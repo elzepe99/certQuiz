@@ -23,6 +23,22 @@
       "description": "Architect-level certification covering application lifecycle management, deployment strategies, environments, and release management.",
       "file": "salesforce_dld_questions_corrected.json",
       "accentColor": "#FF9500"
+    },
+    {
+      "id": "salesforce-iam-architect",
+      "name": "Salesforce Certified Identity and Access Management Architect",
+      "shortName": "IAM Architect",
+      "description": "Architect-level certification covering SSO, OAuth, SAML, My Domain, and identity management on the Salesforce platform.",
+      "file": "salesforce_iam_architect_questions_corrected.json",
+      "accentColor": "#BF5AF2"
+    },
+    {
+      "id": "salesforce-integration-architect",
+      "name": "Salesforce Certified Integration Architect",
+      "shortName": "Integration Architect",
+      "description": "Architect-level certification covering integration patterns, APIs, middleware, security, and data exchange strategies.",
+      "file": "integration_architect_questions_corrected.json",
+      "accentColor": "#FF6B6B"
     }
   ]
 }
