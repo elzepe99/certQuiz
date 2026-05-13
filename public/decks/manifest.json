@@ -1,0 +1,28 @@
+{
+  "decks": [
+    {
+      "id": "salesforce-revenue-cloud",
+      "name": "Salesforce Revenue Cloud Consultant",
+      "shortName": "Revenue Cloud",
+      "description": "Consultant-level certification covering CPQ, Billing, and Subscription Management.",
+      "file": "salesforce-revenue-cloud.json",
+      "accentColor": "#7AB8FF"
+    },
+    {
+      "id": "salesforce-app-builder",
+      "name": "Salesforce Certified Platform App Builder",
+      "shortName": "App Builder",
+      "description": "Certification covering declarative app development, data modeling, automation, and UI customization on the Salesforce platform.",
+      "file": "salesforce_app_builder_questions_corrected.json",
+      "accentColor": "#4CD964"
+    },
+    {
+      "id": "salesforce-dld",
+      "name": "Salesforce Development Lifecycle and Deployment Designer",
+      "shortName": "Dev Lifecycle",
+      "description": "Architect-level certification covering application lifecycle management, deployment strategies, environments, and release management.",
+      "file": "salesforce_dld_questions_corrected.json",
+      "accentColor": "#FF9500"
+    }
+  ]
+}

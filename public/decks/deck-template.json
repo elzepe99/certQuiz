@@ -1,0 +1,24 @@
+[
+  {
+    "question": "Which Salesforce cloud is primarily used for custom CRM app development?",
+    "optionA": "Service Cloud",
+    "optionB": "Sales Cloud",
+    "optionC": "Experience Cloud",
+    "optionD": "Platform",
+    "optionE": "",
+    "correct": "D",
+    "explanation": "Salesforce Platform is used to build custom applications with declarative and programmatic tools.\nReferences:\nhttps://www.salesforce.com/platform/",
+    "_cat": "Platform Basics"
+  },
+  {
+    "question": "Select TWO common authentication methods for API integrations.",
+    "optionA": "OAuth 2.0",
+    "optionB": "SAML",
+    "optionC": "Basic Auth",
+    "optionD": "MFA Prompt",
+    "optionE": "",
+    "correct": "A,C",
+    "explanation": "OAuth 2.0 and Basic Auth are commonly used for API integrations. SAML is usually for SSO browser login flows.",
+    "_cat": "Integration & Security"
+  }
+]
