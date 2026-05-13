@@ -80,29 +80,3 @@ npm run preview
 - `?` — open shortcuts cheatsheet (TODO)
 
 Shortcuts are disabled while the user is typing in an input or textarea.
-
-## Notes on the implementation
-
-- **Per-deck progress** is keyed by deck id in localStorage, so switching decks
-  preserves each one's state independently. `Restart deck` only wipes that
-  deck's key.
-- **Selection discard on navigation**: if the user navigates away from an
-  unsubmitted question without submitting, the in-progress selection is dropped.
-  This matches the spec — feels closer to a real exam, no ghost-state.
-- **Multi-correct support**: schema-ready. Detected when `correct` contains a
-  comma OR the prompt contains "Choose N" / "Select N". Renders as multi-select.
-  No questions in the current Revenue Cloud deck require it.
-- **Reference parsing**: explanations are split at the first `References:` line.
-  Bare URLs in references are auto-linked.
-- **Reduced motion**: animations are gated by `prefers-reduced-motion`.
-
-## What's stubbed / out of scope for v1
-
-- "Mock Exam" and "History" tabs from the handoff are not yet wired (the
-  TopBar surfaces "Practice" and "Review" only).
-- Settings modal (theme, font size, shortcut toggle) is a Settings cog with no
-  sheet behind it yet.
-- Shortcuts cheatsheet (`?`) — handler exists but no modal yet.
-- Below 1280px the right sidebar is hidden (per spec). Below 960px the left
-  sidebar is hidden, but it does not yet collapse into a hamburger drawer —
-  the question map and topics aren't reachable on mobile yet.
