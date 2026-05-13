@@ -48,6 +48,8 @@ type State = {
   setNote: (note: string) => void;
   restart: () => void;
   jumpToNextUnseen: () => void;
+  pauseSession: () => void;
+  resumeSession: () => void;
 
   // selectors
   status: (idx: number) => 'unseen' | 'correct' | 'wrong' | 'skipped';
@@ -62,7 +64,9 @@ export const useQuiz = create<State>((set, get) => ({
   loadDeck: (deck, questions) => {
     const progress = loadProgress(deck.id, questions);
     const orderedQuestions = applyQuestionOrder(questions, progress.questionOrder);
-    set({ deck, questions: orderedQuestions, progress, questionStartTime: Date.now() });
+    // Reset sessionStartTime so offline/sleep time between sessions isn't counted
+    const freshProgress = { ...progress, sessionStartTime: Date.now() };
+    set({ deck, questions: orderedQuestions, progress: freshProgress, questionStartTime: Date.now() });
   },
 
   selectOption: (letter) => {
@@ -211,6 +215,26 @@ export const useQuiz = create<State>((set, get) => ({
     const nextProgress: DeckProgress = { ...fresh, questionOrder: nextOrder };
     set({ questions: shuffledQuestions, progress: nextProgress, questionStartTime: Date.now() });
     saveProgress(deck.id, nextProgress);
+  },
+
+  pauseSession: () => {
+    const { progress, deck } = get();
+    if (!deck) return;
+    const live = Math.floor((Date.now() - progress.sessionStartTime) / 1000);
+    const next: DeckProgress = {
+      ...progress,
+      accumulatedSessionSeconds: progress.accumulatedSessionSeconds + live,
+      sessionStartTime: Date.now(),
+    };
+    set({ progress: next });
+    saveProgress(deck.id, next);
+  },
+
+  resumeSession: () => {
+    const { progress, deck } = get();
+    if (!deck) return;
+    const next: DeckProgress = { ...progress, sessionStartTime: Date.now() };
+    set({ progress: next });
   },
 
   jumpToNextUnseen: () => {

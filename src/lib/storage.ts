@@ -107,6 +107,7 @@ export function emptyProgress(total: number, questionSignatures?: string[]): Dec
     notes: {},
     currentIdx: 0,
     sessionStartTime: Date.now(),
+    accumulatedSessionSeconds: 0,
     timeOnQ: Array(total).fill(0),
     questionOrder: buildQuestionOrder(total),
     questionSignatures: questionSignatures ?? [],
@@ -134,6 +135,7 @@ export function loadProgress(deckId: string, questions: Question[]): DeckProgres
       return {
         ...base,
         ...parsed,
+        accumulatedSessionSeconds: typeof parsed.accumulatedSessionSeconds === 'number' ? parsed.accumulatedSessionSeconds : 0,
         timeOnQ:
           Array.isArray(parsed.timeOnQ) && parsed.timeOnQ.length === total
             ? parsed.timeOnQ
@@ -164,6 +166,7 @@ export function loadProgress(deckId: string, questions: Question[]): DeckProgres
       ...base,
       ...parsed,
       currentIdx: Math.min(Math.max(Number(parsed.currentIdx) || 0, 0), Math.max(0, total - 1)),
+      accumulatedSessionSeconds: typeof parsed.accumulatedSessionSeconds === 'number' ? parsed.accumulatedSessionSeconds : 0,
       answers,
       submitted,
       notes,

@@ -9,10 +9,13 @@ type Props = {
 
 export function SessionTimer({ budget = 60 }: Props) {
   const sessionStart = useQuiz((s) => s.progress.sessionStartTime);
+  const accumulated = useQuiz((s) => s.progress.accumulatedSessionSeconds);
   const questionStart = useQuiz((s) => s.questionStartTime);
   const idx = useQuiz((s) => s.progress.currentIdx);
   const submitted = useQuiz((s) => s.progress.submitted);
   const timeOnQ = useQuiz((s) => s.progress.timeOnQ);
+  const pauseSession = useQuiz((s) => s.pauseSession);
+  const resumeSession = useQuiz((s) => s.resumeSession);
 
   const [, force] = useState(0);
   useEffect(() => {
@@ -20,12 +23,24 @@ export function SessionTimer({ budget = 60 }: Props) {
     return () => clearInterval(t);
   }, []);
 
-  const sessionElapsed = Math.floor((Date.now() - sessionStart) / 1000);
-  const accumulated = timeOnQ[idx] ?? 0;
+  useEffect(() => {
+    function onVisibility() {
+      if (document.visibilityState === 'hidden') {
+        pauseSession();
+      } else {
+        resumeSession();
+      }
+    }
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => document.removeEventListener('visibilitychange', onVisibility);
+  }, [pauseSession, resumeSession]);
+
+  const sessionElapsed = accumulated + Math.floor((Date.now() - sessionStart) / 1000);
+  const accumulatedOnQ = timeOnQ[idx] ?? 0;
   const live = !submitted[idx]
     ? Math.floor((Date.now() - questionStart) / 1000)
     : 0;
-  const onQ = accumulated + live;
+  const onQ = accumulatedOnQ + live;
 
   // pace: if user is averaging > budget, they're behind
   const submittedCount = Object.keys(submitted).length;

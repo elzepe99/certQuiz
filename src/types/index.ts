@@ -31,6 +31,7 @@ export type DeckProgress = {
   notes: Record<number, string>;
   currentIdx: number;
   sessionStartTime: number;
+  accumulatedSessionSeconds: number;
   timeOnQ: number[]; // seconds accumulated per question
   questionOrder: number[]; // displayed question index -> original deck index
   questionSignatures: string[]; // persisted identity for index remapping after deck edits
