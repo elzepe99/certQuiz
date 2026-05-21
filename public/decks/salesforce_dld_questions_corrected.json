@@ -391,8 +391,8 @@
     "optionC": "Single-org strategy, as the high level of business process standardization will be easier to implement in a single org.",
     "optionD": "Multi-org strategy, as they could deploy a common managed (or unlocked) package into the orgs of the different business units.",
     "optionE": "",
-    "correct": "D",
-    "explanation": "The two stated facts point opposite ways: standardization argues for consolidation, but BUs share no customers/processes (no integration need), which removes the main benefit of single-org. A multi-org strategy with a shared package gives each BU autonomy on its own data while a common package enforces standardization of the processes — best of both.",
+    "correct": "C",
+    "explanation": "The CEO's primary, explicit goal is business process standardization across all business units, and a single-org strategy enforces standardization at the platform level — one set of processes, rules, and configuration. The 'no integration required' point removes one argument for consolidation (a shared customer 360) but does not outweigh the standardization driver. A multi-org strategy with a shared managed package (D) can help with some aspects of standardization but cannot fully enforce it across separate orgs, and adds maintenance overhead — it is the trap answer here.",
     "_cat": "Environment Management"
   },
   {
@@ -523,8 +523,8 @@
     "optionC": "Maximum size of deployed .zip file is 39 MB.",
     "optionD": "Deploy up to 10,000 files, but retrieve more than 10,000 files.",
     "optionE": "",
-    "correct": "A,B",
-    "explanation": "Per the Salesforce Metadata API limits: (A) up to 10,000 files per deploy/retrieve, and (B) a 400 MB compressed .zip size limit (post-decompression files have their own caps). The 39 MB figure (C) is the older base64-encoded inline payload limit for the legacy Metadata API SOAP envelope, not the file-based zip limit.",
+    "correct": "A,C",
+    "explanation": "Per the Salesforce Metadata API limits: (A) you can deploy or retrieve up to 10,000 files at once, and (C) the deployed/retrieved compressed .zip file can't exceed 39 MB. The 400 MB figure (B) is the limit for the files once they are UNZIPPED, not the size of the .zip file itself — so labeling the '.zip file' as 400 MB is incorrect. Option D is false because the 10,000-file cap applies to both deploy and retrieve.",
     "_cat": "Deployment"
   },
   {
@@ -1284,6 +1284,237 @@
     "optionE": "",
     "correct": "D",
     "explanation": "The correct response to an upcoming breaking platform change is to act proactively in the environment where the change is already live: (D) identify which developer sandboxes will receive the new release first (sandbox preview windows precede production by weeks), stand up or use one of those upgraded sandboxes, and refactor the affected feature there so it is validated before the release hits production. (A) waiting for Salesforce to fix it is not a valid strategy — the team owns their custom code. (B) updating the API version number alone doesn't replicate the runtime behaviour of the new release. (C) there is no 'delay upgrade' feature that customers can request for Salesforce's three-times-yearly forced platform upgrades.",
+    "_cat": "Environment Management"
+  },
+  {
+    "question": "Universal Containers is looking to install a new application to enable advanced quoting in its current Professional Edition org. The org is near capacity with object and tab limits. Which two solutions should the Architect recommend? Choose 2 answers",
+    "optionA": "Install an Aloha certified App.",
+    "optionB": "Upgrade to an Enterprise Edition org.",
+    "optionC": "Create and install an unmanaged package.",
+    "optionD": "Buy more user licenses to increase org limits.",
+    "optionE": "",
+    "correct": "A,B",
+    "explanation": "Professional Edition has strict limits on custom objects (50) and tabs (10). (A) An Aloha-program certified AppExchange app has its custom objects, tabs, and apps EXEMPT from the org's limits, so it lets UC add the new application without consuming the scarce object/tab capacity. (B) Upgrading to Enterprise Edition raises the limits significantly (200 objects, 25 tabs). An unmanaged package (C) would consume even more of the already-limited object/tab capacity. Buying more user licenses (D) scales things like data and file storage but does NOT raise custom object or tab limits, so it does not solve the stated problem.",
+    "_cat": "Environment Management"
+  },
+  {
+    "question": "A year has passed since a project has gone live and a developer is looking to make an update to an existing Apex class, but is unsure of its purpose. What artifact from the original project should be leveraged to determine the purpose of the class?",
+    "optionA": "User Acceptance Test Scripts.",
+    "optionB": "Test Execution Plan.",
+    "optionC": "Requirements Traceability Matrix.",
+    "optionD": "Test Sign Off Document.",
+    "optionE": "",
+    "correct": "C",
+    "explanation": "A Requirements Traceability Matrix (RTM) maps each business requirement to the corresponding design elements, code components, and test cases. It is the artifact that explicitly links an Apex class back to the requirement that drove its creation, providing context about the class's purpose. User Acceptance Test Scripts (A) describe testing scenarios but not the code's purpose. A Test Execution Plan (B) describes how tests will be run. A Test Sign Off Document (D) records test completion approval.",
+    "_cat": "Application Lifecycle Management"
+  },
+  {
+    "question": "Why does Salesforce prohibit Stress Testing against Production?",
+    "optionA": "There is not enough CPU.",
+    "optionB": "It is a shared environment.",
+    "optionC": "It is blocked by data center infrastructure.",
+    "optionD": "It causes Internet congestion.",
+    "optionE": "",
+    "correct": "B",
+    "explanation": "Salesforce's production environment is a multi-tenant, shared platform. Stress testing one customer's org intentionally drives CPU, memory, and I/O to extreme levels that impact all other tenants sharing the same pod infrastructure. This is why Salesforce's acceptable use policies prohibit unauthorized stress and load testing against production. CPU availability (A), data center blocks (C), and Internet congestion (D) are not the actual reasons.",
+    "_cat": "Development & Testing"
+  },
+  {
+    "question": "Universal Containers (UC) has a recruiting application using Metadata API version 35, deployed to production last year. The current Salesforce platform is running API version 36. A new field introduced on the object Apex page in API version 36 has been developed by a UC developer, who tries to deploy the page using the previous deployment script that uses API version 35. What will happen during the deployment?",
+    "optionA": "The deployment script will pass because the new field is backward compatible with the previous API version 35.",
+    "optionB": "The deployment script will fail because the new field is not known for the previous API version 35.",
+    "optionC": "The deployment script will pass because the new field is supported on the current platform version.",
+    "optionD": "The deployment script will fail because the platform does not support the previous API version 35.",
+    "optionE": "",
+    "correct": "B",
+    "explanation": "When deploying a metadata component that references a new field introduced in API version 36, the deployment tool configured to use API version 35 will fail because that field is not part of the API version 35 schema. Salesforce validates metadata against the API version specified in the deployment manifest — if a feature or field is unknown at that version, deployment fails. The deployment would pass (A, C) only if the API version in the script were updated to at least 36. Version 35 is still supported (D is false).",
+    "_cat": "Deployment"
+  },
+  {
+    "question": "The CTO at Universal Containers decided to implement the Scrum framework for its agile teams and communicated a set of Scrum principles to the company. Which describes a Scrum principle?",
+    "optionA": "Deliver working software, so if a software component is working, avoid changing it.",
+    "optionB": "Respect other teams by not doing their work (a developer should not test the software).",
+    "optionC": "Create transparency by being honest and clear about timing, planning, and obstacles.",
+    "optionD": "Embrace change by working on a different scope every day.",
+    "optionE": "",
+    "correct": "C",
+    "explanation": "Transparency is one of the three pillars of Scrum (along with Inspection and Adaptation). It requires the process and the work to be visible to all responsible parties — being honest about timing, progress, plans, and obstacles is a core Scrum value. (A) misrepresents Scrum — it embraces continuous improvement and change. (B) misrepresents cross-functional team principles — all team members can and should test. (D) misrepresents Scrum's sprint commitment — changing scope daily is an anti-pattern.",
+    "_cat": "Application Lifecycle Management"
+  },
+  {
+    "question": "Universal Containers (UC) has multiple teams with major projects working concurrently in their own developer sandboxes. After deploying to production, a bug is discovered. Due to tight timelines, the development team has suggested correcting the bug in the user acceptance testing (UAT) environment, which is a full copy sandbox. What should the architect recommend? Choose 2 answers",
+    "optionA": "UC should spin up a new sandbox to use as a hotfix environment and deploy the fix from there to production.",
+    "optionB": "The fix should be made in the developer environment where the project work was done.",
+    "optionC": "Since the issue was found in production, it should be treated as a change request and go through the change control process.",
+    "optionD": "Correcting the bug in UAT is ideal since UAT is a full copy and will be the fastest.",
+    "optionE": "",
+    "correct": "A,C",
+    "explanation": "(A) A dedicated hotfix sandbox isolates the emergency fix from in-progress project work — using UAT risks contaminating or destabilizing the active testing environment. (C) Any post-production issue is a production incident that must go through the change control/release management process regardless of urgency. Together these ensure the fix is both done correctly and subject to proper governance.",
+    "_cat": "Project & Release Management"
+  },
+  {
+    "question": "There are many types of quality assurance techniques that can help minimize defects in software projects. Which two techniques should an architect recommend for Universal Containers to incorporate into its overall CI/CD pipeline? Choose 2 answers",
+    "optionA": "Business verification testing.",
+    "optionB": "Stress testing.",
+    "optionC": "Automated browser testing.",
+    "optionD": "Static code quality analysis.",
+    "optionE": "",
+    "correct": "C,D",
+    "explanation": "(C) Automated browser testing (e.g., Selenium, Provar) validates end-to-end UI behavior continuously in the pipeline, catching regressions immediately after each deployment. (D) Static code quality analysis (e.g., PMD, CodeScan) scans source code at commit time for violations, complexity, and security issues, preventing defects before they execute. Business verification testing (A) is done post-deployment by business users, not inside a CI/CD pipeline. Stress testing (B) is prohibited against production and is not a CI/CD pipeline activity.",
+    "_cat": "Development & Testing"
+  },
+  {
+    "question": "Salesforce has three major releases a year. Which type of change introduced by a release can cause automated browser tests to need updating?",
+    "optionA": "DOM changes.",
+    "optionB": "New standard fields.",
+    "optionC": "Metadata schema changes.",
+    "optionD": "New Apex methods.",
+    "optionE": "",
+    "correct": "A",
+    "explanation": "Automated browser tests (Selenium, WebDriver-based) navigate and assert on the rendered HTML Document Object Model (DOM). When a Salesforce release changes the HTML structure, CSS class names, or element IDs — collectively DOM changes — the selectors in automated tests break and require updating. New standard fields (B), metadata schema changes (C), and new Apex methods (D) do not affect the DOM structure that browser tests use.",
+    "_cat": "Development & Testing"
+  },
+  {
+    "question": "Universal Containers (UC) is using Sales and Service Cloud. They have two major releases and four minor releases every year, and maintain deployment (dev), integration, user acceptance (UAT), staging, and hotfix sandboxes. What should an Architect recommend when UC has P1 issues that must be fixed immediately?",
+    "optionA": "Fix the issue in staging and deploy it into production.",
+    "optionB": "Fix the issue in the hotfix sandbox, test, and deploy to production.",
+    "optionC": "Fix the issue in development, test in UAT, and deploy to production.",
+    "optionD": "Follow the release management process to move to production.",
+    "optionE": "",
+    "correct": "B",
+    "explanation": "A P1 (Priority 1) issue is a production emergency requiring immediate action. The hotfix sandbox exists exactly for this purpose — to isolate emergency fixes from in-progress release work, enabling rapid test-and-deploy without disrupting the normal release pipeline. Staging (A) is for pre-production validation of planned releases, not emergencies. Development → UAT (C) is the full pipeline used for regular releases — too slow for a P1. Following the standard release process (D) is appropriate for non-urgent changes, not P1 emergencies.",
+    "_cat": "Project & Release Management"
+  },
+  {
+    "question": "Universal Containers has an active production org and is planning to release new features next month. The team is preparing a deployment plan and reached out to the technical architect for inputs on the rollback strategy. What should a technical architect recommend?",
+    "optionA": "Backup the existing metadata using the ANT Migration Tool. To roll back, deploy again to production using backed-up metadata.",
+    "optionB": "Create a sandbox from production to take backup of existing metadata. To roll back, manually delete new components and redeploy using metadata from this sandbox.",
+    "optionC": "Create a sandbox from production to take backup of existing metadata. To roll back, use destructiveChanges.xml to delete new components and redeploy original metadata from the sandbox.",
+    "optionD": "Backup the existing metadata using the ANT Migration Tool. To roll back, manually delete new components and deploy again using backed-up metadata.",
+    "optionE": "",
+    "correct": "C",
+    "explanation": "The most reliable rollback strategy is: (1) create a fresh sandbox from production before the deployment to capture the exact pre-deployment state; (2) after a failed deployment, use destructiveChanges.xml to programmatically remove newly added components (rather than manually deleting them, which is error-prone at scale); (3) redeploy the original metadata from the pre-deployment sandbox. This is repeatable and auditable. Manually deleting components (B, D) is fragile and inconsistent at scale.",
+    "_cat": "Deployment"
+  },
+  {
+    "question": "Universal Containers (UC) is implementing Service Cloud for their contact centers for 3,000 users and approximately 10 million customers. The average expected response time is less than 5 seconds with 1,500 concurrent users. What type of testing will help UC measure the page response time?",
+    "optionA": "Unit testing.",
+    "optionB": "Load testing.",
+    "optionC": "System integration testing.",
+    "optionD": "Stress testing.",
+    "optionE": "",
+    "correct": "B",
+    "explanation": "Load testing simulates the expected volume of concurrent users (1,500 in this scenario) and measures system performance — page response times, throughput, and error rates — under normal expected load. It is the correct test type for validating a 5-second response SLA. Unit testing (A) verifies code logic, not performance. System integration testing (C) validates end-to-end data flows, not response-time SLAs. Stress testing (D) pushes beyond expected limits to find break points and is not permitted on production.",
+    "_cat": "Development & Testing"
+  },
+  {
+    "question": "What three tools should an architect recommend to support application lifecycle management methodology? Choose 3 answers",
+    "optionA": "Database management systems.",
+    "optionB": "Version control repository.",
+    "optionC": "Middleware.",
+    "optionD": "Continuous integration tool.",
+    "optionE": "Issue tracking tool.",
+    "correct": "B,D,E",
+    "explanation": "ALM methodology requires three foundational tools: (B) a version control repository to store, track, and branch code/configuration; (D) a continuous integration tool to automate builds, tests, and deployments; (E) an issue tracking tool to record, prioritize, and manage bugs and user stories. Database management systems (A) are infrastructure tools, not ALM-specific. Middleware (C) facilitates integration between applications but is not an ALM tool.",
+    "_cat": "Application Lifecycle Management"
+  },
+  {
+    "question": "Universal Containers (UC) is preparing for the new Salesforce release in a couple of months and has several ongoing development projects that may be affected. Which three steps should the team at UC take to prepare for this release? Choose 3 answers",
+    "optionA": "Contact Salesforce to schedule a time to upgrade the full sandbox.",
+    "optionB": "Refresh a sandbox during the Release Preview Window to ensure they have the upcoming release.",
+    "optionC": "Run regression tests in an upgraded sandbox to detect any issues with the upgrade.",
+    "optionD": "Review the release notes for automatically-enabled features and technical debt.",
+    "optionE": "Upgrade any SOAP integrations to the newest WSDL as early as possible.",
+    "correct": "B,C,D",
+    "explanation": "Three key steps: (B) refresh a sandbox during the Release Preview Window so the team gets the new platform version early for testing; (C) run regression tests in the upgraded sandbox to catch breakages before they hit production; (D) review release notes for auto-enabled features that could change behavior and for technical debt to address. Scheduling a specific upgrade time with Salesforce (A) is not possible — schedules are determined by Salesforce. Proactively upgrading SOAP WSDLs (E) is not required — older WSDLs remain backward-compatible unless new features are needed.",
+    "_cat": "Environment Management"
+  },
+  {
+    "question": "Universal Containers is building a new complex integration to a legacy system. The legacy system is also going through a major upgrade. Senior leadership has committed to the board that the combined programs will be completed on time. What is the risk with this plan?",
+    "optionA": "The deadline is scheduled during a Salesforce release.",
+    "optionB": "The project team has decided to use the Waterfall methodology.",
+    "optionC": "The legacy system team is using an Agile methodology.",
+    "optionD": "Multiple work-streams with dependencies could impact the go-live.",
+    "optionE": "",
+    "correct": "D",
+    "explanation": "The primary risk is that two interdependent programs running concurrently — the Salesforce integration and the legacy system upgrade — can block each other. Delays or changes in the legacy upgrade cascade to the integration timeline, and vice versa. Managing cross-program dependencies is the critical challenge. A Salesforce release window (A) is a known, scheduled event that can be planned around. Methodology choices (B, C) are team decisions, not inherent risks of this scenario.",
+    "_cat": "Project & Release Management"
+  },
+  {
+    "question": "Universal Containers (UC) is embarked on an enterprise Salesforce transformation journey. UC would like to streamline and automate deployment to different sandboxes during the build phase. Upon customer acceptance in UAT, the company also requested to automate the production deployment. As the deployment architect, what is the recommendation to satisfy the customer requirements?",
+    "optionA": "Recommend using a Continuous Integration and Continuous Deployment tool and build the pipeline to deploy to sandboxes and production.",
+    "optionB": "Recommend using SFDX and document the deployment commands with steps to be executed for each environment.",
+    "optionC": "Recommend using the ANT script and build a custom application to run the script and use change sets to deploy supported metadata.",
+    "optionD": "Recommend using an AppExchange solution that packages deployment components and run the deployment wizard to track results.",
+    "optionE": "",
+    "correct": "A",
+    "explanation": "A CI/CD tool (Jenkins, GitHub Actions, Azure DevOps, etc.) with a fully automated pipeline is the correct recommendation for streamlined, automated deployments across all environments — from dev sandboxes through to production. It automates builds, tests, and deployments with full visibility and auditability. SFDX with documented manual steps (B) still requires manual intervention. An ANT script with change sets (C) mixes tools and adds complexity. An AppExchange deployment wizard (D) is not a standard CI/CD pipeline and may not support all metadata types.",
+    "_cat": "Deployment"
+  },
+  {
+    "question": "Universal Containers has a full sandbox that will be used to analyze and fix bugs found in production. Which two items should the architect recommend to ensure that bugs found in production are more easily analyzed in this full sandbox? Choose 2 answers",
+    "optionA": "Refresh the full sandbox after every deployment in production.",
+    "optionB": "Create a daily process of copying new and changed data in production to the full sandbox.",
+    "optionC": "Before any deployment in production, the same process must be performed in this sandbox first.",
+    "optionD": "Perform a Refresh Data in the full sandbox.",
+    "optionE": "",
+    "correct": "A,C",
+    "explanation": "(A) Refreshing the full sandbox after every production deployment keeps the sandbox in sync with production metadata and data, making it easy to reproduce production bugs. (C) Performing the same deployment in the sandbox before it goes to production validates the deployment and catches environment-specific issues in a controlled setting. Creating a daily data copy (B) is unnecessary — a full sandbox already contains production data after a refresh. Refresh Data (D) is only available for Partial Copy and Developer Pro sandboxes, not Full sandboxes.",
+    "_cat": "Environment Management"
+  },
+  {
+    "question": "Universal Containers (UC) has developed extensions of Salesforce Service Cloud using the change set development model. Recently, UC acquired a company whose development team uses the org development model. The UC CTO wants both teams to work on a single org and follow the same set of processes. Which development model should the architect recommend for the consolidated development team?",
+    "optionA": "Org development model, because the acquired company's team is already using it and it is better than the change set development model.",
+    "optionB": "Package development model, because it allows packages to be created and deployed using declarative tools without writing code.",
+    "optionC": "Package development model, so teams can build release artifacts that can be tested and released independently from artifacts for other projects.",
+    "optionD": "Change set development model, because UC is already using it, so it will face less resistance.",
+    "optionE": "",
+    "correct": "C",
+    "explanation": "The package development model with unlocked packages is the ideal consolidation target: each team creates its own independently versioned, testable release artifact that deploys without coordinating with other teams' artifacts. This resolves the conflict between legacy change set and org development models. The org development model (A) with change sets creates conflicts in a multi-team shared org. (B) misstates the package model — it requires CLI/programmatic tooling. Change sets (D) are limited and would unnecessarily restrict the acquired team.",
+    "_cat": "Deployment"
+  },
+  {
+    "question": "Universal Containers (UC) has developed a managed package targeted for AppExchange. The product includes Apex code to customize and create layouts. UC is in the testing phase and the package is not yet certified. During testing on the target org, the Apex code for the layouts fails. Why are the Apex classes not able to access the metadata of the target org during testing?",
+    "optionA": "Apex Settings to allow access to metadata is not switched on.",
+    "optionB": "UC needs to turn on Apex Settings within the custom metadata type.",
+    "optionC": "The solution is flawed. UC should utilize the Tooling API from a web service call to modify the layouts.",
+    "optionD": "UC needs to get the managed package certified by the Salesforce security review.",
+    "optionE": "",
+    "correct": "D",
+    "explanation": "Apex code in a managed package can only access the Metadata API of the target org — to read/write metadata such as layouts — if the package has passed Salesforce's security review and been granted the Modify Metadata permission. Before certification, managed package Apex is restricted from accessing the target org's metadata. There is no 'Apex Settings' toggle for this purpose (A, B). Using the Tooling API (C) would face the same restriction and misidentifies the root cause.",
+    "_cat": "Deployment"
+  },
+  {
+    "question": "Universal Containers has multiple projects being developed in parallel. One project is in the testing phase and the testing team found a list of issues on items that will be deployed to production. As the project deadline is short, the customer team proposes that the fixes be done in the test sandbox and then deployed to production. What should the Architect recommend?",
+    "optionA": "Recommend the customer team's proposal to fix the issues in the testing environment and deploy them to production.",
+    "optionB": "Recommend fixing the issues in the development environment and deploying the changes directly to production.",
+    "optionC": "Recommend fixing the issues in the development sandbox, migrating them to testing, and deploying to production after testing.",
+    "optionD": "Recommend fixing the issues in the test environment and migrating the changes to the development sandbox.",
+    "optionE": "",
+    "correct": "C",
+    "explanation": "Best practice requires fixes to originate in the development environment, not the test environment. Fixing in test and deploying directly to production (A) creates an environment divergence — the development sandbox won't have the fix, leading to regression when the next development release deploys. Skipping testing (B) violates quality gates. Fixing in test and back-porting to dev (D) is reversed and error-prone. Only (C) — fix in dev, promote to test, validate, then deploy — keeps all environments in sync and maintains proper flow.",
+    "_cat": "Development & Testing"
+  },
+  {
+    "question": "Universal Containers has just initiated a project to implement a partner community. The application will be deployed into a production environment currently in use by a large Salesforce user base. The project manager has insisted that the development and testing team use a single developer sandbox. What is the risk with this approach?",
+    "optionA": "Testers will encounter platform limits due to developer sandbox capacity limits.",
+    "optionB": "Testers will experience functional changes throughout testing due to not having isolation from development.",
+    "optionC": "Testers will hit governor limits due to large volume of users in the developer sandbox.",
+    "optionD": "Refreshing the developer sandbox will take significant time.",
+    "optionE": "",
+    "correct": "B",
+    "explanation": "When developers and testers share a single sandbox, developers continue committing code changes while testers are executing test cases. This means the application behavior changes mid-cycle underneath the test cases, causing testers to observe unexpected results unrelated to actual defects. The root cause is lack of environment isolation. Platform limits (A) and governor limits (C) are not specific to a shared sandbox. Refresh time (D) is a management concern, not the primary risk of sharing environments.",
+    "_cat": "Environment Management"
+  },
+  {
+    "question": "A release will be deployed over a weekend, one week after Salesforce updates the production environment (e.g., from Winter to Spring). UC has found that a full sandbox refresh can take several days. What should the architect suggest as an optimal deployment plan?",
+    "optionA": "Two weeks before go-live, deploy to Staging and then refresh the Staging and Production support sandboxes. Deploy from Staging to Production at go-live.",
+    "optionB": "Approximately six weeks before go-live, ensure the sandbox will be on the release preview. One week before go-live, deploy to Staging. Deploy from Staging to Production at go-live.",
+    "optionC": "One month before go-live, deploy to Staging and to Production Support. Deploy from Production Support to Production at go-live.",
+    "optionD": "One week before go-live, initiate the Staging sandbox refresh and then immediately deploy to Staging. Deploy from Staging to Production at go-live.",
+    "optionE": "",
+    "correct": "B",
+    "explanation": "Since the release deploys one week after Salesforce upgrades production, the Staging sandbox must already be on the new platform version before the final deployment rehearsal. (B) is optimal: configure the sandbox to join the release preview window approximately six weeks out so it receives the new version early, test in that upgraded environment, then perform the final Staging deploy one week before go-live. (A) refreshing two weeks before may miss the preview window and land on the old version. (D) initiating a full sandbox refresh only one week out is too risky — refreshes take days and may not complete in time. (C) misses version alignment entirely.",
     "_cat": "Environment Management"
   }
 ]
