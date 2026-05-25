@@ -248,8 +248,8 @@
     "optionC": "Approval Process",
     "optionD": "Roll-up Summary",
     "optionE": "",
-    "correct": "D",
-    "explanation": "Account-to-Case is a special standard relationship where Salesforce allows roll-up summary fields, so a roll-up summary counting open cases (with a filter on IsClosed = FALSE) is the simplest, no-code answer. (For Parent Account totals, a formula field that references the Parent Account's roll-up can be added.)",
+    "correct": "A",
+    "explanation": "Account-to-Case is a standard LOOKUP relationship, not master-detail, so a native roll-up summary field cannot be created to count cases — this is a common misconception. A record-triggered flow (or scheduled flow) that counts related open Cases and writes the total to a number field on the Account is the correct no-/low-code tool. Workflow and approval processes cannot aggregate child records.",
     "_cat": "Data Modeling"
   },
   {
@@ -387,12 +387,12 @@
   {
     "question": "Cloud Kicks wants to set up a new opportunity approval process and execute various action items based on the initial submission. Which three action types should an app builder use in the approval process? Choose 3 answers",
     "optionA": "Email Alert",
-    "optionB": "Outbound Message",
+    "optionB": "Create a new record",
     "optionC": "Task",
     "optionD": "Field Update",
     "optionE": "Invocable Process Builder",
     "correct": "A,C,D",
-    "explanation": "Approval processes support these action types: Email Alert, Task, Field Update, and Outbound Message. Of the listed options, Email Alert, Task, and Field Update are all standard approval-process actions. Outbound Message is also valid; 'Invocable Process Builder' is not a real action type.",
+    "explanation": "Approval processes support exactly four action types: Email Alert, Task, Field Update, and Outbound Message. Of the listed options, Email Alert, Task, and Field Update are all valid approval-process actions. 'Create a new record' and 'Invocable Process Builder' are not approval-process action types (creating records is a flow/Process Builder capability, not an approval action).",
     "_cat": "Business Logic"
   },
   {
@@ -737,28 +737,6 @@
     "_cat": "Security"
   },
   {
-    "question": "The DreamHouse Realty (DR) service manager has asked for some improvements in case management to enforce process compliance so that cases are unable to be reverted to an earlier case status, and to ensure that certain fields are required when specific case criteria are met. What solution should an app builder implement to meet these requirements?",
-    "optionA": "Workflow Rules",
-    "optionB": "Process Builder",
-    "optionC": "Validation Rules",
-    "optionD": "Activities Component",
-    "optionE": "",
-    "correct": "C",
-    "explanation": "Validation rules can compare PRIORVALUE(Status) to the new value to block reverting and can conditionally require fields based on other field values — both compliance requirements covered by one feature.",
-    "_cat": "Business Logic"
-  },
-  {
-    "question": "Cloud Kicks works on an annual subscription model. When a sales rep marks an opportunity as Closed Won, a new opportunity should automatically be created for the renewal. The contracts team works outside of Salesforce but also needs to be notified about closed deals in order to initiate the contract process with the customer. Which automation solution would meet these requirements?",
-    "optionA": "Approval Process",
-    "optionB": "Validation Rule",
-    "optionC": "Record-Triggered Flow",
-    "optionD": "Workflow Rule",
-    "optionE": "",
-    "correct": "C",
-    "explanation": "A record-triggered flow is the modern, recommended automation: it can both create the renewal Opportunity and send an email alert to the external contracts team when an Opportunity moves to Closed Won. Process Builder is being retired by Salesforce; flow is the preferred tool.",
-    "_cat": "Business Logic"
-  },
-  {
     "question": "The case handling process at Universal Containers includes multiple steps including approvals, notifications, and field updates. To manage and evaluate all of these changes in a single save operation, an app builder wants to use Process Builder and the advanced option to let the process evaluate a record multiple times has been selected. Which two options should the app builder avoid to prevent recursion? Choose 2 answers",
     "optionA": "IF statements",
     "optionB": "Setting a criteria node to 'No criteria — just execute the actions'",
@@ -856,17 +834,6 @@
     "correct": "A,C",
     "explanation": "(A) Build a multi-approver approval process requiring unanimous approval from manager and VP. (C) Use a record-triggered flow (or Process Builder) to detect when Close Date moves more than 60 days and automatically submit the record for that approval process so reps don't need to remember to submit.",
     "_cat": "Business Logic"
-  },
-  {
-    "question": "Universal Containers expects impacts to operations due to increased demand. The executive team will reach out to current customers and wants to see the number of open cases for the Account and parent Account. What should an app builder use to display the number of open cases on the Account page?",
-    "optionA": "Flow",
-    "optionB": "Approval Process",
-    "optionC": "Roll-up Summary",
-    "optionD": "Custom object",
-    "optionE": "",
-    "correct": "C",
-    "explanation": "Account-Case is one of the few standard lookup relationships that supports roll-up summary fields. A roll-up summary on Account counting child Cases where IsClosed = FALSE produces the desired count without any code or automation.",
-    "_cat": "Data Modeling"
   },
   {
     "question": "DreamHouse Realty is rethinking its sandbox utilization strategy after acquiring Cloud Kicks. The Salesforce CoE already utilizes a partial and a full sandbox, which they refresh on their own regular schedules. Teams are expanding and have to begin each of their small projects in a sandbox before committing to the larger pool for collaborative testing while still keeping costs down. What type of sandbox should each team member use?",
@@ -1045,17 +1012,6 @@
     "_cat": "Business Logic"
   },
   {
-    "question": "Universal Containers (UC) has several large customers that sell their products through dealers. UC identifies and works with a single individual at each customer and at each dealer. Separate bills are sent to each customer and each dealer. These details need to be stored in a format that clearly displays the business entities and their appropriate representatives. How should an app builder implement these requirements?",
-    "optionA": "Create a single parent record, add each rep as a contact to the parent account, and add each dealer as a child record.",
-    "optionB": "Create both customer and dealer as accounts, create account teams on each account, and associate the dealer records with the parent account.",
-    "optionC": "Create a single account record, add each rep as a contact, and create a custom dealer object.",
-    "optionD": "Create both customer and dealer as accounts, add each rep as a contact on the corresponding account, and create an account hierarchy.",
-    "optionE": "",
-    "correct": "D",
-    "explanation": "Each billed entity (customer, dealer) becomes its own Account. Each rep is a Contact on its respective Account. The customer–dealer relationship is expressed using Account Hierarchy via the Parent Account field — clearly displaying the business structure.",
-    "_cat": "Data Modeling"
-  },
-  {
     "question": "Universal Containers has 20 different workflows on the Opportunity object. To ensure that updates are processing properly for all field updates, UC has the 'Re-evaluate workflow rules after field change' checkbox checked. Recently after adding a new workflow, users have reported receiving errors about workflow limits. What should an app builder look at to address this?",
     "optionA": "Talk to a developer about Apex code issues.",
     "optionB": "Number of workflows per object limits.",
@@ -1186,17 +1142,6 @@
     "correct": "A",
     "explanation": "Lightning App Builder's component visibility rules conditionally show/hide a component based on field values, user attributes, or device type. Setting visibility on the weather component to fire when a showing is scheduled meets the requirement declaratively.",
     "_cat": "User Interface"
-  },
-  {
-    "question": "Cloud Kicks is redefining its entire business process to convert the Manager Notes field from a long text area field. The goal is to encourage managers to be more concise in their comments and stay at 255 characters or less. There is preexisting information in the Manager Notes field that often is well beyond the character limit. What would happen to any existing information if the app builder tries to convert a preexisting long text area field to text area? (Variant)",
-    "optionA": "Preexisting information will truncate to the first 255 characters.",
-    "optionB": "Preexisting information in the field will be completely lost.",
-    "optionC": "Preexisting information will remain even if it was over 255 characters.",
-    "optionD": "Preexisting information will cause an error message to pop up.",
-    "optionE": "",
-    "correct": "A",
-    "explanation": "Salesforce truncates existing values to the first 255 characters when a Long Text Area is converted to Text. The Setup screen warns about data truncation but proceeds; characters beyond 255 are lost. (This is a duplicate question — same correct answer as earlier.)",
-    "_cat": "Data Modeling"
   },
   {
     "question": "The sales operations team at AW Computing deletes accounts for a variety of reasons. The sales ops director is worried that the sales team may delete accounts that sales reps are actively selling into. How should the app builder keep accounts with open opportunities from being deleted?",

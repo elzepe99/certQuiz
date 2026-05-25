@@ -39,6 +39,22 @@
       "description": "Architect-level certification covering integration patterns, APIs, middleware, security, and data exchange strategies.",
       "file": "integration_architect_questions_corrected.json",
       "accentColor": "#FF6B6B"
+    },
+    {
+      "id": "salesforce-data-architect",
+      "name": "Salesforce Certified Data Architect",
+      "shortName": "Data Architect",
+      "description": "Architect-level certification covering data modeling, large data volumes, data migration, master data management, and data governance.",
+      "file": "questions_data_architect_merged.json",
+      "accentColor": "#5AC8FA"
+    },
+    {
+      "id": "salesforce-sharing-visibility",
+      "name": "Salesforce Certified Sharing and Visibility Architect",
+      "shortName": "Sharing & Visibility",
+      "description": "Architect-level certification covering the security model, record access, sharing mechanisms, and visibility controls on the Salesforce platform.",
+      "file": "sharing_visibility_questions_corrected.json",
+      "accentColor": "#FFD60A"
     }
   ]
 }

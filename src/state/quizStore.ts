@@ -218,23 +218,36 @@ export const useQuiz = create<State>((set, get) => ({
   },
 
   pauseSession: () => {
-    const { progress, deck } = get();
+    const { progress, deck, questionStartTime } = get();
     if (!deck) return;
-    const live = Math.floor((Date.now() - progress.sessionStartTime) / 1000);
+    const now = Date.now();
+    const live = Math.floor((now - progress.sessionStartTime) / 1000);
+
+    // Freeze the per-question timer too: accumulate the live time on the
+    // current (unsubmitted) question so hidden-tab time isn't counted.
+    const idx = progress.currentIdx;
+    const timeOnQ = [...progress.timeOnQ];
+    if (!progress.submitted[idx]) {
+      const qElapsed = Math.round((now - questionStartTime) / 1000);
+      timeOnQ[idx] = (timeOnQ[idx] ?? 0) + qElapsed;
+    }
+
     const next: DeckProgress = {
       ...progress,
       accumulatedSessionSeconds: progress.accumulatedSessionSeconds + live,
-      sessionStartTime: Date.now(),
+      sessionStartTime: now,
+      timeOnQ,
     };
-    set({ progress: next });
+    set({ progress: next, questionStartTime: now });
     saveProgress(deck.id, next);
   },
 
   resumeSession: () => {
     const { progress, deck } = get();
     if (!deck) return;
-    const next: DeckProgress = { ...progress, sessionStartTime: Date.now() };
-    set({ progress: next });
+    const now = Date.now();
+    const next: DeckProgress = { ...progress, sessionStartTime: now };
+    set({ progress: next, questionStartTime: now });
   },
 
   jumpToNextUnseen: () => {

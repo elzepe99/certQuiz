@@ -622,8 +622,8 @@
     "optionC": "Product Owner",
     "optionD": "Scrum Master",
     "optionE": "",
-    "correct": "C",
-    "explanation": "Scope creep across projects is a backlog/priority/decision-rights problem. A Product Owner has formal authority to define, prioritize, and accept/reject items into a project's scope and to mediate competing requests across projects. Change Manager (A) handles user adoption; Release Manager (B) handles the deployment pipeline; Scrum Master (D) facilitates a single team and has no authority over scope.",
+    "correct": "A",
+    "explanation": "Scope creep BETWEEN multiple projects and vendors is a cross-project change-control problem, which is the Change Manager's remit within a CoE. The Change Manager owns the change-control process — reviewing, approving, and gatekeeping change requests across the whole program — so they can hold the line on scope across projects rather than within one. Product Owner (C) governs backlog and priorities within a single product/project and has no authority across projects, so it doesn't address creep between them. Release Manager (B) handles the deployment pipeline; Scrum Master (D) facilitates a single team and has no authority over scope. Note: the certification exam treats Change Manager here as change-control governance, not user-adoption change management.",
     "_cat": "Application Lifecycle Management"
   },
   {
@@ -732,8 +732,8 @@
     "optionC": "Broken functionality due to Salesforce upgrades.",
     "optionD": "Multiple triggers on the same object, making it hard to understand the order of operations.",
     "optionE": "Duplicated logic across Visualforce pages and Apex classes performing similar tasks.",
-    "correct": "B,D,E",
-    "explanation": "Eight years of multi-vendor development typically produces (B) a brittle test suite with failing tests as the codebase has drifted, (D) the classic anti-pattern of multiple triggers per object with unclear ordering, and (E) duplicated logic between similar Visualforce/Apex artifacts because successive teams didn't refactor existing code. Salesforce-driven breakage (C) is rare due to backward compatibility; (A) is plausible but less universal than B/D/E.",
+    "correct": "A,D,E",
+    "explanation": "Eight years of multi-vendor development typically produces (A) custom-built JSON and string-manipulation classes that are now redundant — native JSON support (the JSON, JSONParser, and JSONGenerator classes) arrived in Spring '12, so code written before that often hand-rolled parsing that is no longer required; (D) the classic anti-pattern of multiple triggers per object with unclear order of operations; and (E) duplicated logic between similar Visualforce/Apex artifacts because successive teams didn't refactor existing code. (B) is not an expected finding — Salesforce's backward-compatibility guarantee means platform upgrades don't break existing unit tests, and tests must pass to deploy in the first place. (C) is rare for the same backward-compatibility reason.",
     "_cat": "Development & Testing"
   },
   {
@@ -1184,7 +1184,7 @@
     "optionD": "DevPro1 cannot be cloned because it is on a different version from Production. Just create a new DevPro2, and migrate metadata from DevPro1.",
     "optionE": "",
     "correct": "A",
-    "explanation": "Salesforce supports cloning a sandbox regardless of whether the source is on a preview or non-preview release — the clone inherits the same Salesforce release version as the source sandbox. Cloning DevPro1 into DevPro2 instantly gives the Service Cloud work stream a sandbox that already contains all completed Sales Cloud work, satisfying the dependency without any manual metadata migration. (D) is incorrect — preview sandboxes can be cloned. (C) creates conflicts in a shared single-sandbox environment between two concurrent work streams. (B) is not an architectural recommendation.",
+    "explanation": "Since Spring '20, Salesforce supports cloning a sandbox that's on a different major release version than production — including a sandbox already upgraded to the preview release. The clone inherits the same release version as the source sandbox (cloning across versions just takes longer to complete). Cloning DevPro1 into DevPro2 instantly gives the Service Cloud work stream a sandbox that already contains all completed Sales Cloud work, satisfying the dependency without any manual metadata migration. (D) is incorrect — its premise is the old, removed restriction; preview sandboxes on a different version than production can be cloned. (C) creates conflicts in a shared single-sandbox environment between two concurrent work streams. (B) is not an architectural recommendation. References: Sandbox Clone FAQ (help.salesforce.com/s/articleView?id=000384932) and 'Clone a Sandbox with a Version Different from Production' release notes (help.salesforce.com/s/articleView?id=release-notes.rn_sandbox_clone_diff_versions.htm).",
     "_cat": "Environment Management"
   },
   {
@@ -1458,8 +1458,8 @@
     "optionC": "Before any deployment in production, the same process must be performed in this sandbox first.",
     "optionD": "Perform a Refresh Data in the full sandbox.",
     "optionE": "",
-    "correct": "A,C",
-    "explanation": "(A) Refreshing the full sandbox after every production deployment keeps the sandbox in sync with production metadata and data, making it easy to reproduce production bugs. (C) Performing the same deployment in the sandbox before it goes to production validates the deployment and catches environment-specific issues in a controlled setting. Creating a daily data copy (B) is unnecessary — a full sandbox already contains production data after a refresh. Refresh Data (D) is only available for Partial Copy and Developer Pro sandboxes, not Full sandboxes.",
+    "correct": "B,C",
+    "explanation": "(B) A full sandbox can only be refreshed once every 29 days, so refreshing after every deployment is not possible. To keep the sandbox data current for reproducing production bugs, set up a daily process to copy new and changed data from production. (C) Performing the same deployment process in the sandbox before production keeps its metadata in sync and validates the deployment in a controlled environment. Refreshing after every deployment (A) is not feasible given the 29-day refresh limit on full sandboxes. Refresh Data (D) is only available for Partial Copy and Developer Pro sandboxes, not Full sandboxes.",
     "_cat": "Environment Management"
   },
   {
