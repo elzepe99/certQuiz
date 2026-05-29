@@ -63,6 +63,14 @@
       "description": "Advanced developer certification covering Apex, process automation and logic, user interface development, testing, debugging, and deployment.",
       "file": "salesforce_questions_Dev2.json",
       "accentColor": "#FF2D55"
+    },
+    {
+      "id": "salesforce-data-cloud-consultant",
+      "name": "Salesforce Certified Data Cloud Consultant",
+      "shortName": "Data Cloud",
+      "description": "Consultant-level certification covering data ingestion and modeling, identity resolution, segmentation and insights, activation, and Data Cloud setup and administration.",
+      "file": "data_cloud_consultant_questions.json",
+      "accentColor": "#00C7BE"
     }
   ]
 }
