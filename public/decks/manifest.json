@@ -55,6 +55,14 @@
       "description": "Architect-level certification covering the security model, record access, sharing mechanisms, and visibility controls on the Salesforce platform.",
       "file": "sharing_visibility_questions_corrected.json",
       "accentColor": "#FFD60A"
+    },
+    {
+      "id": "salesforce-platform-developer-2",
+      "name": "Salesforce Certified Platform Developer II",
+      "shortName": "Developer II",
+      "description": "Advanced developer certification covering Apex, process automation and logic, user interface development, testing, debugging, and deployment.",
+      "file": "salesforce_questions_Dev2.json",
+      "accentColor": "#FF2D55"
     }
   ]
 }

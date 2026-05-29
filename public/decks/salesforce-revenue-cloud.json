@@ -1150,16 +1150,15 @@
     "correct": "C",
     "explanation": "The Product Configurator permission lets the sales rep configure bundle products from Browse Catalog or the Transaction Line Table.",
     "_cat": "Configuration"
-  },
-  {
-    "question": "A high-tech company offers cloud storage services and wants to define different rates for API calls based on customers’ usage patterns.\n\nHow should a consultant set up this requirement?",
-    "optionA": "Use base card entries.",
-    "optionB": "Use attribute rate entries.",
-    "optionC": "Use tier rate entries.",
-    "correct": "C",
-    "explanation": "Tier rate entries define different prices at usage thresholds, which fits API call pricing based on usage volume.",
-    "_cat": "Pricing & Discounts"
-  },
+  },{
+  "question": "A high-tech company offers cloud storage services and wants to define different rates for API calls based on customers' usage patterns.\n\nHow should a consultant set up this requirement?",
+  "optionA": "Use base card entries.",
+  "optionB": "Use attribute rate entries.",
+  "optionC": "Use tier rate entries.",
+  "correct": "C",
+  "explanation": "In Salesforce Revenue Cloud, pricing API calls at different rates based on consumption volume requires the Rate Management data model. A Tier Rate Card contains tier rate entries, where each entry defines a lower bound, upper bound, and an adjustment (percentage or override) applied to the base rate within that consumption band. This allows the system to automatically apply the correct rate as usage crosses thresholds during billing and rating.\n\nOption A is incorrect because base rate card entries define a single flat rate for all usage of a resource — there are no bands or thresholds, so every API call would be priced identically regardless of volume.\n\nOption B is incorrect because attribute rate entries (Rate Adjustment By Attribute) adjust pricing based on product characteristics such as region or configuration — they are not consumption-aware and have no concept of usage thresholds or volume bands.\n\nThe key signal in the question is 'different rates based on usage patterns,' which in Revenue Cloud terminology points directly to tiered, consumption-based rating under the Rate Management data model.",
+  "_cat": "Pricing & Discounts"
+},
   {
     "question": "A sales rep creates a quote with a subscription product called 'Monitoring' with a quantity of 25 and a term of 36 months, followed by Order creation, activation, and assetization. 'Monitoring' has associated Product Ramp Segments with Segment Type as Yearly.\n\nHow many records will be present for Monitoring for each Asset Action and Asset State Period?",
     "optionA": "One Asset Action and three Asset State Periods",
