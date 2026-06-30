@@ -2,11 +2,7 @@ import { useMemo } from 'react';
 import { useQuiz } from '@/state/quizStore';
 import { isCorrect, parseExplanation, linkifySegments } from '@/lib/quiz';
 
-type Props = {
-  onOpenInPanel?: () => void;
-};
-
-export function ExplanationBlock({ onOpenInPanel }: Props) {
+export function ExplanationBlock() {
   const questions = useQuiz((s) => s.questions);
   const idx = useQuiz((s) => s.progress.currentIdx);
   const submitted = useQuiz((s) => s.progress.submitted);
@@ -31,28 +27,17 @@ export function ExplanationBlock({ onOpenInPanel }: Props) {
         borderColor: 'var(--border-subtle)',
       }}
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span
-            className="block h-3 w-[3px] rounded-full"
-            style={{ background: correct ? 'var(--success)' : 'var(--danger)' }}
-          />
-          <h3
-            className="font-mono text-[10px] font-medium uppercase tracking-[0.16em]"
-            style={{ color: correct ? 'var(--success)' : 'var(--danger)' }}
-          >
-            {correct ? '✓ Correct' : '✗ Incorrect'} — Explanation
-          </h3>
-        </div>
-        {onOpenInPanel ? (
-          <button
-            onClick={onOpenInPanel}
-            className="font-mono text-[10px] uppercase tracking-[0.12em] transition-colors hover:text-[color:var(--text-primary)]"
-            style={{ color: 'var(--text-muted)' }}
-          >
-            Open in side panel ↗
-          </button>
-        ) : null}
+      <div className="flex items-center gap-2">
+        <span
+          className="block h-3 w-[3px] rounded-full"
+          style={{ background: correct ? 'var(--success)' : 'var(--danger)' }}
+        />
+        <h3
+          className="font-mono text-[10px] font-medium uppercase tracking-[0.16em]"
+          style={{ color: correct ? 'var(--success)' : 'var(--danger)' }}
+        >
+          {correct ? '✓ Correct' : '✗ Incorrect'} — Explanation
+        </h3>
       </div>
 
       {parsed.body ? (

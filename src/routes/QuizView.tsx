@@ -29,7 +29,7 @@ export function QuizView() {
   const submitted = useQuiz((s) => s.progress.submitted);
   const total = questions.length;
 
-  const [paneTab, setPaneTab] = useState<RightPaneId>('notes');
+  const [paneTab, setPaneTab] = useState<RightPaneId>('comments');
 
   useEffect(() => {
     if (deckLoad.status === 'ready') {
@@ -238,7 +238,7 @@ export function QuizView() {
               <OptionList />
             </div>
 
-            <ExplanationBlock onOpenInPanel={() => setPaneTab('explanation')} />
+            <ExplanationBlock />
 
             <ActionBar onFinish={handleFinish} />
           </div>
