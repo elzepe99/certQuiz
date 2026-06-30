@@ -6,6 +6,47 @@ function buildQuestionOrder(total: number): number[] {
   return Array.from({ length: total }, (_, i) => i);
 }
 
+// Unit-separator joiner — must match the separator used in buildQuestionSignatures
+// so the single-question helpers below produce identical signatures.
+const SIG_SEP = String.fromCharCode(31);
+
+/**
+ * Deterministic content fingerprint for a single question. Stable across deck
+ * reordering and edits to *other* questions — used as the durable key that
+ * comments attach to (mirrors buildQuestionSignatures' per-question output).
+ */
+export function questionSignature(q: Question): string {
+  return [
+    q.question,
+    q.optionA,
+    q.optionB,
+    q.optionC,
+    q.optionD ?? '',
+    q.optionE ?? '',
+    q.correct,
+    q._cat ?? '',
+  ].join(SIG_SEP);
+}
+
+/**
+ * Compact, URL/DB-friendly hash (FNV-1a, 32-bit, hex) of a question signature.
+ * Used as `question_hash` when storing comments so a row stays bound to the
+ * exact question content regardless of its index in the deck.
+ */
+export function hashSignature(sig: string): string {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < sig.length; i++) {
+    h ^= sig.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return (h >>> 0).toString(16).padStart(8, '0');
+}
+
+/** Convenience: compact stable hash for a single question. */
+export function questionHash(q: Question): string {
+  return hashSignature(questionSignature(q));
+}
+
 function buildQuestionSignatures(questions: Question[]): string[] {
   return questions.map((q) =>
     [
