@@ -4,7 +4,7 @@ import { useQuiz } from '@/state/quizStore';
 import { linkifySegments, parseExplanation } from '@/lib/quiz';
 import { CommentsPanel } from '@/components/CommentsPanel';
 
-export type RightPaneId = 'notes' | 'explanation' | 'refs' | 'comments';
+export type RightPaneId = 'notes' | 'refs' | 'comments';
 
 type Props = {
   active: RightPaneId;
@@ -49,21 +49,14 @@ export function RightPanel({ active, onChange }: Props) {
         className="-mx-2 mb-3 flex gap-1 border-b"
         style={{ borderColor: 'var(--border-subtle)' }}
       >
+        <Tab id="comments" active={active === 'comments'} onClick={() => onChange('comments')}>
+          Comments
+        </Tab>
         <Tab id="notes" active={active === 'notes'} onClick={() => onChange('notes')}>
           Notes
         </Tab>
-        <Tab
-          id="explanation"
-          active={active === 'explanation'}
-          onClick={() => onChange('explanation')}
-        >
-          Explanation
-        </Tab>
         <Tab id="refs" active={active === 'refs'} onClick={() => onChange('refs')}>
           Refs
-        </Tab>
-        <Tab id="comments" active={active === 'comments'} onClick={() => onChange('comments')}>
-          Comments
         </Tab>
       </div>
 
@@ -92,19 +85,6 @@ export function RightPanel({ active, onChange }: Props) {
               </span>
             </div>
           </div>
-        ) : null}
-
-        {active === 'explanation' ? (
-          isAnswered && parsed.body ? (
-            <div
-              className="whitespace-pre-line text-[13px] leading-[1.65]"
-              style={{ color: 'var(--text-secondary)' }}
-            >
-              {parsed.body}
-            </div>
-          ) : (
-            <LockedHint label="Reveals after you submit" />
-          )
         ) : null}
 
         {active === 'refs' ? (
