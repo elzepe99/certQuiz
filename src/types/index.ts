@@ -41,3 +41,12 @@ export type ParsedExplanation = {
   body: string;
   references: string[];
 };
+
+export type Comment = {
+  id: string;
+  deckId: string;
+  questionHash: string;
+  author: string;
+  body: string;
+  createdAt: string; // ISO timestamp
+};

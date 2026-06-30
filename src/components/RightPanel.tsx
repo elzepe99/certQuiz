@@ -2,8 +2,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Lock } from 'lucide-react';
 import { useQuiz } from '@/state/quizStore';
 import { linkifySegments, parseExplanation } from '@/lib/quiz';
+import { CommentsPanel } from '@/components/CommentsPanel';
 
-export type RightPaneId = 'notes' | 'explanation' | 'refs';
+export type RightPaneId = 'notes' | 'explanation' | 'refs' | 'comments';
 
 type Props = {
   active: RightPaneId;
@@ -60,6 +61,9 @@ export function RightPanel({ active, onChange }: Props) {
         </Tab>
         <Tab id="refs" active={active === 'refs'} onClick={() => onChange('refs')}>
           Refs
+        </Tab>
+        <Tab id="comments" active={active === 'comments'} onClick={() => onChange('comments')}>
+          Comments
         </Tab>
       </div>
 
@@ -139,6 +143,8 @@ export function RightPanel({ active, onChange }: Props) {
             <LockedHint label="Reveals after you submit" />
           )
         ) : null}
+
+        {active === 'comments' ? <CommentsPanel /> : null}
       </div>
     </div>
   );
