@@ -11,7 +11,7 @@ and add an entry to `manifest.json` to add a new deck.
 - Zustand for per-deck state
 - React Router v6 for routing
 - localStorage for per-deck progress (keyed `quiz:progress:<deck-id>`)
-- Lucide for icons; Inter / Instrument Serif / JetBrains Mono via Google Fonts
+- Lucide for icons; Source Sans 3 / Instrument Serif / JetBrains Mono via Google Fonts
 
 No backend, no auth — fully static, deployable to Vercel / Netlify / Cloudflare Pages.
 

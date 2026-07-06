@@ -71,6 +71,14 @@
       "description": "Consultant-level certification covering data ingestion and modeling, identity resolution, segmentation and insights, activation, and Data Cloud setup and administration.",
       "file": "data_cloud_consultant_questions.json",
       "accentColor": "#00C7BE"
+    },
+    {
+      "id": "salesforce-slack-consultant",
+      "name": "Salesforce Certified Slack Consultant",
+      "shortName": "Slack Consultant",
+      "description": "Consultant-level certification covering discovery, Enterprise Grid and channel design, administration roles, security and compliance, training and enablement, migration, and analytics for Slack deployments.",
+      "file": "Salesforce_Slack_Consultant_Questions.json",
+      "accentColor": "#611F69"
     }
   ]
 }
