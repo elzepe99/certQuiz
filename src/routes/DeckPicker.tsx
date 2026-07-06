@@ -1,55 +1,83 @@
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { TopBar } from '@/components/TopBar';
 import { loadDeckQuestions, useManifest } from '@/lib/decks';
 import { loadProgress } from '@/lib/storage';
 import { isCorrect } from '@/lib/quiz';
 import type { DeckMeta } from '@/types';
-import { ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
 
 type SummaryMap = Record<
   string,
   { total: number; answered: number; correct: number; accuracy: number } | null
 >;
 
+const PAGE_SIZE = 9;
+
 export function DeckPicker() {
   const manifest = useManifest();
   const [summaries, setSummaries] = useState<SummaryMap>({});
+  const [query, setQuery] = useState('');
+  const [page, setPage] = useState(1);
 
+  const decks = manifest.status === 'ready' ? manifest.decks : [];
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return decks;
+    return decks.filter((d) =>
+      [d.name, d.shortName, d.description]
+        .filter(Boolean)
+        .some((s) => s!.toLowerCase().includes(q)),
+    );
+  }, [decks, query]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  // Clamp page whenever the filtered set shrinks (e.g. after typing a query).
+  const currentPage = Math.min(page, totalPages);
+  const pageStart = (currentPage - 1) * PAGE_SIZE;
+  const visibleDecks = useMemo(
+    () => filtered.slice(pageStart, pageStart + PAGE_SIZE),
+    [filtered, pageStart],
+  );
+
+  // Reset to the first page when the search query changes.
   useEffect(() => {
-    if (manifest.status !== 'ready') return;
+    setPage(1);
+  }, [query]);
+
+  // Only compute progress for the decks currently on screen — avoids fetching
+  // every deck file up front, which does not scale as the catalog grows.
+  useEffect(() => {
+    if (manifest.status !== 'ready' || visibleDecks.length === 0) return;
     let cancelled = false;
     (async () => {
-      const out: SummaryMap = {};
-      for (const deck of manifest.decks) {
+      for (const deck of visibleDecks) {
+        if (cancelled) return;
         try {
           const qs = await loadDeckQuestions(deck);
           const p = loadProgress(deck.id, qs);
           const submittedIdxs = Object.keys(p.submitted).map(Number);
-          if (submittedIdxs.length === 0) {
-            out[deck.id] = { total: qs.length, answered: 0, correct: 0, accuracy: 0 };
-            continue;
-          }
           let correct = 0;
           for (const i of submittedIdxs) {
             if (qs[i] && isCorrect(p.answers[i], qs[i].correct)) correct++;
           }
-          out[deck.id] = {
+          const summary = {
             total: qs.length,
             answered: submittedIdxs.length,
             correct,
-            accuracy: correct / submittedIdxs.length,
+            accuracy: submittedIdxs.length ? correct / submittedIdxs.length : 0,
           };
+          if (!cancelled) setSummaries((prev) => ({ ...prev, [deck.id]: summary }));
         } catch {
-          out[deck.id] = null;
+          if (!cancelled) setSummaries((prev) => ({ ...prev, [deck.id]: null }));
         }
       }
-      if (!cancelled) setSummaries(out);
     })();
     return () => {
       cancelled = true;
     };
-  }, [manifest]);
+  }, [manifest.status, visibleDecks]);
 
   return (
     <div className="flex h-screen flex-col" style={{ background: 'var(--bg-canvas)' }}>
@@ -66,6 +94,29 @@ export function DeckPicker() {
             Self-paced certification practice. Pick up where you left off — your progress is
             saved per deck.
           </p>
+
+          {manifest.status === 'ready' && manifest.decks.length > 0 ? (
+            <div className="relative mt-8 max-w-sm">
+              <Search
+                size={16}
+                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2"
+                style={{ color: 'var(--text-muted)' }}
+              />
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search decks…"
+                aria-label="Search decks"
+                className="w-full rounded-lg border py-2.5 pl-9 pr-3 text-sm outline-none transition-colors focus:border-[var(--text-muted)]"
+                style={{
+                  background: 'var(--bg-panel)',
+                  borderColor: 'var(--border-default)',
+                  color: 'var(--text-primary)',
+                }}
+              />
+            </div>
+          ) : null}
 
           {manifest.status === 'loading' ? (
             <p className="mt-12 text-sm" style={{ color: 'var(--text-muted)' }}>
@@ -87,16 +138,101 @@ export function DeckPicker() {
             </div>
           ) : manifest.decks.length === 0 ? (
             <EmptyState />
+          ) : filtered.length === 0 ? (
+            <p className="mt-12 text-sm" style={{ color: 'var(--text-muted)' }}>
+              No decks match “{query.trim()}”.
+            </p>
           ) : (
-            <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {manifest.decks.map((d) => (
-                <DeckCard key={d.id} deck={d} summary={summaries[d.id] ?? null} />
-              ))}
-            </div>
+            <>
+              <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {visibleDecks.map((d) => (
+                  <DeckCard key={d.id} deck={d} summary={summaries[d.id] ?? null} />
+                ))}
+              </div>
+              {totalPages > 1 ? (
+                <Pagination
+                  page={currentPage}
+                  totalPages={totalPages}
+                  onChange={setPage}
+                />
+              ) : null}
+            </>
           )}
         </div>
       </main>
     </div>
+  );
+}
+
+function Pagination({
+  page,
+  totalPages,
+  onChange,
+}: {
+  page: number;
+  totalPages: number;
+  onChange: (page: number) => void;
+}) {
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+
+  const btnStyle = {
+    background: 'var(--bg-panel)',
+    borderColor: 'var(--border-default)',
+    color: 'var(--text-secondary)',
+  };
+
+  return (
+    <nav
+      className="mt-10 flex items-center justify-center gap-2"
+      aria-label="Deck pagination"
+    >
+      <button
+        type="button"
+        onClick={() => onChange(page - 1)}
+        disabled={page <= 1}
+        aria-label="Previous page"
+        className="flex h-9 w-9 items-center justify-center rounded-lg border transition-colors hover:border-[var(--text-muted)] disabled:cursor-not-allowed disabled:opacity-40"
+        style={btnStyle}
+      >
+        <ChevronLeft size={16} />
+      </button>
+
+      {pages.map((p) => {
+        const active = p === page;
+        return (
+          <button
+            key={p}
+            type="button"
+            onClick={() => onChange(p)}
+            aria-label={`Page ${p}`}
+            aria-current={active ? 'page' : undefined}
+            className="flex h-9 min-w-9 items-center justify-center rounded-lg border px-2 font-mono text-sm transition-colors hover:border-[var(--text-muted)]"
+            style={
+              active
+                ? {
+                    background: 'var(--text-primary)',
+                    borderColor: 'var(--text-primary)',
+                    color: 'var(--bg-canvas)',
+                  }
+                : btnStyle
+            }
+          >
+            {p}
+          </button>
+        );
+      })}
+
+      <button
+        type="button"
+        onClick={() => onChange(page + 1)}
+        disabled={page >= totalPages}
+        aria-label="Next page"
+        className="flex h-9 w-9 items-center justify-center rounded-lg border transition-colors hover:border-[var(--text-muted)] disabled:cursor-not-allowed disabled:opacity-40"
+        style={btnStyle}
+      >
+        <ChevronRight size={16} />
+      </button>
+    </nav>
   );
 }
 

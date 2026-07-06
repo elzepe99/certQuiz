@@ -47,7 +47,7 @@ export default {
         'warning-line': 'rgba(251, 191, 36, 0.45)',
       },
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans: ['"Source Sans 3"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         serif: ['"Instrument Serif"', 'ui-serif', 'Georgia', 'serif'],
         mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
       },

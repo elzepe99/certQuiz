@@ -124,7 +124,13 @@ export function RightPanel({ active, onChange }: Props) {
           )
         ) : null}
 
-        {active === 'comments' ? <CommentsPanel /> : null}
+        {active === 'comments' ? (
+          isAnswered ? (
+            <CommentsPanel />
+          ) : (
+            <LockedHint label="Reveals after you submit" />
+          )
+        ) : null}
       </div>
     </div>
   );
