@@ -79,6 +79,14 @@
       "description": "Consultant-level certification covering discovery, Enterprise Grid and channel design, administration roles, security and compliance, training and enablement, migration, and analytics for Slack deployments.",
       "file": "Salesforce_Slack_Consultant_Questions.json",
       "accentColor": "#611F69"
+    },
+    {
+      "id": "claude-questions",
+      "name": "Claude & Anthropic Fundamentals",
+      "shortName": "Claude",
+      "description": "Covers Claude 101, the Claude API, Claude Code, Claude Cowork, prompt engineering, AI fluency frameworks, and AI capabilities and limitations.",
+      "file": "claude_questions.json",
+      "accentColor": "#D97757"
     }
   ]
 }
