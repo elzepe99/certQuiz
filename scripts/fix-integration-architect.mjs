@@ -8,6 +8,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { stampCorrection } from './lib/corrections.mjs';
 
 const FILE = join(
   dirname(fileURLToPath(import.meta.url)),
@@ -33,6 +34,27 @@ const DIAGRAM_140 =
   'Payment System -> itself: 3: process upon dequeue. Separately, Event2 -> Payment System: 4: start; ' +
   'Payment System -> Middleware: 4.1: request; Middleware -> Data Entry Point: 4.1.1: request; ' +
   'Data Entry Point -> Middleware: 4.1.2: reply; Middleware -> Payment System: 4.2: reply.]';
+
+/**
+ * The answer each question carried *before* any of this ran. Pinned here rather
+ * than read from the file, so re-running the script cannot lose the original —
+ * on a second pass the file already holds the corrected value.
+ */
+const ORIGINAL_ANSWER = {
+  '0aaa7b8e': 'D',
+  '3262c8d0': 'B',
+  cb609eba: 'A',
+  f83fef34: 'D',
+  '998dcfd8': 'A,D,E',
+  a5560b30: 'A,D',
+  '319a83b2': 'A,C,E',
+  '1412cc42': 'C',
+  '46d002e1': 'B',
+  '62f27ce6': 'B,D',
+  a1c7d77e: 'E',
+  '34ad5dd6': 'B',
+  fc23a0ff: 'C',
+};
 
 /** id -> mutation. `set` overwrites fields; `note` is why (for the run log). */
 const FIXES = {
@@ -253,7 +275,7 @@ for (const [id, fix] of Object.entries(FIXES)) {
     continue;
   }
   const { q, number } = hit;
-  const before = q.correct;
+  const before = ORIGINAL_ANSWER[id] ?? q.correct;
 
   if (fix.append) {
     for (const [k, v] of Object.entries(fix.append)) {
@@ -261,6 +283,10 @@ for (const [id, fix] of Object.entries(FIXES)) {
     }
   }
   if (fix.set) Object.assign(q, fix.set);
+
+  // Q141 surfaced from the deck validator rather than from a reader's comment.
+  const via = /Found by validation/i.test(fix.note) ? 'validation' : 'comments';
+  stampCorrection(q, { via, note: fix.note, from: before });
 
   const after = q.correct;
   const change = before === after ? `answer ${after} (unchanged)` : `answer ${before} -> ${after}`;

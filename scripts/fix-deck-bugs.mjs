@@ -13,9 +13,22 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { stampCorrection } from './lib/corrections.mjs';
 
 const DECKS = join(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'decks');
 const DRY = process.argv.includes('--dry');
+
+/**
+ * The `correct` value each question carried before this ran. Pinned so a second
+ * run cannot lose it. The three Sharing & Visibility entries held prose rather
+ * than option letters, which is the bug being repaired.
+ */
+const ORIGINAL_ANSWER = {
+  '46cf2c6f': 'Executive, Manager, and User',
+  d603efad: 'Granular Locking',
+  e53d2012: 'Super user permission',
+  f3b19bee: 'D',
+};
 
 const FIXES = {
   'sharing_visibility_questions_corrected.json': {
@@ -24,14 +37,14 @@ const FIXES = {
       set: {
         question:
           'Universal Containers has set up Partner users, who will see records owned by partner users in roles below them in the hierarchy. Which three roles make up the partner role hierarchy?',
-        optionA: 'Executive, Manager, and User',
+        optionA: 'Owner, Manager, and User',
         optionB: 'Executive, Manager, and Worker',
-        optionC: 'Owner, Manager, and User',
+        optionC: 'Executive, Manager, and User',
         optionD: 'Administrator, Manager, and User',
         optionE: '',
-        correct: 'A',
+        correct: 'C',
         explanation:
-          'Enabling a partner account creates a three-tier role hierarchy beneath that account — Partner Executive, Partner Manager, and Partner User (A). A partner user sees records owned by partner users at the roles below their own within that account, so an Executive sees Manager- and User-owned records, a Manager sees User-owned records, and a User sees only their own. The other option sets rename or invent tiers that the platform does not create.',
+          'Enabling a partner account creates a three-tier role hierarchy beneath that account — Partner Executive, Partner Manager, and Partner User (C). A partner user sees records owned by partner users at the roles below their own within that account, so an Executive sees Manager- and User-owned records, a Manager sees User-owned records, and a User sees only their own. The other option sets rename or invent tiers that the platform does not create.',
       },
     },
     d603efad: {
@@ -39,27 +52,27 @@ const FIXES = {
       set: {
         question:
           'When you make changes to roles and groups, Salesforce locks the entire group membership table, which makes it impossible to process group changes in multiple threads to increase throughput on updates. Which feature should be enabled to address this?',
-        optionA: 'Granular Locking',
-        optionB: 'Deferred Sharing Maintenance',
+        optionA: 'Deferred Sharing Maintenance',
+        optionB: 'Granular Locking',
         optionC: 'Parallel Sharing Rule Recalculation',
         optionD: 'Implicit Sharing',
         optionE: '',
-        correct: 'A',
+        correct: 'B',
         explanation:
-          'Granular Locking (A) replaces the single lock over the whole group membership table with locks scoped to the affected membership subsets, so unrelated role and group changes can be processed concurrently instead of serialising behind one another. Deferred Sharing Maintenance (B) postpones recalculation to a maintenance window rather than allowing parallel processing; Parallel Sharing Rule Recalculation (C) speeds up sharing rule recalculation specifically, not group membership updates; and Implicit Sharing (D) is built-in record access between accounts and their child records, not a concurrency control.',
+          'Granular Locking (B) replaces the single lock over the whole group membership table with locks scoped to the affected membership subsets, so unrelated role and group changes can be processed concurrently instead of serialising behind one another. Deferred Sharing Maintenance (A) postpones recalculation to a maintenance window rather than allowing parallel processing; Parallel Sharing Rule Recalculation (C) speeds up sharing rule recalculation specifically, not group membership updates; and Implicit Sharing (D) is built-in record access between accounts and their child records, not a concurrency control.',
       },
     },
     e53d2012: {
       note: 'Q136 had no options and "Super user permission" as the correct field; built the choice set.',
       set: {
-        optionA: 'Partner Super User permission',
-        optionB: 'Delegated External User Administrator',
-        optionC: 'A sharing set granting access through the account',
-        optionD: 'View All permission on each object',
+        optionA: 'Delegated External User Administrator',
+        optionB: 'A sharing set granting access through the account',
+        optionC: 'View All permission on each object',
+        optionD: 'Partner Super User permission',
         optionE: '',
-        correct: 'A',
+        correct: 'D',
         explanation:
-          "The Partner Super User permission (A) is what lets a partner user reach Cases, Leads, Opportunities, and custom object records owned by other users in their own account at the same role or below in the hierarchy. Delegated External User Administrator (B) grants the ability to manage other external users, not to see their records. Sharing sets (C) apply to Customer Community licences that have no role hierarchy, which is precisely the mechanism this question is not describing. View All (D) would expose every record of the object org-wide, far beyond the account-scoped access required.",
+          "The Partner Super User permission (D) is what lets a partner user reach Cases, Leads, Opportunities, and custom object records owned by other users in their own account at the same role or below in the hierarchy. Delegated External User Administrator (A) grants the ability to manage other external users, not to see their records. Sharing sets (B) apply to Customer Community licences that have no role hierarchy, which is precisely the mechanism this question is not describing. View All (C) would expose every record of the object org-wide, far beyond the account-scoped access required.",
       },
     },
     b26eae84: {
@@ -76,6 +89,8 @@ const FIXES = {
 
   'data_cloud_consultant_questions.json': {
     f3b19bee: {
+      // Caught by the validator, but a reader had flagged the same thing.
+      via: 'comments',
       note: 'Q61 had options B and D identical and C repeating one string twice; deduped, and moved the answer to A, which is what the explanation already argued for.',
       set: {
         optionA: "Cities containing 'San Jose', 'SAN JOSE', 'san jose', or 'San jose'",
@@ -107,7 +122,9 @@ for (const [file, fixes] of Object.entries(FIXES)) {
       missing.push(`${file}:${id}`);
       continue;
     }
+    const before = ORIGINAL_ANSWER[id] ?? hit.q.correct;
     Object.assign(hit.q, fix.set);
+    stampCorrection(hit.q, { via: fix.via ?? 'validation', note: fix.note, from: before });
     console.log(`${file.replace(/_questions.*|\.json/g, '').padEnd(20)} Q${String(hit.number).padStart(3)}  ${id}`);
     console.log(`  ${fix.note}`);
     touched++;

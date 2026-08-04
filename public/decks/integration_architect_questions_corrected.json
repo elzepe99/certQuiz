@@ -177,7 +177,12 @@
     "optionE": "Users should be authenticated into DMS and EBS without having to enter username and password.",
     "correct": "A,C,E",
     "explanation": "Context-driven authorisation (A) scopes the call to the customer the agent is already servicing, so no broader search or access is needed. Enterprise security needs (C) capture the encryption, IP allow-listing, and audit obligations that apply to billing data. Seamless authentication into both back-ends (E) removes per-system credentials, typically via SAML or OAuth. Option B deserves the scrutiny it got in the comment: Named Credentials genuinely are how you hold DMS and EBS authentication in Salesforce, and they are often what makes E achievable. It is marked incorrect here because the question asks what to consider about authorisation and authentication needs, and B jumps to maintaining credential details in Salesforce — an implementation choice, and one that sits awkwardly with least privilege when the back-ends already restrict access per user. Treat it as a soft distractor rather than a clear falsehood. Option D is a migration decision, not an auth concern.",
-    "_cat": "Translate Needs to Integration Requirements"
+    "_cat": "Translate Needs to Integration Requirements",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q15 A,C,E confirmed. Explanation now engages with the Named Credentials point in the note."
+    }
   },
   {
     "id": "f2f7e142",
@@ -501,7 +506,14 @@
     "optionE": "",
     "correct": "A",
     "explanation": "The custom Transaction object is incomplete by design between syncs, so the LWC must reach the middleware's Enterprise APIs at view time. Continuation (A) is the platform's mechanism for exactly that: it issues the callout asynchronously and resumes in a callback, so a slow multi-source aggregation doesn't block the request thread or hit the synchronous callout ceiling. Calling the APIs straight from LWC JavaScript (D) pushes endpoint credentials and CSP Trusted Site configuration into the browser and bypasses Apex entirely. Publishing a Platform Event to trigger a sync (B) still leaves a staleness window, and Lightning Data Service (C) can only ever show what the partially-populated custom object holds.",
-    "_cat": "Design Integration Solutions"
+    "_cat": "Design Integration Solutions",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q42 D->A. Its twin Q86 answers Continuation for the identical stem; the deck contradicted itself.",
+      "from": "D",
+      "to": "A"
+    }
   },
   {
     "id": "48dad154",
@@ -561,7 +573,12 @@
     "optionE": "",
     "correct": "A",
     "explanation": "Salesforce Connect with an OData adapter surfaces the core banking transactions as external objects, so community users read live data without a single row being copied into Salesforce (A) — decisive when the source produces 10 million transactions a day and the bank must remain the system of record. Replicating that volume nightly via ETL (B) inflates storage, adds sync lag, and duplicates regulated financial data. External Services (C) is for invoking REST actions declaratively from Flow, not for browsing transaction lists, and an iframe (D) sidesteps the platform's authentication and sharing model altogether.",
-    "_cat": "Design Integration Solutions"
+    "_cat": "Design Integration Solutions",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q47 option B was a verbatim copy of option A; restored the intended distractor."
+    }
   },
   {
     "id": "08387003",
@@ -729,7 +746,12 @@
     "optionE": "",
     "correct": "A",
     "explanation": "A 7-12 second lookup sits beyond the 10-second synchronous Apex callout ceiling, yet the address has to be confirmed before the order can proceed. Workflow-driven Outbound Messaging fires asynchronously with guaranteed delivery and retry for up to 24 hours, and the callback returns the validation result into Salesforce without holding a user thread open (A). Middleware-initiated Remote Invocation (D) inverts the trigger — the legacy system would have to know when a Salesforce address needs checking — which does not fit a validation that must happen on demand at order entry. A nightly batch (B) is far too slow, and an @Future callout (C) still offers no delivery guarantee back into the record.",
-    "_cat": "Design Integration Solutions"
+    "_cat": "Design Integration Solutions",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q61 A confirmed. Explanation now addresses why D does not fit."
+    }
   },
   {
     "id": "3262c8d0",
@@ -741,7 +763,14 @@
     "optionE": "",
     "correct": "A",
     "explanation": "Requirement 5 names the MDM as the system of record for customers and prospects, so Salesforce cannot own that data and MDM must be integrated — which rules out option B, whose list drops MDM entirely and adds a standalone \"Pricing Engine\" that appears nowhere in the landscape (requirement 2 makes the ERP the pricing system of record). Option A covers the ERP (pricing for quotes, and the inventory consultants need), the MDM (customer master), the Invoices system (requirement 6), and the Data Warehouse that feeds the BI dashboards in requirement 4.",
-    "_cat": "Evaluate the Current System Landscape"
+    "_cat": "Evaluate the Current System Landscape",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q62 B->A. Requirement 5 names MDM as system of record for customers; option B omits it and invents a Pricing Engine.",
+      "from": "B",
+      "to": "A"
+    }
   },
   {
     "id": "8e017d58",
@@ -789,7 +818,12 @@
     "optionE": "",
     "correct": "B,D",
     "explanation": "The question asks specifically for security issues. Credentials that must be stored somewhere to be replayed are exposed to whoever can read that store, and an attacker who obtains them inherits a System Administrator session (B); and because the profile is System Administrator, every back-end system using it can reach all data rather than the narrow slice it needs (D). Option A is a genuine risk, but it is an availability and operational-continuity problem — a password reset breaks the integration, it does not expose anything — which is why it falls outside what this question asks for. Option C describes normal platform behaviour rather than a flaw of this approach.",
-    "_cat": "Build Solution"
+    "_cat": "Build Solution",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q66 B,D confirmed. Explanation now says why A is an availability problem rather than a security one."
+    }
   },
   {
     "id": "06618d19",
@@ -1005,7 +1039,14 @@
     "optionE": "",
     "correct": "D",
     "explanation": "The destination is a home-grown system behind a corporate firewall, so Salesforce cannot push into it — the external system has to initiate the connection outbound from its own network and pull. At roughly 2 million records per day, one-way and with no real-time requirement, the Bulk API REST endpoint is the interface built for that profile: asynchronous, batched, and governed by limits sized for data loads rather than transactional traffic (D). A third-party staging tool (A) may be convenient but is not required, and the remaining options describe real-time REST patterns that do not fit the volume or the latency tolerance.",
-    "_cat": "Design Integration Solutions"
+    "_cat": "Design Integration Solutions",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q84 A->D. Target sits behind a firewall, so the external system must initiate; Bulk API fits 2M/day one-way.",
+      "from": "A",
+      "to": "D"
+    }
   },
   {
     "id": "8b442951",
@@ -1113,7 +1154,14 @@
     "optionE": "",
     "correct": "A",
     "explanation": "Keeping the LMS continuously in step with course-registration records is a data-replication requirement, which is what Change Data Capture is built for: it emits create/update/delete/undelete events carrying changed field values, and retains them for 72 hours so a subscriber that drops offline can resume from its ReplayId without losing updates (A). PushTopic-style Streaming API notifications are aimed at refreshing user interfaces rather than reliably synchronising an external datastore, and Outbound Messaging targets a fixed SOAP endpoint rather than a subscribing client.",
-    "_cat": "Design Integration Solutions"
+    "_cat": "Design Integration Solutions",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q93 D->A. Keeping an external system in sync with record changes is CDC's purpose; PushTopic is for UI.",
+      "from": "D",
+      "to": "A"
+    }
   },
   {
     "id": "467325f3",
@@ -1137,7 +1185,14 @@
     "optionE": "Evaluate the build of a custom authentication mechanism for users in each country and support for customers and partners.",
     "correct": "B,C,D",
     "explanation": "Requirement 1 puts internal authentication in each country's local Active Directory, so a Salesforce-native mechanism cannot cover every population (A fails), and hand-building an authentication mechanism per country (E) is an anti-pattern an architect should reject rather than evaluate. What genuinely needs weighing is a split model — Salesforce handling customers and partners while a third-party IdP handles internal users (B) — against a single third-party SSO covering all populations including customers and partners (C), plus the security posture of each internal system and the integration method that satisfies it (D), which is what requirements 4 and 5 demand.",
-    "_cat": "Evaluate Business Needs"
+    "_cat": "Evaluate Business Needs",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q95 A,D,E->B,C,D. Requirement 1 forces an external IdP, so \"Salesforce native for all\" fails; custom auth is an anti-pattern.",
+      "from": "A,D,E",
+      "to": "B,C,D"
+    }
   },
   {
     "id": "a5560b30",
@@ -1149,7 +1204,14 @@
     "optionE": "",
     "correct": "A,B",
     "explanation": "Duplicate Management (matching and duplicate rules) stops duplicates at the point of entry declaratively (A), and a proven AppExchange data-management tool handles the bulk merge of the duplicates already in the org (B). Assigning new contacts to a review queue (C) is explicitly manual, and writing a Batch Apex deduplication job (D) means building and maintaining custom merge logic when a packaged solution already covers it — the kind of trade-off an architect is expected to decide against.",
-    "_cat": "Maintain Integration"
+    "_cat": "Maintain Integration",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q96 A,D->A,B. Declarative/packaged over custom Apex; C is manual.",
+      "from": "A,D",
+      "to": "A,B"
+    }
   },
   {
     "id": "30cfd44f",
@@ -1197,7 +1259,12 @@
     "optionE": "",
     "correct": "D",
     "explanation": "Process Builder invoking an Apex proxy class is the supported path for firing a callout automatically when the Opportunity reaches Closed/Won with products attached (D). The note in the comment is right that A and B are both asynchronous — Apex cannot make a callout directly from a trigger, so option A necessarily defers to @future or Queueable, and the batch job in B runs hourly by definition. Option C does perform a genuinely synchronous callout, but it only runs when a user clicks a button, which does not satisfy a requirement stated in terms of the status changing.",
-    "_cat": "Design Integration Solutions"
+    "_cat": "Design Integration Solutions",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q100 D confirmed. Explanation now addresses the A/B/C reasoning in the note."
+    }
   },
   {
     "id": "5291b286",
@@ -1341,7 +1408,14 @@
     "optionE": "The Bulk API may cause record locking contension on parent objects od Master-Details relationship.",
     "correct": "B,C,E",
     "explanation": "Three statements hold up. The Bulk API accepts multiple binary attachments in a single ZIP accompanied by a request.txt manifest (B). The Bulk API processes large batches in parallel, which can produce record-locking contention on the parent of a master-detail relationship when children of the same parent land in different batches (E), while the SOAP API's smaller synchronous transactions avoid that contention (C). Option D is backwards — job monitoring in Setup is a Bulk API feature, not SOAP. Option A (\"DML limits on Bulk are not governed on Salesforce servers\") is the weakest of the set: Bulk operations are still governed, just under asynchronous limits rather than synchronous ones.",
-    "_cat": "Build Solution"
+    "_cat": "Build Solution",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q112 A,C,E->B,C,E. Bulk ZIP attachment loading is documented; option A's wording is not defensible.",
+      "from": "A,C,E",
+      "to": "B,C,E"
+    }
   },
   {
     "id": "a9229c4d",
@@ -1377,7 +1451,14 @@
     "optionE": "",
     "correct": "C,D",
     "explanation": "Both recommended options keep the ERP credential out of anything a Salesforce user or developer can read. A Named Credential with a Named Principal identity type stores the system username and password in the platform's protected credential store and injects them into the callout at runtime, so the secret never appears in Apex (D). Delegating the call to middleware that holds the credential achieves the same separation, leaving Salesforce with no copy of it at all (C). Static resources (A) and custom settings (B) both leave the password readable to anyone with access to the metadata or the record, which is why neither is acceptable from a security standpoint.",
-    "_cat": "Build Solution"
+    "_cat": "Build Solution",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q115 options B and D were identical and only one answer was marked on a two-answer question; collapsed to four options, answer C,D.",
+      "from": "E",
+      "to": "C,D"
+    }
   },
   {
     "id": "2c39808a",
@@ -1401,7 +1482,14 @@
     "optionE": "",
     "correct": "C",
     "explanation": "Users reporting that newly released changes break functionality that previously worked is the definition of a regression, and Regression Testing is the program that re-verifies existing behaviour after every change (C). Unit tests (B) validate individual components in isolation and routinely pass while cross-component behaviour breaks; User Acceptance Testing (A) confirms new features meet requirements rather than systematically re-checking old ones; and Performance Testing (D) measures speed and scale, not functional correctness.",
-    "_cat": "Maintain Integration"
+    "_cat": "Maintain Integration",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q117 had two options merged into one string (\"Unit Testing C .Regression Testing\"); split into four distinct options.",
+      "from": "B",
+      "to": "C"
+    }
   },
   {
     "id": "6b00132e",
@@ -1461,7 +1549,12 @@
     "optionE": "",
     "correct": "B",
     "explanation": "Leg A is the UI Component's call to the Middleware, and it does not close until 2.4 returns the consolidated summary — so legs B through F all run inside A and are already counted by it. Leg G is the asynchronous process started at 2.3, which continues after the Middleware has replied and therefore never delays the user. What remains is leg H, the render. End-to-end perceived time is A + H (B): summing A to H double-counts the nested legs and adds work the user never waits on, and the other options either stop before the render or fold in the async process.",
-    "_cat": "Maintain Integration"
+    "_cat": "Maintain Integration",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q122 answer B confirmed against the diagram; embedded a textual rendering so the item is answerable without the image."
+    }
   },
   {
     "id": "3f678446",
@@ -1473,7 +1566,12 @@
     "optionE": "",
     "correct": "B,C",
     "explanation": "A Per-User Named Credential only helps where the callout executes in the context of an identifiable running user. Process Builder invoking an invocable or @future Apex callout preserves that context when the Order status changes (B), and Salesforce Connect with OData 2.0 supports per-user identity for external object reads and writes (C). Option D is worth pausing on: a Visualforce page with an Apex callout genuinely can use a per-user Named Credential, so the security setup is not the problem — it fails because the requirement is that order information be sent when the status changes to Confirmed, and a Visualforce page requires a user to navigate to it. Outbound messaging (A) runs as the automated process user, which defeats per-user identity entirely.",
-    "_cat": "Build Solution"
+    "_cat": "Build Solution",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q123 B,C confirmed. Explanation now addresses why D is excluded."
+    }
   },
   {
     "id": "96f3d6af",
@@ -1569,7 +1667,14 @@
     "optionE": "",
     "correct": "D",
     "explanation": "Least privilege is enforced through the profile and permission sets of the identity a callout runs as, and the audit trail (LastModifiedBy, field history, login history) records that user — so giving each external system its own integration user is what actually satisfies both requirements (D). A Connected App governs OAuth: which app may connect and with what scopes. Three Connected Apps that all authenticate as one shared user would still grant each system the union of that user's permissions and would blur every record's attribution, which is why C falls short of the stated requirements.",
-    "_cat": "Build Solution"
+    "_cat": "Build Solution",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q131 C->D. Least privilege and audit attribution come from distinct users, not from Connected Apps.",
+      "from": "C",
+      "to": "D"
+    }
   },
   {
     "id": "d22573a6",
@@ -1605,7 +1710,12 @@
     "optionE": "",
     "correct": "B,C",
     "explanation": "The question asks what these two components must be able to do. The Community portal cannot hold identifiable prescriptions, so it needs callouts to the secure system's RESTful services to retrieve them on demand for an authorised user (C), and Einstein Analytics needs de-identified data bulk-loaded for the small analyst group (B). Encryption in transit and at rest (A) is certainly required, but policy 1 already imposes it on the secure system, and it is a baseline control rather than a capability the portal or Analytics has to provide. Storing identity tokens (D) would place identifiable material outside the secure database, breaking policy 1 outright.",
-    "_cat": "Design Integration Solutions"
+    "_cat": "Design Integration Solutions",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q134 B,C confirmed. Explanation now addresses why A is not the answer."
+    }
   },
   {
     "id": "033b5964",
@@ -1641,7 +1751,14 @@
     "optionE": "",
     "correct": "B,C",
     "explanation": "Both orgs are Salesforce, so the retiring org only needs somewhere to authenticate and a standard endpoint to call: Named Credentials in the source org supply the target-org authentication declaratively, with no credential handling in code (B), and the standard REST API sObject insert accepts the Lead payload as-is (C). Composite REST (D) exists to batch several subrequests into one call — real work to build for no benefit against a 30-minute SLA on individual form submissions — and the Tooling API (A) addresses metadata and developer tooling rather than record CRUD.",
-    "_cat": "Design Integration Solutions"
+    "_cat": "Design Integration Solutions",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q137 B,D->B,C. Composite REST adds work; Named Credentials + a standard REST insert is the least-effort pair, and matches twin Q51.",
+      "from": "B,D",
+      "to": "B,C"
+    }
   },
   {
     "id": "86b274f6",
@@ -1653,7 +1770,12 @@
     "optionE": "Streaming API because of a requirement to dynamically inspect field names during runtime.",
     "correct": "A,B,D",
     "explanation": "The requirement is an inbound, SOAP-based update of the Salesforce Account whenever the financial system changes, and three capabilities follow from it. The Enterprise WSDL provides a strongly-typed, org-specific SOAP contract (A). The Partner WSDL provides a loosely-typed SOAP contract that works across orgs (B). The Partner WSDL is also what allows field names to be inspected at runtime rather than compiled in, which matters when the financial system's payload varies (D). The two rejected options misattribute a capability to the wrong technology: the Partner WSDL is SOAP, not REST (C), and the Streaming API pushes change notifications outward rather than supporting runtime field inspection (E).",
-    "_cat": "Design Integration Solutions"
+    "_cat": "Design Integration Solutions",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q138 A,B,D confirmed. Explanation now walks every option, per the \"feels incomplete\" note."
+    }
   },
   {
     "id": "46d002e1",
@@ -1665,7 +1787,14 @@
     "optionE": "",
     "correct": "D",
     "explanation": "The architect has to pin down what \"prevent access\" actually means before designing anything — freezing the user, deactivating them, stripping permission sets, and how in-flight sessions are handled all imply different solutions — and then establish how quickly a deactivation in the HR system must take effect in Salesforce (D). That frequency is what decides between event-driven propagation and a scheduled sync. Jumping straight to inbound integration requirements (B) presumes an integration is the answer before the requirement it must satisfy is known.",
-    "_cat": "Evaluate Business Needs"
+    "_cat": "Evaluate Business Needs",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q139 B->D. Establish the access-prevention requirement first, then how fast it must propagate.",
+      "from": "B",
+      "to": "D"
+    }
   },
   {
     "id": "d258eebd",
@@ -1677,7 +1806,12 @@
     "optionE": "",
     "correct": "A,D",
     "explanation": "The globally unique identifier minted at the Data Entry Point is what lets the Payment System recognise a request it has already handled and process it exactly once, which is what keeps the SLA intact without duplicate payments (A). The concurrent-update errors come from the fire-and-forget hop at 2.1 leaving no single component in charge of ordering, so having the Middleware coordinate delivery and processing serialises the writes to a given Payment Request record (D). Automatic retries (B and C) resend requests that may already be in flight — without idempotency and coordination in place first, they multiply both the duplicate processing and the update contention.",
-    "_cat": "Maintain Integration"
+    "_cat": "Maintain Integration",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q140 answer A,D confirmed against the diagram; embedded a textual rendering so the item is answerable without the image."
+    }
   },
   {
     "id": "fc23a0ff",
@@ -1689,6 +1823,13 @@
     "optionE": "",
     "correct": "B,C",
     "explanation": "The loop exists because the ESB's write-back of the Order Number is itself an Order update, which re-satisfies the workflow rule and fires another outbound message. Both fixes narrow the rule so that write-back no longer qualifies: excluding the ERP Order Number field update means the rule ignores the one field the ESB sets (B), and excluding the Integration User means it ignores anything that identity does (C). Together they close the loop from both directions. Option D misplaces the filter — the outbound message defines what is sent, not when it fires — and option A (A) rebuilds the same trigger condition in Apex without removing the recursion.",
-    "_cat": "Maintain Integration"
+    "_cat": "Maintain Integration",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "validation",
+      "note": "Q141 options B and E were identical and only one answer was marked on a two-answer question; deduped, answer B,C. (Found by validation, not by a comment.)",
+      "from": "C",
+      "to": "B,C"
+    }
   }
 ]

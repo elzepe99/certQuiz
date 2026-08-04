@@ -845,9 +845,16 @@
     "optionA": "Google Cloud Platform (GCP)",
     "optionB": "Microsoft Azure",
     "optionC": "Amazon Web Services (AWS)",
-    "correct": "A",
-    "explanation": "?????? OR B",
-    "_cat": "General"
+    "correct": "B",
+    "explanation": "Salesforce Contracts handles contract authoring and collaborative redlining through an integration with Microsoft 365 — document templates are built with Microsoft 365 Word as the template type, and negotiation happens in Word via the Salesforce Contracts Connector add-in, with changes synchronised back to the contract record. That places Microsoft Azure as the cloud provider Salesforce must integrate with for this capability (B). Google Cloud Platform and Amazon Web Services underpin other parts of the Salesforce estate but are not what CLM redlining depends on.",
+    "_cat": "General",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q85 A->B. Collaborative redlining runs through the Microsoft 365 Word integration. Also replaced the placeholder explanation, which read \"?????? OR B\".",
+      "from": "A",
+      "to": "B"
+    }
   },
   {
     "id": "32b73310",
@@ -905,9 +912,16 @@
     "optionA": "Select the Auto Renew checkbox on the product selling model.",
     "optionB": "Select the Auto Renew checkbox on the Asset object.",
     "optionC": "Select the Auto Renew checkbox on the Product2 object.",
-    "correct": "C",
-    "explanation": "In Salesforce CPQ and Subscription Management, automatic renewal behavior is driven at the product level via the Auto Renew field on the Product2 record. When this checkbox is selected, any subscription created for that product automatically inherits the renewal behavior - meaning that the system will create renewal opportunities, quotes, or contracts automatically without user intervention.\nThe Auto Renew setting on Product2 defines renewal eligibility for all subscriptions derived from that product, ensuring consistent automation across all customers and contracts.\nThe Asset object does not directly control renewal logic; instead, it reflects renewal status after processing.\nThe Product Selling Model defines how products are sold (one-time, recurring, usage-based), but renewal logic is still determined by the Product2-level Auto Renew setting.\nExact Extract from Salesforce Subscription Management Guide:\n\"To enable automatic subscription renewal without user action, select the Auto Renew checkbox on the Product2 record. Subscriptions created from this product will automatically renew upon term completion.\" References:\nSalesforce Subscription Management Implementation Guide - Auto-Renewal Configuration Salesforce CPQ Implementation Guide - Subscription Product and Renewal Behavior Salesforce Revenue Cloud Data Model - Product2 and Subscription Relationship",
-    "_cat": "Product Catalog"
+    "correct": "B",
+    "explanation": "Renewal behaviour in Revenue Cloud lives on the asset that represents the customer's subscription, not on the product definition. Salesforce's Subscription Management guide directs you to update the Asset record before a renewal order can be created and priced, using fields such as RenewalTerm, RenewalTermUnit, and RenewalPricingType — so marking the subscription to renew without user interaction is done on the Asset (B). Product2 carries no Auto Renew field, which is what makes option C wrong however plausible it reads, and the product selling model (A) governs how the product is sold — one-time, recurring, or usage-based — rather than what happens at the end of a term.",
+    "_cat": "Product Catalog",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q91 C->B. Renewal is driven from the Asset record; Product2 has no Auto Renew field.",
+      "from": "C",
+      "to": "B"
+    }
   },
   {
     "id": "f5adf9ac",
