@@ -1,0 +1,7 @@
+# Scraper checkpoints & debug artifacts (regenerated each run)
+*.checkpoint.json
+_debug_page.html
+
+# Python
+__pycache__/
+*.pyc

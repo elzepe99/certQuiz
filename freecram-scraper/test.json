@@ -1,0 +1,35 @@
+[
+  {
+    "question": "What is the process to upgrade an unmanaged package that is currently installed in production?",
+    "optionA": "Install the new version to a Developer org then deploy to production.",
+    "optionB": "Uninstall the current version and install the new version.",
+    "optionC": "Click the update link on the Installed Packages page.",
+    "optionD": "Use the Install Wizard to install the upgrade to production.",
+    "optionE": "",
+    "correct": "C",
+    "explanation": "The correct method to upgrade an unmanaged package that is installed in a production environment is to use the update link provided on the Installed Packages page. This process ensures that any modifications or additions in the package are properly integrated without the need to uninstall the previous version, thus preserving existing customizations and data.\n* A: Uninstalling removes all associated data and customizations, which is not advisable.\n* B: The Install Wizard is used for initial installations, not upgrades.\nReference: Upgrading Unmanaged Packages on Salesforce Help\nRecent Comments\n(The most recent comments are at the top.)\nTalal sidick\n-\nJan 17, 2026\nAnswer is B",
+    "_cat": "Salesforce Platform App Builder"
+  },
+  {
+    "question": "An app builder would like to streamline the user experience by reflecting summarized calculations of specific fields on various objects. Which field types could be used in roll-up summary fields to accomplish this? Choose 3 answers",
+    "optionA": "Currency",
+    "optionB": "Percent",
+    "optionC": "Date",
+    "optionD": "Checkbox",
+    "optionE": "Time",
+    "correct": "A,B,D",
+    "explanation": "Roll-up summary fields can only be created on master-detail relationships, and they can only calculate numeric fields, such as currency, percent, and number. Date and time fields are not supported for roll-up summary fields. Checkbox fields can be used in roll-up summary filters, but not in the field to aggregate\nRecent Comments\n(The most recent comments are at the top.)\nDoritos\n-\nMar 03, 2026\nThe answer is A,B,C",
+    "_cat": "Salesforce Platform App Builder"
+  },
+  {
+    "question": "Cloud Kicks (CK) increased its Salesforce development efforts so that it now has multiple custom development efforts happening in parallel. CK's developers and admins perform the custom (rations and have complained that working in one sandbox has led to many problems. They requested a solution in which they can work in at least 20 different sandboxes at once, that all start with the same base configuration and data. What should an app builder use to solve the problem?",
+    "optionA": "Sandbox refreshes",
+    "optionB": "Full copy sandboxes",
+    "optionC": "Partial copy sandboxes",
+    "optionD": "Sandbox during",
+    "optionE": "",
+    "correct": "C",
+    "explanation": "References:\nSalesforce Help - Types of Sandboxes",
+    "_cat": "Salesforce Platform App Builder"
+  }
+]
