@@ -261,9 +261,16 @@
     "optionB": "Increase the number of matching rules",
     "optionC": "Include additional attributes in the existing matching rules",
     "optionD": "Reduce the number of matching rules",
-    "correct": "D",
-    "explanation": "A low consolidation rate means fewer individual records are being merged into unified profiles. This typically occurs when matching rules are too restrictive — requiring too many fields to match simultaneously. Reducing the number of matching rules (or relaxing their criteria) lowers the bar for a match, allowing more records to consolidate. Adding more rules (B) or adding attributes to existing rules (C) makes matching stricter, not looser. Reconciliation rules (A) determine which value wins, not whether records match.",
-    "_cat": "Identity Resolution"
+    "correct": "B",
+    "explanation": "The consolidation rate measures how far source records collapse into unified profiles, so raising it means matching more aggressively. Match rules within a ruleset are evaluated independently — a record pair unified by any one of them is merged — so adding rules gives records more chances to match and drives the rate up (B). The other options all tighten matching or miss the mechanism: adding attributes to an existing rule (C) piles on criteria that must all be satisfied at once, reducing matches; removing rules (D) removes opportunities to match and lowers the rate further; and reconciliation rules (A) only decide which value wins on an already-unified profile, never whether two records match.",
+    "_cat": "Identity Resolution",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q24 D->B. More match rules means more chances to match, which raises the consolidation rate; the old answer had the logic inverted.",
+      "from": "D",
+      "to": "B"
+    }
   },
   {
     "id": "29f828ca",
@@ -360,9 +367,16 @@
     "optionB": "Streaming insight",
     "optionC": "Calculated insight",
     "optionD": "Batch data transform",
-    "correct": "B",
-    "explanation": "Streaming insights are designed for real-time or near-real-time aggregation over short time windows — in this case, counting page visits within a 24-hour rolling window. Once the threshold (2 visits) is met, a streaming insight can trigger a data action to add the candidate to the recruiting system. Calculated insights (C) are batch-computed and not suited for sub-24-hour rolling conditions. Streaming and batch transforms (A, D) reshape data but do not evaluate threshold conditions.",
-    "_cat": "Segmentation and Insights"
+    "correct": "C",
+    "explanation": "The stem imposes two requirements, and one of them is decisive: the result must be available for segmentation. Streaming insights cannot be used in the segmentation or activation phases of Data Cloud, which rules out option B however well its real-time character otherwise fits a 24-hour window. A calculated insight can aggregate the visit count per candidate and is usable as a segmentation attribute (C), and the resulting segment can then be activated to the recruiting system, satisfying both halves of the requirement. Streaming and batch data transforms (A and D) reshape data without evaluating a threshold condition at all.",
+    "_cat": "Segmentation and Insights",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q33 B->C. Streaming insights cannot be used in segmentation, which the stem explicitly requires.",
+      "from": "B",
+      "to": "C"
+    }
   },
   {
     "id": "5ce00e3e",
@@ -671,7 +685,14 @@
     "correct": "A",
     "explanation": "Salesforce documents segmentation queries as honoring exact matching on special characters and accents while not being case-sensitive. So 'Is Equal To' on City matches every casing of the entered value — 'San Jose', 'SAN JOSE', 'san jose', and 'San jose' alike (A) — and the remaining options each admit only a subset of those casings. Two boundaries are worth holding onto: case-insensitive is not a partial match, so 'San Jose, CA' is still excluded; and accents are matched exactly, which is why Salesforce's own example notes that a query for 'Canon City' finds 'canon city' but does not find 'Cañon City'.",
     "_cat": "Segmentation and Insights",
-    "optionE": ""
+    "optionE": "",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q61 had options B and D identical and C repeating one string twice; deduped, and moved the answer to A, which is what the explanation already argued for.",
+      "from": "D",
+      "to": "A"
+    }
   },
   {
     "id": "a0c8b14c",
@@ -856,9 +877,16 @@
     "optionB": "Data deletion requests are processed within 1 hour",
     "optionC": "Data deletion requests are submitted for Individual profiles",
     "optionD": "Data deletion requests submitted to Data Cloud are passed to all connected Salesforce clouds",
-    "correct": "C,D",
-    "explanation": "Two key facts about Data Cloud's Consent API for right-to-be-forgotten: (C) Deletion requests are submitted at the Individual profile level — identifying the individual whose data should be removed; and (D) When a deletion request is submitted to Data Cloud, it propagates to all connected Salesforce clouds (Marketing Cloud, Sales Cloud, etc.) that are linked to the same individual. Data deletion requests are processed within 1 hour (B) is approximately correct but the official consideration is propagation across clouds (D) and submission at the Individual level (C). Reprocessing at 30/60/90 days (A) is not a standard Data Cloud Consent API behavior.",
-    "_cat": "Data Cloud Overview"
+    "correct": "A,C",
+    "explanation": "Two considerations matter when Consent API is used for right-to-be-forgotten. Deletion requests are reprocessed at 30, 60, and 90 days, so that any data for the individual that arrived after the original request is also removed and full deletion can be verified (A), and requests are submitted against Individual profiles, which is the entity Data Cloud deletes by (C). Option D inverts the actual behaviour and is the trap here: a deletion request submitted to Data Cloud is not propagated outward, and Salesforce is explicit that you must submit deletion requests separately in every connected system and Salesforce cloud. The one-hour processing claim (B) is not the documented commitment.",
+    "_cat": "Data Cloud Overview",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q78 C,D->A,C. Deletion requests are reprocessed at 30/60/90 days, and they are NOT propagated to connected clouds — you must submit separately.",
+      "from": "C,D",
+      "to": "A,C"
+    }
   },
   {
     "id": "7539b43f",

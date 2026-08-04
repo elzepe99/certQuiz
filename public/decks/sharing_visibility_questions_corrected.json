@@ -674,14 +674,21 @@
   {
     "id": "46cf2c6f",
     "question": "Universal Containers has set up Partner users, who will see records owned by partner users in roles below them in the hierarchy. Which three roles make up the partner role hierarchy?",
-    "optionA": "Executive, Manager, and User",
+    "optionA": "Owner, Manager, and User",
     "optionB": "Executive, Manager, and Worker",
-    "optionC": "Owner, Manager, and User",
+    "optionC": "Executive, Manager, and User",
     "optionD": "Administrator, Manager, and User",
     "optionE": "",
-    "correct": "A",
-    "explanation": "Enabling a partner account creates a three-tier role hierarchy beneath that account — Partner Executive, Partner Manager, and Partner User (A). A partner user sees records owned by partner users at the roles below their own within that account, so an Executive sees Manager- and User-owned records, a Manager sees User-owned records, and a User sees only their own. The other option sets rename or invent tiers that the platform does not create.",
-    "_cat": "Access to Records"
+    "correct": "C",
+    "explanation": "Enabling a partner account creates a three-tier role hierarchy beneath that account — Partner Executive, Partner Manager, and Partner User (C). A partner user sees records owned by partner users at the roles below their own within that account, so an Executive sees Manager- and User-owned records, a Manager sees User-owned records, and a User sees only their own. The other option sets rename or invent tiers that the platform does not create.",
+    "_cat": "Access to Records",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "validation",
+      "note": "Q57 had no options and \"Executive, Manager, and User\" as the correct field; built the choice set and tidied the stem.",
+      "from": "Executive, Manager, and User",
+      "to": "C"
+    }
   },
   {
     "id": "7afcfb38",
@@ -842,14 +849,21 @@
   {
     "id": "d603efad",
     "question": "When you make changes to roles and groups, Salesforce locks the entire group membership table, which makes it impossible to process group changes in multiple threads to increase throughput on updates. Which feature should be enabled to address this?",
-    "optionA": "Granular Locking",
-    "optionB": "Deferred Sharing Maintenance",
+    "optionA": "Deferred Sharing Maintenance",
+    "optionB": "Granular Locking",
     "optionC": "Parallel Sharing Rule Recalculation",
     "optionD": "Implicit Sharing",
     "optionE": "",
-    "correct": "A",
-    "explanation": "Granular Locking (A) replaces the single lock over the whole group membership table with locks scoped to the affected membership subsets, so unrelated role and group changes can be processed concurrently instead of serialising behind one another. Deferred Sharing Maintenance (B) postpones recalculation to a maintenance window rather than allowing parallel processing; Parallel Sharing Rule Recalculation (C) speeds up sharing rule recalculation specifically, not group membership updates; and Implicit Sharing (D) is built-in record access between accounts and their child records, not a concurrency control.",
-    "_cat": "Implications of Security Model Choice"
+    "correct": "B",
+    "explanation": "Granular Locking (B) replaces the single lock over the whole group membership table with locks scoped to the affected membership subsets, so unrelated role and group changes can be processed concurrently instead of serialising behind one another. Deferred Sharing Maintenance (A) postpones recalculation to a maintenance window rather than allowing parallel processing; Parallel Sharing Rule Recalculation (C) speeds up sharing rule recalculation specifically, not group membership updates; and Implicit Sharing (D) is built-in record access between accounts and their child records, not a concurrency control.",
+    "_cat": "Implications of Security Model Choice",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "validation",
+      "note": "Q71 had no options and \"Granular Locking\" as the correct field; turned the statement into a question and built the choice set.",
+      "from": "Granular Locking",
+      "to": "B"
+    }
   },
   {
     "id": "19b83d4f",
@@ -1509,7 +1523,12 @@
     "optionE": "",
     "correct": "B",
     "explanation": "Logging in as an affected staff member and opening the Sharing button on a sample Account (B) lists every user and group with access to that specific record together with the row cause, which names the exact mechanism — role hierarchy, sharing rule, or team — that granted it. The Field Accessibility Viewer (A) reports on field-level security and says nothing about record access. Inspecting the profile and role membership (C) shows what the user is, not why one record reached them. Reviewing organization-wide defaults (D) describes the baseline for all Accounts and cannot explain access to a particular one.",
-    "_cat": "Implications of Security Model Choice"
+    "_cat": "Implications of Security Model Choice",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "validation",
+      "note": "Q126 options A and D were identical; replaced D with a distinct distractor."
+    }
   },
   {
     "id": "5a108e57",
@@ -1622,14 +1641,21 @@
   {
     "id": "e53d2012",
     "question": "Partner users can access records belonging to users in their account at their same role or lower in the role hierarchy, for Cases, Leads, Opportunities and Custom Objects. Which of the following access has to be given?",
-    "optionA": "Partner Super User permission",
-    "optionB": "Delegated External User Administrator",
-    "optionC": "A sharing set granting access through the account",
-    "optionD": "View All permission on each object",
+    "optionA": "Delegated External User Administrator",
+    "optionB": "A sharing set granting access through the account",
+    "optionC": "View All permission on each object",
+    "optionD": "Partner Super User permission",
     "optionE": "",
-    "correct": "A",
-    "explanation": "The Partner Super User permission (A) is what lets a partner user reach Cases, Leads, Opportunities, and custom object records owned by other users in their own account at the same role or below in the hierarchy. Delegated External User Administrator (B) grants the ability to manage other external users, not to see their records. Sharing sets (C) apply to Customer Community licences that have no role hierarchy, which is precisely the mechanism this question is not describing. View All (D) would expose every record of the object org-wide, far beyond the account-scoped access required.",
-    "_cat": "Access to Records"
+    "correct": "D",
+    "explanation": "The Partner Super User permission (D) is what lets a partner user reach Cases, Leads, Opportunities, and custom object records owned by other users in their own account at the same role or below in the hierarchy. Delegated External User Administrator (A) grants the ability to manage other external users, not to see their records. Sharing sets (B) apply to Customer Community licences that have no role hierarchy, which is precisely the mechanism this question is not describing. View All (C) would expose every record of the object org-wide, far beyond the account-scoped access required.",
+    "_cat": "Access to Records",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "validation",
+      "note": "Q136 had no options and \"Super user permission\" as the correct field; built the choice set.",
+      "from": "Super user permission",
+      "to": "D"
+    }
   },
   {
     "id": "79d8546f",
