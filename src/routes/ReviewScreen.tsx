@@ -5,6 +5,7 @@ import { TopBar } from '@/components/TopBar';
 import { useDeck, useManifest } from '@/lib/decks';
 import { loadProgress } from '@/lib/storage';
 import { isCorrect, parseExplanation, getOptions } from '@/lib/quiz';
+import { CorrectionNotice } from '@/components/CorrectionNotice';
 
 export function ReviewScreen() {
   const { deckId } = useParams<{ deckId: string }>();
@@ -243,6 +244,8 @@ export function ReviewScreen() {
                           </div>
                         </div>
                       ) : null}
+
+                      {q.corrected ? <CorrectionNotice correction={q.corrected} /> : null}
                     </div>
                   ) : null}
                 </div>

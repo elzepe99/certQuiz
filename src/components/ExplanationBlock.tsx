@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useQuiz } from '@/state/quizStore';
 import { isCorrect, parseExplanation, linkifySegments } from '@/lib/quiz';
+import { CorrectionNotice } from '@/components/CorrectionNotice';
 
 export function ExplanationBlock() {
   const questions = useQuiz((s) => s.questions);
@@ -14,7 +15,7 @@ export function ExplanationBlock() {
   const parsed = useMemo(() => parseExplanation(q?.explanation ?? ''), [q]);
 
   if (!q || !isAnswered) return null;
-  if (!parsed.body && parsed.references.length === 0) return null;
+  if (!parsed.body && parsed.references.length === 0 && !q.corrected) return null;
 
   const correct = isCorrect(answers[idx], q.correct);
 
@@ -85,6 +86,8 @@ export function ExplanationBlock() {
           </ul>
         </div>
       ) : null}
+
+      {q.corrected ? <CorrectionNotice correction={q.corrected} /> : null}
     </div>
   );
 }
