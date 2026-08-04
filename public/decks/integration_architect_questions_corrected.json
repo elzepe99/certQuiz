@@ -618,15 +618,22 @@
   },
   {
     "id": "c7d46b81",
-    "question": "Northern Trail Outfitters is in the final stages of merging two Salesforce orgs but needs to keep the retiring org available temporarily for lead management because multiple public website forms still post into it. Sales has asked for new leads to be available in the new org within 30 minutes. Which approach requires the least amount of development effort?",
-    "optionA": "Use the Composite REST API to aggregate multiple leads in a single call.",
-    "optionB": "Call the Salesforce REST API to insert the lead into the target org.",
-    "optionC": "Use the Tooling API with Process Builder to insert leads in real time.",
-    "optionD": "",
+    "question": "Northern Trail Outfitters is in the final stages of merging two Salesforce orgs but needs to keep the retiring org available for a short period of time for lead management, as it is connected to multiple public website forms. The sales department has requested that new leads are available in the new Salesforce instance within 30 minutes. Which two approaches will require the least amount of development effort? Choose 2 answers",
+    "optionA": "Use the Tooling API with Process Builder to insert leads in real time.",
+    "optionB": "Configure named credentials in the source org.",
+    "optionC": "Call the Salesforce REST API to insert the lead into the target org.",
+    "optionD": "Use the Composite REST API to aggregate multiple leads in a single call.",
     "optionE": "",
-    "correct": "B",
-    "explanation": "Both endpoints are Salesforce orgs, so the retiring org just needs an outbound call (typically from a trigger or invocable action) to the new org's standard sObjects/Lead endpoint — a Connected App provides auth and the JSON payload is the standard Lead shape, so no custom API needs to be built on either side. Composite REST (A) adds payload-construction and bulk error-handling work that isn't needed for a simple 30-minute SLA, and the Tooling API (C) is for metadata/developer tooling, not transactional record CRUD.",
-    "_cat": "Build Solution"
+    "correct": "B,C",
+    "explanation": "Both orgs are Salesforce, so the retiring org needs only somewhere to authenticate and a standard endpoint to call. Named Credentials in the source org supply the target org's authentication declaratively, with no credential handling in code (B), and the standard REST API sObject insert accepts the Lead payload as-is (C). Composite REST (D) exists to batch several subrequests into one call — real work to build, for no benefit against a 30-minute SLA on leads arriving one form submission at a time. The Tooling API (A) addresses metadata and developer tooling rather than record CRUD.",
+    "_cat": "Design Integration Solutions",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q51 absorbed its duplicate Q137: restored the full four-option \"choose 2\" form that Q51 had been truncated from. Answer is Named Credentials plus the standard REST insert.",
+      "from": "B",
+      "to": "B,C"
+    }
   },
   {
     "id": "96f938f3",
@@ -934,18 +941,6 @@
     "_cat": "Build Solution"
   },
   {
-    "id": "4c2b26c8",
-    "question": "Northern Trail Outfitters (NTO) has recently implemented middleware for orchestration of services across platforms. The ERP system being used requires transactions be captured near real time at a REST endpoint initiated in Salesforce when creating an order object. Additionally, the Salesforce team has limited development resources and requires a low code solution. Which two options will fulfill the use case requirements? Choose 2 answers",
-    "optionA": "Implement Change Data Capture on the order object and leverage the replay Id in the middleware solution.",
-    "optionB": "Use a process builder to create a Platform Event, selecting the record type as the Platform Event Name on insert of record.",
-    "optionC": "Implement a Workflow Rule with Outbound Messaging to send SOAP messages to the designated endpoint.",
-    "optionD": "Use Remote Process Invocation fire and forget pattern on insert on the order object using Flow Builder.",
-    "optionE": "",
-    "correct": "A,D",
-    "explanation": "A low-code, near-real-time push to the middleware on Order creation can be met two ways: enable Change Data Capture on Order and consume the change events (with ReplayId) in the middleware (A), or use a fire-and-forget Remote Process Invocation triggered declaratively from Flow Builder on insert (D). Outbound Messaging (C) sends SOAP, not the required REST, and the Process Builder/Platform Event option (B) is misconfigured.",
-    "_cat": "Design Integration Solutions"
-  },
-  {
     "id": "21e6ad5a",
     "question": "Universal Container needs to integrate Salesforcewith several home-grown systems. These systems require custom code to be written in order to integrate with them, and the CIO argues that if custom code needs to be written, then there is no reason to invest in middleware Which three considerations should an Architect bring up to the CIO? Choose 3 answers",
     "optionA": "Bulkification",
@@ -1059,18 +1054,6 @@
     "correct": "A,B",
     "explanation": "When an external endpoint URL changes unexpectedly, the fix is configuration rather than code. Named Credentials centralize the endpoint and authentication so a single change updates all callouts (A), and Remote Site Settings must list the new URL for Apex callouts to be permitted (B). CSP Trusted Sites apply to client-side (LWC/VF) calls, and an ESB is a heavier architectural change, not a quick downtime fix.",
     "_cat": "Maintain Integration"
-  },
-  {
-    "id": "0bfdcf2c",
-    "question": "A conglomerate is designing a Lightning Web Component (LWC) to display transactions aggregated from different sources. Their current system landscape is as follows: 1. Transactions are created at any time through their various on-premise and cloud-based systems. 2. All necessary transactions are replicated to a custom Transaction object in Salesforce. It is updated periodically so it only has a subset of the necessary transactions between updates. 3. Middleware supports publish-subscribe interactions and provides RESTful Enterprise APIs that can retrieve transactions from on-premise and cloud-based systems. The company wants to address a usability concern regarding incomplete data displayed on the LWC component. What should the Integration Architect specify so the LWC will be able to display all the required transactions?",
-    "optionA": "Call the Enterprise APIs directly from the LWC's JavaScript code and redisplay the LWC on receipt of the API response.",
-    "optionB": "Use the Continuation class to call the Enterprise APIs and then process the response in a callback method.",
-    "optionC": "Let the Lightning Data Service with an wire adapter display new values when the custom object records change.",
-    "optionD": "Publish a Platform Event, have the middleware subscribe and update the custom object on receipt of Platform Event.",
-    "optionE": "",
-    "correct": "B",
-    "explanation": "The custom object holds only a periodic subset, so to display all transactions the component must fetch live data from the middleware's Enterprise APIs—using the Continuation class to make the long-running callout asynchronously and render the response in a callback (B). Calling the API directly from LWC JavaScript (A) hits CSP/CORS and governor constraints, and the Lightning Data Service/Platform Event options only reflect the incomplete local data.",
-    "_cat": "Design Integration Solutions"
   },
   {
     "id": "e5bf3115",
@@ -1740,25 +1723,6 @@
     "correct": "C,D",
     "explanation": "Frequent validation-error failures on the nightly Product load point to a mismatch between source data and Salesforce rules, so the architect should review the Salesforce data model and validation rules and adjust the integration accordingly (D), and implement a regression-testing policy to catch issues introduced by ongoing development (C). You can't turn off validation rules via SOAP headers for arbitrary loads, and redesigning the ERP report (A) doesn't address the Salesforce-side validation.",
     "_cat": "Maintain Integration"
-  },
-  {
-    "id": "62f27ce6",
-    "question": "Northern Trail Outfitters is in the final stages of merging two Salesforce orgs but needs to keep the retiring org available for a short period of time for lead management as it is connected to multiple public web site forms. The sales department has requested that new leads are available in the new Salesforce instance within 30 minutes. Which two approaches will require the least amount of development effort? Choose 2 answers",
-    "optionA": "Use the tooling API with Process Builder to insert leads in real time.",
-    "optionB": "Configure named credentials in the source org.",
-    "optionC": "Call the Salesforce REST API to insert the lead into the target system.",
-    "optionD": "Use the Composite REST API to aggregate multiple leads in a single call.",
-    "optionE": "",
-    "correct": "B,C",
-    "explanation": "Both orgs are Salesforce, so the retiring org only needs somewhere to authenticate and a standard endpoint to call: Named Credentials in the source org supply the target-org authentication declaratively, with no credential handling in code (B), and the standard REST API sObject insert accepts the Lead payload as-is (C). Composite REST (D) exists to batch several subrequests into one call — real work to build for no benefit against a 30-minute SLA on individual form submissions — and the Tooling API (A) addresses metadata and developer tooling rather than record CRUD.",
-    "_cat": "Design Integration Solutions",
-    "corrected": {
-      "date": "2026-08-04",
-      "via": "comments",
-      "note": "Q137 B,D->B,C. Composite REST adds work; Named Credentials + a standard REST insert is the least-effort pair, and matches twin Q51.",
-      "from": "B,D",
-      "to": "B,C"
-    }
   },
   {
     "id": "86b274f6",

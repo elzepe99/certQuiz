@@ -685,9 +685,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "validation",
-      "note": "Q57 had no options and \"Executive, Manager, and User\" as the correct field; built the choice set and tidied the stem.",
-      "from": "Executive, Manager, and User",
-      "to": "C"
+      "note": "Q57 had no options and \"Executive, Manager, and User\" as the correct field; built the choice set and tidied the stem."
     }
   },
   {
@@ -860,9 +858,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "validation",
-      "note": "Q71 had no options and \"Granular Locking\" as the correct field; turned the statement into a question and built the choice set.",
-      "from": "Granular Locking",
-      "to": "B"
+      "note": "Q71 had no options and \"Granular Locking\" as the correct field; turned the statement into a question and built the choice set."
     }
   },
   {
@@ -1652,9 +1648,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "validation",
-      "note": "Q136 had no options and \"Super user permission\" as the correct field; built the choice set.",
-      "from": "Super user permission",
-      "to": "D"
+      "note": "Q136 had no options and \"Super user permission\" as the correct field; built the choice set."
     }
   },
   {

@@ -22,6 +22,10 @@ const DRY = process.argv.includes('--dry');
  * The `correct` value each question carried before this ran. Pinned so a second
  * run cannot lose it. The three Sharing & Visibility entries held prose rather
  * than option letters, which is the bug being repaired.
+ *
+ * Note that a prose entry here is not evidence the answer moved: for those
+ * three, the prose *became* the lettered option with the same meaning, so their
+ * fixes set `answerMoved: false` and no from/to is recorded.
  */
 const ORIGINAL_ANSWER = {
   '46cf2c6f': 'Executive, Manager, and User',
@@ -33,6 +37,7 @@ const ORIGINAL_ANSWER = {
 const FIXES = {
   'sharing_visibility_questions_corrected.json': {
     '46cf2c6f': {
+      answerMoved: false,
       note: 'Q57 had no options and "Executive, Manager, and User" as the correct field; built the choice set and tidied the stem.',
       set: {
         question:
@@ -48,6 +53,7 @@ const FIXES = {
       },
     },
     d603efad: {
+      answerMoved: false,
       note: 'Q71 had no options and "Granular Locking" as the correct field; turned the statement into a question and built the choice set.',
       set: {
         question:
@@ -63,6 +69,7 @@ const FIXES = {
       },
     },
     e53d2012: {
+      answerMoved: false,
       note: 'Q136 had no options and "Super user permission" as the correct field; built the choice set.',
       set: {
         optionA: 'Delegated External User Administrator',
@@ -83,6 +90,17 @@ const FIXES = {
         correct: 'B',
         explanation:
           'Logging in as an affected staff member and opening the Sharing button on a sample Account (B) lists every user and group with access to that specific record together with the row cause, which names the exact mechanism — role hierarchy, sharing rule, or team — that granted it. The Field Accessibility Viewer (A) reports on field-level security and says nothing about record access. Inspecting the profile and role membership (C) shows what the user is, not why one record reached them. Reviewing organization-wide defaults (D) describes the baseline for all Accounts and cannot explain access to a particular one.',
+      },
+    },
+  },
+
+  'agentforce_specialist_questions.json': {
+    '680ae5b4': {
+      answerMoved: false,
+      note: 'Q31 the explanation rebutted a non-existent "Option D"; the text it argues against is option B. Letter corrected, answer C unchanged.',
+      set: {
+        explanation:
+          'When a prompt template version is immutable, it means that once the version is activated, it cannot be edited or modified. This ensures consistency in production environments where changes could disrupt workflows.\n* Option A is incorrect: Any version (not just the latest) can be activated, depending on the use case.\n* Option B is incorrect: Modifications require manually creating a new version; automatic versioning is not enforced.\n* Option C is correct: Activation locks the version, enforcing immutability.\nReferences:\n* Salesforce Help: Prompt Template Versioning\n* States that "activated prompt template versions are immutable and cannot be edited."',
       },
     },
   },
@@ -124,7 +142,14 @@ for (const [file, fixes] of Object.entries(FIXES)) {
     }
     const before = ORIGINAL_ANSWER[id] ?? hit.q.correct;
     Object.assign(hit.q, fix.set);
-    stampCorrection(hit.q, { via: fix.via ?? 'validation', note: fix.note, from: before });
+    stampCorrection(hit.q, {
+      via: fix.via ?? 'validation',
+      note: fix.note,
+      // `answerMoved: false` means the answer was only *relabelled* — giving an
+      // existing answer a letter is not a change of answer, and rendering it as
+      // "Granular Locking -> B" tells the reader something untrue.
+      from: fix.answerMoved === false ? undefined : before,
+    });
     console.log(`${file.replace(/_questions.*|\.json/g, '').padEnd(20)} Q${String(hit.number).padStart(3)}  ${id}`);
     console.log(`  ${fix.note}`);
     touched++;
