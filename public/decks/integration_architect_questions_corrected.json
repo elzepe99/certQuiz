@@ -619,15 +619,15 @@
     "optionC": "Call the Salesforce REST API to insert the lead into the target org.",
     "optionD": "Use the Composite REST API to aggregate multiple leads in a single call.",
     "optionE": "",
-    "correct": "B,C",
-    "explanation": "Both orgs are Salesforce, so the retiring org needs only somewhere to authenticate and a standard endpoint to call. Named Credentials in the source org supply the target org's authentication declaratively, with no credential handling in code (B), and the standard REST API sObject insert accepts the Lead payload as-is (C). Composite REST (D) exists to batch several subrequests into one call — real work to build, for no benefit against a 30-minute SLA on leads arriving one form submission at a time. The Tooling API (A) addresses metadata and developer tooling rather than record CRUD.",
+    "correct": "B,D",
+    "explanation": "Both orgs are Salesforce, so the retiring org needs only somewhere to authenticate and a way to move the records. Named Credentials supply the target org's authentication declaratively, with no credential handling in code (B). Composite REST then carries many leads in a single call: Salesforce documents the composite resources as simplifying code and reducing network overhead, and the whole series counts as one call against API limits — which matters when several public web forms are feeding leads continuously and they must all arrive within 30 minutes (D). Posting each lead individually to the standard sObject endpoint (C) works, but it needs loop, batching and per-record error handling that Composite gives you for free. The Tooling API (A) addresses metadata and developer tooling rather than record CRUD.",
     "_cat": "Design Integration Solutions",
     "corrected": {
       "date": "2026-08-04",
-      "via": "comments",
-      "note": "Q51 absorbed its duplicate Q137: restored the full four-option \"choose 2\" form that Q51 had been truncated from. Answer is Named Credentials plus the standard REST insert.",
-      "from": "B",
-      "to": "B,C"
+      "via": "validation",
+      "note": "Q50 B,C -> B,D, reverting an earlier change in this repo. Its twin Q22 keys Named Credentials plus Composite REST, and Salesforce documents composite resources as simplifying code and consuming one API call for the whole series.",
+      "from": "B,C",
+      "to": "B,D"
     }
   },
   {
@@ -1052,9 +1052,16 @@
     "optionC": "Content Security Policies",
     "optionD": "Enterprise ESB",
     "optionE": "",
-    "correct": "A,B",
-    "explanation": "When an external endpoint URL changes unexpectedly, the fix is configuration rather than code. Named Credentials centralize the endpoint and authentication so a single change updates all callouts (A), and Remote Site Settings must list the new URL for Apex callouts to be permitted (B). CSP Trusted Sites apply to client-side (LWC/VF) calls, and an ESB is a heavier architectural change, not a quick downtime fix.",
-    "_cat": "Maintain Integration"
+    "correct": "A,D",
+    "explanation": "What shortens the outage is having the endpoint live somewhere other than compiled code. A Named Credential holds the URL and its authentication as configuration, so a changed endpoint is a field edit that takes effect immediately with no deployment (A). An enterprise service bus goes further: Salesforce calls the bus, and the new provider URL is repointed in middleware without Salesforce changing at all, which also shields the other consumers of that exchange-rate feed (D). Remote Site Settings (B) is only an allow-list that callouts must satisfy — updating it is necessary if you are calling a raw URL, but it does not remove the hardcoded endpoint from Apex, so a deployment is still needed and the downtime stands. Note also that a callout through a Named Credential does not consult Remote Site Settings at all. CSP Trusted Sites (C) governs browser-side requests from Lightning components, not Apex callouts.",
+    "_cat": "Maintain Integration",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "validation",
+      "note": "Q83 A,B -> A,D. Remote Site Settings is a prerequisite for raw callouts, not a way to absorb an endpoint change; Named Credentials and an ESB both externalise the URL from code, which is what shortens the outage.",
+      "from": "A,B",
+      "to": "A,D"
+    }
   },
   {
     "id": "e5bf3115",
@@ -1306,9 +1313,16 @@
     "optionC": "An iFrame embedding a custom .Net application that displays data from the other systems.",
     "optionD": "A custom Visualforce page with client- side calls out to the other systems.",
     "optionE": "",
-    "correct": "B,C",
-    "explanation": "Without Lightning Experience and with no need to persist the external data, the UI should match the Salesforce (Classic) look using a custom Visualforce page whose controller calls out to the external systems (B), or—if matching the existing app is the priority—an iFrame embedding an external application within a Visualforce page (C). Persisting data via middleware (A) is unnecessary, and client-side callouts (D) face CSP/CORS limits.",
-    "_cat": "Design Integration Solutions"
+    "correct": "B,D",
+    "explanation": "The stem sets two tests: the data must not persist in Salesforce, and the result must match the Salesforce UI. A Visualforce page inherits the platform styling and chrome, so it passes on both counts whether the external call is made server-side from its controller (B) or client-side from JavaScript on the page (D) — the two genuinely different implementations offered here. An iframe embedding a custom .NET application (C) renders that application's own interface inside Salesforce, which is the opposite of matching the Salesforce UI however convenient it is to build. Middleware continuously persisting the data into Salesforce (A) fails the other test, since the company has said it needs the data for nothing else. Lightning Experience being switched off is what makes Visualforce, rather than a Lightning component, the vehicle.",
+    "_cat": "Design Integration Solutions",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "validation",
+      "note": "Q102 B,C -> B,D. The stem asks for approaches that match the Salesforce UI; an iframe hosting a .NET application is precisely what does not.",
+      "from": "B,C",
+      "to": "B,D"
+    }
   },
   {
     "id": "98f55ac4",
@@ -1596,14 +1610,19 @@
   {
     "id": "8d786996",
     "question": "Northern Trail Outfitters (NTO) uses Salesforce to track leads, opportunities and order details that convert leads to customers. However, Orders are managed by an external (remote) system. Sales representatives want to view and update real-time order information in Salesforce. NTO wants the data to only persist in the external system. Which type of Integration should an architect recommend to meet this business requirement?",
-    "optionA": "Data Visualization",
+    "optionA": "Data Virtualization",
     "optionB": "Data Synchronization",
     "optionC": "Process Orchestration",
     "optionD": "Batch Processing",
     "optionE": "",
     "correct": "A",
-    "explanation": "Sales reps must view and update real-time order data that should persist only in the external system, which is the Data Virtualization use case—surface external orders as external objects (for example via Salesforce Connect) without copying them into Salesforce (A). Data Synchronization and Batch Processing would persist copies in Salesforce, and Process Orchestration addresses multi-step process flow, not live external display.",
-    "_cat": "Design Integration Solutions"
+    "explanation": "Sales representatives need to read and write live order data that must never be copied into Salesforce, which is the definition of Data Virtualization: Salesforce Connect exposes the remote orders as external objects, queried on demand and written straight back to the source, with nothing stored locally (A). Data Synchronization (B) and Batch Processing (D) both work by landing copies in Salesforce, which the requirement forbids, and Process Orchestration (C) coordinates multi-step processes across systems rather than surfacing a remote record for viewing and editing.",
+    "_cat": "Design Integration Solutions",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "validation",
+      "note": "Q124 option A read \"Data Visualization\", which names a different concept entirely. The pattern is Data Virtualization; the answer was always A."
+    }
   },
   {
     "id": "546064d6",
