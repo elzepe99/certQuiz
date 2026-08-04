@@ -29,6 +29,12 @@ export type QuestionCorrection = {
   note: string;
   from?: string; // previous `correct` value, present only when the answer moved
   to?: string;
+  /**
+   * True when the question was reviewed against a comment and deliberately left
+   * unchanged. Without this a reader meets their own objection with no sign it
+   * was ever considered, which reads as an oversight rather than a decision.
+   */
+  upheld?: boolean;
 };
 
 export type DeckMeta = {
