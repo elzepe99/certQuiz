@@ -11,9 +11,10 @@ function buildQuestionOrder(total: number): number[] {
 const SIG_SEP = String.fromCharCode(31);
 
 /**
- * Deterministic content fingerprint for a single question. Stable across deck
- * reordering and edits to *other* questions — used as the durable key that
- * comments attach to (mirrors buildQuestionSignatures' per-question output).
+ * Deterministic *content* fingerprint for a single question. Superseded by the
+ * question's `id` as the durable key (see questionKey) — retained because it is
+ * how keys were derived before ids existed, and is still needed to migrate
+ * progress saved under the old scheme.
  */
 export function questionSignature(q: Question): string {
   return [
@@ -42,24 +43,31 @@ export function hashSignature(sig: string): string {
   return (h >>> 0).toString(16).padStart(8, '0');
 }
 
-/** Convenience: compact stable hash for a single question. */
-export function questionHash(q: Question): string {
-  return hashSignature(questionSignature(q));
+/**
+ * The durable key for a question: its assigned `id` when present, otherwise a
+ * hash of its current content.
+ *
+ * Every question's id was seeded with exactly that content hash, so the two
+ * branches agree for un-edited questions — which is what lets ids be adopted
+ * without migrating a single stored comment. Once a question is edited, only
+ * the id branch stays stable, which is the whole point.
+ */
+export function questionKey(q: Question): string {
+  return q.id ?? hashSignature(questionSignature(q));
 }
 
+/** Compact stable key for a single question, stored as `question_hash`. */
+export function questionHash(q: Question): string {
+  return questionKey(q);
+}
+
+/**
+ * Persisted identity for each question, in deck order. Keyed on `id` so that
+ * correcting a question's answer no longer scrambles which questions you have
+ * already worked through.
+ */
 function buildQuestionSignatures(questions: Question[]): string[] {
-  return questions.map((q) =>
-    [
-      q.question,
-      q.optionA,
-      q.optionB,
-      q.optionC,
-      q.optionD ?? '',
-      q.optionE ?? '',
-      q.correct,
-      q._cat ?? '',
-    ].join('\u001f'),
-  );
+  return questions.map(questionKey);
 }
 
 function remapIndexRecord<T>(
@@ -120,6 +128,15 @@ function remapQuestionOrder(
   return mapped;
 }
 
+/**
+ * Bring signatures persisted under the pre-`id` scheme into the current key
+ * space. Those were raw content strings joined by SIG_SEP; hashing one yields
+ * exactly the id that question was seeded with, so old progress keeps matching.
+ */
+function normalizeStoredSignatures(sigs: string[]): string[] {
+  return sigs.map((sig) => (sig.includes(SIG_SEP) ? hashSignature(sig) : sig));
+}
+
 function buildIndexMap(oldSigs: string[], nextSigs: string[]): Map<number, number> {
   const slots = new Map<string, number[]>();
   for (let i = 0; i < nextSigs.length; i++) {
@@ -168,8 +185,9 @@ export function loadProgress(deckId: string, questions: Question[]): DeckProgres
     if (!raw) return emptyProgress(total, signatures);
     const parsed = JSON.parse(raw) as Partial<DeckProgress>;
     const base = emptyProgress(total, signatures);
-    const parsedSigs = Array.isArray(parsed.questionSignatures) ? parsed.questionSignatures : null;
-    if (!parsedSigs || parsedSigs.length === 0) return base;
+    const storedSigs = Array.isArray(parsed.questionSignatures) ? parsed.questionSignatures : null;
+    if (!storedSigs || storedSigs.length === 0) return base;
+    const parsedSigs = normalizeStoredSignatures(storedSigs);
 
     const sameSignatures = parsedSigs.every((sig, i) => sig === signatures[i]);
     if (sameSignatures) {

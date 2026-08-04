@@ -1,4 +1,11 @@
 export type Question = {
+  /**
+   * Permanent identity for this question, assigned once in the deck JSON and
+   * never recomputed. Comments and saved progress key off it, so editing the
+   * stem, an option, or `correct` no longer detaches them. Seeded from the
+   * question's original content hash — see scripts/add-question-ids.mjs.
+   */
+  id?: string;
   question: string;
   optionA: string;
   optionB: string;
