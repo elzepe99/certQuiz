@@ -13,6 +13,11 @@ const SOURCE_LABEL: Record<QuestionCorrection['via'], string> = {
   validation: 'Corrected by deck validation',
 };
 
+const UPHELD_LABEL: Record<QuestionCorrection['via'], string> = {
+  comments: 'Reviewed from comments — answer stands',
+  validation: 'Reviewed by deck validation — answer stands',
+};
+
 /**
  * Shows that a question was changed after import, and why. Rendered wherever a
  * question's answer is revealed, so the provenance of a correction travels with
@@ -20,21 +25,25 @@ const SOURCE_LABEL: Record<QuestionCorrection['via'], string> = {
  */
 export function CorrectionNotice({ correction }: { correction: QuestionCorrection }) {
   const movedAnswer = correction.from && correction.to;
+  const upheld = correction.upheld === true;
+
+  // An upheld review reports that nothing changed, so it reads as information
+  // rather than as a warning about altered content.
+  const tone = upheld
+    ? { bg: 'var(--bg-panel-hi)', border: 'var(--border-default)', fg: 'var(--text-muted)' }
+    : { bg: 'var(--warning-bg)', border: 'var(--warning-border)', fg: 'var(--warning)' };
 
   return (
     <div
       className="mt-4 rounded-[10px] border px-3.5 py-3"
-      style={{
-        background: 'var(--warning-bg)',
-        borderColor: 'var(--warning-border)',
-      }}
+      style={{ background: tone.bg, borderColor: tone.border }}
     >
       <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
         <span
           className="font-mono text-[10px] font-medium uppercase tracking-[0.16em]"
-          style={{ color: 'var(--warning)' }}
+          style={{ color: tone.fg }}
         >
-          ⟲ {SOURCE_LABEL[correction.via]}
+          {upheld ? '✓' : '⟲'} {(upheld ? UPHELD_LABEL : SOURCE_LABEL)[correction.via]}
         </span>
         {movedAnswer ? (
           <span
