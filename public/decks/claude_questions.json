@@ -1,5 +1,6 @@
 [
   {
+    "id": "5eba870e",
     "question": "Which of the following best describes Claude's capabilities?",
     "optionA": "Claude is a search engine that retrieves information from the web",
     "optionB": "Claude is a voice assistant for smart home devices",
@@ -11,6 +12,7 @@
     "_cat": "Claude 101"
   },
   {
+    "id": "0b49c0d6",
     "question": "What is the primary difference between projects and skills?",
     "optionA": "Projects are free, skills require a paid plan",
     "optionB": "Projects are for teams, skills are for individuals",
@@ -22,6 +24,7 @@
     "_cat": "Claude 101"
   },
   {
+    "id": "f2c3dc60",
     "question": "What data can Claude access through connectors?",
     "optionA": "Only data you have permission to access",
     "optionB": "All data in the connected service",
@@ -33,6 +36,7 @@
     "_cat": "Claude 101"
   },
   {
+    "id": "651ff8c4",
     "question": "Who needs to complete the initial setup before team members can use Enterprise Search?",
     "optionA": "Anthropic support team",
     "optionB": "Each individual user",
@@ -44,6 +48,7 @@
     "_cat": "Claude 101"
   },
   {
+    "id": "3bb78cfe",
     "question": "What happens when your project knowledge base approaches context limits?",
     "optionA": "Claude stops accepting new file uploads",
     "optionB": "Claude seamlessly enables RAG mode to expand capacity by up to 10x",
@@ -55,6 +60,7 @@
     "_cat": "Claude 101"
   },
   {
+    "id": "6c467223",
     "question": "What can you do with a published artifact?",
     "optionA": "Only view it—no interaction is possible",
     "optionB": "Share it with anyone via link, and others can \"remix\" it in their own Claude conversations",
@@ -66,6 +72,7 @@
     "_cat": "Claude 101"
   },
   {
+    "id": "61bc0dd9",
     "question": "Which three elements make up an effective prompt?",
     "optionA": "Introduction, body, and conclusion",
     "optionB": "Setting the stage, defining the task, and specifying rules",
@@ -77,6 +84,7 @@
     "_cat": "Claude 101"
   },
   {
+    "id": "41a929a3",
     "question": "If Claude's response is too generic, what should you try?",
     "optionA": "Add more details about your audience, role, or constraints",
     "optionB": "Ask Claude to search the web for better answers",
@@ -88,6 +96,7 @@
     "_cat": "Claude 101"
   },
   {
+    "id": "5ab69038",
     "question": "Which Claude product is best suited for navigating an unfamiliar codebase and automating development tasks?",
     "optionA": "Claude Code",
     "optionB": "Claude for Chrome",
@@ -99,6 +108,7 @@
     "_cat": "Claude 101"
   },
   {
+    "id": "ebae4a8a",
     "question": "Which of the following tasks is a good candidate for Research mode?",
     "optionA": "Reformatting a PDF file",
     "optionB": "Conducting comprehensive market analysis",
@@ -110,6 +120,7 @@
     "_cat": "Claude 101"
   },
   {
+    "id": "6231df9f",
     "question": "What does the pretraining stage produce?",
     "optionA": "A search engine that retrieves facts",
     "optionB": "A model with no knowledge at all",
@@ -121,6 +132,7 @@
     "_cat": "AI Capabilities and Limitations"
   },
   {
+    "id": "2e3ae97a",
     "question": "Which of these is a \"fingerprint\" left by fine-tuning?",
     "optionA": "The context window size",
     "optionB": "The knowledge cutoff",
@@ -132,6 +144,7 @@
     "_cat": "AI Capabilities and Limitations"
   },
   {
+    "id": "e5fca712",
     "question": "When generative AI writes an answer, what is it fundamentally doing?",
     "optionA": "Searching a database for the best match",
     "optionB": "Consulting a list of verified facts",
@@ -143,6 +156,7 @@
     "_cat": "AI Capabilities and Limitations"
   },
   {
+    "id": "355ee070",
     "question": "Where does hallucination tend to concentrate?",
     "optionA": "In the opening sentence of a response",
     "optionB": "In general explanations of common concepts",
@@ -154,6 +168,7 @@
     "_cat": "AI Capabilities and Limitations"
   },
   {
+    "id": "7efe3e7e",
     "question": "What does the \"knowledge cutoff\" mean?",
     "optionA": "The model refuses to answer certain topics",
     "optionB": "The model forgets information over long conversations",
@@ -165,6 +180,7 @@
     "_cat": "AI Capabilities and Limitations"
   },
   {
+    "id": "513c4852",
     "question": "How is Working Memory different from the other three properties?",
     "optionA": "It can't be extended by product features",
     "optionB": "It only matters for coding tasks",
@@ -176,6 +192,7 @@
     "_cat": "AI Capabilities and Limitations"
   },
   {
+    "id": "a7ae1b26",
     "question": "What does \"letter over spirit\" describe?",
     "optionA": "The model generating text that's too formal",
     "optionB": "The model refusing to follow any instructions",
@@ -187,6 +204,7 @@
     "_cat": "AI Capabilities and Limitations"
   },
   {
+    "id": "ffef5231",
     "question": "A hallucinated citation (a paper that doesn't exist) is which two properties colliding?",
     "optionA": "Next Token Prediction + Knowledge",
     "optionB": "Next Token Prediction + Working Memory",
@@ -198,6 +216,7 @@
     "_cat": "AI Capabilities and Limitations"
   },
   {
+    "id": "f5c85d2d",
     "question": "What does \"calibrated trust\" mean in practice?",
     "optionA": "Trusting AI more as you use it more",
     "optionB": "Locating your task on each property's continuum and adjusting your habits accordingly",
@@ -209,6 +228,7 @@
     "_cat": "AI Capabilities and Limitations"
   },
   {
+    "id": "6d560d74",
     "question": "How do the four properties relate to the 4D Framework?",
     "optionA": "They replace the 4Ds entirely",
     "optionB": "The properties only apply to Discernment",
@@ -220,6 +240,7 @@
     "_cat": "AI Capabilities and Limitations"
   },
   {
+    "id": "93c636d6",
     "question": "Claude Code works as an AI agent. What is an AI agent?",
     "optionA": "A chatbot that responds to questions in real time",
     "optionB": "A code editor with built-in autocomplete features",
@@ -231,6 +252,7 @@
     "_cat": "Claude Code 101"
   },
   {
+    "id": "b82b104b",
     "question": "What happens when Claude Code reaches its context window limit?",
     "optionA": "It switches to a smaller, faster model to save memory",
     "optionB": "It removes your oldest files to make room for new ones",
@@ -242,6 +264,7 @@
     "_cat": "Claude Code 101"
   },
   {
+    "id": "65aa4545",
     "question": "What is the recommended workflow for using Claude Code effectively?",
     "optionA": "Code → Test → Deploy → Monitor",
     "optionB": "Explore → Plan → Code → Commit",
@@ -253,6 +276,7 @@
     "_cat": "Claude Code 101"
   },
   {
+    "id": "76ab26e1",
     "question": "How does Claude Code use the CLAUDE.md file?",
     "optionA": "It reads it only after you run the /init command",
     "optionB": "It reads it once when you first create the project",
@@ -264,6 +288,7 @@
     "_cat": "Claude Code 101"
   },
   {
+    "id": "0739f272",
     "question": "Which three parameters does the messages.create call itself require?",
     "optionA": "A model, a system prompt, and an API key",
     "optionB": "A model, a max tokens limit, and a list of messages",
@@ -275,6 +300,7 @@
     "_cat": "Claude Platform 101"
   },
   {
+    "id": "3390841c",
     "question": "When Claude decides to use a tool, who actually executes it?",
     "optionA": "Claude runs it inside the model during the response",
     "optionB": "Anthropic runs it on their servers automatically",
@@ -286,6 +312,7 @@
     "_cat": "Claude Platform 101"
   },
   {
+    "id": "6cd5c390",
     "question": "Why does context management matter for long-running agents?",
     "optionA": "Claude refuses requests that use more than half the window",
     "optionB": "Old messages are deleted automatically after ten turns",
@@ -297,6 +324,7 @@
     "_cat": "Claude Platform 101"
   },
   {
+    "id": "bf8f3a9c",
     "question": "Which jobs are the best fit for a managed agent?",
     "optionA": "Single questions that need one fast answer",
     "optionB": "Long-running, sandboxed, or background work",
@@ -308,6 +336,7 @@
     "_cat": "Claude Platform 101"
   },
   {
+    "id": "f7f22bdb",
     "question": "In Claude Code, which slash command invokes the built-in skill for working with the Claude API?",
     "optionA": "/anthropic-api",
     "optionB": "/claude-sdk",
@@ -319,6 +348,7 @@
     "_cat": "Claude Platform 101"
   },
   {
+    "id": "7d075416",
     "question": "What do subagents enable when Cowork is handling a large task with independent pieces?",
     "optionA": "They let Cowork run tasks on other computers in your network",
     "optionB": "They automatically retry failed steps without telling you",
@@ -330,6 +360,7 @@
     "_cat": "Introduction to Claude Cowork"
   },
   {
+    "id": "650aec2e",
     "question": "How does a Cowork project's memory differ from memory in Claude chat?",
     "optionA": "Cowork project memory is larger and can hold more information",
     "optionB": "A Cowork project's memory stays inside that project, while chat memory applies across all your conversations",
@@ -341,6 +372,7 @@
     "_cat": "Introduction to Claude Cowork"
   },
   {
+    "id": "25907c82",
     "question": "Which statement correctly describes the relationship between skills and plugins?",
     "optionA": "Skills are for developers and plugins are for end users",
     "optionB": "Plugins work everywhere Claude runs, while skills only work in Cowork",
@@ -352,6 +384,7 @@
     "_cat": "Introduction to Claude Cowork"
   },
   {
+    "id": "0cd7002c",
     "question": "A scheduled task was due while your computer was asleep. What happens?",
     "optionA": "The task is skipped and will run at the next scheduled time",
     "optionB": "The task fails and you need to reschedule it manually",
@@ -363,6 +396,7 @@
     "_cat": "Introduction to Claude Cowork"
   },
   {
+    "id": "07e7492a",
     "question": "Each Cowork task starts fresh. How does context carry from one task to the next?",
     "optionA": "Through a project (folder, instructions, and memory for one piece of work) and global instructions that apply to every task",
     "optionB": "Cowork automatically remembers every conversation and applies it to new tasks",
@@ -374,6 +408,7 @@
     "_cat": "Introduction to Claude Cowork"
   },
   {
+    "id": "9c6dee15",
     "question": "What's the recommended habit before sending a Cowork output onward or acting on it?",
     "optionA": "Run the same task a second time and compare the two outputs",
     "optionB": "Ask Claude to grade its own work on a scale of one to ten",
@@ -385,6 +420,7 @@
     "_cat": "Introduction to Claude Cowork"
   },
   {
+    "id": "09b47d21",
     "question": "When you point Cowork at a working folder, what does that enable?",
     "optionA": "The folder contents are copied to Anthropic servers for processing",
     "optionB": "All files in the folder are automatically backed up before each task",
@@ -396,6 +432,7 @@
     "_cat": "Introduction to Claude Cowork"
   },
   {
+    "id": "df07324e",
     "question": "Which of the following tasks is the best fit for Cowork rather than chat?",
     "optionA": "Asking Claude to rewrite a paragraph you pasted into the conversation",
     "optionB": "Turning a folder of meeting notes and spreadsheets into a finished presentation saved to your folder",
@@ -407,6 +444,7 @@
     "_cat": "Introduction to Claude Cowork"
   },
   {
+    "id": "c2e26962",
     "question": "What is the fundamental limitation of language models that necessitates the use of a tool system in coding assistants?",
     "optionA": "They can only generate code in specific programming languages",
     "optionB": "They have limited memory capacity for large codebases",
@@ -418,6 +456,7 @@
     "_cat": "Claude Code in Action"
   },
   {
+    "id": "97076e3a",
     "question": "What permission configuration is required when integrating MCP servers with Claude Code in GitHub Actions?",
     "optionA": "Each MCP server tool must be individually listed in the permissions",
     "optionB": "No special permissions are needed if running in GitHub Actions",
@@ -429,6 +468,7 @@
     "_cat": "Claude Code in Action"
   },
   {
+    "id": "9af18c91",
     "question": "What is the primary difference between Plan Mode and Thinking Mode in Claude Code?",
     "optionA": "Plan Mode is for writing code while Thinking Mode is for debugging",
     "optionB": "Plan Mode is faster while Thinking Mode is more accurate",
@@ -440,6 +480,7 @@
     "_cat": "Claude Code in Action"
   },
   {
+    "id": "aa94c982",
     "question": "Which of the following correctly describes the three types of Claude.md files and their usage?",
     "optionA": "Project level (debugging), Local level (testing), Machine level (production)",
     "optionB": "Project level (personal use), Local level (team sharing), Machine level (repository specific)",
@@ -451,6 +492,7 @@
     "_cat": "Claude Code in Action"
   },
   {
+    "id": "afb6bc13",
     "question": "How do you create a custom command in Claude Code that accepts runtime parameters?",
     "optionA": "Use the @parameters decorator in the command file",
     "optionB": "Define parameters in settings.json configuration",
@@ -462,6 +504,7 @@
     "_cat": "Claude Code in Action"
   },
   {
+    "id": "e671e0a3",
     "question": "Which type of hook can prevent a tool call from happening if certain conditions are met?",
     "optionA": "PostToolUse hook",
     "optionB": "Project hook",
@@ -473,6 +516,7 @@
     "_cat": "Claude Code in Action"
   },
   {
+    "id": "55ae20a0",
     "question": "A developer wants to prevent Claude from reading sensitive .env files. Which type of hook should they set up, and what tool names would they likely match?",
     "optionA": "PostToolUse hook, matching Write and Edit",
     "optionB": "PreToolUse hook, matching Write and Create",
@@ -484,6 +528,7 @@
     "_cat": "Claude Code in Action"
   },
   {
+    "id": "2ce9cf01",
     "question": "What is the primary purpose of hooks in Claude Code?",
     "optionA": "To manage project dependencies.",
     "optionB": "To automatically generate new code snippets.",
@@ -495,6 +540,7 @@
     "_cat": "Claude Code in Action"
   },
   {
+    "id": "0bfe7d2c",
     "question": "According to the AI Fluency Framework, what does AI Fluency mean?",
     "optionA": "Memorizing the best prompts for different AI tools",
     "optionB": "Using AI to automate all possible tasks",
@@ -506,6 +552,7 @@
     "_cat": "AI Fluency Frameworks & Foundations"
   },
   {
+    "id": "696ed4ca",
     "question": "The four core competencies in the AI Fluency Framework are known as \"The 4 Ds.\" Which of the following lists all four correctly?",
     "optionA": "Design, Description, Development, Deployment",
     "optionB": "Delegation, Description, Discernment, Diligence",
@@ -517,6 +564,7 @@
     "_cat": "AI Fluency Frameworks & Foundations"
   },
   {
+    "id": "ac1312a0",
     "question": "Which competency focuses primarily on deciding what work should be done by AI versus what should be handled by humans?",
     "optionA": "Diligence",
     "optionB": "Description",
@@ -528,6 +576,7 @@
     "_cat": "AI Fluency Frameworks & Foundations"
   },
   {
+    "id": "1beb56f2",
     "question": "According to the framework, what is the primary focus of the Diligence competency?",
     "optionA": "Responsible AI use, transparency, and accountability",
     "optionB": "Evaluating the quality of AI outputs",
@@ -539,6 +588,7 @@
     "_cat": "AI Fluency Frameworks & Foundations"
   },
   {
+    "id": "de100d49",
     "question": "Which of the following best describes \"Problem Awareness\" within the Delegation competency?",
     "optionA": "Clearly defining your goals and understanding what work is needed before involving AI",
     "optionB": "Understanding which AI platform to use",
@@ -550,6 +600,7 @@
     "_cat": "AI Fluency Frameworks & Foundations"
   },
   {
+    "id": "dec73a89",
     "question": "Which competency focuses on communicating clearly with AI systems about what you want, how you want it done, and how you want to interact?",
     "optionA": "Description",
     "optionB": "Diligence",
@@ -561,6 +612,7 @@
     "_cat": "AI Fluency Frameworks & Foundations"
   },
   {
+    "id": "85daf187",
     "question": "Which of the following best describes \"Product Description\" within the Description competency?",
     "optionA": "Taking responsibility for AI-generated content accuracy",
     "optionB": "Evaluating whether AI outputs meet your requirements",
@@ -572,6 +624,7 @@
     "_cat": "AI Fluency Frameworks & Foundations"
   },
   {
+    "id": "4fba061b",
     "question": "Which competency involves critically evaluating AI outputs, processes, and behaviors to ensure quality and appropriateness?",
     "optionA": "Diligence",
     "optionB": "Delegation",
@@ -583,6 +636,7 @@
     "_cat": "AI Fluency Frameworks & Foundations"
   },
   {
+    "id": "8763b061",
     "question": "Which of the following best describes \"Process Discernment\" within the Discernment competency?",
     "optionA": "Assessing whether the AI's reasoning process and problem solving approach is effective",
     "optionB": "Ensuring transparency about AI involvement in your work",
@@ -594,6 +648,7 @@
     "_cat": "AI Fluency Frameworks & Foundations"
   },
   {
+    "id": "64f770c0",
     "question": "Which of the following best describes \"Transparency Diligence\" within the Diligence competency?",
     "optionA": "Choosing the most advanced AI system available",
     "optionB": "Making AI work as fast as possible",
@@ -605,6 +660,7 @@
     "_cat": "AI Fluency Frameworks & Foundations"
   },
   {
+    "id": "afe924e9",
     "question": "You want to send a request to Claude's API. What's the minimum information you must include?",
     "optionA": "Only the API key and your question",
     "optionB": "Just your message text",
@@ -616,6 +672,7 @@
     "_cat": "Building with the Claude API - Quiz 1"
   },
   {
+    "id": "c79005ac",
     "question": "You ask Claude \"What is pizza?\" and it answers. Then you ask \"What toppings are popular?\" but Claude doesn't understand what you're referring to. What's the problem?",
     "optionA": "Your internet connection is slow",
     "optionB": "Claude is broken",
@@ -627,6 +684,7 @@
     "_cat": "Building with the Claude API - Quiz 1"
   },
   {
+    "id": "787e486d",
     "question": "When Claude processes your text, what's the first thing it does?",
     "optionA": "Generates a response immediately",
     "optionB": "Checks if it's appropriate content",
@@ -638,6 +696,7 @@
     "_cat": "Building with the Claude API - Quiz 1"
   },
   {
+    "id": "9a4ed965",
     "question": "Users complain your chat app feels slow because they wait 20 seconds staring at a loading spinner, then all the generated text appears at once. What can fix this?",
     "optionA": "Asking shorter questions",
     "optionB": "Using a faster internet connection",
@@ -649,6 +708,7 @@
     "_cat": "Building with the Claude API - Quiz 1"
   },
   {
+    "id": "acac0f78",
     "question": "You're building a web app that talks to Claude. Where should you store your API key?",
     "optionA": "In your mobile app that users install",
     "optionB": "In a text file on the user's computer",
@@ -660,6 +720,7 @@
     "_cat": "Building with the Claude API - Quiz 1"
   },
   {
+    "id": "bfca3246",
     "question": "You're building a math tutor bot. You want Claude to give hints instead of direct answers. What should you use?",
     "optionA": "Setting a very low word limit",
     "optionB": "Using all capital letters in your messages",
@@ -671,6 +732,7 @@
     "_cat": "Building with the Claude API - Quiz 1"
   },
   {
+    "id": "60926dda",
     "question": "You want Claude to give very predictable, consistent answers for a factual Q&A app. What temperature setting should you use?",
     "optionA": "Temperature doesn't matter for facts",
     "optionB": "Low temperature (near 0.0)",
@@ -682,6 +744,7 @@
     "_cat": "Building with the Claude API - Quiz 1"
   },
   {
+    "id": "e779e3ef",
     "question": "You're building an app that needs clean JSON from Claude with no extra text or formatting. How do you get just the raw JSON?",
     "optionA": "Send the request multiple times and pick the best one",
     "optionB": "Ask Claude very nicely to only return JSON",
@@ -693,6 +756,7 @@
     "_cat": "Building with the Claude API - Quiz 1"
   },
   {
+    "id": "18120a5c",
     "question": "You wrote a prompt and tested it once. It worked fine, so you deployed it to production. What's the main risk with this approach?",
     "optionA": "Users will provide unexpected inputs that break it",
     "optionB": "The prompt will become too expensive",
@@ -704,6 +768,7 @@
     "_cat": "Building with the Claude API - Quiz 2"
   },
   {
+    "id": "f9257796",
     "question": "You need test cases for your prompt evaluation. You have two options: write them by hand or use Claude to generate them. Which model should you use for generation?",
     "optionA": "The most expensive model available",
     "optionB": "Multiple models combined",
@@ -715,6 +780,7 @@
     "_cat": "Building with the Claude API - Quiz 2"
   },
   {
+    "id": "56ca5fd5",
     "question": "You're running a prompt evaluation workflow. You've used Claude to generate some responses. What's the next step?",
     "optionA": "Deploy to production",
     "optionB": "Rewrite the original prompt",
@@ -726,6 +792,7 @@
     "_cat": "Building with the Claude API - Quiz 2"
   },
   {
+    "id": "388bc8c8",
     "question": "You want to measure how well your prompts actually work in practice. Which approach should you focus on?",
     "optionA": "Using more examples",
     "optionB": "Prompt engineering techniques",
@@ -737,6 +804,7 @@
     "_cat": "Building with the Claude API - Quiz 2"
   },
   {
+    "id": "dbf389c8",
     "question": "You're using a model grader to evaluate responses. To get better scores than just middle-range numbers, what should you ask for alongside the score?",
     "optionA": "Just the numerical score",
     "optionB": "Comparison to other responses",
@@ -748,6 +816,7 @@
     "_cat": "Building with the Claude API - Quiz 2"
   },
   {
+    "id": "5ddf83c0",
     "question": "Which type of grader uses another AI model to assess the quality of outputs?",
     "optionA": "Model grader",
     "optionB": "Human grader",
@@ -759,6 +828,7 @@
     "_cat": "Building with the Claude API - Quiz 2"
   },
   {
+    "id": "0277b059",
     "question": "You want Claude to create a workout plan. Which opening line works better?",
     "optionA": "\"Create a 30-minute workout plan for beginners\"",
     "optionB": "\"Do you know anything about exercise?\"",
@@ -770,6 +840,7 @@
     "_cat": "Prompt Engineering Techniques"
   },
   {
+    "id": "511c9e3d",
     "question": "Claude keeps missing sarcastic comments when analyzing social media posts. What's the best way to fix this?",
     "optionA": "Ask it to guess when something might be sarcastic",
     "optionB": "Provide examples showing sarcastic posts labeled as negative",
@@ -781,6 +852,7 @@
     "_cat": "Prompt Engineering Techniques"
   },
   {
+    "id": "c0fe4f7c",
     "question": "What is prompt engineering?",
     "optionA": "Training AI models on new datasets",
     "optionB": "Improving a prompt to get more reliable, higher-quality outputs",
@@ -792,6 +864,7 @@
     "_cat": "Prompt Engineering Techniques"
   },
   {
+    "id": "acb4b572",
     "question": "\"Providing sample input/output pairs to guide AI responses\" describes which prompt engineering technique?",
     "optionA": "Being clear and direct",
     "optionB": "Iterative refinement",
@@ -803,6 +876,7 @@
     "_cat": "Prompt Engineering Techniques"
   },
   {
+    "id": "ffa83377",
     "question": "What is the main purpose of using XML tags in prompts?",
     "optionA": "To reduce the token count of prompts",
     "optionB": "To increase the processing speed of AI models",

@@ -1,5 +1,6 @@
 [
   {
+    "id": "296ced65",
     "question": "A legal firm using Slack needs to ensure that their communication aligns with the requirements of legal hold for potential litigation. Which Slack feature is most appropriate for them to utilize?",
     "optionA": "Periodic data exports for backups",
     "optionB": "Custom retention settings for messages and files",
@@ -11,6 +12,7 @@
     "_cat": "Compliance & Data Governance"
   },
   {
+    "id": "535baa2b",
     "question": "An Org Owner is using the Slack analytics dashboard to determine the optimal allocation of resources for different departments using Slack. Which aspect of the analytics dashboard should they examine to make informed decisions?",
     "optionA": "Most frequently used emojis",
     "optionB": "Time spent in voice or video calls",
@@ -22,6 +24,7 @@
     "_cat": "Analytics & Reporting"
   },
   {
+    "id": "70cfc31f",
     "question": "During a consultation with a client new to Slack, what question should you ask to align Slack's capabilities with their long-term goals?",
     "optionA": "What are your color preferences for the Slack interface to match your company branding?",
     "optionB": "What are your organization's strategic objectives and how do you envision Slack supporting these objectives?",
@@ -33,6 +36,7 @@
     "_cat": "Discovery & Consulting"
   },
   {
+    "id": "a0bf9e87",
     "question": "In designing a Slack grid for an organization, what is a best practice to ensure that the design aligns with the organization's communication needs and structure?",
     "optionA": "Tailoring the grid to reflect the organization's structure, with channels dedicated to different departments, projects, and company-wide communication",
     "optionB": "Implementing a single channel for all communications to simplify management and oversight",
@@ -44,6 +48,7 @@
     "_cat": "Enterprise Grid & Channel Design"
   },
   {
+    "id": "ad687de6",
     "question": "In an effort to improve productivity, a company using Slack seeks to optimize its channel strategy. What is a key practice they should implement for effective channel management?",
     "optionA": "Automatically add all employees to every channel",
     "optionB": "Use clear and descriptive naming conventions for channels",
@@ -55,6 +60,7 @@
     "_cat": "Channel Management"
   },
   {
+    "id": "4c998d54",
     "question": "When finalizing a vision statement with a client for their Slack implementation, what aspect is most important to include?",
     "optionA": "A detailed list of every feature available in Slack",
     "optionB": "Specific, measurable goals that align with the client's broader business objectives",
@@ -66,6 +72,7 @@
     "_cat": "Discovery & Consulting"
   },
   {
+    "id": "d1ec6012",
     "question": "An organization is concerned about securing their Slack workspace in the event of employee turnover. Which identity management practice should they prioritize?",
     "optionA": "Regular password update reminders for all users",
     "optionB": "Integration with the organization's active directory for automated account management",
@@ -77,6 +84,7 @@
     "_cat": "Security & Identity Management"
   },
   {
+    "id": "d1458b4b",
     "question": "A nonprofit organization frequently collaborates with various stakeholders on Slack Connect. They want to ensure efficient communication while safeguarding sensitive data. What configuration setting is most suitable for their Slack Connect channels?",
     "optionA": "Enable automatic approval of all Slack Connect invitations from known organizations",
     "optionB": "Implement a Data Loss Prevention (DLP) integration for Slack Connect channels",
@@ -88,6 +96,7 @@
     "_cat": "Slack Connect & Security"
   },
   {
+    "id": "7cdb2278",
     "question": "In a workshop designed to teach advanced Slack functionalities to experienced users, what experiential learning technique would be most effective?",
     "optionA": "Distributing advanced user manuals and guides for self-study post-workshop",
     "optionB": "Facilitating a hands-on workshop where users actively engage in creating complex workflows and integrating third-party apps within Slack",
@@ -99,6 +108,7 @@
     "_cat": "Training & Enablement"
   },
   {
+    "id": "10bdf793",
     "question": "An organization using Slack needs to ensure that their workspace can only be accessed from their office premises for security reasons. What security setting should they implement to achieve this?",
     "optionA": "Two-factor authentication for all user logins",
     "optionB": "IP whitelisting to restrict access to the office network",
@@ -110,6 +120,7 @@
     "_cat": "Security & Identity Management"
   },
   {
+    "id": "96be8a94",
     "question": "A client is planning to migrate from an existing communication platform to Slack. What is the first essential step in this migration process?",
     "optionA": "Immediately transferring all historical data from the old platform to Slack",
     "optionB": "Conducting a comprehensive needs analysis to understand the client's communication workflow and how Slack can be integrated",
@@ -121,6 +132,7 @@
     "_cat": "Migration"
   },
   {
+    "id": "2169924a",
     "question": "A growing tech startup using Slack wants to ensure that its channel settings support both open communication and focused discussions. How should they structure their channel management settings?",
     "optionA": "Restrict channel creation to administrators only to maintain focus",
     "optionB": "Allow all employees to create channels without any restrictions",
@@ -132,6 +144,7 @@
     "_cat": "Channel Management"
   },
   {
+    "id": "20885bb7",
     "question": "What is a fundamental aspect of the Slack experiential learning approach when training new users in a corporate setting?",
     "optionA": "Providing a comprehensive set of written documentation for users to study and learn about Slack independently",
     "optionB": "Relying exclusively on traditional lecture-based training sessions without hands-on practice",
@@ -143,6 +156,7 @@
     "_cat": "Training & Enablement"
   },
   {
+    "id": "9f6ca95b",
     "question": "When creating a learning plan for Slack admins in a rapidly growing startup, what aspect is crucial to include to ensure they can keep up with the evolving needs of their team?",
     "optionA": "Limiting the training to one extensive session covering all Slack features in detail",
     "optionB": "A dynamic, ongoing training program that evolves with new Slack updates and features, including regular refresher courses",
@@ -154,6 +168,7 @@
     "_cat": "Training & Enablement"
   },
   {
+    "id": "1d57f94c",
     "question": "A large organization using Slack's Enterprise Grid needs to designate a role to someone who will oversee the entire Slack environment across multiple workspaces, including setting security policies and managing compliance. Which role is most appropriate for this responsibility?",
     "optionA": "Workspace Owner",
     "optionB": "Workspace Admin",
@@ -165,6 +180,7 @@
     "_cat": "Administration Roles"
   },
   {
+    "id": "0609296f",
     "question": "When conducting a live Slack training session for a newly formed team in a corporation, what is the most effective way to create an experiential learning environment?",
     "optionA": "Present a detailed PowerPoint presentation on Slack features without any interactive elements",
     "optionB": "Engage participants in a hands-on workshop where they actively use Slack to collaborate on a simulated project, with real-time guidance and feedback",
@@ -176,6 +192,7 @@
     "_cat": "Training & Enablement"
   },
   {
+    "id": "016036e7",
     "question": "In a rapidly growing organization, employees are facing difficulties in finding relevant channels on Slack. What advice should be given to streamline channel discovery and usage?",
     "optionA": "Recommend deleting less active channels to reduce the total number",
     "optionB": "Suggest using a clear and consistent channel naming convention that includes department and function",
@@ -187,6 +204,7 @@
     "_cat": "Channel Management"
   },
   {
+    "id": "e50e9a46",
     "question": "A user is experiencing audio issues during Slack calls, where they can't hear other participants. What is the first action they should take to troubleshoot this problem?",
     "optionA": "Check their audio settings in Slack and ensure their speakers or headphones are properly connected and configured",
     "optionB": "Replace their computer's sound card as it might be faulty",
@@ -198,6 +216,7 @@
     "_cat": "Troubleshooting"
   },
   {
+    "id": "24d2ac86",
     "question": "In a live training session aimed at helping a marketing team use Slack for campaign management, what experiential learning activity would be most beneficial?",
     "optionA": "Solely focusing on the lecture about Slack's technical specifications and backend architecture",
     "optionB": "Conducting a role-playing exercise where team members use Slack to plan, discuss, and execute a mock marketing campaign",
@@ -209,6 +228,7 @@
     "_cat": "Training & Enablement"
   },
   {
+    "id": "989f370e",
     "question": "A newly formed company is setting up Slack and wants to foster a collaborative environment while also maintaining a level of organization in their communications. What channel management setting should they implement?",
     "optionA": "Allow all employees to create both public and private channels without restrictions",
     "optionB": "Create a few essential channels for general topics and allow department heads to create additional channels as needed",
@@ -220,6 +240,7 @@
     "_cat": "Channel Management"
   },
   {
+    "id": "a401a105",
     "question": "You are meeting with a client who has been using Slack for basic communication. What question would be most useful to understand their needs for expanding Slack usage?",
     "optionA": "How many employees in your organization have installed Slack on their mobile devices?",
     "optionB": "What specific challenges are you currently facing with team communication and collaboration?",
@@ -231,6 +252,7 @@
     "_cat": "Discovery & Consulting"
   },
   {
+    "id": "663ae7a0",
     "question": "In the event of a technical issue during Slack migration, who should the client contact first for resolution?",
     "optionA": "Contact Slack's customer service directly for all technical issues",
     "optionB": "The client should try to resolve the issue independently before reaching out for assistance",
@@ -242,6 +264,7 @@
     "_cat": "Migration"
   },
   {
+    "id": "d7360bcf",
     "question": "A user is experiencing slow loading times and frequent disconnections when using Slack. What should be the initial step in troubleshooting this issue?",
     "optionA": "Advise them to clear the cache and data for the Slack application",
     "optionB": "Immediately escalate the issue to Slack's engineering team for an in-depth analysis",
@@ -253,6 +276,7 @@
     "_cat": "Troubleshooting"
   },
   {
+    "id": "60708c05",
     "question": "In a company using Slack, there is a need for a role that can manage workspace settings, oversee channel creation, and handle user permissions but should not have access to billing information. Which Slack administrative role is best suited for this task?",
     "optionA": "Workspace Owner",
     "optionB": "Workspace Admin",
@@ -264,6 +288,7 @@
     "_cat": "Administration Roles"
   },
   {
+    "id": "47e8ec41",
     "question": "A rapidly growing startup using Slack is experiencing challenges in maintaining a balance between open communication and information overload. What setting adjustment would best help them address this challenge?",
     "optionA": "Restrict the creation of new channels to administrators only",
     "optionB": "Allow unlimited creation of channels by all users",
@@ -275,6 +300,7 @@
     "_cat": "Channel Management"
   },
   {
+    "id": "6bfcfbed",
     "question": "A healthcare organization using Slack needs to ensure compliance with HIPAA regulations. How should they manage the approval of third-party apps?",
     "optionA": "Implement an automatic approval system for apps that claim HIPAA compliance",
     "optionB": "Approve only the most popular and widely used apps",
@@ -286,6 +312,7 @@
     "_cat": "Compliance & Data Governance"
   },
   {
+    "id": "eaa94ffb",
     "question": "A large corporation with a diverse employee base is adopting Slack. What approach should be taken in designing a learning curriculum for these users to ensure comprehensive understanding and adoption of the platform?",
     "optionA": "Create a diverse learning curriculum that starts with Slack basics and gradually introduces more advanced features, tailored to different departments and user roles",
     "optionB": "Assume all employees have a similar level of technical proficiency and provide a uniform advanced-level training for all",
@@ -297,6 +324,7 @@
     "_cat": "Training & Enablement"
   },
   {
+    "id": "6b1ec162",
     "question": "A company's Workspace Owner wants to improve team productivity and collaboration. Which feature in the Slack analytics dashboard should they focus on to get insights into how effectively their team is collaborating?",
     "optionA": "Number of files uploaded",
     "optionB": "Active channels and engagement levels",
@@ -308,6 +336,7 @@
     "_cat": "Analytics & Reporting"
   },
   {
+    "id": "6b9124ed",
     "question": "In the final phase of a Slack migration, what is a key activity to ensure the client's smooth transition to the new platform?",
     "optionA": "Completely dismantling the old communication platform immediately to prevent fallback",
     "optionB": "Providing extensive post-migration support, including troubleshooting, additional training, and regular check-ins",
@@ -319,6 +348,7 @@
     "_cat": "Migration"
   },
   {
+    "id": "bd98bac0",
     "question": "A company is rolling out Slack to its employees and is in the process of executing its learning curriculum. What approach should be taken to ensure effective training for all employees?",
     "optionA": "Implement a flexible, phased training program that includes initial basic training, followed by more advanced sessions and regular refresher courses",
     "optionB": "Provide a single intensive training session covering all aspects of Slack, without any follow-up or additional support",
@@ -330,6 +360,7 @@
     "_cat": "Training & Enablement"
   },
   {
+    "id": "4953a8af",
     "question": "When discussing the adoption of Slack with a potential client who is concerned about team collaboration and productivity, which feature of Slack would you emphasize as most beneficial?",
     "optionA": "The ability to customize Slack's appearance with various themes and backgrounds",
     "optionB": "The integration of Slack with a wide range of productivity tools and apps to streamline workflows",
@@ -341,6 +372,7 @@
     "_cat": "Discovery & Consulting"
   },
   {
+    "id": "cb206cbe",
     "question": "In a growing startup, there is a need to assign a role responsible for managing day-to-day operations in Slack, such as user permissions and channel management, but without access to sensitive billing information. Which role should they assign?",
     "optionA": "Workspace Admin, who can manage daily operations like user permissions and channel settings but does not have access to billing information",
     "optionB": "Org Owner, who has full control over all administrative and billing settings",
@@ -352,6 +384,7 @@
     "_cat": "Administration Roles"
   },
   {
+    "id": "6febbd25",
     "question": "A marketing agency is looking to improve team collaboration and project management using Slack. Which use case should be recommended to them?",
     "optionA": "Creating dedicated channels for each project to centralize communication and file sharing",
     "optionB": "Using only direct messages for all project-related communications",
@@ -363,6 +396,7 @@
     "_cat": "Channel Management"
   },
   {
+    "id": "ff8a88a6",
     "question": "A large corporation is setting up its Slack workspace and needs to decide who should have the highest level of control and oversight over the entire Slack environment. Who should be assigned this role?",
     "optionA": "Org Owner, who has full access to all administrative settings, workspace management, and data for compliance purposes",
     "optionB": "Individual Workspace Admin, responsible for managing specific workspaces within the organization",
@@ -374,6 +408,7 @@
     "_cat": "Administration Roles"
   },
   {
+    "id": "0c94d85c",
     "question": "A company is implementing Slack and needs to train their admins on effectively managing the platform. What should be a key focus in the curriculum designed for these admins?",
     "optionA": "Emphasizing only basic messaging and channel creation functionalities",
     "optionB": "A comprehensive curriculum that includes basic functionalities, advanced admin controls, security settings, and best practices for user management",
@@ -385,6 +420,7 @@
     "_cat": "Training & Enablement"
   },
   {
+    "id": "79e98f8f",
     "question": "A financial company using Slack wants to ensure that the apps being used comply with strict data security regulations. What is the most appropriate app approval setting they should implement?",
     "optionA": "Allow all employees to install any apps they find useful",
     "optionB": "Automatically approve all apps listed in the Slack App Directory",
@@ -396,6 +432,7 @@
     "_cat": "Security & Identity Management"
   },
   {
+    "id": "c2a30421",
     "question": "In a multinational company using Slack, the leadership wants to ensure that the communication tool aligns with the diverse needs of different regions while maintaining a consistent company policy. How should they approach the configuration of Slack settings?",
     "optionA": "Implement the same settings globally without regional modifications",
     "optionB": "Allow each region to independently configure their Slack settings",

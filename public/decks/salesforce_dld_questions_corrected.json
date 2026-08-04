@@ -1,5 +1,6 @@
 [
   {
+    "id": "4ebcf84d",
     "question": "What are two advantages of using an Agile project management tool? Choose 2 answers",
     "optionA": "Consolidate project artifacts to a common repository.",
     "optionB": "Better relationships with business stakeholders.",
@@ -11,6 +12,7 @@
     "_cat": "Project & Release Management"
   },
   {
+    "id": "bdae5231",
     "question": "What are two roles a project Steering Committee plays in determining what methodologies are used? Choose 2 answers",
     "optionA": "Designing a methodology that will meet a particular project's requirements.",
     "optionB": "Approving deviations from the chosen methodology, when required to address project issues.",
@@ -22,6 +24,7 @@
     "_cat": "Application Lifecycle Management"
   },
   {
+    "id": "b00849d8",
     "question": "At Universal Containers, Salesforce administrators are making changes to permission sets under instruction from the business. Randomly, various SOQL statements are failing. What strategy could be advised to bring this issue to the developer's attention earlier?",
     "optionA": "Ask administrators to only make changes to profiles instead.",
     "optionB": "Create a sandbox refresh strategy to ensure each sandbox is refreshed every day.",
@@ -33,6 +36,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "4e87b7fd",
     "question": "Universal Containers (UC) has used Salesforce for the last 6 years with 50% custom code. UC has recently implemented continuous integration. UC wants to improve old test classes whenever new functionality invalidates tests. UC also wants to reduce the deployment time required. What should the architect recommend?",
     "optionA": "Do not execute any test classes in sandboxes and Production.",
     "optionB": "Execute all test classes in sandboxes and selected test classes in Production.",
@@ -44,6 +48,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "daf3611e",
     "question": "Universal Containers has five development teams. The performance of the teams has been good, but the number of bugs has been increasing. After each sprint, they need more time to understand the code and make changes. What are two ways to improve the performance? Choose 2 answers",
     "optionA": "Sprint review process.",
     "optionB": "Define a team that will analyze/approve all changes.",
@@ -55,6 +60,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "93601ed1",
     "question": "Universal Containers is a global organization that maintains regional production instances of Salesforce. One region has created a new application to track shipping containers. The CIO has requested that this new application be used globally by all the Salesforce instances and further maintained and modified regionally by local administrators. Which two deployment tools will support the request? Choose 2 answers",
     "optionA": "Ant Migration Tool",
     "optionB": "Developer Console",
@@ -66,6 +72,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "1371e84d",
     "question": "Universal Containers has just completed several projects, including new custom objects and custom fields. Administrators are having difficulty maintaining the application due to not knowing how objects and fields are being used. Which two options should an architect recommend? Choose 2 answers",
     "optionA": "Create design standards to consistently use the description field on custom objects.",
     "optionB": "Create design standards with a document to store all custom objects and custom fields.",
@@ -77,6 +84,7 @@
     "_cat": "Application Lifecycle Management"
   },
   {
+    "id": "28e4ec67",
     "question": "Universal Containers is adopting Scrum as an Agile methodology and wants to choose a software tool to support the adoption. What three key features of an Agile development support tool should an architect look for? Choose 3 answers",
     "optionA": "Work (for example, user stories or tasks) assignment.",
     "optionB": "Email notifications when work is created or changed.",
@@ -88,6 +96,7 @@
     "_cat": "Project & Release Management"
   },
   {
+    "id": "bc626241",
     "question": "Universal Containers (UC) is considering implementing a minor change policy for a series of low-risk user stories that are commonly received by the UC admins. The policy would allow admins to make these changes directly in production. UC does not have continuous integration/continuous delivery (CI/CD) in place. Which three best practices should the architect suggest UC follow for their new change policy? Choose 3 answers",
     "optionA": "Downstream environments will not be automatically updated when production changes.",
     "optionB": "Minor changes do not need to be documented and can be made at any time.",
@@ -99,6 +108,7 @@
     "_cat": "Application Lifecycle Management"
   },
   {
+    "id": "8846055b",
     "question": "Universal Containers requires that all sandboxes that have not been recently refreshed must also receive the newest changes to production. This must be done before any functionality from that environment can be moved to production. Which deployment tool would allow this deployment process to be managed in an automated fashion?",
     "optionA": "Change Sets",
     "optionB": "Workbench",
@@ -110,6 +120,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "716287d1",
     "question": "Universal Containers has seven orgs in different regions. Its processes are global and standardized but each region needs the flexibility to be able to understand the global code and customize some aspects for its regions. Which development model is optimized for this need?",
     "optionA": "Create a centralized Git with all the code where the global team approves the changes made by the local teams.",
     "optionB": "Use unlocked packages to deploy the global code and allow each country to create its own customized unlocked package extensions.",
@@ -121,6 +132,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "058e3da6",
     "question": "Universal Containers is concerned that after each release, reports and dashboards seem to roll back to previous versions. Executives spend many hours crafting these dashboards to perfectly meet their needs, and are now questioning the Salesforce platform's ability to save things, even data records. What can the Salesforce architect advise to stop the rollbacks from happening?",
     "optionA": "Ensure report metadata is exported daily and that it is merged into the developer branches before the next release.",
     "optionB": "Use a third-party data warehouse.",
@@ -132,6 +144,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "f3d07cd1",
     "question": "Universal Containers has recently acquired another business that uses Salesforce extensively. UC wants to merge their Salesforce orgs to effectively sell and service customers under one business. Traditionally, UC has followed an Agile development methodology to deliver Salesforce functionality. With the merging businesses, UC is convinced that adopting a Waterfall development methodology is the best approach. Which are two positive aspects of using a Waterfall development methodology? Choose 2 answers",
     "optionA": "Changes late in the process are expected and can be handled by integrating them into the requirements specs.",
     "optionB": "Milestones, timelines, and estimates tend to be more accurate and predictable due to the upfront due diligence.",
@@ -143,6 +156,7 @@
     "_cat": "Application Lifecycle Management"
   },
   {
+    "id": "9fd8746c",
     "question": "When replacing an old legacy system with Salesforce, which two strategies should the plan consider to mitigate the risks associated with migrating data from the legacy system to Salesforce? Choose 2 answers",
     "optionA": "Migrate users in phases based on their functions, requiring parallel use of legacy system and Salesforce for a certain period of time.",
     "optionB": "Identify the data relevant to the new system, including dependencies, and develop a plan/scripts for verification of data integrity.",
@@ -154,6 +168,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "cf2eecac",
     "question": "Universal Containers is delivering many changes to its Salesforce system. Adoption reports are discovering that many features are unused. The steering committee wants this to change and is looking to the architect for advice. What should an architect recommend to overcome this?",
     "optionA": "Using Lightning Web Components for every user interface.",
     "optionB": "Sending weekly communication emails reporting on least engaged users.",
@@ -165,6 +180,7 @@
     "_cat": "Application Lifecycle Management"
   },
   {
+    "id": "02921bb0",
     "question": "Universal Containers is in the final stages of building a new application to track custom containers. During a review of the application, a business subject matter expert mentioned that it would be nice to be able to track additional container types beyond what was originally scoped during the plan and design phase. Which two actions should be performed to mitigate the risk? Choose 2 answers",
     "optionA": "Have a discussion with the business SME and communicate that a new developer environment will be needed to mitigate the risk.",
     "optionB": "Have a discussion with the business SME and communicate that Salesforce has limitations in supporting such a feature to mitigate the risk.",
@@ -176,6 +192,7 @@
     "_cat": "Project & Release Management"
   },
   {
+    "id": "3a0f40db",
     "question": "Universal Containers is planning to release simple configuration changes and enhancements to their Sales Cloud. A technical architect recommends using change sets. Which two advantages would change sets provide in this scenario? Choose 2 answers",
     "optionA": "The ability to deploy a very large number of components easily.",
     "optionB": "A simple and declarative method for deployment.",
@@ -187,6 +204,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "6e79fdb4",
     "question": "Universal Containers has development teams working on multiple projects. They are exploring a source control tool to track and manage their code/config. What two benefits does a source control tool provide? Choose 2 answers",
     "optionA": "Provides the ability for distributed teams to work in isolation.",
     "optionB": "Provides automated code/configuration deployments.",
@@ -198,6 +216,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "96a9af62",
     "question": "Universal Containers (UC) has two major releases every year and the team always runs into longer deployment times. In which two ways can UC reduce deployment time? Choose 2 answers",
     "optionA": "Specify the tests to run by using the RunSpecifiedTests test level.",
     "optionB": "Use recent deployment validations and the Quick Deploy feature.",
@@ -209,6 +228,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "1f8fa592",
     "question": "Which two statements are accurate about why Mock objects are needed when writing test classes? Choose 2 answers",
     "optionA": "A Mock is needed whenever the code makes an HTTP callout.",
     "optionB": "Mock can also be used on the classes that extend the Batchable interface to bypass the batch jobs.",
@@ -220,6 +240,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "19382561",
     "question": "Universal Containers is looking to construct a continuous integration process to help manage code quality. Which three tools should be used to enable this? Choose 3 answers",
     "optionA": "Force.com Migration Tool (or SFDX CLI)",
     "optionB": "Continuous Integration build tool",
@@ -231,6 +252,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "d1099662",
     "question": "Which are two recommended methods of creating test data in Salesforce? Choose 2 answers",
     "optionA": "Utilize Heroku Connect to provide test class data.",
     "optionB": "Reference data from middleware directly within your test class.",
@@ -242,6 +264,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "4f44277d",
     "question": "Universal Containers' (UC) Customer Community is scheduled to go live in the EMEA region in 3 months. UC follows a typical centralized governance model. Two weeks ago, the project stakeholders informed the project team about recent changes in mandatory compliance requirements needed to go live. The project team analyzed the requirements and have estimated additional budget needs of 30% of the project cost for incorporating the compliance requirements. Which management team is empowered to approve this additional budget?",
     "optionA": "Change Control Board",
     "optionB": "Executive Steering Committee",
@@ -253,6 +276,7 @@
     "_cat": "Project & Release Management"
   },
   {
+    "id": "387dd40b",
     "question": "Universal Containers (UC) just started configuration and customization of its Salesforce organization. The architect suggested the definition of an Application Lifecycle Management (ALM) process. What are three benefits of following an ALM process? Choose 3 answers",
     "optionA": "Training new users after each minor and major release.",
     "optionB": "Releasing new features on a consistent schedule.",
@@ -264,6 +288,7 @@
     "_cat": "Application Lifecycle Management"
   },
   {
+    "id": "c5a6781c",
     "question": "Universal Containers has recently replaced a custom service center application with Salesforce Service Cloud. Administrators are now confused about which fields and classes are actively being utilized and how future implementations can be maintained. Choose 2 answers",
     "optionA": "Create an adoption plan for end users using Salesforce dashboards and reports.",
     "optionB": "Create a governance framework focused on high-level business strategy and goals.",
@@ -275,6 +300,7 @@
     "_cat": "Application Lifecycle Management"
   },
   {
+    "id": "8771e8d4",
     "question": "Universal Containers (UC) has two subsidiaries which operate independently. UC has made the decision to operate two separate Salesforce orgs, one for each subsidiary. However, certain functions and processes between the two orgs must be standardized. Which approach should UC take to develop customizations once and make them available in both orgs?",
     "optionA": "Develop the functionality in a sandbox and deploy it to both production orgs.",
     "optionB": "Create a managed (or unlocked) package in a Developer Edition org and deploy it to both production orgs.",
@@ -286,6 +312,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "5e784c10",
     "question": "Universal Containers has many development teams deploying into a single org. The business is very seasonal and approaching its busiest season. The business owner asks the architect for advice about its next major production release. What best practice should an architect recommend?",
     "optionA": "Make declarative changes in production only.",
     "optionB": "Bypass regression testing for minor changes.",
@@ -297,6 +324,7 @@
     "_cat": "Project & Release Management"
   },
   {
+    "id": "e06083f5",
     "question": "What sandbox type would be appropriate for diagnosing reports of poor performance when accessing certain Visualforce pages?",
     "optionA": "Developer Sandbox",
     "optionB": "Developer Pro Sandbox",
@@ -308,6 +336,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "63d84f51",
     "question": "Universal Containers has a complex deployment coming up. The deployment will include several Apex classes which depend on custom settings that hold important configuration. How should an architect manage this deployment?",
     "optionA": "Manually deploy and populate the custom settings in production prior to the Apex class deployment.",
     "optionB": "Migrate the configuration to a Custom Metadata Type and include it in the deployment to production.",
@@ -319,6 +348,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "1e158c90",
     "question": "A Salesforce administrator has initiated a deployment using a change set. The deployment has taken more time than usual. What is the potential reason for this?",
     "optionA": "The change set performance is independent of included components.",
     "optionB": "The change set includes field type changes for some objects.",
@@ -330,6 +360,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "bf46c00b",
     "question": "Universal Containers (UC) has multiple teams working on different projects. Multiple projects will be deployed to many production orgs. During code reviews, the architect finds inconsistently named variables and lack of best practices. What should an architect recommend to improve consistency?",
     "optionA": "Create a Center of Excellence for release management.",
     "optionB": "Use static code analysis to enforce coding standards.",
@@ -341,6 +372,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "376e5852",
     "question": "Universal Containers is building a custom application on the Force.com platform. There is a budget and release date that has been set by the board of directors, but the application must meet the requirements that will be submitted and voted on by a public user community. What is the risk associated with the scenario?",
     "optionA": "The project is not using the Waterfall methodology.",
     "optionB": "The requirements should not be solicited by an external community.",
@@ -352,6 +384,7 @@
     "_cat": "Project & Release Management"
   },
   {
+    "id": "106ad44b",
     "question": "Universal Containers (UC) has a customized repository that represents lots of different apps or projects. UC currently is trying to shift from the org development model to the package development model to manage changes. In the org development model, each developer starts their work within their own personal sandbox. When it comes to choosing development environments, what should a Salesforce architect recommend?",
     "optionA": "Start using scratch orgs that track all changes automatically and proceed with a staggered approach since scratch orgs can coexist with other models.",
     "optionB": "Start using scratch orgs because a developer can spin up a scratch org to start a new project, start a new feature branch, or start automated testing.",
@@ -363,6 +396,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "d6c3d18a",
     "question": "Universal Containers has written several validation rules and workflow rules for the Lead object. Which two test types should an architect suggest to ensure that a large inbound call center does not experience platform slowdowns under high call volume for the Lead object? Choose 2 answers",
     "optionA": "Unit Test",
     "optionB": "Performance Test",
@@ -374,6 +408,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "17935246",
     "question": "Universal Containers is starting a Center of Excellence (CoE). Which two user groups should an architect recommend to join the CoE? Choose 2 answers",
     "optionA": "Inside Sales Users",
     "optionB": "Call Center Agents",
@@ -385,6 +420,7 @@
     "_cat": "Application Lifecycle Management"
   },
   {
+    "id": "1292cd74",
     "question": "Universal Containers (UC) has recently acquired other companies that have their own Salesforce orgs. These companies have been merged as new UC business units. The CEO has requested an architect review the org strategy taking into consideration two main factors: (1) The CEO wants business process standardization among all business units. (2) Business process integration is not required as the different business units have different customers and expertise. Which org strategy should the architect recommend in this scenario, and why?",
     "optionA": "Single-org strategy, as costs increase as the number of orgs go up.",
     "optionB": "Multi-org strategy, as it is uncommon for diversified business units to get used to working in the same space as other business units.",
@@ -396,6 +432,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "ef47a1bd",
     "question": "Universal Containers (UC) is embarked on a large Salesforce transformation journey. UC's DevOps team raised a question about tracking Salesforce metadata throughout the development lifecycle across sandboxes all the way to production. As the deployment architect of the project, what should be the recommendation to track which version of each feature is in different environments?",
     "optionA": "Use an AppExchange or third-party tool that is specialized in Salesforce deployment.",
     "optionB": "Use change sets to track deployed customizations.",
@@ -407,6 +444,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "c0976a29",
     "question": "Universal Containers' (UC) development team is using an Agile tool to track the status of build items, but only in terms of stages. UC is not able to track any effort estimates, log any hours worked, or keep track of remaining effort. For what reasons should UC consider using the Agile tool for effort tracking?",
     "optionA": "Allows the management team to manage the performance of bad developers who are slacking off.",
     "optionB": "Allows the developer to compare their effort estimates and actuals to better adjust their future estimates.",
@@ -418,6 +456,7 @@
     "_cat": "Project & Release Management"
   },
   {
+    "id": "bc9a1ad1",
     "question": "The CTO at Universal Containers is complaining to the software development managers that he has no visibility of their teams' work status. What two software development methodologies should an architect suggest to solve this issue, and why? Choose 2 answers",
     "optionA": "DevOps, because monitoring and logging practices help you stay informed of performance in real time.",
     "optionB": "Kanban, because one of its basic elements is to make everything visible, creating consistent transparency of work items.",
@@ -429,6 +468,7 @@
     "_cat": "Application Lifecycle Management"
   },
   {
+    "id": "a44349e1",
     "question": "Universal Containers (UC) is planning for a huge data migration as part of their Service Cloud implementation. UC has approximately 15 million customers, 30 million contacts, and 30 million active cases. Which two key areas of UC's data migration test plan should be included? Choose 2 answers",
     "optionA": "Target Salesforce server and source system IP addresses.",
     "optionB": "Manual and automated data validation approaches.",
@@ -440,6 +480,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "52e1dadf",
     "question": "Universal Containers wants to introduce data volume testing to resolve ongoing performance defects earlier in the lifecycle. Regulations prohibit the use of production data in non-production environments. Which two options can the architect recommend? Choose 2 answers",
     "optionA": "Use Query Analyzer in production.",
     "optionB": "Request a partial sandbox copy after the next Salesforce release.",
@@ -451,6 +492,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "2b7730d8",
     "question": "Universal Containers (UC) is considering updating their Salesforce production deployment as a part of their release management process. Which three best practices should UC consider for production deployment? Choose 3 answers",
     "optionA": "Define a rollback strategy.",
     "optionB": "Announce the maintenance window ahead of time.",
@@ -462,6 +504,7 @@
     "_cat": "Project & Release Management"
   },
   {
+    "id": "6d1e8ed6",
     "question": "Universal Containers (UC) is a high-tech company using SFDX tools and methodologies for its Salesforce development. UC has moved some of its code and configuration to unlocked packages. Which two best practices should an architect recommend to support UC's new package development strategy? Choose 2 answers",
     "optionA": "Test developed packages in test environments before installing to production.",
     "optionB": "Move everything in the existing codebase to a single monolithic package.",
@@ -473,6 +516,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "004b8e73",
     "question": "Universal Containers (UC) has been following the Waterfall methodology to deliver customer apps in Salesforce. As the business is growing at scale and with demand to incorporate features and functionality at faster pace, UC is finding the Waterfall approach is not optimal, and intends to transition towards an Agile development methodology. Which are two strengths of using an Agile development methodology? Choose 2 answers",
     "optionA": "Careful documentation is done at each step of the process so a target body of knowledge is available for inspection.",
     "optionB": "The project requirements in later phases are expected and accommodated by the process, by design.",
@@ -484,6 +528,7 @@
     "_cat": "Application Lifecycle Management"
   },
   {
+    "id": "59848aee",
     "question": "Ursa Major Solar (UMS) has used Aura components significantly in its Salesforce application development. UMS has established a robust test framework and the development team follows Salesforce-recommended testing practices. The UMS team uses Salesforce's test tool to check for common accessibility issues. In which two environments can the UMS team call Aura accessibility tests? Choose 2 answers",
     "optionA": "WebDriver Test",
     "optionB": "JS Test (Jasmine)",
@@ -495,6 +540,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "c4030b0e",
     "question": "Cloud Kicks (CK) is launching a new sneaker line during the upcoming holiday season and needs to do thorough batch data testing before go-live. CK is using Salesforce Unlimited Edition. What two sandbox types should the architect recommend for batch data testing? Choose 2 answers",
     "optionA": "Developer Sandbox",
     "optionB": "Partial Copy Sandbox",
@@ -506,6 +552,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "69a9ff36",
     "question": "Universal Containers (UC) has four different business units (BUs) with different processes that share global customers. They have implemented a multi-org strategy with one org consolidating customer 360-degree view, and four orgs for the different BUs. Each of the BU orgs reads and writes customer information from/to the customer 360-degree view org in real time. UC is now launching a new BU that will use Salesforce. It does not share customers with the other BUs and needs flexibility in their business processes. What should an architect recommend as org strategy for this new BU?",
     "optionA": "Use the same Salesforce org of another BU that shares geographical localization with the new BU.",
     "optionB": "Use a new Salesforce org for the new BU, and customize integration so that it reads and writes customer information from the customer data org.",
@@ -517,6 +564,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "46826f40",
     "question": "Universal Containers (UC) works with different partners and has few admin resources that take care of the day-to-day deployment tasks. As a result, UC would like to find a way to automate the deployments using Metadata API. Which two limitations of Metadata API should be considered when using Metadata API-based deployments? Choose 2 answers",
     "optionA": "Deploy and retrieve up to 10,000 files at once.",
     "optionB": "Maximum size of deployed .zip file is 400 MB.",
@@ -528,6 +576,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "82bf81bd",
     "question": "What are two limitations an architect should consider when designing a strategy for managing technical reference data with multiple related objects? Choose 2 answers",
     "optionA": "Apex CPU limits",
     "optionB": "Circular relationships",
@@ -539,6 +588,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "edf98922",
     "question": "Northern Trail Outfitters (NTO) recently acquired Eastern Trail Outfitters (ETO). NTO's sales leadership team had hands-on experience with ETO's Sales Optimization app and have given the feedback that the app would benefit NTO's sales team. Which option should the architect recommend for having ETO's Sales Optimization app in NTO's Salesforce org in the shortest possible time?",
     "optionA": "Create an unmanaged package of the app and deploy in NTO's org.",
     "optionB": "Create users in ETO's org and provide access to NTO's sales team.",
@@ -550,6 +600,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "711da2f7",
     "question": "Universal Containers has just acquired Planetary Storage. Both companies use Salesforce to manage their sales activities. The two companies have many customers in common and the company plans to merge the two sales organizations, but the products and sales processes between the two original companies will remain different and distinct. What factor should the company consider in merging the two Salesforce orgs into a single org?",
     "optionA": "Transactional sales data could be combined without modification since standard objects are used.",
     "optionB": "Business processes on standard objects can be merged without modifications.",
@@ -561,6 +612,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "c7cb14ef",
     "question": "Universal Containers has just initiated a project to implement a custom container tracking application with a large development team. The project manager is concerned that the large number of developers in a single Developer Pro sandbox could lead to challenges with code being overwritten. Which two methods should be used to mitigate this risk? Choose 2 answers",
     "optionA": "Replace the Developer Pro sandbox with a Partial Copy sandbox.",
     "optionB": "Provide each developer their own sandbox/developer org and implement a code repository and continuous integration to merge code into the Developer Pro sandbox.",
@@ -572,6 +624,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "27a5139f",
     "question": "Universal Containers (UC) has a huge volume of metadata that cannot be deployed at once. What is the recommended strategy for UC to be successful with the deployment?",
     "optionA": "Use a continuous integration tool such as Jenkins to deploy in the right order.",
     "optionB": "Identify metadata dependencies, create logical groupings, and deploy in the right order.",
@@ -583,6 +636,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "631e1af5",
     "question": "Universal Containers is about to begin the release of a major project. To facilitate this, they have several sandboxes to make their deployment train. These sandboxes are a mix of preview and non-preview instances. What should the architect recommend?",
     "optionA": "No advice needed, mixing instance types is important for regression testing.",
     "optionB": "Refresh all non-preview sandboxes during the release preview window.",
@@ -594,6 +648,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "3079812f",
     "question": "Universal Containers operates from North America and does business within North America. UC has just acquired a local company in Asia to start operating from Asia. Currently, these two business units operate in two different languages. Both units have different sales processes and have to comply strictly with local laws. During the expansion phase, UC would like to focus on innovation over standardization. What should an architect recommend given the scenario?",
     "optionA": "Single-org strategy, standardized sales process, common rules, and business-unit-specific locale.",
     "optionB": "Multi-org strategy, standardized sales process, common rules, and same locale across orgs.",
@@ -605,6 +660,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "7e0cf4e3",
     "question": "Universal Containers is validating an outbound change set from the Developer sandbox to the production org. Which two locking behaviors will occur during a deployment? Choose 2 answers",
     "optionA": "The sandbox org will be locked. Administrators cannot modify metadata.",
     "optionB": "The production org will be locked. Users will still be able to read/write data to the org.",
@@ -616,6 +672,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "26ed97a3",
     "question": "Universal Containers (UC) is embarking on a large program of work, with different projects and different vendors. UC created a Center of Excellence (CoE) that is struggling with scope creep between the different projects. What role should the architect suggest be added to the CoE?",
     "optionA": "Change Manager",
     "optionB": "Release Manager",
@@ -627,6 +684,7 @@
     "_cat": "Application Lifecycle Management"
   },
   {
+    "id": "3639bf51",
     "question": "Which two decisions should be made by an Architecture Review Board (ARB)? Choose 2 answers",
     "optionA": "What testing tools should be used to track integration testing requirements.",
     "optionB": "Whether to utilize the Waterfall or Agile methodology on the project.",
@@ -638,6 +696,7 @@
     "_cat": "Application Lifecycle Management"
   },
   {
+    "id": "91f88d7e",
     "question": "Universal Containers wants to implement a release strategy with major releases every four weeks and minor releases every week. Major releases follow Development, System Testing (SIT), User Acceptance Testing (UAT), and Training. Minor releases follow Development and User Acceptance Testing (UAT) stages. What represents a valid environment strategy consideration for UAT?",
     "optionA": "Minor and major releases use separate Developer Pro sandboxes.",
     "optionB": "Minor and major releases use the same Full Copy sandbox.",
@@ -649,6 +708,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "70a0c1d5",
     "question": "Universal Containers (UC) has a large backlog of work. They have noticed that despite their best efforts, valuable enhancements and updates are not being completed because they do not have the bandwidth to get them done. Many of these items are low effort and would not require experienced resources. What should the architect recommend that will minimize additional costs and allow UC to accomplish more?",
     "optionA": "UC should start a citizen development program.",
     "optionB": "UC should eliminate low-value items from the backlog.",
@@ -660,6 +720,7 @@
     "_cat": "Application Lifecycle Management"
   },
   {
+    "id": "4c9df2a3",
     "question": "A technical lead is performing all code reviews for a team and is finding many errors and improvement points. This is delaying the team's deliveries. Which two actions can effectively contribute to the quality and agility of the team? Choose 2 answers",
     "optionA": "Create development standards and train teams in those standards.",
     "optionB": "Choose the most senior developer to help the technical lead in the code review.",
@@ -671,6 +732,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "162eb8ef",
     "question": "Universal Containers (UC) is looking for advice on how often it should refresh its sandboxes. UC currently uses a development lifecycle that starts with developer environments and moves to integration testing, QA testing, UAT, and then production. They have many scrum teams working concurrently and the teams do not agree on when refreshes should occur. What two recommendations should the architect suggest? Choose 2 answers",
     "optionA": "Integration sandboxes should be refreshed rarely because of the burden of maintaining the various API connections.",
     "optionB": "Sandboxes should be refreshed on the day when the refresh is allowed for that type of sandbox.",
@@ -682,6 +744,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "19f08b3e",
     "question": "Cloud Kicks is considering using an automated testing tool to help manage deployments between environments. When should the architect recommend the use of an automated testing tool?",
     "optionA": "Automated tests should be run daily in all developer orgs.",
     "optionB": "Automated tests should be run only when merging into Full or Partial Copy sandboxes.",
@@ -693,6 +756,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "9c991e6c",
     "question": "Universal Containers (UC) is developing a new Customer Community. Requirements for the Community are not fully defined. UC is planning on using an Agile methodology for this work and has promised delivery of the complete system in three months. What are two risks associated with this approach? Choose 2 answers",
     "optionA": "Agile does not allow for changes to requirements, so customers might not like the resulting solution.",
     "optionB": "Agile is not an appropriate development methodology for Customer Community implementations.",
@@ -704,6 +768,7 @@
     "_cat": "Project & Release Management"
   },
   {
+    "id": "c50db85c",
     "question": "Universal Containers has decided on a single-org strategy, despite having to deal with the complexity of having multiple lines of business (LOBs) inside a single org. What are two common challenges in a single-org strategy for multiple LOBs? Choose 2 answers",
     "optionA": "Lack of declarative sharing and visibility capabilities to ensure correct visibility of objects and records.",
     "optionB": "Making Salesforce work with multiple currencies.",
@@ -715,6 +780,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "96992a86",
     "question": "Universal Containers (UC) operates globally from different geographical locations. UC is revisiting their current org strategy. Which three factors should an architect consider for a single-org strategy? Choose 3 answers",
     "optionA": "Consistent processes across the business.",
     "optionB": "Increased ability to collaborate.",
@@ -726,6 +792,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "21b6ccf3",
     "question": "Universal Containers (UC) has a large user base (>300 users) and was originally implemented eight years ago by a Salesforce systems integration partner. Since then, UC has made a number of changes to their Visualforce pages and Apex classes in response to customer requirements, made by a variety of vendors and internal teams. Which three issues would a new technical architect expect to see when evaluating the code in the Salesforce org? Choose 3 answers",
     "optionA": "Custom-built JSON and string manipulation classes that are no longer required.",
     "optionB": "Multiple unit test failures would be encountered.",
@@ -737,6 +804,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "d292fd5d",
     "question": "Which are two characteristics of an effective communication plan? Choose 2 answers",
     "optionA": "Consistent communication to a pre-defined list of stakeholders.",
     "optionB": "Communication to stakeholders on a 'need-to-know' basis.",
@@ -748,6 +816,7 @@
     "_cat": "Project & Release Management"
   },
   {
+    "id": "51fb3e72",
     "question": "Universal Containers has just initiated a project involving a large distributed development and testing team. The development team members need access to a tool to manage requirements, and the testing team needs access to a tool to manage defects. Additionally, stakeholders are requesting ad-hoc status reports. What tool should an architect recommend to support the project?",
     "optionA": "Wave (Tableau CRM)",
     "optionB": "Code Repository",
@@ -759,6 +828,7 @@
     "_cat": "Project & Release Management"
   },
   {
+    "id": "db8dd0f5",
     "question": "Universal Containers is in the process of testing their integration between Salesforce and their on-premise ERP systems. The testing team has requested a sandbox with up to 10,000 records in each object to benchmark the integration performance. What is the fastest approach an architect should recommend?",
     "optionA": "Spin off a Developer sandbox, migrate the metadata, and load the data using Data Loader.",
     "optionB": "Spin off a Full Copy sandbox with all the objects that are required for testing the integration.",
@@ -770,6 +840,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "42760192",
     "question": "Universal Containers (UC) is considering updating their Salesforce release management process. Which three best practices should UC consider for version control? Choose 3 answers",
     "optionA": "Maintain a single entry point for production from the master branch.",
     "optionB": "Maintain unrestricted access to the release sandboxes for all changes being deployed.",
@@ -781,6 +852,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "7ae89b27",
     "question": "Universal Containers (UC) uses a managed package to install an internal Sales app in five orgs. Within each org there are integrations and local processes with the objects of the managed package. UC wants to use unlocked packages for better integration with CI/CD processes. What would the Salesforce architect recommend for this migration?",
     "optionA": "Export all data from objects/fields of the managed package, uninstall it, install an unlocked package with the same namespace as the managed package, and restore all data.",
     "optionB": "Export all data from objects/fields of the managed package, uninstall it, install the unlocked package without a namespace, and restore all data.",
@@ -792,6 +864,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "d1940574",
     "question": "Northern Trail Outfitters (NTO) has well-defined release management processes for both large and small projects. NTO's development team created a workflow and a trigger for changes in its opportunity renewal process. What should the architect recommend for release planning of these changes?",
     "optionA": "Plan this as an interim release after checking with Salesforce Support.",
     "optionB": "Plan this as a major release and align with a Salesforce major release.",
@@ -803,6 +876,7 @@
     "_cat": "Project & Release Management"
   },
   {
+    "id": "2c90c553",
     "question": "What is the responsibility of the technical architect within a Change Control Board meeting?",
     "optionA": "Approve the upcoming release for deployment into production.",
     "optionB": "Prioritize the Salesforce product roadmap with business stakeholders.",
@@ -814,6 +888,7 @@
     "_cat": "Project & Release Management"
   },
   {
+    "id": "9cb20e73",
     "question": "Universal Containers wants to do weekly releases to production. What approach will mitigate the risk of bugs being inadvertently introduced to production?",
     "optionA": "Use of an Agile methodology.",
     "optionB": "Automated testing.",
@@ -825,6 +900,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "a0fc764b",
     "question": "Which two project situations favor a Waterfall methodology? Choose 2 answers",
     "optionA": "An application in post-production, with incremental changes made by a small team.",
     "optionB": "An application with many systems and inter-dependencies between components.",
@@ -836,6 +912,7 @@
     "_cat": "Application Lifecycle Management"
   },
   {
+    "id": "92fc13de",
     "question": "Universal Containers (UC) has received feedback from the field on several new feature requests aligned to business goals. UC is looking for a way to quickly get feedback and prioritize these requests. Which two options should an architect recommend? Choose 2 answers",
     "optionA": "Create the backlog or priority list in a project management tool.",
     "optionB": "Present the feature requests at a Center of Excellence meeting.",
@@ -847,6 +924,7 @@
     "_cat": "Project & Release Management"
   },
   {
+    "id": "9ef00f77",
     "question": "Universal Containers has a highly integrated environment with significant process orchestration between systems. When refreshing UAT, objects that have External IDs from production no longer point to valid External IDs in the UAT environment. What should an architect do to resolve this?",
     "optionA": "Let UAT point to production integrations and roll back each transaction after it finishes.",
     "optionB": "Delete all the data and use an automated testing tool to create new data across all the systems in UAT.",
@@ -858,6 +936,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "6156a463",
     "question": "What are two advantages of automated test data loads over manual data loads? Choose 2 answers",
     "optionA": "Automated loads can be done with no human oversight.",
     "optionB": "Automated loads are reliable in their results.",
@@ -869,6 +948,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "023258c0",
     "question": "The team at Universal Containers is building an application on Java that will interact with its Salesforce application. They want to use SOQL queries to retrieve and make changes to smaller pieces of Salesforce metadata through this application. Which API should the team leverage?",
     "optionA": "Tooling API",
     "optionB": "User Interface API",
@@ -880,6 +960,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "2de25757",
     "question": "What is the responsibility of an executive sponsor on a project?",
     "optionA": "Communicate project status.",
     "optionB": "Determine project methodology.",
@@ -891,6 +972,7 @@
     "_cat": "Project & Release Management"
   },
   {
+    "id": "b5cde063",
     "question": "Universal Containers is about to begin development work on a new project in their Salesforce org that will take many months to complete. UC is concerned about how critical bugs will be addressed for existing live functionality. What is the recommended release management strategy to address this concern?",
     "optionA": "Include fixes for critical bugs in the ongoing development sandboxes so that they will be released with the other code.",
     "optionB": "Utilize a dedicated Developer Pro sandbox to address critical bugs and release to production.",
@@ -902,6 +984,7 @@
     "_cat": "Project & Release Management"
   },
   {
+    "id": "5c2251da",
     "question": "Which statement is true for a Staging sandbox in a typical release pipeline?",
     "optionA": "Salesforce major releases (e.g., Winter to Spring) always occur in Staging and Production at the same time.",
     "optionB": "The Staging environment can only be updated once every two weeks.",
@@ -913,6 +996,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "598ef283",
     "question": "Universal Containers (UC) is implementing a governance framework and has asked the architect to make recommendations regarding release planning. Which two decisions should the architect make when planning for releases? Choose 2 answers",
     "optionA": "Whether Salesforce will wait to upgrade the pod until after a UC release is complete.",
     "optionB": "When to test a new UC feature release if there are issues.",
@@ -924,6 +1008,7 @@
     "_cat": "Project & Release Management"
   },
   {
+    "id": "f629a361",
     "question": "Universal Containers (UC) is working with Salesforce CPQ, which uses configuration sObjects to drive business logic. What are two best-practice recommendations an architect should propose to allow UC to deploy CPQ features as part of their CI/CD process? Choose 2 answers",
     "optionA": "Use Data Loader to deploy CSV files.",
     "optionB": "Build an Apex framework to deploy CPQ records.",
@@ -935,6 +1020,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "60b6639e",
     "question": "An architect is working on a Universal Containers project, and due to security concerns they cannot provide the architect with production access. Instead, a central release management team will be responsible for performing production deployments for all development teams. How should an architect leverage the Metadata API to ensure any metadata components necessary to deploy the project's functionality are properly communicated to the release management team?",
     "optionA": "Create a change set in each sandbox and download the package.xml file for the release management team.",
     "optionB": "Provide a spreadsheet of all components and utilize the Metadata API's readMetadata call.",
@@ -946,6 +1032,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "9845d66b",
     "question": "Universal Containers has started building a customer Lightning community that contains a few dozen Aura components. The development team lead has come to the Salesforce architect about questions regarding testing the Lightning components. What two knowledge points can the architect pass to the development team lead? Choose 2 answers",
     "optionA": "There is a $T test helper object that can be used to create the instance of the Lightning component, and it is promise enabled.",
     "optionB": "The testing can be viewed in the lightning.force.com/c/jasminetests.app URL. The page loads and runs Jasmine tests and writes pass/fail information to the screen.",
@@ -957,6 +1044,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "ece03577",
     "question": "Which two project situations favor an Agile methodology? Choose 2 answers",
     "optionA": "A digitization project to update an existing customer-facing process and enable quick adjustments.",
     "optionB": "A project with well-defined requirements and complex interactions between front- and back-end systems.",
@@ -968,6 +1056,7 @@
     "_cat": "Application Lifecycle Management"
   },
   {
+    "id": "12f79a7f",
     "question": "Universal Containers (UC) had added a Service team to the Salesforce Platform. The Service team would like to have a few dozen of the service centers entered into the system as technical reference data. The service centers are made searchable in many different web forms and are rather independent from all other business entities. In the past, they had to manually add any new service centers in each sandbox in the code migration path. They would like to eliminate the manual work if possible. What is an optimal way to accomplish this requirement?",
     "optionA": "Add the service centers to a list custom settings.",
     "optionB": "Define a brand-new custom object with a picklist field to host all of the service centers.",
@@ -979,6 +1068,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "3f3e8dd7",
     "question": "Universal Containers uses multiple Salesforce orgs for its different lines of business (LOBs). In a recent analysis, the architect found that UC could have a more complete view of its customers by gathering customer data from different orgs. What two options can an architect recommend to accomplish the customer 360-degree view? Choose 2 answers",
     "optionA": "Migrate from multi-org to single-org strategy, consolidating customer data in the process.",
     "optionB": "Implement a Hub-and-Spoke multi-org strategy by consolidating customer data in a single org, which will be the master of customer data, and using integration strategies to let the LOB orgs read and write from it.",
@@ -990,6 +1080,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "051864d9",
     "question": "Universal Containers (UC) wants to shorten their deployment time to production by controlling which tests to run in production. UC's Architect has suggested that they run only subsets of tests. Which two statements are true regarding running specific tests during deployments? Choose 2 answers",
     "optionA": "Specifying the test method is supported in DeployOptions, therefore specify only the test classes that are required to be executed.",
     "optionB": "To run a subset of tests, set the Run Specified Tests test level on the DeployOptions object and pass it as an argument to the deploy() call.",
@@ -1001,6 +1092,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "73b40778",
     "question": "Universal Containers (UC) is using Salesforce for their sales organization. The sales users have created several dashboards using multiple running users. The admins have also added a few workflow rules that send email notifications to some sales users. What should an Architect consider while planning the deployment of such components? Choose 2 answers",
     "optionA": "If the username in the source org doesn't exist in the target org, the deployment will stop until the usernames are resolved or removed.",
     "optionB": "User fields are preserved during metadata deployments and Salesforce attempts to locate a matching user in the target org during deployment.",
@@ -1012,6 +1104,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "feeeb5f2",
     "question": "Universal Containers has a highly customized Salesforce org, with many different pieces of configuration and code. Which configuration item should be covered by executable tests?",
     "optionA": "Workflow Rules",
     "optionB": "Case Assignment Rules",
@@ -1023,6 +1116,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "0a6666e2",
     "question": "Universal Containers (UC) is implementing Salesforce and wants the custom code to be unit-tested for all adverse conditions. Which two best practices should an Architect recommend while implementing Test Classes? Choose 2 answers",
     "optionA": "Test classes should not create custom setting data.",
     "optionB": "Test classes must use existing data in the environment.",
@@ -1034,6 +1128,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "91eb375c",
     "question": "Universal Containers (UC) is planning to move to Salesforce Sales Cloud and retire its homegrown on-premise system. As part of the project, UC will need to migrate 5 million Accounts, 10 million Contacts, and 5 million Leads to Salesforce. Which three areas should be tested as part of data migration? Choose 3 answers",
     "optionA": "Account and Lead ownership",
     "optionB": "Contact association with correct Account",
@@ -1045,6 +1140,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "2825c32c",
     "question": "Universal Containers (UC) has been on the org development model with scratch orgs already enabled, but they haven't been taking advantage of scratch orgs. Now UC is ready to move to the package development model. What step must be done by an administrator?",
     "optionA": "In setup, switch the Enable Unlocked Packages to Enabled, keep the Enable Second-Generation Managed Packages as disabled.",
     "optionB": "In setup, switch the Enable Dev Hub to Enabled, then switch the Enable Source Tracking for Scratch Orgs to Enabled.",
@@ -1056,6 +1152,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "21da735a",
     "question": "UC has recently acquired companies that have their own Salesforce orgs, merged as new business units. The CEO wants business process standardization among all units, but business process integration is NOT required as units have different customers. Which org strategy should the architect recommend?",
     "optionA": "Single-org strategy, as costs increase as the number of orgs go up.",
     "optionB": "Multi-org strategy, as it is uncommon for diversified business units to work in the same space.",
@@ -1067,6 +1164,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "947a218f",
     "question": "Sales and Service products will be created by two teams using 2nd-generation managed packages. The Sales team needs to use a specific function of the Service product, but only the functions exposed by the Service team. No other team will use these functions. What should an architect recommend?",
     "optionA": "Create two 2GP packages with the same namespace; set the methods to be shared with @namespaceAccessible.",
     "optionB": "Create two managed packages with Sales and Service namespaces; set the methods with @salesAccessible.",
@@ -1078,6 +1176,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "ae8b6e7f",
     "question": "What are three advantages of the package development model? Choose 3 answers",
     "optionA": "Eliminating the need of using change sets, which should no longer be used.",
     "optionB": "Providing its own source control.",
@@ -1089,6 +1188,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "c4314d7d",
     "question": "All AppExchange products are subject to Salesforce security reviews. What is the most common reason AppExchange products fail the security review?",
     "optionA": "SOQL injection",
     "optionB": "Cross-site scripting",
@@ -1100,6 +1200,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "20a0373a",
     "question": "Universal Containers has multiple development teams working on separate streams with different timelines. Each stream has different releases and delivery dates. What is a suitable branching policy to recommend?",
     "optionA": "GitHub flow",
     "optionB": "Trunk-based development",
@@ -1111,6 +1212,7 @@
     "_cat": "Application Lifecycle Management"
   },
   {
+    "id": "50c2ae4b",
     "question": "Universal Containers (UC) uses Salesforce Performance Edition and is hosting weekly training sessions for 4 weeks (5 days each, new trainees weekly). UC wants to train on samples of production data and delete data at week-end. What is the optimal recommendation?",
     "optionA": "Refresh a Partial Copy sandbox every weekend and include an appropriate sandbox template.",
     "optionB": "Refresh a Developer Pro sandbox every weekend and include an appropriate sandbox template.",
@@ -1122,6 +1224,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "0b8c5d16",
     "question": "Universal Containers uses the org development model and Salesforce CLI. A feature release artifact (.zip file) has been tested in a lower sandbox and is being deployed to a full sandbox for performance testing. Quick deployment options are NOT being used. What is the correct deployment approach?",
     "optionA": "Authorize to Full sandbox; Validate with sfdx:source:deploy; Deploy with sfdx:source:deploy.",
     "optionB": "Authorize to Full sandbox; Validate with sfdx:mdapi:deploy; Deploy with sfdx:source:deploy.",
@@ -1133,6 +1236,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "6fcd633a",
     "question": "Universal Containers (UC) has 80% code coverage. Despite having a test plan for each sprint, the number of defects is large. What two items should the architect recommend to reduce defects? Choose 2 answers",
     "optionA": "The test script should be used to define the test classes.",
     "optionB": "The code coverage should be increased to 95%.",
@@ -1144,6 +1248,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "1fca2746",
     "question": "Universal Containers' architect is documenting the Application Lifecycle Management (ALM) process to communicate it to development teams from different implementation partners. Which three steps apply to any Salesforce development project? Choose 3 answers",
     "optionA": "Environment management",
     "optionB": "Test or validation",
@@ -1155,6 +1260,7 @@
     "_cat": "Application Lifecycle Management"
   },
   {
+    "id": "cd632689",
     "question": "Universal Containers (UC) has two full sandboxes — 'Stage' for performance/regression testing and another for UAT. Both were refreshed two months ago. UC is targeting UAT completion in two weeks and a production release in four weeks. A Salesforce major release is scheduled in six weeks. UC needs to release on the current Salesforce version. What should the architect recommend?",
     "optionA": "Refresh both sandboxes immediately to get the preview release and complete testing.",
     "optionB": "Proceed with the current sandbox versions and release before the Salesforce upgrade.",
@@ -1166,6 +1272,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "b06f104c",
     "question": "Universal Containers (UC) operates globally with regional production orgs for Americas, EMEA, and APAC due to regulatory requirements. Each org has regional customizations AND shared standard features. How should shared metadata be deployed across all regional production orgs?",
     "optionA": "Deploy metadata to production orgs using managed packages.",
     "optionB": "Deploy metadata to production orgs using unmanaged packages.",
@@ -1177,6 +1284,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "46cb24ed",
     "question": "Universal Containers (UC) has multi-cloud architecture in a single org. The Sales Cloud dev team is working in a Dev Pro sandbox (DevPro1) delivering a release in three months. The business requirements from Service Cloud warrant a quicker release in four weeks, but need part of the Sales Cloud work that is completed in DevPro1. The decision of using a separate Dev Pro sandbox (DevPro2) is still pending. DevPro1 was upgraded to preview for the next Salesforce major release two weeks ago. What should an Architect recommend?",
     "optionA": "Clone the DevPro1 sandbox and name it DevPro2 for the second work stream to work on the Service Cloud requirements.",
     "optionB": "Push back on the requirements because adding another work stream will bring some risks with it.",
@@ -1188,6 +1296,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "0788a944",
     "question": "UC's scale of Salesforce deployment has increased over time, leading to complexities. UC is finding too many bugs in the deployed code, which has become a challenge to the delivery team. The team wants to reduce the amount of bugs by ensuring all the developed code is reviewed, tested, and validated in the upstream deployment process. Which three development practices will be best suited to address UC's concerns? Choose 3 answers",
     "optionA": "Use continuous integration with automation testing.",
     "optionB": "Encourage the development team to be self-organizing.",
@@ -1199,6 +1308,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "1655aa24",
     "question": "What are three advantages of using the SFDX? Choose 3 answers",
     "optionA": "Can store code on a local machine, or a version control system.",
     "optionB": "Can quickly deploy metadata using Execute Anonymous.",
@@ -1210,6 +1320,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "c4e0249f",
     "question": "Which are two key benefits of fully integrating an agile issue tracker with software testing and continuous integration tools? Choose 2 answers",
     "optionA": "Developers can see automated test statuses post code commit on a specific user story.",
     "optionB": "Developers can collaborate and communicate effectively on specific user stories.",
@@ -1221,6 +1332,7 @@
     "_cat": "Project & Release Management"
   },
   {
+    "id": "9164ffe1",
     "question": "Universal Containers business users often observe that newly released features are resulting in other previously existing and stable functionality being broken. Which approach should an Architect recommend to prevent regression?",
     "optionA": "Utilize the developer console to run test suites for the affected functionality.",
     "optionB": "Utilize unit and functional test automation as part of a continuous integration strategy.",
@@ -1232,6 +1344,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "45cad6f6",
     "question": "Universal Containers (UC) deploys major releases on a monthly schedule. In recent months, the team has noticed the deployment time has increased two-fold from 2 hours to 4 hours. The team wants to get back to reasonable deployment times. Which three issues could be affecting their deployment times? Choose 3 answers",
     "optionA": "The number and complexity of Apex tests will have a large impact on the deployment time.",
     "optionB": "Some components — profiles, custom junction objects, and fields — take longer to process than others.",
@@ -1243,6 +1356,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "47bcc6c5",
     "question": "What are two things needed to delete metadata with a deploy() call? Choose 2 answers",
     "optionA": "Package.xml file.",
     "optionB": "The current API version must be used.",
@@ -1254,6 +1368,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "69e82cf5",
     "question": "A Salesforce contractor has built an application for Universal Containers (UC). The contractor will need to deploy multiple times from the contractor's own Salesforce to UC's Salesforce environments. Ultimately, UC has full control of the application's code, including its intellectual property. Which deployment method should the contractor use?",
     "optionA": "Eclipse IDE.",
     "optionB": "Unmanaged Package.",
@@ -1265,6 +1380,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "41c787b2",
     "question": "Which two options should be considered when making production changes in a highly regulated and audited environment? Choose 2 answers",
     "optionA": "All changes including hotfixes should be reviewed against security principles.",
     "optionB": "Any production change should have explicit stakeholder approval.",
@@ -1276,6 +1392,7 @@
     "_cat": "Application Lifecycle Management"
   },
   {
+    "id": "d7b0ee0b",
     "question": "Universal Containers (UC) is working on a major project and has determined that its approach to a certain feature will no longer work with an upcoming Salesforce platform release (e.g., Winter to Spring). What should a Technical Architect recommend to address this issue?",
     "optionA": "Continue with the current approach, since Salesforce will rectify the issue prior to updating the production environment to the new platform release.",
     "optionB": "Continue development in a non-upgraded sandbox, and have the developer update the API version of the code to the upcoming API version for testing purposes.",
@@ -1287,6 +1404,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "36974ea1",
     "question": "Universal Containers is looking to install a new application to enable advanced quoting in its current Professional Edition org. The org is near capacity with object and tab limits. Which two solutions should the Architect recommend? Choose 2 answers",
     "optionA": "Install an Aloha certified App.",
     "optionB": "Upgrade to an Enterprise Edition org.",
@@ -1298,6 +1416,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "6a25c420",
     "question": "A year has passed since a project has gone live and a developer is looking to make an update to an existing Apex class, but is unsure of its purpose. What artifact from the original project should be leveraged to determine the purpose of the class?",
     "optionA": "User Acceptance Test Scripts.",
     "optionB": "Test Execution Plan.",
@@ -1309,6 +1428,7 @@
     "_cat": "Application Lifecycle Management"
   },
   {
+    "id": "11f1d00f",
     "question": "Why does Salesforce prohibit Stress Testing against Production?",
     "optionA": "There is not enough CPU.",
     "optionB": "It is a shared environment.",
@@ -1320,6 +1440,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "acf27c9e",
     "question": "Universal Containers (UC) has a recruiting application using Metadata API version 35, deployed to production last year. The current Salesforce platform is running API version 36. A new field introduced on the object Apex page in API version 36 has been developed by a UC developer, who tries to deploy the page using the previous deployment script that uses API version 35. What will happen during the deployment?",
     "optionA": "The deployment script will pass because the new field is backward compatible with the previous API version 35.",
     "optionB": "The deployment script will fail because the new field is not known for the previous API version 35.",
@@ -1331,6 +1452,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "ade048ca",
     "question": "The CTO at Universal Containers decided to implement the Scrum framework for its agile teams and communicated a set of Scrum principles to the company. Which describes a Scrum principle?",
     "optionA": "Deliver working software, so if a software component is working, avoid changing it.",
     "optionB": "Respect other teams by not doing their work (a developer should not test the software).",
@@ -1342,6 +1464,7 @@
     "_cat": "Application Lifecycle Management"
   },
   {
+    "id": "7e6cdb08",
     "question": "Universal Containers (UC) has multiple teams with major projects working concurrently in their own developer sandboxes. After deploying to production, a bug is discovered. Due to tight timelines, the development team has suggested correcting the bug in the user acceptance testing (UAT) environment, which is a full copy sandbox. What should the architect recommend? Choose 2 answers",
     "optionA": "UC should spin up a new sandbox to use as a hotfix environment and deploy the fix from there to production.",
     "optionB": "The fix should be made in the developer environment where the project work was done.",
@@ -1353,6 +1476,7 @@
     "_cat": "Project & Release Management"
   },
   {
+    "id": "2d70511f",
     "question": "There are many types of quality assurance techniques that can help minimize defects in software projects. Which two techniques should an architect recommend for Universal Containers to incorporate into its overall CI/CD pipeline? Choose 2 answers",
     "optionA": "Business verification testing.",
     "optionB": "Stress testing.",
@@ -1364,6 +1488,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "065657fa",
     "question": "Salesforce has three major releases a year. Which type of change introduced by a release can cause automated browser tests to need updating?",
     "optionA": "DOM changes.",
     "optionB": "New standard fields.",
@@ -1375,6 +1500,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "d098ec60",
     "question": "Universal Containers (UC) is using Sales and Service Cloud. They have two major releases and four minor releases every year, and maintain deployment (dev), integration, user acceptance (UAT), staging, and hotfix sandboxes. What should an Architect recommend when UC has P1 issues that must be fixed immediately?",
     "optionA": "Fix the issue in staging and deploy it into production.",
     "optionB": "Fix the issue in the hotfix sandbox, test, and deploy to production.",
@@ -1386,6 +1512,7 @@
     "_cat": "Project & Release Management"
   },
   {
+    "id": "821c2331",
     "question": "Universal Containers has an active production org and is planning to release new features next month. The team is preparing a deployment plan and reached out to the technical architect for inputs on the rollback strategy. What should a technical architect recommend?",
     "optionA": "Backup the existing metadata using the ANT Migration Tool. To roll back, deploy again to production using backed-up metadata.",
     "optionB": "Create a sandbox from production to take backup of existing metadata. To roll back, manually delete new components and redeploy using metadata from this sandbox.",
@@ -1397,6 +1524,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "34e34718",
     "question": "Universal Containers (UC) is implementing Service Cloud for their contact centers for 3,000 users and approximately 10 million customers. The average expected response time is less than 5 seconds with 1,500 concurrent users. What type of testing will help UC measure the page response time?",
     "optionA": "Unit testing.",
     "optionB": "Load testing.",
@@ -1408,6 +1536,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "227cab5e",
     "question": "What three tools should an architect recommend to support application lifecycle management methodology? Choose 3 answers",
     "optionA": "Database management systems.",
     "optionB": "Version control repository.",
@@ -1419,6 +1548,7 @@
     "_cat": "Application Lifecycle Management"
   },
   {
+    "id": "ef3368a2",
     "question": "Universal Containers (UC) is preparing for the new Salesforce release in a couple of months and has several ongoing development projects that may be affected. Which three steps should the team at UC take to prepare for this release? Choose 3 answers",
     "optionA": "Contact Salesforce to schedule a time to upgrade the full sandbox.",
     "optionB": "Refresh a sandbox during the Release Preview Window to ensure they have the upcoming release.",
@@ -1430,6 +1560,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "b19ac21f",
     "question": "Universal Containers is building a new complex integration to a legacy system. The legacy system is also going through a major upgrade. Senior leadership has committed to the board that the combined programs will be completed on time. What is the risk with this plan?",
     "optionA": "The deadline is scheduled during a Salesforce release.",
     "optionB": "The project team has decided to use the Waterfall methodology.",
@@ -1441,6 +1572,7 @@
     "_cat": "Project & Release Management"
   },
   {
+    "id": "0ab782ac",
     "question": "Universal Containers (UC) is embarked on an enterprise Salesforce transformation journey. UC would like to streamline and automate deployment to different sandboxes during the build phase. Upon customer acceptance in UAT, the company also requested to automate the production deployment. As the deployment architect, what is the recommendation to satisfy the customer requirements?",
     "optionA": "Recommend using a Continuous Integration and Continuous Deployment tool and build the pipeline to deploy to sandboxes and production.",
     "optionB": "Recommend using SFDX and document the deployment commands with steps to be executed for each environment.",
@@ -1452,6 +1584,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "cb26f076",
     "question": "Universal Containers has a full sandbox that will be used to analyze and fix bugs found in production. Which two items should the architect recommend to ensure that bugs found in production are more easily analyzed in this full sandbox? Choose 2 answers",
     "optionA": "Refresh the full sandbox after every deployment in production.",
     "optionB": "Create a daily process of copying new and changed data in production to the full sandbox.",
@@ -1463,6 +1596,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "c60fdc56",
     "question": "Universal Containers (UC) has developed extensions of Salesforce Service Cloud using the change set development model. Recently, UC acquired a company whose development team uses the org development model. The UC CTO wants both teams to work on a single org and follow the same set of processes. Which development model should the architect recommend for the consolidated development team?",
     "optionA": "Org development model, because the acquired company's team is already using it and it is better than the change set development model.",
     "optionB": "Package development model, because it allows packages to be created and deployed using declarative tools without writing code.",
@@ -1474,6 +1608,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "8d278dc8",
     "question": "Universal Containers (UC) has developed a managed package targeted for AppExchange. The product includes Apex code to customize and create layouts. UC is in the testing phase and the package is not yet certified. During testing on the target org, the Apex code for the layouts fails. Why are the Apex classes not able to access the metadata of the target org during testing?",
     "optionA": "Apex Settings to allow access to metadata is not switched on.",
     "optionB": "UC needs to turn on Apex Settings within the custom metadata type.",
@@ -1485,6 +1620,7 @@
     "_cat": "Deployment"
   },
   {
+    "id": "1e990e83",
     "question": "Universal Containers has multiple projects being developed in parallel. One project is in the testing phase and the testing team found a list of issues on items that will be deployed to production. As the project deadline is short, the customer team proposes that the fixes be done in the test sandbox and then deployed to production. What should the Architect recommend?",
     "optionA": "Recommend the customer team's proposal to fix the issues in the testing environment and deploy them to production.",
     "optionB": "Recommend fixing the issues in the development environment and deploying the changes directly to production.",
@@ -1496,6 +1632,7 @@
     "_cat": "Development & Testing"
   },
   {
+    "id": "a2bf19b2",
     "question": "Universal Containers has just initiated a project to implement a partner community. The application will be deployed into a production environment currently in use by a large Salesforce user base. The project manager has insisted that the development and testing team use a single developer sandbox. What is the risk with this approach?",
     "optionA": "Testers will encounter platform limits due to developer sandbox capacity limits.",
     "optionB": "Testers will experience functional changes throughout testing due to not having isolation from development.",
@@ -1507,6 +1644,7 @@
     "_cat": "Environment Management"
   },
   {
+    "id": "7f719fb9",
     "question": "A release will be deployed over a weekend, one week after Salesforce updates the production environment (e.g., from Winter to Spring). UC has found that a full sandbox refresh can take several days. What should the architect suggest as an optimal deployment plan?",
     "optionA": "Two weeks before go-live, deploy to Staging and then refresh the Staging and Production support sandboxes. Deploy from Staging to Production at go-live.",
     "optionB": "Approximately six weeks before go-live, ensure the sandbox will be on the release preview. One week before go-live, deploy to Staging. Deploy from Staging to Production at go-live.",
