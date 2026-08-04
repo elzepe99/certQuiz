@@ -600,25 +600,6 @@
     "_cat": "Design Integration Solutions"
   },
   {
-    "id": "7b5ecf20",
-    "question": "(Variant) A developer has been tasked by the integration architect to build a solution based on the Streaming API. The developer has done some research and has found there are different implementations of events in Salesforce (PushTopic Events, Change Data Capture, Generic Streaming, Platform Events), but is unsure of how to proceed with the implementation and asks the system architect for some guidance. What should the architect consider when making the recommendation?",
-    "optionA": "Change Data Capture does not have record access support.",
-    "optionB": "PushTopic Events can define a custom payload.",
-    "optionC": "Change Data Capture can be published from Apex.",
-    "optionD": "",
-    "optionE": "",
-    "correct": "A",
-    "explanation": "The three-option variant of the same item, and it resolves the same way. Change Data Capture ignores sharing settings and sends change events for every record of an object, so it has no record-level access support (A) — though it does respect field-level security, delivering only the fields the subscriber may view. Change events are generated automatically from record changes and cannot be published from Apex, so C is false. Option B, that PushTopic events can define a custom payload, is not simply wrong — the SOQL SELECT clause determines which fields appear — but it is the softer claim, since the payload is confined to fields of the queried object rather than an arbitrary schema. Pick the CDC statement, which the documentation asserts directly.",
-    "_cat": "Design Integration Solutions",
-    "corrected": {
-      "date": "2026-08-04",
-      "via": "comments",
-      "note": "Q49 B->A. Same reasoning as its twin Q44: the CDC record-access statement is the documented one.",
-      "from": "B",
-      "to": "A"
-    }
-  },
-  {
     "id": "1036ee6a",
     "question": "Northern Trail Outfitters (NTO) has an integration set up between a Salesforce org and a quoting system. NTO would like to show a notification to all sales representatives that use Salesforce any time the quoting system will be taken down for maintenance. Which Salesforce API should an Integration Architect use to fulfill this requirement?",
     "optionA": "Connect REST API",
