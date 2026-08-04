@@ -5,8 +5,11 @@ import { CompletionScreen } from '@/routes/CompletionScreen';
 import { ReviewScreen } from '@/routes/ReviewScreen';
 
 export function App() {
+  // basename must track Vite's `base` (/certQuiz/ on GitHub Pages, / elsewhere).
+  // Without it the router never matches a deep link — /certQuiz/deck/x falls
+  // through to the catch-all and redirects to the picker.
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Routes>
         <Route path="/" element={<DeckPicker />} />
         <Route path="/deck/:deckId" element={<QuizView />} />
