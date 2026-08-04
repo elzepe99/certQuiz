@@ -1,0 +1,24 @@
+[
+  {
+    "question": "DreamHouse Realty regularly processes customer requests for warranty work and would like to offer customers a self-serve option to generate cases. Which two solutions should an administrator use to meet this request? Choose 2 answers",
+    "optionA": "Web-to-Case",
+    "optionB": "Case Escalation",
+    "optionC": "Case Queues",
+    "optionD": "Email-to-Case",
+    "optionE": "",
+    "correct": "A,D",
+    "explanation": "Web-to-Case and Email-to-Case are two solutions that allow customers to create cases from a web form or an email. Web-to-Case generates HTML code for a web form that you can place on your website. Email-to-Case converts incoming emails into cases.\nReferences: https://help.salesforce.com/s/articleView?id=sf.customizesupport_web_to_case.htm&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.customizesupport_email_to_case.htm&type=5",
+    "_cat": "Salesforce Platform App Builder"
+  },
+  {
+    "question": "The VP of Sales at Cloud Kicks is receiving an error message that prevents them form saving an Opportunity. The administrator attempted the same edit without receiving an error. How can the administrator validate the error the user is receiving?",
+    "optionA": "Edit the page layout.",
+    "optionB": "View the setup audit trail.",
+    "optionC": "Log in as the user",
+    "optionD": "Review the sharing model",
+    "optionE": "",
+    "correct": "C",
+    "explanation": "Log in as the user is a feature that can be used to validate the error the user is receiving. Log in as the user allows an administrator to access Salesforce as another user and perform actions on their behalf, such as editing an opportunity. This can help troubleshoot issues that are specific to a user's profile, role, or permissions. References: https://help.salesforce.com/s/articleView?id=sf.admin_login.htm&type=5",
+    "_cat": "Salesforce Platform App Builder"
+  }
+]
