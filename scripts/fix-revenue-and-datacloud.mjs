@@ -14,6 +14,7 @@ const DRY = process.argv.includes('--dry');
 
 /** Answers before this ran; pinned so a second run cannot lose them. */
 const ORIGINAL_ANSWER = {
+  f6c30064: 'C',
   d0a0a5f3: 'D',
   '0b702723': 'B',
   ff10adbd: 'C,D',
@@ -50,6 +51,13 @@ const FIXES = {
   },
 
   'salesforce-revenue-cloud.json': {
+    f6c30064: {
+      note: 'Q30 answer C confirmed against the Trailhead attribute-based pricing module; the flag is set per-product under Overridden Inherited Attributes. Explanation rewritten around the documented click path, replacing invented references.',
+      set: {
+        explanation:
+          "Salesforce's own walkthrough sets this flag from the product, not from the classification: open the product, and on its Related tab under Overridden Inherited Attributes open the attribute, then on the Product Attribute Definition page select Is Price Impacting. That is an override of an attribute the product inherited, which is exactly what \"for this product only\" calls for (C). Setting the flag on the classification's attribute (A) would apply it to every product sharing that class, and the attribute definition (B) is global metadata describing the attribute itself — neither can scope pricing relevance to a single product. Once the two attributes are marked, Attribute-Based Adjustment records define the actual price changes per attribute-value combination.",
+      },
+    },
     '6f59e427': {
       note: 'Q85 A->B. Collaborative redlining runs through the Microsoft 365 Word integration. Also replaced the placeholder explanation, which read "?????? OR B".',
       set: {

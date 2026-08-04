@@ -296,8 +296,13 @@
     "optionB": "Edit the attribute definition and set the 'Is Price Impacting' flag.",
     "optionC": "Edit the inherited attributes at the product level and set the 'Is Price Impacting' flag.",
     "correct": "C",
-    "explanation": "* \"Attributes inherited from a product class can be customized at the product level.\"\n* \"Setting the 'Is Price Impacting' flag at the product level determines whether that attribute participates in attribute-based pricing calculations for that specific product.\"\n* \"The flag on the product class attribute only defines the default behavior, but pricing relevance is determined at the product level.\" Step-by-Step Reasoning:\n* Requirement: Two attributes (from product class) must affect price for this product only.\n* Best Practice: Override the inherited attributes at the product level and set Is Price Impacting = True.\n* Why C is Correct: Ensures attribute-based pricing applies only to this product without affecting others in the class.\n* Why Others Are Incorrect:\n* A: Setting the flag at the classification level affects all products in that class.\n* B: Attribute Definition is global metadata; it cannot specify product-specific pricing impact.\nReferences :\n* Salesforce CPQ Implementation Guide - Attribute-Based Pricing Configuration\n* Salesforce Subscription Management Implementation Guide - Product Attribute Inheritance and Overrides",
-    "_cat": "Pricing & Discounts"
+    "explanation": "Salesforce's own walkthrough sets this flag from the product, not from the classification: open the product, and on its Related tab under Overridden Inherited Attributes open the attribute, then on the Product Attribute Definition page select Is Price Impacting. That is an override of an attribute the product inherited, which is exactly what \"for this product only\" calls for (C). Setting the flag on the classification's attribute (A) would apply it to every product sharing that class, and the attribute definition (B) is global metadata describing the attribute itself — neither can scope pricing relevance to a single product. Once the two attributes are marked, Attribute-Based Adjustment records define the actual price changes per attribute-value combination.",
+    "_cat": "Pricing & Discounts",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "comments",
+      "note": "Q30 answer C confirmed against the Trailhead attribute-based pricing module; the flag is set per-product under Overridden Inherited Attributes. Explanation rewritten around the documented click path, replacing invented references."
+    }
   },
   {
     "id": "89816cb1",

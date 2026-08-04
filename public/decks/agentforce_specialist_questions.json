@@ -368,8 +368,13 @@
     "optionD": "",
     "optionE": "",
     "correct": "C",
-    "explanation": "When a prompt template version is immutable, it means that once the version is activated, it cannot be edited or modified. This ensures consistency in production environments where changes could disrupt workflows.\n* Option A is incorrect: Any version (not just the latest) can be activated, depending on the use case.\n* Option D is incorrect: Modifications require manually creating a new version; automatic versioning is not enforced.\n* Option C is correct: Activation locks the version, enforcing immutability.\nReferences:\n* Salesforce Help: Prompt Template Versioning\n* States that \"activated prompt template versions are immutable and cannot be edited.\"",
-    "_cat": "Salesforce Agentforce Specialist"
+    "explanation": "When a prompt template version is immutable, it means that once the version is activated, it cannot be edited or modified. This ensures consistency in production environments where changes could disrupt workflows.\n* Option A is incorrect: Any version (not just the latest) can be activated, depending on the use case.\n* Option B is incorrect: Modifications require manually creating a new version; automatic versioning is not enforced.\n* Option C is correct: Activation locks the version, enforcing immutability.\nReferences:\n* Salesforce Help: Prompt Template Versioning\n* States that \"activated prompt template versions are immutable and cannot be edited.\"",
+    "_cat": "Salesforce Agentforce Specialist",
+    "corrected": {
+      "date": "2026-08-04",
+      "via": "validation",
+      "note": "Q31 the explanation rebutted a non-existent \"Option D\"; the text it argues against is option B. Letter corrected, answer C unchanged."
+    }
   },
   {
     "id": "02699cee",
