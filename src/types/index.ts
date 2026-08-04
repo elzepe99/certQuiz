@@ -15,6 +15,20 @@ export type Question = {
   correct: string; // 'A' | 'B' | 'C' | 'D' | 'E', or comma-separated for multi-correct
   explanation: string;
   _cat: string;
+  /**
+   * Set when this question has been corrected since it was imported. Surfaced
+   * in the UI so a change is visible at the point of study rather than being
+   * silently absorbed into the JSON.
+   */
+  corrected?: QuestionCorrection;
+};
+
+export type QuestionCorrection = {
+  date: string; // YYYY-MM-DD
+  via: 'comments' | 'validation';
+  note: string;
+  from?: string; // previous `correct` value, present only when the answer moved
+  to?: string;
 };
 
 export type DeckMeta = {
