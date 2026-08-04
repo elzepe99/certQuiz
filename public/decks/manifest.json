@@ -81,6 +81,14 @@
       "accentColor": "#611F69"
     },
     {
+      "id": "salesforce-agentforce-specialist",
+      "name": "Salesforce Certified Agentforce Specialist",
+      "shortName": "Agentforce",
+      "description": "Specialist-level certification covering Agentforce and Agent Builder, custom and standard agent actions, prompt templates, Einstein Trust Layer, Data Cloud grounding, and agent testing and deployment.",
+      "file": "agentforce_specialist_questions.json",
+      "accentColor": "#5E5CE6"
+    },
+    {
       "id": "claude-questions",
       "name": "Claude & Anthropic Fundamentals",
       "shortName": "Claude",
