@@ -14,7 +14,10 @@
       "Bash(git push *)",
       "Bash(git check-ignore *)",
       "Bash(python -c ' *)",
-      "Bash(node scripts/fix-streaming-questions.mjs)"
+      "Bash(node scripts/fix-streaming-questions.mjs)",
+      "Bash(node scripts/fix-deepdive-integration.mjs)",
+      "Bash(node scripts/review-comments.mjs *)",
+      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('.claude/settings.local.json','utf8'\\)\\); console.log\\('valid JSON'\\)\")"
     ]
   }
 }
