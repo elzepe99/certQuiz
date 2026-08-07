@@ -95,6 +95,14 @@
       "description": "Covers Claude 101, the Claude API, Claude Code, Claude Cowork, prompt engineering, AI fluency frameworks, and AI capabilities and limitations.",
       "file": "claude_questions.json",
       "accentColor": "#D97757"
+    },
+    {
+      "id": "salesforce-admin",
+      "name": "Salesforce Certified Administrator",
+      "shortName": "Administrator",
+      "description": "Foundational certification covering configuration and setup, object management and the Lightning App Builder, sales and service applications, data and analytics, and process automation.",
+      "file": "salesforce_admin_questions.json",
+      "accentColor": "#F062C0"
     }
   ]
 }

@@ -16,10 +16,15 @@ export const CORRECTION_DATE = '2026-08-04';
  * @param {string} opts.note                  one-line human explanation
  * @param {string} [opts.from]                previous `correct` value, recorded
  *                                            only when the answer actually moved
+ * @param {string} [opts.date]                when this batch was applied; defaults
+ *                                            to CORRECTION_DATE so existing callers
+ *                                            are unaffected. Pass it when a later
+ *                                            pass runs on a different day, so the
+ *                                            stamp records the real date.
  */
-export function stampCorrection(q, { via, note, from }) {
+export function stampCorrection(q, { via, note, from, date }) {
   const corrected = {
-    date: CORRECTION_DATE,
+    date: date ?? CORRECTION_DATE,
     via,
     note: note.trim(),
   };
