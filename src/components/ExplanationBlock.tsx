@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useQuiz } from '@/state/quizStore';
 import { isCorrect, parseExplanation, linkifySegments } from '@/lib/quiz';
 import { CorrectionNotice } from '@/components/CorrectionNotice';
+import { RichText } from '@/components/RichText';
 
 export function ExplanationBlock() {
   const questions = useQuiz((s) => s.questions);
@@ -43,10 +44,10 @@ export function ExplanationBlock() {
 
       {parsed.body ? (
         <div
-          className="mt-3 max-h-[280px] overflow-y-auto whitespace-pre-line pr-3 text-[14px] leading-[1.65]"
+          className="mt-3 max-h-[280px] overflow-y-auto pr-3 text-[14px] leading-[1.65]"
           style={{ color: 'var(--text-primary)' }}
         >
-          {parsed.body}
+          <RichText text={parsed.body} size="sm" />
         </div>
       ) : null}
 

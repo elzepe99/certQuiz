@@ -1741,7 +1741,7 @@
   },
   {
     "id": "d50c6ceb",
-    "question": "A developer has a page with two extensions overriding the Standard controller for Case.<apex:page standardController=\"Case\" extension=\"CaseExtensionOne,CaseExtension Two\" showHeader=\"false\"> Each extension has a method called Save. The page has a command button as defined: <apex:commandButton value=\"Save\" action=\"{!save}\"/>",
+    "question": "A developer has a page with two extensions overriding the Standard controller for Case.\n\n```html\n<apex:page standardController=\"Case\" extension=\"CaseExtensionOne,CaseExtension Two\" showHeader=\"false\">\n```\n\nEach extension has a method called Save. The page has a command button as defined:\n\n```html\n<apex:commandButton value=\"Save\" action=\"{!save}\"/>\n```",
     "optionA": "All of the three Save methods will be executed",
     "optionB": "Save from Case Standard Controller will be executed",
     "optionC": "Save from CaseExtensionTwo will be executed",
