@@ -1,0 +1,19 @@
+{
+  "deck": "public/decks/salesforce_iam_architect_questions_corrected.json",
+  "reviewed": "2026-08-09",
+  "findings": [
+    {
+      "id": "c18bee92",
+      "verdict": "corrected",
+      "was": "A",
+      "correct": "B",
+      "explanation": "The requirement is that an employee disabled in LDAP cannot reach Salesforce at all. Standing up an identity provider that authenticates against LDAP, federating it to Salesforce with single sign-on, and disabling Login Form authentication achieves that end to end (B). Once LDAP disables the account the IdP will not issue an assertion, and with the login form switched off there is no Salesforce-local password left to fall back on. Closing that fallback is the part that actually removes the 24-hour window.\nOption A names the wrong feature. Salesforce documents an Authentication Provider as a way to log in with credentials from a third party using OpenID Connect or a custom OAuth 2.0 configuration; it has no LDAP capability, because LDAP is not an OAuth or OIDC protocol. The mechanism that does validate credentials against an LDAP server is Delegated Authentication — a separate feature, configured under Single Sign-On Settings and backed by a SOAP web service you host. Delegated Authentication would satisfy this requirement. An \"authentication provider that delegates to LDAP\" is not something you can configure.\nJust-in-Time provisioning (C) cannot help: a JIT registration handler only runs when a user logs in, so a user who can no longer authenticate never triggers it and is never deactivated by it. A login flow (D) runs after Salesforce has already validated the credentials, which is the wrong side of the check.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.sso_delauthentication.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.sso_authentication_providers.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5"
+      ],
+      "note": "Answer moved A->B. Option A says to \"configure an authentication provider to delegate authentication to the LDAP directory\", but Salesforce documents Authentication Providers as OpenID Connect or custom OAuth 2.0 integrations with a third party, with no LDAP support. The feature that validates credentials against LDAP is Delegated Authentication, which is a different feature and not what option A names. Option B is a complete, documented solution, and disabling Login Form authentication is what actually closes the bypass that left the 24-hour window. The deck's own structural audit flagged this as a near-miss: the explanation argued Delegated Authentication while the key pointed at the Auth Provider option."
+    }
+  ]
+}
