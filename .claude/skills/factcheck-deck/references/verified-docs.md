@@ -52,6 +52,29 @@ looking anything up — these recur constantly across Salesforce certifications.
 | Self-registration / SSO pairings | **Auth Provider + Registration Handler** (OpenID Connect and other social/external IdPs); **SAML + Just-in-Time provisioning**. Crossing the pairs is the standard distractor | Configure an Auth Provider Using OpenID Connect; Just-in-Time Provisioning for SAML |
 | Auth Provider vs Delegated Authentication | **Not the same feature, and a live trap.** An Authentication Provider logs users in with third-party credentials over **OpenID Connect or custom OAuth 2.0** — it has **no LDAP capability**, since LDAP is neither. **Delegated Authentication** is the feature that has Salesforce validate credentials against an **LDAP** server, configured under Single Sign-On Settings and backed by a SOAP web service you host. An option saying "configure an authentication provider to delegate authentication to LDAP" describes something you cannot configure | Authentication Provider SSO; Delegated Authentication |
 | Deactivating access via LDAP | JIT provisioning **cannot** deactivate a disabled user — a JIT registration handler only fires **on login**, and a user who can no longer authenticate never triggers it. A login flow runs **after** credentials are validated. Closing the gap needs IdP-backed SSO **plus Login Form authentication disabled**, or Delegated Authentication | Delegated Authentication; SAML SSO |
+| Validation rules and multiple errors | "When one validation rule fails, Salesforce continues to check other validation rules on that field or other fields on the page and **displays all error messages at once**." This is what makes *validation rules* — not client-side JS — the answer to "show more than one error on a `lightning-record-edit-form`" | Validation Rule Considerations |
+| BatchApexErrorEvent | A **standard** platform event the **platform fires automatically** when a batch job's start/execute/finish hits an **unhandled** exception. Gated only on the class implementing `Database.RaisesPlatformEvents`. The object page settles every distractor in one line: **"Only the Salesforce Platform can fire this event; Apex code and the API can't."** Supported subscribers are Apex triggers, flows, processes, **Pub/Sub API, and Streaming API (CometD)** — so an external system genuinely can listen on `/event/BatchApexErrorEvent`. A *custom* event can't substitute either: an unhandled exception has no catch point, and a default-behaviour publish rolls back with the transaction | Firing Platform Events from Batch Apex; BatchApexErrorEvent |
+| COUNT() and the query-row limit | **COUNT() and COUNT(fieldName) cost one query row** (one per grouping if `GROUP BY` is present). **Every other aggregate function counts each row used by the aggregation** as a query row — so `SUM()` over millions of records blows the 50,000-row limit while `COUNT()` over the same records does not. This is the real discriminator in "count millions of records efficiently" items | Working with SOQL Aggregate Functions |
+| SeeAllData and rollback | The annotation "applies to data queries but **doesn't apply to record creation or changes, including deletions**. New and changed records are **still rolled back** in Apex tests even when using the annotation." So a test that deletes real org records under `SeeAllData=true` leaves the org exactly as it found it | Using the isTest(SeeAllData=True) Annotation |
+| @testSetup and code coverage | "If a test setup method calls a **non-test method of another class, no code coverage is calculated** for the non-test method." So code reachable only from `@testSetup` doesn't count; call it from a test method instead | Using Test Setup Methods |
+| ALL ROWS | Queries "all records in an organization, **including deleted records and archived activities**". To include archived but exclude deleted, combine `ALL ROWS` with `IsDeleted = false`. Can't be used with `FOR UPDATE` | Querying All Records with a SOQL Statement |
+| Queueable vs Schedulable (the timing slot) | **Queueable has no scheduling capability.** Its only timing control is `System.enqueueJob(queueable, delay)` — a **minimum delay of 0–10 minutes**, "ignored during Apex testing". No recurrence, no time of day. `Schedulable` is what takes a **cron expression** via `System.schedule()` or the Schedule Apex page, and the Apex Scheduler page names the canonical pairing: "**ideal for daily or weekly maintenance tasks using Batch Apex**". On a "run this nightly over lots of records" choose-two, the two slots are *volume* (Batchable) and *recurrence* (Schedulable) — Queueable competes for neither | Apex Scheduler; Queueable Apex |
+| Why Batch Apex and not Queueable for LDV | The query-row limit is **50,000 in async exactly as in sync**, so making a job asynchronous buys *no* extra room to query 50,000+ records — a Queueable fails the same way a synchronous method would (heap likewise: 6 MB sync / 12 MB async). Batch Apex escapes it by a specific documented mechanism: "**If you use a QueryLocator object, the governor limit for the total number of records retrieved by SOQL queries is bypassed**… up to **50 million records**." Separately, "each execution of a batch Apex job is considered a discrete transaction… **governor limits are reset for each transaction**". Two distinct guarantees — the bypass covers the *query*, the reset covers the *processing*. Don't attribute the query headroom to the chunking | Use Batch Apex; Execution Governors and Limits |
+| @future limits (a fabricated-limit trap) | The **50** attached to `@future` is "**Maximum number of methods with the future annotation allowed per Apex invocation**" — a cap on how many future calls one transaction may make (0 in batch/future contexts, 50 in queueable). It is **not** "50 records per method call", a limit that does not exist and that a Dev II deck explanation asserted twice. Real `@future` constraints: static, `void`, **primitives or collections of primitives only** (no sObjects), can't be scheduled, no job id, no chaining | Execution Governors and Limits; Future Annotation |
+| Scheduled Apex limits | "Although scheduled Apex is an asynchronous feature, **synchronous limits apply to scheduled Apex jobs.**" This is the real reason `Schedulable` alone can't aggregate 50,000+ records — it buys timing, not headroom — and why Batch Apex is the other half of every "run a big calculation nightly" answer | Execution Governors and Limits |
+| DML governor limits | **150 DML statements** per transaction, and **10,000 records processed by DML** — the 10,000 is a **transaction-wide total, not a per-statement allowance**. Cascading trigger/flow DML counts against the same total, which is why a 200-record update can fail on it | Execution Governors and Limits |
+| Callouts and pending DML | "You **can't make a callout when there are pending operations** in the same transaction. Things that result in pending operations are **DML statements**, asynchronous Apex, scheduled Apex, or sending email." DML *after* a callout is fine. In tests: keep the **DML outside** `Test.startTest()/stopTest()` and the **callout inside**, and `Test.startTest()` must precede `Test.setMock()`. `Test.startTest()` **commits nothing** — it opens a fresh governor-limit context | Callout Limits and Limitations; Performing DML Operations and Mock Callouts |
+| Non-selective OR in SOQL | "If you use **two indexed fields joined by an OR** in the WHERE clause, your search results can exceed the index threshold. **Break the query into two queries and join the results.**" The same page's remedy for NULL filters on picklists/foreign keys is to "use values such as NA to replace NULLS" — i.e. an indexed formula field substituting a string for NULL | SOQL and SOSL (LDV Best Practices) |
+| External ID indexing | "**External IDs cause an index to be created on that field.**" Available only on Auto Number, Email, Number, and Text. The record `Id` is the primary key index; `CreatedDate`, `Systemmodstamp`, `Name`, `RecordTypeId`, `Division`, `Email`, and lookup/master-detail foreign keys are the other standard indexed fields. **Read the list carefully before writing a distractor:** it is `CreatedDate` (not `CreatedById`) that is indexed, and the entry is written **"Systemmodstamp (LastModifiedDate)"** — so "LastModifiedDate is not indexed" is *not* a claim this page supports | Indexes (Large Data Volumes) |
+| LIKE and indexes | A `LIKE` filter with a **leading** `%` wildcard cannot use an index; a **trailing** wildcard (`'value%'`) can. So "mark the field as an External ID" is a real fix for a slow `LIKE 'x%'` query, and a non-fix for `LIKE '%x%'` | Maximizing the Performance of Force.com SOQL |
+| Big Object SOQL | Index fields must be filtered **left to right in defined order**, and only **`=`, `<`, `>`, `<=`, `>=`, `IN`** are permitted — `LIKE`, `INCLUDES`, `EXCLUDES`, `!=`, `NOT IN` all fail. Non-final index fields accept only `=` | The Big Objects Playbook (SF Developers blog) |
+| Multiple controller extensions | A method defined in more than one extension resolves to the **leftmost** extension — first in the comma-separated `extensions` list. The others are **overridden, not chained** | Building a Controller Extension |
+| Field history retention | **18 months** in the org, **24 months via the API**, when Field Audit Trail is off. Field Audit Trail retains until you delete it (archives after 18 months in production) | Field History Tracking Overview |
+| Static resources | **5 MB** per resource, **250 MB** per org — its own allocation. Documented benefits: `$Resource` by name instead of hard-coded ids, a `.zip`/`.jar` archive of related files, and relative paths between files inside an archive. **Not** automatically minified | Using Static Resources |
+| Visualforce GET order of execution | Controller/extension constructors → custom components created, *their* constructors, then their attribute expressions → `assignTo` attributes → page expressions, `<apex:page action>`, other getters/setters → view state created if `<apex:form>` → HTML sent. Custom-component evaluation comes **before** the page's own expressions and action attribute | Order of Execution for Visualforce Page Get Requests |
+| Opportunity.ContactId | **It exists.** A standard, read-only field holding the primary contact, derived from the OpportunityContactRole. Any explanation asserting "Opportunity has no ContactId field" is wrong — the reason to reject a ContactId-based query is that it returns one primary contact, not the Account's contacts | Opportunity (Object Reference) |
+| Queueable chaining inside a test | **Real behaviour, no longer documented.** "You can't chain queueable jobs in an Apex test" was removed from the Queueable Apex page and from the Queueable interface reference; only third-party sources still state it. What the current page *does* document is that only **one job can be enqueued from an executing job**, and the `Test.startTest`/`stopTest` pattern. Treat `Test.isRunningTest()` guards around a chained enqueue as correct but **cite the enqueue limit, not a chaining-in-test sentence** — there isn't one to cite | Queueable Apex |
+| Lightning Inspector docs | **Removed from the Aura guide.** `lightning/inspector_*.htm` now redirects to the Debugging intro, including pinned old-version URLs. The Storage tab (client-side cache of storable actions) is still described in the Salesforce Developers blog post introducing the Inspector | Introducing the Salesforce Lightning Inspector |
 
 Every row above now names a source that was opened and read. If you add a row you
 have not rendered, mark it "verify before citing" and confirm it before it reaches
@@ -264,6 +287,120 @@ not `remoteaccess_token_introspection`).
 `platform.networks_create_external_users.htm`,
 `sf.users_license_types_communities.htm`, `sf.users_login_history.htm`.
 
+### Platform Developer II — Apex
+All rendered during the Dev II deck pass. Book prefix is
+`https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/` unless noted.
+
+- **Triggers** — `apex_triggers.htm`, `apex_triggers_context_variables.htm`,
+  `apex_triggers_bulk.htm`, `apex_triggers_bulk_idioms.htm`, `apex_triggers_bestpract.htm`
+- **Transactions & limits** — `apex_transaction.htm`, `langCon_apex_transaction_control.htm`
+  (the savepoint-invalidation rule), `apex_gov_limits.htm`
+- **Async** — `apex_batch_interface.htm`, `apex_scheduler.htm`, `apex_queueing_jobs.htm`,
+  `apex_classes_annotation_future.htm` (`(callout=true)` and the static/primitive-args rules),
+  `apex_batch_platformevents.htm`
+- **Callouts** — `apex_callouts.htm`, `apex_callouts_timeouts.htm`,
+  `apex_callouts_remote_site_settings.htm`, `apex_callouts_wsdl2apex_testing.htm`
+- **Web services** — `apex_rest.htm`
+- **Testing** — `apex_testing_SOSL.htm` (SOSL returns an empty list unless
+  `Test.setFixedSearchResults`), `apex_testing_data.htm`, `apex_testing_data_access.htm`,
+  `apex_testing_seealldata_using.htm` (the rollback-including-deletions rule — cite **this**,
+  not `apex_testing_data_access.htm`, which covers access isolation and never mentions
+  rollback), `apex_testing_testsetup_using.htm`, `apex_testing_tools_start_stop_test.htm`,
+  `apex_testing_tools_runas.htm`, `apex_testing_best_practices.htm`,
+  `apex_classes_restful_http_testing_dml.htm`
+- **Classes & annotations** — `apex_classes_static.htm`, `apex_classes_keywords_sharing.htm`,
+  `apex_classes_annotation_AuraEnabled.htm`, `apex_classes_email_inbound.htm`
+- **SOQL** — `apex_dynamic_soql.htm`, `apex_dynamic_describeSObject.htm`,
+  `langCon_apex_SOQL_query_all_rows.htm`, `langCon_apex_SOQL_working_with_results.htm`,
+  `langCon_apex_SOQL_agg_fns.htm` (the COUNT()-costs-one-query-row rule),
+  `langCon_apex_dml_examples_upsert.htm`, `langCon_apex_dml_nested_object.htm`
+- **Sharing** — `apex_bulk_sharing.htm`, `apex_bulk_sharing_understanding.htm`,
+  `apex_bulk_sharing_creating_with_apex.htm`
+- **Debugging** — `apex_debugging_debug_log.htm`
+
+Apex Reference Guide (`…apexref.meta/apexref/`): `apex_methods_system_date.htm`,
+`apex_methods_system_database.htm`, `apex_methods_system_sobject_describe.htm`,
+`apex_pages_standardcontroller.htm`, `apex_interface_webservicemock.htm`,
+`apex_namespace_Flow.htm`, `flow_interview_class.htm`.
+
+### Platform Developer II — LWC and Aura
+
+The newer `developer.salesforce.com/docs/platform/**/guide/*.html` format is
+**server-rendered**, so `check-urls.mjs` verifies these without a browser. Prefer it
+over `docs/component-library/bundle/…`, which is client-rendered.
+
+LWC guide (`https://developer.salesforce.com/docs/platform/lwc/guide/`):
+`create-lifecycle-hooks.html`, `create-lifecycle-hooks-dom.html`, `create-conditional.html`,
+`create-resources.html`, `js-third-party-library.html`, `events-create-dispatch.html`,
+`apex.html`-family: `apex-call-imperative.html`, `apex-wire-method.html`,
+`apex-expose-method.html`, `apex-error-handling.html`, `data-wire-service-about.html`,
+`data-create-record.html`, `reference-lightning-ui-api-record.html`,
+`reference-salesforce-modules`, `testing.html`, `unit-testing-using-jest-create-tests.html`.
+
+Lightning Component Reference (`…/docs/platform/lightning-component-reference/guide/`):
+`lightning-record-edit-form.html` (states that `lightning-messages` goes immediately before
+or after the `lightning-input-field`s), `lightning-layout.html`, `lightning-layout-item.html`
+(mobile-first grid; device attributes are additive), `lightning-datatable.html`,
+`lightning-platform-resource-loader.html`, `force-has-sobject-name.html`.
+
+Aura guide (`…lightning.meta/lightning/`): `expr_locale_value_provider.htm`,
+`components_using_lex_s1_config_action.htm`, `components_config_for_app_builder.htm`,
+`components_config_for_app_builder_design_files.htm`, `events_intro.htm`,
+`events_component.htm`, `events_component_fire.htm`, `events_application.htm`,
+`controllers_server_storable_actions.htm`, `controllers_server_apex_custom_errors.htm`,
+`js_libs_platform.htm`, `debug_intro.htm`.
+
+- **Introducing the Salesforce Lightning Inspector (blog)** — https://developer.salesforce.com/blogs/developer-relations/2016/02/introducing-salesforce-lightning-inspector
+  Names all six tabs; "The Storage tab reveals the client-side storage for Lightning
+  applications. Actions marked as storable are cached in the actions store." Cite this
+  instead of the removed `inspector_storage.htm`.
+
+### Visualforce
+Book prefix `https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/`.
+
+`pages_controller_lifecycle.htm`, `pages_controller_get_request.htm`,
+`pages_controller_extension.htm` (the leftmost-extension override rule),
+`pages_controller_methods.htm`, `pages_resources.htm` (5 MB / 250 MB and the three
+documented benefits), `pages_js_remoting.htm`, `pages_remote_objects.htm`,
+`pages_output_pdf_renderas.htm`, `pages_best_practices_perf_lazy_load.htm`,
+`apex_ApexPages_StandardController_ctor.htm`, and component reference pages
+`pages_compref_actionSupport.htm`, `pages_compref_commandButton.htm`,
+`pages_compref_messages.htm`, `pages_compref_pageMessages.htm`.
+
+- **Optimize the View State** — https://developer.salesforce.com/docs/atlas.en-us.salesforce_visualforce_best_practices.meta/salesforce_visualforce_best_practices/pages_best_practices_perf_code_view_state.htm
+  Note the separate `salesforce_visualforce_best_practices` book — the `pages` book's
+  `pages_controller_transient.htm` is dead.
+
+### More platform / reference (Dev II pass)
+- **Validation Rule Considerations** — https://help.salesforce.com/s/articleView?id=platform.fields_validation_considerations.htm&language=en_US&type=5
+- **Validation Rules Fields** — https://help.salesforce.com/s/articleView?id=platform.fields_validation_rules_fields.htm&language=en_US&type=5
+- **Custom Metadata Types** — https://help.salesforce.com/s/articleView?id=platform.custommetadatatypes_overview.htm&language=en_US&type=5
+- **Create a Sharing Set for Experience Cloud Site Users** — https://help.salesforce.com/s/articleView?id=platform.networks_setting_light_users.htm&language=en_US&type=5
+- **Custom Error Element (Flow)** — https://help.salesforce.com/s/articleView?id=platform.flow_ref_elements_custom_error.htm&language=en_US&type=5
+- **Event Monitoring** — https://help.salesforce.com/s/articleView?id=sf.real_time_event_monitoring_overview.htm&language=en_US&type=5
+- **Monitor Setup Changes with Setup Audit Trail** — https://help.salesforce.com/s/articleView?id=sf.admin_monitorsetup.htm&language=en_US&type=5
+  Note the `sf.` namespace; `platform.admin_monitorsetup.htm` does not resolve.
+- **Log Inspector (Developer Console)** — https://help.salesforce.com/s/articleView?id=platform.code_dev_console_view_system_log.htm&language=en_US&type=5
+  The Executed Units tab's **Count** column is "Number of times the item was called during
+  the process" — the answer to "how do I count calls to a method".
+- **Field History Tracking Overview** — https://help.salesforce.com/s/articleView?language=en_US&id=sf.tracking_field_history.htm&type=5
+- **Field Audit Trail** — https://help.salesforce.com/s/articleView?language=en_US&id=sf.field_audit_trail.htm&type=5
+- **AccountHistory (Field Reference Guide)** — https://developer.salesforce.com/docs/atlas.en-us.sfFieldRef.meta/sfFieldRef/salesforce_field_reference_AccountHistory.htm
+- **Opportunity (Object Reference)** — https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_opportunity.htm
+- **SOQL and SOSL (LDV Best Practices)** — https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_soql_and_sosl.htm
+  The decompose-the-OR rule and the NULL-substitution rule, in one table.
+- **Using Relationship Queries** — https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql_relationships_query_using.htm
+- **COUNT() and COUNT(fieldName)** — https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql_select_count.htm
+- **Big Objects (Implementation Guide)** — https://developer.salesforce.com/docs/atlas.en-us.bigobjects.meta/bigobjects/big_object.htm
+  Sibling pages that exist: `big_object_considerations.htm` (Best Practices),
+  `big_object_query_examples.htm`.
+- **The Big Objects Playbook (blog)** — https://developer.salesforce.com/blogs/2026/06/big-objects-playbook-payload-capture-and-replay
+  The only current source found for the permitted big-object query operators.
+- **Continuous Integration (Salesforce DX Developer Guide)** — https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm
+- **About REST API** — https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_what_is_rest_api.htm
+- **Insert or Update (Upsert) a Record Using an External ID** — https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/dome_upsert.htm
+- **SessionHeader (SOAP API)** — https://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_header_sessionheader.htm
+
 ## Known dead
 
 Do not re-add these; all look plausible and all 404.
@@ -295,6 +432,52 @@ worth internalising: a real article name with an **invented suffix or namespace*
 - `https://developer.salesforce.com/docs/atlas.en-us.connect_api.meta/connect_api/intro.htm`
   — the Connect REST API guide is under the `chatterapi` book, not `connect_api`. This URL
   renders the bare "Salesforce Developers" shell. Use `…chatterapi/intro_using_chatter_connect.htm`.
+
+### From the Platform Developer II deck pass
+
+A different failure mode from the IAM deck's invented ids: most of these were **real
+pages that have since been removed or moved between books**. Two of them return HTTP 404
+and `check-urls.mjs` catches them; the rest answer 200 and quietly render either the
+**book root** or a **different article**, which only opening them reveals.
+
+Hard 404s (caught by `check-urls.mjs`):
+- `…/docs/platform/lightning-component-reference/guide/lightning-messages.html` — no such
+  page in the new reference format. Cite `lightning-record-edit-form.html`, which states
+  where `lightning-messages` goes.
+- `…/docs/platform/lwc/guide/create-conditional-rendering.html` → real: `create-conditional.html`
+- `…/docs/platform/sf-cli/guide/sf-intro.html` and `…/docs/platform/sfdx-dev/guide/sfdx-dev-intro.html`
+  — the DX guide is still under `atlas.en-us.sfdx_dev.meta/sfdx_dev/`.
+
+Silent redirects — **200 with the wrong article**, so only a browser catches them:
+- `…lightning.meta/lightning/inspector_storage.htm` → renders **Debugging**. The whole
+  Lightning Inspector section is gone from the Aura guide. `inspector_intro.htm` and the
+  pinned `atlas.en-us.236.0.lightning.meta/…/inspector_storage.htm` do the same, so
+  falling back to an older API version does **not** rescue a removed page.
+- `…pages.meta/pages/pages_controller_transient.htm` → renders **Introducing Visualforce**.
+  Use the `salesforce_visualforce_best_practices` book's `pages_best_practices_perf_code_view_state.htm`.
+- `…pages.meta/pages/pages_static_resources.htm` → real: `pages_resources.htm`
+- `…pages.meta/pages/apex_ApexPages_StandardController.htm` → real:
+  `apex_ApexPages_StandardController_ctor.htm`, or `apexref/apex_pages_standardcontroller.htm`
+- `…pages.meta/pages/pages_js_remoting_config.htm` → use `pages_js_remoting.htm`
+- `…apexcode/apex_callouts_remote_site.htm` → real: `apex_callouts_remote_site_settings.htm`
+- `…apexcode/apex_flow.htm` → real: `apexref/flow_interview_class.htm`
+- `…apexcode/apex_classes_restful_http_testing_wsdl2apex.htm` → real:
+  `apexcode/apex_callouts_wsdl2apex_testing.htm`
+- `…soql_sosl.meta/soql_sosl/big_object_querying.htm` **and**
+  `…bigobjects.meta/bigobjects/big_object_querying.htm` → both fall back to their book
+  root. "SOQL with Big Objects" no longer exists in either book; the operator list
+  survives only in the 2026 Big Objects Playbook blog post.
+- `…object_reference.meta/object_reference/sforce_api_objects_accounthistory.htm` → falls
+  back to the book root. Use the Field Reference Guide's
+  `sfFieldRef/salesforce_field_reference_AccountHistory.htm`.
+- `help.salesforce.com … id=platform.admin_monitorsetup.htm` → real namespace is `sf.`
+- `help.salesforce.com … id=platform.code_dev_console_log_inspector.htm` → real:
+  `platform.code_dev_console_view_system_log.htm`
+
+The book-root fallback is the pattern to internalise from this deck: a wrong section id
+inside a **real** book renders that book's landing page with a plausible title
+("Big Objects | Big Objects Implementation Guide"), which reads as success in a tab
+listing. Check the `<h1>` and the breadcrumb, not just `document.title`.
 
 Old release-note URLs are the most fragile category — Salesforce reorganises them
 between releases. Prefer a current help article over a release note when both
