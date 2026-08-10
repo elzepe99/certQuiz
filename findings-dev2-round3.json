@@ -1,0 +1,29 @@
+{
+  "deck": "public/decks/salesforce_questions_Dev2.json",
+  "reviewed": "2026-08-09",
+  "findings": [
+    {
+      "id": "f62513eb",
+      "verdict": "confirmed",
+      "explanation": "Two requirements, two interfaces. Aggregating across more than 50,000 Contacts needs Batch Apex, because Database.Batchable is what splits the work into chunks — the per-transaction limits reset for each execute() call, so the job never meets the 50,000-record query-row ceiling that a single transaction would hit. Running it once a day after hours needs Schedulable, which is what System.schedule() takes and what lets you set the time. The two go together: the Schedulable class's execute() calls Database.executeBatch() on the Batchable class.\nQueueable will not carry the volume. A queueable job runs as one transaction with one set of governor limits, so aggregating every Contact runs into the same 50,000-row query limit that ordinary Apex does; it also has no scheduling of its own. The @future annotation is weaker still — it can't be scheduled, returns no job id, can't be chained, and takes only primitives and collections of primitives as arguments. Note that the well-known 50 attached to @future is the maximum number of future methods allowed per Apex invocation, not a cap on records per call.\nOne detail that catches people out: scheduled Apex is asynchronous, but synchronous governor limits apply to a scheduled job. So Schedulable on its own does not buy you extra headroom — that is exactly why the Batchable half of the answer is needed and not optional.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_batch_interface.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_scheduler.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_gov_limits.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_annotation_future.htm"
+      ]
+    },
+    {
+      "id": "c74b1c3e",
+      "verdict": "reasoning",
+      "explanation": "Two requirements, two interfaces. Aggregating across more than 50,000 Contacts needs Database.Batchable, because Batch Apex splits the work into chunks and the per-transaction limits reset for each execute() call, so the job never meets the 50,000-record query-row ceiling a single transaction would hit. Running it once a day after hours needs Schedulable, which is what System.schedule() takes; its execute() then calls Database.executeBatch() on the Batchable class.\nQueueable will not carry the volume: a queueable job runs as one transaction with one set of governor limits, so aggregating every Contact meets the same 50,000-row query limit ordinary Apex does, and it has no scheduling of its own. The @future annotation is weaker still — it can't be scheduled, returns no job id, can't be chained, and accepts only primitives and collections of primitives as arguments, so you can't even hand it a list of sObjects.\nBe careful with the number 50 here. Execution Governors and Limits gives it as the maximum number of methods with the future annotation allowed per Apex invocation — a cap on how many future calls one transaction can make. It is not a limit on how many records a future method may process.\nAlso worth knowing: scheduled Apex is an asynchronous feature, but synchronous governor limits apply to a scheduled job. Schedulable alone therefore buys no extra headroom, which is precisely why the Batchable half of the answer is required.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_batch_interface.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_scheduler.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_gov_limits.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_annotation_future.htm"
+      ],
+      "note": "Answer C,D stands. The explanation invented a governor limit: it stated that @future \"has a limit of 50 records per method call\". No such limit exists — Execution Governors and Limits gives 50 as the maximum number of methods with the future annotation allowed per Apex invocation. Rewritten with the real constraints on @future (no scheduling, no job id, no chaining, primitive-only arguments) and with the documented note that synchronous limits apply to scheduled Apex, which is the actual reason Schedulable alone is insufficient."
+    }
+  ]
+}
