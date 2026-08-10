@@ -30,15 +30,20 @@
   },
   {
     "id": "a3252caa",
-    "question": "\"A developer wrote the following method to find all the test accounts in the org:\npublic static Account[] searchTestAccounts(){\n    List<List<SObject>> searchList = [ FIND 'test' IN ALL FIELDS\n                                        RETURNING Account(Name)];\n    return (Account[]) searchList[0];\n}\nHowever, the test method below fails.\n@isTest\npublic static void testSearchTestAccounts(){\n    Account a = new Account(name='test');\n    insert a;\n    Account [] accounts = TestAccountFinder.searchTestAccounts();\n    System.assert(accounts.size() == 1 );\n}\nWhat should be used to fix this failing test?\"",
-    "optionA": "Test.fixedSearchResults() method to set up expected data",
+    "question": "A developer wrote the following method to find all the test accounts in the org:\npublic static Account[] searchTestAccounts(){\n    List<List<SObject>> searchList = [ FIND 'test' IN ALL FIELDS\n                                        RETURNING Account(Name)];\n    return (Account[]) searchList[0];\n}\nHowever, the test method below fails.\n@isTest\npublic static void testSearchTestAccounts(){\n    Account a = new Account(name='test');\n    insert a;\n    Account[] accounts = TestAccountFinder.searchTestAccounts();\n    System.assert(accounts.size() == 1);\n}\nWhat should be used to fix this failing test?",
+    "optionA": "Test.setFixedSearchResults() method to set up expected data",
     "optionB": "@isTest(SeeAllData=true) to access org data for the test",
     "optionC": "@testSetup method to set up expected data",
     "optionD": "Test.loadData to set up expected data",
     "optionE": "",
     "correct": "A",
-    "explanation": "The method to find 'test accounts' suggests SOSL usage. SOSL searches don't return predictable results in test context. Test.setFixedSearchResults() is used to mock SOSL search results, allowing you to specify exactly what records the SOSL query should return during testing.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_SOSL.htm",
-    "_cat": "Testing, Debugging, and Deployment"
+    "explanation": "SOSL behaves differently under test than it does at runtime. The Apex Developer Guide states that to keep test methods predictable, any SOSL query in an Apex test returns an empty set of search results — so searchTestAccounts() returns nothing, accounts.size() is 0, and the assertion fails no matter how many matching Accounts the test inserted first.\nTest.setFixedSearchResults() is the fix: it defines the list of record ids the search should return for the remainder of the test, so the method under test receives the Account the test created.\nThe distractors all address the wrong layer. SeeAllData=true widens which records a query can see, but it does not switch SOSL back on in a test. @testSetup and Test.loadData are both ways of creating test data, and creating more data doesn't help when the search is returning an empty list by design.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_SOSL.htm",
+    "_cat": "Testing, Debugging, and Deployment",
+    "corrected": {
+      "date": "2026-08-09",
+      "via": "validation",
+      "note": "Duplicate resolved. This question and one other in the deck were the same item scraped twice; the other copy had OCR-damaged options (\"Test. fixsdSsarchReaulta [)\", \"Teat.loadData\") and has been removed, leaving this one. While consolidating, two scrape artifacts were cleaned here: the stem was wrapped in stray double quotes, and option A named the method \"Test.fixedSearchResults()\", which does not exist — corrected to Test.setFixedSearchResults(), the method the explanation had been describing all along. Answer unchanged at A."
+    }
   },
   {
     "id": "3598b33b",
@@ -304,15 +309,20 @@
   },
   {
     "id": "264d0eab",
-    "question": "Consider the below trigger intended to assign the Account to the manager of the Account's region:\n\ntrigger AccountTriggerMap on Account ( before insert, before update )\n{\n    List<Account> accountList = new List<Account>();\n    for( Account anAccount : trigger.new )\n    {\n        Region__c TRegion = [\n        SELECT acc.s, Name, Region_Map.get\n        FROM Regionc\n        WHERE Name = :anAccount.Region_Name\n        Limit 1 ]\n    }\n\n    anAccount.OwnerId =TRegion.RegionManager__c\n\n    accountList.add( anAccount );\n\n    update accountList;\n}\nWhich two changes should a developer make in this trigger to adhere to best practices?",
-    "optionA": "",
-    "optionB": "Move the query outside the loop",
-    "optionC": "Use a map to cache the results",
-    "optionD": "Remove the Update line",
+    "question": "Consider the trigger below, intended to assign the Account to the manager of the Account's region:\n\ntrigger AssignOwnerByRegion on Account ( before insert, before update )\n{\n    List<Account> accountList = new List<Account>();\n    for( Account anAccount : trigger.new )\n    {\n        Region__c theRegion = [\n            SELECT Id, Name, Region_Manager__c\n            FROM Region__c\n            WHERE Name = :anAccount.Region_Name__c\n        ];\n        anAccount.OwnerId = theRegion.Region_Manager__c;\n        accountList.add( anAccount );\n    }\n    update accountList;\n}\nWhich two changes should a developer make in this trigger to adhere to best practices? (Choose two.)",
+    "optionA": "Use a Map accountMap instead of List accountList.",
+    "optionB": "Move the Region__c query to outside the loop.",
+    "optionC": "Use a Map to cache the results of the Region__c query by Id.",
+    "optionD": "Remove the last line updating accountList as it is not needed.",
     "optionE": "",
     "correct": "B,D",
-    "explanation": "Option B is correct because moving the SOQL query outside of the for loop is essential to bulkify the trigger.\nOption D is correct, because its Before Trigger, and Before trigger does not required DML statements on Same records. So remove those update Account stmt\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_bulk_idioms.htm",
-    "_cat": "Process Automation and Logic"
+    "explanation": "Two things break best practice here, and both are visible inside the loop.\nThe Region__c query runs once per Account in Trigger.new. A bulk update of 200 Accounts issues 200 queries and the transaction dies on the 101st. Move it out: query the regions once for every Region_Name__c in the batch, build a Map<String, Region__c> keyed by Name, and look each Account's region up from that map inside the loop.\nThe trailing update accountList is not merely unnecessary — it is not allowed. accountList holds the same sObjects as Trigger.new, and the Apex Developer Guide states plainly that trigger.new and trigger.old cannot be used in Apex DML operations. In a before trigger you don't need it anyway: \"You can use an object to change its own field values using trigger.new, but only in before triggers\", and those assignments are saved when the trigger finishes.\nThe other two options change nothing. Caching the query results in a Map keyed by Id doesn't help, because the lookup here is by Region Name rather than by Id — and on its own it still leaves the query inside the loop. Swapping List accountList for a Map accountMap alters neither defect; the collection type was never the problem.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_bulk.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_bulk_idioms.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_context_variables_considerations.htm",
+    "_cat": "Process Automation and Logic",
+    "corrected": {
+      "date": "2026-08-09",
+      "via": "validation",
+      "note": "Item repaired; key unchanged at B,D. As scraped the trigger body was corrupted — a mangled SELECT clause, a missing object name, and the OwnerId assignment and add() call shown outside the loop — and optionA was an empty string, so a four-option question presented three. The stem has been replaced with the intact trigger and the missing fourth option restored, keeping the existing lettering so the key still resolves to \"move the query outside the loop\" and \"remove the update\". The reason for removing the update is now cited to the documented rule that trigger.new cannot be used in DML operations, rather than to it merely being redundant."
+    }
   },
   {
     "id": "380cc77c",
@@ -625,18 +635,6 @@
     "_cat": "User Interface"
   },
   {
-    "id": "c50102dd",
-    "question": "A developer wrote the following method to find all the test accounts in the org:\npublic static Account[] searchTestAccounts() {\r\n    List<List<SObject>> searchList = [FIND 'test' IN ALL FIELDS\r\n                                     RETURNING Account(Name)];\r\n    return (Account[]) searchList[0];\r\n}\r\n\r\nHowever, the test method below fails.\r\n\r\n@isTest\r\npublic static void testSearchTestAccounts() {\r\n    Account a = new Account(name='test');\r\n    insert a;\r\n    Account[] accounts = TestAccountFinder.searchTestAccounts();\r\n    System.assert(accounts.size() == 1);\r\n}\nWhat should be used to fix this failing test?",
-    "optionA": "Test. fixsdSsarchReaulta [) method to set up expected data",
-    "optionB": "B. @isTest (SeeAllData=true) to access org data for the test",
-    "optionC": "@testsetup method to set up expected data",
-    "optionD": "Teat.loadData to set up expected data",
-    "optionE": "",
-    "correct": "A",
-    "explanation": "The issue mentioned is that the test method fails, which is likely because SOSL queries don't return results in test methods unless you use the Test.setFixedSearchResults() method to mock the search results.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_SOSL.htm",
-    "_cat": "Testing, Debugging, and Deployment"
-  },
-  {
     "id": "9f8cdefa",
     "question": "A developer built an Aura component for guests to self-register upon arrival at a front desk kiosk. Now the developer needs to create a component for the utility tray to alert users whenever a guest arrives at the front desk.\nWhat should be used?",
     "optionA": "DML Operation",
@@ -818,7 +816,7 @@
     "optionD": "Sharing sets",
     "optionE": "",
     "correct": "D",
-    "explanation": "Sharing sets are specifically designed for sharing data with external users (such as partner portal users, community users, or customer portal users). They allow you to:\n\nDefine criteria-based rules for what records external partners can access\nControl visibility of specific cases based on field values or other criteria\nProvide granular access control for external collaboration\nMaintain security by limiting what external users can see\n\nLet me explain why the other options aren't as suitable:\nA. Role hierarchy - This is primarily for internal organizational structure and doesn't directly address external partner access requirements.\nB. Criteria-based sharing rules - While these can share records based on criteria, they're typically designed for internal users within the organization and have limitations for external sharing scenarios.\nC. Apex managed sharing - Although this provides programmatic control over sharing, it's more complex to implement and maintain compared to the purpose-built sharing sets feature for external partner scenarios.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=platform.networks_setting_light_users.htm&language=en_US&type=5",
+    "explanation": "A sharing set is the feature built for exactly this shape of problem. Salesforce Help describes it as granting Experience Cloud site users access to any record associated with an account or contact that matches the user's own account or contact, configured through access mappings that follow lookups from the user and from the target record. The article's own example is the scenario in this question: grant site users access to all cases related to the account identified on the user's contact.\nThat is what makes it the controlled option. Access is scoped by the partner's own account rather than granted wholesale, it is declarative, and record access granted this way is deliberately not extended upward through the role hierarchy.\nThe others don't fit external users collaborating on cases. A role hierarchy models the internal organisation. Criteria-based sharing rules key off field values on the record rather than off the relationship between the record and the external user's account, so they can't express \"the cases belonging to this partner's account\". Apex managed sharing could be made to do it, but the platform sharing guidance is to reach for code only when a requirement can't be met by any other means — and here it can.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=platform.networks_setting_light_users.htm&language=en_US&type=5\nhttps://architect.salesforce.com/fundamentals/platform-sharing-architecture",
     "_cat": "Developer Fundamentals"
   },
   {
@@ -1609,7 +1607,7 @@
     "optionD": "An ETL tool to process batches of newly saved Orders every few minutes to store the pricing back in Salesforce",
     "optionE": "",
     "correct": "A",
-    "explanation": "The price must be returned and shown immediately while the user builds the order, which requires a synchronous, real-time request. A Visualforce page whose controller makes a synchronous Apex callout can call the pricing service, display the result, and save it back in one interaction. A trigger callout (B) must be asynchronous and fires on save, an Outbound Message (C) is one-way and asynchronous, and an ETL batch (D) adds minutes of delay.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts.htm\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html",
+    "explanation": "This is the Request and Reply pattern, which the integration patterns guide defines as Salesforce invoking a process on a remote system, waiting for that process to complete, and then tracking state based on the response. Every clause of the requirement matches: the rep is on the phone, the pricing has to come back during that interaction, and the returned price is stored on the record.\nA Visualforce page whose controller makes a synchronous Apex callout is how you implement that — the user acts, the controller calls the pricing service, and the response is displayed and saved in the same request.\nThe alternatives all break the synchronous requirement. A callout from a trigger has to be made asynchronously, so the result cannot come back into the page the user is looking at, and it fires on save rather than while the order is being built. An outbound message is Fire and Forget: Salesforce hands the message off and does not wait for a reply, so nothing comes back to display. An ETL job introduces minutes of delay, which is the opposite of what a live phone call needs.\nReferences:\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts.htm",
     "_cat": "Process Automation and Logic"
   },
   {
@@ -1633,12 +1631,12 @@
     "optionD": "Static resource files do not count against an organization's quota of data storage.",
     "optionE": "Relative paths can be used in files in static resource archives to refer to other content within the archive.",
     "correct": "B,C,E",
-    "explanation": "The Visualforce guide names exactly these three as the reasons to prefer a static resource over uploading a file to the Documents tab: you can package a collection of related files into a directory hierarchy and upload it as a .zip or .jar archive (C), you can reference the resource by name with the $Resource global variable instead of hard-coding a document id (B), and files inside an archive can refer to one another by relative path (E).\nStatic resources are not minified for you (A) — if you want minified JavaScript, you upload it already minified. Option D is about storage allocation rather than a benefit of using them: the documented limits are 5 MB for a single static resource and 250 MB of static resources per org.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_resources.htm\nhttps://developer.salesforce.com/docs/platform/lwc/guide/create-resources.html",
+    "explanation": "The Visualforce guide names three reasons to prefer a static resource over uploading a file to the Documents tab, and they are the three to select: you can reference the resource by name with the $Resource global variable instead of hard-coding a document id, you can package a directory hierarchy of related files and upload it as a single .zip or .jar archive, and files inside an archive can refer to one another by relative path.\nAutomatic minification is not one of them — a static resource is served as you uploaded it, so minified JavaScript has to be minified before upload.\nThe storage option is a flaw in the item rather than a distractor, because it is also true. Salesforce's Data and File Storage Allocations page lists what counts toward file storage — attachments, Files home, CRM Content, Chatter files, the Documents tab, the File field on Knowledge articles, and Site.com assets — and then enumerates data storage object by object. Static resources appear in neither list. They carry their own separate allocation instead: 5 MB per resource and 250 MB per org. So four of the five statements here are correct while only three can be chosen; the three above are the ones the documentation frames as reasons to use the feature, which is what the question asks for.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_resources.htm\nhttps://developer.salesforce.com/docs/platform/lwc/guide/create-resources.html\nhttps://help.salesforce.com/s/articleView?id=xcloud.overview_storage.htm&language=en_US&type=5",
     "_cat": "User Interface",
     "corrected": {
       "date": "2026-08-09",
       "via": "validation",
-      "note": "Answer B,C,E stands — those are the three benefits the Visualforce guide itself lists. The explanation's parenthetical claim that static resources 'do count against the org's file storage' is not what the documentation says; the guide gives a separate allocation of 5 MB per resource and 250 MB per org, so that sentence has been replaced with the documented limits."
+      "note": "Answer B,C,E stands as the three benefits the Visualforce guide itself lists, but the item is defective: option D is also true. Data and File Storage Allocations includes static resources in neither the file-storage list nor the data-storage list, and the Visualforce guide gives them a separate 5 MB per-resource / 250 MB per-org allocation, so they genuinely do not count against the data storage quota. This supersedes the earlier note, which had established only that the deck's original claim (\"they do count against the org's file storage\") was unsupported; the deeper check shows the opposite statement is the documented one."
     }
   },
   {
@@ -1674,7 +1672,7 @@
     "optionD": "There is an existing, external system of truth for user access assignments which will continue to drive access and be integrated with salesforce",
     "optionE": "You need to change record access to read/write for all users utilising a lightning component",
     "correct": "B,C,D",
-    "explanation": "Programmatic (Apex managed) sharing is appropriate when native sharing performs poorly at scale (B), when team-style access is needed on custom objects where account/case teams aren't available (C), and when an external system of record drives user access and integrates with Salesforce (D). A manager seeing subordinates' records (A) is handled by the role hierarchy, and granting read/write to all users from a component (E) isn't a sharing-design scenario.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing_understanding.htm",
+    "explanation": "The governing principle is in Salesforce's platform sharing architecture guidance: Apex managed sharing, also called programmatic sharing, is for building sharing settings in code when a data access requirement can't be met by any other means. Read the options against that test.\nTeam functionality on custom objects qualifies, because account, opportunity, and case teams exist only on those standard objects — there is no declarative team feature to turn on for a custom object, so the share records have to be created in code.\nAn external system that owns user access assignments qualifies too. Declarative sharing is driven by ownership, role, and field criteria inside Salesforce; none of those can be driven by an outside system of record, so an integration writing share rows programmatically is the only route.\nPerformance at scale is the softest of the three, and worth flagging as such: it is a real consideration — large volumes of sharing rules make group membership recalculation expensive — but it is a judgement about scale rather than a capability the declarative model lacks.\nThe two rejected options fail the test outright. A manager seeing records created by their team is precisely what the role hierarchy does declaratively. Granting read/write to all users is an organization-wide default change, not a sharing design problem, and has nothing to do with the component displaying the records.\nReferences:\nhttps://architect.salesforce.com/fundamentals/platform-sharing-architecture\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing_understanding.htm",
     "_cat": "Developer Fundamentals"
   },
   {
@@ -1698,7 +1696,7 @@
     "optionD": "Call-in directly from each remote system to Salesforce APIs to push and pull the data",
     "optionE": "",
     "correct": "B",
-    "explanation": "A third-party ETL tool can replicate data in scheduled batches — pushing billing data into Salesforce and extracting activity data to the on-premises warehouse — and can run outside business hours to avoid interfering with users while handling large volumes. Batch Apex (A) doesn't pull external data on its own, Salesforce Connect (C) is for live external access rather than scheduled bulk movement, and direct API calls from each system (D) are harder to schedule and scale.\nReferences:\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html\nhttps://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/asynch_api_planning_guidelines.htm",
+    "explanation": "This is Batch Data Synchronization, which the integration patterns guide defines as data in Salesforce being created or refreshed to reflect updates from an external system, and changes from Salesforce being sent to an external system, with updates in either direction done in a batch manner. The requirement is bidirectional and weekly, which is that definition almost word for word.\nA third-party ETL tool is the standard implementation: it can be scheduled outside business hours so the load doesn't compete with users, it moves large volumes through the Bulk API, and it handles both directions with one tool.\nThe alternatives each miss part of it. Batch Apex runs inside Salesforce and can push data out, but nothing about it pulls a weekly extract from a remote billing system on its own. Salesforce Connect is data virtualization — it reads external data live rather than replicating it, so the warehouse still doesn't get its copy. Direct API calls from each remote system can move the data but leave you building and scheduling the orchestration for every system separately, which is what an ETL tool exists to avoid.\nReferences:\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html\nhttps://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/asynch_api_planning_guidelines.htm",
     "_cat": "Process Automation and Logic"
   },
   {
