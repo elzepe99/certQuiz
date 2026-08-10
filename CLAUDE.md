@@ -84,18 +84,30 @@ the tests green is safe; a spike means the heuristic now eats prose.
 
 ## Deck state — as of 2026-08-10
 
-1,565 questions across 13 decks. **479 (31%) carry a documentation reference.**
-Reference coverage is the honest proxy for "has been fact-checked", because the
-skill requires a citation on every verdict including `confirmed`.
+1,565 questions across 13 decks. **440 (28%) carry a reference with an actual URL.**
+
+Measure coverage with a URL test, not by looking for the `References:` marker. The
+app's parser (`src/lib/quiz.ts`) treats **every** non-empty line after the marker as
+a reference and does not require a URL, so 546 questions render a References section
+but only 440 have a link in it. The **106-question gap** is real content: prose like
+"Salesforce Agentforce Documentation: SDR Agent Setup > Channels" rendered under a
+References heading with nothing to click. It degrades gracefully — `linkifySegments`
+only linkifies real URLs — but it is unverifiable by a learner and it inflates any
+naive coverage count.
+Reference coverage is a *necessary* signal but **not a sufficient one** — the skill
+requires a citation on every verdict including `confirmed`, so a fully checked deck
+always reaches N/N, but a deck can reach N/N without its answers ever having been
+checked. The IAM row below is the worked example. Read the Verification status
+column, not the Cited column.
 
 | Deck | Q | Cited | Verification status |
 |---|---:|---:|---|
 | salesforce-platform-developer-2 | 148 | 148 | **Fully checked** — 8 rounds, 2 keys moved |
 | salesforce-integration-architect | 137 | 137 | **Fully checked** — 37 stamps, 15 keys moved |
-| salesforce-iam-architect | 122 | 122 | Cited 122/122, but **only 1 answer verified against docs** — see below |
-| salesforce-admin | 154 | 36 | Partial; 13 keys moved (ADM-201 merge pass) |
-| salesforce-agentforce-specialist | 125 | 26 | Partial |
-| salesforce-revenue-cloud | 137 | 10 | Barely started |
+| salesforce-iam-architect | 122 | 122 | **Fully checked** (2026-08-10) — 3 keys moved, 7 reasoning fixes |
+| salesforce-admin | 154 | 33 | Partial; 13 keys moved (ADM-201 merge pass). 3 more render a References block whose URL is broken across lines — one shows a bare `htm` |
+| salesforce-agentforce-specialist | 125 | **0** | **Not cited at all.** 73 questions render a References block containing prose only, no URLs |
+| salesforce-revenue-cloud | 137 | **0** | **Not cited at all.** 30 questions render a References block containing prose only, no URLs |
 | salesforce-data-cloud-consultant | 100 | 0 | Uncited; 4 keys moved via comments |
 | salesforce-sharing-visibility | 139 | 0 | Uncited; 4 reasoning stamps |
 | salesforce-app-builder | 119 | 0 | **Untouched** |
@@ -104,12 +116,21 @@ skill requires a citation on every verdict including `confirmed`.
 | claude-questions | 74 | 0 | **Untouched** |
 | salesforce-slack-consultant | 37 | 0 | **Untouched** (smallest — good next target) |
 
-**The IAM deck is the trap in this table.** It reads as complete (122/122 cited)
-but its citations came from a pass that verified *structure*, not answers. Only
-question `c18bee92` was ever settled against documentation. Worse, 15 of its
-original 41 URLs were dead and had to be replaced. Full coverage is not evidence
-of correctness — do not let this table's "Cited" column talk you out of a
-documentation pass.
+**The IAM deck used to be the trap in this table, and the lesson survives it.**
+Before 2026-08-10 it read as complete at 122/122 cited, but those citations came
+from a pass that verified *structure*, not answers — only `c18bee92` had ever been
+settled against documentation, and 15 of its original 41 URLs were dead. A full
+documentation pass then found **3 wrong answers and 7 imprecise explanations** in
+the 121 questions that had never been checked. So the rule holds generally:
+**full citation coverage is not evidence of correctness.** When a "Cited" number
+looks reassuring, check what the pass that produced it actually verified.
+
+The three keys that moved, as a flavour of what full coverage was hiding:
+`f5a4335a` C→A (a Connected App's trusted-IP field is scoped to the web server
+flow, so profile Login IP Ranges are what restrict a username-password
+integration), `efc3d13e` B→C (one MFA prompt across mixed login paths comes from
+session security levels, not the org-wide MFA setting), `9f507c0e` A,B→B,D
+(Embedded Login is not one of the four documented login page types).
 
 Clean across all 13 decks right now: zero `U+FFFD` replacement characters, zero
 literal `"Option B"` placeholder strings, zero keys pointing at empty options,
@@ -215,7 +236,22 @@ static flag but never checks it. Recording "this item is defective and here is
 why" is a legitimate outcome and more useful than a confident guess. Flag it to
 me in the report.
 
-### 11. Later passes overturning earlier notes
+### 11. A live citation that doesn't support its claim
+Distinct from a dead URL and harder to catch, because every automated check
+passes: the link renders, it's an official vendor page, and it's on the right
+topic. It just doesn't contain the fact.
+
+IAM `#23` cited "SMS Identity Verification" for a claim about how Identity
+Verification Credits are consumed. The article renders fine and is topically
+adjacent — but **the word "credit" does not appear on it once**. The article that
+settles it is "Identity Verification Credits Add-On License Considerations"
+(25,000 SMS/month, 300,000 credits/year).
+
+So URL verification has two steps, not one: confirm the page renders *and*
+confirm the specific assertion is on it. Grep the rendered text for the key term
+before citing — if the term is absent, it is the wrong page.
+
+### 12. Later passes overturning earlier notes
 Because `stampCorrection` stores **one record per question**, correcting a
 question again *overwrites* the earlier note. This has already caused three
 supersessions where a round-2 conclusion was reversed in round 6–8 on deeper
@@ -224,6 +260,29 @@ keeping into the new one. Do not re-litigate a settled question without new
 evidence — that is churn.
 
 ---
+
+### 13. A pass that confirms everything and corrects nothing
+The strongest single red flag, and it is now quantified in this repo.
+
+The IAM deck's round-1 pass (2026-08-09) recorded **115 confirmed, 7 reasoning, and
+0 corrected** across 122 questions, reaching 122/122 coverage. Round 2 re-checked the
+same deck against rendered documentation and found **3 wrong answers and 7 imprecise
+explanations — all ten of them in questions round 1 had marked `confirmed`.**
+
+So a verdict distribution with no corrections is not evidence of a clean deck; it is
+evidence of a pass that attached citations without letting the documentation decide.
+A genuine pass on scraped content finds *something*. When you inherit a fully cited
+deck whose findings show zero corrections, sample it before trusting it.
+
+The same pass also produced the dead-URL problem: 15 of its 41 URLs did not render.
+Citing and verifying are different activities, and only one of them was done.
+
+**A filing hazard that hid this for a while:** the round-1 findings lived in a file
+named `findings-integration-architect.json`, but its `deck` field pointed at the IAM
+deck and **all 122 of its findings were IAM ids**. The file was the IAM pass under the
+wrong name. Trust the `deck` field and the ids, never the filename — and note that the
+integration deck's own 137/137 citations therefore have no surviving findings file and
+have never been render-verified.
 
 ## Invariants
 
