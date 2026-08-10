@@ -1,0 +1,1169 @@
+{
+  "deck": "public/decks/salesforce_questions_Dev2.json",
+  "reviewed": "2026-08-09",
+  "findings": [
+    {
+      "id": "fb30207f",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.fields_validation_considerations.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/platform/lightning-component-reference/guide/lightning-record-edit-form.html"
+      ]
+    },
+    {
+      "id": "12c11e51",
+      "verdict": "reasoning",
+      "explanation": "B and C are the optimized queries. Customer_Number__c is marked as an External ID, and Salesforce creates an index on any External ID field, so an equality filter on it is selective. C filters on Id, the primary key, which is always indexed; binding a bounded list of Ids keeps the filter selective. A is not selective: Name != NULL matches essentially every row, so the optimizer falls back to a full table scan. D is not selective either. Name != '' matches nearly every record, and IsDeleted = false adds nothing the optimizer can use, because a SOQL query already excludes soft-deleted rows unless you add ALL ROWS. Selectivity comes from filtering on an indexed field with a narrow result set, not from restating a default.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_infrastructure_indexes.htm"
+      ],
+      "note": "Key B,C is right, but the explanation argued for B and D — it defended an option the key does not name. The LDV Indexes page settles it: External IDs cause an index to be created on that field, and the record Id is the primary key index."
+    },
+    {
+      "id": "a3252caa",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_SOSL.htm"
+      ]
+    },
+    {
+      "id": "3598b33b",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/lwc/guide/create-lifecycle-hooks-dom.html"
+      ]
+    },
+    {
+      "id": "ad6dc9c9",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_data_access.htm"
+      ]
+    },
+    {
+      "id": "cb0d4ef3",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_rest.htm"
+      ]
+    },
+    {
+      "id": "95587f24",
+      "verdict": "reasoning",
+      "explanation": "lightning-layout is a mobile-first 12-column grid. The size attribute sets the width at the smallest breakpoint and applies upward until a device-specific attribute overrides it, and the device attributes are additive: medium-device-size applies to tablets and to everything larger. So three items each set to size=\"12\" take the full width and stack into three rows on a phone, and adding medium-device-size=\"4\" places the same three items side by side in a single row on tablet and desktop. Note that size=\"12\" by itself never produces a single row: full width means one item per row on every device, including desktop.\nThis item is defective as scraped. Options B, C, and D are empty placeholders rather than code, and the surviving fragment of option A states only the size=\"12\" half of the answer, which on its own gives the three-row mobile layout and not the single-row desktop layout the question asks about. The key is left at A because it is the only option carrying any content; treat the reasoning above as the answer rather than the option text.",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/lightning-component-reference/guide/lightning-layout-item.html"
+      ],
+      "note": "Defective item — three of four options are placeholder text and option A is a truncated fragment. Documentation establishes that the single-row tablet/desktop layout needs a device-specific attribute (medium-device-size), not size='12' alone."
+    },
+    {
+      "id": "f62513eb",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_batch_interface.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_scheduler.htm"
+      ]
+    },
+    {
+      "id": "6845ba58",
+      "verdict": "corrected",
+      "was": "B",
+      "correct": "D",
+      "explanation": "BatchApexErrorEvent is a standard platform event that the platform publishes on your behalf. The Apex Developer Guide states that if the start, execute, or finish method of a batch Apex job encounters an unhandled exception, a BatchApexErrorEvent platform event is fired, and that to get this behaviour the batch class declaration must implement the Database.RaisesPlatformEvents marker interface. The external system subscribes to that event and receives the job id, the exception type and message, the stack trace, and the record ids that were in scope at the time of failure.\nA custom event published with EventBus.publish() cannot do this job. An unhandled exception is by definition not caught, so there is no point in your own code at which to publish, and an event published with the default publish-after-commit behaviour in that transaction is discarded when the transaction rolls back. That also rules out publishing the standard event yourself: you do not call EventBus.publish() for BatchApexErrorEvent, the platform fires it. addError() adds a record-level error inside a trigger and publishes nothing at all.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_batch_platformevents.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.platform_events.meta/platform_events/sforce_api_objects_batchapexerrorevent.htm"
+      ],
+      "note": "The Apex Developer Guide documents BatchApexErrorEvent as a standard platform event fired automatically by the platform for unhandled batch exceptions, gated only on implementing Database.RaisesPlatformEvents. No custom event and no EventBus.publish() call is involved, which is what the old key B asserted."
+    },
+    {
+      "id": "59d5a8f8",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.platform_events.meta/platform_events/platform_events_publish.htm"
+      ]
+    },
+    {
+      "id": "e831eba6",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/expr_locale_value_provider.htm"
+      ]
+    },
+    {
+      "id": "d6fe74e5",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/langCon_apex_transaction_control.htm"
+      ]
+    },
+    {
+      "id": "3810d972",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_queueing_jobs.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_tools_start_stop_test.htm"
+      ]
+    },
+    {
+      "id": "f9c8f7b9",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/lightning-component-reference/guide/lightning-layout-item.html"
+      ]
+    },
+    {
+      "id": "b3a07999",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/components_using_lex_s1_config_action.htm"
+      ]
+    },
+    {
+      "id": "295b0c8b",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/lightning-component-reference/guide/lightning-record-edit-form.html"
+      ]
+    },
+    {
+      "id": "659c1a94",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_compref_actionSupport.htm"
+      ]
+    },
+    {
+      "id": "7675adce",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_batch_interface.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_scheduler.htm"
+      ]
+    },
+    {
+      "id": "53d0a7d2",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_context_variables.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers.htm"
+      ]
+    },
+    {
+      "id": "be8e114a",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_debugging_debug_log.htm"
+      ]
+    },
+    {
+      "id": "1698e7ee",
+      "verdict": "reasoning",
+      "explanation": "Custom validation rules are the documented way to get more than one error at a time. Salesforce Help states directly that when one validation rule fails, Salesforce continues to check the other validation rules on that field and on other fields on the page, and displays all error messages at once. lightning-record-edit-form surfaces those record-level and field-level errors together — place lightning-messages inside the form and the errors the save returns render as a set, and the same errors are available programmatically through event.detail.output.fieldErrors, which is a list precisely because more than one field can fail.\nClient-side validation is the wrong answer here, and it is close to being the cause of the complaint: the per-field HTML constraints on lightning-input-field report on blur, one field at a time, which is the one-error-at-a-time behaviour the users are describing. Reimplementing business rules in JavaScript also duplicates them in the component and leaves every other entry point to the record unprotected. Apex REST is an inbound integration mechanism and Next Best Action serves recommendations; neither validates form input.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.fields_validation_considerations.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/platform/lightning-component-reference/guide/lightning-record-edit-form.html"
+      ],
+      "note": "The key C stands. The explanation was self-contradictory — it declared 'Option B (Client-side validation) is correct' while the key names C, and then listed C among the options that are 'not directly related'. Validation Rule Considerations settles it: all failing validation rule messages are displayed at once."
+    },
+    {
+      "id": "44d8b26d",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_infrastructure_indexes.htm"
+      ]
+    },
+    {
+      "id": "5c94971b",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/blogs/developer-relations/2016/02/introducing-salesforce-lightning-inspector",
+        "https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/controllers_server_storable_actions.htm"
+      ]
+    },
+    {
+      "id": "264d0eab",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_bulk_idioms.htm"
+      ]
+    },
+    {
+      "id": "380cc77c",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing_creating_with_apex.htm"
+      ],
+      "explanation": "For community users within the same Account hierarchy to see records based on a custom junction object, Apex managed sharing can be used. An Apex trigger can create sharing records based on the junction object relationships, allowing users to see records from different departments as required."
+    },
+    {
+      "id": "082893f1",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/langCon_apex_SOQL_query_all_rows.htm"
+      ]
+    },
+    {
+      "id": "c74b1c3e",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_batch_interface.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_scheduler.htm"
+      ]
+    },
+    {
+      "id": "8ae9f7e4",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/lightning-component-reference/guide/lightning-record-edit-form.html",
+        "https://developer.salesforce.com/docs/platform/lwc/guide/data-create-record.html"
+      ]
+    },
+    {
+      "id": "3bbf155f",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/lwc/guide/testing.html",
+        "https://developer.salesforce.com/docs/platform/lwc/guide/unit-testing-using-jest-create-tests.html"
+      ]
+    },
+    {
+      "id": "afd20ee7",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_best_practices_perf_lazy_load.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_visualforce_best_practices.meta/salesforce_visualforce_best_practices/pages_best_practices_perf_code_view_state.htm"
+      ]
+    },
+    {
+      "id": "e67f6bc8",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?language=en_US&id=sf.named_credentials_about.htm&type=5"
+      ]
+    },
+    {
+      "id": "ea09f5b0",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts_timeouts.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_annotation_future.htm"
+      ]
+    },
+    {
+      "id": "b906dc2c",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_restful_http_testing_httpcalloutmock.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_restful_http_testing.htm"
+      ]
+    },
+    {
+      "id": "0d827147",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_visualforce_best_practices.meta/salesforce_visualforce_best_practices/pages_best_practices_perf_code_view_state.htm"
+      ]
+    },
+    {
+      "id": "92f1ec38",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/lightning-component-reference/guide/lightning-layout-item.html"
+      ]
+    },
+    {
+      "id": "e92e64ee",
+      "verdict": "reasoning",
+      "explanation": "Outbound messaging is the right mechanism here. It is declarative, it fires from a workflow rule, flow, or approval process when the Order's status changes to Paid, it delivers a SOAP message to an endpoint of the kind the OMS already exposes, and it retries on its own: messages queue until they are delivered or until they are 24 hours old, with a 60-second timeout per attempt. Generating the Enterprise or Partner WSDL is backwards, because those WSDLs describe Salesforce's own API for clients calling in, not the OMS's endpoint. A callout from an Apex trigger works but has to be made asynchronously, consumes the transaction's callout budget, and makes you hand-build the retry behaviour outbound messaging already provides.\nOne detail in this item is now out of date. Outbound messages no longer carry a session id. Effective the week of 23 February 2026, Salesforce removed the Send Session ID option, forced IncludeSessionId to false, and stopped including the sessionID element in the payload; a system that calls back into Salesforce after receiving the notification must authenticate with OAuth 2.0. Choose the outbound message for the declarative, retrying SOAP delivery, not for a session id it no longer sends.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.workflow_om_considerations.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.workflow_managing_outbound_messages.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=005232763&language=en_US&type=1"
+      ],
+      "note": "Key C stands — outbound messaging is still the correct mechanism — but the stated rationale is no longer true. Salesforce removed the outbound-message session id in February 2026, so 'contains the session ID' describes a retired capability and must not be taught as a reason to pick this answer."
+    },
+    {
+      "id": "69a6cded",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_annotation_AuraEnabled.htm"
+      ]
+    },
+    {
+      "id": "d47df5e9",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_testsetup_using.htm"
+      ]
+    },
+    {
+      "id": "254644b6",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_output_pdf_renderas.htm"
+      ]
+    },
+    {
+      "id": "2388fdd4",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_annotation_AuraEnabled.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/controllers_server_storable_actions.htm"
+      ]
+    },
+    {
+      "id": "017f2acb",
+      "verdict": "corrected",
+      "was": "A",
+      "correct": "B",
+      "explanation": "B is the only block that applies the two rules and leaves everything else alone. It scopes the query with WHERE Type IN :statusMap.keySet(), so only Customer and Prospect records are retrieved, and it reads the new value straight out of the map with statusMap.get(a.Type), so the mapping is stated once.\nA sets the right statuses but adds every Account it queried to accountUpdates — the add() sits outside the if — so the update writes to every Account in the org, not only the two types the rules name. That is what the requirement 'no other changes to data should be made' rules out: unrelated records get a new LastModifiedDate and their triggers and flows fire. It also does not survive volume, because the query is capped at 50,000 rows and the update at 10,000 rows per transaction, while B only ever retrieves and updates the matching records. C repeats A's defect in a more verbose form. D is the worst of the four: it sets every Account whose Type is not 'Customer' — including Accounts with no Type at all — to 'Pending'.\nThe habit this item is testing is to scope the query to the records the requirement names rather than querying everything and sorting it out in Apex.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_gov_limits.htm"
+      ],
+      "note": "Key moved A -> B. Both blocks assign the correct statuses, but in A the accountUpdates.add(a) call sits outside the containsKey guard, so the DML touches every Account in the org — which the stem's 'no other changes to data should be made' forbids, and which hits the 10,000-row DML and 50,000-row SOQL governor limits at scale. B filters the query by the map's keySet and updates only matching records. The previous explanation already conceded that 'B is actually the more optimized approach' and defended A only by appeal to a published exam key, which is not evidence."
+    },
+    {
+      "id": "075e76d2",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_js_remoting.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_remote_objects.htm"
+      ]
+    },
+    {
+      "id": "17d8af13",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/components_config_for_app_builder.htm"
+      ]
+    },
+    {
+      "id": "0eac03b0",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_rest.htm"
+      ]
+    },
+    {
+      "id": "c4cec291",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/components_config_for_app_builder_design_files.htm"
+      ]
+    },
+    {
+      "id": "75e642fb",
+      "verdict": "reasoning",
+      "explanation": "AccountController is declared with sharing, so getAllAccounts() returns only the Accounts the running user can see. The setup method creates 10 Accounts owned by an administrator and 20 owned by a standard user, and the assertion expects all 30 — a total only a user with View All Data sees. A test method runs as the user who executes it unless you say otherwise, so the fix is to run the call as the administrator.\nIt has to be done inside the test method. user1 and user2 are local variables of the @TestSetup method and are out of scope in getAllAccounts_apex_test, which is why the answer re-queries the administrator into memory before wrapping lines 15 and 16 in System.runAs. Running as the standard user instead would return only that user's 20 Accounts and fail the same assertion. Test.startTest() and Test.stopTest() give the enclosed code a fresh set of governor limits but change nothing about whose sharing applies, so neither option that leans on them repairs the test.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_tools_runas.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_keywords_sharing.htm"
+      ],
+      "note": "Answer C stands. The explanation was a bare restatement of the option text with no reasoning, so it gave a reader nothing to check — rewritten to name the two things that decide the item: 'with sharing' plus the running user, and the scope of user1."
+    },
+    {
+      "id": "dbe97ce5",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_testsetup_using.htm"
+      ]
+    },
+    {
+      "id": "85a3fa6c",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_compref_actionSupport.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_compref_commandButton.htm"
+      ]
+    },
+    {
+      "id": "9f8cdefa",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/events_application.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/events_component.htm"
+      ]
+    },
+    {
+      "id": "59f7360d",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql_relationships_query_using.htm"
+      ]
+    },
+    {
+      "id": "40004899",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_dynamic_soql.htm"
+      ]
+    },
+    {
+      "id": "e4d0d916",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm"
+      ]
+    },
+    {
+      "id": "aa38d07c",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.fields_validation_rules_fields.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_bulk.htm"
+      ]
+    },
+    {
+      "id": "15dc7a90",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_annotation_AuraEnabled.htm",
+        "https://developer.salesforce.com/docs/platform/lwc/guide/apex-expose-method.html"
+      ]
+    },
+    {
+      "id": "41c7ada5",
+      "verdict": "confirmed",
+      "explanation": "@testSetup method improves test performance. It allows data sharing across test methods within a class, reducing redundant data creation.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_testsetup_using.htm"
+      ]
+    },
+    {
+      "id": "c8de9a78",
+      "verdict": "reasoning",
+      "explanation": "The component calls serverEcho({ firstName: this.firstName }), and an imperative Apex call passes an object whose property names match the Apex method's parameter names. So the Apex parameter has to be named firstName and typed to what the component actually sends — a String. Declaring it as Object is what breaks the call.\nOnce the parameter is a String, line 06 has nothing left to do: firstName already holds the value, and .get('firstName') is a Map operation that a String does not have. Remove that line and return firstName directly.\nThe other two options are wrong on their own terms. @AuraEnabled goes on the method, not on the class — annotating the class does not expose anything. And an @AuraEnabled method already has to be static and public or global, so switching it to global changes nothing about the argument that is actually failing.",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/lwc/guide/apex-call-imperative.html",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_annotation_AuraEnabled.htm"
+      ],
+      "note": "Key B,D stands. The explanation defended B with the opposite of the correct reason — it said the Apex method 'expects an Object named firstName, which is then cast to a String inside the method' and that no change was needed, which describes the broken code rather than the fix. The LWC guide states that an imperative call passes an object whose properties match the Apex method's parameters."
+    },
+    {
+      "id": "e6067a5f",
+      "verdict": "confirmed",
+      "explanation": "To ensure that the DOM is clean before each test runs, the developer should use the afterEach() method to reset it. This is part of the setup and teardown process in Jest tests, which helps to avoid state leakage between tests. The jsdom instance is shared across the test cases in a single file, so without resetting it the components rendered by one test are still in the document when the next one runs.",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/lwc/guide/unit-testing-using-jest-create-tests.html"
+      ]
+    },
+    {
+      "id": "3467c031",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_best_practices.htm"
+      ]
+    },
+    {
+      "id": "1a279dfb",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.custommetadatatypes_overview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "6686c9b7",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_annotation_AuraEnabled.htm"
+      ]
+    },
+    {
+      "id": "a170139a",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_annotation_future.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts_timeouts.htm"
+      ]
+    },
+    {
+      "id": "c0bd95df",
+      "verdict": "confirmed",
+      "explanation": "Bulk-safe triggers use collections to aggregate DML operations. This practice minimizes the number of DML statements, which is essential for bulk processing.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_bulk.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_bulk_idioms.htm"
+      ]
+    },
+    {
+      "id": "a8b17c49",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.networks_setting_light_users.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "c26371c1",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_methods_system_date.htm"
+      ]
+    },
+    {
+      "id": "6d242d63",
+      "verdict": "confirmed",
+      "explanation": "The valid SOQL query on a Big Object must filter the index fields, in the order they were defined, using only the operators the index supports: =, <, >, <=, >=, and IN. Account__c, Program__c, and Transaction_Date__c are the index fields here, and option A filters all three with equality. LIKE (B), INCLUDES (C), and EXCLUDES (D) are not among the supported operators, so those queries fail at runtime regardless of which fields they name.",
+      "references": [
+        "https://developer.salesforce.com/blogs/2026/06/big-objects-playbook-payload-capture-and-replay",
+        "https://developer.salesforce.com/docs/atlas.en-us.bigobjects.meta/bigobjects/big_object_query_examples.htm"
+      ]
+    },
+    {
+      "id": "c91ba2b8",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_queueing_jobs.htm"
+      ]
+    },
+    {
+      "id": "4f9da22c",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts_timeouts.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_annotation_future.htm"
+      ]
+    },
+    {
+      "id": "b92420f4",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/lwc/guide/events-create-dispatch.html"
+      ]
+    },
+    {
+      "id": "f3d819e3",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/langCon_apex_transaction_control.htm"
+      ]
+    },
+    {
+      "id": "20c11a40",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/components_config_for_app_builder_design_files.htm"
+      ]
+    },
+    {
+      "id": "9199fb45",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm"
+      ]
+    },
+    {
+      "id": "a7f95dd5",
+      "verdict": "reasoning",
+      "explanation": "AccountHistory is a system-maintained, read-only object: Salesforce writes a row when a tracked field on the parent Account changes, and no DML of yours can insert one. That removes option A outright. SeeAllData=true only widens what the test can see in the org's existing data; the assertion here is scoped to the Account the test just created, which has no history rows to find, so it fails just the same. Deleting the test abandons coverage of a method that does have testable logic.\nThat leaves the conditional stub. Gating getAccountHistory() on Test.isRunningTest() and returning constructed AccountHistory rows lets the method be exercised without depending on data the platform will not produce in a test. Be clear that this is a workaround, not a pattern to reach for: production code branching on whether it is under test is a well-known smell, and the durable fix is to put the query behind a seam — a selector class or an injected dependency — that the test can substitute.\nOne caveat about this item as printed: the test method shown queries AccountHistory directly rather than calling getAccountHistory(), so a stub inside that method would not actually change this test's result. Treat the answer as being about how to test code that depends on field history, not about this exact snippet.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?language=en_US&id=sf.tracking_field_history.htm&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfFieldRef.meta/sfFieldRef/salesforce_field_reference_AccountHistory.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_data_access.htm"
+      ],
+      "note": "Key C stands as the best-supported option, but the item is weak and the old explanation cited an exam-dump site (ExamTopics) as its authority, which is not a source. Documentation establishes that A is impossible — history objects are read-only and system-generated — and that B cannot help, since the assertion targets a record created inside the test. Flagged: the printed test queries AccountHistory directly, so no change inside getAccountHistory() would make this exact snippet pass."
+    },
+    {
+      "id": "e2ba60ab",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/lwc/guide/apex-wire-method.html",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_annotation_AuraEnabled.htm"
+      ]
+    },
+    {
+      "id": "62592f03",
+      "verdict": "confirmed",
+      "explanation": "To determine which objects to include in the response, the developer should check the isCustom() value on the sObject describe result. This method returns a Boolean indicating whether the sObject is a custom object.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_methods_system_sobject_describe.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_dynamic_describeSObject.htm"
+      ]
+    },
+    {
+      "id": "4f119a16",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/lightning-component-reference/guide/lightning-layout-item.html"
+      ]
+    },
+    {
+      "id": "d5978be6",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/lwc/guide/apex-wire-method.html",
+        "https://developer.salesforce.com/docs/platform/lwc/guide/data-wire-service-about.html"
+      ]
+    },
+    {
+      "id": "4023a9a3",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_compref_commandButton.htm"
+      ]
+    },
+    {
+      "id": "caa4bfe8",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?language=en_US&id=sf.named_credentials_about.htm&type=5"
+      ]
+    },
+    {
+      "id": "595ebc61",
+      "verdict": "reasoning",
+      "explanation": "The Apex Developer Guide states the rule and its workaround in one place: callouts aren't allowed after DML operations in the same transaction, because the DML leaves pending uncommitted work. To insert test data and still make a mock callout, enclose the callout in Test.startTest and Test.stopTest and keep the DML outside that block — so the inserts run before Test.startTest and the callout runs after it. The same page adds that Test.startTest must appear before Test.setMock.\nTwo things are worth stating precisely. Test.startTest does not commit the inserted records; nothing in a test is ever committed. It opens a fresh context with its own set of governor limits, and it is that boundary the callout restriction is evaluated against. And the rule is not that every callout must precede every DML statement — DML that happens after a mock callout is explicitly allowed and needs no special handling.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_restful_http_testing_dml.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts_timeouts.htm"
+      ],
+      "note": "Answer D stands. The explanation claimed Test.startTest 'ensures that the DML operations are committed', which is false — no DML is committed in a test — and stated the restriction backwards as 'all callouts are made before any DML operations in a transaction'. The guide's rule is that the callout goes inside Test.startTest/Test.stopTest while the DML stays outside it."
+    },
+    {
+      "id": "abea6c7c",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_batch_interface.htm"
+      ]
+    },
+    {
+      "id": "1963db51",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/lightning-component-reference/guide/force-has-sobject-name.html"
+      ]
+    },
+    {
+      "id": "df3ee6db",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts_remote_site_settings.htm"
+      ]
+    },
+    {
+      "id": "727db5f6",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.real_time_event_monitoring_overview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "adfa5369",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/events_component_fire.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/events_component.htm"
+      ]
+    },
+    {
+      "id": "218106b6",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_queueing_jobs.htm"
+      ]
+    },
+    {
+      "id": "738ade86",
+      "verdict": "reasoning",
+      "explanation": "Breaking the query in two is the documented remedy. The Large Data Volumes best-practices guide names this exact case: if you use two indexed fields joined by an OR in the WHERE clause, the result set can exceed the index selectivity threshold, so decompose the query — run it as two queries and join the results. Each half then filters on a single indexed field and can use that index, and the union of the two result sets is the same set of Accounts the OR would have returned, which is what 'preserving the entire result set' requires.\nA formula field does not help: a formula combining CreatedDate and RecordTypeId is evaluated at query time, and a non-deterministic formula field can't be indexed at all. @Future moves the same slow query into another transaction without making it any faster. Database.getQueryLocator is how Batch Apex streams a large result set, but it does not change the query's selectivity — the same non-selective OR is still evaluated, so it addresses row limits rather than the performance problem described here.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_soql_and_sosl.htm",
+        "https://developer.salesforce.com/blogs/engineering/2013/07/maximizing-the-performance-of-force-com-soql-reports-and-list-views"
+      ],
+      "note": "Key B stands. The explanation argued for option D from its first line — 'Option D is correct because using the Database.QueryLocator method...' — while the key names B. The LDV best-practices guide settles it: two indexed fields joined by an OR can exceed the index threshold, and the stated remedy is to break the query into two queries and join the results."
+    },
+    {
+      "id": "9e1c8386",
+      "verdict": "confirmed",
+      "explanation": "Creating a reusable Apex class for API integration allows for code encapsulation and maintainability. This class can then be invoked from any other Apex class that requires interaction with the API, preventing code duplication.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_static.htm"
+      ]
+    },
+    {
+      "id": "5be4b08d",
+      "verdict": "confirmed",
+      "explanation": "The test class may not be re-querying the Account record after updating the Opportunity, which is necessary to verify the updated field values. If the test does not query the database to get the most recent data after the trigger runs, it will not see the changes made by the trigger — the sObject variable still in memory holds the values as they were before the trigger touched the related record.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_best_practices.htm"
+      ]
+    },
+    {
+      "id": "e9c97c99",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/lightning-component-reference/guide/lightning-datatable.html"
+      ]
+    },
+    {
+      "id": "72374e4c",
+      "verdict": "reasoning",
+      "explanation": "A static variable in Apex holds its value for the life of the transaction, so a static Boolean that is set once and checked before doing the work is the standard way to stop a handler from running a second time when something later in the same transaction updates the record again. That is the only mechanism among these options that survives past a single invocation. The instance variable in option C isn't visible from a static method and would be re-initialised with every new instance in any case, and the local variable in option D is re-created — and reset to true — each time the trigger fires. Option B puts the flag in the right place but then assigns firstRun = true at the top of the trigger, resetting the guard immediately before testing it.\nTwo caveats about this item as printed. Option A adds the static flag to the handler but never tests it, so read literally the code still runs on every invocation; what the answer is really identifying is the mechanism, not the snippet. And options B and D pass Trigger.newMap to a method whose parameter is List<Case>, which would not compile.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_static.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_bestpract.htm"
+      ],
+      "note": "Key A stands as the only option using the right mechanism — a static variable retains its value for the duration of the transaction, which is what makes it usable as a recursion guard. Flagged as defective: option A declares the static flag without ever checking it, so the printed code would not by itself prevent the second run, and options B and D pass a Map to a method that takes a List."
+    },
+    {
+      "id": "50c95d23",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_what_is_rest_api.htm"
+      ]
+    },
+    {
+      "id": "2f02cf00",
+      "verdict": "confirmed",
+      "explanation": "Use AuraHandledException in a try-catch block for custom errors. Throwing a System.AuraHandledException from the Apex controller replaces the generic 'An internal server error has occurred' with a message you choose, which the component receives and can display.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/controllers_server_apex_custom_errors.htm",
+        "https://developer.salesforce.com/docs/platform/lwc/guide/apex-error-handling.html"
+      ]
+    },
+    {
+      "id": "2ddd7bf6",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/lwc/guide/reference-lightning-ui-api-record.html",
+        "https://developer.salesforce.com/docs/platform/lwc/guide/data-wire-service-about.html"
+      ]
+    },
+    {
+      "id": "74efe37c",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_controller_methods.htm"
+      ]
+    },
+    {
+      "id": "e91d90d4",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/lightning-component-reference/guide/lightning-layout.html",
+        "https://developer.salesforce.com/docs/platform/lightning-component-reference/guide/lightning-layout-item.html"
+      ]
+    },
+    {
+      "id": "67563135",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/lwc/guide/create-resources.html",
+        "https://developer.salesforce.com/docs/platform/lwc/guide/js-third-party-library.html"
+      ]
+    },
+    {
+      "id": "7e99199d",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.admin_monitorsetup.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "87b506a2",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.bigobjects.meta/bigobjects/big_object.htm"
+      ]
+    },
+    {
+      "id": "a6345067",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.flow_ref_elements_custom_error.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers.htm"
+      ]
+    },
+    {
+      "id": "6b4e2f7b",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_tools_start_stop_test.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_annotation_future.htm"
+      ]
+    },
+    {
+      "id": "f7fd9efb",
+      "verdict": "reasoning",
+      "explanation": "C is the bulkified pattern. It walks the Opportunities once to collect the distinct Account ids into a Set, then issues a single query against those Accounts with a Contacts subquery — one query however long opportunityList is, and the Set keeps an Account shared by several Opportunities from being queried twice.\nA does not compile: opportunityList is a List, so opportunityList.AccountId is not a valid expression. B puts a SOQL query inside the for loop, which is the standard way to hit the 100-query governor limit on a bulk update. D asks the wrong question. Opportunity does have a standard ContactId field, but it holds the single primary contact derived from the opportunity contact role and is frequently null, so querying those ids returns at most one Contact per Opportunity rather than every Contact on the Opportunity's Account.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_bulk.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_opportunity.htm"
+      ],
+      "note": "Answer C stands. The explanation's dismissal of option D was factually wrong — it stated that 'Opportunities don't have a ContactId field', while the Object Reference documents Opportunity.ContactId as a standard read-only field holding the primary contact. D is still incorrect, but because it returns the primary contact rather than all of the Account's Contacts."
+    },
+    {
+      "id": "b9fd412b",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_visualforce_best_practices.meta/salesforce_visualforce_best_practices/pages_best_practices_perf_code_view_state.htm"
+      ]
+    },
+    {
+      "id": "e9c0d546",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/lwc/guide/apex-wire-method.html",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_keywords_sharing.htm"
+      ]
+    },
+    {
+      "id": "e82a5694",
+      "verdict": "confirmed",
+      "explanation": "Static resources are ideal for efficient loading and caching of external files in Visualforce. They allow bundling and minimizing HTTP requests — a zip archive can hold a whole library, and Salesforce serves and caches the resource for you.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_resources.htm"
+      ]
+    },
+    {
+      "id": "9943756f",
+      "verdict": "confirmed",
+      "explanation": "The loop contains a SOQL query inside it, so it runs once per Contact. It fails on the very first iteration: the inner query has LIMIT 5 and five Accounts were created today, so it returns five rows, and assigning a multi-row result to a single Account variable throws System.QueryException: List has more than one row for assignment to SObject. The SOQL-in-a-loop governor limit would be the next problem, but the assignment exception is raised first.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/langCon_apex_SOQL_working_with_results.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_gov_limits.htm"
+      ]
+    },
+    {
+      "id": "9e515004",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_static.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_bestpract.htm"
+      ]
+    },
+    {
+      "id": "3870d944",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.platform_events.meta/platform_events/platform_events_publish.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.platform_events.meta/platform_events/platform_events_subscribe.htm"
+      ]
+    },
+    {
+      "id": "ebb9f61a",
+      "verdict": "reasoning",
+      "explanation": "getAccount is a static method, so it is called on the class: MyRemoter.getAccount('TestAccount'). That is option D. @RemoteAction methods are required to be static, which is why none of the instance-based calls are right.\nOption A refers to a controller variable the test never declares. Option B constructs a MyRemoter and reaches the static method through the instance; Apex tolerates that in places but it is not how a static method is meant to be invoked, and it does not reflect how the remote action is actually called from the page. Option C passes an argument to a constructor that takes none and then calls getAccount() without the argument it requires, so it would not compile.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_js_remoting.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_static.htm"
+      ],
+      "note": "Answer D stands, but the explanation opened with the sentence 'Option C is correct:' before walking the options and concluding 'The answer is D.' Anyone reading the first line took away the wrong answer. Rewritten so the opening sentence states the answer the key actually names."
+    },
+    {
+      "id": "4ccc3eda",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/debug_intro.htm"
+      ]
+    },
+    {
+      "id": "4c5d1329",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_queueing_jobs.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts_timeouts.htm"
+      ]
+    },
+    {
+      "id": "7d4b9c57",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/js_libs_platform.htm"
+      ]
+    },
+    {
+      "id": "497c27b5",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql_select_count.htm"
+      ]
+    },
+    {
+      "id": "9efee9d1",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/langCon_apex_dml_examples_upsert.htm"
+      ]
+    },
+    {
+      "id": "474e9918",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts_timeouts.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_annotation_future.htm"
+      ]
+    },
+    {
+      "id": "5f4a5b96",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_js_remoting.htm"
+      ]
+    },
+    {
+      "id": "7871e9fd",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_bestpract.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_static.htm"
+      ]
+    },
+    {
+      "id": "11d22bd9",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts_timeouts.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_annotation_future.htm"
+      ]
+    },
+    {
+      "id": "e2367a85",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_gov_limits.htm"
+      ]
+    },
+    {
+      "id": "b8c07851",
+      "verdict": "reasoning",
+      "explanation": "The number is 10,000, and the precise wording matters: Execution Governors and Limits states it as the total number of records processed as a result of DML statements in a transaction, not an allowance per statement. Ten inserts of 1,000 records each exhaust it exactly as a single insert of 10,000 would, and records touched by cascading automation — triggers, flows, roll-up recalculations — count against the same total. That is why a mass update can fail on this limit even though no individual DML statement comes close to 10,000 rows.\nThe companion limit is 150 DML statements per transaction. Both are transaction-wide and both are the same in synchronous and asynchronous contexts.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_gov_limits.htm"
+      ],
+      "note": "Answer D (10,000) stands. The explanation described it as a per-statement ceiling — 'in a single DML operation you can process up to 10,000 records at once' — but the governor is the total number of records processed by DML across the whole transaction. The deck's own cascading-trigger question depends on the transaction-wide reading, so the two explanations contradicted each other."
+    },
+    {
+      "id": "dba0fd10",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts_timeouts.htm"
+      ]
+    },
+    {
+      "id": "788ce14e",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/apex_ApexPages_StandardController_ctor.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_pages_standardcontroller.htm"
+      ]
+    },
+    {
+      "id": "9d81f45b",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_methods_system_database.htm"
+      ]
+    },
+    {
+      "id": "d2a074ac",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_gov_limits.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_transaction.htm"
+      ]
+    },
+    {
+      "id": "97dbf5bc",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_compref_pageMessages.htm"
+      ]
+    },
+    {
+      "id": "03fa7cee",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_annotation_future.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts_timeouts.htm"
+      ]
+    },
+    {
+      "id": "95b3cb00",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts.htm",
+        "https://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html"
+      ]
+    },
+    {
+      "id": "1b7b6b00",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/dome_upsert.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/langCon_apex_dml_nested_object.htm"
+      ]
+    },
+    {
+      "id": "49c5e8ad",
+      "verdict": "reasoning",
+      "explanation": "The Visualforce guide names exactly these three as the reasons to prefer a static resource over uploading a file to the Documents tab: you can package a collection of related files into a directory hierarchy and upload it as a .zip or .jar archive (C), you can reference the resource by name with the $Resource global variable instead of hard-coding a document id (B), and files inside an archive can refer to one another by relative path (E).\nStatic resources are not minified for you (A) — if you want minified JavaScript, you upload it already minified. Option D is about storage allocation rather than a benefit of using them: the documented limits are 5 MB for a single static resource and 250 MB of static resources per org.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_resources.htm",
+        "https://developer.salesforce.com/docs/platform/lwc/guide/create-resources.html"
+      ],
+      "note": "Answer B,C,E stands — those are the three benefits the Visualforce guide itself lists. The explanation's parenthetical claim that static resources 'do count against the org's file storage' is not what the documentation says; the guide gives a separate allocation of 5 MB per resource and 250 MB per org, so that sentence has been replaced with the documented limits."
+    },
+    {
+      "id": "77c104fc",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.flow_build_data_update.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=001096524&language=en_US&type=1"
+      ]
+    },
+    {
+      "id": "fa810727",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/dome_upsert.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_infrastructure_indexes.htm"
+      ]
+    },
+    {
+      "id": "e2a749f7",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing_understanding.htm"
+      ]
+    },
+    {
+      "id": "f82f42e8",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?language=en_US&id=sf.tracking_field_history.htm&type=5",
+        "https://help.salesforce.com/s/articleView?language=en_US&id=sf.field_audit_trail.htm&type=5"
+      ]
+    },
+    {
+      "id": "0a52f212",
+      "verdict": "confirmed",
+      "references": [
+        "https://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/asynch_api_planning_guidelines.htm"
+      ]
+    },
+    {
+      "id": "f688895a",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.workflow_managing_outbound_messages.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts.htm"
+      ]
+    },
+    {
+      "id": "ce2609d1",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_soql_and_sosl.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_infrastructure_indexes.htm"
+      ]
+    },
+    {
+      "id": "036f6646",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/lwc/guide/apex-error-handling.html",
+        "https://developer.salesforce.com/docs/platform/lwc/guide/create-conditional.html"
+      ]
+    },
+    {
+      "id": "00016277",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/lwc/guide/apex-wire-method.html",
+        "https://developer.salesforce.com/docs/platform/lwc/guide/reference-salesforce-modules"
+      ]
+    },
+    {
+      "id": "42d0474c",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.code_dev_console_view_system_log.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "f84106f3",
+      "verdict": "reasoning",
+      "explanation": "The documented order for a Visualforce get request is: the constructors on the custom controller or controller extensions run first; then any custom components on the page are created, their controllers' constructors run, and the expressions set on their attributes are evaluated; then assignTo attributes on those components execute; then page expressions, the action attribute on <apex:page>, and all other getter and setter calls are evaluated; then the view state is created if the page contains an <apex:form>; and finally the resulting HTML is sent to the browser.\nSo the constructors and expressions on custom components come after the controller constructor and before the page's own expressions and action attribute — not after them.\nThis item is defective as scraped: the step the question asks you to look past — 'after this step' — was carried by a diagram that did not survive, so the question cannot be answered from the printed text alone. Treat it as a prompt to know the sequence above.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_controller_get_request.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_controller_lifecycle.htm"
+      ],
+      "note": "Key A stands, but the explanation gave the order backwards — it said custom-component constructors are evaluated after the page's expressions, action attributes, and method calls, while the Visualforce guide places them before. Also flagged: the stem refers to 'this step' from a diagram lost in scraping, so the item is unanswerable as printed."
+    },
+    {
+      "id": "d85ba695",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_email_inbound.htm"
+      ]
+    },
+    {
+      "id": "fc0bc95b",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/flow_interview_class.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_namespace_Flow.htm"
+      ]
+    },
+    {
+      "id": "2b360cbd",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_header_sessionheader.htm"
+      ]
+    },
+    {
+      "id": "614b99d9",
+      "verdict": "reasoning",
+      "explanation": "For a SOAP callout the mock is the WebServiceMock interface (C), registered with Test.setMock(WebServiceMock.class, new MyMock()) (D), and the callout itself goes inside Test.startTest() and Test.stopTest() (A). HttpCalloutMock is the equivalent for HTTP and REST callouts, not for a class generated from a WSDL, so E is the wrong interface here.\nB is wrong because the data insertion belongs outside the start/stop block. A callout can't run while there is pending DML in the same transaction, and enclosing the callout — not the DML — is what allows both in one test method. Note that Test.startTest() does not commit anything: nothing in a test is ever committed. It opens a fresh context with its own set of governor limits, and that is the boundary the callout restriction is measured against.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts_wsdl2apex_testing.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_interface_webservicemock.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_restful_http_testing_dml.htm"
+      ],
+      "note": "Answer A,C,D stands. The explanation asserted that wrapping the callout in Test.startTest()/Test.stopTest() means the data inserted beforehand 'is committed', which is false — a test never commits DML. Rewritten to say what the boundary actually does, and to state why HttpCalloutMock is the wrong interface for a WSDL-generated SOAP callout."
+    },
+    {
+      "id": "af20c4c2",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_static.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_bestpract.htm"
+      ]
+    },
+    {
+      "id": "d50c6ceb",
+      "verdict": "confirmed",
+      "explanation": "With more than one extension on the same standard controller, a method defined in several places resolves to the leftmost extension — the one that appears first in the comma-separated extensions list. The Visualforce guide states this and gives the same shape of example: with extensions=\"ExtOne,ExtTwo\" and getFoo() defined in both, the rendered value comes from ExtOne. So the Save in CaseExtensionOne is the one that runs, and only that one: the other extension's Save and the standard controller's Save are overridden rather than chained.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_controller_extension.htm"
+      ]
+    },
+    {
+      "id": "020e43fb",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_compref_actionSupport.htm"
+      ]
+    },
+    {
+      "id": "b191ada7",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_compref_messages.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_compref_pageMessages.htm"
+      ]
+    },
+    {
+      "id": "10197f02",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_infrastructure_indexes.htm"
+      ]
+    }
+  ]
+}
