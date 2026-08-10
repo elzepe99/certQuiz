@@ -8,7 +8,7 @@
     "optionD": "SSO from Salesforce Mobile App",
     "optionE": "",
     "correct": "C,D",
-    "explanation": "My Domain gives the org a unique URL, which is what enables (C) deep links to specific Salesforce resources to survive an SP-initiated SAML SSO redirect (the URL is captured in RelayState and the user lands on the intended record), and (D) SSO from the Salesforce mobile app, which requires a My Domain URL to drive the IdP-initiated or SP-initiated flow. Login Forensics (A) and App Launcher (B) don't depend on My Domain for SAML SSO.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.domain_name_overview.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5",
+    "explanation": "My Domain gives the org a unique URL, which is what enables (C) deep links to specific Salesforce resources to survive an SP-initiated SAML SSO redirect (the URL is captured in RelayState and the user lands on the intended record), and (D) SSO from the Salesforce mobile app, which requires a My Domain URL to drive the IdP-initiated or SP-initiated flow. Login Forensics (A) and App Launcher (B) don't depend on My Domain for SAML SSO.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.domain_name_overview.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=000315559&language=en_US&type=1\nhttps://help.salesforce.com/s/articleView?id=000386791&language=en_US&type=1",
     "_cat": "Single Sign-On"
   },
   {
@@ -20,8 +20,13 @@
     "optionD": "IdP-initiated SSO will not work.",
     "optionE": "",
     "correct": "B",
-    "explanation": "Without My Domain, users access Salesforce via the standard login.salesforce.com URL — which has no way to know which org the SAML AuthnRequest should target. SP-initiated SSO therefore cannot be triggered. IdP-initiated SSO still works because the IdP posts the assertion directly to Salesforce's ACS endpoint, where the audience is identified from the assertion itself.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.domain_name_overview.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5",
-    "_cat": "Single Sign-On"
+    "explanation": "Without My Domain, users arrive at the generic login.salesforce.com hostname, which is shared across orgs. Salesforce documents the consequence directly: when SSO starts from a Salesforce link — the login page, a deep link, an Outlook Sync URL — 'Salesforce does not know in advance which Identity Provider to use.' That is the SP-initiated case, so it is SP-initiated SSO that breaks. IdP-initiated SSO is unaffected, because the IdP posts the assertion straight to Salesforce's endpoint and the assertion itself identifies the audience.\nOne documented caveat is worth knowing rather than overstating the answer: on a generic login page setup, SP-initiated SSO can work *after* the user has completed at least one IdP-initiated SSO, because Salesforce then sets a browser cookie identifying the correct IdP for future logins. So the accurate claim is that SP-initiated SSO cannot be initiated on its own without My Domain — not that the flow is permanently impossible in every circumstance.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=000315559&language=en_US&type=1",
+    "_cat": "Single Sign-On",
+    "corrected": {
+      "date": "2026-08-10",
+      "via": "validation",
+      "note": "Key B stands. The explanation was right in substance but overstated: it said SP-initiated SSO 'cannot be triggered', full stop. The documentation adds a real caveat — for generic login page setups, SP-initiated SSO works once a prior IdP-initiated login has set a browser cookie identifying the IdP. Added that so the item teaches the actual mechanism (unique hostname enables immediate IdP lookup) rather than an absolute that the docs qualify."
+    }
   },
   {
     "id": "f568388f",
@@ -32,7 +37,7 @@
     "optionD": "Add the list of company's network IP addresses to the Login Range list under 2FA Setup.",
     "optionE": "",
     "correct": "C",
-    "explanation": "A custom login flow runs after credentials are presented but before the session is established. Inside the flow, Apex can read the user's source IP, compare it to the corporate ranges, and selectively invoke the 2FA challenge — making 2FA conditional on network. The 'TFA for UI Logins' permission (B) forces 2FA always, and there is no UserLogin trigger (A).\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.security_login_flow.htm&language=en_US&type=5",
+    "explanation": "A custom login flow runs after credentials are presented but before the session is established. Inside the flow, Apex can read the user's source IP, compare it to the corporate ranges, and selectively invoke the 2FA challenge — making 2FA conditional on network. The 'TFA for UI Logins' permission (B) forces 2FA always, and there is no UserLogin trigger (A).\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.security_login_flow.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.security_networkaccess.htm&language=en_US&type=5",
     "_cat": "Access Management Best Practices"
   },
   {
@@ -44,7 +49,7 @@
     "optionD": "Allow partners to choose the Salesforce org they need information from and use login flows to authenticate access.",
     "optionE": "",
     "correct": "B",
-    "explanation": "With limited custom development, the cleanest pattern is one org per country (matching the existing multi-org footprint) and SAML federation between the orgs so a partner authenticates once at their primary org and can SSO into the other community orgs. Consolidating into a single org (C) is a larger architectural shift; APIs (A) and choosing the org per session (D) involve more custom work.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5",
+    "explanation": "With limited custom development, the cleanest pattern is one org per country (matching the existing multi-org footprint) and SAML federation between the orgs so a partner authenticates once at their primary org and can SSO into the other community orgs. Consolidating into a single org (C) is a larger architectural shift; APIs (A) and choosing the org per session (D) involve more custom work.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.sso_about.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.identity_provider_enable.htm&language=en_US&type=5",
     "_cat": "Single Sign-On"
   },
   {
@@ -80,7 +85,7 @@
     "optionD": "Salesforce is the Service Provider and Google is the Identity Provider.",
     "optionE": "",
     "correct": "C,D",
-    "explanation": "The customer is trying to access Salesforce (the resource being protected), so Salesforce is always the Service Provider in this scenario. When the customer chooses to log in via Facebook or Google, those services authenticate the user and assert identity to Salesforce — making them the Identity Providers in (C) and (D) respectively.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5",
+    "explanation": "The customer is trying to access Salesforce (the resource being protected), so Salesforce is always the Service Provider in this scenario. When the customer chooses to log in via Facebook or Google, those services authenticate the user and assert identity to Salesforce — making them the Identity Providers in (C) and (D) respectively.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.sso_authentication_providers.htm&language=en_US&type=5",
     "_cat": "Single Sign-On"
   },
   {
@@ -92,8 +97,13 @@
     "optionD": "To use dynamic branding, the community must be built with the Visualforce + Salesforce Tabs template.",
     "optionE": "",
     "correct": "A,C",
-    "explanation": "Dynamic branding on Experience Cloud requires (A) a Lightning template (Customer Account Portal is the canonical example) and (C) the Experience ID (expid) parameter passed in the URL — Salesforce uses that ID to look up the brand-specific images, colors, and content for the login page. The Visualforce + Tabs template (D) doesn't support dynamic branding, and an external CMS (B) is not required.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.external_identity_branding_use_cases.htm&language=en_US&type=5",
-    "_cat": "Salesforce Identity and CIAM"
+    "explanation": "Dynamic branding turns on one documented mechanism: the Experience ID. You extend the identity endpoints with an expid value — site-url/services/oauth2/authorize/expid_value and site-url/idp/endpoint/HttpPost/expid_value — or pass expid={value} on the login page, CommunitiesSelfReg, and forgot-password URLs, and Salesforce resolves the brand-specific logo and content from that value at run time. That is option C.\nThe other half is that the site must be one you can brand in Experience Builder. Every Experience Cloud template except Salesforce Tabs + Visualforce is a Lightning template customised in Experience Builder, and each one 'comes with its own set of pages for login, identity verification, password resets, and self-registration'. So option D is the one template that rules dynamic branding out, and an external CMS (B) is nowhere required — a CMS URL is merely one place the {expid} placeholder can point.\nBe aware that option A is narrower than the documentation: nothing restricts dynamic branding to the Customer Account Portal template specifically. Read A as 'a Lightning/Experience Builder template, of which Customer Account Portal is one' — that is the claim the docs support.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.external_identity_dynamic_extend_endpoint_expid.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=experience.external_identity_create_branded_experience.htm&language=en_US&type=5",
+    "_cat": "Salesforce Identity and CIAM",
+    "corrected": {
+      "date": "2026-08-10",
+      "via": "validation",
+      "note": "Key A,C stands as the best-supported pair, but the item is partly defective and the explanation now says so. Option C is solidly documented. Option A is not: 'Brand Your Experience Builder Pages' never mentions the Customer Account Portal template at all, and states that *each* Experience Cloud template ships its own login/verification/reset/self-registration pages. The real requirement is an Experience Builder (Lightning) template — which is why option D, Salesforce Tabs + Visualforce, is the genuine exclusion. A is defensible only on the loose reading 'a Lightning template such as Customer Account Portal'; flagged rather than silently confirmed."
+    }
   },
   {
     "id": "119806fb",
@@ -116,7 +126,7 @@
     "optionD": "Login Flows",
     "optionE": "",
     "correct": "A",
-    "explanation": "The OAuth 2.0 Device Authentication Flow is designed for devices that have limited or no input capability (a fitness band can't host a login form). The customer initiates pairing on the device, gets a short user code, then completes authorization in the community on a richer device — the standard pattern for linking a wearable to a user account.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_device_flow.htm&language=en_US&type=5",
+    "explanation": "The OAuth 2.0 Device Authentication Flow is designed for devices that have limited or no input capability (a fitness band can't host a login form). The customer initiates pairing on the device, gets a short user code, then completes authorization in the community on a richer device — the standard pattern for linking a wearable to a user account.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_device_flow.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.remoteaccess_oauth_device_flow.htm&language=en_US&type=5",
     "_cat": "Identity Management Concepts"
   },
   {
@@ -127,9 +137,16 @@
     "optionC": "Add the Employee portal's IP address to the IP Relaxation / Trusted IP Range for the Connected App.",
     "optionD": "Use a digital certificate signed by the Employee portal server.",
     "optionE": "",
-    "correct": "C",
-    "explanation": "A Connected App's IP Relaxation setting (Trusted IP Ranges) lets you bypass IP-based 2FA challenges or, more importantly, restrict the Connected App so that token requests from outside the trusted range are blocked — exactly what's needed to ensure only the Employee portal server can use this OAuth integration.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_about.htm&language=en_US&type=5",
-    "_cat": "Access Management Best Practices"
+    "correct": "A",
+    "explanation": "The integration authenticates with the OAuth Username-Password flow, and the only documented mechanism that denies a login by source IP is a profile's Login IP Ranges: \"To control login access at the user level, specify the ranges of allowed IP addresses on a user's profile. When you define IP address restrictions for a profile, a login from any other IP address is denied.\" Putting the Employee portal server's address in the API user's profile Login IP Ranges is therefore what restricts the connection to that one host.\nThe Connected App setting named in option C does not do this. A connected app's trusted-IP field is labelled \"Trusted IP Range for OAuth Web Server Flow\" and governs the web server flow, not the username-password flow used here. IP Relaxation is a relaxation control — its options bypass the org's IP restrictions rather than impose them — and Salesforce notes that IP restrictions are enforced only when they are configured on a user's profile, which points back to option A.\nA dedicated profile (B) is good practice but restricts nothing by itself, and a digital certificate (D) is not part of the username-password flow.\nA note on the scenario itself: Salesforce is retiring the OAuth 2.0 username-password flow for connected apps, and says the update 'will break all connected app integrations that use this flow'. The IP-restriction answer above is unchanged, but a design like this one should now move to the client credentials flow for server-to-server integration, or the web server flow with PKCE for end-user login.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.users_profiles_epui_login_ip_ranges.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.connected_app_edit_ip_ranges.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=005388592&language=en_US&type=1",
+    "_cat": "Access Management Best Practices",
+    "corrected": {
+      "date": "2026-08-10",
+      "via": "validation",
+      "note": "Answer moved C->A. The deck asserted that a Connected App's \"IP Relaxation / Trusted IP Range\" restricts token requests to a trusted range. Rendering the documentation shows two things against that: the field is scoped to the OAuth Web Server flow by its own name (\"Trusted IP Range for OAuth Web Server Flow\") while this question specifies the Username-Password flow, and IP Relaxation exists to relax org IP enforcement, not to add it. Salesforce states IP restrictions are enforced only where configured on a user's profile, and the Restrict Login IP Addresses in Profiles article says outright that a login from any other IP address is denied. That is option A.",
+      "from": "C",
+      "to": "A"
+    }
   },
   {
     "id": "9f08f844",
@@ -140,7 +157,7 @@
     "optionD": "Users leaving laptops unattended and not logging out of Salesforce.",
     "optionE": "",
     "correct": "B,C",
-    "explanation": "2FA mitigates risks where the password alone could be compromised: (B) credentials sniffed/phished on public Wi-Fi still can't log in without the second factor; (C) password reuse on Facebook means a Facebook breach exposes the password — but 2FA stops a remote attacker from logging in to Salesforce with it. Unattended laptops (D) need session timeouts/lockscreens, not 2FA. Weak reset questions (A) need policy changes.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.security_require_two_factor_authentication.htm&language=en_US&type=5",
+    "explanation": "2FA mitigates risks where the password alone could be compromised: (B) credentials sniffed/phished on public Wi-Fi still can't log in without the second factor; (C) password reuse on Facebook means a Facebook breach exposes the password — but 2FA stops a remote attacker from logging in to Salesforce with it. Unattended laptops (D) need session timeouts/lockscreens, not 2FA. Weak reset questions (A) need policy changes.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.security_require_two_factor_authentication.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.security_overview_2fa.htm&language=en_US&type=5",
     "_cat": "Access Management Best Practices"
   },
   {
@@ -164,7 +181,7 @@
     "optionD": "Check the Refresh Token policy defined in the Salesforce Connected App.",
     "optionE": "",
     "correct": "D",
-    "explanation": "The fact that exactly the initial-launch cohort (~6 months ago) is now hitting re-auth points at a refresh-token expiration: many Connected Apps default 'Refresh token is valid until revoked' but can be set to expire after a fixed period. The Connected App's Refresh Token policy is the first thing to check.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_about.htm&language=en_US&type=5",
+    "explanation": "The fact that exactly the initial-launch cohort (~6 months ago) is now hitting re-auth points at a refresh-token expiration: many Connected Apps default 'Refresh token is valid until revoked' but can be set to expire after a fixed period. The Connected App's Refresh Token policy is the first thing to check.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_about.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.connected_app_manage_oauth.htm&language=en_US&type=5",
     "_cat": "Identity Management Concepts"
   },
   {
@@ -176,7 +193,7 @@
     "optionD": "The users forget to check the box to remember their credentials.",
     "optionE": "",
     "correct": "A",
-    "explanation": "A daily re-auth pattern is the signature of a refresh token expiring after a fixed period (e.g., '24 hours' or 'after 1 day of inactivity'). The Connected App's refresh token policy must be reviewed and set to a longer/inactivity-based expiration — typically 'Valid until revoked' for a long-lived mobile app.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_refresh_token_flow.htm&language=en_US&type=5",
+    "explanation": "A daily re-auth pattern is the signature of a refresh token expiring after a fixed period (e.g., '24 hours' or 'after 1 day of inactivity'). The Connected App's refresh token policy must be reviewed and set to a longer/inactivity-based expiration — typically 'Valid until revoked' for a long-lived mobile app.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_refresh_token_flow.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.connected_app_manage_oauth.htm&language=en_US&type=5",
     "_cat": "Identity Management Concepts"
   },
   {
@@ -188,7 +205,7 @@
     "optionD": "Identity Only",
     "optionE": "",
     "correct": "D",
-    "explanation": "Identity Only license is designed for internal employees who need Salesforce Identity services (SSO, App Launcher) to access non-Salesforce apps but don't need access to Salesforce CRM functionality. External Identity (B) is for external customers, not employees; Identity Connect (A) is an integration product, and Identity Verification (C) is an add-on for SMS verification credits.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.users_license_types_communities.htm&language=en_US&type=5",
+    "explanation": "Identity Only license is designed for internal employees who need Salesforce Identity services (SSO, App Launcher) to access non-Salesforce apps but don't need access to Salesforce CRM functionality. External Identity (B) is for external customers, not employees; Identity Connect (A) is an integration product, and Identity Verification (C) is an add-on for SMS verification credits.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.users_license_types_communities.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.identity_licenses.htm&language=en_US&type=5",
     "_cat": "Salesforce Identity and CIAM"
   },
   {
@@ -219,7 +236,7 @@
     "optionD": "Identity Connect",
     "optionE": "",
     "correct": "A,B",
-    "explanation": "(B) A Connected App represents the external billing app and configures SAML/OIDC SSO with Salesforce as IdP. (A) The App Launcher then exposes that Connected App as a tile so users can launch the billing app via SSO from inside Salesforce. Canvas (C) is for embedded/iframed apps — overkill when a redirect is acceptable. Identity Connect (D) is for AD synchronization.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_about.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml_setting_up.htm&language=en_US&type=5",
+    "explanation": "(B) A Connected App represents the external billing app and configures SAML/OIDC SSO with Salesforce as IdP. (A) The App Launcher then exposes that Connected App as a tile so users can launch the billing app via SSO from inside Salesforce. Canvas (C) is for embedded/iframed apps — overkill when a redirect is acceptable. Identity Connect (D) is for AD synchronization.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_about.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml_setting_up.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_create_saml_sso.htm&language=en_US&type=5",
     "_cat": "Single Sign-On"
   },
   {
@@ -243,7 +260,7 @@
     "optionD": "Access Token",
     "optionE": "",
     "correct": "A,B,D",
-    "explanation": "The Web Server flow involves: (A) the client secret, exchanged with the authorization code at the token endpoint to prove the client's identity (server-side, can keep secrets); (B) scopes, requested at authorization time to define what the issued token can do; (D) an access token, returned at the end of the exchange to call protected resources. Verification URL (C) belongs to the Device Authentication flow.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_web_server_flow.htm&language=en_US&type=5",
+    "explanation": "The Web Server flow involves: (A) the client secret, exchanged with the authorization code at the token endpoint to prove the client's identity (server-side, can keep secrets); (B) scopes, requested at authorization time to define what the issued token can do; (D) an access token, returned at the end of the exchange to call protected resources. Verification URL (C) belongs to the Device Authentication flow.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_web_server_flow.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.remoteaccess_oauth_device_flow.htm&language=en_US&type=5",
     "_cat": "Identity Management Concepts"
   },
   {
@@ -255,7 +272,7 @@
     "optionD": "Assign each sub-brand a unique Experience ID and use the Experience ID to dynamically brand the login experience.",
     "optionE": "",
     "correct": "D",
-    "explanation": "Experience IDs (expid) let a single Experience Cloud site dynamically render branded pages, images, and styling per brand based on a parameter passed in the URL — scaling cleanly to 150+ brands within one community/site rather than requiring 150 communities (A) or 150 orgs (B).\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.external_identity_branding_use_cases.htm&language=en_US&type=5",
+    "explanation": "Experience IDs (expid) let a single Experience Cloud site dynamically render branded pages, images, and styling per brand based on a parameter passed in the URL — scaling cleanly to 150+ brands within one community/site rather than requiring 150 communities (A) or 150 orgs (B).\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.external_identity_branding_use_cases.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.external_identity_dynamic_extend_endpoint_expid.htm&language=en_US&type=5",
     "_cat": "Salesforce Identity and CIAM"
   },
   {
@@ -267,7 +284,7 @@
     "optionD": "Configure registration for communities to use a custom Apex controller.",
     "optionE": "",
     "correct": "A,B",
-    "explanation": "To capture custom data and run logic during community self-registration, the standard pattern is (B) point Communities Login & Registration settings to a custom Visualforce page that collects the custom fields, and (A) modify the CommunitiesSelfRegController Apex code to apply your assignment logic for profile and account based on those fields. There is no out-of-the-box 'SelfRegistration trigger' (C).\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.external_identity_self_registration_configure.htm&type=5&language=en_US",
+    "explanation": "To capture custom data and run logic during community self-registration, the standard pattern is (B) point Communities Login & Registration settings to a custom Visualforce page that collects the custom fields, and (A) modify the CommunitiesSelfRegController Apex code to apply your assignment logic for profile and account based on those fields. There is no out-of-the-box 'SelfRegistration trigger' (C).\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.external_identity_self_registration_configure.htm&type=5&language=en_US\nhttps://help.salesforce.com/s/articleView?id=sf.external_identity_self_registration_modify_default_page.htm&language=en_US&type=5",
     "_cat": "Salesforce Identity and CIAM"
   },
   {
@@ -279,7 +296,7 @@
     "optionD": "Identity Verification Credits are a direct add-on license based on the number of existing member-based or login-based community licenses.",
     "optionE": "",
     "correct": "B",
-    "explanation": "Salesforce Identity Verification Credits are consumed only by SMS messages sent to deliver a one-time passcode — email OTP delivery is free and does not consume credits. Estimate the monthly SMS credit requirement by counting the expected number of login challenges that will be resolved via SMS (not email), since only those consume credits.\nOption C ('each verification sent') is the distractor: it would count email verifications too, overcounting and leading to unnecessary credit purchases. The correct answer B specifically scopes the estimate to SMS-based challenges.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.security_sms_identity_verification.htm&language=en_US&type=5",
+    "explanation": "Salesforce Identity Verification Credits are consumed only by SMS messages sent to deliver a one-time passcode — email OTP delivery is free and does not consume credits. Estimate the monthly SMS credit requirement by counting the expected number of login challenges that will be resolved via SMS (not email), since only those consume credits.\nOption C ('each verification sent') is the distractor: it would count email verifications too, overcounting and leading to unnecessary credit purchases. The correct answer B specifically scopes the estimate to SMS-based challenges.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.security_sms_identity_verification.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=005239145&language=en_US&type=1",
     "_cat": "Salesforce Identity and CIAM"
   },
   {
@@ -291,7 +308,7 @@
     "optionD": "Create a Connected App for each external application.",
     "optionE": "Set up Salesforce as a SAML IdP with My Domain.",
     "correct": "B,D,E",
-    "explanation": "Three required steps to make Salesforce a SAML IdP with App Launcher: (E) enable My Domain and configure Salesforce as a SAML IdP; (D) register each external app as a Connected App; (B) configure each Connected App with a Start URL so it appears as a tile in the App Launcher. Auth Providers (C) are for inbound social SSO; Identity Connect (A) is for AD sync.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml_setting_up.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_about.htm&language=en_US&type=5",
+    "explanation": "Three required steps to make Salesforce a SAML IdP with App Launcher: (E) enable My Domain and configure Salesforce as a SAML IdP; (D) register each external app as a Connected App; (B) configure each Connected App with a Start URL so it appears as a tile in the App Launcher. Auth Providers (C) are for inbound social SSO; Identity Connect (A) is for AD sync.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml_setting_up.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_about.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_create_saml_sso.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.identity_provider_enable.htm&language=en_US&type=5",
     "_cat": "Integration with IdPs"
   },
   {
@@ -303,7 +320,7 @@
     "optionD": "The Identity Provider can authenticate multiple social media accounts.",
     "optionE": "",
     "correct": "B,C",
-    "explanation": "An Identity Provider's two core enterprise benefits are (B) one identity authenticated across many SP applications (true SSO) and (C) one place to define and enforce password policies (length, complexity, rotation, lockout) consistently for all those apps. The IdP doesn't store per-app credentials (A) — it issues assertions/tokens — and authenticating social accounts (D) is a niche use case.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5",
+    "explanation": "An Identity Provider's two core enterprise benefits are (B) one identity authenticated across many SP applications (true SSO) and (C) one place to define and enforce password policies (length, complexity, rotation, lockout) consistently for all those apps. The IdP doesn't store per-app credentials (A) — it issues assertions/tokens — and authenticating social accounts (D) is a niche use case.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.sso_about.htm&language=en_US&type=5",
     "_cat": "Identity Management Concepts"
   },
   {
@@ -315,7 +332,7 @@
     "optionD": "OAuth Client",
     "optionE": "",
     "correct": "A,B",
-    "explanation": "Two simultaneous Salesforce roles: (B) Okta authenticates users into Salesforce via SAML, so Salesforce is the SAML Service Provider; (A) the Forecasting app calls the Salesforce REST API on behalf of the user using an OAuth access token, so Salesforce is the OAuth Resource Server. The Forecasting app is the OAuth Client; Okta is the SAML IdP.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5\nhttps://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_understanding_authentication.htm",
+    "explanation": "Two simultaneous Salesforce roles: (B) Okta authenticates users into Salesforce via SAML, so Salesforce is the SAML Service Provider; (A) the Forecasting app calls the Salesforce REST API on behalf of the user using an OAuth access token, so Salesforce is the OAuth Resource Server. The Forecasting app is the OAuth Client; Okta is the SAML IdP.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5\nhttps://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_understanding_authentication.htm\nhttps://help.salesforce.com/s/articleView?id=sf.sso_about.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_scopes.htm&language=en_US&type=5",
     "_cat": "Identity Management Concepts"
   },
   {
@@ -339,7 +356,7 @@
     "optionD": "Create separate login flows corresponding to the different community user personas.",
     "optionE": "",
     "correct": "A",
-    "explanation": "Different user experiences based on registration data are best modeled by storing the user's choices on the User/Contact record and using component visibility (and audience targeting) on the existing community pages keyed off those fields. This avoids the maintenance overhead of separate registration controllers (B), triggers (C), or login flows (D).\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.external_identity_self_registration_configure.htm&type=5&language=en_US",
+    "explanation": "Different user experiences based on registration data are best modeled by storing the user's choices on the User/Contact record and using component visibility (and audience targeting) on the existing community pages keyed off those fields. This avoids the maintenance overhead of separate registration controllers (B), triggers (C), or login flows (D).\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.external_identity_self_registration_configure.htm&type=5&language=en_US\nhttps://help.salesforce.com/s/articleView?id=experience.community_builder_page_visibilty_overview.htm&language=en_US&type=5",
     "_cat": "Salesforce Identity and CIAM"
   },
   {
@@ -351,7 +368,7 @@
     "optionD": "Configure Salesforce as a SAML Service Provider, and enable SCIM (System for Cross-Domain Identity Management) for provisioning and deprovisioning of users.",
     "optionE": "",
     "correct": "D",
-    "explanation": "SCIM is the standard protocol for cross-domain provisioning/deprovisioning, supporting create/update/disable triggered from the central IAM. Pairing SCIM (for lifecycle events) with SAML (for SSO) cleanly separates authentication from provisioning. JIT (B) only provisions on first login and cannot deprovision; Identity Connect (C) is AD-specific.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.identity_scim_overview.htm&language=en_US&type=5",
+    "explanation": "SCIM is the standard protocol for cross-domain provisioning/deprovisioning, supporting create/update/disable triggered from the central IAM. Pairing SCIM (for lifecycle events) with SAML (for SSO) cleanly separates authentication from provisioning. JIT (B) only provisions on first login and cannot deprovision; Identity Connect (C) is AD-specific.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.identity_scim_overview.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.sso_jit_about.htm&language=en_US&type=5",
     "_cat": "Identity Governance"
   },
   {
@@ -363,7 +380,7 @@
     "optionD": "Identity Connect License",
     "optionE": "",
     "correct": "B",
-    "explanation": "Identity Only is the right license for internal employees who need Salesforce Identity services (SSO into other apps, App Launcher) but don't need access to Salesforce objects/CRM functionality. External Identity (A) is for customers/partners (external users), not employees.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.users_license_types_communities.htm&language=en_US&type=5",
+    "explanation": "Identity Only is the right license for internal employees who need Salesforce Identity services (SSO into other apps, App Launcher) but don't need access to Salesforce objects/CRM functionality. External Identity (A) is for customers/partners (external users), not employees.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.users_license_types_communities.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.identity_licenses.htm&language=en_US&type=5",
     "_cat": "Salesforce Identity and CIAM"
   },
   {
@@ -375,7 +392,7 @@
     "optionD": "External Data Source with Named Principal identity type.",
     "optionE": "",
     "correct": "A,C",
-    "explanation": "(C) The third-party app is registered as a Connected App in Salesforce, which configures SAML/OIDC and treats Salesforce as the IdP. (A) The App Launcher exposes the Connected App as a tile in the customer portal so users can SSO to it. Delegated Auth (B) is the wrong direction (Salesforce calls out to verify credentials), and external data sources (D) are about data integration, not identity.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_about.htm&language=en_US&type=5",
+    "explanation": "(C) The third-party app is registered as a Connected App in Salesforce, which configures SAML/OIDC and treats Salesforce as the IdP. (A) The App Launcher exposes the Connected App as a tile in the customer portal so users can SSO to it. Delegated Auth (B) is the wrong direction (Salesforce calls out to verify credentials), and external data sources (D) are about data integration, not identity.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_about.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_create_saml_sso.htm&language=en_US&type=5",
     "_cat": "Integration with IdPs"
   },
   {
@@ -387,7 +404,7 @@
     "optionD": "Modify the CommunitiesSelfRegController to assign the Profile and Account.",
     "optionE": "",
     "correct": "B,D",
-    "explanation": "The standard pattern is the same as the earlier near-duplicate question: (B) point Communities Login & Registration settings to a custom Visualforce page that captures the custom fields, and (D) modify the CommunitiesSelfRegController Apex class to apply your profile/account assignment logic. There is no SelfRegistration trigger (C).\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.external_identity_self_registration_configure.htm&type=5&language=en_US",
+    "explanation": "The standard pattern is the same as the earlier near-duplicate question: (B) point Communities Login & Registration settings to a custom Visualforce page that captures the custom fields, and (D) modify the CommunitiesSelfRegController Apex class to apply your profile/account assignment logic. There is no SelfRegistration trigger (C).\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.external_identity_self_registration_configure.htm&type=5&language=en_US\nhttps://help.salesforce.com/s/articleView?id=sf.external_identity_self_registration_modify_default_page.htm&language=en_US&type=5",
     "_cat": "Salesforce Identity and CIAM"
   },
   {
@@ -435,7 +452,7 @@
     "optionD": "Salesforce Org1 and Salesforce Org2 are acting as Identity Providers.",
     "optionE": "",
     "correct": "B",
-    "explanation": "In a typical hub-and-spoke setup, PingFederate is the primary corporate IdP and one Salesforce org is configured as a secondary IdP for downstream systems. Both can act as Identity Providers in different SSO chains. The other Salesforce org and the financial/CPQ systems function as Service Providers in this layout.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5",
+    "explanation": "In a typical hub-and-spoke setup, PingFederate is the primary corporate IdP and one Salesforce org is configured as a secondary IdP for downstream systems. Both can act as Identity Providers in different SSO chains. The other Salesforce org and the financial/CPQ systems function as Service Providers in this layout.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.sso_sfdc_both_sp_idp.htm&language=en_US&type=5",
     "_cat": "Single Sign-On"
   },
   {
@@ -447,7 +464,7 @@
     "optionD": "Use the updateUser() method on the Registration Handler class.",
     "optionE": "",
     "correct": "D",
-    "explanation": "When Salesforce uses an Auth Provider for Facebook, the Apex Registration Handler class implements both createUser() (first login) and updateUser() (subsequent logins). The updateUser() method runs every time the user logs in via Facebook and is the canonical place to sync attribute changes from the Facebook profile back to the Salesforce user.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_provider_openid_connect.htm&language=en_US&type=5",
+    "explanation": "When Salesforce uses an Auth Provider for Facebook, the Apex Registration Handler class implements both createUser() (first login) and updateUser() (subsequent logins). The updateUser() method runs every time the user logs in via Facebook and is the canonical place to sync attribute changes from the Facebook profile back to the Salesforce user.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_provider_openid_connect.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_create_registration_handler.htm&language=en_US&type=5\nhttps://developer.salesforce.com/docs/platform/mobile-sdk/guide/communities-customize-auth-provider.html",
     "_cat": "Integration with IdPs"
   },
   {
@@ -459,7 +476,7 @@
     "optionD": "Identity Provider Login URL",
     "optionE": "",
     "correct": "A",
-    "explanation": "Entity ID is the unique identifier the SP presents to the IdP — the IdP uses it to look up which SP configuration (certificate, ACS URL, attribute mapping) to apply to a given SAML AuthnRequest or Response. Two Salesforce orgs against the same IdP must have distinct Entity IDs.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml_setting_up.htm&language=en_US&type=5",
+    "explanation": "Entity ID is the unique identifier the SP presents to the IdP — the IdP uses it to look up which SP configuration (certificate, ACS URL, attribute mapping) to apply to a given SAML AuthnRequest or Response. Two Salesforce orgs against the same IdP must have distinct Entity IDs.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml_setting_up.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_create_saml_sso.htm&language=en_US&type=5",
     "_cat": "Single Sign-On"
   },
   {
@@ -471,7 +488,7 @@
     "optionD": "The web service should implement a custom password decryption method.",
     "optionE": "",
     "correct": "B",
-    "explanation": "Delegated Authentication works by having Salesforce call out to an external SOAP web service on every login attempt. The endpoint receives the user's credentials over the network, so the connection MUST be secured with TLS using a certificate from a Certificate Authority that Salesforce trusts. Any interception in transit would expose the password in plaintext.\nThe Delegated Authentication WSDL published by Salesforce defines exactly three input parameters: username, password, and sourceIp. Option C ('one to four parameters') is incorrect — the signature is fixed, not variable.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_delauthentication.htm&language=en_US&type=5",
+    "explanation": "Delegated Authentication works by having Salesforce call out to an external SOAP web service on every login attempt. The endpoint receives the user's credentials over the network, so the connection MUST be secured with TLS using a certificate from a Certificate Authority that Salesforce trusts. Any interception in transit would expose the password in plaintext.\nThe Delegated Authentication WSDL published by Salesforce defines exactly three input parameters: username, password, and sourceIp. Option C ('one to four parameters') is incorrect — the signature is fixed, not variable.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_delauthentication.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.sso_delauthentication_tips.htm&language=en_US&type=5",
     "_cat": "Identity Management Concepts"
   },
   {
@@ -483,7 +500,7 @@
     "optionD": "Select 'Enable as a Canvas Personal App' in the Connected App settings.",
     "optionE": "",
     "correct": "A,B",
-    "explanation": "(A) Setting Permitted Users to 'Admin approved users are pre-authorized' lets admins control which agents get the Canvas app silently. (B) Configuring SAML SP-initiated as the Canvas authentication method makes Salesforce act as the IdP that signs users into the pricing app automatically — no second login. OAuth (C) is the alternative auth model but the question specifies SAML SSO context.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.platform_connect.meta/platform_connect/canvas_framework_intro.htm\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml_setting_up.htm&language=en_US&type=5",
+    "explanation": "(A) Setting Permitted Users to 'Admin approved users are pre-authorized' lets admins control which agents get the Canvas app silently. (B) Configuring SAML SP-initiated as the Canvas authentication method makes Salesforce act as the IdP that signs users into the pricing app automatically — no second login. OAuth (C) is the alternative auth model but the question specifies SAML SSO context.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.platform_connect.meta/platform_connect/canvas_framework_intro.htm\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml_setting_up.htm&language=en_US&type=5\nhttps://developer.salesforce.com/docs/atlas.en-us.platform_connect.meta/platform_connect/canvas_app_saml_sso_intro.htm\nhttps://help.salesforce.com/s/articleView?id=xcloud.connected_app_manage_oauth.htm&language=en_US&type=5",
     "_cat": "Single Sign-On"
   },
   {
@@ -495,7 +512,7 @@
     "optionD": "Federation ID",
     "optionE": "",
     "correct": "B",
-    "explanation": "The Apex Registration Handler is where the auth provider's createUser/updateUser logic lives. It receives the Facebook user data, decides whether to create a new community user or link to an existing one, and persists that mapping — making it the component that 'associates' a Facebook user with a Salesforce user.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_provider_openid_connect.htm&language=en_US&type=5",
+    "explanation": "The Apex Registration Handler is where the auth provider's createUser/updateUser logic lives. It receives the Facebook user data, decides whether to create a new community user or link to an existing one, and persists that mapping — making it the component that 'associates' a Facebook user with a Salesforce user.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_provider_openid_connect.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_create_registration_handler.htm&language=en_US&type=5\nhttps://developer.salesforce.com/docs/platform/mobile-sdk/guide/communities-customize-auth-provider.html",
     "_cat": "Integration with IdPs"
   },
   {
@@ -519,7 +536,7 @@
     "optionD": "Use SAML Just-in-Time provisioning between Facebook and Salesforce.",
     "optionE": "",
     "correct": "B",
-    "explanation": "Same answer as the earlier question — the Auth Provider's Apex Registration Handler exposes an updateUser() method that fires on every login after the first, and is the canonical place to sync changing Facebook profile attributes to the Salesforce user.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_provider_openid_connect.htm&language=en_US&type=5",
+    "explanation": "Same answer as the earlier question — the Auth Provider's Apex Registration Handler exposes an updateUser() method that fires on every login after the first, and is the canonical place to sync changing Facebook profile attributes to the Salesforce user.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_provider_openid_connect.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_create_registration_handler.htm&language=en_US&type=5\nhttps://developer.salesforce.com/docs/platform/mobile-sdk/guide/communities-customize-auth-provider.html",
     "_cat": "Integration with IdPs"
   },
   {
@@ -531,7 +548,7 @@
     "optionD": "Add an Apex callout in the Registration Handler of the Authorization Provider.",
     "optionE": "",
     "correct": "D",
-    "explanation": "The Auth Provider's Apex Registration Handler runs createUser() on first login. Adding an Apex callout there to the accounting system's web service is exactly the right place to provision the customer in the external system at the same moment the Salesforce community user is created.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_provider_openid_connect.htm&language=en_US&type=5",
+    "explanation": "The Auth Provider's Apex Registration Handler runs createUser() on first login. Adding an Apex callout there to the accounting system's web service is exactly the right place to provision the customer in the external system at the same moment the Salesforce community user is created.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_provider_openid_connect.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_create_registration_handler.htm&language=en_US&type=5\nhttps://developer.salesforce.com/docs/platform/mobile-sdk/guide/communities-customize-auth-provider.html",
     "_cat": "Integration with IdPs"
   },
   {
@@ -567,7 +584,7 @@
     "optionD": "Email Verification Credits",
     "optionE": "",
     "correct": "A,C",
-    "explanation": "(A) External Identity is the license type for external (non-employee) users who only need authentication, not Salesforce data access — perfect for a CIAM use case. (C) SMS Verification Credits are required because mobile-first means mobile-number-as-username with OTP via SMS, which consumes credits per message. Email verification is free, so 'Email Verification Credits' (D) isn't a real license.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.users_license_types_communities.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.security_sms_identity_verification.htm&language=en_US&type=5",
+    "explanation": "(A) External Identity is the license type for external (non-employee) users who only need authentication, not Salesforce data access — perfect for a CIAM use case. (C) SMS Verification Credits are required because mobile-first means mobile-number-as-username with OTP via SMS, which consumes credits per message. Email verification is free, so 'Email Verification Credits' (D) isn't a real license.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.users_license_types_communities.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.security_sms_identity_verification.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.identity_licenses.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=005239145&language=en_US&type=1",
     "_cat": "Salesforce Identity and CIAM"
   },
   {
@@ -591,7 +608,7 @@
     "optionD": "Customer Community License",
     "optionE": "",
     "correct": "A",
-    "explanation": "These are external customers who only need authentication and SSO into a label-generator app — not Salesforce CRM data. External Identity is the right license: it includes Auth Provider access, App Launcher, and OAuth-based SSO. Identity License (B) is for internal employees, and the Customer Community licenses (C, D) are heavier and meant for users that work with Salesforce records.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.users_license_types_communities.htm&language=en_US&type=5",
+    "explanation": "These are external customers who only need authentication and SSO into a label-generator app — not Salesforce CRM data. External Identity is the right license: it includes Auth Provider access, App Launcher, and OAuth-based SSO. Identity License (B) is for internal employees, and the Customer Community licenses (C, D) are heavier and meant for users that work with Salesforce records.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.users_license_types_communities.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.identity_licenses.htm&language=en_US&type=5",
     "_cat": "Salesforce Identity and CIAM"
   },
   {
@@ -603,7 +620,7 @@
     "optionD": "Update the default registration handlers to create and update users.",
     "optionE": "Register both Facebook and LinkedIn as Connected Apps.",
     "correct": "A,B,D",
-    "explanation": "Three steps: (A) create Auth Providers for Facebook and LinkedIn (Salesforce ships predefined types for both); (B) enable those providers in the community's Login Page Setup so the social buttons appear; (D) customize the auto-generated Apex Registration Handler to map social attributes to community user fields. SAML (C) and Connected Apps (E) are not used for inbound social sign-on.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_provider_openid_connect.htm&language=en_US&type=5",
+    "explanation": "Three steps: (A) create Auth Providers for Facebook and LinkedIn (Salesforce ships predefined types for both); (B) enable those providers in the community's Login Page Setup so the social buttons appear; (D) customize the auto-generated Apex Registration Handler to map social attributes to community user fields. SAML (C) and Connected Apps (E) are not used for inbound social sign-on.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_provider_openid_connect.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.sso_authentication_providers.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_create_registration_handler.htm&language=en_US&type=5",
     "_cat": "Integration with IdPs"
   },
   {
@@ -615,7 +632,7 @@
     "optionD": "Configure IdP-initiated SSO that passes the SAML token upon Salesforce resource access request.",
     "optionE": "",
     "correct": "D",
-    "explanation": "The user is already authenticated at the corporate portal (via the IdP). Clicking a Salesforce link should not bounce them through Salesforce's login. IdP-initiated SSO posts the existing SAML assertion directly to Salesforce's ACS endpoint, completing SSO in a single hop — the seamless experience required.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5",
+    "explanation": "The user is already authenticated at the corporate portal (via the IdP). Clicking a Salesforce link should not bounce them through Salesforce's login. IdP-initiated SSO posts the existing SAML assertion directly to Salesforce's ACS endpoint, completing SSO in a single hop — the seamless experience required.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=000315559&language=en_US&type=1",
     "_cat": "Single Sign-On"
   },
   {
@@ -627,7 +644,7 @@
     "optionD": "Set up Salesforce as an Authentication Provider to the existing IdP.",
     "optionE": "",
     "correct": "A",
-    "explanation": "The corporate IdP already authenticates users against LDAP. Salesforce should join that ecosystem as a SAML Service Provider so users SSO from the IdP — they keep the one corporate password and don't need a separate Salesforce one. Salesforce Connect (B) is for data integration, not passwords.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5",
+    "explanation": "The corporate IdP already authenticates users against LDAP. Salesforce should join that ecosystem as a SAML Service Provider so users SSO from the IdP — they keep the one corporate password and don't need a separate Salesforce one. Salesforce Connect (B) is for data integration, not passwords.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.sso_about.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.sso_delauthentication.htm&language=en_US&type=5",
     "_cat": "Single Sign-On"
   },
   {
@@ -639,7 +656,7 @@
     "optionD": "Web Server flow with a Refresh Token.",
     "optionE": "",
     "correct": "B",
-    "explanation": "The User-Agent flow (implicit grant) with a refresh token (B) is the traditional exam answer for 'after first login, never re-prompt' on mobile. With 'refresh_token' scope, the refresh token is stored on the device and silently renews access tokens — so the requirement is met.\nHowever, Salesforce now explicitly recommends the Web Server flow with PKCE for native and mobile apps instead of the User-Agent flow. The User-Agent / implicit grant delivers the access token in the URL fragment, creating a token-leakage risk through browser history and redirect-URL interception. Salesforce allows administrators to disable the User-Agent flow entirely at the Connected App level for this reason.\nThe Web Server flow with a refresh token (option D) satisfies the same 'no re-login' requirement while the authorization code exchange is done server-side with a PKCE code verifier, eliminating the fragment-exposure risk. On the current Salesforce platform, D is the architecturally preferred choice for new mobile implementations.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.remoteaccess_oauth_user_agent_flow.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_web_server_flow.htm&language=en_US&type=5",
+    "explanation": "The User-Agent flow (implicit grant) with a refresh token (B) is the traditional exam answer for 'after first login, never re-prompt' on mobile. With 'refresh_token' scope, the refresh token is stored on the device and silently renews access tokens — so the requirement is met.\nHowever, Salesforce now explicitly recommends the Web Server flow with PKCE for native and mobile apps instead of the User-Agent flow. The User-Agent / implicit grant delivers the access token in the URL fragment, creating a token-leakage risk through browser history and redirect-URL interception. Salesforce allows administrators to disable the User-Agent flow entirely at the Connected App level for this reason.\nThe Web Server flow with a refresh token (option D) satisfies the same 'no re-login' requirement while the authorization code exchange is done server-side with a PKCE code verifier, eliminating the fragment-exposure risk. On the current Salesforce platform, D is the architecturally preferred choice for new mobile implementations.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.remoteaccess_oauth_user_agent_flow.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_web_server_flow.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_scopes.htm&language=en_US&type=5",
     "_cat": "Identity Management Concepts"
   },
   {
@@ -650,9 +667,16 @@
     "optionC": "For all employee profiles, set the Session Level Required at Login to High Assurance and add the corporate identity provider to the High Assurance list for the org's Session Security Levels.",
     "optionD": "Create a custom login flow that enforces MFA and assign it to a permission set. Then assign the permission set to all employees.",
     "optionE": "",
-    "correct": "B",
-    "explanation": "Enabling 'MFA for User Interface Logins' at the org level forces MFA for every UI login, regardless of authentication path. Salesforce intelligently honors the IdP's MFA when the SAML assertion advertises an authn context, avoiding double prompts — meeting the 'single MFA prompt' requirement cleanly.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.security_require_two_factor_authentication.htm&language=en_US&type=5",
-    "_cat": "Access Management Best Practices"
+    "correct": "C",
+    "explanation": "The requirement has two login paths and asks for exactly one MFA prompt on each. Session security levels are the documented way to get that, and Salesforce spells out both halves.\nOn the profile side: 'For Session Security Level Required at Login, select High Assurance to require users to verify their identity with multi-factor authentication when they log in.' That guarantees a prompt for anyone logging in directly with a username and password.\nOn the org side, the Session Settings page is where an SSO provider's own MFA is recognised: 'If users access Salesforce via single sign-on (SSO) only and you're using your SSO provider's MFA solution: Put your SSO provider in the High Assurance column.' A user arriving through NTO's corporate IdP therefore lands in a high-assurance session already, satisfying the login requirement without a second Salesforce challenge. Together these produce one prompt per path, which is what the stem asks for.\nEnabling MFA for User Interface Logins org-wide instead forces Salesforce's own challenge on every UI login, including users who already completed MFA at the IdP — the double prompt the requirement rules out. Salesforce does not infer trust from a SAML authentication context here; the documented mechanism for honouring an IdP's MFA is the High Assurance column, not an authn-context check.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.understand_mfa_high_assurance_login_session.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=platform.users_profiles_session.htm&language=en_US&type=5",
+    "_cat": "Access Management Best Practices",
+    "corrected": {
+      "date": "2026-08-10",
+      "via": "validation",
+      "note": "Answer moved B->C. The old explanation defended the org-wide MFA setting by asserting that 'Salesforce intelligently honors the IdP's MFA when the SAML assertion advertises an authn context, avoiding double prompts.' No documentation supports that mechanism, and the article written for this exact problem prescribes a different one: put the SSO provider in the High Assurance column of Session Settings so SSO users arrive with a high-assurance session, and require High Assurance at login so direct logins are challenged once. That is option C, both halves quotable. Option B would double-prompt precisely the SSO population whose IdP already enforces MFA, which is what the single-prompt requirement forbids.",
+      "from": "B",
+      "to": "C"
+    }
   },
   {
     "id": "c9f1c673",
@@ -663,7 +687,7 @@
     "optionD": "Increase Password complexity requirements in Salesforce.",
     "optionE": "",
     "correct": "A",
-    "explanation": "Phishing harvests passwords. Salesforce Authenticator with two-step verification adds an MFA factor that the attacker doesn't have — and its push-based approval also surfaces login attempts (location, IP) for the user to approve, providing visible signals that something is off. Stronger passwords (D) don't help once they're phished.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.security_require_two_factor_authentication.htm&language=en_US&type=5",
+    "explanation": "Phishing harvests passwords. Salesforce Authenticator with two-step verification adds an MFA factor that the attacker doesn't have — and its push-based approval also surfaces login attempts (location, IP) for the user to approve, providing visible signals that something is off. Stronger passwords (D) don't help once they're phished.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.security_require_two_factor_authentication.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.security_overview_2fa.htm&language=en_US&type=5",
     "_cat": "Access Management Best Practices"
   },
   {
@@ -687,7 +711,7 @@
     "optionD": "SOAP API for Provisioning; Just-in-Time (JIT) for Deprovisioning.",
     "optionE": "",
     "correct": "A",
-    "explanation": "JIT (Just-in-Time) provisioning creates or updates a Salesforce user record when the user successfully authenticates via SAML — so it handles provisioning at first login. JIT cannot deprovision users because deprovisioning means the user can no longer log in at all, which means the JIT handler never fires. An explicit API call from the IdP or an admin tool is required to deactivate the user in Salesforce.\nThe answer therefore requires the IdP product to support (A) SAML JIT for provisioning plus an API (SOAP or SCIM) for deprovisioning. SCIM is now the modern standard for deprovisioning, but the answer option uses 'SOAP API' as the deprovisioning mechanism — both SOAP and SCIM are valid, but SOAP API is what the option set provides.\nOptions B and C (JIT for both, or API for both) misunderstand the fundamental limitation: JIT is event-driven by authentication, so it cannot independently initiate a deprovisioning action.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_jit_about.htm&language=en_US&type=5\nhttps://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_calls_create.htm",
+    "explanation": "JIT (Just-in-Time) provisioning creates or updates a Salesforce user record when the user successfully authenticates via SAML — so it handles provisioning at first login. JIT cannot deprovision users because deprovisioning means the user can no longer log in at all, which means the JIT handler never fires. An explicit API call from the IdP or an admin tool is required to deactivate the user in Salesforce.\nThe answer therefore requires the IdP product to support (A) SAML JIT for provisioning plus an API (SOAP or SCIM) for deprovisioning. SCIM is now the modern standard for deprovisioning, but the answer option uses 'SOAP API' as the deprovisioning mechanism — both SOAP and SCIM are valid, but SOAP API is what the option set provides.\nOptions B and C (JIT for both, or API for both) misunderstand the fundamental limitation: JIT is event-driven by authentication, so it cannot independently initiate a deprovisioning action.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_jit_about.htm&language=en_US&type=5\nhttps://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_calls_create.htm\nhttps://help.salesforce.com/s/articleView?id=sf.identity_scim_overview.htm&language=en_US&type=5",
     "_cat": "Identity Governance"
   },
   {
@@ -711,7 +735,7 @@
     "optionD": "Set up My Domain.",
     "optionE": "",
     "correct": "C,D",
-    "explanation": "(D) My Domain is required for SP-initiated SSO to work — Salesforce needs a unique URL to direct AuthnRequests from. (C) The SAML SSO settings configure the IdP metadata, certificates, Entity ID, and ACS URL on the Salesforce side. Connected Apps (B) are for outbound (Salesforce as IdP); delegated auth (A) is a different mechanism.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml_setting_up.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.domain_name_overview.htm&language=en_US&type=5",
+    "explanation": "(D) My Domain is required for SP-initiated SSO to work — Salesforce needs a unique URL to direct AuthnRequests from. (C) The SAML SSO settings configure the IdP metadata, certificates, Entity ID, and ACS URL on the Salesforce side. Connected Apps (B) are for outbound (Salesforce as IdP); delegated auth (A) is a different mechanism.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml_setting_up.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.domain_name_overview.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=000315559&language=en_US&type=1\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_service_provider_configuration.htm&language=en_US&type=5",
     "_cat": "Single Sign-On"
   },
   {
@@ -723,8 +747,13 @@
     "optionD": "For supporting OIDC, it is necessary to enable SAML with Just-in-Time provisioning (JIT) and OAuth 2.0.",
     "optionE": "",
     "correct": "A,C",
-    "explanation": "(A) Each social provider (Facebook, Twitter, OIDC) needs its own Auth Provider configured, and Auth Providers must be enabled on the Login & Registration page. (C) Auth Provider Registration Handlers are Apex classes — implementing the user creation/update logic requires Apex skills. Auth Provider RegistrationHandlers cannot be built in Flow today.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_provider_openid_connect.htm&language=en_US&type=5",
-    "_cat": "Integration with IdPs"
+    "explanation": "Two things are genuinely required for social sign-on. Each provider needs its own authentication provider configured — Facebook, Twitter, and the OIDC provider alike, since Salesforce supports 'OpenID Connect or... a custom OAuth 2.0 configuration' — and those providers must then be enabled on the site's login page before the social buttons appear. That is option A, and it also disposes of option D: an OIDC provider is handled natively by the auth provider framework and needs no SAML or Just-in-Time provisioning bolted on.\nThe second requirement is a registration handler, which is mandatory rather than optional: 'To set up single sign-on (SSO) with an authentication provider, you must set up a registration handler.' Its job is to take the attributes the social provider returns, look for a matching user, and create or update accordingly.\nOne important currency note. Apex is a supported way to write that handler, but it is no longer the only one — Salesforce now states that 'to set up a registration handler, you can use Flow Builder or Apex', and describes the flow option as something that 'can be configured and maintained entirely with clicks instead of code. No developer knowledge is necessary.' So read option C as naming a supported implementation, not an unavoidable prerequisite; a modern build can satisfy this requirement declaratively.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_create_registration_handler.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.sso_authentication_providers.htm&language=en_US&type=5",
+    "_cat": "Integration with IdPs",
+    "corrected": {
+      "date": "2026-08-10",
+      "via": "validation",
+      "note": "Key A,C left in place but the item is now partly stale, and the explanation says so instead of asserting the old absolute. Option C claims 'Apex coding skills are needed for the Registration Handler', which was true when the item was written and is no longer: Salesforce documents Flow Builder as a first-class registration handler type requiring no developer knowledge. That also makes option B closer to true than the deck allowed. I did not move the key to A,B because B's wording names Process Builder, which is retired, so neither option is cleanly correct as printed. Flagged as a judgement call for the user: the cleanest repair is to reword C to 'a registration handler is required (Apex or Flow)' rather than to reletter the key."
+    }
   },
   {
     "id": "5e7db9c7",
@@ -735,7 +764,7 @@
     "optionD": "Reference to a URL redirect parameter at the identity provider.",
     "optionE": "",
     "correct": "C",
-    "explanation": "RelayState is opaque to the IdP — the SP sets it before redirecting and the IdP echoes it back unchanged with the SAML response. The SP uses it to remember where to send the user after authentication, which is what enables deep-linking through SSO.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5",
+    "explanation": "RelayState is opaque to the IdP — the SP sets it before redirecting and the IdP echoes it back unchanged with the SAML response. The SP uses it to remember where to send the user after authentication, which is what enables deep-linking through SSO.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=000386068&language=en_US&type=1",
     "_cat": "Single Sign-On"
   },
   {
@@ -759,7 +788,7 @@
     "optionD": "Add customers as contacts and add them to Experience Cloud site.",
     "optionE": "",
     "correct": "A,D",
-    "explanation": "Without self-registration, the admin-driven path is: (D) create a Contact, then create the community user from that contact and add them to the community; (A) enable Welcome emails so each newly created community user receives a 'set your password' email, allowing them to choose their own password on first access.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=platform.networks_create_external_users.htm&language=en_US&type=5",
+    "explanation": "Without self-registration, the admin-driven path is: (D) create a Contact, then create the community user from that contact and add them to the community; (A) enable Welcome emails so each newly created community user receives a 'set your password' email, allowing them to choose their own password on first access.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=platform.networks_create_external_users.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.faq_communities_external_member_login_info.htm&language=en_US&type=5",
     "_cat": "Salesforce Identity and CIAM"
   },
   {
@@ -771,7 +800,7 @@
     "optionD": "Start URL for the Connected App is not set in Connected App settings.",
     "optionE": "",
     "correct": "A,D",
-    "explanation": "Two specific causes of a missing App Launcher tile: (A) the Connected App's App Manager visibility setting must be 'Visible in App Launcher' (not Hidden); (D) the Connected App must have a Start URL configured — that's the URL the App Launcher tile launches to, and without it the tile is hidden.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_about.htm&language=en_US&type=5",
+    "explanation": "Two specific causes of a missing App Launcher tile: (A) the Connected App's App Manager visibility setting must be 'Visible in App Launcher' (not Hidden); (D) the Connected App must have a Start URL configured — that's the URL the App Launcher tile launches to, and without it the tile is hidden.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_about.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=000272761&language=en_US&type=1\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_create_saml_sso.htm&language=en_US&type=5",
     "_cat": "Single Sign-On"
   },
   {
@@ -795,7 +824,7 @@
     "optionD": "Use of self-signed certificate leads to lower maintenance for trusting party because there is no trusted CA cert to maintain.",
     "optionE": "",
     "correct": "A",
-    "explanation": "When the trusted party (the server) uses a self-signed certificate, the trusting party (the client) must explicitly add that specific cert to its truststore — and rotate it whenever the trusted party rotates its cert. This is higher maintenance than CA-signed certs, where the client just trusts the CA root once.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.security_keys_uploading_mutual_auth_cert_api.htm&language=en_US&type=5",
+    "explanation": "When the trusted party (the server) uses a self-signed certificate, the trusting party (the client) must explicitly add that specific cert to its truststore — and rotate it whenever the trusted party rotates its cert. This is higher maintenance than CA-signed certs, where the client just trusts the CA root once.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.security_keys_uploading_mutual_auth_cert_api.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.security_keys_uploading_mutual_auth_cert.htm&language=en_US&type=5",
     "_cat": "Identity Management Concepts"
   },
   {
@@ -807,7 +836,7 @@
     "optionD": "Configure Delegated Authentication.",
     "optionE": "",
     "correct": "A,C",
-    "explanation": "Same answer as the earlier near-duplicate: My Domain (A) is required so SP-initiated SAML AuthnRequests can target a specific org URL, and SAML SSO Settings (C) must be configured with the IdP's metadata. Connected Apps and Delegated Auth are unrelated to inbound SAML.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml_setting_up.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.domain_name_overview.htm&language=en_US&type=5",
+    "explanation": "Same answer as the earlier near-duplicate: My Domain (A) is required so SP-initiated SAML AuthnRequests can target a specific org URL, and SAML SSO Settings (C) must be configured with the IdP's metadata. Connected Apps and Delegated Auth are unrelated to inbound SAML.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml_setting_up.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.domain_name_overview.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=000315559&language=en_US&type=1\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_service_provider_configuration.htm&language=en_US&type=5",
     "_cat": "Single Sign-On"
   },
   {
@@ -819,7 +848,7 @@
     "optionD": "Use a login flow to query the helpdesk to validate user status.",
     "optionE": "",
     "correct": "C",
-    "explanation": "When the helpdesk is the source of truth and provisioning must happen at approval time (not at login), the natural pattern is for the helpdesk to call Salesforce's SOAP/REST API to create/update the User, assign profile, and assign permission sets — pushing the lifecycle event into Salesforce immediately upon approval.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_understanding_authentication.htm",
+    "explanation": "When the helpdesk is the source of truth and provisioning must happen at approval time (not at login), the natural pattern is for the helpdesk to call Salesforce's SOAP/REST API to create/update the User, assign profile, and assign permission sets — pushing the lifecycle event into Salesforce immediately upon approval.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_understanding_authentication.htm\nhttps://help.salesforce.com/s/articleView?id=sf.sso_jit_about.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.identity_scim_overview.htm&language=en_US&type=5",
     "_cat": "Identity Governance"
   },
   {
@@ -831,7 +860,7 @@
     "optionD": "Identity License.",
     "optionE": "",
     "correct": "A",
-    "explanation": "Salesforce Platform license is designed for users who need access to custom Apex/Visualforce/custom-object apps but don't need standard CRM objects (Sales/Service). It supports SSO via SAML and is the most cost-effective fit for a custom internal innovation platform.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=platform.users_understanding_license_types.htm&language=en_US&type=5",
+    "explanation": "Salesforce Platform license is designed for users who need access to custom Apex/Visualforce/custom-object apps but don't need standard CRM objects (Sales/Service). It supports SSO via SAML and is the most cost-effective fit for a custom internal innovation platform.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=platform.users_understanding_license_types.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=platform.users_license_types_available.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.identity_licenses.htm&language=en_US&type=5",
     "_cat": "Salesforce Identity and CIAM"
   },
   {
@@ -843,7 +872,7 @@
     "optionD": "Facebook and LinkedIn will be the SPs.",
     "optionE": "",
     "correct": "B",
-    "explanation": "The user is trying to access Salesforce (the protected resource), so Salesforce is the Service Provider. Facebook and LinkedIn are the Identity Providers — they authenticate the user and pass the identity assertion to Salesforce.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5",
+    "explanation": "The user is trying to access Salesforce (the protected resource), so Salesforce is the Service Provider. Facebook and LinkedIn are the Identity Providers — they authenticate the user and pass the identity assertion to Salesforce.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.sso_about.htm&language=en_US&type=5",
     "_cat": "Identity Management Concepts"
   },
   {
@@ -879,7 +908,7 @@
     "optionD": "Web Server OAuth Flow",
     "optionE": "",
     "correct": "A",
-    "explanation": "The SAML Assertion OAuth Flow lets a client app exchange an existing SAML assertion (from the corporate IdP) for a Salesforce OAuth access token — perfect when the integration client has already authenticated the user via SAML SSO and now needs API access without a second login.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_SAML_bearer_flow.htm&language=en_US&type=5",
+    "explanation": "The SAML Assertion OAuth Flow lets a client app exchange an existing SAML assertion (from the corporate IdP) for a Salesforce OAuth access token — perfect when the integration client has already authenticated the user via SAML SSO and now needs API access without a second login.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_SAML_bearer_flow.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_web_sso_flow.htm&language=en_US&type=5",
     "_cat": "Integration with IdPs"
   },
   {
@@ -903,8 +932,13 @@
     "optionD": "Use a self-signed certificate for Salesforce and a self-signed cert for the external system.",
     "optionE": "",
     "correct": "A,D",
-    "explanation": "The two consistent, valid configurations are: (A) both sides use CA-signed certs (typical production posture, easy to maintain); or (D) both sides use self-signed certs (often used in non-prod or controlled integrations where each side imports the other's cert into its truststore). Mixed configurations (B, C) are technically possible but break symmetry/maintenance.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.security_keys_uploading_mutual_auth_cert_api.htm&language=en_US&type=5",
-    "_cat": "Identity Management Concepts"
+    "explanation": "Two-way SSL requires each side to validate what the other presents, so the workable combinations are the ones where that validation can succeed in both directions.\nBoth sides CA-signed is the straightforward posture: trust derives from a root authority each side already holds, and Salesforce publishes the roots it accepts at /cacerts.jsp. Salesforce also documents that a client certificate obtained from a Public CA 'must chain to a valid Root CA for your instance' and, for mutual authentication, 'must include the Client Authentication EKU'.\nBoth sides self-signed can also be made to work, but only because trust is established by explicit exchange rather than by a CA: for inbound mutual authentication 'Salesforce checks the certificate and chain against the certificate that you upload in your Certificate and Key Management settings', and a certificate Salesforce presents outbound has to be installed in the target server's keystore. Every renewal then has to be re-exchanged on both sides, which is why this option suits controlled or non-production integrations rather than public ones.\nBe aware of two current constraints that bear on the CA-signed choice: certificates must include all intermediates in the chain, and under Chrome Root Program Policy v1.7 your client and server certificates 'can't originate from the same Public Root CA', so a single hierarchy for both roles is no longer viable.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.security_keys_uploading_mutual_auth_cert.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=000383575&language=en_US&type=1",
+    "_cat": "Identity Management Concepts",
+    "corrected": {
+      "date": "2026-08-10",
+      "via": "validation",
+      "note": "Key A,D left in place, but flagged as a judgement call rather than confirmed, because the documentation does not settle it as cleanly as the deck implies. What is documented: for inbound mTLS Salesforce validates the client chain against a certificate you upload, which is what makes a self-signed pairing workable, and Salesforce can present a self-signed certificate outbound if the target installs it. What is not documented anywhere I could render: any statement that the asymmetric combinations B and C are invalid. They are coherent configurations, so the item's premise that only the symmetric pairs are 'valid choices' rests on a symmetry intuition rather than a source. I did not reletter the key, since A and D are genuinely workable and no documentation contradicts them; the honest repair would be to reword the stem toward 'most commonly used' rather than 'valid'. The explanation now states the real constraints, including the Chrome Root Program v1.7 rule against sharing one root CA for client and server certificates."
+    }
   },
   {
     "id": "337c210b",
@@ -915,7 +949,7 @@
     "optionD": "Use a different Entity ID than the first org.",
     "optionE": "",
     "correct": "D",
-    "explanation": "The Entity ID uniquely identifies a Service Provider to an IdP. Two Salesforce orgs sharing the same Entity ID would collide at the IdP — it wouldn't know which SP configuration to use. The new org must be configured with a distinct Entity ID, and registered separately at the IdP.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml_setting_up.htm&language=en_US&type=5",
+    "explanation": "The Entity ID uniquely identifies a Service Provider to an IdP. Two Salesforce orgs sharing the same Entity ID would collide at the IdP — it wouldn't know which SP configuration to use. The new org must be configured with a distinct Entity ID, and registered separately at the IdP.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml_setting_up.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_create_saml_sso.htm&language=en_US&type=5",
     "_cat": "Single Sign-On"
   },
   {
@@ -939,7 +973,7 @@
     "optionD": "Use information in the signed request that is received from Facebook.",
     "optionE": "",
     "correct": "A",
-    "explanation": "Same answer as the earlier two near-duplicate questions: the Auth Provider's Apex Registration Handler exposes an updateUser() method that fires on every login after the first. This is the canonical place to sync changing Facebook profile attributes back to the Salesforce user record.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_provider_openid_connect.htm&language=en_US&type=5",
+    "explanation": "Same answer as the earlier two near-duplicate questions: the Auth Provider's Apex Registration Handler exposes an updateUser() method that fires on every login after the first. This is the canonical place to sync changing Facebook profile attributes back to the Salesforce user record.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_provider_openid_connect.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_create_registration_handler.htm&language=en_US&type=5\nhttps://developer.salesforce.com/docs/platform/mobile-sdk/guide/communities-customize-auth-provider.html",
     "_cat": "Integration with IdPs"
   },
   {
@@ -951,7 +985,7 @@
     "optionD": "Create custom scopes and assign to the Connected App.",
     "optionE": "",
     "correct": "D",
-    "explanation": "OAuth custom scopes let you define and enforce fine-grained permissions specific to the protected resource (e.g., read:orders vs. write:orders). Scopes are negotiated at token issuance time and the resource server checks them on each call — providing flexible, declarative authorization that goes beyond just app-level access (A, B).\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_scopes.htm&language=en_US&type=5",
+    "explanation": "OAuth custom scopes let you define and enforce fine-grained permissions specific to the protected resource (e.g., read:orders vs. write:orders). Scopes are negotiated at token issuance time and the resource server checks them on each call — providing flexible, declarative authorization that goes beyond just app-level access (A, B).\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_scopes.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_customscopes.htm&language=en_US&type=5",
     "_cat": "Access Management Best Practices"
   },
   {
@@ -975,8 +1009,13 @@
     "optionD": "SAML Assertion Flow",
     "optionE": "",
     "correct": "C",
-    "explanation": "When a SAML configuration already exists, the SAML Bearer Assertion Flow lets a previously issued/exchangeable SAML assertion be traded for an OAuth access token, reusing the SSO trust relationship to secure API access. (Note: 'OAuth 2.0 SAML Bearer Assertion Flow' and 'SAML Assertion Flow' are the same Salesforce flow — but option C is the canonical naming.)\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_SAML_bearer_flow.htm&language=en_US&type=5",
-    "_cat": "Integration with IdPs"
+    "explanation": "Salesforce documents two different ways to turn SAML into API access, and this item turns on choosing between them.\nThe OAuth 2.0 SAML bearer assertion flow is the mainstream OAuth authorization flow for the job: 'a client—via a connected app—can use previous authorization by supplying a signed SAML 2.0 assertion to request an OAuth access token. The digital signature applied to the SAML assertion authenticates the authorized app.' The assertion is posted to the token endpoint, which 'issues an access_token based on prior approval of the app', so the existing SAML trust is reused while the connected app gives administrators a place to approve and govern each client. Since the question asks which OAuth authorization flow should be used, this is the answer.\nThe other option is real and worth knowing rather than dismissing. The SAML assertion flow 'is an alternative for orgs that use SAML to access Salesforce and want to access the API the same way', and it 'can be used without a connected app'. Salesforce frames it as an alternative, and it carries limitations the bearer flow does not: it cannot be used with more than one org, and authentication through it does not invoke login flows.\nSo the discriminator is governance and scope. Choose the bearer assertion flow when clients should be registered and approved as connected apps, which is the normal posture for securing APIs; the plain assertion flow suits reusing one org's web SSO configuration directly for API federation with no app registration.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_SAML_bearer_flow.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_web_sso_flow.htm&language=en_US&type=5",
+    "_cat": "Integration with IdPs",
+    "corrected": {
+      "date": "2026-08-10",
+      "via": "validation",
+      "note": "Key C left in place, but flagged: this is the one item in the deck where I could not settle the answer decisively, and the user should decide. The case for C is that the question asks which OAuth authorization flow 'should be used', and the SAML bearer assertion flow is the mainstream one for API access via SAML, running through a connected app; Salesforce explicitly calls the plain SAML assertion flow 'an alternative' and documents real limitations on it. The case for D is the stem's wording, which paraphrases the assertion flow's opening sentence almost exactly — 'an existing SAML configuration that supports the company's single sign-on process to Salesforce' against 'orgs that use SAML to access Salesforce and want to access the API the same way'. Unlike the deck's other SAML-flow question, this stem contains no requirement that administrators authorise consuming apps, which is the requirement that cleanly selects bearer elsewhere in the deck. Review this together with the question keyed to the SAML Assertion Flow: the two stems are close enough that whichever way this one is decided, both should be worded so the discriminator is visible."
+    }
   },
   {
     "id": "340019b3",
@@ -1023,7 +1062,7 @@
     "optionD": "On successful creation of partners using the Self Registration page in Experience Cloud, create the identity in Ping.",
     "optionE": "",
     "correct": "B",
-    "explanation": "Make the IdP the single source of truth for identity (one registration, no duplicates) and have it call the Salesforce API to create the corresponding partner user when registration succeeds. The user authenticates through the IdP into Experience Cloud via SSO afterward. This avoids the dual-write problem inherent in (A) and (D).\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_jit_about.htm&language=en_US&type=5",
+    "explanation": "Make the IdP the single source of truth for identity (one registration, no duplicates) and have it call the Salesforce API to create the corresponding partner user when registration succeeds. The user authenticates through the IdP into Experience Cloud via SSO afterward. This avoids the dual-write problem inherent in (A) and (D).\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_jit_about.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.identity_scim_overview.htm&language=en_US&type=5",
     "_cat": "Identity Governance"
   },
   {
@@ -1035,7 +1074,7 @@
     "optionD": "Configure the regional Salesforce orgs as Identity Providers.",
     "optionE": "",
     "correct": "C",
-    "explanation": "Salesforce can act as a SAML Identity Provider. Configuring the main org as the IdP lets users authenticate there once and SSO into the regional Salesforce orgs (which become Service Providers), accessed via the App Launcher.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml_setting_up.htm&language=en_US&type=5",
+    "explanation": "Salesforce can act as a SAML Identity Provider. Configuring the main org as the IdP lets users authenticate there once and SSO into the regional Salesforce orgs (which become Service Providers), accessed via the App Launcher.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml_setting_up.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.sso_sfdc_both_sp_idp.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.identity_provider_enable.htm&language=en_US&type=5",
     "_cat": "Single Sign-On"
   },
   {
@@ -1047,7 +1086,7 @@
     "optionD": "Disallow the use of Single Sign-On for any users of the mobile app.",
     "optionE": "",
     "correct": "A,B",
-    "explanation": "(A) Requiring High Assurance sessions on the Connected App forces an MFA-elevated session before the app can be used. (B) Adding an authenticator app as a second factor satisfies that requirement and protects against credential theft. (C) is wrong because users are out of the office; (D) disallowing SSO degrades security by avoiding centralized policy.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_about.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.security_require_two_factor_authentication.htm&language=en_US&type=5",
+    "explanation": "(A) Requiring High Assurance sessions on the Connected App forces an MFA-elevated session before the app can be used. (B) Adding an authenticator app as a second factor satisfies that requirement and protects against credential theft. (C) is wrong because users are out of the office; (D) disallowing SSO degrades security by avoiding centralized policy.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_about.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.security_require_two_factor_authentication.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.connected_app_manage_session_policies.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.security_overview_2fa.htm&language=en_US&type=5",
     "_cat": "Access Management Best Practices"
   },
   {
@@ -1059,7 +1098,7 @@
     "optionD": "Connected App and OAuth scopes",
     "optionE": "",
     "correct": "D",
-    "explanation": "Any external app that calls the Salesforce API via OAuth must be registered as a Connected App, and OAuth scopes on that Connected App define what the app's tokens can do (e.g., 'api' for REST access). This is the foundational artifact for OAuth integrations to Salesforce.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_about.htm&language=en_US&type=5",
+    "explanation": "Any external app that calls the Salesforce API via OAuth must be registered as a Connected App, and OAuth scopes on that Connected App define what the app's tokens can do (e.g., 'api' for REST access). This is the foundational artifact for OAuth integrations to Salesforce.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_about.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_scopes.htm&language=en_US&type=5",
     "_cat": "Identity Management Concepts"
   },
   {
@@ -1071,7 +1110,7 @@
     "optionD": "Delegated Authentication is enabled for the System Administrator profile.",
     "optionE": "The return type of the web service method should be a Boolean value.",
     "correct": "A,B,E",
-    "explanation": "Three items to consider when building a Delegated Authentication web service:\n(A) Whitelist Salesforce IP ranges on the corporate firewall — Salesforce makes an outbound SOAP call to the Delegated Auth endpoint on every login, so the corporate firewall must permit traffic from Salesforce's published egress IP ranges.\n(B) Include sourceIp as a method parameter — the Delegated Auth WSDL defines exactly three input parameters: username, password, and sourceIp. The sourceIp can be used inside the service for additional IP-based security decisions.\n(E) Return a Boolean — the SOAP method must return true (valid credentials) or false (invalid). Salesforce uses this value directly to approve or reject the login.\n(C) is false: Delegated Authentication is SOAP-only. The Salesforce-published WSDL defines the entire contract, and a REST endpoint cannot fulfill it.\n(D) is a dangerous distractor: enabling Delegated Auth on the System Administrator profile means that if the endpoint goes down, no administrator can log in to diagnose the outage. Best practice is to keep at least one System Administrator on standard Salesforce authentication as a recovery fallback.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_delauthentication.htm&language=en_US&type=5",
+    "explanation": "Three items to consider when building a Delegated Authentication web service:\n(A) Whitelist Salesforce IP ranges on the corporate firewall — Salesforce makes an outbound SOAP call to the Delegated Auth endpoint on every login, so the corporate firewall must permit traffic from Salesforce's published egress IP ranges.\n(B) Include sourceIp as a method parameter — the Delegated Auth WSDL defines exactly three input parameters: username, password, and sourceIp. The sourceIp can be used inside the service for additional IP-based security decisions.\n(E) Return a Boolean — the SOAP method must return true (valid credentials) or false (invalid). Salesforce uses this value directly to approve or reject the login.\n(C) is false: Delegated Authentication is SOAP-only. The Salesforce-published WSDL defines the entire contract, and a REST endpoint cannot fulfill it.\n(D) is a dangerous distractor: enabling Delegated Auth on the System Administrator profile means that if the endpoint goes down, no administrator can log in to diagnose the outage. Best practice is to keep at least one System Administrator on standard Salesforce authentication as a recovery fallback.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_delauthentication.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.sso_delauthentication_tips.htm&language=en_US&type=5",
     "_cat": "Identity Management Concepts"
   },
   {
@@ -1083,7 +1122,7 @@
     "optionD": "Develop a custom Auth server in AWS.",
     "optionE": "",
     "correct": "C",
-    "explanation": "Configuring AWS Cognito (or a similar AWS-hosted OIDC service) as an OpenID Connect Auth Provider in Salesforce lets Salesforce trust AWS-issued tokens for SSO. OIDC is a standard, well-supported protocol for this exact pattern — no custom auth server needed.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_provider_openid_connect.htm&language=en_US&type=5",
+    "explanation": "Configuring AWS Cognito (or a similar AWS-hosted OIDC service) as an OpenID Connect Auth Provider in Salesforce lets Salesforce trust AWS-issued tokens for SSO. OIDC is a standard, well-supported protocol for this exact pattern — no custom auth server needed.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_provider_openid_connect.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.sso_authentication_providers.htm&language=en_US&type=5",
     "_cat": "Integration with IdPs"
   },
   {
@@ -1107,7 +1146,7 @@
     "optionD": "The default login user can be set.",
     "optionE": "",
     "correct": "A,C",
-    "explanation": "When configuring an Auth Provider, two configurable options are: (A) a custom Registration Handler Apex class to handle createUser/updateUser logic; and (C) a Custom Error URL where users land if authentication fails. Default cert (B) and default login user (D) aren't Auth Provider configuration options.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_provider_openid_connect.htm&language=en_US&type=5",
+    "explanation": "When configuring an Auth Provider, two configurable options are: (A) a custom Registration Handler Apex class to handle createUser/updateUser logic; and (C) a Custom Error URL where users land if authentication fails. Default cert (B) and default login user (D) aren't Auth Provider configuration options.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_provider_openid_connect.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.sso_provider_linkedin.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_create_registration_handler.htm&language=en_US&type=5",
     "_cat": "Integration with IdPs"
   },
   {
@@ -1119,7 +1158,7 @@
     "optionD": "Use Salesforce Connect to synchronize LDAP passwords to Salesforce.",
     "optionE": "",
     "correct": "C",
-    "explanation": "Same answer as the earlier near-duplicate: configure Salesforce as a SAML Service Provider to the existing IdP so users SSO with their corporate LDAP-backed credentials and don't need a separate Salesforce password.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5",
+    "explanation": "Same answer as the earlier near-duplicate: configure Salesforce as a SAML Service Provider to the existing IdP so users SSO with their corporate LDAP-backed credentials and don't need a separate Salesforce password.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.sso_about.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.sso_delauthentication.htm&language=en_US&type=5",
     "_cat": "Single Sign-On"
   },
   {
@@ -1143,7 +1182,7 @@
     "optionD": "Start URL on Identity Provider",
     "optionE": "",
     "correct": "A",
-    "explanation": "Deep linking — landing on a specific Salesforce record after SSO — requires SP-initiated SSO. The user's request URL is captured in the SAML AuthnRequest's RelayState, and the SP returns the user to the originally requested resource after SSO completes. IdP-initiated SSO (B) lands users on a default URL only.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5",
+    "explanation": "Deep linking — landing on a specific Salesforce record after SSO — requires SP-initiated SSO. The user's request URL is captured in the SAML AuthnRequest's RelayState, and the SP returns the user to the originally requested resource after SSO completes. IdP-initiated SSO (B) lands users on a default URL only.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=000315559&language=en_US&type=1\nhttps://help.salesforce.com/s/articleView?id=000386068&language=en_US&type=1",
     "_cat": "Single Sign-On"
   },
   {
@@ -1155,8 +1194,13 @@
     "optionD": "In the mobile navigation menu on Salesforce for Android.",
     "optionE": "",
     "correct": "A,D",
-    "explanation": "Canvas app locations in the Connected App settings include: Chatter Tab, Chatter Feed, Console (sidebar) (A), Lightning Component, Lightning Page, Mobile Nav (D), Open CTI, Page Layouts and Mobile Cards, Publisher, Visualforce Page. Knowledge article body (C) is not a Canvas placement.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.platform_connect.meta/platform_connect/canvas_framework_intro.htm",
-    "_cat": "Identity Management Concepts"
+    "explanation": "Where a canvas app can appear is governed by the Locations field of the Canvas app settings on its connected app, and the documented values are Chatter Feed, Chatter Tab, Console, Layouts and Mobile Cards, Lightning Component, Mobile Nav, Open CTI, Publisher, and Visualforce Page.\nTwo of those match the keyed answers directly. 'Console—The canvas app appears in the footer or sidebars of a Salesforce console. If this option is selected, you must choose where the canvas app appears in a console by adding it as a custom console component.' And 'Mobile Nav—The canvas app is accessible from the mobile app navigation menu.'\nThe option that is not a location is the Knowledge article: nothing in the Canvas documentation places a canvas app inside the body of a Knowledge article, and it is the only one of the four that appears nowhere in the Locations list.\nBe aware that this item is defective as a choose-two. Open CTI is also a documented Locations value — 'Open CTI—The canvas app appears in the call control tool. If this option is selected, you must specify the canvas app in your call center's definition file for it to appear' — so three of the four options are correct and only one is genuinely false.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.platform_connect.meta/platform_connect/canvas_apps_where_they_appear.htm",
+    "_cat": "Identity Management Concepts",
+    "corrected": {
+      "date": "2026-08-10",
+      "via": "validation",
+      "note": "Key A,D left in place because both are correct, but the item is defective and the explanation now says so. Option B is equally correct: Open CTI is one of the nine documented values of the Locations field, described as making the canvas app appear in the call control tool, and the same page separately lists 'In an Open CTI call control tool after you add it to the call center's definition file' among the places canvas apps appear. So this is a choose-two with three true options. Only option C is false — Knowledge is not mentioned anywhere on the page. Flagged for the user: the clean repair is either to convert this to a choose-three, or to replace option B with a second genuinely false location, since as printed a well-prepared candidate can pick A, B or D and be right."
+    }
   },
   {
     "id": "e178d75d",
@@ -1167,7 +1211,7 @@
     "optionD": "Contactless user feature is available only with the External Identity license, which can restrict the Experience Cloud functionality available to the user.",
     "optionE": "",
     "correct": "D",
-    "explanation": "Contactless users are an External Identity-only feature. Switching to that license to use contactless reduces overhead but limits what those users can do in the community (no full record access like a Customer Community Plus user has). NTO's architecture must accept that trade-off.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.external_identity_manage_create_contactless_users.htm&language=en_US&type=5",
+    "explanation": "Contactless users are an External Identity-only feature. Switching to that license to use contactless reduces overhead but limits what those users can do in the community (no full record access like a Customer Community Plus user has). NTO's architecture must accept that trade-off.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.external_identity_manage_create_contactless_users.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.identity_licenses.htm&language=en_US&type=5",
     "_cat": "Salesforce Identity and CIAM"
   },
   {
@@ -1179,7 +1223,7 @@
     "optionD": "Salesforce User ID",
     "optionE": "Federation ID",
     "correct": "B,D,E",
-    "explanation": "When Salesforce is the SAML Service Provider, the SAML Identity Type can be: (B) Salesforce Username, (E) Federation ID, or (D) Salesforce User ID — those are the three identifiers Salesforce can match against in its SAML SSO Settings. Email and Full Name are not direct identity types.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml_setting_up.htm&language=en_US&type=5",
+    "explanation": "When Salesforce is the SAML Service Provider, the SAML Identity Type can be: (B) Salesforce Username, (E) Federation ID, or (D) Salesforce User ID — those are the three identifiers Salesforce can match against in its SAML SSO Settings. Email and Full Name are not direct identity types.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml_setting_up.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_service_provider_configuration.htm&language=en_US&type=5",
     "_cat": "Single Sign-On"
   },
   {
@@ -1191,7 +1235,7 @@
     "optionD": "Refresh Token Policy - Expire the refresh token if it has not been used for 7 days.",
     "optionE": "",
     "correct": "D",
-    "explanation": "The Connected App Refresh Token Policy includes the option to 'Expire refresh token if not used for N days.' Setting it to 7 days means an unused-for-a-week device's refresh token expires, forcing the user to re-authenticate (re-verify) on the next use — exactly the policy described.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_about.htm&language=en_US&type=5",
+    "explanation": "The Connected App Refresh Token Policy includes the option to 'Expire refresh token if not used for N days.' Setting it to 7 days means an unused-for-a-week device's refresh token expires, forcing the user to re-authenticate (re-verify) on the next use — exactly the policy described.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_about.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.connected_app_manage_oauth.htm&language=en_US&type=5",
     "_cat": "Access Management Best Practices"
   },
   {
@@ -1215,7 +1259,7 @@
     "optionD": "StartURL",
     "optionE": "",
     "correct": "C",
-    "explanation": "RelayState is the standard SAML parameter for preserving deep-link context. The SP includes it in the AuthnRequest, the IdP echoes it back unchanged in the response, and the SP uses it to redirect the user to the resource they originally requested.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5",
+    "explanation": "RelayState is the standard SAML parameter for preserving deep-link context. The SP includes it in the AuthnRequest, the IdP echoes it back unchanged in the response, and the SP uses it to redirect the user to the resource they originally requested.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=000386068&language=en_US&type=1",
     "_cat": "Single Sign-On"
   },
   {
@@ -1227,7 +1271,7 @@
     "optionD": "Ensure that there is an HTTPS connection between IdP and SP.",
     "optionE": "",
     "correct": "B",
-    "explanation": "Salesforce supports signed SAML AuthnRequests via the 'Request Signing Certificate' setting. With signing enabled, any tampering with the request content invalidates the signature, and the IdP rejects it — providing the integrity guarantee the head of IT is asking for. HTTPS protects transport but not the assertion's signed payload identity.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml_setting_up.htm&language=en_US&type=5",
+    "explanation": "Salesforce supports signed SAML AuthnRequests via the 'Request Signing Certificate' setting. With signing enabled, any tampering with the request content invalidates the signature, and the IdP rejects it — providing the integrity guarantee the head of IT is asking for. HTTPS protects transport but not the assertion's signed payload identity.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml_setting_up.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.sso_service_provider_configuration.htm&language=en_US&type=5",
     "_cat": "Single Sign-On"
   },
   {
@@ -1239,7 +1283,7 @@
     "optionD": "Delegated Authentication will continue to work with a .NET service.",
     "optionE": "",
     "correct": "A,D",
-    "explanation": "Delegated Authentication has a fixed contract: it's SOAP-based, with a specific WSDL Salesforce calls. So (A) it cannot be implemented as a REST service. The implementation language is irrelevant as long as the SOAP contract is honored — (D) .NET can serve the WSDL just as well as Java. The CIO needs to know REST is the blocker, not the language.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_delauthentication.htm&language=en_US&type=5",
+    "explanation": "Delegated Authentication has a fixed contract: it's SOAP-based, with a specific WSDL Salesforce calls. So (A) it cannot be implemented as a REST service. The implementation language is irrelevant as long as the SOAP contract is honored — (D) .NET can serve the WSDL just as well as Java. The CIO needs to know REST is the blocker, not the language.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_delauthentication.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.sso_delauthentication_tips.htm&language=en_US&type=5",
     "_cat": "Identity Management Concepts"
   },
   {
@@ -1251,7 +1295,7 @@
     "optionD": "Use Visualforce as the landing page for My Domain to redirect users to the Identity Provider login page.",
     "optionE": "",
     "correct": "B",
-    "explanation": "On the My Domain page's Authentication Configuration, removing 'Login Page' from the listed Authentication Services causes users hitting the My Domain URL to skip Salesforce's login screen and be redirected directly to the configured external IdP — the cleanest way to make SSO automatic.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.domain_name_overview.htm&language=en_US&type=5",
+    "explanation": "On the My Domain page's Authentication Configuration, removing 'Login Page' from the listed Authentication Services causes users hitting the My Domain URL to skip Salesforce's login screen and be redirected directly to the configured external IdP — the cleanest way to make SSO automatic.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.domain_name_overview.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.domain_name_login_id_prov.htm&language=en_US&type=5",
     "_cat": "Single Sign-On"
   },
   {
@@ -1263,7 +1307,7 @@
     "optionD": "The Salesforce SSO settings are using HTTP POST.",
     "optionE": "",
     "correct": "C",
-    "explanation": "The IdP must echo back the RelayState parameter unchanged. If the IdP is dropping or rewriting it, the SP loses the deep-link context and falls back to the default landing page (home). Investigating the IdP's RelayState handling is the canonical first step for this exact symptom.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5",
+    "explanation": "The IdP must echo back the RelayState parameter unchanged. If the IdP is dropping or rewriting it, the SP loses the deep-link context and falls back to the default landing page (home). Investigating the IdP's RelayState handling is the canonical first step for this exact symptom.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=000386068&language=en_US&type=1\nhttps://help.salesforce.com/s/articleView?id=000315559&language=en_US&type=1",
     "_cat": "Single Sign-On"
   },
   {
@@ -1286,9 +1330,16 @@
     "optionC": "Lightning Experience Page",
     "optionD": "Experience Builder Page",
     "optionE": "",
-    "correct": "A,B",
-    "explanation": "Two valid login page types for an Experience Cloud site are (A) Embedded Login (a JavaScript-based widget that can be embedded anywhere) and (B) Login Discovery Page (which prompts for username first and routes the user to the right authentication method). Lightning Experience Page (C) is an internal user UI pattern; Experience Builder Page (D) is a tool for building the site, not a login page type.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.external_identity_login_pages_configure.htm&type=5&language=en_US",
-    "_cat": "Salesforce Identity and CIAM"
+    "correct": "B,D",
+    "explanation": "Salesforce documents a closed set of login page types, chosen on the Login & Registration page of the Administration workspace, and there are exactly four: Default Page, Login Discovery Page, Experience Builder Page, and Visualforce Page.\nTwo of them are the answers here. The Login Discovery Page is the type used 'to help you configure passwordless login. With passwordless login, you can let users log in with their email address or phone number.' The Experience Builder Page lets you 'quickly create and style a page that matches your company's brand' by dragging components in Experience Builder — with one restriction worth knowing: 'Unlike the other page types, the Experience Builder page limits users to logging in with a username and password', and the site must be published first.\nEmbedded Login is not a login page type. It is a separate Salesforce Customer Identity feature that embeds login into an external website you host, and it sits alongside the login-page topics in the documentation rather than among the page-type options. It is also no longer a natural recommendation: Salesforce disabled Embedded Login by default in Summer '24 because it relies on third-party cookies, and advises using a redirect-based OAuth flow instead.\nThere is likewise no 'Lightning Experience Page' login type. The nearest real options are the Experience Builder Page for a declarative build and the Visualforce Page for a fully custom one.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.external_identity_login_discovery_login_types.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.external_identity_login_pages_configure.htm&type=5&language=en_US",
+    "_cat": "Salesforce Identity and CIAM",
+    "corrected": {
+      "date": "2026-08-10",
+      "via": "validation",
+      "note": "Answer moved A,B->B,D. The dedicated Login Page Types article carries a table of every valid type, and it contains Default Page, Login Discovery Page, Experience Builder Page and Visualforce Page — the word 'Embedded' does not appear in that table at all. The configuration article agrees, enumerating the same four values for the Login Page Type field. So option A named a real Salesforce feature that is not one of the answers to this question, and option D named an actual page type that the old key omitted. Embedded Login is separately documented as disabled by default since Summer '24 owing to third-party cookie restrictions, which makes keying it doubly wrong. Option C remains invented.",
+      "from": "A,B",
+      "to": "B,D"
+    }
   },
   {
     "id": "4549ec9c",
@@ -1299,8 +1350,13 @@
     "optionD": "Set organization-wide default sharing for Contact to Public Read Only.",
     "optionE": "Contact Salesforce Support to enable Business Accounts.",
     "correct": "A,B,C",
-    "explanation": "(A) Person Accounts must be enabled by Salesforce Support — they cannot be self-enabled. (B) The community guest profile / public access settings must permit access to both Person and Business account record types. (C) For self-registration with Person Accounts, the 'Account' lookup in the community Login & Registration settings must be left empty, so a Person Account is created instead of a contact under a default account.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.external_identity_self_registration_person_accounts.htm&language=en_US&type=5",
-    "_cat": "Salesforce Identity and CIAM"
+    "explanation": "Person accounts are the right model for a business-to-consumer portal, because when new users register 'they're added to your site under an individual record that merges account and contact information' — there is no separate business account to attach a contact to.\nThree things have to be in place. Person Accounts must be turned on for the org. The site's guest and public access settings must permit the Person Account and Business Account record types, so a self-registering user can actually be created against them. And the Login & Registration configuration must not force everyone into one account: leaving the default Account field empty is what lets each registration create its own person account rather than being attached to a single shared one.\nOne currency correction to how the first step is often described. Enabling Person Accounts no longer requires a support request. Salesforce documents it as self-service: 'From Setup, enter Person Accounts in the Quick Find box, and then select Person Accounts. Go through the steps listed on the Setup page. Turn on Person Accounts', needing only the Customize Application and View All Profiles permissions. Read option A as 'enable Person Accounts', not as 'file a case'. Note also that the switch is one-way — 'After Person Accounts is enabled, it can't be disabled' — so preview it in a sandbox first.\nBusiness accounts need no such enablement at all; they are standard and available in all editions.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sales.account_person_enable.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.external_identity_self_registration_person_accounts.htm&language=en_US&type=5",
+    "_cat": "Salesforce Identity and CIAM",
+    "corrected": {
+      "date": "2026-08-10",
+      "via": "validation",
+      "note": "Key A,B,C left in place, but option A is stale and the explanation now says so. The Enable Person Accounts article describes a self-service Setup flow and never mentions Salesforce Support — the phrase does not appear on the page — and Salesforce shipped a release note specifically titled around enabling person accounts without contacting support. So A is correct in substance (Person Accounts must be enabled) and wrong in mechanism (a support request). I did not move the key because there is no fourth correct option to promote: D is wrong on sharing, and E is wrong because business accounts are standard in all editions and need no enablement. That makes this a choose-three with only two cleanly correct options as printed. Flagged for the user: reword A to 'Enable Person Accounts in Setup'. Separate note on citations — the deck's existing person-account self-registration link renders but is a stub that only points elsewhere, so the enablement article is the one carrying the facts."
+    }
   },
   {
     "id": "46545053",
@@ -1335,7 +1391,7 @@
     "optionD": "The use of High Assurance sessions is required for the Connected App.",
     "optionE": "",
     "correct": "C",
-    "explanation": "When a Connected App's Permitted Users is set to 'Admin approved users are pre-authorized,' a user who does not have the right profile or permission set assigned to that Connected App receives exactly this 'Not approved for access' error. Granting the appropriate profile/permission set resolves it.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_about.htm&language=en_US&type=5",
+    "explanation": "When a Connected App's Permitted Users is set to 'Admin approved users are pre-authorized,' a user who does not have the right profile or permission set assigned to that Connected App receives exactly this 'Not approved for access' error. Granting the appropriate profile/permission set resolves it.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_about.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=000386708&language=en_US&type=1\nhttps://help.salesforce.com/s/articleView?id=000272761&language=en_US&type=1",
     "_cat": "Access Management Best Practices"
   },
   {
@@ -1347,7 +1403,7 @@
     "optionD": "Login Forensics",
     "optionE": "",
     "correct": "D",
-    "explanation": "Login Forensics is Salesforce Shield's analytics feature that aggregates login events to surface anomalous behavior — average login counts, off-hours logins, users far above the norm. Login History (B) is a flat event log without analytics on top; Login Inspector (C) isn't a real product.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.identity_monitor_access.htm&language=en_US&type=5",
+    "explanation": "Login Forensics is Salesforce Shield's analytics feature that aggregates login events to surface anomalous behavior — average login counts, off-hours logins, users far above the norm. Login History (B) is a flat event log without analytics on top; Login Inspector (C) isn't a real product.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.identity_monitor_access.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.users_login_history.htm&language=en_US&type=5",
     "_cat": "Identity Governance"
   },
   {
@@ -1359,7 +1415,7 @@
     "optionD": "Authorize the third-party service by sending authorization requests to the community-url/services/oauth2/authorize/expid_value.",
     "optionE": "",
     "correct": "D",
-    "explanation": "Salesforce Experience Cloud supports passing an Experience ID (expid) on the OAuth authorization endpoint URL. The expid drives dynamic branding of the login page (logos, colors, content) — exactly the requirement to render the right brand based on the user's selection on Heroku before authorization completes.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.external_identity_branding_use_cases.htm&language=en_US&type=5",
+    "explanation": "Salesforce Experience Cloud supports passing an Experience ID (expid) on the OAuth authorization endpoint URL. The expid drives dynamic branding of the login page (logos, colors, content) — exactly the requirement to render the right brand based on the user's selection on Heroku before authorization completes.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.external_identity_branding_use_cases.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.external_identity_dynamic_extend_endpoint_expid.htm&language=en_US&type=5",
     "_cat": "Salesforce Identity and CIAM"
   },
   {
@@ -1371,7 +1427,7 @@
     "optionD": "Download the Identity Provider Event Log and evaluate the details of activities performed by the user.",
     "optionE": "",
     "correct": "C",
-    "explanation": "Login History is the canonical first place to look for a compromised account: source IPs, user agents, login times, and login statuses. Anomalies (unfamiliar geographies, unusual hours, new devices) are immediate signals of compromise that scope the rest of the investigation.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.users_login_history.htm&language=en_US&type=5",
+    "explanation": "Login History is the canonical first place to look for a compromised account: source IPs, user agents, login times, and login statuses. Anomalies (unfamiliar geographies, unusual hours, new devices) are immediate signals of compromise that scope the rest of the investigation.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.users_login_history.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.identity_monitor_access.htm&language=en_US&type=5",
     "_cat": "Identity Governance"
   },
   {
@@ -1395,7 +1451,7 @@
     "optionD": "Users can change it on the enterprise LDAP authentication portal.",
     "optionE": "",
     "correct": "D",
-    "explanation": "With Delegated Authentication, Salesforce never owns the password — every login attempt is forwarded to LDAP, which is the source of truth. Therefore the password can only be changed at the LDAP/enterprise authentication portal; the Salesforce 'Forgot password' and 'Change password' UIs become no-ops or are hidden.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_delauthentication.htm&language=en_US&type=5",
+    "explanation": "With Delegated Authentication, Salesforce never owns the password — every login attempt is forwarded to LDAP, which is the source of truth. Therefore the password can only be changed at the LDAP/enterprise authentication portal; the Salesforce 'Forgot password' and 'Change password' UIs become no-ops or are hidden.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.sso_delauthentication.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.sso_delauthentication_tips.htm&language=en_US&type=5",
     "_cat": "Integration with IdPs"
   },
   {
@@ -1407,7 +1463,7 @@
     "optionD": "Customer 360 Identity not only provides a unified sign up and sign in experience, but also tracks anonymous user activity prior to signing up so organizations can understand user activity before and after the users identify themselves.",
     "optionE": "",
     "correct": "A,C",
-    "explanation": "Customer 360 Identity's two flagship benefits: (A) one customer identity across all of an organization's digital properties, surfacing cross-property activity for that one user; (C) multi-brand support, so a single identity layer can serve different branded experiences while keeping correlation possible. Anonymous-to-known tracking (D) is more of a marketing-cloud capability.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.identity_licenses.htm&language=en_US&type=5",
+    "explanation": "Customer 360 Identity's two flagship benefits: (A) one customer identity across all of an organization's digital properties, surfacing cross-property activity for that one user; (C) multi-brand support, so a single identity layer can serve different branded experiences while keeping correlation possible. Anonymous-to-known tracking (D) is more of a marketing-cloud capability.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.identity_licenses.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.external_identity_dynamic_multiple_brands.htm&language=en_US&type=5",
     "_cat": "Salesforce Identity and CIAM"
   },
   {
@@ -1431,7 +1487,7 @@
     "optionD": "Use Connected App OAuth policies to restrict mobile app access to authorized users.",
     "optionE": "",
     "correct": "D",
-    "explanation": "The Connected App's Permitted Users setting ('Admin approved users are pre-authorized') combined with profile or permission-set assignment is the canonical way to restrict who can use the app via OAuth. Only sales users are assigned, so only they can authenticate through the Connected App.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_about.htm&language=en_US&type=5",
+    "explanation": "The Connected App's Permitted Users setting ('Admin approved users are pre-authorized') combined with profile or permission-set assignment is the canonical way to restrict who can use the app via OAuth. Only sales users are assigned, so only they can authenticate through the Connected App.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_about.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.connected_app_manage_oauth.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=000272761&language=en_US&type=1",
     "_cat": "Access Management Best Practices"
   },
   {
@@ -1443,7 +1499,7 @@
     "optionD": "Use Connected App with OAuth and Security Assertion Markup Language (SAML) to access other non-Salesforce internal apps.",
     "optionE": "",
     "correct": "A",
-    "explanation": "Configuring Mobile App settings on the Connected App (private app distribution) lets the iOS app authenticate to Salesforce. Making Salesforce the IdP for the other internal apps means once the user has the Salesforce session, they SSO to those apps. One login, many apps — exactly the described model.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_about.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml_setting_up.htm&language=en_US&type=5",
+    "explanation": "Configuring Mobile App settings on the Connected App (private app distribution) lets the iOS app authenticate to Salesforce. Making Salesforce the IdP for the other internal apps means once the user has the Salesforce session, they SSO to those apps. One login, many apps — exactly the described model.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_about.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.sso_saml_setting_up.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.identity_provider_enable.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.connected_app_create_saml_sso.htm&language=en_US&type=5",
     "_cat": "Salesforce Identity and CIAM"
   },
   {
@@ -1455,7 +1511,7 @@
     "optionD": "Use SAML federated authentication and block access to reports when accessed through a standard assurance session.",
     "optionE": "",
     "correct": "B",
-    "explanation": "Salesforce Session Security Levels let admins mark SAML sessions as High Assurance and standard logins as Standard Assurance. Then a permission like 'Export Reports' can be raised to require a High Assurance session — users with AD-SAML logins can export, users with Salesforce password sessions cannot. Clean, native solution with no permission-set churn.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.security_overview_sessions.htm&language=en_US&type=5",
+    "explanation": "Salesforce Session Security Levels let admins mark SAML sessions as High Assurance and standard logins as Standard Assurance. Then a permission like 'Export Reports' can be raised to require a High Assurance session — users with AD-SAML logins can export, users with Salesforce password sessions cannot. Clean, native solution with no permission-set churn.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.security_overview_sessions.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=xcloud.understand_mfa_high_assurance_login_session.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=platform.users_profiles_session.htm&language=en_US&type=5",
     "_cat": "Access Management Best Practices"
   },
   {
@@ -1467,7 +1523,7 @@
     "optionD": "The web server must be able to protect consumer privacy.",
     "optionE": "",
     "correct": "A,D",
-    "explanation": "(A) Web Server flow uses a client secret, which must be protected — so the application must run on a secure server (not a JS browser app or mobile binary). (D) The server holds tokens and user data and must protect that information. The flow does return a refresh token (B is false), and credentials are entered at Salesforce, never passed through the application (C is false).\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_web_server_flow.htm&language=en_US&type=5",
+    "explanation": "(A) Web Server flow uses a client secret, which must be protected — so the application must run on a secure server (not a JS browser app or mobile binary). (D) The server holds tokens and user data and must protect that information. The flow does return a refresh token (B is false), and credentials are entered at Salesforce, never passed through the application (C is false).\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_web_server_flow.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_scopes.htm&language=en_US&type=5",
     "_cat": "Identity Management Concepts"
   }
 ]
