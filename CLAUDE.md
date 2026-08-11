@@ -103,7 +103,7 @@ column, not the Cited column.
 | Deck | Q | Cited | Verification status |
 |---|---:|---:|---|
 | salesforce-platform-developer-2 | 148 | 148 | **Fully checked** — 8 rounds, 2 keys moved |
-| salesforce-integration-architect | 137 | 137 | **Fully checked** — 37 stamps, 15 keys moved |
+| salesforce-integration-architect | 137 | 137 | **Fully checked** — 37 stamps, 15 keys moved. Spot-rechecked 2026-08-10: citations sound, content current, 0 wrong answers found |
 | salesforce-iam-architect | 122 | 122 | **Fully checked** (2026-08-10) — 3 keys moved, 7 reasoning fixes |
 | salesforce-admin | 154 | 33 | Partial; 13 keys moved (ADM-201 merge pass). 3 more render a References block whose URL is broken across lines — one shows a bare `htm` |
 | salesforce-agentforce-specialist | 125 | **0** | **Not cited at all.** 73 questions render a References block containing prose only, no URLs |
@@ -280,9 +280,14 @@ Citing and verifying are different activities, and only one of them was done.
 **A filing hazard that hid this for a while:** the round-1 findings lived in a file
 named `findings-integration-architect.json`, but its `deck` field pointed at the IAM
 deck and **all 122 of its findings were IAM ids**. The file was the IAM pass under the
-wrong name. Trust the `deck` field and the ids, never the filename — and note that the
-integration deck's own 137/137 citations therefore have no surviving findings file and
-have never been render-verified.
+wrong name. Trust the `deck` field and the ids, never the filename.
+
+**The integration deck was then checked against this suspicion and cleared it** — see
+its row above. Its findings file did not survive, but a 2026-08-10 spot-check found the
+citation base sound and the content current. The lesson to carry is therefore narrower
+than "distrust any deck without a findings file": distrust a *verdict distribution with
+no corrections*. Integration moved 15 keys; IAM round 1 moved none. That difference,
+not the missing file, was the real signal.
 
 ## Invariants
 
