@@ -1,0 +1,550 @@
+{
+  "deck": "public/decks/salesforce_app_builder_questions_corrected.json",
+  "reviewed": "2026-08-10",
+  "findings": [
+    {
+      "id": "b0d92c09",
+      "verdict": "corrected",
+      "was": "C",
+      "correct": "D",
+      "explanation": "Sandbox cloning is the feature written for this scenario, and Salesforce describes it in almost the stem's words: 'You can create a sandbox by cloning an existing sandbox rather than using your production org as your source. Save time by customizing a sandbox with a set of data and metadata and then replicating it. Sandbox cloning simplifies having multiple concurrent streams of work in your application life cycle... Your colleagues can easily clone individual sandboxes instead of sharing one sandbox and avoid stepping on each other's toes.' That covers all three requirements — parallel streams of work, escaping a single shared sandbox, and every environment starting from one common baseline, since 'when you clone a sandbox, its data and metadata are copied to the new sandbox.'\nThe sandbox *types* cannot deliver the same thing, because each one copies from production rather than from a prepared baseline. A Partial Copy sandbox 'includes a copy of your production org's configuration (metadata) and a sample of your production org's data as defined by a sandbox template' — so twenty of them would each be a fresh slice of production, not twenty copies of the team's agreed starting configuration. Partial Copy is also a paid add-on for Enterprise, Unlimited and Performance editions rather than something available in twenties; Developer sandboxes are the type that ships in quantity, and they carry metadata only, which is precisely why cloning is what gets a common set of *data* into them.\nOne practical note the documentation adds: 'A cloned sandbox uses the same license type as its source org', so cloning organises the environments rather than conjuring extra licences. Refreshes (A) only re-copy an existing sandbox from its source, and Full sandboxes (B) are the least plausible at this count.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.data_sandbox_cloning_overview.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.create_test_instance.htm&language=en_US&type=5"
+      ],
+      "note": "Answer moved C->D. The Sandbox Cloning article matches this stem clause by clause — 'multiple concurrent streams of work', colleagues cloning 'instead of sharing one sandbox', and 'customizing a sandbox with a set of data and metadata and then replicating it' for the common baseline. The old key rested on Partial Copy being licensed in larger quantities than Full, which is true but does not reach twenty, and misses the real defect: every sandbox type copies from production, so no quantity of fresh Partial Copies gives twenty environments sharing one prepared configuration. Cloning is also what puts data into Developer sandboxes, which are the type that actually ships in quantity and otherwise carry metadata only."
+    },
+    {
+      "id": "eae6a2e7",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.tips_for_using_picklist_formula_fields.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.customize_functions_text.htm&language=en_US&type=5"
+      ],
+      "note": "Key C confirmed, and the rejected formula is rejected on a documented type mismatch rather than on style. Only three functions may reference picklist values in a formula — TEXT, ISPICKVAL and CASE — and they do different jobs: 'TEXT converts the selected value of a picklist into standard text', whereas 'ISPICKVAL determines whether a picklist field contains a specific value' and returns a boolean. A field meant to display the region therefore needs TEXT, not ISPICKVAL, which is why B fails. The cross-object part is what keeps it in sync: a formula evaluates on read, so the Contact always reflects the Account's current value with no automation to maintain, which is why A and D are inferior — both store a copy that only updates when their automation fires. One precision worth recording: TEXT returns the value's API name, so if the picklist's labels and API names differ, the displayed text is the API name."
+    },
+    {
+      "id": "2268b774",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.fields_creating_cross_object_notes.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.formula_using_date_datetime.htm&language=en_US&type=5"
+      ],
+      "note": "Key A confirmed. Cross-object formulas traverse parent relationships by spanning, so from Opportunity Product a formula can reach the parent Opportunity and then the grandparent Account, and HYPERLINK can render that as a clickable link — well inside the documented limit of ten unique relationships per object. Option B is impossible by field type: a formula field returns a value of its configured return type and cannot produce rich text markup. Option D fails on scale rather than on principle, since the platform warns that complex formulas 'compile to a larger size' and 'you might run into issues with formula compile size' — twenty spanned fields across two objects is exactly where that bites. Option C is the interesting near-miss: concatenating the Opportunity's name with a description is perfectly possible, so it is not wrong in itself, but it does not require the spanning capability the question is testing."
+    },
+    {
+      "id": "5e649731",
+      "verdict": "reasoning",
+      "explanation": "With the option to let a process evaluate a record up to five times in a single save turned on, the risk is that an action re-triggers the same process. Two of the listed patterns invite that.\nA criteria node set to 'No criteria — just execute the actions' has nothing to gate it, so on each re-evaluation it fires again — the classic runaway. And invocable processes introduce mutual triggering, where one process calls another that updates a record and brings the first back into scope.\nThe two rejected options are the safeguards rather than the hazards. ISCHANGED narrows a criteria node to real transitions of a field, so it stops an action from re-firing when nothing relevant changed, and IF statements are ordinary formula logic used inside criteria.\nOne important currency note about this whole item. Process Builder reached end of support on 31 December 2025. Existing processes continue to run and can still be edited, so the recursion behaviour described here is still real for orgs that have them, but nothing new should be built in Process Builder. In a record-triggered flow the equivalent discipline is entry conditions plus the option to run the flow only when specified changes are made, which is how you avoid the same loop.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.flow_build_data_update.htm&language=en_US&type=5"
+      ],
+      "note": "Key B,C stands, but this item is built entirely on a tool that reached end of support on 31 Dec 2025, and the explanation now says so. Per the established fact that this is retirement of support rather than removal of capability, the answer remains correct for orgs running existing processes, and the reasoning about ungated criteria nodes and mutually invocable processes is sound. Added the currency flag and named the record-triggered flow equivalent — entry conditions and running only when specified changes are made — so a learner takes away transferable guidance rather than only Process Builder mechanics. Flagged for the user: of the questions reviewed so far, this is the one most tied to a retired tool, and it may be worth rewriting around flows rather than keeping."
+    },
+    {
+      "id": "f275115f",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.overview_of_custom_object_relationships.htm&language=en_US&type=5"
+      ],
+      "note": "Key D confirmed by the documented delete behaviour: 'Deleting a detail record moves it to the Recycle Bin and leaves the master record intact; deleting a master record also deletes related detail and subdetail records.' That cascade is exactly the simultaneous deletion the requirement describes, and it is unique to master-detail among the options. A many-to-many (A) is itself built from master-detail relationships but describes a different structure than a supplier owning its items, an indirect lookup (B) links a child external object to a Salesforce parent and has no cascade, and a hierarchical relationship (C) applies only to the User object."
+    },
+    {
+      "id": "df028304",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.overview_of_custom_object_relationships.htm&language=en_US&type=5"
+      ],
+      "note": "Key B confirmed, and the item is really a test of which side cascades. 'Deleting a master record also deletes related detail and subdetail records', so the relationship to Account must be master-detail for a deleted Account to take its testimonials with it. A lookup carries no such behaviour, so pointing the Contact relationship at a lookup lets the testimonial survive a deleted Contact — the second requirement. Option D reverses the two and would therefore delete testimonials with the Contact while orphaning them from Account. C makes it a junction object, which would require both relationships to be master-detail and so would cascade from Contact as well. A uses two lookups, losing the Account cascade entirely; note also that a master-detail relationship field is required on the detail record, which is a stronger guarantee than marking a lookup required."
+    },
+    {
+      "id": "d36e669a",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.overview_of_custom_object_relationships.htm&language=en_US&type=5"
+      ],
+      "note": "Key B confirmed on a documented consequence of master-detail: 'Detail and subdetail records inherit security settings and permissions from the master record. You can't set permissions on the detail record independently', and 'Custom objects on the detail side of a master-detail relationship can't have sharing rules, manual sharing, or queues, as these require the Owner field.' Applications is the detail object, so it has neither its own org-wide default nor its own sharing rules — which rules out A and D as configurations that cannot exist. Access is granted by sharing the parent Internship records, which is B. C proposes a queue, and the same sentence explains why that is impossible on a detail object."
+    },
+    {
+      "id": "108817b2",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.relationships_considerations.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.overview_of_custom_object_relationships.htm&language=en_US&type=5"
+      ],
+      "note": "Key C confirmed on relationship direction, which is what the item tests. The relationship field lives on the child and surfaces the child on the parent: 'When you define a master-detail relationship, the custom object on which you're working is the detail side. Its data appears as a custom related list on page layouts for the other object.' The same directionality holds for lookups, so a lookup created on Asset Inventory pointing to Asset produces the Asset Inventory related list on Asset. Option D is wrong precisely because it states the direction backwards — a master-detail created on Asset would make Asset the detail of Asset Inventory. A roll-up summary (A) computes a value and creates no related list, and a junction object (B) would add an unnecessary object for what is a simple parent-child relationship."
+    },
+    {
+      "id": "ecea7391",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.changesets_about_components.htm&language=en_US&type=5"
+      ],
+      "note": "Key C,D,E confirmed against the list of component types that can be added to a change set, which includes Apex Class, Custom Object and Custom Field among its entries. The two rejected options are not on that list, and for different reasons worth knowing: standard fields (B) are part of the platform rather than metadata you deploy — though changes such as picklist values on a standard field can travel by other means — and Web-to-Lead (A) is org-level setup configuration rather than a deployable component. The distinction the item is really testing is between customisations you build, which are deployable, and org settings you toggle, which generally are not."
+    },
+    {
+      "id": "43e6003e",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.what_are_approvals.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.approvals_automated_actions.htm&language=en_US&type=5"
+      ],
+      "note": "Key D confirmed, consistent with the deck's other sign-off items. The requirement is that a named person must approve before something proceeds, which is what an approval process models — entry criteria, an assigned approver, and actions attached to initial submission, approval and rejection. Option B is the closest miss and is worth distinguishing: Approvals in Chatter is not a separate feature that provides sign-off, it is a delivery channel enabled in Chatter Settings that posts requests from an existing approval process into feeds. So B presupposes D rather than replacing it. An automated email (C) notifies without recording a decision, and 'stack post' (A) is not a Salesforce feature."
+    },
+    {
+      "id": "98a52146",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.managing_the_sharing_model.htm&language=en_US&type=5"
+      ],
+      "note": "Key B confirmed on the documented distinction between the two sharing rule kinds: 'You can create sharing rules based on record owner or field values in the record and specify the public groups and roles that receive access.' The requirement keys on a field value — Type equals Service Agreement — rather than on who owns the record, so the criteria-based form is the one that applies, and it grants access to the Service Manager role regardless of owner. Owner-based rules (A) would share by ownership and so could not target opportunities by type. Manual sharing (D) is per-record and performed by the owner, which cannot scale to 'whenever an opportunity is created'. Apex managed sharing (C) is documented as the option for when 'sharing rules and manual sharing don't provide the required access control', and here a sharing rule does."
+    },
+    {
+      "id": "7ee5407d",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.managing_the_sharing_model.htm&language=en_US&type=5"
+      ],
+      "note": "Key B,C confirmed, and the two steps are the documented pair for tightening then reopening access. Org-wide defaults 'give you a baseline level of access for each object', so moving off a public model starts there (B). Sharing rules then 'represent the exceptions to your organization-wide default sharing settings' and can be built on 'field values in the record', which is what restores the sales team's access to records with the sales record type (C). The documentation even models this sequence: set a restrictive default, 'then, you can create... sharing rules to extend access'. An owner-based rule (D) cannot express a record-type criterion, and updating the Sales profile (A) changes object and field permissions rather than record-level access, so it cannot grant visibility to records the user does not own under a private model."
+    },
+    {
+      "id": "d1692d01",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.managing_the_sharing_model.htm&language=en_US&type=5"
+      ],
+      "note": "Key B confirmed. 'The role hierarchy automatically grants users access to the records owned by or shared with their subordinates in the hierarchy' — which delivers the whole requirement at once: access to the technicians' work orders, the ability to edit them and their attachments, and access to other related records the technicians own, without enumerating objects. Option A would work but is the wrong instrument, since Modify All Data grants org-wide access to every record of every object rather than to one region's technicians, and the deck is right to reject it on least-privilege grounds. D has the same over-reach at object scope. C misuses a workflow rule, which updates field values and cannot grant record access at all."
+    },
+    {
+      "id": "a50d3615",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.lightning_page_components.htm&language=en_US&type=5"
+      ],
+      "note": "Key C confirmed. Record Detail is the standard component that renders the assigned page layout's sections and fields on a Lightning record page, which is what 'see all of the fields from the page layout' asks for. The distractors each show a subset or something else entirely: the Highlights Panel (A) surfaces a few key fields in the page header, Path (D) displays stage progression with per-stage key fields rather than the full layout, and Recommendations (B) surfaces Next Best Action recommendations."
+    },
+    {
+      "id": "c4104391",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.lightning_page_components.htm&language=en_US&type=5"
+      ],
+      "note": "Key C confirmed. Twitter is a standard Lightning page component, listed with its prerequisite: 'Social Accounts and Contacts must be enabled for your organization before you can add the Twitter component to a Lightning page.' So the declarative route is to place that component on the Contact record page, and because Lightning pages can be built for the phone form factor, the same approach serves the mobile app — which is what option C describes. An AppExchange component (B) is unnecessary when a standard component exists, a formula field (A) could at best build a link rather than surface a profile, and a quick action on the mobile navigation (D) is not how a record-scoped profile view is presented."
+    },
+    {
+      "id": "cf57c925",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.lightning_page_components.htm&language=en_US&type=5"
+      ],
+      "note": "Key D confirmed by the component's documented purpose: 'Use the Tabs component to add tabs to a region of your Lightning page. Choose from a set of standard tabs or create custom tabs to enhance record and Home pages for your Lightning Experience users', with capacity for up to 100 tabs — ample for grouping 100-plus fields. Option E is the honest near-miss and the deck is right to acknowledge it: the Accordion component organises components into collapsible sections and would also break the fields up, but the requirement says 'separate tabs', which is the Tabs component by name. The remaining options do not group anything: Highlights Panel (A) shows key fields at the top of a record, Record Detail (B) renders the layout as a single block, and Field Section (C) is a Dynamic Forms construct for sections within the detail area rather than a tabbed container."
+    },
+    {
+      "id": "a73d0a3c",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=xcloud.salesforce_app_customize_lex_app.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.customize_lex_nav_menus_create.htm&language=en_US&type=5"
+      ],
+      "note": "Key C confirmed. Mobile navigation is driven by Lightning apps — since Winter '22 the Salesforce mobile app defaults to a phone-enabled Lightning app when one is available to the user — and a Lightning app's navigation items are configured per app, with profiles assigned to control who gets mobile access to it. Two differently-configured Lightning apps assigned to the sales and marketing profiles therefore give each team its own mobile navigation, which is exactly the requirement. The distractors address other layers: profiles and object read access (A) govern what data a user can reach rather than the menu's contents and order, roles with home page layouts (B) confuse the role hierarchy and Lightning pages with navigation, and public groups (D) are not a unit that mobile navigation can be assigned to."
+    },
+    {
+      "id": "194683e0",
+      "verdict": "reasoning",
+      "explanation": "Worth reading this item with care, because the documentation does not describe the navigation menu the way the options assume.\nIn the Mobile Only navigation menu, Groups is itself one of the available items, listed alongside Chatter rather than nested inside it: 'Groups — Appears for organizations that have Chatter enabled. If you don't add this item to the navigation menu, groups and the Groups item are automatically included in the set of Smart Search Items.' So two documented facts bear on the symptom. Groups is available only when Chatter is enabled for the org, and when it is not placed on the menu explicitly it still reaches users through Smart Search Items.\nThat second behaviour is the most likely explanation for an item that seems to be missing from the picker while remaining reachable in the app: it is being surfaced through Smart Search Items rather than as a menu entry you positioned. It is also why the ordering goal in the stem is hard to achieve — an item delivered through Smart Search Items is not something you can place last in the menu.\nThe practical checks are therefore whether Chatter is enabled for the org, and whether Groups is already accounted for in the Selected list or via Smart Search Items.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=xcloud.salesforce_app_customize_nav_menu.htm&language=en_US&type=5"
+      ],
+      "note": "Key D left in place but this item looks defective and needs your decision — flagged rather than silently confirmed. The old explanation asserted that Groups 'appears in the Chatter section of the mobile navigation menu rather than as a standalone selectable item'. The Mobile Only Navigation Menu documentation contradicts both halves: it lists Groups as its own available item, and it describes no 'Chatter section' at all — Chatter and Groups are separate entries in the same list. What the documentation does describe is that Groups is available only when Chatter is enabled, and that if you do not add it to the menu, 'groups and the Groups item are automatically included in the set of Smart Search Items' — which is closer to option B than to option D. I did not move the key because option B as worded ('unavailable on the navigation menu') is not documented either, and I could not confirm the exact cause of an item missing from the picker. Recommended repair: reword the options around the documented facts, Chatter-enabled availability and Smart Search Items fallback."
+    },
+    {
+      "id": "455b9add",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.approvals_for_chatter_enabling.htm&language=en_US&type=5"
+      ],
+      "note": "Key C confirmed, with the setup path documented step by step: 'From Setup, enter Chatter Settings in the Quick Find box, then select Chatter Settings. Click Edit. Select Allow Approvals. Save your changes.' The effect is the capability the managers want — 'administrators can turn on Approvals in Chatter. Users then receive approval requests as posts in their Chatter feeds' — which is what lets them respond while travelling. So the setting lives in Chatter Settings rather than in the approval process itself, which is why option D is the natural-sounding wrong answer. Feed tracking (A) governs which record changes post to a feed rather than whether approval requests do, and Object Settings (B) is not where this is enabled. Two operational notes from the same page: turning it on makes all existing active classic approval processes start generating Chatter posts, and Salesforce now recommends Flow Approval Processes as the modern alternative."
+    },
+    {
+      "id": "5feb8608",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.reports_embed_pagelayout.htm&language=en_US&type=5"
+      ],
+      "note": "Key A confirmed on the documented prerequisites for embedding a chart: 'Before you add a chart, check that: Its source report is in a folder that's shared with users who need access... The source report format is summary or matrix. The source report has a chart.' The summary-or-matrix requirement eliminates both tabular options (C and D) outright rather than on preference. Between the two remaining, the report must be built on the object whose records are being charted — Opportunity, grouped by Stage — so that the chart shows opportunities by stage; a summary report on Account (B) would group accounts and could not break opportunities out by stage. Worth noting the folder prerequisite too, since reports in personal folders 'are unavailable to add to a page', which is the same constraint that governs change set deployment of reports elsewhere in this deck."
+    },
+    {
+      "id": "cf83a80b",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/lwc/guide/targets-lightning-utility-bar.html",
+        "https://developer.salesforce.com/docs/platform/lwc/guide/use-config-for-utility-bar.html"
+      ],
+      "note": "Key C confirmed. Availability in the utility bar is controlled by a declared target in the component's configuration file: the reference guide states that lightning__UtilityBar 'enables a component to be used as a utility item in an app's utility bar', and the accompanying guidance is that 'to make your component usable as a utility item in the utility bar, set isExposed to true, and define a lightning__UtilityBar target'. Until that target is present, App Manager has nothing to offer in the utility-item picker, which is exactly the symptom described. The distractors name other real targets or surfaces — record pages and Lightning App Builder are separate targets (A, B), each governing a different placement — and App Manager (D) is where the utility item is added rather than something the component is tagged for."
+    },
+    {
+      "id": "192da39e",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=xcloud.for_leads.htm&language=en_US&type=5"
+      ],
+      "note": "Key B confirmed, and the duplicate-prevention behaviour is documented rather than assumed: 'You can choose whether to match leads in your import file with existing leads in Salesforce. Leads can be matched according to the following types: Salesforce ID, name, email, or external ID. Choosing a matching type sets the criteria for avoiding duplicate leads.' The worked example is this scenario exactly — a lead arriving with an email that already exists is updated rather than duplicated. That built-in matching is what the marketing team's daily full list needs, since they cannot tell what is already in the pipeline. Data Loader (C) and dataloader.io (A) perform inserts and updates against ids without this matching step, so a repeated list would insert duplicates, and manual entry (D) is not viable for 800 records a day. Note the corollary for precision: choosing a matching type of None makes the wizard create a lead for every row, so the protection comes from the matching choice rather than from the tool alone."
+    },
+    {
+      "id": "c8e73298",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.changesets_about_components.htm&language=en_US&type=5"
+      ],
+      "note": "Key B confirmed, and the documentation describes this exact symptom rather than a general limitation: 'Reports stored in the Unfiled Public Reports folder appear in the list of reports that can be added to the change set, but they aren't deployed even if added to the change set.' That is precisely what happened — the reports were added and simply did not arrive. The prescribed fix is option B: 'To deploy a private or unfiled report using a change set, first copy or move the report to a different report folder.' The same passage disproves option C, since reports are a deployable component type; the problem is the folder, not the feature. Option A moves the reports into the very folder that causes the failure. D would work as a workaround but is unnecessary, and the same guide warns against unmanaged packages for sandbox-to-production migration. Note the sibling rule worth knowing: reports in My Personal Custom Reports do not even appear in the selection list."
+    },
+    {
+      "id": "a56ee547",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.changesets_about_components.htm&language=en_US&type=5"
+      ],
+      "note": "Key A,B,C confirmed against the list of component types that can be added to a change set, which includes Action, Custom Field and Page Layout among its entries. All three keyed items are therefore deployable, and each is needed for the layout to arrive intact: the layout itself, the custom fields it places, and the custom actions on it — a layout referencing a field or action that does not exist in the target org is the classic partial-deployment failure. The distractors are not components at all in this sense: Lightning App Builder (D) is the tool used to build Lightning pages rather than a deployable artefact, and while Profile is a real change set component, the System Administrator profile (E) is not required for a page layout to deploy — layout assignment to profiles is a separate concern from deploying the layout."
+    },
+    {
+      "id": "e7674bf2",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.fields_validation_considerations.htm&language=en_US&type=5"
+      ],
+      "note": "Key A confirmed verbatim. Validation Rule Considerations states: 'Validation rules are only enforced during lead conversion if validation and triggers for lead conversion are enabled in your organization.' So when that setting is off, Account, Contact and Opportunity validation rules are simply skipped during conversion and records can be created that would otherwise fail — which is precisely the missing information the app builder has noticed. That documented conditionality is what makes B and D wrong: validation rules do not inherently fail to run on converted records, they run or not depending on this setting. C misattributes it to users bypassing rules deliberately, when the cause is org configuration rather than user behaviour."
+    },
+    {
+      "id": "e2e924df",
+      "verdict": "reasoning",
+      "explanation": "Both keyed options keep large volumes of data reportable without consuming standard Salesforce data storage, which is what the requirement needs.\nA big object 'stores and manages massive amounts of data on the Salesforce platform', and archiving from other objects into one is a documented use — 'You can archive data from other objects or bring massive datasets from outside systems into a big object'. External objects take the other route: through Salesforce Connect they surface records that remain in the external system, so nothing is copied into Salesforce at all.\nOne important currency correction on how you get data back out of a big object. Async SOQL is no longer the answer: Salesforce retired it with the Summer '23 release, stating 'You must use the Bulk API or batch Apex to query or report on custom Big Objects'. CRM Analytics still loads big object data, using Bulk API requests. Plan big object reporting around Bulk API or batch Apex rather than Async SOQL.\nAlso keep the trade-off in view when choosing between them: big objects are built for scale rather than for interactive use, with no standard UI or list views and a deliberately narrow query surface, whereas external objects give live access but depend on the external system's availability. Custom objects (B) would consume the very storage the project is trying to reclaim, and 'Related Objects' (C) is not a Salesforce feature.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.bigobjects.meta/bigobjects/big_object.htm",
+        "https://help.salesforce.com/s/articleView?id=000394892&language=en_US&type=1"
+      ],
+      "note": "Key A,D stands, but the explanation cited a retired capability. It justified Big Objects by saying they support 'async SOQL/queries' — Salesforce retired Async SOQL for Big Objects with Summer '23, almost three years before this deck was reviewed, and now directs you to Bulk API or batch Apex to query or report on them. Rewritten to name the current mechanism and to be honest about the trade-off the old text waved at with 'some limitations': big objects have no standard UI or list views and a narrow query surface, so they are archival storage with code-based retrieval rather than a drop-in reporting source."
+    },
+    {
+      "id": "f1910535",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.custom_field_types.htm&type=5&language=en_US"
+      ],
+      "note": "Key C confirmed almost verbatim. The field type table states: 'An indirect lookup relationship links a child external object to a parent standard or custom object. When you create an indirect lookup relationship field on an external object, you specify the parent object field and the child object field to match and associate records in the relationship. Specifically, you select a custom unique, external ID field on the parent object to match against the child's indirect lookup relationship field.' Both attributes named in option C — external ID and unique — and both the parent-side placement and the custom-field requirement come straight from that sentence. The distractors all propose matching on the Salesforce record id in some form (A, B, D), which is precisely what an indirect lookup exists to avoid: the external system holds its own key, so the match is made on a custom field you designate rather than on the platform id."
+    },
+    {
+      "id": "dec9a6b4",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.overview_of_custom_object_relationships.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.relationships_manytomany.htm&language=en_US&type=5"
+      ],
+      "note": "Key C confirmed, derived from the inheritance rule rather than from a sentence about junction objects specifically — stated plainly so a later pass does not hunt for one. A many-to-many is modelled as a junction object carrying two master-detail relationships, and for master-detail 'Detail and subdetail records inherit security settings and permissions from the master record. You can't set permissions on the detail record independently.' Since the junction record's access is inherited from both masters, losing Read on Interest removes access to the junction records as well as to the Interest records themselves — which is option C. That also disposes of the near-misses: D is wrong because junction visibility is not partial, the whole record is inaccessible rather than the record minus a field; A is wrong because no Read means no access at all rather than read-only; and B overreaches, since Account access is governed by Account and is unaffected by a related junction record the user cannot see."
+    },
+    {
+      "id": "70d99691",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.approvals_automated_actions.htm&language=en_US&type=5"
+      ],
+      "note": "Key A,C,D confirmed by enumeration: 'Classic approval processes support four automated actions', and the table lists exactly Task ('Assigns a task to a user who you specify'), Email Alert ('Sends an email to a designated recipient using a specified email template'), Field Update ('Changes the value of a selected field') and Outbound Message ('Sends a message to a designated endpoint'). Three of those four are the keyed options; the fourth is simply not among the choices. Neither distractor is an action type — creating a record (B) is something flows do, and 'Invocable Process Builder' (E) is not an approval action at all. The same article confirms these can be attached to 'approval steps, initial submission, final approval, final rejection, or recall', which is what the stem's 'based on the initial submission' refers to. Currency note: Salesforce now heads this page by recommending Flow Approval Processes as 'a modern alternative to Classic Approval Processes', so the four-action model describes the classic feature this item is written against."
+    },
+    {
+      "id": "9fbef4f6",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.approvals_automated_actions.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.what_are_approvals.htm&language=en_US&type=5"
+      ],
+      "note": "Key A confirmed. The requirement has all three parts of an approval process — a criterion that triggers it (discount over 30%), a named person who must sign off (the CFO), and a gate before the deal can close — and an approval process is the feature that models exactly that, with automated actions attachable at initial submission, approval, rejection and recall. The distractors are individual actions rather than a sign-off mechanism, and two of them are in fact action *types within* an approval process: Email Alert (B) and Field Update (C) both appear in its four-action table, which is why they cannot be the answer to 'what feature handles this requirement'. A workflow rule (D) can fire those same actions but has no concept of an approver, a response, or a gate."
+    },
+    {
+      "id": "aeb59023",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.approvals_automated_actions.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.what_are_approvals.htm&language=en_US&type=5"
+      ],
+      "note": "Key C confirmed on the same grounds as the deck's other CFO sign-off item, and the pair are consistent with each other. The requirement is that acceptance must be recorded before the opportunity can close, which is a sign-off gate — approval processes model approvers, responses, and actions at each outcome, including final approval and final rejection. A validation rule (D) is the closest miss and is worth naming precisely: it can block a save when a condition is unmet, but it has no notion of who accepted, when, or of routing a request to them, so it cannot represent acceptance of terms. An email alert (A) notifies without capturing a decision, and a dynamic action (B) governs which buttons appear on a page."
+    },
+    {
+      "id": "4b57de62",
+      "verdict": "reasoning",
+      "explanation": "The requirement is to reach an external SOAP endpoint when inventory changes, and the choice comes down to which automation can act after the record is saved and is still supported.\nA before-save record-triggered flow is ruled out by design: before-save flows can only set field values on the record that triggered them, and cannot perform actions, so they cannot call anything outward. That leaves the after-save flow, which can invoke an action — including an outbound message, or Apex that calls the service — once the inventory change is committed.\nBe careful with the reason for rejecting the older tools, because it is about support rather than capability. Outbound messaging genuinely does call a SOAP endpoint: Salesforce documents an outbound message as one that 'sends a message to a designated endpoint', and outbound message actions are available to flows, workflow rules, approval processes and entitlement processes alike. So a workflow rule could technically have done this. What disqualifies options C and D is that Workflow Rules and Process Builder reached end of support on 31 December 2025; existing automation continues to run, but neither is the tool to build this with now. Since outbound messaging is available to flows, the after-save flow is also how you would use it today.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.flow_build_data_update.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.approvals_automated_actions.htm&language=en_US&type=5"
+      ],
+      "note": "Key A stands, but the explanation's dismissal of outbound messaging was wrong and has been corrected. It claimed workflow outbound messages are 'SOAP-style notifications from Salesforce, not arbitrary web service calls', implying they could not satisfy the requirement. Salesforce documents an outbound message as sending 'a message to a designated endpoint' — that is a SOAP web service call, and it is the classic declarative way to make one. So options C and D fail on support status, not on capability: both Process Builder and Workflow Rules hit end of support on 31 Dec 2025. Rewritten so the reader takes away the correct model of outbound messaging, and so the before-save exclusion rests on its documented limitation of updating only the triggering record's fields."
+    },
+    {
+      "id": "39919e32",
+      "verdict": "reasoning",
+      "explanation": "The requirement is a value copied once at creation and then frozen, which rules out anything that recalculates. A formula field is therefore wrong on principle rather than on detail: it evaluates every time the record is read, so if the Account's Billing State later changes, the Opportunity's displayed value changes with it — exactly what the requirement forbids. A roll-up summary is doubly inapplicable, since it aggregates child records across a master-detail relationship rather than copying a parent's field.\nWhat satisfies the requirement is automation that writes the value into a plain field on create and never runs again: a workflow rule with a field update, configured to evaluate only when a record is created, copies Account.BillingState into a text field on the Opportunity and leaves it alone thereafter.\nOne important currency note. Workflow Rules reached end of support on 31 December 2025. Existing rules continue to run and can still be edited, so the answer is not wrong, but a solution built today would use a record-triggered flow set to run only on record creation — the same design in the current tool. An Apex trigger (B) would also work and is likewise frozen-on-create, but it is code where clicks suffice.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.fields_about_roll_up_summary_fields.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.flow_build_data_update.htm&language=en_US&type=5"
+      ],
+      "note": "Key C stands, but the item needs a currency flag the old explanation only half gave. Workflow Rules reached end of support on 31 Dec 2025; per the established fact that this is retirement of support rather than removal of capability, an answer keying a workflow rule is still correct, but the explanation now says so explicitly and names the record-triggered flow equivalent instead of mentioning it in passing. Also strengthened the rejection of D, which the old text ignored: a roll-up summary aggregates detail records across a master-detail relationship and cannot copy a parent field at all."
+    },
+    {
+      "id": "41de0feb",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_environments.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.create_test_instance.htm&language=en_US&type=5"
+      ],
+      "note": "Key B confirmed, and every figure in the stem matches the Sandbox Feature Quick Reference exactly. Partial Copy Sandbox: refresh interval 5 days, data storage 5 GB, what's copied 'Metadata and sample data', sandbox templates Required. A 5-day interval is what makes a weekend refresh possible, and 5 GB is precisely the ceiling the stem names. The alternatives fail on one axis each: Full Sandbox has a 29-day refresh interval, so it cannot be refreshed weekly whatever its capacity; and Developer (200 MB) and Developer Pro (1 GB) copy 'Metadata only', so neither supplies the production data subset the requirement is built around, quite apart from their smaller storage."
+    },
+    {
+      "id": "aead4086",
+      "verdict": "reasoning",
+      "explanation": "Deploying a flow as active is not the default behaviour, so two things have to be true.\nFirst, the org has to allow it: 'By default, processes and flows that are active in a sandbox or non-production org are deployed to a production org as inactive.' To change that, in Process Automation Settings you select Deploy processes and flows as active and enter a flow test coverage percentage.\nSecond, the coverage bar has to be met: 'Before you can deploy a process or autolaunched flow as active, make sure you meet flow test coverage requirements. At least one Apex test must cover the flow test coverage percentage of the active processes and autolaunched flows.' That is why verifying Apex test coverage exists for the flow is the planning consideration — and note it applies to autolaunched flows, which is what this stem describes; flows with screens are exempt from flow test coverage requirements.\nBe careful with the threshold. The number is whatever percentage the org has configured in Process Automation Settings, not a fixed platform figure, and it is a distinct requirement from the Apex code coverage rule that governs deployments generally. Option C describes exactly the default outcome the requirement is trying to avoid, since manual reactivation is what happens when the active-deployment setting is off.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.flow_distribute_deploy_active.htm&language=en_US&type=5"
+      ],
+      "note": "Key A stands, but the explanation asserted a number the documentation does not: it claimed deploying an active flow 'requires at least 75% Apex test coverage in the org just like any deployment'. The word 75 does not appear on the Deploy Processes and Flows as Active page at all. What it documents is a configurable flow test coverage percentage, entered in Process Automation Settings, with the requirement that 'at least one Apex test must cover the flow test coverage percentage' — a separate mechanism from the Apex code coverage rule the old text borrowed the figure from. Rewritten to name the real mechanism, to add the prerequisite setting that the old explanation omitted entirely, and to record that screen flows are exempt."
+    },
+    {
+      "id": "a2b1cdb4",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.fields_about_roll_up_summary_fields.htm&language=en_US&type=5"
+      ],
+      "note": "Key C confirmed. The documented calculations are to 'count the number of detail records related to a master record' or 'calculate the sum, minimum value, or maximum value of a field in the detail records', and a total value is a sum — so SUM over Opportunity Amount, filtered to won records, is the roll-up type. COUNT (A) would return how many won opportunities there are rather than their value, and MAX (B) and MIN (D) return a single extreme value rather than a total."
+    },
+    {
+      "id": "93fc7f11",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.fields_about_roll_up_summary_fields.htm&language=en_US&type=5"
+      ],
+      "note": "Key A confirmed, and the field-type rules are what make it the only workable option. MIN and MAX accept date and date/time fields, so MIN over Opportunity Close Date filtered to won records returns the earliest purchase — the first order date. SUM does not accept dates at all, which disposes of C on documented grounds rather than on plausibility. B and D both add a separate date field plus extra automation to hold a value the roll-up computes directly, and D compounds the error by describing a roll-up summary that updates another field, which is not how the field works: a roll-up summary *is* the field holding the computed value."
+    },
+    {
+      "id": "99028ce3",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.fields_about_roll_up_summary_fields.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.overview_of_custom_object_relationships.htm&language=en_US&type=5"
+      ],
+      "note": "Key C confirmed by a dependency the documentation makes explicit: a roll-up summary requires that 'the detail record must be related to the master through a master-detail relationship'. A lookup relationship therefore cannot carry one, so any roll-up summary on Account that summarises Park must be deleted before the relationship can be downgraded — which is exactly the blocker the app builder is hitting. The distractors invent dependencies that do not exist: there is no requirement that an object hold at least one master-detail field for reporting (B), a flow referencing the object does not block the relationship change (A), and D describes formulas in the wrong direction while cross-object formulas are not what gates this conversion."
+    },
+    {
+      "id": "8393698f",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.notes_on_changing_custom_field_types.htm&language=en_US&type=5"
+      ],
+      "note": "Key A confirmed, and the two closest distractors are eliminated by documented rules rather than by judgement. Option C is safe: changing an external ID field's type only breaks the external ID behaviour when the new type is something other than text, number, or email, and Number to Text stays inside that permitted set, so the field keeps acting as an external ID with no extra work. Option D is not a change that needs additional steps because it cannot be made at all — 'You can't change the data type of any custom field that is mapped for lead conversion.' That leaves A, where the constraint is Apex rather than metadata: Apex is strongly typed, so a class or trigger referencing the field will no longer compile after a Number to Text change, and the stem removes the obvious remedy by forbidding Apex edits. B is a real restriction in its own right but concerns reportability of encrypted data rather than a step needed to retain existing functionality."
+    },
+    {
+      "id": "c3dbacf5",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.flow_build_data_update.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.flow_ref_elements_actions_approval.htm&language=en_US&type=5"
+      ],
+      "note": "Key D confirmed as the only option that covers both requirements at once. A record-triggered flow entered on the transition to Closed Won can create the renewal opportunity and, in the same flow, notify the contracts team — flows create and update records through their data elements and reach outward through actions, so one automation satisfies both halves. The alternatives each cover at most one: an outbound message (B) can notify an external endpoint but cannot create the renewal record, an approval process (A) routes a record for sign-off rather than generating anything, and a validation rule (C) can only block a save."
+    },
+    {
+      "id": "aae29b1e",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.flow_ref_elements_actions_approval.htm&language=en_US&type=5"
+      ],
+      "note": "Key C confirmed, and there is a purpose-built action for it: 'Submit for Approval Action — Submit one Salesforce record for approval using Classic Approval Processes', invoked by adding 'an Action element to your flow. In the Action field, enter Submit, and select Submit for Approval', with the record id supplied as an input. So automation can perform the submission the reps keep forgetting, which is what the requirement asks. Option A rests on a misconception the item is built to test: entry criteria decide whether a record is *eligible* for an approval process, not whether it enters one — submission remains an explicit act, whether performed by a person or by this action. B notifies a manager but leaves the record unsubmitted, and D concerns responding to approvals by email rather than starting them. Note the action's own caveat for currency: it submits to Classic Approval Processes and does not submit to Flow Approval Processes."
+    },
+    {
+      "id": "50298114",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.flow_build_data_update.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.fields_about_roll_up_summary_fields.htm&language=en_US&type=5"
+      ],
+      "note": "Key D confirmed on both halves of the reasoning. Flow can do the job: an after-save record-triggered flow uses the Update Records element to write field values on records other than the one that triggered it, which is what stamping a Last Maintenance Date onto the related Asset requires when a maintenance Work Order closes. And the natural-looking alternative is documented as impossible rather than merely inferior — a roll-up summary requires that 'the detail record must be related to the master through a master-detail relationship', and Asset to Work Order is a lookup, so option B cannot be built at all. That leaves Flow as the declarative choice over the programmatic ones: Visualforce (A) is a UI technology and would not react to a status change, and an Apex trigger (C) would work but is code where clicks suffice, which is the wrong recommendation for an app builder. Worth knowing for precision: a before-save flow could not do this, since before-save flows cannot update related records — only the triggering record's own fields."
+    },
+    {
+      "id": "ec780513",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.fields_about_field_validation.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.customize_functions_priorvalue.htm&language=en_US&type=5"
+      ],
+      "note": "Key A confirmed, and one documented property of validation rules covers both requirements at once: 'A validation rule can contain a formula or expression that evaluates the data in one or more fields and returns a value of \"True\" or \"False\"'. Evaluating one field to decide whether another is mandatory is the conditional-requirement half, and PRIORVALUE supplies the status-regression half by comparing a field against its previous value — Salesforce's own sample uses exactly that shape, blocking a change when a value moves the wrong way relative to PRIORVALUE. Option D is the instructive contrast and the reason A wins: marking a field required on the page layout makes it required unconditionally, which cannot express 'only when specific case criteria are met'. Dependent picklists (B) filter available values rather than enforce transitions, and an approval process (C) routes a record for sign-off rather than blocking a save. Minor wording note for a future pass: option A says 'validation rules with help text', but a validation rule carries an error message; field-level help text is a separate feature, so read A as the validation-rule answer."
+    },
+    {
+      "id": "db67d315",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.customizing_related_lists.htm&language=en_US&type=5"
+      ],
+      "note": "Key A confirmed, and both numbers in the stem are documented in one place: 'You can include up to 10 fields per related list. To display more than four fields in Lightning Experience, edit the related list component in the Lightning App Builder and choose Enhanced List as the related list type.' That names the component the question asks for and explains why Basic List (B) fails — four fields is its ceiling in Lightning, short of the ten required. Enhanced List is also the type that carries column sorting and text wrapping. Related List - Single (C) surfaces one related list rather than changing its column capacity, and Related List List View (D) links out to a list view. Citation note worth keeping: this replaces the Spring '20 release note that our references file records as dead for the four-versus-ten fact — the stable Customize Related Lists article carries it."
+    },
+    {
+      "id": "b4a0859a",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.formula_using_date_datetime.htm&language=en_US&type=5"
+      ],
+      "note": "Key B confirmed on the stem's decisive phrase, 'only interested in whole units'. Date arithmetic is documented to produce exactly that: 'If you subtract one date from another... the resulting value will be the difference between the two initial values in days (Number data type).' TODAY() is the function that yields a Date — it 'returns the current day, month, and year as a Date data type' and is described as useful 'for formulas where you are concerned with how many days have passed since a previous date'. NOW() is ruled out by the same article rather than by intuition: subtraction between two Date/Time values 'returns a decimal value indicating the difference in number of days, hours, and minutes', with the worked example that 5.52 means five days, twelve hours and twenty-eight minutes. DATEVALUE (C) and DATETIMEVALUE (A) convert an existing value rather than returning the current date, so neither supplies 'today'."
+    },
+    {
+      "id": "2ebcd70e",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.lightning_page_components_visibility.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.lightning_page_components_visibility_considerations.htm&language=en_US&type=5"
+      ],
+      "note": "Key A confirmed, and the documentation's own illustration is this pattern: 'you can construct a filter that causes a rich text component on an opportunity page to display when the opportunity's amount is greater than or equal to US$1 million.' A Rich Text component gated by a field condition is precisely what the requirement describes. The cross-object part is supported too — on record pages you can filter on record fields or advanced fields such as fields from related objects, with field references allowed to span up to five levels — so a Case page component can key on the parent Account's support level. That makes A strictly simpler than the alternatives, which all involve Visualforce (B, C) or cloning the Lightning page and assigning it (D), and note that D is not even implementable as written, since Lightning record pages are assigned by app, record type and profile rather than 'to platinum accounts'. One limitation to carry: parent lookup fields are not supported in visibility filters on Dynamic Forms-enabled pages, so this solution assumes the Case page is not using Dynamic Forms for that field."
+    },
+    {
+      "id": "d0441ea2",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sales.faq_forecasts_category_mapping.htm&language=en_US&type=5"
+      ],
+      "note": "Key B,C,D confirmed, and the two rejected options are rejected for the same documented reason. Forecast Category and Probability are both consequences of Stage rather than fields you set: 'If the stage of an opportunity changes, the probability and forecast category also change', and the article shows the mapping table where each stage carries its own probability and forecast category. Configuration happens through Stage — 'Update the mappings in the Stage field on the Opportunity object' — so Forecast Category (A) and Probability (E) are configured indirectly, via the Stage picklist's rows, which is exactly what 'available to be configured directly' excludes. Stage itself (B) is that picklist, and Lead Source (C) and Type (D) are ordinary standard picklists whose values are edited on the field."
+    },
+    {
+      "id": "df7e220e",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.fields_creating_cross_object_notes.htm&language=en_US&type=5"
+      ],
+      "note": "Key D confirmed, including the option's unusual syntax, which is real and documented for exactly this situation. 'Some objects support different object types for the Owner field, such as a User, Queue, or Calendar. When you create a cross-object formula using Owner on such objects, be explicit about the owner type that you reference', and the article's worked example is queue-aware: 'IF( ISBLANK( Owner:User.Id ), Owner:Queue.QueueEmail, Owner:User.Email )', illustrated on a Lead. So Owner:Queue.Id resolves only when the owner is a queue, which makes NOT(ISBLANK(Owner:Queue.Id)) true precisely when a Lead still sits in the queue — the condition that should block the save. Option C uses valid syntax but gates on ISNEW(), so it would police creation only and let an existing queue-owned Lead be edited freely. A and B are malformed: both prefix the field with the object name inside its own object's formula, A wraps a single argument in AND(), and B inverts the logic."
+    },
+    {
+      "id": "e2c4f8aa",
+      "verdict": "reasoning",
+      "explanation": "Folder access is what separates the two audiences here. Sharing the dashboard folder with Roles and Subordinates of the US Sales Director gives every rep beneath that role the ability to open the dashboard, while sharing the source report's folder only with the US Sales Director role means only directors can open the underlying report — which is the drill-down half of the requirement.\nOne mechanism worth being precise about, because it is easy to state backwards. Restricting the report folder does not hide the numbers rendered in the dashboard. A dashboard runs as its running user, and Salesforce's own worked example of Viewer access describes a sales rep who checks his standing on a dashboard and 'must view the data in the underlying reports' yet needs nothing more than 'Viewer access to the folder that contains the Master Sales dashboard'. So reps who can open this dashboard will see the component values; what they will not be able to do is open or drill into the source report.\nRead the requirement's 'see the data in the component' as being about reaching the report behind it rather than about the summary figures on the dashboard face. The other options fail more plainly: making the director the running user (A) changes whose data is shown without restricting report access, dynamic dashboards (B) show each viewer their own data and cannot be the answer to a shared team dashboard, and sharing a dashboard directly with a public group (D) is not how dashboard access is granted — folders are.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.analytics_folder_viewer.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.analytics_folder_access.htm&language=en_US&type=5"
+      ],
+      "note": "Key C stands, but the old explanation was wrong on mechanism and has been corrected. It claimed that 'by restricting the report folder, only directors can see the underlying numbers'. The Viewer Access article contradicts that with a worked example: a sales rep who refreshes a dashboard and views the data in its underlying reports needs only Viewer access to the dashboard's folder. Dashboard components render as the running user, so report-folder access controls drill-down, not whether the component displays values. That makes the stem's 'see the data in the component' imprecise — flagged rather than silently confirmed, since a learner could otherwise take away a false model of dashboard security. The key is still the best answer because it is the only option that grants reps the dashboard while confining source-report access to directors."
+    },
+    {
+      "id": "aa446baa",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=000384387&language=en_US&type=1",
+        "https://help.salesforce.com/s/articleView?id=sf.reports_manage_report_type.htm&language=en_US&type=5"
+      ],
+      "note": "Key C confirmed. A custom report type's field layout is what determines which fields are offered in the report builder, and Salesforce's troubleshooting guidance for exactly this symptom is that the layout must be edited: 'Fields from related objects must be added using \"+ Lookup Fields\" in the CRT Field Layout editor. Simply having a lookup relationship on the object does not automatically expose related fields. Fields added without this step do not appear in the report.' Since the Applicant field is reached through the Position with or without Applicants report type, adding it to that report type's field layout is the fix. The distractors each address a different subsystem: field-level security (A) governs whether a user can see a field they already have in the layout, Allow Reports (B) controls whether a custom object is reportable at all rather than which of its fields appear, and Manage Public Reports (D) is about saving reports to public folders. Currency note for a later pass: Salesforce has since shipped an Auto Add Fields to Custom Report Types setting, so on an org with that enabled newly created custom fields can appear without this step — the manual layout edit remains the documented fix for related-object fields and for orgs without it."
+    },
+    {
+      "id": "71a617ac",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.reports_builder_fields_groupings.htm&language=en_US&type=5"
+      ],
+      "note": "Key A confirmed, and the documentation's own example is this requirement in miniature: 'Group data in columns or rows in summary, matrix, and joined reports to display meaningful information. For example, group opportunities by Close Date to see closed opportunities or group cases by product to see the number of cases for each product.' Comparing case counts across two dimensions is a grouping on rows and a grouping on columns, which is what the matrix format exists for. The distractors all do adjacent jobs: bucket columns (B) collapse values into custom categories, which would be useful for banding priorities but not for cross-tabulating them against status; a custom report type (C) decides which objects and fields are reportable before any grouping happens; and filters (D) narrow which records appear rather than arranging them for comparison."
+    },
+    {
+      "id": "2acc4e50",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.managing_the_sharing_model.htm&language=en_US&type=5"
+      ],
+      "note": "Key A,D confirmed, and the article defines both keyed features in exactly the stem's terms. Sharing rules 'represent the exceptions to your organization-wide default sharing settings. They allow you to extend record access to users regardless of their place in the role hierarchy', giving 'additional users access to records they don't own'. Manual sharing covers the case where no consistent group exists: 'Record owners can use manual sharing to give read and edit permissions to users who don't have access any other way.' Both therefore extend access beyond the org-wide default, which is the requirement. Option B is the precise near-miss: public groups appear in this article only as something a sharing rule targets — you 'specify the public groups and roles that receive access' — so a group is the audience, not the grant. Option C operates on a different axis entirely, since permission set groups bundle object, field and system permissions rather than record-level sharing."
+    },
+    {
+      "id": "ff970202",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.overview_of_custom_object_relationships.htm&language=en_US&type=5"
+      ],
+      "note": "Key C confirmed almost verbatim: 'The Owner field on the detail and subdetail records isn't available and is automatically set to the owner of the master record', with 'Detail and subdetail records inherit security settings and permissions from the master record. You can't set permissions on the detail record independently.' That rules out B and D directly, because there is no Owner field on the detail record to set and no independent owner configuration on the detail object. A invents a default-owner setting on the parent object. The same paragraph explains a consequence worth knowing for other items in this deck: custom objects on the detail side 'can't have sharing rules, manual sharing, or queues, as these require the Owner field.'"
+    },
+    {
+      "id": "c2379d8e",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.notes_on_changing_custom_field_types.htm&language=en_US&type=5"
+      ],
+      "note": "Key A confirmed verbatim. Under Text Area (Long), the conversion considerations state: 'When you convert a long text area field to an Email, Phone, Text, Text Area, or URL type field, the record data is truncated to the first 255 characters of the field.' That is option A word for word — data is neither preserved beyond the limit (B), nor blocked by an error (C), nor wholly lost (D). Worth carrying from the same article: the general guidance is to convert only fields with no data, and where data is lost 'any list view based on the custom field is deleted, and assignment and escalation rules can be affected' — so the truncation here is not the only side effect a change like this can have."
+    },
+    {
+      "id": "696e6048",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.custom_field_types.htm&type=5&language=en_US"
+      ],
+      "note": "Key B confirmed from the custom field type table: 'Geolocation — Lets users specify a location by its latitude and longitude.' That is exactly what the customers are supplying. A Number field (A) would need two separate fields and would carry no geographic semantics, Text (C) would store coordinates as unvalidated strings, and an External Lookup (D) relates a record to data in an external system rather than capturing a coordinate pair. One practical consideration the article adds, which matters when planning an org's field budget: 'Geolocation is a compound field that counts toward your org's limits as three custom fields: one for latitude, one for longitude, and one for internal use.'"
+    },
+    {
+      "id": "5bc838e7",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.fields_creating_global_picklists.htm&language=en_US&type=5"
+      ],
+      "note": "Key B confirmed by the feature's stated purpose: 'Use a global picklist value set to share values across objects and custom picklist fields, and to restrict the picklists to only the values that you specify.' The article draws the exact contrast the stem sets up — 'A custom picklist is tied to a particular object as a field on the object. Unlike a custom picklist field, a global picklist exists independently as a global picklist value set. Its values are shared with any picklist that's based on it' — which is how one Status list serves three objects with one place to maintain it. A field update (A) writes a value rather than defining the list, a dynamic action (C) controls which buttons appear on a page, and a dependent picklist (D) filters one picklist's values by another field on the same record, which is a different problem. Note the side effect: a global value set is restricted by nature, so users cannot add unapproved values, even through the API."
+    },
+    {
+      "id": "e12c8221",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.pkg1_dev.meta/pkg1_dev/packaging_developing_unmanaged.htm"
+      ],
+      "note": "Key B confirmed by a sentence that settles the whole item: 'The developer who creates and uploads an unmanaged package has no control over the installed components, and can't change or upgrade them.' Unmanaged packages are framed as 'a one-time drop of applications that require customization after installation', and once installed the components 'can be edited in the org they're installed in' — so there is no version relationship to upgrade along. With no upgrade path, uninstalling and installing the new version is the only route, which is B. C is the specific trap, since an update link is a managed-package affordance and no equivalent exists here. A confuses package installation with metadata deployment, and the same article warns against unmanaged packages for sandbox-to-production migration anyway, pointing to change sets or the Ant Migration Tool. D restates installing without addressing the existing version."
+    },
+    {
+      "id": "9ba9345d",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.granting_access_to_records_lex.htm&language=en_US&type=5"
+      ],
+      "note": "Key B confirmed. Sharing is the documented record-level action for this — 'Click Sharing on the record that you want to share' — and the Sharing Detail page it opens is what answers the stem's two-part question, listing the users who have access along with a Why? link explaining how each user obtained it (ownership, role hierarchy, sharing rule, manual share, associated record). Option C is the near-miss and is genuinely a real feature, but Sharing Hierarchy reports access derived from the role hierarchy rather than the full picture with reasons, and it is not the button added to a page layout for this purpose. New Task (A) and Edit (D) are unrelated. Stated precisely: the 'who has access and why' listing is documented against the Sharing Detail page, historically a Salesforce Classic surface, while the rendered Lightning article confirms Sharing itself is the record-level sharing entry point."
+    },
+    {
+      "id": "2a1d9baf",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.faq_import_general_update_blank_fields.htm&language=en_US&type=5"
+      ],
+      "note": "Key C,D confirmed, and both keyed steps appear in a single documented procedure: 'To replace fields with null values, you must use Data Loader... Blank out the fields you want to update. In Data Loader, choose Settings | Settings, and select Insert null values.' That is option D for the tool and option C for the setting. The same opening clause is what rules out option B — 'you must use Data Loader' — because the Data Import Wizard treats a blank cell as no change rather than as an instruction to clear the field, which is exactly the behaviour this requirement needs to override. Option A is irrelevant, since record type selection has no bearing on whether blanks overwrite existing values."
+    },
+    {
+      "id": "e187aca4",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.fields_about_roll_up_summary_fields.htm&language=en_US&type=5"
+      ],
+      "note": "Key A,B,C confirmed against the documented calculation types. A roll-up summary can 'count the number of detail records related to a master record' or 'calculate the sum, minimum value, or maximum value of a field in the detail records', and the field types offered follow the calculation: number, currency and percent are available for SUM, while MIN and MAX additionally accept date and date/time. So Currency (A) and Percent (B) qualify via SUM, and Date (C) qualifies via MIN/MAX — which is why the item can key three types even though date cannot be summed. Checkbox (D) and Time (E) appear in neither list. The existing explanation gets this right, including the aside that COUNT does not depend on a summarised field type."
+    },
+    {
+      "id": "ecc2f2d1",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.fields_about_roll_up_summary_fields.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.overview_of_custom_object_relationships.htm&language=en_US&type=5"
+      ],
+      "note": "Key A confirmed, and the two requirements in the stem select master-detail together rather than separately. The reparenting half is now documented outright: 'By default, records can't be reparented in master-detail relationships', with reparenting available only if an admin selects the Allow reparenting option — which is what makes the relationship satisfy 'permanently ensure the gift cards are unable to be moved'. Roll-up summary requires it outright — 'The detail record must be related to the master through a master-detail relationship' — which is what allows the count of gift cards on Account. The reparenting requirement points the same way: a master-detail child cannot be moved to a different parent unless reparenting is explicitly allowed, whereas a lookup (D) leaves the parent freely editable. B and C are the wrong kind of answer, since the question asks what field to create on the gift card object and both a roll-up summary and a formula would be created on Account instead."
+    },
+    {
+      "id": "82c18788",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.fields_about_roll_up_summary_fields.htm&language=en_US&type=5"
+      ],
+      "note": "Key B confirmed by the definition of where the field lives: 'You can create a roll-up summary field to display a value in a master record based on the values of fields in a detail record.' Account is the master in the Account-Opportunity relationship, so both counts are built as fields on the Account object. That also disposes of D, which names the detail side. Lightning App Builder (A) arranges components on a page and creates no fields, and Lightning Object Creator (C) builds new objects from spreadsheets."
+    },
+    {
+      "id": "f0fcecae",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.fields_about_roll_up_summary_fields.htm&language=en_US&type=5"
+      ],
+      "note": "Key C,D confirmed, and option A is documented-wrong rather than merely unlikely. D restates the hard requirement — 'The detail record must be related to the master through a master-detail relationship' — so the two lookup-related objects in the proposal cannot be summarised natively at all, which is the consideration that matters most to the design. C matches the documented allowance of 25 roll-up summary fields per object, raisable to a hard ceiling of 40 on request; with three objects contributing 15 fields each the proposal asks for 45 and fails on this limit even before the relationship problem. A is the trap: the article lists count, sum, minimum and maximum as the available calculations and never mentions average, so 'AVG' is not a roll-up type."
+    },
+    {
+      "id": "2607cf61",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.fields_about_roll_up_summary_fields.htm&language=en_US&type=5"
+      ],
+      "note": "Key A confirmed, and the reasoning turns on the relationship type rather than on Flow being generically useful. Case relates to Account by lookup, not master-detail, and roll-up summary requires that 'the detail record must be related to the master through a master-detail relationship' — so option D is impossible here however natural it looks, which is the misconception the item is built to catch. That leaves a record-triggered or scheduled flow to count related open Cases and write the total to a field on Account. Workflow (B) can update fields but cannot aggregate child records, and an approval process (C) routes records for sign-off and computes nothing."
+    }
+  ]
+}
