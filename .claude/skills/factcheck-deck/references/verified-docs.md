@@ -79,6 +79,17 @@ looking anything up — these recur constantly across Salesforce certifications.
 | Visualforce GET order of execution | Controller/extension constructors → custom components created, *their* constructors, then their attribute expressions → `assignTo` attributes → page expressions, `<apex:page action>`, other getters/setters → view state created if `<apex:form>` → HTML sent. Custom-component evaluation comes **before** the page's own expressions and action attribute | Order of Execution for Visualforce Page Get Requests |
 | Opportunity.ContactId | **It exists.** A standard, read-only field holding the primary contact, derived from the OpportunityContactRole. Any explanation asserting "Opportunity has no ContactId field" is wrong — the reason to reject a ContactId-based query is that it returns one primary contact, not the Account's contacts | Opportunity (Object Reference) |
 | Queueable chaining inside a test | **Real behaviour, no longer documented.** "You can't chain queueable jobs in an Apex test" was removed from the Queueable Apex page and from the Queueable interface reference; only third-party sources still state it. What the current page *does* document is that only **one job can be enqueued from an executing job**, and the `Test.startTest`/`stopTest` pattern. Treat `Test.isRunningTest()` guards around a chained enqueue as correct but **cite the enqueue limit, not a chaining-in-test sentence** — there isn't one to cite | Queueable Apex |
+| One MFA prompt across mixed login paths | **Session security levels, not the org-wide MFA setting.** Profile side: "For Session Security Level Required at Login, select **High Assurance** to require users to verify their identity with multi-factor authentication when they log in." Org side (Session Settings): "If users access Salesforce via single sign-on (SSO) only and you're using **your SSO provider's MFA solution**: Put your SSO provider in the **High Assurance** column" — and conversely, if you want *Salesforce* to do the MFA for SSO users, put the provider in the **Standard** column. Enabling "MFA for User Interface Logins" org-wide instead **double-prompts** anyone whose IdP already did MFA. Salesforce does **not** infer trust from a SAML authn context — that mechanism does not exist | Understand the Relationship Between MFA and a High Assurance Login Session; Edit Session Settings in Profiles |
+| Registration handler: Apex is no longer required | "To set up a registration handler, you can use **Flow Builder or Apex**", and the flow option "can be configured and maintained entirely with clicks instead of code. **No developer knowledge is necessary.**" Any deck item asserting "Apex coding skills are needed for the Registration Handler" is now **stale**. The handler itself is still mandatory: "To set up single sign-on (SSO) with an authentication provider, you **must** set up a registration handler" | Create an Authentication Provider Registration Handler |
+| Registration handler behaviour | Create vs update is decided by matching, not by a separate feature: the handler must "look for a matching user record in Salesforce", then "If there is a matching user, the registration handler **updates** the user record with information from the identity provider", else it creates one. Method names (`createUser`, `updateUser`, `canCreateUser`) are **not** on the help article — they live in the Mobile SDK guide's "Customize the Auth. Provider Apex Class" | Create an Authentication Provider Registration Handler; Customize the Auth. Provider Apex Class |
+| Connected app creation | **Restricted as of Spring '26** — the banner appears on every connected-app help page: "Connected apps creation is restricted as of Spring '26. You can continue to use existing connected apps during and after Spring '26. However, we recommend using **external client apps** instead." Like the Workflow Rules row, this is a restriction on *creating*, not a removal of capability — so exam answers keying "create a Connected App" remain correct, and should note external client apps as the current recommendation rather than be marked wrong | Integrate Service Providers as Connected Apps with SAML 2.0; Configure Trusted IP Ranges for a Connected App |
+| App Launcher tile | One sentence settles every "how does the app appear in App Launcher" item: "**Specifying a Start URL makes the application available in the app menu and in App Launcher.**" For a canvas app the Start URL field is skipped — Canvas embeds rather than redirects, so Canvas is the wrong answer whenever the stem says a redirect is acceptable | Integrate Service Providers as Connected Apps with SAML 2.0 |
+| Salesforce as SAML IdP | Enabling it requires only a **certificate** (default self-signed SHA-256, or your own) and clicking **Enable Identity Provider**. The current article **never mentions My Domain** as a prerequisite — that requirement predates universal My Domain enforcement, so treat "set up Salesforce as a SAML IdP *with My Domain*" as still-correct but no longer a distinct step | Enable Salesforce as a SAML Identity Provider |
+| Connected App refresh token policy | Four options: **valid until revoked (default)**; immediately expire; **expire if not used for n** (inactivity — resets on each use); **expire after n** (fixed clock — "if the policy states one day, the user can obtain new sessions only for 24 hours"). The policy "is evaluated only during usage of the issued refresh token and doesn't affect a user's current session". Daily re-auth ⇒ *after n*; a cohort re-authing together ⇒ *after n* started at first authorisation. The `refresh_token` grant does **not** use the callback URL, so a changed redirect URI cannot cause refresh failures | Manage OAuth Access Policies for a Connected App |
+| OAuth username-password flow | **Being retired for connected apps** — Salesforce states the update "will break all connected app integrations that use this flow", because the flow "directly passes the user's credentials in HTTP requests". Replacements it names: **client credentials flow** for server-to-server, **web server flow with PKCE** for end-user login. Any item whose scenario is built on username-password is still answerable, but should flag the retirement rather than teach the flow as current practice | Salesforce Retirement of OAuth 2.0 Username-Password Flow |
+| Connected App trusted IP range | The field is **"Trusted IP Range for OAuth Web Server Flow"** — scoped to the web server flow by its own name, so it does **not** restrict a username-password integration. **IP Relaxation relaxes** org IP enforcement rather than adding it. IP restrictions are enforced **only where configured on a user's profile**, so the mechanism that actually denies a login by source IP is profile **Login IP Ranges**: "a login from any other IP address is denied" | Configure Trusted IP Ranges for a Connected App; Restrict Login IP Addresses in Profiles |
+| My Domain and SSO | With My Domain "the target hostname at Salesforce is unique to the organization", so "the correct Identity Provider (IdP) data for SSO can be looked up immediately". Without it, on a Salesforce link — login page, **deep link**, Outlook Sync URL — "Salesforce does not know in advance which Identity Provider to use", which is the SP-initiated case. **Caveat:** on a generic login page, SP-initiated *can* work after one IdP-initiated login sets an IdP cookie, so "SP-initiated will never work" is an overstatement. Separately, "**The Salesforce Mobile App only supports Service Provider (SP) Initiated SSO**" | Considerations for Setting Up Salesforce My Domain with SSO; Salesforce Mobile App: Single Sign-On overview |
+| Identity Verification Credits | Denominated in **SMS sends** — the add-on "typically includes 25,000 SMS messages per month, 300,000 credits per year". So estimates key off SMS challenges, not all verifications. **Cite the add-on considerations article** (`id=005239145`, a `type=1` knowledge article); `security_sms_identity_verification` renders but never uses the word "credit" | Identity Verification Credits Add-On License Considerations |
 | Lightning Inspector docs | **Removed from the Aura guide.** `lightning/inspector_*.htm` now redirects to the Debugging intro, including pinned old-version URLs. The Storage tab (client-side cache of storable actions) is still described in the Salesforce Developers blog post introducing the Inspector | Introducing the Salesforce Lightning Inspector |
 
 Every row above now names a source that was opened and read. If you add a row you
@@ -252,6 +263,24 @@ it. A believed-correct fact with no rendered source is a liability, not a shortc
 
 ### Identity & access management
 All rendered during the IAM deck repair.
+
+Added in the IAM answer-verification pass (2026-08-10), all three rendered:
+
+- **Restrict Login IP Addresses in Profiles** — https://help.salesforce.com/s/articleView?id=sf.users_profiles_epui_login_ip_ranges.htm&language=en_US&type=5
+  "To control login access at the user level, specify the ranges of allowed IP
+  addresses on a user's profile. When you define IP address restrictions for a
+  profile, a login from any other IP address is denied." The mechanism that
+  actually restricts an OAuth username-password integration to one host.
+- **Configure Trusted IP Ranges for a Connected App** — https://help.salesforce.com/s/articleView?id=xcloud.connected_app_edit_ip_ranges.htm&language=en_US&type=5
+  The field is named **"Trusted IP Range for OAuth Web Server Flow"** — scoped to
+  the web server flow, so it does not govern username-password. IP Relaxation
+  *relaxes* org IP enforcement rather than adding it, and IP restrictions are
+  enforced only where configured on a user's profile.
+- **Identity Verification Credits Add-On License Considerations** — https://help.salesforce.com/s/articleView?id=005239145&language=en_US&type=1
+  Credits are denominated in SMS: "typically includes 25,000 SMS messages per
+  month, 300,000 credits per year". Note this is a `type=1` knowledge article,
+  not a `type=5` doc page. **Do not** cite `security_sms_identity_verification`
+  for credit consumption — it renders, but never uses the word "credit".
 
 - **Custom Login Flows** — https://help.salesforce.com/s/articleView?id=sf.security_login_flow.htm&language=en_US&type=5
 - **Session Security** — https://help.salesforce.com/s/articleView?id=sf.security_overview_sessions.htm&language=en_US&type=5
@@ -436,6 +465,44 @@ worth internalising: a real article name with an **invented suffix or namespace*
 - `sf.c360_a_identity.htm` → use `sf.identity_licenses.htm`
 - `sf.networks_contactless_users.htm` → use `sf.external_identity_manage_create_contactless_users.htm`
 - `…apexcode/apex_classes_ConnectedApp.htm` → real: `…apexref/apex_class_Auth_ConnectedAppPlugin.htm`
+
+### From the IAM answer-verification pass (2026-08-10)
+
+Both are the **atlas apexref** failure mode, and both were the top Google result for
+`Auth.RegistrationHandler`. Neither is a 404 — one renders an empty shell, the other
+renders the book's table of contents, so only opening them reveals the problem.
+
+- `…/docs/atlas.en-us.apexref.meta/apexref/apex_auth_plugin.htm` — renders a body of
+  **15 characters** ("Skip Navigation") with the bare title "Salesforce Developers",
+  even after waiting for the client-side render. The article historically lived in the
+  `apexcode` book, same migration pattern as the ConnectedAppPlugin entry above.
+- `…/docs/atlas.en-us.apexref.meta/apexref/apex_interface_Auth_RegistrationHandler.htm`
+  — guessed from the naming convention of its sibling interfaces
+  (`apex_interface_Auth_ConfigurableSelfRegHandler.htm` and friends, which are real).
+  Answers 200 and renders the **Apex Reference Guide root TOC**, not the interface.
+  A plausible-looking id that follows a real convention is still a guess.
+
+A third dead id, and the only one so far that produces the **textbook 404-wearing-a-200**:
+
+- `sf.security_require_two-factor_authentication.htm` — renders "We looked high and low but
+  couldn't find that page" in a 633-character body. Note the **hyphen** in `two-factor`.
+- The deck's own citation uses **underscores** — `sf.security_require_two_factor_authentication.htm`
+  — and that one is **alive**, but it resolves to the general "Multi-Factor Authentication
+  for Salesforce Orgs" overview rather than an article matching its id. Fine to cite for
+  MFA questions; do not expect a page about *requiring* MFA. One character of difference
+  separates a live redirect from a dead link, so copy ids rather than retyping them.
+
+Use instead, both rendered and confirmed:
+- **Create an Authentication Provider Registration Handler** — https://help.salesforce.com/s/articleView?id=xcloud.sso_create_registration_handler.htm&language=en_US&type=5
+  Carries the sentences that settle the whole Registration Handler cluster: "The
+  registration handler creates and updates Salesforce users after they authenticate
+  with the identity provider", and for a returning user, "If there is a matching user,
+  the registration handler updates the user record with information from the identity
+  provider." Note it does **not** contain the method names `createUser`/`updateUser`.
+- **Customize the Auth. Provider Apex Class** (Mobile SDK guide) — https://developer.salesforce.com/docs/platform/mobile-sdk/guide/communities-customize-auth-provider.html
+  This is where the method names live: `createUser()`, `updateUser()`, `canCreateUser()`,
+  and the auto-generated `AutocreatedRegHandlerxxxxxx` class. A newer `/docs/platform/…`
+  path, which renders reliably where the atlas ids did not.
 
 ### Others
 
