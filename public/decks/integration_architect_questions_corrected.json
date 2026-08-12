@@ -1582,7 +1582,7 @@
   },
   {
     "id": "0ae13744",
-    "question": "A company's cloud-based single page application consolidates data local to the application with data from on premise and 3rd party systems. The diagram below typifies the application's combined use of synchronous and asynchronous calls. The company wants to use the average response time of its application's user interface as a basis for certain alerts. For this purpose, the following occurs: 1. Log every call's start and finish date and time to a central analytics data store. 2. Compute response time uniformly as the difference between the start and finish date and time - A to H in the diagram. Which computation represents the end-to-end response time from the user's perspective? [Diagram — sequence. User -> UI Component: 1: onClick. UI Component -> Middleware: 2: getSummary (leg A). Middleware -> On-Premise System: 2.1: getSummary (leg B); On-Premise System -> itself: 2.1.1: consolidateInfo (leg C); returns 2.1.2: summary info. Middleware -> 3rd Party System: 2.2: getSummary (leg D); 3rd Party System -> itself: 2.2.1: consolidateInfo (leg E); returns 2.2.2: summary info. Middleware -> On-Premise System: 2.3: startAsyncProcess (leg F); On-Premise System -> itself: 2.3.1: process (leg G) — asynchronous, continues after the reply is sent. Middleware -> UI Component: 2.4: consolidated summary, which closes leg A. UI Component -> itself: 3: render (leg H).]",
+    "question": "A company's cloud-based single page application consolidates data local to the application with data from on premise and 3rd party systems. The diagram below typifies the application's combined use of synchronous and asynchronous calls. The company wants to use the average response time of its application's user interface as a basis for certain alerts. For this purpose, the following occurs: 1. Log every call's start and finish date and time to a central analytics data store. 2. Compute response time uniformly as the difference between the start and finish date and time - A to H in the diagram. Which computation represents the end-to-end response time from the user's perspective?",
     "optionA": "Sum of A to H",
     "optionB": "Sum of A and H",
     "optionC": "Sum of A to F",
@@ -1594,7 +1594,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "comments",
-      "note": "Q122 answer B confirmed against the diagram; embedded a textual rendering so the item is answerable without the image."
+      "note": "Q122 answer B confirmed against the diagram. The textual rendering added then was replaced on 2026-08-11 by a drawn sequence diagram, which shows the leg nesting the prose could not."
     }
   },
   {
@@ -1825,7 +1825,7 @@
   },
   {
     "id": "d258eebd",
-    "question": "A company accepts payment requests 24x7. Once they accept a payment request, their service level agreement (SLA) requires them to make sure each payment request is processed by their Payment System. They track payment requests using a globally unique identifier created at the Data Entry Point. Their simplified flow is as shown in the diagram. They encounter intermittent update errors when two or more processes try to update the same Payment Request record at the same time. Which two recommendations should an integration architect make to improve their SLA and update conflict handling? Choose 2 answers [Diagram — sequence. Event1 -> Data Entry Point: 1: start. Data Entry Point -> Middleware: 2: request. Middleware -> Payment System: 2.1: send, marked \"fire and forget\"; Payment System -> itself: 2.1.1: enqueue. Middleware -> Data Entry Point: 2.2: reply, returned immediately without waiting for processing. Payment System -> itself: 3: process upon dequeue. Separately, Event2 -> Payment System: 4: start; Payment System -> Middleware: 4.1: request; Middleware -> Data Entry Point: 4.1.1: request; Data Entry Point -> Middleware: 4.1.2: reply; Middleware -> Payment System: 4.2: reply.]",
+    "question": "A company accepts payment requests 24x7. Once they accept a payment request, their service level agreement (SLA) requires them to make sure each payment request is processed by their Payment System. They track payment requests using a globally unique identifier created at the Data Entry Point. Their simplified flow is as shown in the diagram. They encounter intermittent update errors when two or more processes try to update the same Payment Request record at the same time. Which two recommendations should an integration architect make to improve their SLA and update conflict handling? Choose 2 answers",
     "optionA": "Payment System should process a payment request only once.",
     "optionB": "Data Entry Point and Middleware should automatically retry requests.",
     "optionC": "Payment System and Middleware should automatically retry requests.",
@@ -1837,7 +1837,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "comments",
-      "note": "Q140 answer A,D confirmed against the diagram; embedded a textual rendering so the item is answerable without the image."
+      "note": "Q140 answer A,D confirmed against the diagram. The textual rendering added then was replaced on 2026-08-11 by a drawn sequence diagram, which puts both exchanges on one time axis."
     }
   },
   {

@@ -43,6 +43,8 @@ to forget under fatigue.
 ```
 src/                  the app — components, lib/quiz.ts (explanation parsing),
                       lib/richtext.ts (code-block detection)
+src/diagrams/         hand-authored SVG figures, keyed by question id in
+                      registry.ts — see "Questions that need a figure" below
 public/decks/         13 decks + manifest.json + deck-template.json
 scripts/
   audit-deck.mjs      structural audit — skill Phase 1
@@ -79,6 +81,59 @@ npm run build            # tsc -b && vite build
 The richtext suite ends with a deck-wide sweep whose block count spikes if a
 detection rule starts over-firing. A rule change that leaves the count flat and
 the tests green is safe; a spike means the heuristic now eats prose.
+
+### Questions that need a figure
+
+Some scraped items were written against a diagram that did not survive the
+scrape. The earlier workaround flattened the picture into a bracketed
+`[Diagram — sequence. A -> B: ...]` blob welded onto the stem, which is
+unreadable and, for anything whose answer turns on nesting or timing, does not
+actually carry the mechanism. **Do not add more of those.** Draw the figure.
+
+`src/diagrams/registry.ts` maps a question `id` to a hand-authored inline SVG.
+Nothing changes in the deck JSON — ids are permanent, so the binding survives
+stem edits, and an SVG inlined into a deck file would make the content
+uneditable. `primitives.tsx` holds the sequence-diagram vocabulary (lifelines,
+activation bars, self-calls, leg chips); the two component-style figures are
+bespoke.
+
+**All four current figures are redrawn from the original exam images**, which
+the repo owner supplied on 2026-08-11. Two of them had first been drawn from the
+stem alone, and comparing them against the originals moved real details — most
+sharply in `0ae13744`, where the lettered legs sit on the participant that is
+*waiting* (A on the UI Component, B/D/F on the Middleware as it makes each
+sub-call), not on the participant being called, which is where a from-the-prose
+reading naturally puts them. **Ask for the source image before drawing from a
+stem.** The answer key did not move, but the figure was teaching the wrong
+convention.
+
+Four rules the existing four follow:
+
+- **Paint with the CSS variables, never literal hex.** The figure should
+  inherit the palette, not sit on top of it.
+- **No mark may single out the keyed option.** These render *above* the
+  options, before the reader has committed. State the mechanism; leave the
+  reasoning alone. Captions say how to read the notation, not what the answer
+  works out to.
+- **Mark a reconstruction as one.** Set `reconstructed: true` when no original
+  figure survived and you drew it from the stem. It renders a chip and a
+  figcaption note; a reader deserves to know it is not the exam's own artwork.
+  No current figure sets it — the flag exists for the next one drawn blind, and
+  comes off once the original turns up and the drawing is checked against it.
+- **Do not reproduce the source's typos.** The eligibility figure misspells
+  "Eligibility" three times; the redrawing spells it correctly. Fidelity is to
+  the structure, not the proofreading.
+- **Verify geometry in the browser, not by eye in the source.** Coordinates
+  computed while writing collide in practice. Load the question and compare
+  every `<text>` bounding box in *screen* space — `getBBox()` ignores `<g
+  transform>` and will report false overlaps for anything inside the legend.
+
+The question column is ~550px with both sidebars open, so a five-lifeline
+diagram cannot fit legibly. Figures scroll sideways at their `minWidth` and
+Expand opens them full-viewport. That overlay stops keystrokes in the capture
+phase on purpose — `lib/shortcuts.ts` binds Enter, the arrows and 1–5 on
+`window`, so without it paging an expanded diagram would answer the question
+underneath.
 
 ---
 
