@@ -82,18 +82,29 @@ the tests green is safe; a spike means the heuristic now eats prose.
 
 ---
 
-## Deck state — as of 2026-08-10
+## Deck state — as of 2026-08-11
 
-1,565 questions across 13 decks. **440 (28%) carry a reference with an actual URL.**
+1,565 questions across 13 decks. **559 (36%) carry a reference with an actual URL.**
 
 Measure coverage with a URL test, not by looking for the `References:` marker. The
 app's parser (`src/lib/quiz.ts`) treats **every** non-empty line after the marker as
-a reference and does not require a URL, so 546 questions render a References section
-but only 440 have a link in it. The **106-question gap** is real content: prose like
+a reference and does not require a URL, so 598 questions render a References section
+but only 559 have a link in it. The **39-question gap** is real content: prose like
 "Salesforce Agentforce Documentation: SDR Agent Setup > Channels" rendered under a
-References heading with nothing to click. It degrades gracefully — `linkifySegments`
-only linkifies real URLs — but it is unverifiable by a learner and it inflates any
-naive coverage count.
+References heading with nothing to click, plus a handful of empty blocks. It degrades
+gracefully — `linkifySegments` only linkifies real URLs — but it is unverifiable by a
+learner and it inflates any naive coverage count. The gap is **agentforce 26,
+revenue-cloud 10, admin 3**.
+
+That corrects a figure this file previously carried. The old row claimed a
+106-question gap split agentforce 73 / revenue-cloud 30 / admin 3. Measured per
+question, the gap is 39; 73 is close to agentforce's count of URL-less reference
+*lines* (79), so the old number appears to have counted lines and labelled them
+questions. Count questions, and re-measure rather than copying the previous row:
+
+```sh
+node -e "const fs=require('fs'),p=require('path');const d='public/decks';let m=0,c=0;fs.readdirSync(d).filter(f=>f.endsWith('.json')&&!/manifest|deck-template/.test(f)).forEach(f=>{const qs=JSON.parse(fs.readFileSync(p.join(d,f),'utf8'));if(!Array.isArray(qs))return;qs.forEach(q=>{const e=q.explanation||'';const i=e.search(/^References:/mi);if(i>=0){m++;if(/https:\/\//.test(e.slice(i)))c++;}})});console.log('marker',m,'cited',c,'gap',m-c)"
+```
 Reference coverage is a *necessary* signal but **not a sufficient one** — the skill
 requires a citation on every verdict including `confirmed`, so a fully checked deck
 always reaches N/N, but a deck can reach N/N without its answers ever having been
@@ -106,11 +117,11 @@ column, not the Cited column.
 | salesforce-integration-architect | 137 | 137 | **Fully checked** — 37 stamps, 15 keys moved. Spot-rechecked 2026-08-10: citations sound, content current, 0 wrong answers found |
 | salesforce-iam-architect | 122 | 122 | **Fully checked** (2026-08-10) — 3 keys moved, 7 reasoning fixes |
 | salesforce-admin | 154 | 33 | Partial; 13 keys moved (ADM-201 merge pass). 3 more render a References block whose URL is broken across lines — one shows a bare `htm` |
-| salesforce-agentforce-specialist | 125 | **0** | **Not cited at all.** 73 questions render a References block containing prose only, no URLs |
-| salesforce-revenue-cloud | 137 | **0** | **Not cited at all.** 30 questions render a References block containing prose only, no URLs |
+| salesforce-agentforce-specialist | 125 | **0** | **Not cited at all.** 26 questions render a References block containing prose only (79 such lines), no URLs |
+| salesforce-revenue-cloud | 137 | **0** | **Not cited at all.** 10 questions render a References block with no URL — 2 carry prose, 8 are empty |
 | salesforce-data-cloud-consultant | 100 | 0 | Uncited; 4 keys moved via comments |
 | salesforce-sharing-visibility | 139 | 0 | Uncited; 4 reasoning stamps |
-| salesforce-app-builder | 119 | 0 | **Untouched** |
+| salesforce-app-builder | 119 | 119 | **Fully checked** (2026-08-11) — 3 keys moved, 26 reasoning fixes |
 | salesforce-dld | 138 | 0 | **Untouched** |
 | salesforce-data-architect | 135 | 0 | **Untouched** |
 | claude-questions | 74 | 0 | **Untouched** |
