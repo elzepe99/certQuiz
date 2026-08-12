@@ -1,0 +1,26 @@
+{
+  "deck": "public/decks/integration_architect_questions_corrected.json",
+  "reviewed": "2026-08-10",
+  "findings": [
+    {
+      "id": "ca753119",
+      "verdict": "reasoning",
+      "explanation": "Of the options offered, Process Builder calling an Apex proxy class is the one that fires automatically when the Opportunity reaches Closed/Won, which is what the scenario describes (D). A trigger cannot call out directly, so option A necessarily defers the work to @future or Queueable, and option B is hourly by definition. Option C does perform a genuinely synchronous callout, but only when a user clicks a button, so it does not respond to a status change.\nTwo caveats matter more than the letter, and both count against reading this item too literally.\nFirst, the stem's requirement that the callout be synchronous cannot actually be satisfied by any automatic option here. Salesforce documents that you 'can't make a callout when there are pending operations in the same transaction', and that DML statements are exactly such an operation. A Process Builder action runs after the record is saved, so an Apex proxy invoked from it has uncommitted work pending and must be annotated @future(callout=true) to call out at all — which makes it asynchronous, the same objection the explanation raises against option A. Treat D as the automation answer, not as a synchronous one.\nSecond, Process Builder reached end of support on 31 December 2025. Existing processes continue to run and can still be edited, so the answer is not wrong, but a design built today would use Flow to invoke the Apex proxy instead.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts_timeouts.htm",
+        "https://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#Remote_Process_Invocation___Request_And_Reply"
+      ],
+      "note": "Key D stands, but the item is defective and the explanation now says so instead of asserting Process Builder is 'the supported path' for a synchronous callout. Two problems. The pending-DML rule means a callout from Process Builder-invoked Apex requires @future(callout=true), so it is asynchronous — which contradicts the stem's synchronous requirement and undercuts the explanation's own reason for rejecting option A. No option satisfies both 'automatic on status change' and 'synchronous', so the stem is internally inconsistent. Separately, Process Builder hit end of support on 31 Dec 2025; per the established fact that this is retirement of support rather than removal of capability, the key remains correct, and Flow is the current equivalent. Flagged for the user: the clean repair is to drop 'synchronous' from the stem, or reword option D to name Flow."
+    },
+    {
+      "id": "3f678446",
+      "verdict": "reasoning",
+      "explanation": "A per-user Named Credential only helps where the callout runs in the context of an identifiable running user, so the question is which scenarios preserve that context.\nProcess Builder invoking an invocable or @future Apex callout does preserve it — asynchronous Apex runs as the user who triggered it — so order information can be sent under that user's identity when the status changes to Confirmed (B). Salesforce Connect with the OData 2.0 adapter supports a per-user identity type for external object reads and writes, so it qualifies too (C).\nOption A fails on identity: outbound messaging runs as the automated process user, which defeats per-user identity entirely. It is also built on a capability that no longer exists — Salesforce removed the session ID from outbound messages in February 2026, so 'outbound message with session ID' describes a retired feature.\nOption D is worth pausing on, because the security setup is not what disqualifies it: a Visualforce page with an Apex callout genuinely can use a per-user Named Credential. It fails because the requirement is that information be sent when the status changes, and a Visualforce page waits for a user to navigate to it.\nCurrency note on the keyed answer: Process Builder reached end of support on 31 December 2025. Existing processes still run, so B remains correct, but Flow is the mechanism to use for new work.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?language=en_US&id=sf.named_credentials_about.htm&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.workflow_om_considerations.htm&language=en_US&type=5"
+      ],
+      "note": "Key B,C stands; this is a currency fix rather than a correction. The explanation described Process Builder as the mechanism that 'preserves that context' without noting it reached end of support on 31 Dec 2025, so a reader would take it as current guidance. Added the retirement and named Flow as the replacement, keeping the key because retirement of support is not removal of capability. Also strengthened the rejection of option A, which the old text dismissed only on the automated-process-user grounds: the session ID it depends on was removed from outbound messages in February 2026, so the option describes a capability that no longer exists at all."
+    }
+  ]
+}
