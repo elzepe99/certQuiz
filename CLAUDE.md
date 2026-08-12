@@ -121,7 +121,7 @@ column, not the Cited column.
 | salesforce-revenue-cloud | 137 | **0** | **Not cited at all.** 10 questions render a References block with no URL — 2 carry prose, 8 are empty |
 | salesforce-data-cloud-consultant | 100 | 0 | Uncited; 4 keys moved via comments |
 | salesforce-sharing-visibility | 139 | 0 | Uncited; 4 reasoning stamps |
-| salesforce-app-builder | 119 | 119 | **Fully checked** (2026-08-11) — 3 keys moved, 26 reasoning fixes |
+| salesforce-app-builder | 119 | 119 | **Fully checked** (2026-08-11) — 4 keys moved, 25 reasoning fixes, 3 defective option sets repaired |
 | salesforce-dld | 138 | 0 | **Untouched** |
 | salesforce-data-architect | 135 | 0 | **Untouched** |
 | claude-questions | 74 | 0 | **Untouched** |
