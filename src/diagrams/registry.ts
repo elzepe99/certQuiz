@@ -45,9 +45,6 @@ export const QUESTION_DIAGRAMS: Record<string, QuestionDiagram> = {
   '9a718961': { ...historicalDataStore, minWidth: 720 },
   // "See diagram & description" — eligibility checks behind a 9-second gateway.
   '647f738a': { ...eligibilityTimeout, minWidth: 950 },
-  // Same scenario and same key as 647f738a, with the options shuffled and the
-  // "see diagram" reference dropped. Same figure applies.
-  '13687b39': { ...eligibilityTimeout, minWidth: 950 },
   // Data Architect: "a data model as shown in the image" — the DreamHouse ERD.
   bd39a845: { ...dreamHouseDataModel, minWidth: 900 },
 };
