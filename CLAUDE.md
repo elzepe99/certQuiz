@@ -139,7 +139,10 @@ underneath.
 
 ## Deck state — as of 2026-08-11
 
-1,565 questions across 13 decks. **559 (36%) carry a reference with an actual URL.**
+1,549 questions across 13 decks. **549 (35%) carry a reference with an actual URL.**
+
+That is down from 1,565 / 559 because 16 intra-deck duplicates were removed on
+2026-08-11 (see "Duplicates" below), not because anything was decited.
 
 Measure coverage with a URL test, not by looking for the `References:` marker. The
 app's parser (`src/lib/quiz.ts`) treats **every** non-empty line after the marker as
@@ -169,13 +172,13 @@ column, not the Cited column.
 | Deck | Q | Cited | Verification status |
 |---|---:|---:|---|
 | salesforce-platform-developer-2 | 148 | 148 | **Fully checked** — 8 rounds, 2 keys moved |
-| salesforce-integration-architect | 137 | 137 | **Fully checked** — 37 stamps, 15 keys moved. Spot-rechecked 2026-08-10: citations sound, content current, 0 wrong answers found |
-| salesforce-iam-architect | 122 | 122 | **Fully checked** (2026-08-10) — 3 keys moved, 7 reasoning fixes |
+| salesforce-integration-architect | 133 | 133 | **Fully checked** — 37 stamps, 15 keys moved. Spot-rechecked 2026-08-10: citations sound, content current, 0 wrong answers found |
+| salesforce-iam-architect | 116 | 116 | **Fully checked** (2026-08-10) — 3 keys moved, 7 reasoning fixes |
 | salesforce-admin | 154 | 33 | Partial; 13 keys moved (ADM-201 merge pass). 3 more render a References block whose URL is broken across lines — one shows a bare `htm` |
-| salesforce-agentforce-specialist | 125 | **0** | **Not cited at all.** 26 questions render a References block containing prose only (79 such lines), no URLs |
+| salesforce-agentforce-specialist | 122 | **0** | **Not cited at all.** 26 questions render a References block containing prose only (79 such lines), no URLs |
 | salesforce-revenue-cloud | 137 | **0** | **Not cited at all.** 10 questions render a References block with no URL — 2 carry prose, 8 are empty |
 | salesforce-data-cloud-consultant | 100 | 0 | Uncited; 4 keys moved via comments |
-| salesforce-sharing-visibility | 139 | 0 | Uncited; 4 reasoning stamps |
+| salesforce-sharing-visibility | 136 | 0 | Uncited; 4 reasoning stamps |
 | salesforce-app-builder | 119 | 119 | **Fully checked** (2026-08-11) — 4 keys moved, 27 reasoning fixes, 3 defective option sets repaired. Q1–50 spot-rechecked: 10 sampled, 1 defect (a mechanism stated backwards), so the earlier batches read sound |
 | salesforce-dld | 138 | 0 | **Untouched** |
 | salesforce-data-architect | 135 | 0 | **Untouched** |
@@ -200,9 +203,58 @@ session security levels, not the org-wide MFA setting), `9f507c0e` A,B→B,D
 
 Clean across all 13 decks right now: zero `U+FFFD` replacement characters, zero
 literal `"Option B"` placeholder strings, zero keys pointing at empty options,
-zero missing ids, **zero cross-deck duplicate stems**. One intra-deck duplicate
-stem remains, in IAM (`#43`/`#78`) — benign, deliberately option-shuffled
-variants that both key `updateUser()` on the Registration Handler.
+zero missing ids.
+
+### Duplicates
+
+Cross-deck repeats are fine and deliberate — the same item legitimately appears
+in more than one certification. **Only intra-deck duplicates are defects.**
+
+This file used to claim one intra-deck duplicate, in IAM. That was measured with
+an exact-match check, which is close to useless here: freecram serves the same
+item twice with the options shuffled and OCR noise in the text (`ReplaylD` for
+`ReplayId`, `CRH` for `CRM`, `accountsusing`), so no two copies are ever byte-
+identical. A token-overlap check found **28 near-duplicate pairs**. Measure with
+similarity, never equality:
+
+```sh
+# intra-deck pairs, Jaccard >= 0.72 on stem tokens longer than 3 chars
+node scripts/find-duplicates.mjs
+```
+
+**16 were removed on 2026-08-11** — same question, and the *keyed option text*
+matched even where the letter did not. The keeper was the copy with the longer
+stem and explanation and more references; one reference held only by a dropped
+copy was merged into its keeper first. Use `scripts/remove-questions.mjs`, which
+refuses any id still bound in `src/diagrams/registry.ts`.
+
+**11 pairs remain and must not be merged.** They read alike but their keys point
+at genuinely different option text, so one of each pair is either wrong or a
+distinct question — resolving them is a fact-check, not a dedupe:
+
+| Deck | Pair |
+|---|---|
+| agentforce-specialist | `e6949181` vs `63afa960` — Model Playground vs Testing Center |
+| agentforce-specialist | `0b45cf29` vs `b7ffd87e` |
+| data-cloud-consultant | `b16bbc31` vs `e652607d` — "takes up to 24 hours" vs "available soon" |
+| revenue-cloud | `6f99fe4e` vs `ac4ee893` — AI prompt template vs contract extraction template |
+| revenue-cloud | `f5adf9ac` vs `f12dffa3` |
+| dld | `2b7730d8` vs `42760192`; `a0fc764b` vs `ece03577` |
+| iam-architect | `cfcdee5c` vs `717f2404` |
+| platform-developer-2 | `f62513eb` vs `c74b1c3e` — **probably a true duplicate**: "Implement Database.Batchable interface" and "Database.Batchable" are the same answer differently worded. Left in place only because both copies are fully cited with ~3,000-character explanations, so pick the keeper deliberately |
+| sharing-visibility | `b3eeee28` vs `c095ab36`; `681f22f4` vs `7d2c8e5f` — partner *manager* vs *individual* partner users |
+
+`find-duplicates.mjs` labels two of those eleven `SAME`. It is wrong on both, and
+they are worth knowing as the shape of its blind spot: `6f99fe4e`/`ac4ee893`
+differ only in the noun ("AI prompt template" vs "contract extraction template")
+and `681f22f4`/`7d2c8e5f` only in the qualifier ("partner *manager* users" vs
+"*individual* partner users"). One decisive word inside two otherwise identical
+sentences scores as agreement. **Read both copies; never remove on the label.**
+
+**Comments are the unhandled risk.** Supabase stores them keyed on question id,
+so removing a question orphans its comments. Supabase was not configured when the
+16 were removed, so this went unchecked — run `npm run review-comments` before
+the next removal pass.
 
 ---
 
