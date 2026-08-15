@@ -777,3 +777,187 @@ Dead guesses that looked plausible and were not real: `/jobs/task-dependencies`
 **Not documented by Databricks**, despite appearing in this deck: any rule of thumb
 reading a **CPU-time vs task-time ratio** in the Spark UI. The Spark UI guide diagnoses
 slow stages by I/O, small files, skew, spill and slow UDFs, and never frames that ratio.
+
+---
+
+# Verified Salesforce Revenue Cloud documentation
+
+From the salesforce-revenue-cloud pass (2026-08-15). Every URL below was opened in
+the browser and confirmed to render the named article.
+
+## The rename that shapes every search
+
+Revenue Cloud is now documented as **"Agentforce Revenue Management (formerly
+Revenue Cloud)"**, and its Help articles live in the **`ind.`** namespace. Search
+results still surface `sf.` ids for the same titles and **many of those 404** — see
+Known dead below. When a `sf.pricing_*` or `sf.product_catalog_*` id fails, try the
+`ind.` equivalent before concluding the article is gone.
+
+## How this vendor fails (confirmed by test)
+
+An invented `ind.` article id renders **"We looked high and low but couldn't find
+that page"** under the generic title `Salesforce Help | Article`. A real one renders
+the article title. So on help.salesforce.com **title alone is a reliable signal** —
+but the title lags one call behind `navigate`, so read `document.title` in a
+follow-up call, not from the navigate output. Batching across several tabs and
+reading titles one call later verifies ~8 URLs per round trip.
+
+`developer.salesforce.com` atlas pages render their title immediately, and a dead
+book/section id yields an **empty body** (innerText length ~15) under the generic
+title `Salesforce Developers`. `cml_cml_core_concepts.htm` fails this way.
+
+## Settled facts
+
+| Fact | Value | Source |
+|---|---|---|
+| Place Sales Transaction line items | **1,000** quote line items per quote, 1,000 order products per order; 3,000 line item attributes | Place Sales Transaction (POST) |
+| Place Order line items | **300** max, and the API is **deprecated as of API v63.0** in favour of Place Sales Transaction | Place Order (POST) |
+| quantityScaleMethod valid values | **Constant** and **Proportional** only — "None" is not a value. Proportional means child qty = parent x child | Product Related Component |
+| Products List (POST) inputs | catalogId, categoryId, productClassificationId optional; **priceBookId is Required**. There is **no** productIds property | Products List (POST) |
+| Standard context definition | Can only be **extended or cloned**, never edited or deleted. Extend keeps the inheritance link and receives upgrades; clone is a point-in-time copy that does not | Context Definitions |
+| Context definition health check | Query ContextDefinition; InheritedFrom should be blank if ClonedFrom is populated. Both populated causes unexpected pricing errors — recreate it | KB 004259656 |
+| Pricing procedure inputs | Elements map Input Variables to **context tags**, not raw attributes — an untagged attribute is invisible to the procedure | Use Context Definitions |
+| Decomposition Scope | Broad to narrow: **Account, Order, Bundle, Order Line Item**. Order Line Item is the default. A child's scope must not be broader than its parent's | Decomposition Scope |
+| Local vs group cardinality | Local = default/min/max **quantity** of one component. Group = min/max **number of child components** | Define Quantity Limits for Bundled Products |
+| Activated orders | Once status moves Draft to Activated, items cannot be edited on the order **regardless of permissions** | View and Edit Orders |
+| Quote-to-contract popup | Driven by flow rev_contracts__CreateCntrFromQuote, set in Setup > Revenue Settings; admins customize by entering a **different flow API name** | Map a Flow to Capture Quote Line Pricing on Contracts |
+| Contract extraction template | Defines **attribute mapping, context mapping, and prompt instructions**; Create Attribute Definition clones ContractsExtractionContext | Create a Contract Extraction Template |
+| Asset lifecycle permissions | Separate permission sets per action: **InitiateAmendment API, InitiateCancellation API, InitiateRenewal API**, plus Assetize Order — so one action can be withdrawn without the others | Assign Revenue Management Permission Sets |
+| PCM Viewer vs Designer | Viewer = **read**; Designer = **read-write** plus Product Discovery setup. Product Discovery User = use the browsing experience | Assign Revenue Management Permission Sets |
+| Migrated assets | Amend/renew/cancel work **only** with assets created through order activation. Migrated or manually created assets may lack the required relationships | Amending, Renewing, and Canceling Assets |
+| Pricing Operations Console | **Renamed** to Revenue Cloud Operations Console. Article title is "Monitor and Troubleshoot Pricing Issues" | ind.pricing_operations_console |
+
+## Confirmed URLs — Help (pricing)
+
+- https://help.salesforce.com/s/articleView?id=ind.pricing_use_context_definitions.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.pricing_pricing_procedures.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.pricing_pricing_element.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.pricing_discount_spread_service.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.pricing_subscription_pricing_proration.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.pricing_attribute_based_price.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.pricing_create_bundle_based_adjustments.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.pricing_price_adjustment_matrix.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.pricing_operations_console.htm&language=en_US&type=5
+
+## Confirmed URLs — Help (catalog, configurator, discovery)
+
+- https://help.salesforce.com/s/articleView?id=ind.product_catalog_products.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.product_catalog_qualification_rules.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.product_catalog_change_a_configurable_bundle_product_to_a_static_bundle_product.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sf.product_catalog_local_cardinality_and_group_cardinality.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.product_configurator_use_the_cml_editor.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.product_configurator_product_configurator_permissions.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?language=en_US&id=ind.product_configurator_configure_bundled_products.htm&type=5
+- https://help.salesforce.com/s/articleView?language=en_US&id=ind.qocal_set_up_product_discovery.htm&type=5
+
+## Confirmed URLs — Help (quote, order, asset lifecycle)
+
+- https://help.salesforce.com/s/articleView?id=ind.qocal_manage_assets_in_revenue_lifecycle_management.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.qocal_renew_assets.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.qocal_asset_lifecycle.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.qocal_view_and_edit_orders.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.qocal_manage_orders_in_revenue_lifecycle_management.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.qocal_create_asset_contract_relationship.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.qocal_flow_templates_automate_renewal_opportunity_creation_and_asset_renewal.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.qocal_considerations_syncing_quotes_and_opportunities_in_revenue_cloud.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.qocal_set_up_quote_and_order_features_in_revenue_cloud.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.qocal_setup_tax_engine.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sf.qocal_quote_to_contract_flow.htm&language=en_US&type=5 (renders as "Map a Flow to Capture Quote Line Pricing on Contracts")
+- https://help.salesforce.com/s/articleView?id=ind.transaction_management_essentials.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sf.order_edit.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sales.cpq_quotes_without_opportunities.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sales.quotes_synch.htm&language=en_US&type=5
+
+## Confirmed URLs — Help (DRO, billing, usage, contracts, setup)
+
+- https://help.salesforce.com/s/articleView?id=sf.dro_decomposition_scope.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.dro_in_flight_order_changes.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.dro_fulfillment_plan_actions_and_information.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.dro_define_how_a_product_decomposes.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.billing.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.billing_credit_memos.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sf.blng_advance_and_arrears.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?language=en_US&id=sf.blng_invoice_sched.htm&type=5
+- https://help.salesforce.com/s/articleView?id=ind.um_define_a_product_usage_grant.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.sf_contracts_create_a_contract_extraction_template_for_extraction.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.sf_contracts_View_the_Standard_ContractsExtractionContext_Mapping.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.sf_contracts_Salesforce_Contracts_Overview.htm&language=en_US
+- https://help.salesforce.com/s/articleView?language=en_US&id=ind.revenue_cloud_permission_sets_table.htm&type=5
+- https://help.salesforce.com/s/articleView?id=ind.setup_revenue_cloud.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.data_model_overview.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.context_service_context_definitions.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.context_service_add_context_mapping.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.revenue_intelligence_set_up_revenue_management_intelligence.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.revenue_intelligence_install_deploy_rev_intelligence_data_kit.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.revenue_management_intelligence_for_revenue_cloud.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=004259656&language=en_US&type=1 (Context Definition Extension Best Practices)
+- https://help.salesforce.com/s/articleView?id=004576666&language=en_US&type=1 (New Contract vs Create Contract buttons)
+
+## Confirmed URLs — developer guide
+
+All under https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/ unless noted:
+
+- connect_resources_products_list.htm
+- connect_resources_product_details.htm
+- product_discovery_business_apis.htm
+- connect_resources_place_sales_transaction.htm
+- connect_resources_place_order.htm
+- connect_resources_place_supplemental_transaction.htm
+- connect_resources_pricing_process_execution.htm
+- connect_responses_product_related_component_output.htm
+- sforce_api_objects_asset.htm
+- sforce_api_objects_assetstateperiod.htm
+- sforce_api_objects_assetstateperiodattribute.htm
+- sforce_api_objects_assetactionsource.htm
+- sforce_api_objects_assetcontractrelationship.htm
+- sforce_api_objects_productusagegrant.htm
+- apex_interface_commercetax_TaxEngineAdapter.htm
+- cml_what_is_constraint_modeling_language.htm
+- cml_cml_best_practices.htm
+- cml_constraints.htm
+- cml_types.htm
+
+Also confirmed:
+- https://developer.salesforce.com/docs/atlas.en-us.industries_reference.meta/industries_reference/context_service_overview.htm
+- https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_billingschedule.htm
+- https://developer.salesforce.com/docs/platform/data-models/guide/usage-management.html
+
+## Confirmed URLs — Trailhead
+
+All under https://trailhead.salesforce.com/content/learn/modules/:
+
+- product-catalog-management-with-revenue-cloud/get-started-with-product-catalog-management
+- product-catalog-management-with-revenue-cloud/create-a-product-bundle
+- price-management-with-revenue-cloud/implement-attribute-based-pricing
+- price-management-with-revenue-cloud/set-up-bundle-based-pricing
+- advanced-price-management-with-revenue-cloud/configure-contract-based-pricing
+- advanced-price-management-with-revenue-cloud/set-up-subscription-pricing-with-proration
+- asset-lifecycle-management-with-revenue-cloud/manage-customer-asset-amendments
+- asset-lifecycle-management-with-revenue-cloud/manage-customer-asset-renewals-and-cancellations
+- billing-management-with-revenue-cloud/create-billing-policies-and-treatments
+- billing-management-with-revenue-cloud/generate-invoices-revenue
+- complex-order-decomposition-and-orchestration-with-revenue-cloud/define-an-order-decomposition
+- product-qualification-and-disqualification-with-agentforce-revenue-management/manage-product-visibility
+- revenue-cloud-design/set-up-your-product-offerings
+- revenue-cloud-design/configure-pricing-for-products
+- usage-management-foundations/get-to-know-usage-management
+- deep-dive-into-salesforce-contracts/create-update-and-manage-contracts-hoc
+
+## Known dead — from the Revenue Cloud pass (2026-08-15)
+
+All seven were caught by browser verification. Five came from search-result
+listings; two were constructed during the pass.
+
+| Dead URL | Replacement |
+|---|---|
+| sf.pricing_attribute_based_price.htm | ind.pricing_attribute_based_price.htm ("Attribute-Based Discounts") |
+| sf.pricing_bundle_based_price.htm | ind.pricing_create_bundle_based_adjustments.htm |
+| sf.pricing_price_adjustment_matrix.htm | ind.pricing_price_adjustment_matrix.htm ("Dynamic Pricing With Price Adjustment Matrix") |
+| sf.product_catalog_qualification_rules_key_terms.htm | ind.product_catalog_qualification_rules.htm |
+| sf.product_catalog_view_and_assign_permission_set_licenses_in_product_catalog_management.htm | dropped; use the permission set table |
+| https://www.salesforce.com/company/legal/safe-harbor/ (HTTP 404) | none found — no citable Safe Harbor page |
+| trailhead.../modules/salesforce-implementation-strategies (404) | ind.setup_revenue_cloud.htm |
+
+**The lesson worth carrying:** the five `sf.*` ids all appeared as titled results in
+web search. Search returning a title is not evidence the URL resolves — for these,
+the article had moved to the `ind.` namespace and the old id 404s. Always render.
