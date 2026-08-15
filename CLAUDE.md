@@ -158,21 +158,24 @@ underneath.
 
 ## Deck state — as of 2026-08-15
 
-1,697 questions across 14 decks. **697 (41%) carry a reference with an actual URL.**
+1,697 questions across 14 decks. **834 (49%) carry a reference with an actual URL.**
 
-The jump from 1,549 / 549 is the Databricks deck arriving fully checked on
-2026-08-15: +148 questions, all 148 cited. It is the first non-Salesforce deck in
-the repo, and the first that was fact-checked in the same pass that imported it.
+The jump from 697 is the revenue-cloud pass on 2026-08-15: +137 cited, taking that
+deck from 0/137 to 137/137. No new questions arrived — this is the first pass in the
+repo that only added citations and corrections to an existing deck rather than
+importing one. Before it, the jump from 1,549 / 549 was the Databricks deck arriving
+fully checked the same day: +148 questions, all 148 cited, the first non-Salesforce
+deck in the repo and the first fact-checked in the same pass that imported it.
 
 Measure coverage with a URL test, not by looking for the `References:` marker. The
 app's parser (`src/lib/quiz.ts`) treats **every** non-empty line after the marker as
-a reference and does not require a URL, so 598 questions render a References section
-but only 559 have a link in it. The **39-question gap** is real content: prose like
+a reference and does not require a URL, so 861 questions render a References section
+but only 834 have a link in it. The **27-question gap** is real content: prose like
 "Salesforce Agentforce Documentation: SDR Agent Setup > Channels" rendered under a
 References heading with nothing to click, plus a handful of empty blocks. It degrades
 gracefully — `linkifySegments` only linkifies real URLs — but it is unverifiable by a
-learner and it inflates any naive coverage count. The gap is **agentforce 26,
-revenue-cloud 8, admin 3**.
+learner and it inflates any naive coverage count. The gap is now **agentforce 24,
+admin 3**; revenue-cloud's 8 were closed by the 2026-08-15 pass.
 
 That corrects a figure this file previously carried. The old row claimed a
 106-question gap split agentforce 73 / revenue-cloud 30 / admin 3. Measured per
@@ -197,7 +200,7 @@ column, not the Cited column.
 | salesforce-iam-architect | 116 | 116 | **Fully checked** (2026-08-10) — 3 keys moved, 7 reasoning fixes |
 | salesforce-admin | 154 | 33 | Partial; 13 keys moved (ADM-201 merge pass). 3 more render a References block whose URL is broken across lines — one shows a bare `htm` |
 | salesforce-agentforce-specialist | 122 | **0** | **Not cited at all.** 26 questions render a References block containing prose only (79 such lines), no URLs |
-| salesforce-revenue-cloud | 137 | **0** | **Not cited at all.** 10 questions render a References block with no URL — 2 carry prose, 8 are empty |
+| salesforce-revenue-cloud | 137 | 137 | **Fully checked** (2026-08-15) — 2 keys moved, 88 explanations rewritten. Its defect was **fabricated citations, not wrong answers**: 73 explanations quoted invented "Exact Extracts". 9 questions could not be settled and say so in their own prose |
 | salesforce-data-cloud-consultant | 100 | 0 | Uncited; 4 keys moved via comments |
 | salesforce-sharing-visibility | 136 | 0 | Uncited; 4 reasoning stamps |
 | salesforce-app-builder | 119 | 119 | **Fully checked** (2026-08-11) — 4 keys moved, 27 reasoning fixes, 3 defective option sets repaired. Q1–50 spot-rechecked: 10 sampled, 1 defect (a mechanism stated backwards), so the earlier batches read sound |
@@ -236,6 +239,22 @@ error), and one was a default reported as a ceiling — the same three shapes th
 file already lists under Recurring failure patterns, now confirmed on a second
 vendor.
 
+**Revenue Cloud is a third shape again, and its row will look wrong if you apply the
+rule above without reading this.** Its pass moved only **2 keys in 137** — a ~1.5%
+correction rate that, by the "a pass that corrects nothing is a red flag" heuristic,
+should read as a lazy pass. It was not. The defect in that deck was not in the answer
+key at all: **73 of 137 explanations quoted fabricated "Exact Extracts" from Salesforce
+guides that do not exist** ("Salesforce Revenue Cloud Platform Concepts", "Revenue Cloud
+Fulfillment Architecture Notes"), and the quoted sentences return no matches anywhere.
+88 explanations were rewritten to strip them.
+
+So the deck was generated with a *sound key and invented supporting prose* — the exact
+mirror of the IAM trap, where citations were attached to keys nobody had checked. The
+generalised rule is therefore **not** "few corrections means a bad pass" but: *ask which
+layer the generator got wrong.* A pass that moves few keys but rewrites most
+explanations is as real as one that moves many keys. Check the rewrite count alongside
+the correction count before judging either.
+
 ### Duplicates
 
 Cross-deck repeats are fine and deliberate — the same item legitimately appears
@@ -273,7 +292,7 @@ fix was to move the explanation onto the clean copy and drop the corrupted one.
 **Check both option sets before accepting the suggested keeper** — a long
 explanation is easy to transfer, a destroyed option set is not.
 
-**11 Salesforce pairs remain and must not be merged.** They read alike but their keys
+**10 Salesforce pairs remain and must not be merged.** They read alike but their keys
 point at genuinely different option text, so one of each pair is either wrong or a
 distinct question — resolving them is a fact-check, not a dedupe:
 
@@ -282,8 +301,7 @@ distinct question — resolving them is a fact-check, not a dedupe:
 | agentforce-specialist | `e6949181` vs `63afa960` — Model Playground vs Testing Center |
 | agentforce-specialist | `0b45cf29` vs `b7ffd87e` |
 | data-cloud-consultant | `b16bbc31` vs `e652607d` — "takes up to 24 hours" vs "available soon" |
-| revenue-cloud | `6f99fe4e` vs `ac4ee893` — AI prompt template vs contract extraction template |
-| revenue-cloud | `f5adf9ac` vs `f12dffa3` |
+| revenue-cloud | `f5adf9ac` vs `f12dffa3` — **the pair now contradicts itself.** The 2026-08-15 pass could not find a documented Revenue Cloud setting controlling renewal quote-vs-order, so both keys were left alone: `f5adf9ac` keys "Change the Revenue Cloud settings", `f12dffa3` keys "Override the standard Salesforce flow". The deck currently teaches both. On the product's configuration-over-customization pattern `f12dffa3` is the likely wrong copy — settle it by checking an org, not by reasoning |
 | dld | `2b7730d8` vs `42760192`; `a0fc764b` vs `ece03577` |
 | iam-architect | `cfcdee5c` vs `717f2404` |
 | platform-developer-2 | `f62513eb` vs `c74b1c3e` — **probably a true duplicate**: "Implement Database.Batchable interface" and "Database.Batchable" are the same answer differently worded. Left in place only because both copies are fully cited with ~3,000-character explanations, so pick the keeper deliberately |
@@ -297,12 +315,22 @@ versus a *database*; `1b743a58` vs `b8d8ba3d` are the same repair action worded 
 `c41ece0b` vs `0327f145` are the same question under the old and new names for
 Catalog Explorer. Both copies of the last two are annotated with the naming note.
 
-`find-duplicates.mjs` labels two of those eleven `SAME`. It is wrong on both, and
-they are worth knowing as the shape of its blind spot: `6f99fe4e`/`ac4ee893`
-differ only in the noun ("AI prompt template" vs "contract extraction template")
-and `681f22f4`/`7d2c8e5f` only in the qualifier ("partner *manager* users" vs
-"*individual* partner users"). One decisive word inside two otherwise identical
-sentences scores as agreement. **Read both copies; never remove on the label.**
+`find-duplicates.mjs` labelled two of the original eleven `SAME`, and the shape of
+its blind spot is worth knowing: `6f99fe4e`/`ac4ee893` differed only in the noun
+("AI prompt template" vs "contract extraction template") and `681f22f4`/`7d2c8e5f`
+only in the qualifier ("partner *manager* users" vs "*individual* partner users").
+One decisive word inside two otherwise identical sentences scores as agreement.
+**Read both copies; never remove on the label.**
+
+**`6f99fe4e`/`ac4ee893` has since been resolved, and it is the worked example of why
+these pairs are a fact-check rather than a dedupe.** The two carried identical stems
+and options with opposite keys, so one had to be wrong. The documentation settled it —
+a contract extraction template is *defined* as the thing holding attribute mapping and
+context mapping, while the AI prompt template shapes model instructions — so on
+2026-08-15 `6f99fe4e` moved B→A to match `ac4ee893`. **They now agree on stem, options
+and key, which makes them a true duplicate: re-run `find-duplicates.mjs` and pick a
+keeper.** Nothing was removed. This is the same effect the Databricks deck showed —
+a fact-check turning a `DIFFERS` pair into a `SAME` one — now confirmed on Salesforce.
 
 **Comments are the unhandled risk.** Supabase stores them keyed on question id,
 so removing a question orphans its comments. Supabase was not configured when the
