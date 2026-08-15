@@ -1,0 +1,89 @@
+{
+  "9cd76b59": {
+    "correct": "B",
+    "_src": "v2026-07-28.q73",
+    "stem": "A data engineer is processing ingested streaming tables and needs to filter out NULL values in the order_datetime column from the raw streaming table orders_raw",
+    "url": "https://www.freecram.net/question/GAQM.Databricks-Certified-Data-Engineer-Associate.v2026-07-28.q73/a-data-engineer-is-processing-ingested-streaming-tables-and-needs-to-filter-out-null-values-in-the-order_dateti",
+    "options": {
+      "A": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/769bf11e12e0cd47dbd9165dad865e94.jpg",
+      "B": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/18c4c7b69c2693b43cbbaa2ad9a3283f.jpg",
+      "C": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/d6f0fd7faaf969d56de79c0bb94bda24.jpg",
+      "D": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/76107d33886717ae194c43d3952e8d4b.jpg"
+    }
+  },
+  "5bd76bd3": {
+    "correct": "C",
+    "_src": "v2026-07-28.q73",
+    "stem": "A data engineer streams customer orders into a Kafka topic (orders_topic) and is currently writing the ingestion script of a DLT pipeline. The data engineer nee",
+    "url": "https://www.freecram.net/question/GAQM.Databricks-Certified-Data-Engineer-Associate.v2026-07-28.q73/a-data-engineer-streams-customer-orders-into-a-kafka-topic-orders_topic-and-is-currently-writing-the",
+    "options": {
+      "A": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/1d6230695fff12e2e1c1b2340f25a497.jpg",
+      "B": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/86c8c1a94239c5b3175a7832a408f4fe.jpg",
+      "C": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/859b7b41f917a4df54fc782d66b26c6b.jpg",
+      "D": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/b9588aa0a21e854ff71946d8358bdc08.jpg"
+    }
+  },
+  "c05bd089": {
+    "correct": "A",
+    "_src": "v2026-07-28.q73",
+    "stem": "A Data Engineer is building a simple data pipeline using Delta Live Tables (DLT) in Databricksto ingest customer data. The raw customer data is stored in a clou",
+    "url": "https://www.freecram.net/question/GAQM.Databricks-Certified-Data-Engineer-Associate.v2026-07-28.q73/a-data-engineer-is-building-a-simple-data-pipeline-using-delta-live-tables-dlt-in-databricksto-ingest",
+    "options": {
+      "A": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/3b757a88075a267aa6b635c1563ce6cd.jpg",
+      "B": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/01210aad0547861c50e4e0c1ea1224cd.jpg",
+      "C": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/65f1b447d353a4e76866e0ae6f7c2773.jpg",
+      "D": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/bdc08ad0a133f55238a7b67a18bf694e.jpg"
+    }
+  },
+  "90a659a5": {
+    "correct": "C",
+    "_src": "v2026-06-09.q113",
+    "stem": "A data engineer needs to apply custom logic to identify employees with more than 5 years of experience in array column employees in table stores. The custom log",
+    "url": "https://www.freecram.net/question/GAQM.Databricks-Certified-Data-Engineer-Associate.v2026-06-09.q113/a-data-engineer-needs-to-apply-custom-logic-to-identify-employees-with-more-than-5-years-of-experience",
+    "options": {
+      "A": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/f69b54c898d58af3737db3deb02c4db0.jpg",
+      "B": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/1be4225a0f494a4fdd23e5aa16bca41e.jpg",
+      "C": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/086ef5b2ab408637a69b72c3b6312e72.jpg",
+      "D": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/4ccac9e7de3a89cc7f658f44aae2d51f.jpg",
+      "E": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/5f1dd6d82c460374f4e8aee2eb795c79.jpg"
+    }
+  },
+  "e15b1b0a": {
+    "correct": "A",
+    "_src": "v2026-06-09.q113",
+    "stem": "A data architect has determined that a table of the following format is necessary: Which of the following code blocks uses SQL DDL commands to create an empty D",
+    "url": "https://www.freecram.net/question/GAQM.Databricks-Certified-Data-Engineer-Associate.v2026-06-09.q113/a-data-architect-has-determined-that-a-table-of-the-following-format-is-necessary-exhibit-which-of",
+    "options": {
+      "A": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/2970b88fc094d7a9c2ba1476a9a267d6.jpg",
+      "B": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/26366317062bbb3aa81819bc2afbda1c.jpg",
+      "C": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/94c4c403db28bffd79d61f15a21f9b4e.jpg",
+      "D": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/5be3f255dca6caa6881414555f31d910.jpg",
+      "E": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/b012100600219f53ae40052969341818.jpg"
+    }
+  },
+  "ef32d90b": {
+    "correct": "E",
+    "_src": "v2026-06-09.q113",
+    "stem": "A data engineer needs to apply custom logic to string column city in table stores for a specific use case. In order to apply this custom logic at scale, the dat",
+    "url": "https://www.freecram.net/question/GAQM.Databricks-Certified-Data-Engineer-Associate.v2026-06-09.q113/a-data-engineer-needs-to-apply-custom-logic-to-string-column-city-in-table-stores-for-a-specific-use",
+    "options": {
+      "A": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/571e8b1134fc6c9d07bdd175bf9b591e.jpg",
+      "B": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/d9fe8f10705b529483ef95e700a1c233.jpg",
+      "C": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/c19c23b22090ae377382dadd96dd3443.jpg",
+      "D": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/b0c99429f93321d4635e6c72d6c3032c.jpg",
+      "E": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/071ef410f068aba58531413167412e09.jpg"
+    }
+  },
+  "4dd670d2": {
+    "correct": "A",
+    "_src": "v2026-06-09.q113",
+    "stem": "A data engineer is processing ingested streaming tables and needs to filter out NULL values in the order_datetime column from the raw streaming table orders_raw",
+    "url": "https://www.freecram.net/question/GAQM.Databricks-Certified-Data-Engineer-Associate.v2026-06-09.q113/a-data-engineer-is-processing-ingested-streaming-tables-and-needs-to-filter-out-null-values-in-the-order_dateti",
+    "options": {
+      "A": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/bc8abe434583e7eb6688ee68da7359f2.jpg",
+      "B": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/2c5bacbab7bac5c874c077ebf703ea22.jpg",
+      "C": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/acd20230eeb1e8b73f7695954cad4743.jpg",
+      "D": "https://www.freecram.net/uploads/Databricks-Certified-Data-Engineer-Associate/952b9e5dca60d1200155d6b7716ec700.jpg"
+    }
+  }
+}

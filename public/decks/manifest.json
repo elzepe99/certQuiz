@@ -1,6 +1,14 @@
 {
   "decks": [
     {
+      "id": "databricks-data-engineer-associate",
+      "name": "Databricks Certified Data Engineer Associate",
+      "shortName": "Databricks DE Associate",
+      "description": "Associate-level certification covering Delta Lake, Delta Live Tables, incremental ingestion, Databricks SQL, workflows, and Unity Catalog governance.",
+      "file": "databricks-data-engineer-associate.json",
+      "accentColor": "#FF3621"
+    },
+    {
       "id": "salesforce-revenue-cloud",
       "name": "Salesforce Revenue Cloud Consultant",
       "shortName": "Revenue Cloud",

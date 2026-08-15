@@ -4,6 +4,7 @@ import { paymentRequestFlow } from './PaymentRequestFlow';
 import { historicalDataStore } from './HistoricalDataStore';
 import { eligibilityTimeout } from './EligibilityTimeout';
 import { dreamHouseDataModel } from './DreamHouseDataModel';
+import { employeeTableFormat } from './EmployeeTableFormat';
 
 export type QuestionDiagram = {
   /** The figure itself — a hand-authored inline SVG component. */
@@ -47,6 +48,8 @@ export const QUESTION_DIAGRAMS: Record<string, QuestionDiagram> = {
   '647f738a': { ...eligibilityTimeout, minWidth: 950 },
   // Data Architect: "a data model as shown in the image" — the DreamHouse ERD.
   bd39a845: { ...dreamHouseDataModel, minWidth: 900 },
+  // Databricks: "a table of the following format is necessary" — the target schema.
+  e15b1b0a: { ...employeeTableFormat, minWidth: 460 },
 };
 
 export function diagramFor(id: string | undefined): QuestionDiagram | undefined {
