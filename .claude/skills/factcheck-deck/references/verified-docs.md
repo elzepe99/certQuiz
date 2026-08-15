@@ -709,3 +709,71 @@ listing. Check the `<h1>` and the breadcrumb, not just `document.title`.
 Old release-note URLs are the most fragile category — Salesforce reorganises them
 between releases. Prefer a current help article over a release note when both
 cover the fact.
+
+---
+
+# Verified Databricks documentation
+
+Added 2026-08-15 during the first Databricks pass (Data Engineer Associate, 153 q).
+Every URL below was fetched and returned HTTP 200; the ones carrying a decisive fact
+were additionally rendered and read.
+
+## Databricks docs behave differently from Salesforce Help — this is the important part
+
+**`docs.databricks.com` returns honest 404s.** An invented article id gets a real
+`404` status, unlike `help.salesforce.com`, which answers every id with `200`. So a
+plain status check is a *reliable* deadness test here, and URL verification is far
+cheaper on this vendor than on Salesforce.
+
+Two caveats that still bite:
+
+- In a **browser** a 404 renders a friendly "We can't find the article you're looking
+  for" page with the generic title `Databricks on AWS`, so it *looks* like a soft 404.
+  The status underneath is genuinely 404 — check the status, not the rendering.
+- A `200` proves the page exists, **not** that it contains your claim. That trap is
+  live here: this deck shipped a Delta Live Tables *tutorial* URL as the citation on a
+  *table-permissions* question. It renders perfectly and is plainly the wrong page.
+
+Fastest bulk check: open any `docs.databricks.com` page in the browser tool, then
+`fetch()` candidate URLs from that origin in a loop — same-origin, so no CORS, and the
+final `r.url` shows you where each one redirects.
+
+## Renames and redirects to know
+
+| Old | Now | Notes |
+|---|---|---|
+| `/dlt/…` | `/ldp/…` | **Delta Live Tables → Lakeflow Declarative Pipelines.** All DLT URLs redirect |
+| `/delta-sharing/` | `/opensharing` | |
+| `/delta/vacuum`, `/delta/history`, `/delta/clustering`, `/delta/update-schema` | `/tables/…` | The `/delta/` tree largely moved under `/tables/` |
+| `/compute/sql-warehouse/serverless` | `/admin/sql/serverless` | |
+| `/structured-streaming/` | `/structured-streaming/concepts` | |
+| Data Explorer | **Catalog Explorer** | UI rename; decks still say Data Explorer |
+| `/connect/external-systems/jdbc` | `/archive/connectors/jdbc` | Redirects into `/archive/` — **don't cite**, it will age out |
+
+Dead guesses that looked plausible and were not real: `/jobs/task-dependencies`
+(use `/jobs/configure-task`), `/jobs/schedule` (use `/jobs/triggers`), `/ldp/python-dev`,
+`/ldp/sql-ref`, `/sql/language-manual/functions/groupby`, `/tables/write`,
+`/notebooks/variable-explorer`, `/optimizations/join-strategies`.
+
+## Settled facts
+
+| Fact | Value | Source |
+|---|---|---|
+| Job cluster notebook output ceiling | **30 MB**. Distinct from *maximum cell output size*, which **defaults to 10 MB** and is configurable 1–20 MB via `%set_cell_max_output_size_in_mb`. A classic default-vs-ceiling trap | Known limitations of Databricks notebooks |
+| Expectation actions | `EXPECT` = warn (invalid rows **written** to target); `EXPECT … ON VIOLATION DROP ROW` = dropped before write, count logged with dataset metrics; `EXPECT … ON VIOLATION FAIL UPDATE` = update fails, manual intervention needed | Manage data quality with pipeline expectations |
+| Notebook cell languages | **One language per cell.** A `%python`/`%sql` magic overrides the *whole* cell — it does not mix languages within one | Develop code in Databricks notebooks |
+| Auto Loader schema inference | For formats that don't encode types (**JSON, CSV, XML**) all columns infer as **strings**. Samples first **50 GB or 1000 files** | Configure schema inference and evolution in Auto Loader |
+| `cloudFiles.schemaEvolutionMode` | `addNewColumns` (default, fails then restarts with new schema), `addNewColumnsWithTypeWidening`, `rescue`, `failOnNewColumns` (fails and does **not** restart), `none` | same |
+| `Trigger.Once` | **Deprecated** since DBR 11.3 LTS — use `Trigger.AvailableNow`. `AvailableNow` splits the backlog into **multiple** incremental batches; `Once` uses a single batch | Configure Structured Streaming trigger intervals |
+| Intelligent Workload Management (IWM) | **Serverless SQL warehouses only.** Documented as enhancing "Databricks SQL Serverless's ability to process large numbers of queries quickly and cost-effectively". Pro gets Photon + Predictive IO; Classic gets Photon only | SQL warehouse types |
+| Unity Catalog lineage retention | **Indefinite** (all lineage captured after 2024-09-01). Not 90 days, not 3 months | Lineage in Unity Catalog |
+| Dropping UC tables | **Managed** → metadata *and* underlying data files removed. **External** → metadata only, data files left intact | Work with external tables |
+| `TBLPROPERTIES` syntax | Requires parenthesised key-value pairs: `TBLPROPERTIES ('PII' = 'true')`. A bare `TBLPROPERTIES PII` is a **syntax error** — `COMMENT "…"` is what takes a bare string literal | Table properties and table options |
+| Notebook debugger | Provides breakpoints, step-by-step execution and a **variable explorer pane**. A breakpoint stops *before* the line runs — it does **not** raise type errors | Debug Databricks notebooks |
+| Git folders (Repos) | Now support **merge, rebase, resolve conflicts, reset** in-workspace. Older exam items claiming merge must happen outside Databricks are **stale** | Create and manage Git folders |
+| Legacy vs UC grants | `USAGE ON DATABASE` is legacy Hive metastore. Unity Catalog uses `USE CATALOG` / `USE SCHEMA`, plus `SELECT` to read | Privileges reference |
+| Control vs compute plane | Control plane = Databricks-managed backend services in the Databricks account (web app). Compute plane = where data is processed; classic runs in the customer's cloud account | High-level architecture |
+
+**Not documented by Databricks**, despite appearing in this deck: any rule of thumb
+reading a **CPU-time vs task-time ratio** in the Spark UI. The Spark UI guide diagnoses
+slow stages by I/O, small files, skew, spill and slow UDFs, and never frames that ratio.
