@@ -7,6 +7,7 @@ import { TopicsList } from '@/components/TopicsList';
 import { OptionList } from '@/components/OptionList';
 import { ExplanationBlock } from '@/components/ExplanationBlock';
 import { RichText } from '@/components/RichText';
+import { QuestionDiagram } from '@/components/QuestionDiagram';
 import { ActionBar } from '@/components/ActionBar';
 import { SessionTimer } from '@/components/SessionTimer';
 import { PerformanceCard } from '@/components/PerformanceCard';
@@ -234,6 +235,8 @@ export function QuizView() {
             >
               <RichText text={q.question} size="md" />
             </h1>
+
+            <QuestionDiagram questionId={q.id} />
 
             <div className="mt-7">
               <OptionList />

@@ -5,3 +5,9 @@ _debug_page.html
 # Python
 __pycache__/
 *.pyc
+
+# Raw scrape dumps. The deck in public/decks/ is the product; these are the
+# intermediate JSON the scraper emitted before dedupe and fact-checking, and
+# the Aug 2026 cleanup established that raw dumps do not live in the tree.
+# Keep them locally while a pass is in flight, then let them go.
+databricks-v*.json

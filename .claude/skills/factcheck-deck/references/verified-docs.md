@@ -114,6 +114,8 @@ looking anything up — these recur constantly across Salesforce certifications.
 | External ID | "An external ID field contains record identifiers from a system outside of Salesforce. You can use an external ID field to update or **upsert** records using the API... you can use this field to **prevent duplicates by also marking the field as Unique**." Up to **25** per object; auto-number, email, number or text only | Custom Field Attributes |
 | Sandbox licences bundle Developer sandboxes | "Developer sandboxes **aren't available for purchase** but are bundled with add-on sandboxes of other types. The Partial Copy Sandbox add-on is bundled with **10**. The Full Sandbox add-on is bundled with **15**." Developer Pro must be bought. Refresh/storage: Developer 1 day / 200 MB, Developer Pro 1 day / 1 GB, Partial 5 days / 5 GB, Full 29 days / production-sized | Sandbox Licenses and Storage Limits by Type |
 | Process Builder action list | Complete and closed: create a record, invoke another process, Chatter post, quick action, Quip, launch a flow, send an email, custom notification, survey invitation, submit for approval, update records, call Apex. **No delete action and no outbound message action** — outbound messages belong to Workflow Rules | Add Actions to Your Process |
+| Process Builder cannot run on delete | Its Record Change trigger offers exactly two settings — "**only when a record is created**" and "**when a record is created or edited**" — and its only other trigger types are Event (platform event) and Invocable. There is no delete trigger under any configuration. Record-triggered **flows** do run on delete and can block one with a Custom Error element, so any "prevent/gate a deletion" item separates cleanly along this line. This moved an App Builder key | Configure the Process Trigger; Custom Error Element |
+| Classic approval process automated actions | **Exactly four: Task, Email Alert, Field Update, Outbound Message.** No delete, no flow, no Apex. So an approval process can route a decision and stamp the outcome onto a field, but it can never itself delete a record or stop someone deleting one — "gate a delete with approval" always needs a second mechanism to enforce it | Add Automated Actions to a Classic Approval Process |
 | CASE() vs nested IF() | CASE "checks a given expression against a series of values. **If the expression is equal to a value**, returns the corresponding result" — equality only, so it cannot express a numeric range. Salesforce's own Case Age colour-indicator sample uses nested `IF()` with `IMAGE()`; the picklist samples use `CASE()` | CASE; Sample Image Link Formulas |
 
 Every row above now names a source that was opened and read. If you add a row you
@@ -534,6 +536,9 @@ id 404s, try `sf.` before assuming the article is gone.
 **Automation**
 - **Salesforce Workflow Rules & Process Builder End of Support** — https://help.salesforce.com/s/articleView?id=000389396&language=en_US&type=1
 - **Add Actions to Your Process** — https://help.salesforce.com/s/articleView?id=platform.process_action.htm&language=en_US&type=5
+- **Configure the Process Trigger** — https://help.salesforce.com/s/articleView?id=sf.process_start.htm&language=en_US&type=5
+  Enumerates the Record Change trigger settings; the `platform.` and `sf.process_which_object` variants both 404.
+- **Add Automated Actions to a Classic Approval Process** — https://help.salesforce.com/s/articleView?id=platform.approvals_automated_actions.htm&language=en_US&type=5
 - **Workflow Limits** — https://help.salesforce.com/s/articleView?id=platform.workflow_limits.htm&language=en_US&type=5
 - **Field Updates That Reevaluate Workflow Rules** — https://help.salesforce.com/s/articleView?id=platform.workflow_field_updates_reevalute_wf.htm&language=en_US&type=5
 - **Considerations for Field Update Actions** — https://help.salesforce.com/s/articleView?id=platform.workflow_field_update_considerations.htm&language=en_US&type=5
@@ -704,3 +709,71 @@ listing. Check the `<h1>` and the breadcrumb, not just `document.title`.
 Old release-note URLs are the most fragile category — Salesforce reorganises them
 between releases. Prefer a current help article over a release note when both
 cover the fact.
+
+---
+
+# Verified Databricks documentation
+
+Added 2026-08-15 during the first Databricks pass (Data Engineer Associate, 153 q).
+Every URL below was fetched and returned HTTP 200; the ones carrying a decisive fact
+were additionally rendered and read.
+
+## Databricks docs behave differently from Salesforce Help — this is the important part
+
+**`docs.databricks.com` returns honest 404s.** An invented article id gets a real
+`404` status, unlike `help.salesforce.com`, which answers every id with `200`. So a
+plain status check is a *reliable* deadness test here, and URL verification is far
+cheaper on this vendor than on Salesforce.
+
+Two caveats that still bite:
+
+- In a **browser** a 404 renders a friendly "We can't find the article you're looking
+  for" page with the generic title `Databricks on AWS`, so it *looks* like a soft 404.
+  The status underneath is genuinely 404 — check the status, not the rendering.
+- A `200` proves the page exists, **not** that it contains your claim. That trap is
+  live here: this deck shipped a Delta Live Tables *tutorial* URL as the citation on a
+  *table-permissions* question. It renders perfectly and is plainly the wrong page.
+
+Fastest bulk check: open any `docs.databricks.com` page in the browser tool, then
+`fetch()` candidate URLs from that origin in a loop — same-origin, so no CORS, and the
+final `r.url` shows you where each one redirects.
+
+## Renames and redirects to know
+
+| Old | Now | Notes |
+|---|---|---|
+| `/dlt/…` | `/ldp/…` | **Delta Live Tables → Lakeflow Declarative Pipelines.** All DLT URLs redirect |
+| `/delta-sharing/` | `/opensharing` | |
+| `/delta/vacuum`, `/delta/history`, `/delta/clustering`, `/delta/update-schema` | `/tables/…` | The `/delta/` tree largely moved under `/tables/` |
+| `/compute/sql-warehouse/serverless` | `/admin/sql/serverless` | |
+| `/structured-streaming/` | `/structured-streaming/concepts` | |
+| Data Explorer | **Catalog Explorer** | UI rename; decks still say Data Explorer |
+| `/connect/external-systems/jdbc` | `/archive/connectors/jdbc` | Redirects into `/archive/` — **don't cite**, it will age out |
+
+Dead guesses that looked plausible and were not real: `/jobs/task-dependencies`
+(use `/jobs/configure-task`), `/jobs/schedule` (use `/jobs/triggers`), `/ldp/python-dev`,
+`/ldp/sql-ref`, `/sql/language-manual/functions/groupby`, `/tables/write`,
+`/notebooks/variable-explorer`, `/optimizations/join-strategies`.
+
+## Settled facts
+
+| Fact | Value | Source |
+|---|---|---|
+| Job cluster notebook output ceiling | **30 MB**. Distinct from *maximum cell output size*, which **defaults to 10 MB** and is configurable 1–20 MB via `%set_cell_max_output_size_in_mb`. A classic default-vs-ceiling trap | Known limitations of Databricks notebooks |
+| Expectation actions | `EXPECT` = warn (invalid rows **written** to target); `EXPECT … ON VIOLATION DROP ROW` = dropped before write, count logged with dataset metrics; `EXPECT … ON VIOLATION FAIL UPDATE` = update fails, manual intervention needed | Manage data quality with pipeline expectations |
+| Notebook cell languages | **One language per cell.** A `%python`/`%sql` magic overrides the *whole* cell — it does not mix languages within one | Develop code in Databricks notebooks |
+| Auto Loader schema inference | For formats that don't encode types (**JSON, CSV, XML**) all columns infer as **strings**. Samples first **50 GB or 1000 files** | Configure schema inference and evolution in Auto Loader |
+| `cloudFiles.schemaEvolutionMode` | `addNewColumns` (default, fails then restarts with new schema), `addNewColumnsWithTypeWidening`, `rescue`, `failOnNewColumns` (fails and does **not** restart), `none` | same |
+| `Trigger.Once` | **Deprecated** since DBR 11.3 LTS — use `Trigger.AvailableNow`. `AvailableNow` splits the backlog into **multiple** incremental batches; `Once` uses a single batch | Configure Structured Streaming trigger intervals |
+| Intelligent Workload Management (IWM) | **Serverless SQL warehouses only.** Documented as enhancing "Databricks SQL Serverless's ability to process large numbers of queries quickly and cost-effectively". Pro gets Photon + Predictive IO; Classic gets Photon only | SQL warehouse types |
+| Unity Catalog lineage retention | **Indefinite** (all lineage captured after 2024-09-01). Not 90 days, not 3 months | Lineage in Unity Catalog |
+| Dropping UC tables | **Managed** → metadata *and* underlying data files removed. **External** → metadata only, data files left intact | Work with external tables |
+| `TBLPROPERTIES` syntax | Requires parenthesised key-value pairs: `TBLPROPERTIES ('PII' = 'true')`. A bare `TBLPROPERTIES PII` is a **syntax error** — `COMMENT "…"` is what takes a bare string literal | Table properties and table options |
+| Notebook debugger | Provides breakpoints, step-by-step execution and a **variable explorer pane**. A breakpoint stops *before* the line runs — it does **not** raise type errors | Debug Databricks notebooks |
+| Git folders (Repos) | Now support **merge, rebase, resolve conflicts, reset** in-workspace. Older exam items claiming merge must happen outside Databricks are **stale** | Create and manage Git folders |
+| Legacy vs UC grants | `USAGE ON DATABASE` is legacy Hive metastore. Unity Catalog uses `USE CATALOG` / `USE SCHEMA`, plus `SELECT` to read | Privileges reference |
+| Control vs compute plane | Control plane = Databricks-managed backend services in the Databricks account (web app). Compute plane = where data is processed; classic runs in the customer's cloud account | High-level architecture |
+
+**Not documented by Databricks**, despite appearing in this deck: any rule of thumb
+reading a **CPU-time vs task-time ratio** in the Spark UI. The Spark UI guide diagnoses
+slow stages by I/O, small files, skew, spill and slow UDFs, and never frames that ratio.
