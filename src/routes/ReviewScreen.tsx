@@ -7,6 +7,7 @@ import { loadProgress } from '@/lib/storage';
 import { isCorrect, parseExplanation, getOptions } from '@/lib/quiz';
 import { CorrectionNotice } from '@/components/CorrectionNotice';
 import { RichText } from '@/components/RichText';
+import { QuestionDiagram } from '@/components/QuestionDiagram';
 
 export function ReviewScreen() {
   const { deckId } = useParams<{ deckId: string }>();
@@ -192,7 +193,9 @@ export function ReviewScreen() {
                       className="border-t px-4 pb-4 pt-3"
                       style={{ borderColor: 'var(--border-subtle)' }}
                     >
-                      <ul className="flex flex-col gap-1.5">
+                      <QuestionDiagram questionId={q.id} compact />
+
+                      <ul className="mt-3 flex flex-col gap-1.5">
                         {opts.map(({ letter, text }) => {
                           const isCorrectOpt = q.correct
                             .split(',')
