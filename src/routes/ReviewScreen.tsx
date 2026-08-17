@@ -6,6 +6,8 @@ import { useDeck, useManifest } from '@/lib/decks';
 import { loadProgress } from '@/lib/storage';
 import { isCorrect, parseExplanation, getOptions } from '@/lib/quiz';
 import { CorrectionNotice } from '@/components/CorrectionNotice';
+import { RichText } from '@/components/RichText';
+import { QuestionDiagram } from '@/components/QuestionDiagram';
 
 export function ReviewScreen() {
   const { deckId } = useParams<{ deckId: string }>();
@@ -167,10 +169,10 @@ export function ReviewScreen() {
                         {flagged ? ' · flagged' : ''}
                       </span>
                       <span
-                        className="mt-1 block whitespace-pre-line font-serif text-[18px] leading-snug"
+                        className="mt-1 block font-serif text-[18px] leading-snug"
                         style={{ color: 'var(--text-primary)' }}
                       >
-                        {q.question}
+                        <RichText text={q.question} size="sm" />
                       </span>
                       <span
                         className="mt-2 block font-mono text-[11px] tabular-nums"
@@ -191,7 +193,9 @@ export function ReviewScreen() {
                       className="border-t px-4 pb-4 pt-3"
                       style={{ borderColor: 'var(--border-subtle)' }}
                     >
-                      <ul className="flex flex-col gap-1.5">
+                      <QuestionDiagram questionId={q.id} compact />
+
+                      <ul className="mt-3 flex flex-col gap-1.5">
                         {opts.map(({ letter, text }) => {
                           const isCorrectOpt = q.correct
                             .split(',')
@@ -222,7 +226,9 @@ export function ReviewScreen() {
                               <span className="font-mono text-[11px] font-medium">
                                 {letter}
                               </span>
-                              <span className="whitespace-pre-line">{text}</span>
+                              <span className="min-w-0 flex-1">
+                                <RichText text={text} size="sm" />
+                              </span>
                             </li>
                           );
                         })}
@@ -237,10 +243,10 @@ export function ReviewScreen() {
                             Explanation
                           </div>
                           <div
-                            className="mt-1.5 whitespace-pre-line text-[13px] leading-[1.65]"
+                            className="mt-1.5 text-[13px] leading-[1.65]"
                             style={{ color: 'var(--text-secondary)' }}
                           >
-                            {parsed.body}
+                            <RichText text={parsed.body} size="sm" />
                           </div>
                         </div>
                       ) : null}

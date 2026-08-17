@@ -61,6 +61,40 @@ npm run preview
    ```
 3. Redeploy. No code changes needed.
 
+## Code snippets in questions
+
+Question stems, options, and explanations can contain code. It is rendered in a
+monospace block with its indentation preserved and long lines scrolling
+horizontally, rather than reflowed into the surrounding serif — see
+`src/lib/richtext.ts` and `src/components/RichText.tsx`.
+
+Detection is automatic: a line-by-line heuristic tuned to Apex, SOQL/SOSL, and
+Visualforce/LWC markup. Most decks need nothing. It is deliberately conservative
+— prose that merely mentions an API (`"Annotate the method with @AuraEnabled."`)
+stays prose.
+
+When the heuristic gets a question wrong, fence the snippet. Fences win outright:
+if a string contains any, the heuristic does not run on it at all.
+
+````text
+Given the following code, which statement is true?
+```apex
+public class AccountService {
+    // …
+}
+```
+````
+
+Single backticks mark inline code inside a sentence: `` `Database.insert()` ``.
+
+After changing any rule in `richtext.ts`, run the regression tests — they pin
+real strings from the decks, and the deck sweep at the end will show a count
+spike if a rule starts over-firing:
+
+```sh
+npm run test:richtext
+```
+
 ## Routes
 
 | Path                            | View                    |

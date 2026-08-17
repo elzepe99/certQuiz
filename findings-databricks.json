@@ -1,0 +1,1054 @@
+{
+  "deck": "public/decks/databricks-data-engineer-associate.json",
+  "reviewed": "2026-08-15",
+  "findings": [
+    {
+      "id": "253200f6",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/ldp/expectations"
+      ]
+    },
+    {
+      "id": "ae5406b2",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/notebooks/notebook-limitations"
+      ]
+    },
+    {
+      "id": "5acae1e0",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/notebooks/notebooks-code"
+      ]
+    },
+    {
+      "id": "27d6e2a9",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/compute/pool-index"
+      ]
+    },
+    {
+      "id": "f649f00e",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/compute/serverless/"
+      ]
+    },
+    {
+      "id": "e22e750b",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby"
+      ]
+    },
+    {
+      "id": "714c3513",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby"
+      ]
+    },
+    {
+      "id": "b982701e",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-functions-builtin"
+      ]
+    },
+    {
+      "id": "5e449a1e",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using"
+      ]
+    },
+    {
+      "id": "5b22314e",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/tables/external"
+      ]
+    },
+    {
+      "id": "f163d861",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/repos/git-operations-with-repos"
+      ]
+    },
+    {
+      "id": "3c490978",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into"
+      ]
+    },
+    {
+      "id": "bc754c65",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/dev-tools/bundles/"
+      ]
+    },
+    {
+      "id": "e86e463b",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/ldp/expectations"
+      ]
+    },
+    {
+      "id": "d5ed9d2a",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/dev-tools/bundles/",
+        "https://docs.databricks.com/aws/en/dev-tools/ci-cd"
+      ]
+    },
+    {
+      "id": "607579bf",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/schema"
+      ]
+    },
+    {
+      "id": "09230e35",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/compute/configure"
+      ]
+    },
+    {
+      "id": "d205b9c7",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/jobs/configure-task"
+      ]
+    },
+    {
+      "id": "9df48f77",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/opensharing"
+      ]
+    },
+    {
+      "id": "ef8652ae",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/repos/"
+      ]
+    },
+    {
+      "id": "630dc828",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/admin/sql/serverless"
+      ]
+    },
+    {
+      "id": "9f03e206",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-pivot"
+      ]
+    },
+    {
+      "id": "391a3356",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/data-governance/unity-catalog/"
+      ]
+    },
+    {
+      "id": "e994ba67",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/structured-streaming/concepts"
+      ]
+    },
+    {
+      "id": "9cd76b59",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/ldp/expectations"
+      ]
+    },
+    {
+      "id": "a495c049",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/delta/"
+      ]
+    },
+    {
+      "id": "94a481b8",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/repos/git-operations-with-repos"
+      ]
+    },
+    {
+      "id": "39a9ae72",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/data-governance/unity-catalog/access-control/privileges-reference"
+      ]
+    },
+    {
+      "id": "c46dbf87",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/"
+      ]
+    },
+    {
+      "id": "42c11595",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/user/alerts/"
+      ]
+    },
+    {
+      "id": "2a715f47",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/lakehouse/",
+        "https://docs.databricks.com/aws/en/delta/"
+      ]
+    },
+    {
+      "id": "e37b5308",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using"
+      ]
+    },
+    {
+      "id": "8163487e",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/"
+      ]
+    },
+    {
+      "id": "1eb89e9b",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/getting-started/overview"
+      ]
+    },
+    {
+      "id": "93896ff1",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/ldp/configure-pipeline"
+      ]
+    },
+    {
+      "id": "883f4c22",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/query-federation/"
+      ]
+    },
+    {
+      "id": "0964845e",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/data-governance/unity-catalog/manage-privileges/admin-privileges"
+      ]
+    },
+    {
+      "id": "7770a34e",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into"
+      ]
+    },
+    {
+      "id": "721d10bc",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/ldp/expectations"
+      ]
+    },
+    {
+      "id": "4362d421",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/dev-tools/bundles/"
+      ]
+    },
+    {
+      "id": "0cc3a156",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/ldp/concepts/flows"
+      ]
+    },
+    {
+      "id": "d4cff52c",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/language-manual/functions/count_if"
+      ]
+    },
+    {
+      "id": "855493c1",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/opensharing/share-data-databricks"
+      ]
+    },
+    {
+      "id": "7d8befb9",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-setops"
+      ]
+    },
+    {
+      "id": "b3e97d70",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/discover/database-objects"
+      ]
+    },
+    {
+      "id": "5bd76bd3",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/ldp/",
+        "https://docs.databricks.com/aws/en/structured-streaming/concepts"
+      ]
+    },
+    {
+      "id": "c05bd089",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/ldp/"
+      ]
+    },
+    {
+      "id": "e5b58f83",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/compute/pool-index"
+      ]
+    },
+    {
+      "id": "d4bf69a2",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/compute/cluster-metrics",
+        "https://docs.databricks.com/aws/en/optimizations/spark-ui-guide/"
+      ]
+    },
+    {
+      "id": "cbad36b2",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/schema"
+      ]
+    },
+    {
+      "id": "8b96c6a7",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/ldp/concepts/streaming-tables"
+      ]
+    },
+    {
+      "id": "731b1431",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/pyspark/basics"
+      ]
+    },
+    {
+      "id": "d96fcc04",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/data-governance/unity-catalog/access-control/privileges-reference"
+      ]
+    },
+    {
+      "id": "9803cecf",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/jobs/monitor"
+      ]
+    },
+    {
+      "id": "3781f6d5",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/jobs/triggers"
+      ]
+    },
+    {
+      "id": "0caebf63",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/opensharing/share-data-databricks"
+      ]
+    },
+    {
+      "id": "ecd9e75b",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/ldp/configure-pipeline"
+      ]
+    },
+    {
+      "id": "c59ebbbc",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/user/alerts/"
+      ]
+    },
+    {
+      "id": "7fc931cb",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/admin/sql/serverless"
+      ]
+    },
+    {
+      "id": "47a349af",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/getting-started/overview"
+      ]
+    },
+    {
+      "id": "9582ab27",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/ldp/expectations"
+      ]
+    },
+    {
+      "id": "eda36319",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/lakehouse/medallion"
+      ]
+    },
+    {
+      "id": "a3d17a56",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/tables/external",
+        "https://docs.databricks.com/aws/en/tables/managed"
+      ]
+    },
+    {
+      "id": "d3fe1ff3",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby"
+      ]
+    },
+    {
+      "id": "be6c2bbb",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/tables/operations/vacuum",
+        "https://docs.databricks.com/aws/en/tables/history"
+      ]
+    },
+    {
+      "id": "e2b2b183",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/structured-streaming/triggers"
+      ]
+    },
+    {
+      "id": "5db322a2",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/jobs/configure-task"
+      ]
+    },
+    {
+      "id": "90a659a5",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/language-manual/functions/filter"
+      ]
+    },
+    {
+      "id": "9318411d",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/jobs/repair-job-failures"
+      ]
+    },
+    {
+      "id": "cd5c6fb5",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/structured-streaming/watermarks"
+      ]
+    },
+    {
+      "id": "87500e54",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/user/queries/schedule-query"
+      ]
+    },
+    {
+      "id": "7e554787",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/ldp/expectations"
+      ]
+    },
+    {
+      "id": "01a4251c",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/tables/managed"
+      ]
+    },
+    {
+      "id": "db601c4b",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/structured-streaming/triggers"
+      ]
+    },
+    {
+      "id": "3b73f7fd",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/data-governance/unity-catalog/data-lineage"
+      ]
+    },
+    {
+      "id": "260f002c",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/lakehouse/medallion"
+      ]
+    },
+    {
+      "id": "495c576a",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/jobs/compute"
+      ]
+    },
+    {
+      "id": "c6af1c01",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/dev-tools/bundles/"
+      ]
+    },
+    {
+      "id": "4f099cf4",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/tables/operations/vacuum"
+      ]
+    },
+    {
+      "id": "66dcd37c",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby"
+      ]
+    },
+    {
+      "id": "576c09d6",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/language-manual/delta-delete-from"
+      ]
+    },
+    {
+      "id": "e15b1b0a",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using"
+      ]
+    },
+    {
+      "id": "e1fce6fb",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/lakehouse/medallion"
+      ]
+    },
+    {
+      "id": "4139a66f",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/lakehouse/medallion"
+      ]
+    },
+    {
+      "id": "ef32d90b",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function"
+      ]
+    },
+    {
+      "id": "145c9e5f",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/query-federation/"
+      ]
+    },
+    {
+      "id": "17bff8a1",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/ldp/expectations"
+      ]
+    },
+    {
+      "id": "9356edb4",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/lakehouse/medallion"
+      ]
+    },
+    {
+      "id": "b830bd4a",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/language-manual/functions/count_if"
+      ]
+    },
+    {
+      "id": "8c02bf21",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/schema",
+        "https://docs.databricks.com/aws/en/tables/update-schema"
+      ]
+    },
+    {
+      "id": "f936e928",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/lakehouse/medallion"
+      ]
+    },
+    {
+      "id": "25c59e18",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/compute/sql-warehouse/"
+      ]
+    },
+    {
+      "id": "a65602bf",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/notebooks/notebooks-code"
+      ]
+    },
+    {
+      "id": "18a58c20",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/language-manual/delta-delete-from"
+      ]
+    },
+    {
+      "id": "e4e3a589",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/jobs/"
+      ]
+    },
+    {
+      "id": "ab519345",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using"
+      ]
+    },
+    {
+      "id": "393dfae5",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/tables/external"
+      ]
+    },
+    {
+      "id": "37d2584a",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-hints",
+        "https://docs.databricks.com/aws/en/optimizations/aqe"
+      ]
+    },
+    {
+      "id": "5c71f0db",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/notebooks/debugger"
+      ]
+    },
+    {
+      "id": "1b743a58",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/jobs/repair-job-failures"
+      ]
+    },
+    {
+      "id": "58e8c0c0",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/compute/serverless/limitations",
+        "https://docs.databricks.com/aws/en/compute/serverless/"
+      ]
+    },
+    {
+      "id": "4521d38c",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/tables/managed",
+        "https://docs.databricks.com/aws/en/views/"
+      ]
+    },
+    {
+      "id": "d19c13d0",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/delta/"
+      ]
+    },
+    {
+      "id": "1af41ff9",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/structured-streaming/checkpoints"
+      ]
+    },
+    {
+      "id": "b44046a7",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/structured-streaming/checkpoints"
+      ]
+    },
+    {
+      "id": "4156034b",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/dev-tools/databricks-connect/"
+      ]
+    },
+    {
+      "id": "b8479190",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/notebooks/debugger"
+      ]
+    },
+    {
+      "id": "85fa27f8",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/"
+      ]
+    },
+    {
+      "id": "6f2f2961",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/views/"
+      ]
+    },
+    {
+      "id": "42c02958",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/optimizations/"
+      ]
+    },
+    {
+      "id": "d1d9d3e4",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/spark/"
+      ]
+    },
+    {
+      "id": "cebba9ec",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/tables/clustering"
+      ]
+    },
+    {
+      "id": "d7737ad3",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/data-governance/unity-catalog/access-control/privileges-reference"
+      ]
+    },
+    {
+      "id": "b199b398",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/notebooks/widgets"
+      ]
+    },
+    {
+      "id": "5da4fd9e",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/data-governance/unity-catalog/access-control/privileges-reference"
+      ]
+    },
+    {
+      "id": "635bddb5",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/compute/serverless/"
+      ]
+    },
+    {
+      "id": "347e0272",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/pyspark/"
+      ]
+    },
+    {
+      "id": "cf9b73c2",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/dev-tools/databricks-connect/"
+      ]
+    },
+    {
+      "id": "c86a38ee",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/pyspark/"
+      ]
+    },
+    {
+      "id": "32080a59",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/data-governance/unity-catalog/manage-privileges"
+      ]
+    },
+    {
+      "id": "61f47f5f",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into"
+      ]
+    },
+    {
+      "id": "357e5f5f",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/",
+        "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/schema"
+      ]
+    },
+    {
+      "id": "047d9dcc",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/compute/sql-warehouse/warehouse-types"
+      ]
+    },
+    {
+      "id": "c41ece0b",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/discover/database-objects"
+      ]
+    },
+    {
+      "id": "0327f145",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/discover/database-objects"
+      ]
+    },
+    {
+      "id": "b75b484a",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/lakehouse/"
+      ]
+    },
+    {
+      "id": "3b2b15a2",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/dev-tools/bundles/"
+      ]
+    },
+    {
+      "id": "044f84a7",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/lakehouse/medallion"
+      ]
+    },
+    {
+      "id": "1d94fee4",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/jobs/compute"
+      ]
+    },
+    {
+      "id": "ac547586",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/lakehouse/"
+      ]
+    },
+    {
+      "id": "b2eac0e1",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/pyspark/"
+      ]
+    },
+    {
+      "id": "19f13e4f",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view"
+      ]
+    },
+    {
+      "id": "2decff00",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/jobs/compute"
+      ]
+    },
+    {
+      "id": "c25ad90d",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/pyspark/"
+      ]
+    },
+    {
+      "id": "0774a092",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/opensharing/share-data-open"
+      ]
+    },
+    {
+      "id": "80bcd63f",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-cache-cache-table"
+      ]
+    },
+    {
+      "id": "b92b838e",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/tables/data-skipping"
+      ]
+    },
+    {
+      "id": "b0ef3381",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/optimizations/"
+      ]
+    },
+    {
+      "id": "efaa02e1",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/ldp/",
+        "https://docs.databricks.com/aws/en/ldp/expectations"
+      ]
+    },
+    {
+      "id": "334c542a",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/optimizations/"
+      ]
+    },
+    {
+      "id": "da42fde3",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/data-governance/unity-catalog/access-control/privileges-reference"
+      ]
+    },
+    {
+      "id": "e0215c73",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/jobs/triggers"
+      ]
+    },
+    {
+      "id": "6a772acc",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/tables/managed"
+      ]
+    },
+    {
+      "id": "927c138b",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/pyspark/"
+      ]
+    },
+    {
+      "id": "e93d65ad",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using"
+      ]
+    },
+    {
+      "id": "b88bac23",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/tables/tune-file-size"
+      ]
+    },
+    {
+      "id": "6c62630d",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/lakehouse/medallion"
+      ]
+    },
+    {
+      "id": "b8d8ba3d",
+      "verdict": "confirmed",
+      "references": [
+        "https://docs.databricks.com/aws/en/jobs/repair-job-failures"
+      ]
+    }
+  ]
+}

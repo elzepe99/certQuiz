@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { Check, X } from 'lucide-react';
 import { useQuiz } from '@/state/quizStore';
 import { getOptions, isMultiCorrectPrompt } from '@/lib/quiz';
+import { RichText } from '@/components/RichText';
 
 export function OptionList() {
   const questions = useQuiz((s) => s.questions);
@@ -45,7 +46,7 @@ export function OptionList() {
               else selectOption(letter);
             }}
             disabled={isAnswered}
-            className={`relative flex items-start gap-4 rounded-[12px] border px-5 py-4 text-left transition-all ${
+            className={`relative flex items-start gap-4 rounded-[12px] border py-4 pl-5 pr-12 text-left transition-all ${
               !isAnswered ? 'hover:border-[color:var(--border-strong)]' : ''
             } ${dimmed ? 'opacity-55' : ''}`}
             style={optionStyle(isSelected, showCorrect, showWrong)}
@@ -57,10 +58,10 @@ export function OptionList() {
               {letter}
             </span>
             <span
-              className="whitespace-pre-line pt-1 text-[15px] leading-relaxed"
+              className="min-w-0 flex-1 pt-1 text-[15px] leading-relaxed"
               style={{ color: 'var(--text-primary)' }}
             >
-              {text}
+              <RichText text={text} size="sm" />
             </span>
             <Indicator isSelected={isSelected} showCorrect={showCorrect} showWrong={showWrong} />
           </button>

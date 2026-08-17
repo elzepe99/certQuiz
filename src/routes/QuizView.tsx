@@ -6,6 +6,8 @@ import { QuestionMap } from '@/components/QuestionMap';
 import { TopicsList } from '@/components/TopicsList';
 import { OptionList } from '@/components/OptionList';
 import { ExplanationBlock } from '@/components/ExplanationBlock';
+import { RichText } from '@/components/RichText';
+import { QuestionDiagram } from '@/components/QuestionDiagram';
 import { ActionBar } from '@/components/ActionBar';
 import { SessionTimer } from '@/components/SessionTimer';
 import { PerformanceCard } from '@/components/PerformanceCard';
@@ -228,11 +230,13 @@ export function QuizView() {
 
             <h1
               key={`q-${idx}`}
-              className="mt-3 max-w-[60ch] animate-fade-in whitespace-pre-line font-serif text-[28px] leading-[1.3] tracking-[-0.012em] sm:text-[30px]"
+              className="mt-3 max-w-[68ch] animate-fade-in font-serif text-[28px] leading-[1.3] tracking-[-0.012em] sm:text-[30px]"
               style={{ color: 'var(--text-primary)' }}
             >
-              {q.question}
+              <RichText text={q.question} size="md" />
             </h1>
+
+            <QuestionDiagram questionId={q.id} />
 
             <div className="mt-7">
               <OptionList />

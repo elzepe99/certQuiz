@@ -23,10 +23,10 @@ export function TopBar({ currentDeck, decks }: Props) {
 
   return (
     <header
-      className="flex h-[60px] shrink-0 items-center gap-4 border-b px-4"
+      className="flex h-[60px] shrink-0 items-center gap-2 border-b px-3 sm:gap-4 sm:px-4"
       style={{ background: 'var(--bg-panel)', borderColor: 'var(--border-subtle)' }}
     >
-      <Link to="/" className="flex items-center gap-2">
+      <Link to="/" className="flex shrink-0 items-center gap-2">
         <span
           className="block h-4 w-4 rounded-[3px]"
           style={{
@@ -34,8 +34,10 @@ export function TopBar({ currentDeck, decks }: Props) {
             boxShadow: '0 0 12px rgba(122, 184, 255, 0.35)',
           }}
         />
+        {/* The mark alone carries the home link on a phone; the wordmark is the
+            cheapest thing to trade for the deck name staying readable. */}
         <span
-          className="font-serif text-[19px] tracking-tight"
+          className="hidden font-serif text-[19px] tracking-tight sm:block"
           style={{ color: 'var(--text-primary)' }}
         >
           CertPrep
@@ -43,22 +45,22 @@ export function TopBar({ currentDeck, decks }: Props) {
       </Link>
 
       {currentDeck && decks ? (
-        <div ref={ref} className="relative">
+        <div ref={ref} className="relative min-w-0">
           <button
             onClick={() => setOpen((v) => !v)}
-            className="flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors hover:border-[color:var(--border-strong)]"
+            className="flex w-full min-w-0 items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors hover:border-[color:var(--border-strong)]"
             style={{
               background: 'var(--bg-panel-hi)',
               borderColor: 'var(--border-default)',
               color: 'var(--text-primary)',
             }}
           >
-            <span>{currentDeck.shortName}</span>
-            <ChevronDown size={14} style={{ color: 'var(--text-muted)' }} />
+            <span className="truncate">{currentDeck.shortName}</span>
+            <ChevronDown size={14} className="shrink-0" style={{ color: 'var(--text-muted)' }} />
           </button>
           {open ? (
             <div
-              className="absolute left-0 top-full z-30 mt-2 w-72 rounded-lg border p-1 shadow-xl"
+              className="absolute left-0 top-full z-30 mt-2 w-72 max-w-[calc(100vw-48px)] rounded-lg border p-1 shadow-xl"
               style={{
                 background: 'var(--bg-panel-hi)',
                 borderColor: 'var(--border-default)',
@@ -97,7 +99,7 @@ export function TopBar({ currentDeck, decks }: Props) {
         </div>
       ) : null}
 
-      <nav className="ml-auto flex items-center gap-1">
+      <nav className="ml-auto flex shrink-0 items-center gap-1">
         {currentDeck ? (
           <>
             <NavTab to={`/deck/${currentDeck.id}`} end>
@@ -108,7 +110,9 @@ export function TopBar({ currentDeck, decks }: Props) {
         ) : null}
       </nav>
 
-      <div className="flex items-center gap-2">
+      {/* Decorative only — no handler behind either control, so it is the first
+          thing to drop when the bar runs out of room on a phone. */}
+      <div className="hidden shrink-0 items-center gap-2 sm:flex">
         <button
           aria-label="Settings"
           className="rounded-md p-1.5 transition-colors hover:bg-[color:var(--bg-panel-hi)]"
