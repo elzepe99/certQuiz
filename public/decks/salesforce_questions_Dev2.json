@@ -608,12 +608,7 @@
     "optionE": "",
     "correct": "C",
     "explanation": "AccountController is declared with sharing, so getAllAccounts() returns only the Accounts the running user can see. The setup method creates 10 Accounts owned by an administrator and 20 owned by a standard user, and the assertion expects all 30 — a total only a user with View All Data sees. A test method runs as the user who executes it unless you say otherwise, so the fix is to run the call as the administrator.\nIt has to be done inside the test method. user1 and user2 are local variables of the @TestSetup method and are out of scope in getAllAccounts_apex_test, which is why the answer re-queries the administrator into memory before wrapping lines 15 and 16 in System.runAs. Running as the standard user instead would return only that user's 20 Accounts and fail the same assertion. Test.startTest() and Test.stopTest() give the enclosed code a fresh set of governor limits but change nothing about whose sharing applies, so neither option that leans on them repairs the test.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_tools_runas.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_keywords_sharing.htm",
-    "_cat": "Testing, Debugging, and Deployment",
-    "corrected": {
-      "date": "2026-08-09",
-      "via": "validation",
-      "note": "Answer C stands. The explanation was a bare restatement of the option text with no reasoning, so it gave a reader nothing to check — rewritten to name the two things that decide the item: 'with sharing' plus the running user, and the scope of user1."
-    }
+    "_cat": "Testing, Debugging, and Deployment"
   },
   {
     "id": "dbe97ce5",

@@ -1308,12 +1308,7 @@
     "explanation": "Unity Catalog captures lineage automatically for queries run on Databricks, down to the column level, and aggregates it across every workspace attached to the metastore. The documentation describes it as showing which queries and files populate a table, which jobs and notebooks transform it, and which dashboards consume the results -- so the graph spans notebooks, downstream tables and reports together, not any one of them alone.\nThat also disposes of the retention objection. Lineage data displayed in Catalog Explorer is retained indefinitely, with all lineage captured after September 1, 2024 available; there is no three-month window.\nReferences:\nhttps://docs.databricks.com/aws/en/data-governance/unity-catalog/data-lineage",
     "_cat": "Databricks Certified Data Engineer Associate",
     "_url": "https://www.freecram.net/question/GAQM.Databricks-Certified-Data-Engineer-Associate.v2026-06-09.q113/what-databricks-feature-can-be-used-to-check-the-data-sources-and-tables-used-in-a-workspace",
-    "_src": "v2026-06-09.q113",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer stands. Recorded the current retention explicitly because the distractor asserts a three-month limit: the documentation states lineage in Catalog Explorer is retained indefinitely, with data captured after 2024-09-01 available."
-    }
+    "_src": "v2026-06-09.q113"
   },
   {
     "id": "8c02bf21",
@@ -1495,12 +1490,7 @@
     "explanation": "When a job run fails partway through, Databricks lets you repair that run rather than start a fresh one: a repair re-executes only the failed and skipped tasks, reusing the successful output of everything upstream. After fixing the notebook, repairing is what gets the workflow to a completed state without paying for the tasks that already succeeded.\nRestarting or switching the cluster addresses nothing, because the failure came from the notebook code rather than the compute. Rerunning the whole pipeline would work but repeats successful work.\nOne wording note: in the Databricks UI the action is called Repair run, and it is initiated from the failed run. On a single-task workflow the distinction is cosmetic, since the one task is the whole run.\nReferences:\nhttps://docs.databricks.com/aws/en/jobs/repair-job-failures",
     "_cat": "Databricks Certified Data Engineer Associate",
     "_url": "https://www.freecram.net/question/GAQM.Databricks-Certified-Data-Engineer-Associate.v2026-06-09.q113/a-databricks-single-task-workflow-fails-at-the-last-task-due-to-an-error-in-a-notebook-the-data-engineer",
-    "_src": "v2026-06-09.q113",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer stands. Aligned the wording with the documented feature name, which is Repair run rather than repair the task; on a single-task workflow they refer to the same action."
-    }
+    "_src": "v2026-06-09.q113"
   },
   {
     "id": "5c71f0db",
@@ -2056,12 +2046,7 @@
     "explanation": "Catalog Explorer is where a table's permissions are reviewed. Selecting the table shows its owner and the privileges granted on it, which answers whether the engineer already has the access their pipeline needs. Jobs, Dashboards and Repos expose no table-level privilege information.\nCatalog Explorer is the current name for what earlier documentation called Data Explorer; a near-duplicate of this question elsewhere in the deck still uses the older label.\nReferences:\nhttps://docs.databricks.com/aws/en/discover/database-objects",
     "_cat": "Databricks Certified Data Engineer Associate",
     "_url": "https://www.freecram.net/question/GAQM.Databricks-Certified-Data-Engineer-Associate.v2026-06-09.q113/a-data-engineer-needs-to-use-a-delta-table-as-part-of-a-data-pipeline-but-they-do-not-know-if-they-have-104",
-    "_src": "v2026-06-09.q113",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer stands, but the reference was replaced. This question previously cited a Delta Live Tables pipelines tutorial, which renders fine and is plainly about pipelines rather than about reviewing table permissions -- a live citation that did not support its claim."
-    }
+    "_src": "v2026-06-09.q113"
   },
   {
     "id": "da42fde3",

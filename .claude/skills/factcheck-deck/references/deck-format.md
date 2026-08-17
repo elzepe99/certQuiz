@@ -69,6 +69,8 @@ when it did not.
   comment surfaced the problem.
 - `from` is recorded **only** when it differs from the new key, so a
   reasoning-only fix produces a stamp with no misleading arrow.
+- A stamp is a warning shown mid-study. Do not stamp one for prose that was
+  merely thin — see the verdict table below.
 - `date` defaults to the repo-wide `CORRECTION_DATE`. Pass it explicitly for a
   later pass so the stamp records when the review actually happened.
 - **Only one record is stored per question.** Correcting a question that was
@@ -85,10 +87,14 @@ when it did not.
     { "id": "c19a756b", "verdict": "confirmed",
       "references": ["https://help.salesforce.com/..."] },
 
-    { "id": "b054672a", "verdict": "reasoning",
+    { "id": "7a1c0d94", "verdict": "clarified",
       "explanation": "Rewritten prose, no References block — the script appends it.",
+      "references": ["https://developer.salesforce.com/..."] },
+
+    { "id": "b054672a", "verdict": "reasoning",
+      "explanation": "Rewritten prose stating the documented mechanism.",
       "references": ["https://developer.salesforce.com/..."],
-      "note": "Answer stands; the mechanism was stated imprecisely." },
+      "note": "Answer stands; the explanation taught a governor limit that does not exist." },
 
     { "id": "9f21ab03", "verdict": "corrected",
       "was": "A", "correct": "C,D",
@@ -104,8 +110,17 @@ when it did not.
 | Verdict | Meaning | Requires | Stamps a correction |
 |---|---|---|---|
 | `confirmed` | Answer right, reasoning sound | `references` | no |
-| `reasoning` | Answer right, explanation wrong or vague | `explanation`, `references`, `note` | yes, no arrow |
+| `clarified` | Answer right, explanation improved but nothing it said was false | `explanation`, `references` (a `note` is rejected) | no |
+| `reasoning` | Answer right, explanation *wrong* — or the item itself is defective | `explanation`, `references`, `note` | yes, no arrow |
 | `corrected` | Answer wrong | `was`, `correct`, `explanation`, `references`, `note` | yes, with arrow |
+
+The split between `clarified` and `reasoning` is what keeps the notice meaningful.
+Ask whether a learner who believed the old explanation would now hold a false
+belief. If yes — a fabricated limit, an argument for the option the key does not
+name, a retired capability, a broken item — it is `reasoning`, and the note says
+which belief. If the prose merely reads better now, it is `clarified` and the
+question shows nothing. Notices that all say "explanation adjusted" train the
+reader to skip the one that says the answer moved.
 
 Write the `explanation` as prose only. `apply-findings.mjs` appends the
 `References:` block and merges with any references already on the question, so
