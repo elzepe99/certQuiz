@@ -53,6 +53,13 @@ scripts/
                       the same string, which on a code deck reports the two answers
                       as identical when the operator IS the question
   find-duplicates.mjs near-duplicate detector — see "Duplicates"
+  remove-questions.mjs  removes questions by id; refuses ids bound in
+                        src/diagrams/registry.ts. Until 2026-08-17 its indent
+                        detection matched the first indented `"`, which is the
+                        *second* nesting level, so every run doubled the file's
+                        indentation — that is why agentforce, integration, iam and
+                        sharing-visibility sit at 4 spaces while every other deck
+                        is at 2. Cosmetic, and left alone rather than reformatted
   add-question-ids.mjs  mints permanent ids; NEW decks only
   review-comments.mjs   exports in-app comments to markdown
   test-richtext.mjs     regression suite for the code-fence heuristic
@@ -178,6 +185,12 @@ rebind rather than stay orphaned.
 in many ways". It was never a certification deck and nothing in the app referenced it
 beyond its manifest entry. That removal is why the totals dropped from 1,697 / 14 decks.
 
+**Three more questions went the same day, in a separate pass.** Two revenue-cloud
+copies (`ac4ee893`, `f5adf9ac`) and one platform-developer-2 copy (`c74b1c3e`), each
+a pair its own fact-check had turned from `DIFFERS` into `SAME`. Nothing was lost —
+all three pairs were identical in options and in key. That pass also repaired eight
+admin reference blocks against rendered documentation (see the admin row).
+
 The jump from 697 is the revenue-cloud pass on 2026-08-15: +137 cited, taking that
 deck from 0/137 to 137/137. No new questions arrived — this is the first pass in the
 repo that only added citations and corrections to an existing deck rather than
@@ -214,12 +227,12 @@ column, not the Cited column.
 | Deck | Q | Cited | Verification status |
 |---|---:|---:|---|
 | databricks-data-engineer-associate | 148 | 148 | **Fully checked** (2026-08-15) — 8 keys moved, 11 reasoning fixes, in the same pass that imported it. First non-Salesforce deck |
-| salesforce-platform-developer-2 | 148 | 148 | **Fully checked** — 8 rounds, 2 keys moved |
-| salesforce-integration-architect | 133 | 133 | **Fully checked** — 37 stamps, 15 keys moved. Spot-rechecked 2026-08-10: citations sound, content current, 0 wrong answers found |
+| salesforce-platform-developer-2 | 147 | 147 | **Fully checked** — 8 rounds, 2 keys moved. Deduped 148 → 147 on 2026-08-17 |
+| salesforce-integration-architect | 133 | 133 | **Fully checked** — 37 stamps, 15 keys moved. Spot-rechecked 2026-08-10: citations sound, content current, 0 wrong answers found. Its **27 in-app comments were already worked through** — they are the largest comment set in the repo and read like open disputes ("It is B", "Might be D"), but the repo owner confirmed on 2026-08-17 that they were addressed. Do not re-triage them as new signal |
 | salesforce-iam-architect | 116 | 116 | **Fully checked** (2026-08-10) — 3 keys moved, 7 reasoning fixes |
-| salesforce-admin | 154 | 33 | Partial; 13 keys moved (ADM-201 merge pass). 3 more render a References block whose URL is broken across lines — one shows a bare `htm` |
+| salesforce-admin | 154 | 36 | Partial; 13 keys moved (ADM-201 merge pass). **8 questions had their references repaired on 2026-08-17**, and the repair found more than line-wrapping: of the 9 distinct `sf.` article ids those blocks cited, **only `sf.security_networkaccess` still renders**. The rest 404 behind HTTP 200 — see failure pattern 4b |
 | salesforce-agentforce-specialist | 121 | 121 | **Fully checked** (2026-08-17) — 16 keys moved across 6 batches. Started from 0 cited, with 26 questions rendering a References block of prose only. One duplicate removed (`b7ffd87e`), resolving the pair this file flagged |
-| salesforce-revenue-cloud | 137 | 137 | **Fully checked** (2026-08-15) — 2 keys moved, 88 explanations rewritten. Its defect was **fabricated citations, not wrong answers**: 73 explanations quoted invented "Exact Extracts". 9 questions could not be settled and say so in their own prose |
+| salesforce-revenue-cloud | 135 | 135 | **Fully checked** (2026-08-15) — 2 keys moved, 88 explanations rewritten. Its defect was **fabricated citations, not wrong answers**: 73 explanations quoted invented "Exact Extracts". 9 questions could not be settled and say so in their own prose. Deduped 137 → 135 on 2026-08-17 |
 | salesforce-data-cloud-consultant | 100 | 0 | Uncited; 4 keys moved via comments |
 | salesforce-sharing-visibility | 136 | 136 | **Fully checked** (2026-08-17) — 2 keys moved, 6 reasoning fixes, 19 silent clarifications. The 4 earlier 2026-08-04 validation stamps are preserved |
 | salesforce-app-builder | 119 | 119 | **Fully checked** (2026-08-11) — 4 keys moved, 27 reasoning fixes, 3 defective option sets repaired. Q1–50 spot-rechecked: 10 sampled, 1 defect (a mechanism stated backwards), so the earlier batches read sound |
@@ -270,9 +283,11 @@ Fulfillment Architecture Notes"), and the quoted sentences return no matches any
 paragraph is the record.** The stripped fabrication is text no learner will ever
 see, the key stands and the current explanation is properly cited, so the notice
 gave a reader nothing to act on — while firing on 49 of 137 questions, which
-trains a reader to skip the notices that do matter. Revenue Cloud now stamps 33:
-4 answer moves, 4 items that could not be settled, 8 defective items, and 17 that
-flag residual uncertainty about the key. The same call was applied to
+trains a reader to skip the notices that do matter. Revenue Cloud now stamps 31:
+3 answer moves, 4 items that could not be settled, 8 defective items, and 16 that
+flag residual uncertainty about the key. (33 until the 2026-08-17 dedupe removed
+`f5adf9ac` and dropped `f12dffa3`'s notice, which once its twin was gone announced a
+contradiction no reader could still see.) The same call was applied to
 `0327f145` in the Databricks deck, whose old citation was live but did not support
 its claim. Per-question provenance for all 50 is in the findings files and in git.
 
@@ -302,6 +317,29 @@ override specifies the Salesforce Classic override, so mobile users see the Visu
 page". A separate mobile slot exists. Three plausible-sounding pages agreeing is not
 the same as the page that documents the Setup screen.
 
+### What to work on next
+
+Ordered as of 2026-08-18, after the agentforce and sharing-visibility passes landed.
+The audit-lead counts come from `node scripts/audit-deck.mjs <deck>` and are leads,
+not verdicts — but a deck with many of them and no citations is where a pass pays best.
+
+| # | Deck | Q | Cited | Audit leads | Why it is here |
+|---|---|---:|---:|---:|---|
+| 1 | data-architect | 135 | 0 | 3 | Untouched, and the largest uncited deck |
+| 2 | dld | 138 | 0 | 1 | Untouched, large, 2 duplicate pairs |
+| 3 | data-cloud-consultant | 100 | 0 | 2 | 4 user comments waiting, 1 duplicate pair |
+| 4 | slack-consultant | 37 | 0 | 2 | Smallest deck in the repo — the cheapest way to run a full pass end to end |
+| 5 | admin | 154 | 36 | 3 | 118 questions still uncited. The 2026-08-17 reference repair covered 8 of them; the rest of the deck has never been checked, and its `sf.` citations are the ones most likely to be dead |
+
+Two things that are **not** deck passes but are queued:
+
+- **The 7 remaining Salesforce near-duplicate pairs** below — each needs the
+  documentation to say which copy is right, except where the option *text* already
+  agrees (check that first; that is what `f62513eb`/`c74b1c3e` turned out to be).
+- **The admin deck's remaining citations have not been rendered.** Eight blocks were
+  repaired and 8 of the 9 `sf.` ids behind them were dead. The other 25 cited admin
+  questions were never checked that way, so treat that 36 as unverified.
+
 ### Duplicates
 
 Cross-deck repeats are fine and deliberate — the same item legitimately appears
@@ -329,7 +367,11 @@ refuses any id still bound in `src/diagrams/registry.ts`.
 deck, five pairs read as `DIFFERS` only because one copy carried a wrong key. Once
 the documentation moved those keys, the pairs agreed and became true duplicates —
 so **re-run `find-duplicates.mjs` after a fact-check pass**, not just before one.
-Five were removed on 2026-08-15 for exactly this reason.
+Five were removed on 2026-08-15 for exactly this reason, and two more from
+revenue-cloud on 2026-08-17 — `ac4ee893` and `f5adf9ac`, the pairs the revenue-cloud
+pass had just settled. Both keepers were checked against the blind spot below before
+removal: identical option sets, identical reference lists, no `src/diagrams/registry.ts`
+binding, and no comments on either dropped id.
 
 **`weight()` does not look at option quality, and it picked the wrong keeper once.**
 In the Databricks PII pair it favoured `472fcdb7` for having the longer explanation,
@@ -339,7 +381,7 @@ fix was to move the explanation onto the clean copy and drop the corrupted one.
 **Check both option sets before accepting the suggested keeper** — a long
 explanation is easy to transfer, a destroyed option set is not.
 
-**10 Salesforce pairs remain and must not be merged.** They read alike but their keys
+**7 Salesforce pairs remain and must not be merged.** They read alike but their keys
 point at genuinely different option text, so one of each pair is either wrong or a
 distinct question — resolving them is a fact-check, not a dedupe:
 
@@ -348,10 +390,8 @@ distinct question — resolving them is a fact-check, not a dedupe:
 | agentforce-specialist | `e6949181` vs `63afa960` — Model Playground vs Testing Center |
 | agentforce-specialist | `0b45cf29` vs `b7ffd87e` |
 | data-cloud-consultant | `b16bbc31` vs `e652607d` — "takes up to 24 hours" vs "available soon" |
-| revenue-cloud | `f5adf9ac` vs `f12dffa3` — **settled 2026-08-16, and the earlier guess was backwards.** Both copies now key "Override the standard Salesforce flow" (`f5adf9ac` moved A→B). Enabling Revenue Settings documents Set Up Flow for Managing Assets as taking "the API name of the screen flow that will be used when amending, renewing, and canceling assets", changed by supplying a custom flow — so the extension point is the flow, and no documented Revenue Settings toggle allows renewal quote-vs-order. The 2026-08-15 note predicted `f12dffa3` was the wrong copy on the configuration-over-customization pattern; the documentation says otherwise, which is the case for checking rather than reasoning from a pattern. Still a redundant pair, but no longer a contradictory one |
 | dld | `2b7730d8` vs `42760192`; `a0fc764b` vs `ece03577` |
 | iam-architect | `cfcdee5c` vs `717f2404` |
-| platform-developer-2 | `f62513eb` vs `c74b1c3e` — **probably a true duplicate**: "Implement Database.Batchable interface" and "Database.Batchable" are the same answer differently worded. Left in place only because both copies are fully cited with ~3,000-character explanations, so pick the keeper deliberately |
 | sharing-visibility | `b3eeee28` vs `c095ab36`; `681f22f4` vs `7d2c8e5f` — partner *manager* vs *individual* partner users |
 
 Four Databricks pairs also remain, all checked and all legitimately distinct:
@@ -374,15 +414,31 @@ these pairs are a fact-check rather than a dedupe.** The two carried identical s
 and options with opposite keys, so one had to be wrong. The documentation settled it —
 a contract extraction template is *defined* as the thing holding attribute mapping and
 context mapping, while the AI prompt template shapes model instructions — so on
-2026-08-15 `6f99fe4e` moved B→A to match `ac4ee893`. **They now agree on stem, options
-and key, which makes them a true duplicate: re-run `find-duplicates.mjs` and pick a
-keeper.** Nothing was removed. This is the same effect the Databricks deck showed —
+2026-08-15 `6f99fe4e` moved B→A to match `ac4ee893`. That made them a true duplicate,
+and `ac4ee893` was removed on 2026-08-17; `6f99fe4e` kept the longer explanation and
+its notice was rewritten to stand on its own now that the twin it named is gone. The
+renewal pair `f5adf9ac`/`f12dffa3` went the same way on the same day — `f5adf9ac`
+removed, `f12dffa3` keeping the category (`Subscriptions`) the rest of the
+renew-an-asset items use. This is the same effect the Databricks deck showed —
 a fact-check turning a `DIFFERS` pair into a `SAME` one — now confirmed on Salesforce.
 
-**Comments are the unhandled risk.** Supabase stores them keyed on question id,
-so removing a question orphans its comments. Supabase was not configured when the
-16 were removed, so this went unchecked — run `npm run review-comments` before
-the next removal pass.
+**The platform-developer-2 pair `f62513eb`/`c74b1c3e` was also resolved on 2026-08-17,
+and it needed no documentation at all.** Both asked the same aggregate-50,000-contacts
+question and both keyed Batchable + Schedulable; only the option *wording* differed
+("Implement Database.Batchable interface" against a bare "Database.Batchable"), which
+is why the letters disagreed and the tool called it `DIFFERS`. `f62513eb` was kept for
+the fuller option text and a clean explanation; `c74b1c3e`'s stamp (it had invented an
+`@future` "50 records per method call" limit) went with it, the limit having never
+appeared in the keeper. Reference sets were identical and the deck has no comments.
+**So check whether a `DIFFERS` pair actually keys the same option text before booking
+it as a fact-check** — this one was a dedupe wearing a fact-check's label.
+
+**Comments orphan silently, so check them before every removal.** Supabase stores
+them keyed on question id. It was not configured when the 16 were removed on
+2026-08-11, so that pass went unchecked; it *is* configured now (`.env.local`), and
+the 2026-08-17 dedupe ran `npm run review-comments salesforce-revenue-cloud` first —
+36 comments exist repo-wide, 4 of them on revenue-cloud (`f6c30064`, `6f59e427`,
+`f769f864`), none on a removed id. Do the same before the next one.
 
 ---
 
@@ -445,6 +501,28 @@ Render every URL and confirm the title matches. `"We looked high and low but
 couldn't find that page"` is a 404 wearing a 200. Drop a URL you cannot confirm —
 one verified link beats three hopeful ones. Then add confirmed URLs to
 `references/verified-docs.md`.
+
+### 4b. Salesforce moved a lot of Help articles from `sf.` to `platform.`
+Found on 2026-08-17 while repairing eight admin questions. Of the nine distinct
+`sf.` article ids those blocks cited, **eight are dead and one lives**
+(`sf.security_networkaccess`). Some have a live `platform.` twin at the same id
+(`platform.login_ip_ranges`, `platform.lightning_page_components_visibility`), some
+were renamed outright (`sf.flow_concepts_scheduled_start` →
+`platform.flow_concepts_trigger_schedule`), and some have no equivalent at all
+(`sf.flow_builder_overview`). **Swapping the prefix is not a fix — it is another
+guess.** `platform.flow_builder_overview` and `platform.workflow_outbound_messages`
+are both dead too. Not every live article is `platform.` either:
+`sf.adding_actions_using_ple`, `sf.customize_supportrules` and
+`sf.security_controlling_access_using_hierarchies` all render today.
+
+Checking is cheap and there is a working recipe. Open the URL in the in-app browser
+pane, wait for the SPA, and read `document.title`: a real article gives its own title
+("Restrict Login IP Addresses in Profiles | Salesforce Help"), a dead id gives the
+generic `Salesforce Help | Article` plus "We looked high and low". One
+`javascript_tool` call per URL also greps the rendered text for the term the citation
+is supposed to support, which is failure pattern 11 in the same pass —
+`platform.sharing_model_fields` renders fine but never says "Grant Access Using
+Hierarchies", so it was the wrong page for the question citing it.
 
 ### 5. Scrape damage in options and code
 Freecram scrapes arrive corrupted in specific ways:
