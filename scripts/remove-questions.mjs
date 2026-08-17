@@ -64,7 +64,10 @@ const drop = new Set(ids);
 const kept = deck.filter((q) => !drop.has(q.id));
 
 const crlf = raw.includes('\r\n');
-const indentMatch = raw.match(/\n([ \t]+)"/);
+// Match the first indented line, whatever character it starts with. Matching
+// the first indented `"` instead reads the *second* level of nesting — line 2
+// of a deck is `{`, not a key — which doubled the file indentation on each run.
+const indentMatch = raw.match(/\n([ \t]+)\S/);
 const indent = indentMatch ? indentMatch[1].length : 2;
 let out = JSON.stringify(kept, null, indent);
 if (crlf) out = out.replace(/\n/g, '\r\n');
