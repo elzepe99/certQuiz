@@ -684,5 +684,8 @@ and arrows that crash the default console codec with a `charmap` error. That is 
 console limitation, not corrupt data; confirm by counting `U+FFFD` in the file,
 which should be zero.
 
-`gh` CLI is **not installed**. Install it and run `gh auth login` for PR work —
-never paste tokens into chat.
+`gh` CLI **is installed** (`C:/Program Files/GitHub CLI/gh`) and authenticated as
+`elzepe99` from the keyring, with `repo`, `workflow`, `read:org` and `gist` scopes —
+enough to push a branch and open a PR without further setup. This file claimed the
+opposite until 2026-08-17; check `gh auth status` rather than trusting either
+statement. Never paste tokens into chat.
