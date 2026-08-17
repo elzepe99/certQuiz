@@ -187,12 +187,7 @@
     "optionE": "Users should be authenticated into DMS and EBS without having to enter username and password.",
     "correct": "A,C,E",
     "explanation": "Context-driven authorisation (A) scopes the call to the customer the agent is already servicing, so no broader search or access is needed. Enterprise security needs (C) capture the encryption, IP allow-listing, and audit obligations that apply to billing data. Seamless authentication into both back-ends (E) removes per-system credentials, typically via SAML or OAuth. Option B deserves the scrutiny it got in the comment: Named Credentials genuinely are how you hold DMS and EBS authentication in Salesforce, and they are often what makes E achievable. It is marked incorrect here because the question asks what to consider about authorisation and authentication needs, and B jumps to maintaining credential details in Salesforce — an implementation choice, and one that sits awkwardly with least privilege when the back-ends already restrict access per user. Treat it as a soft distractor rather than a clear falsehood. Option D is a migration decision, not an auth concern.\nReferences:\nhttps://help.salesforce.com/s/articleView?language=en_US&id=sf.named_credentials_about.htm&type=5",
-    "_cat": "Translate Needs to Integration Requirements",
-    "corrected": {
-      "date": "2026-08-04",
-      "via": "comments",
-      "note": "Q15 A,C,E confirmed. Explanation now engages with the Named Credentials point in the note."
-    }
+    "_cat": "Translate Needs to Integration Requirements"
   },
   {
     "id": "f2f7e142",
@@ -838,12 +833,7 @@
     "optionE": "",
     "correct": "B,D",
     "explanation": "The question asks specifically for security issues. Credentials that must be stored somewhere to be replayed are exposed to whoever can read that store, and an attacker who obtains them inherits a System Administrator session (B); and because the profile is System Administrator, every back-end system using it can reach all data rather than the narrow slice it needs (D). Option A is a genuine risk, but it is an availability and operational-continuity problem — a password reset breaks the integration, it does not expose anything — which is why it falls outside what this question asks for. Option C describes normal platform behaviour rather than a flaw of this approach.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.secure_coding_guide.meta/secure_coding_guide/secure_coding_storing_sensitive_data.htm\nhttps://help.salesforce.com/s/articleView?language=en_US&id=sf.named_credentials_about.htm&type=5",
-    "_cat": "Build Solution",
-    "corrected": {
-      "date": "2026-08-04",
-      "via": "comments",
-      "note": "Q66 B,D confirmed. Explanation now says why A is an availability problem rather than a security one."
-    }
+    "_cat": "Build Solution"
   },
   {
     "id": "06618d19",
@@ -1293,12 +1283,7 @@
     "optionE": "",
     "correct": "D",
     "explanation": "Process Builder invoking an Apex proxy class is the supported path for firing a callout automatically when the Opportunity reaches Closed/Won with products attached (D). The note in the comment is right that A and B are both asynchronous — Apex cannot make a callout directly from a trigger, so option A necessarily defers to @future or Queueable, and the batch job in B runs hourly by definition. Option C does perform a genuinely synchronous callout, but it only runs when a user clicks a button, which does not satisfy a requirement stated in terms of the status changing.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts_timeouts.htm\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#Remote_Process_Invocation___Request_And_Reply",
-    "_cat": "Design Integration Solutions",
-    "corrected": {
-      "date": "2026-08-04",
-      "via": "comments",
-      "note": "Q100 D confirmed. Explanation now addresses the A/B/C reasoning in the note."
-    }
+    "_cat": "Design Integration Solutions"
   },
   {
     "id": "5291b286",
@@ -1607,12 +1592,7 @@
     "optionE": "",
     "correct": "B,C",
     "explanation": "A Per-User Named Credential only helps where the callout executes in the context of an identifiable running user. Process Builder invoking an invocable or @future Apex callout preserves that context when the Order status changes (B), and Salesforce Connect with OData 2.0 supports per-user identity for external object reads and writes (C). Option D is worth pausing on: a Visualforce page with an Apex callout genuinely can use a per-user Named Credential, so the security setup is not the problem — it fails because the requirement is that order information be sent when the status changes to Confirmed, and a Visualforce page requires a user to navigate to it. Outbound messaging (A) runs as the automated process user, which defeats per-user identity entirely.\nReferences:\nhttps://help.salesforce.com/s/articleView?language=en_US&id=sf.named_credentials_about.htm&type=5\nhttps://help.salesforce.com/s/articleView?language=en_US&id=sf.platform_connect_identity_type.htm&type=5\nhttps://help.salesforce.com/s/articleView?id=005232763&language=en_US&type=1",
-    "_cat": "Build Solution",
-    "corrected": {
-      "date": "2026-08-04",
-      "via": "comments",
-      "note": "Q123 B,C confirmed. Explanation now addresses why D is excluded."
-    }
+    "_cat": "Build Solution"
   },
   {
     "id": "96f3d6af",
@@ -1756,12 +1736,7 @@
     "optionE": "",
     "correct": "B,C",
     "explanation": "The question asks what these two components must be able to do. The Community portal cannot hold identifiable prescriptions, so it needs callouts to the secure system's RESTful services to retrieve them on demand for an authorised user (C), and Einstein Analytics needs de-identified data bulk-loaded for the small analyst group (B). Encryption in transit and at rest (A) is certainly required, but policy 1 already imposes it on the secure system, and it is a baseline control rather than a capability the portal or Analytics has to provide. Storing identity tokens (D) would place identifiable material outside the secure database, breaking policy 1 outright.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.bi_dev_guide_ext_data.meta/bi_dev_guide_ext_data/bi_ext_data_overview.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_rest_exposing_data.htm",
-    "_cat": "Design Integration Solutions",
-    "corrected": {
-      "date": "2026-08-04",
-      "via": "comments",
-      "note": "Q134 B,C confirmed. Explanation now addresses why A is not the answer."
-    }
+    "_cat": "Design Integration Solutions"
   },
   {
     "id": "033b5964",
@@ -1797,12 +1772,7 @@
     "optionE": "Streaming API because of a requirement to dynamically inspect field names during runtime.",
     "correct": "A,B,D",
     "explanation": "The requirement is an inbound, SOAP-based update of the Salesforce Account whenever the financial system changes, and three capabilities follow from it. The Enterprise WSDL provides a strongly-typed, org-specific SOAP contract (A). The Partner WSDL provides a loosely-typed SOAP contract that works across orgs (B). The Partner WSDL is also what allows field names to be inspected at runtime rather than compiled in, which matters when the financial system's payload varies (D). The two rejected options misattribute a capability to the wrong technology: the Partner WSDL is SOAP, not REST (C), and the Streaming API pushes change notifications outward rather than supporting runtime field inspection (E).\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_partner.htm",
-    "_cat": "Design Integration Solutions",
-    "corrected": {
-      "date": "2026-08-04",
-      "via": "comments",
-      "note": "Q138 A,B,D confirmed. Explanation now walks every option, per the \"feels incomplete\" note."
-    }
+    "_cat": "Design Integration Solutions"
   },
   {
     "id": "46d002e1",
