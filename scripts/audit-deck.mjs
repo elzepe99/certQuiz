@@ -39,6 +39,19 @@ const STOP = new Set(
 );
 const keywords = (s) => new Set(norm(s).split(' ').filter((w) => w && !STOP.has(w)));
 
+/**
+ * Options are compared with their operators intact.
+ *
+ * `norm` collapses every non-alphanumeric run to a space, which is right for
+ * prose but erases exactly the characters a code option turns on: `age <= 25`
+ * and `age > 25` both flatten to `age 25`, and `day_of_week = 1` becomes
+ * indistinguishable from `day_of_week == 1`. On a deck whose options are code
+ * that reports the two answers as duplicates when the operator *is* the
+ * question. Case and whitespace still collapse, so genuine restatements of the
+ * same option are still caught.
+ */
+const normOption = (s) => (s ?? '').toLowerCase().replace(/\s+/g, ' ').trim();
+
 const answerLetters = (q) =>
   q.correct.split(',').map((c) => c.trim().toUpperCase()).filter(Boolean);
 
@@ -100,7 +113,7 @@ for (const [i, q] of questions.entries()) {
   }
   const seen = new Map();
   for (const c of present(q)) {
-    const k = norm(q[`option${c}`]);
+    const k = normOption(q[`option${c}`]);
     if (!k) continue;
     if (seen.has(k)) {
       findings.dupOption.push({ n: i + 1, pair: `${seen.get(k)}/${c}`, text: q[`option${c}`].slice(0, 62) });

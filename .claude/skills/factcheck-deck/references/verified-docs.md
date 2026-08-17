@@ -79,7 +79,44 @@ looking anything up — these recur constantly across Salesforce certifications.
 | Visualforce GET order of execution | Controller/extension constructors → custom components created, *their* constructors, then their attribute expressions → `assignTo` attributes → page expressions, `<apex:page action>`, other getters/setters → view state created if `<apex:form>` → HTML sent. Custom-component evaluation comes **before** the page's own expressions and action attribute | Order of Execution for Visualforce Page Get Requests |
 | Opportunity.ContactId | **It exists.** A standard, read-only field holding the primary contact, derived from the OpportunityContactRole. Any explanation asserting "Opportunity has no ContactId field" is wrong — the reason to reject a ContactId-based query is that it returns one primary contact, not the Account's contacts | Opportunity (Object Reference) |
 | Queueable chaining inside a test | **Real behaviour, no longer documented.** "You can't chain queueable jobs in an Apex test" was removed from the Queueable Apex page and from the Queueable interface reference; only third-party sources still state it. What the current page *does* document is that only **one job can be enqueued from an executing job**, and the `Test.startTest`/`stopTest` pattern. Treat `Test.isRunningTest()` guards around a chained enqueue as correct but **cite the enqueue limit, not a chaining-in-test sentence** — there isn't one to cite | Queueable Apex |
+| One MFA prompt across mixed login paths | **Session security levels, not the org-wide MFA setting.** Profile side: "For Session Security Level Required at Login, select **High Assurance** to require users to verify their identity with multi-factor authentication when they log in." Org side (Session Settings): "If users access Salesforce via single sign-on (SSO) only and you're using **your SSO provider's MFA solution**: Put your SSO provider in the **High Assurance** column" — and conversely, if you want *Salesforce* to do the MFA for SSO users, put the provider in the **Standard** column. Enabling "MFA for User Interface Logins" org-wide instead **double-prompts** anyone whose IdP already did MFA. Salesforce does **not** infer trust from a SAML authn context — that mechanism does not exist | Understand the Relationship Between MFA and a High Assurance Login Session; Edit Session Settings in Profiles |
+| Registration handler: Apex is no longer required | "To set up a registration handler, you can use **Flow Builder or Apex**", and the flow option "can be configured and maintained entirely with clicks instead of code. **No developer knowledge is necessary.**" Any deck item asserting "Apex coding skills are needed for the Registration Handler" is now **stale**. The handler itself is still mandatory: "To set up single sign-on (SSO) with an authentication provider, you **must** set up a registration handler" | Create an Authentication Provider Registration Handler |
+| Registration handler behaviour | Create vs update is decided by matching, not by a separate feature: the handler must "look for a matching user record in Salesforce", then "If there is a matching user, the registration handler **updates** the user record with information from the identity provider", else it creates one. Method names (`createUser`, `updateUser`, `canCreateUser`) are **not** on the help article — they live in the Mobile SDK guide's "Customize the Auth. Provider Apex Class" | Create an Authentication Provider Registration Handler; Customize the Auth. Provider Apex Class |
+| Connected app creation | **Restricted as of Spring '26** — the banner appears on every connected-app help page: "Connected apps creation is restricted as of Spring '26. You can continue to use existing connected apps during and after Spring '26. However, we recommend using **external client apps** instead." Like the Workflow Rules row, this is a restriction on *creating*, not a removal of capability — so exam answers keying "create a Connected App" remain correct, and should note external client apps as the current recommendation rather than be marked wrong | Integrate Service Providers as Connected Apps with SAML 2.0; Configure Trusted IP Ranges for a Connected App |
+| App Launcher tile | One sentence settles every "how does the app appear in App Launcher" item: "**Specifying a Start URL makes the application available in the app menu and in App Launcher.**" For a canvas app the Start URL field is skipped — Canvas embeds rather than redirects, so Canvas is the wrong answer whenever the stem says a redirect is acceptable | Integrate Service Providers as Connected Apps with SAML 2.0 |
+| Salesforce as SAML IdP | Enabling it requires only a **certificate** (default self-signed SHA-256, or your own) and clicking **Enable Identity Provider**. The current article **never mentions My Domain** as a prerequisite — that requirement predates universal My Domain enforcement, so treat "set up Salesforce as a SAML IdP *with My Domain*" as still-correct but no longer a distinct step | Enable Salesforce as a SAML Identity Provider |
+| Connected App refresh token policy | Four options: **valid until revoked (default)**; immediately expire; **expire if not used for n** (inactivity — resets on each use); **expire after n** (fixed clock — "if the policy states one day, the user can obtain new sessions only for 24 hours"). The policy "is evaluated only during usage of the issued refresh token and doesn't affect a user's current session". Daily re-auth ⇒ *after n*; a cohort re-authing together ⇒ *after n* started at first authorisation. The `refresh_token` grant does **not** use the callback URL, so a changed redirect URI cannot cause refresh failures | Manage OAuth Access Policies for a Connected App |
+| OAuth username-password flow | **Being retired for connected apps** — Salesforce states the update "will break all connected app integrations that use this flow", because the flow "directly passes the user's credentials in HTTP requests". Replacements it names: **client credentials flow** for server-to-server, **web server flow with PKCE** for end-user login. Any item whose scenario is built on username-password is still answerable, but should flag the retirement rather than teach the flow as current practice | Salesforce Retirement of OAuth 2.0 Username-Password Flow |
+| Connected App trusted IP range | The field is **"Trusted IP Range for OAuth Web Server Flow"** — scoped to the web server flow by its own name, so it does **not** restrict a username-password integration. **IP Relaxation relaxes** org IP enforcement rather than adding it. IP restrictions are enforced **only where configured on a user's profile**, so the mechanism that actually denies a login by source IP is profile **Login IP Ranges**: "a login from any other IP address is denied" | Configure Trusted IP Ranges for a Connected App; Restrict Login IP Addresses in Profiles |
+| My Domain and SSO | With My Domain "the target hostname at Salesforce is unique to the organization", so "the correct Identity Provider (IdP) data for SSO can be looked up immediately". Without it, on a Salesforce link — login page, **deep link**, Outlook Sync URL — "Salesforce does not know in advance which Identity Provider to use", which is the SP-initiated case. **Caveat:** on a generic login page, SP-initiated *can* work after one IdP-initiated login sets an IdP cookie, so "SP-initiated will never work" is an overstatement. Separately, "**The Salesforce Mobile App only supports Service Provider (SP) Initiated SSO**" | Considerations for Setting Up Salesforce My Domain with SSO; Salesforce Mobile App: Single Sign-On overview |
+| Identity Verification Credits | Denominated in **SMS sends** — the add-on "typically includes 25,000 SMS messages per month, 300,000 credits per year". So estimates key off SMS challenges, not all verifications. **Cite the add-on considerations article** (`id=005239145`, a `type=1` knowledge article); `security_sms_identity_verification` renders but never uses the word "credit" | Identity Verification Credits Add-On License Considerations |
 | Lightning Inspector docs | **Removed from the Aura guide.** `lightning/inspector_*.htm` now redirects to the Debugging intro, including pinned old-version URLs. The Storage tab (client-side cache of storable actions) is still described in the Salesforce Developers blog post introducing the Inspector | Introducing the Salesforce Lightning Inspector |
+| Workflow Rules / Process Builder end of support | **31 December 2025.** "Salesforce no longer supports Workflow Rules and Process Builder as of December 31, 2025... Your active Workflow Rules and Process Builder processes continue to run as they do today, even after 2025. The only change is that Salesforce no longer provides customer support or bug fixes." Retirement of *support*, not of capability — an exam key naming either tool stays correct; flag it and name the Flow Builder equivalent. The banner now sits on every workflow and process help page | Salesforce Workflow Rules & Process Builder End of Support |
+| Validation rules after a workflow field update | **They do not re-run.** Order of Execution: "Executes workflow rules. If there are workflow field updates: Updates the record again. **Runs system validations again. Custom validation rules, flows, duplicate rules, processes built with Process Builder, and escalation rules aren't run again.**" Corroborated by the field-update considerations page: "Workflow rules and some processes can invalidate previously valid fields. Invalidation occurs because updates to records based on workflow rules... don't trigger validation rules." So a field update writing a value its own validation rule forbids **saves successfully**. This moved an App Builder key | Triggers and Order of Execution; Considerations for Field Update Actions |
+| Roll-up summary supported relationships | Master-detail is the general rule, but four documented exceptions matter: roll-ups can be built on "Any custom object that is on the master side of a master-detail relationship; Any standard object that is on the master side of a master-detail relationship with a custom object; **Opportunities using the values of opportunity products**; **Accounts using the values of related opportunities**; **Campaigns using campaign member status or the values of campaign member custom fields**." **Cases are not on that list** — an Account/Case roll-up is impossible and sends you to Flow, Apex, or AppExchange. Calculation types are COUNT, SUM, MIN, MAX; there is no AVG | Roll-Up Summary Field |
+| Data Loader record ceiling | **150,000,000 records** per CSV, not the 5 million older material claims. The Data Import Wizard's line is "You're loading less than 50,000 records", and its supported objects are "accounts, contacts, leads, solutions, campaign members, person accounts, and custom objects" — a short list that disposes of any option proposing it for PermissionSetAssignment or similar | When to Use Data Loader; What kind of objects can I import? |
+| Actions on a Lightning record page | The page-layout action list surfaces in exactly three places, per Actions in Lightning Experience: the **highlights panel** page-level action menu ("The actions in the highlights panel come from the Salesforce Mobile and Lightning Experience Actions section of the page layout"), the **Activity tab** ("New Event and New Task don't show up here" — they "display on the Activity tab"), and the **Chatter tab** (standard Chatter actions only). **Path displays no actions**: a path is picklist steps, up to five key fields, and up to 1,000 characters of guidance. This moved an App Builder key | Actions in Lightning Experience; Standard Lightning Page Components; Create a Path |
+| Record type assignment | Controls **creation and editing, never visibility**: "Record type assignment on a user's profile or permission set (or permission set group) doesn't determine whether a user can view a record with that record type." Assignable in **both** profiles and permission sets — but assignment is additive, so granting record types through a permission set can never *remove* one the profile already offers. Only profiles carry a default record type and the Master record type; only permission sets are restricted to custom record types | How Is Record Type Access Specified?; Assign Record Types and Page Layouts in Profiles; Assign Custom Record Types in Permission Sets |
+| My Domain as a prerequisite | **No longer a live blocker.** "All orgs get a My Domain with enhanced domains by default." Legacy items that make My Domain deployment a precondition (custom Lightning components in App Builder, Salesforce as a SAML IdP) are historically accurate but describe a condition satisfied everywhere | My Domain |
+| Path enforcement | Path **guides, it does not require**: "You can't use the page layout to require different fields in different steps. However, you can set up validation rules based on a path step." Each step shows up to five key fields and up to 1,000 characters of guidance for success | Considerations and Guidelines for Creating Paths; Create a Path |
+| Before-save vs after-save flows | A before-save (Fast Field Updates) flow supports "**only these elements: Assignment, Decision, Get Records, and Loop**" and can update only the triggering record. Anything else — related records, or an action such as Submit for Approval — needs the after-save (Actions and Related Records) context. This is also why "one flow per object" is not achievable and "one per object **per trigger context**" is | Before-Save Record-Triggered Flows; Record-Triggered Automation (decision guide) |
+| Blocking a delete declaratively | The **Custom Error element** in a record-triggered flow now does what an Apex `before delete` trigger used to be needed for: it "use[s] the same functionality as the addError() method in Apex", and the article's own example is "when a user deletes a record that triggers a flow, the flow can return an error message that tells the user why the deletion wasn't allowed." A few objects (OpportunityTeamMember, CampaignMember) don't support it on before-delete | Custom Error Element |
+| Approvals are now "Classic" | Every approval help page carries: "Try **Flow Approval Processes**, a modern alternative to Classic Approval Processes." Classic approvals remain fully supported and remain the exam answer; note the alternative rather than marking items stale. Unanimity is a step setting: "Require unanimous approval from all selected approvers. The record is approved only if everyone approves the request." Delegation is a User field: "If populated, this user receives the same approval requests as you do. Delegated approvers can't reassign approval requests" | Classic Approval Processes; Identify Assigned Approvers for an Approval Step; Classic Approval Processes User Preferences |
+| Change set deployment | **Atomic**: "A change set is deployed in a single transaction. If the deployment is unable to complete for any reason, the entire transaction is rolled back", and once successful it can't be rolled back. A deployment connection is **necessary but not sufficient**: "A deployment connection alone doesn't enable change sets to be sent between orgs. Each org must be authorized to send and receive change sets." Both facts are true simultaneously, which broke a "choose 2" in the App Builder deck | Deploy a Change Set; Deployment Connections for Change Sets |
+| Field type change in a deployment | The slow part is a per-record data conversion: "the conversion runs in the background... **In some cases, the conversion can take over 24 hours to complete**", with Picklist↔Text and Date/Time→Time the slowest. Deployments also hit a ceiling of **85 million field type conversions** — 30 million records × 3 fields = 90 million, over the limit | Considerations for Converting the Field Type of a Custom Field |
+| Workflow reevaluation cascade | With Re-evaluate Workflow Rules After Field Change on, "This cascade... can happen **up to five times** after the initial field update that started it", and mutually triggering rules "can cause your organization to exceed its limit for **workflow time triggers per hour**" (1,000/hour). Only rules **on the same object** are reevaluated; "Cross-object workflow rules aren't candidates for reevaluation." Per-object limits: **50 active**, 500 total | Field Updates That Reevaluate Workflow Rules; Workflow Limits |
+| Schema Builder | Creates objects, fields (including formula and roll-up summary) and both relationship types, and its whole purpose is visualising relationships. Its one documented gap: "**Any field you add through Schema Builder isn't automatically added to the object's page layout.** You must edit the page layout to specify where the field should be displayed." It also cannot export a schema | Create Fields with Schema Builder; Schema Builder Considerations |
+| Standard report type auto-generation | "When the custom object is the **child** in any master-detail relationship, a new standard report type will be created (**Parent WITH Custom Object** report type)", conditional on Allow Reporting being enabled. Lookups between two custom objects generate one too; multi-level relationships generate a *custom* report type that counts against the org limit | Criteria to Generate a Standard Report Type |
+| Master-detail reparenting | "**By default, records can't be reparented in master-detail relationships.** Administrators can, however, allow child records... to be reparented to different parent records by selecting the **Allow reparenting** option." The classic symptom is a user who cannot change a detail record's parent after creation | Object Relationships Overview |
+| Contacts with no account | "**A contact that isn't linked to an account is always private**, regardless of your organization's sharing model. Only the owner of the contact and administrators can view it. Sharing rules and workflow rules don't apply to private contacts." First thing to check on "one user can't see a contact" | Considerations for Sharing and Accessing Contacts |
+| Lightning page activation options | Exactly four: org default; default for **specific Lightning apps**; a combination of **apps, record types, and profiles** (record types for record pages only); and a **form factor**. **Permission sets and roles are not activation targets** | Activate Lightning Record or Home Pages |
+| Lightning page templates | **Not blanket-responsive.** "Home page templates are desktop-only. Standard app page templates support both desktop and phone. Standard record page templates support both desktop and phone, **except the pinned region templates, which are desktop only**." A page's template **can** be switched later, but not to one supporting a narrower device set, and components the new template's form factor doesn't support are dropped at run time | Lightning Page Templates |
+| External ID | "An external ID field contains record identifiers from a system outside of Salesforce. You can use an external ID field to update or **upsert** records using the API... you can use this field to **prevent duplicates by also marking the field as Unique**." Up to **25** per object; auto-number, email, number or text only | Custom Field Attributes |
+| Sandbox licences bundle Developer sandboxes | "Developer sandboxes **aren't available for purchase** but are bundled with add-on sandboxes of other types. The Partial Copy Sandbox add-on is bundled with **10**. The Full Sandbox add-on is bundled with **15**." Developer Pro must be bought. Refresh/storage: Developer 1 day / 200 MB, Developer Pro 1 day / 1 GB, Partial 5 days / 5 GB, Full 29 days / production-sized | Sandbox Licenses and Storage Limits by Type |
+| Process Builder action list | Complete and closed: create a record, invoke another process, Chatter post, quick action, Quip, launch a flow, send an email, custom notification, survey invitation, submit for approval, update records, call Apex. **No delete action and no outbound message action** — outbound messages belong to Workflow Rules | Add Actions to Your Process |
+| Process Builder cannot run on delete | Its Record Change trigger offers exactly two settings — "**only when a record is created**" and "**when a record is created or edited**" — and its only other trigger types are Event (platform event) and Invocable. There is no delete trigger under any configuration. Record-triggered **flows** do run on delete and can block one with a Custom Error element, so any "prevent/gate a deletion" item separates cleanly along this line. This moved an App Builder key | Configure the Process Trigger; Custom Error Element |
+| Classic approval process automated actions | **Exactly four: Task, Email Alert, Field Update, Outbound Message.** No delete, no flow, no Apex. So an approval process can route a decision and stamp the outcome onto a field, but it can never itself delete a record or stop someone deleting one — "gate a delete with approval" always needs a second mechanism to enforce it | Add Automated Actions to a Classic Approval Process |
+| CASE() vs nested IF() | CASE "checks a given expression against a series of values. **If the expression is equal to a value**, returns the corresponding result" — equality only, so it cannot express a numeric range. Salesforce's own Case Age colour-indicator sample uses nested `IF()` with `IMAGE()`; the picklist samples use `CASE()` | CASE; Sample Image Link Formulas |
 
 Every row above now names a source that was opened and read. If you add a row you
 have not rendered, mark it "verify before citing" and confirm it before it reaches
@@ -253,6 +290,24 @@ it. A believed-correct fact with no rendered source is a liability, not a shortc
 ### Identity & access management
 All rendered during the IAM deck repair.
 
+Added in the IAM answer-verification pass (2026-08-10), all three rendered:
+
+- **Restrict Login IP Addresses in Profiles** — https://help.salesforce.com/s/articleView?id=sf.users_profiles_epui_login_ip_ranges.htm&language=en_US&type=5
+  "To control login access at the user level, specify the ranges of allowed IP
+  addresses on a user's profile. When you define IP address restrictions for a
+  profile, a login from any other IP address is denied." The mechanism that
+  actually restricts an OAuth username-password integration to one host.
+- **Configure Trusted IP Ranges for a Connected App** — https://help.salesforce.com/s/articleView?id=xcloud.connected_app_edit_ip_ranges.htm&language=en_US&type=5
+  The field is named **"Trusted IP Range for OAuth Web Server Flow"** — scoped to
+  the web server flow, so it does not govern username-password. IP Relaxation
+  *relaxes* org IP enforcement rather than adding it, and IP restrictions are
+  enforced only where configured on a user's profile.
+- **Identity Verification Credits Add-On License Considerations** — https://help.salesforce.com/s/articleView?id=005239145&language=en_US&type=1
+  Credits are denominated in SMS: "typically includes 25,000 SMS messages per
+  month, 300,000 credits per year". Note this is a `type=1` knowledge article,
+  not a `type=5` doc page. **Do not** cite `security_sms_identity_verification`
+  for credit consumption — it renders, but never uses the word "credit".
+
 - **Custom Login Flows** — https://help.salesforce.com/s/articleView?id=sf.security_login_flow.htm&language=en_US&type=5
 - **Session Security** — https://help.salesforce.com/s/articleView?id=sf.security_overview_sessions.htm&language=en_US&type=5
 - **Monitor Access to Your Salesforce Orgs and Experience Cloud Sites** — https://help.salesforce.com/s/articleView?id=sf.identity_monitor_access.htm&language=en_US&type=5
@@ -413,6 +468,102 @@ documented benefits), `pages_js_remoting.htm`, `pages_remote_objects.htm`,
 - **Insert or Update (Upsert) a Record Using an External ID** — https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/dome_upsert.htm
 - **SessionHeader (SOAP API)** — https://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_header_sessionheader.htm
 
+### Platform App Builder pass (2026-08-11)
+
+Every URL below was opened and its rendered title confirmed. Note the namespace
+split: most current help ids use `platform.`, but a stubborn minority still only
+answer on `sf.`, and Sales Cloud topics live under `sales.`. When a `platform.`
+id 404s, try `sf.` before assuming the article is gone.
+
+**Fields, formulas, validation**
+- **Sample Image Link Formulas** — https://help.salesforce.com/s/articleView?id=platform.useful_advanced_formulas_image_links.htm&language=en_US&type=5
+  Contains the "Color Squares for Case Age" and "Flags for Case Priority" samples.
+- **IMAGE** — https://help.salesforce.com/s/articleView?id=platform.customize_functions_image.htm&language=en_US&type=5
+- **CASE** — https://help.salesforce.com/s/articleView?id=platform.customize_functions_case.htm&language=en_US&type=5
+- **ISCHANGED** — https://help.salesforce.com/s/articleView?id=platform.customize_functions_ischanged.htm&language=en_US&type=5
+  "Returns FALSE when evaluating any field on a newly created record."
+- **Tips for Writing Validation Rules** — https://help.salesforce.com/s/articleView?id=platform.fields_validation_rules_tips.htm&language=en_US&type=5
+- **Validation Rule Considerations** — https://help.salesforce.com/s/articleView?id=platform.fields_validation_considerations.htm&language=en_US&type=5
+- **Custom Field Attributes** — https://help.salesforce.com/s/articleView?id=platform.custom_field_attributes.htm&language=en_US&type=5
+  The External ID / Unique definition and the 25-per-object limit.
+- **Considerations for Converting the Field Type of a Custom Field** — https://help.salesforce.com/s/articleView?id=platform.notes_on_changing_custom_field_types.htm&language=en_US&type=5
+- **Roll-Up Summary Field** — https://help.salesforce.com/s/articleView?id=platform.fields_about_roll_up_summary_fields.htm&language=en_US&type=5
+- **Create a Roll-Up Summary Field** — https://help.salesforce.com/s/articleView?id=platform.fields_defining_summary_fields.htm&language=en_US&type=5
+
+**Objects, relationships, schema**
+- **Object Relationships Overview** — https://help.salesforce.com/s/articleView?id=platform.overview_of_custom_object_relationships.htm&language=en_US&type=5
+- **Create a Custom Object from a Spreadsheet in Lightning Experience** — https://help.salesforce.com/s/articleView?id=platform.dev_objectcreate_task_lex_from_spreadsheet.htm&language=en_US&type=5
+  The article behind "Lightning Object Creator".
+- **Create Fields with Schema Builder** — https://help.salesforce.com/s/articleView?id=sf.schema_builder_elements_fields.htm&language=en_US&type=5
+  `platform.schema_builder_creating_fields` does **not** exist; this is the live id.
+- **Schema Builder Considerations** — https://help.salesforce.com/s/articleView?id=platform.schema_builder_considerations.htm&language=en_US&type=5
+- **Criteria to Generate a Standard Report Type** — https://help.salesforce.com/s/articleView?id=000383026&language=en_US&type=1
+
+**UI / App Builder**
+- **Actions in Lightning Experience** — https://help.salesforce.com/s/articleView?id=platform.actions_in_lex.htm&language=en_US&type=5
+  Enumerates every place an action appears on a record page. Path is not among them.
+- **Global Quick Actions** — https://help.salesforce.com/s/articleView?id=platform.actions_overview_global.htm&language=en_US&type=5
+- **Set Predefined Field Values for Quick Action Fields** — https://help.salesforce.com/s/articleView?id=platform.predefined_field_values.htm&language=en_US&type=5
+- **Create Dynamic Actions in Lightning App Builder** — https://help.salesforce.com/s/articleView?id=platform.lightning_app_builder_create_dynamic_action.htm&language=en_US&type=5
+- **Activate Lightning Record or Home Pages** — https://help.salesforce.com/s/articleView?id=platform.lightning_app_builder_customize_lex_pages_activate.htm&language=en_US&type=5
+- **Lightning Page Templates** — https://help.salesforce.com/s/articleView?id=platform.lightning_page_templates.htm&language=en_US&type=5
+- **Tips for Creating Mobile App Pages in Lightning App Builder** — https://help.salesforce.com/s/articleView?id=platform.lightning_app_builder_mobile_guidance.htm&language=en_US&type=5
+- **Page Layouts** — https://help.salesforce.com/s/articleView?id=platform.customize_layout.htm&language=en_US&type=5
+- **Guide Users with Path** — https://help.salesforce.com/s/articleView?id=sales.path_overview.htm&language=en_US&type=5
+- **Create a Path** — https://help.salesforce.com/s/articleView?id=sales.path_create.htm&language=en_US&type=5
+- **Considerations and Guidelines for Creating Paths** — https://help.salesforce.com/s/articleView?id=sales.path_considerations.htm&language=en_US&type=5
+- **Customize Chatter Feed Tracking** — https://help.salesforce.com/s/articleView?id=sf.collab_feed_tracking.htm&language=en_US&type=5
+  `platform.collab_feed_tracking` 404s.
+- **View a List of Lightning Components in Your Org** — https://developer.salesforce.com/docs/platform/lwc/guide/use-setup.html
+- **My Domain** — https://help.salesforce.com/s/articleView?id=xcloud.domain_name_overview.htm&language=en_US&type=5
+  `platform.` and `sf.` both 404 for this one; only `xcloud.` renders.
+
+**Security and sharing**
+- **Assign Record Types and Page Layouts in Profiles** — https://help.salesforce.com/s/articleView?id=platform.users_profiles_record_types.htm&language=en_US&type=5
+- **Assign Custom Record Types in Permission Sets** — https://help.salesforce.com/s/articleView?id=platform.perm_sets_record_types_assign.htm&language=en_US&type=5
+- **How Is Record Type Access Specified?** — https://help.salesforce.com/s/articleView?id=platform.permissions_record_type_access.htm&language=en_US&type=5
+- **Permission Set Groups** — https://help.salesforce.com/s/articleView?id=platform.perm_set_groups.htm&language=en_US&type=5
+- **Field Permissions** — https://help.salesforce.com/s/articleView?id=platform.users_profiles_field_perms.htm&language=en_US&type=5
+- **"View All" and "Modify All" Permissions Overview** — https://help.salesforce.com/s/articleView?id=platform.users_profiles_view_all_mod_all.htm&language=en_US&type=5
+- **Create Criteria-Based Sharing Rules** — https://help.salesforce.com/s/articleView?id=platform.security_sharing_rules_criteria.htm&language=en_US&type=5
+- **Grant Access to Records with Manual Sharing in Lightning Experience** — https://help.salesforce.com/s/articleView?id=platform.granting_access_to_records_lex.htm&language=en_US&type=5
+- **Considerations for Using Account Teams** — https://help.salesforce.com/s/articleView?id=sales.accountteam_def.htm&language=en_US&type=5
+  Lists Profiles among the account access methods — useful against "profiles never grant record access".
+- **Considerations for Sharing and Accessing Contacts** — https://help.salesforce.com/s/articleView?id=sales.contacts_sharing_considerations.htm&language=en_US&type=5
+- **Salesforce Entity Key Prefix Decoder** — https://help.salesforce.com/s/articleView?id=000385203&language=en_US&type=1
+  User = 005.
+
+**Automation**
+- **Salesforce Workflow Rules & Process Builder End of Support** — https://help.salesforce.com/s/articleView?id=000389396&language=en_US&type=1
+- **Add Actions to Your Process** — https://help.salesforce.com/s/articleView?id=platform.process_action.htm&language=en_US&type=5
+- **Configure the Process Trigger** — https://help.salesforce.com/s/articleView?id=sf.process_start.htm&language=en_US&type=5
+  Enumerates the Record Change trigger settings; the `platform.` and `sf.process_which_object` variants both 404.
+- **Add Automated Actions to a Classic Approval Process** — https://help.salesforce.com/s/articleView?id=platform.approvals_automated_actions.htm&language=en_US&type=5
+- **Workflow Limits** — https://help.salesforce.com/s/articleView?id=platform.workflow_limits.htm&language=en_US&type=5
+- **Field Updates That Reevaluate Workflow Rules** — https://help.salesforce.com/s/articleView?id=platform.workflow_field_updates_reevalute_wf.htm&language=en_US&type=5
+- **Considerations for Field Update Actions** — https://help.salesforce.com/s/articleView?id=platform.workflow_field_update_considerations.htm&language=en_US&type=5
+- **Triggers and Order of Execution** — https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_order_of_execution.htm
+- **Before-Save Record-Triggered Flows** — https://help.salesforce.com/s/articleView?id=platform.flow_concepts_trigger_record.htm&language=en_US&type=5
+- **Custom Error Element** — https://help.salesforce.com/s/articleView?id=platform.flow_ref_elements_custom_error.htm&language=en_US&type=5
+- **Connecting to an API Without a Connector Using HTTP Callout** — https://help.salesforce.com/s/articleView?id=platform.flow_http_callout.htm&language=en_US&type=5
+- **Record-Triggered Automation (decision guide)** — https://architect.salesforce.com/docs/architect/decision-guides/guide/record-triggered.html
+  "Use one entry point per Salesforce Object."
+- **Classic Approval Processes** — https://help.salesforce.com/s/articleView?id=platform.what_are_approvals.htm&language=en_US&type=5
+- **Identify Assigned Approvers for an Approval Step** — https://help.salesforce.com/s/articleView?id=platform.approvals_step_approver.htm&language=en_US&type=5
+- **Classic Approval Processes User Preferences** — https://help.salesforce.com/s/articleView?id=platform.approvals_change_approval_user_pref.htm&language=en_US&type=5
+
+**Data loading, sandboxes, deployment**
+- **When to Use Data Loader** — https://developer.salesforce.com/docs/atlas.en-us.dataLoader.meta/dataLoader/when_to_use_the_data_loader.htm
+  The help-site `sf.when_to_use_the_data_loader` URL redirects here.
+- **What kind of objects can I import?** — https://help.salesforce.com/s/articleView?id=sf.faq_data_import_wizard_what_kind_objects.htm&language=en_US&type=5
+- **Sandbox Licenses and Storage Limits by Type** — https://help.salesforce.com/s/articleView?id=platform.data_sandbox_environments.htm&language=en_US&type=5
+- **Deploy a Change Set** — https://help.salesforce.com/s/articleView?id=platform.changesets_inbound_deploy.htm&language=en_US&type=5
+- **Deployment Connections for Change Sets** — https://help.salesforce.com/s/articleView?id=sf.changesets_about_connection.htm&language=en_US&type=5
+- **Install a Managed Package** — https://help.salesforce.com/s/articleView?id=sf.distribution_installing_packages.htm&language=en_US&type=5
+  `platform.distribution_installing_packages` 404s.
+- **Account Hierarchy: Set Up** — https://help.salesforce.com/s/articleView?id=sales.account_hierarchy_setup_lex.htm&language=en_US&type=5
+- **Considerations for Using Account Hierarchy** — https://help.salesforce.com/s/articleView?id=sales.account_parent_lex.htm&language=en_US&type=5
+
 ## Known dead
 
 Do not re-add these; all look plausible and all 404.
@@ -437,6 +588,44 @@ worth internalising: a real article name with an **invented suffix or namespace*
 - `sf.networks_contactless_users.htm` → use `sf.external_identity_manage_create_contactless_users.htm`
 - `…apexcode/apex_classes_ConnectedApp.htm` → real: `…apexref/apex_class_Auth_ConnectedAppPlugin.htm`
 
+### From the IAM answer-verification pass (2026-08-10)
+
+Both are the **atlas apexref** failure mode, and both were the top Google result for
+`Auth.RegistrationHandler`. Neither is a 404 — one renders an empty shell, the other
+renders the book's table of contents, so only opening them reveals the problem.
+
+- `…/docs/atlas.en-us.apexref.meta/apexref/apex_auth_plugin.htm` — renders a body of
+  **15 characters** ("Skip Navigation") with the bare title "Salesforce Developers",
+  even after waiting for the client-side render. The article historically lived in the
+  `apexcode` book, same migration pattern as the ConnectedAppPlugin entry above.
+- `…/docs/atlas.en-us.apexref.meta/apexref/apex_interface_Auth_RegistrationHandler.htm`
+  — guessed from the naming convention of its sibling interfaces
+  (`apex_interface_Auth_ConfigurableSelfRegHandler.htm` and friends, which are real).
+  Answers 200 and renders the **Apex Reference Guide root TOC**, not the interface.
+  A plausible-looking id that follows a real convention is still a guess.
+
+A third dead id, and the only one so far that produces the **textbook 404-wearing-a-200**:
+
+- `sf.security_require_two-factor_authentication.htm` — renders "We looked high and low but
+  couldn't find that page" in a 633-character body. Note the **hyphen** in `two-factor`.
+- The deck's own citation uses **underscores** — `sf.security_require_two_factor_authentication.htm`
+  — and that one is **alive**, but it resolves to the general "Multi-Factor Authentication
+  for Salesforce Orgs" overview rather than an article matching its id. Fine to cite for
+  MFA questions; do not expect a page about *requiring* MFA. One character of difference
+  separates a live redirect from a dead link, so copy ids rather than retyping them.
+
+Use instead, both rendered and confirmed:
+- **Create an Authentication Provider Registration Handler** — https://help.salesforce.com/s/articleView?id=xcloud.sso_create_registration_handler.htm&language=en_US&type=5
+  Carries the sentences that settle the whole Registration Handler cluster: "The
+  registration handler creates and updates Salesforce users after they authenticate
+  with the identity provider", and for a returning user, "If there is a matching user,
+  the registration handler updates the user record with information from the identity
+  provider." Note it does **not** contain the method names `createUser`/`updateUser`.
+- **Customize the Auth. Provider Apex Class** (Mobile SDK guide) — https://developer.salesforce.com/docs/platform/mobile-sdk/guide/communities-customize-auth-provider.html
+  This is where the method names live: `createUser()`, `updateUser()`, `canCreateUser()`,
+  and the auto-generated `AutocreatedRegHandlerxxxxxx` class. A newer `/docs/platform/…`
+  path, which renders reliably where the atlas ids did not.
+
 ### Others
 
 - `https://releasenotes.docs.salesforce.com/en-us/spring20/release-notes/rn_lex_enhanced_related_lists.htm`
@@ -444,6 +633,32 @@ worth internalising: a real article name with an **invented suffix or namespace*
 - `https://developer.salesforce.com/docs/atlas.en-us.connect_api.meta/connect_api/intro.htm`
   — the Connect REST API guide is under the `chatterapi` book, not `connect_api`. This URL
   renders the bare "Salesforce Developers" shell. Use `…chatterapi/intro_using_chatter_connect.htm`.
+
+### From the Platform App Builder pass (2026-08-11)
+
+All of these render the "We looked high and low but couldn't find that page" shell
+behind HTTP 200. Every one is a **namespace guess** — the article exists, but under a
+different prefix. Try `sf.`, then `sales.`, then `xcloud.` before concluding an id is
+dead, and never cite a `platform.` id you have not opened.
+
+- `help.salesforce.com/s/articleView?id=platform.fields_useful_validation_formulas.htm`
+  — the examples live at `platform.fields_useful_field_validation_formulas.htm`; for
+  general guidance cite `platform.fields_validation_rules_tips.htm` instead. This one
+  was drafted into three findings before being caught by rendering.
+- `platform.collab_feed_tracking.htm` — live at `sf.collab_feed_tracking.htm`.
+- `platform.faq_data_import_wizard_what_kind_objects.htm` — live at `sf.`.
+- `platform.distribution_installing_packages.htm` — live at `sf.`.
+- `platform.when_to_use_the_data_loader.htm` — the topic moved out of Help entirely,
+  into the Data Loader Guide on developer.salesforce.com.
+- `platform.domain_name_overview.htm` and `sf.domain_name_overview.htm` — only the
+  `xcloud.` namespace renders My Domain.
+- `platform.schema_builder_creating_fields.htm` — the article is
+  `sf.schema_builder_elements_fields.htm`.
+- `platform.lcc_appexchange_packages_overview.htm` and its `sf.` twin — both dead;
+  no replacement found, use `sf.distribution_installing_packages.htm` for AppExchange
+  installation claims.
+- `platform.flow_concepts_trigger_guidelines.htm` and its `sf.` twin — both dead. For
+  flow-consolidation guidance cite the architect decision guide instead.
 
 ### From the Platform Developer II deck pass
 
@@ -494,3 +709,255 @@ listing. Check the `<h1>` and the breadcrumb, not just `document.title`.
 Old release-note URLs are the most fragile category — Salesforce reorganises them
 between releases. Prefer a current help article over a release note when both
 cover the fact.
+
+---
+
+# Verified Databricks documentation
+
+Added 2026-08-15 during the first Databricks pass (Data Engineer Associate, 153 q).
+Every URL below was fetched and returned HTTP 200; the ones carrying a decisive fact
+were additionally rendered and read.
+
+## Databricks docs behave differently from Salesforce Help — this is the important part
+
+**`docs.databricks.com` returns honest 404s.** An invented article id gets a real
+`404` status, unlike `help.salesforce.com`, which answers every id with `200`. So a
+plain status check is a *reliable* deadness test here, and URL verification is far
+cheaper on this vendor than on Salesforce.
+
+Two caveats that still bite:
+
+- In a **browser** a 404 renders a friendly "We can't find the article you're looking
+  for" page with the generic title `Databricks on AWS`, so it *looks* like a soft 404.
+  The status underneath is genuinely 404 — check the status, not the rendering.
+- A `200` proves the page exists, **not** that it contains your claim. That trap is
+  live here: this deck shipped a Delta Live Tables *tutorial* URL as the citation on a
+  *table-permissions* question. It renders perfectly and is plainly the wrong page.
+
+Fastest bulk check: open any `docs.databricks.com` page in the browser tool, then
+`fetch()` candidate URLs from that origin in a loop — same-origin, so no CORS, and the
+final `r.url` shows you where each one redirects.
+
+## Renames and redirects to know
+
+| Old | Now | Notes |
+|---|---|---|
+| `/dlt/…` | `/ldp/…` | **Delta Live Tables → Lakeflow Declarative Pipelines.** All DLT URLs redirect |
+| `/delta-sharing/` | `/opensharing` | |
+| `/delta/vacuum`, `/delta/history`, `/delta/clustering`, `/delta/update-schema` | `/tables/…` | The `/delta/` tree largely moved under `/tables/` |
+| `/compute/sql-warehouse/serverless` | `/admin/sql/serverless` | |
+| `/structured-streaming/` | `/structured-streaming/concepts` | |
+| Data Explorer | **Catalog Explorer** | UI rename; decks still say Data Explorer |
+| `/connect/external-systems/jdbc` | `/archive/connectors/jdbc` | Redirects into `/archive/` — **don't cite**, it will age out |
+
+Dead guesses that looked plausible and were not real: `/jobs/task-dependencies`
+(use `/jobs/configure-task`), `/jobs/schedule` (use `/jobs/triggers`), `/ldp/python-dev`,
+`/ldp/sql-ref`, `/sql/language-manual/functions/groupby`, `/tables/write`,
+`/notebooks/variable-explorer`, `/optimizations/join-strategies`.
+
+## Settled facts
+
+| Fact | Value | Source |
+|---|---|---|
+| Job cluster notebook output ceiling | **30 MB**. Distinct from *maximum cell output size*, which **defaults to 10 MB** and is configurable 1–20 MB via `%set_cell_max_output_size_in_mb`. A classic default-vs-ceiling trap | Known limitations of Databricks notebooks |
+| Expectation actions | `EXPECT` = warn (invalid rows **written** to target); `EXPECT … ON VIOLATION DROP ROW` = dropped before write, count logged with dataset metrics; `EXPECT … ON VIOLATION FAIL UPDATE` = update fails, manual intervention needed | Manage data quality with pipeline expectations |
+| Notebook cell languages | **One language per cell.** A `%python`/`%sql` magic overrides the *whole* cell — it does not mix languages within one | Develop code in Databricks notebooks |
+| Auto Loader schema inference | For formats that don't encode types (**JSON, CSV, XML**) all columns infer as **strings**. Samples first **50 GB or 1000 files** | Configure schema inference and evolution in Auto Loader |
+| `cloudFiles.schemaEvolutionMode` | `addNewColumns` (default, fails then restarts with new schema), `addNewColumnsWithTypeWidening`, `rescue`, `failOnNewColumns` (fails and does **not** restart), `none` | same |
+| `Trigger.Once` | **Deprecated** since DBR 11.3 LTS — use `Trigger.AvailableNow`. `AvailableNow` splits the backlog into **multiple** incremental batches; `Once` uses a single batch | Configure Structured Streaming trigger intervals |
+| Intelligent Workload Management (IWM) | **Serverless SQL warehouses only.** Documented as enhancing "Databricks SQL Serverless's ability to process large numbers of queries quickly and cost-effectively". Pro gets Photon + Predictive IO; Classic gets Photon only | SQL warehouse types |
+| Unity Catalog lineage retention | **Indefinite** (all lineage captured after 2024-09-01). Not 90 days, not 3 months | Lineage in Unity Catalog |
+| Dropping UC tables | **Managed** → metadata *and* underlying data files removed. **External** → metadata only, data files left intact | Work with external tables |
+| `TBLPROPERTIES` syntax | Requires parenthesised key-value pairs: `TBLPROPERTIES ('PII' = 'true')`. A bare `TBLPROPERTIES PII` is a **syntax error** — `COMMENT "…"` is what takes a bare string literal | Table properties and table options |
+| Notebook debugger | Provides breakpoints, step-by-step execution and a **variable explorer pane**. A breakpoint stops *before* the line runs — it does **not** raise type errors | Debug Databricks notebooks |
+| Git folders (Repos) | Now support **merge, rebase, resolve conflicts, reset** in-workspace. Older exam items claiming merge must happen outside Databricks are **stale** | Create and manage Git folders |
+| Legacy vs UC grants | `USAGE ON DATABASE` is legacy Hive metastore. Unity Catalog uses `USE CATALOG` / `USE SCHEMA`, plus `SELECT` to read | Privileges reference |
+| Control vs compute plane | Control plane = Databricks-managed backend services in the Databricks account (web app). Compute plane = where data is processed; classic runs in the customer's cloud account | High-level architecture |
+
+**Not documented by Databricks**, despite appearing in this deck: any rule of thumb
+reading a **CPU-time vs task-time ratio** in the Spark UI. The Spark UI guide diagnoses
+slow stages by I/O, small files, skew, spill and slow UDFs, and never frames that ratio.
+
+---
+
+# Verified Salesforce Revenue Cloud documentation
+
+From the salesforce-revenue-cloud pass (2026-08-15). Every URL below was opened in
+the browser and confirmed to render the named article.
+
+## The rename that shapes every search
+
+Revenue Cloud is now documented as **"Agentforce Revenue Management (formerly
+Revenue Cloud)"**, and its Help articles live in the **`ind.`** namespace. Search
+results still surface `sf.` ids for the same titles and **many of those 404** — see
+Known dead below. When a `sf.pricing_*` or `sf.product_catalog_*` id fails, try the
+`ind.` equivalent before concluding the article is gone.
+
+## How this vendor fails (confirmed by test)
+
+An invented `ind.` article id renders **"We looked high and low but couldn't find
+that page"** under the generic title `Salesforce Help | Article`. A real one renders
+the article title. So on help.salesforce.com **title alone is a reliable signal** —
+but the title lags one call behind `navigate`, so read `document.title` in a
+follow-up call, not from the navigate output. Batching across several tabs and
+reading titles one call later verifies ~8 URLs per round trip.
+
+`developer.salesforce.com` atlas pages render their title immediately, and a dead
+book/section id yields an **empty body** (innerText length ~15) under the generic
+title `Salesforce Developers`. `cml_cml_core_concepts.htm` fails this way.
+
+## Settled facts
+
+| Fact | Value | Source |
+|---|---|---|
+| Place Sales Transaction line items | **1,000** quote line items per quote, 1,000 order products per order; 3,000 line item attributes | Place Sales Transaction (POST) |
+| Place Order line items | **300** max, and the API is **deprecated as of API v63.0** in favour of Place Sales Transaction | Place Order (POST) |
+| quantityScaleMethod valid values | **Constant** and **Proportional** only — "None" is not a value. Proportional means child qty = parent x child | Product Related Component |
+| Products List (POST) inputs | catalogId, categoryId, productClassificationId optional; **priceBookId is Required**. There is **no** productIds property | Products List (POST) |
+| Standard context definition | Can only be **extended or cloned**, never edited or deleted. Extend keeps the inheritance link and receives upgrades; clone is a point-in-time copy that does not | Context Definitions |
+| Context definition health check | Query ContextDefinition; InheritedFrom should be blank if ClonedFrom is populated. Both populated causes unexpected pricing errors — recreate it | KB 004259656 |
+| Pricing procedure inputs | Elements map Input Variables to **context tags**, not raw attributes — an untagged attribute is invisible to the procedure | Use Context Definitions |
+| Decomposition Scope | Broad to narrow: **Account, Order, Bundle, Order Line Item**. Order Line Item is the default. A child's scope must not be broader than its parent's | Decomposition Scope |
+| Local vs group cardinality | Local = default/min/max **quantity** of one component. Group = min/max **number of child components** | Define Quantity Limits for Bundled Products |
+| Activated orders | Once status moves Draft to Activated, items cannot be edited on the order **regardless of permissions** | View and Edit Orders |
+| Quote-to-contract popup | Driven by flow rev_contracts__CreateCntrFromQuote, set in Setup > Revenue Settings; admins customize by entering a **different flow API name** | Map a Flow to Capture Quote Line Pricing on Contracts |
+| Contract extraction template | Defines **attribute mapping, context mapping, and prompt instructions**; Create Attribute Definition clones ContractsExtractionContext | Create a Contract Extraction Template |
+| Asset lifecycle permissions | Separate permission sets per action: **InitiateAmendment API, InitiateCancellation API, InitiateRenewal API**, plus Assetize Order — so one action can be withdrawn without the others | Assign Revenue Management Permission Sets |
+| PCM Viewer vs Designer | Viewer = **read**; Designer = **read-write** plus Product Discovery setup. Product Discovery User = use the browsing experience | Assign Revenue Management Permission Sets |
+| Migrated assets | Amend/renew/cancel work **only** with assets created through order activation. Migrated or manually created assets may lack the required relationships | Amending, Renewing, and Canceling Assets |
+| Pricing Operations Console | **Renamed** to Revenue Cloud Operations Console. Article title is "Monitor and Troubleshoot Pricing Issues" | ind.pricing_operations_console |
+
+## Confirmed URLs — Help (pricing)
+
+- https://help.salesforce.com/s/articleView?id=ind.pricing_use_context_definitions.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.pricing_pricing_procedures.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.pricing_pricing_element.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.pricing_discount_spread_service.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.pricing_subscription_pricing_proration.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.pricing_attribute_based_price.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.pricing_create_bundle_based_adjustments.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.pricing_price_adjustment_matrix.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.pricing_operations_console.htm&language=en_US&type=5
+
+## Confirmed URLs — Help (catalog, configurator, discovery)
+
+- https://help.salesforce.com/s/articleView?id=ind.product_catalog_products.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.product_catalog_qualification_rules.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.product_catalog_change_a_configurable_bundle_product_to_a_static_bundle_product.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sf.product_catalog_local_cardinality_and_group_cardinality.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.product_configurator_use_the_cml_editor.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.product_configurator_product_configurator_permissions.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?language=en_US&id=ind.product_configurator_configure_bundled_products.htm&type=5
+- https://help.salesforce.com/s/articleView?language=en_US&id=ind.qocal_set_up_product_discovery.htm&type=5
+
+## Confirmed URLs — Help (quote, order, asset lifecycle)
+
+- https://help.salesforce.com/s/articleView?id=ind.qocal_manage_assets_in_revenue_lifecycle_management.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.qocal_renew_assets.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.qocal_asset_lifecycle.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.qocal_view_and_edit_orders.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.qocal_manage_orders_in_revenue_lifecycle_management.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.qocal_create_asset_contract_relationship.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.qocal_flow_templates_automate_renewal_opportunity_creation_and_asset_renewal.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.qocal_considerations_syncing_quotes_and_opportunities_in_revenue_cloud.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.qocal_set_up_quote_and_order_features_in_revenue_cloud.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.qocal_setup_tax_engine.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sf.qocal_quote_to_contract_flow.htm&language=en_US&type=5 (renders as "Map a Flow to Capture Quote Line Pricing on Contracts")
+- https://help.salesforce.com/s/articleView?id=ind.transaction_management_essentials.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sf.order_edit.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sales.cpq_quotes_without_opportunities.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sales.quotes_synch.htm&language=en_US&type=5
+
+## Confirmed URLs — Help (DRO, billing, usage, contracts, setup)
+
+- https://help.salesforce.com/s/articleView?id=sf.dro_decomposition_scope.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.dro_in_flight_order_changes.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.dro_fulfillment_plan_actions_and_information.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.dro_define_how_a_product_decomposes.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.billing.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.billing_credit_memos.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sf.blng_advance_and_arrears.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?language=en_US&id=sf.blng_invoice_sched.htm&type=5
+- https://help.salesforce.com/s/articleView?id=ind.um_define_a_product_usage_grant.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.sf_contracts_create_a_contract_extraction_template_for_extraction.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.sf_contracts_View_the_Standard_ContractsExtractionContext_Mapping.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.sf_contracts_Salesforce_Contracts_Overview.htm&language=en_US
+- https://help.salesforce.com/s/articleView?language=en_US&id=ind.revenue_cloud_permission_sets_table.htm&type=5
+- https://help.salesforce.com/s/articleView?id=ind.setup_revenue_cloud.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.data_model_overview.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.context_service_context_definitions.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.context_service_add_context_mapping.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.revenue_intelligence_set_up_revenue_management_intelligence.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.revenue_intelligence_install_deploy_rev_intelligence_data_kit.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ind.revenue_management_intelligence_for_revenue_cloud.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=004259656&language=en_US&type=1 (Context Definition Extension Best Practices)
+- https://help.salesforce.com/s/articleView?id=004576666&language=en_US&type=1 (New Contract vs Create Contract buttons)
+
+## Confirmed URLs — developer guide
+
+All under https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/ unless noted:
+
+- connect_resources_products_list.htm
+- connect_resources_product_details.htm
+- product_discovery_business_apis.htm
+- connect_resources_place_sales_transaction.htm
+- connect_resources_place_order.htm
+- connect_resources_place_supplemental_transaction.htm
+- connect_resources_pricing_process_execution.htm
+- connect_responses_product_related_component_output.htm
+- sforce_api_objects_asset.htm
+- sforce_api_objects_assetstateperiod.htm
+- sforce_api_objects_assetstateperiodattribute.htm
+- sforce_api_objects_assetactionsource.htm
+- sforce_api_objects_assetcontractrelationship.htm
+- sforce_api_objects_productusagegrant.htm
+- apex_interface_commercetax_TaxEngineAdapter.htm
+- cml_what_is_constraint_modeling_language.htm
+- cml_cml_best_practices.htm
+- cml_constraints.htm
+- cml_types.htm
+
+Also confirmed:
+- https://developer.salesforce.com/docs/atlas.en-us.industries_reference.meta/industries_reference/context_service_overview.htm
+- https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_billingschedule.htm
+- https://developer.salesforce.com/docs/platform/data-models/guide/usage-management.html
+
+## Confirmed URLs — Trailhead
+
+All under https://trailhead.salesforce.com/content/learn/modules/:
+
+- product-catalog-management-with-revenue-cloud/get-started-with-product-catalog-management
+- product-catalog-management-with-revenue-cloud/create-a-product-bundle
+- price-management-with-revenue-cloud/implement-attribute-based-pricing
+- price-management-with-revenue-cloud/set-up-bundle-based-pricing
+- advanced-price-management-with-revenue-cloud/configure-contract-based-pricing
+- advanced-price-management-with-revenue-cloud/set-up-subscription-pricing-with-proration
+- asset-lifecycle-management-with-revenue-cloud/manage-customer-asset-amendments
+- asset-lifecycle-management-with-revenue-cloud/manage-customer-asset-renewals-and-cancellations
+- billing-management-with-revenue-cloud/create-billing-policies-and-treatments
+- billing-management-with-revenue-cloud/generate-invoices-revenue
+- complex-order-decomposition-and-orchestration-with-revenue-cloud/define-an-order-decomposition
+- product-qualification-and-disqualification-with-agentforce-revenue-management/manage-product-visibility
+- revenue-cloud-design/set-up-your-product-offerings
+- revenue-cloud-design/configure-pricing-for-products
+- usage-management-foundations/get-to-know-usage-management
+- deep-dive-into-salesforce-contracts/create-update-and-manage-contracts-hoc
+
+## Known dead — from the Revenue Cloud pass (2026-08-15)
+
+All seven were caught by browser verification. Five came from search-result
+listings; two were constructed during the pass.
+
+| Dead URL | Replacement |
+|---|---|
+| sf.pricing_attribute_based_price.htm | ind.pricing_attribute_based_price.htm ("Attribute-Based Discounts") |
+| sf.pricing_bundle_based_price.htm | ind.pricing_create_bundle_based_adjustments.htm |
+| sf.pricing_price_adjustment_matrix.htm | ind.pricing_price_adjustment_matrix.htm ("Dynamic Pricing With Price Adjustment Matrix") |
+| sf.product_catalog_qualification_rules_key_terms.htm | ind.product_catalog_qualification_rules.htm |
+| sf.product_catalog_view_and_assign_permission_set_licenses_in_product_catalog_management.htm | dropped; use the permission set table |
+| https://www.salesforce.com/company/legal/safe-harbor/ (HTTP 404) | none found — no citable Safe Harbor page |
+| trailhead.../modules/salesforce-implementation-strategies (404) | ind.setup_revenue_cloud.htm |
+
+**The lesson worth carrying:** the five `sf.*` ids all appeared as titled results in
+web search. Search returning a title is not evidence the URL resolves — for these,
+the article had moved to the `ind.` namespace and the old id 404s. Always render.
