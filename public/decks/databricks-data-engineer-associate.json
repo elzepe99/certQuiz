@@ -429,7 +429,7 @@
   },
   {
     "id": "e37b5308",
-    "question": "A data engineer needs to create a table in Databricks using data from a CSV file at location /path/to/csv. They run the following command: Which of the following lines of code fills in the above blank to successfully complete the task?",
+    "question": "A data engineer needs to create a table in Databricks using data from a CSV file at location /path/to/csv. They run the following command:\n```sql\nCREATE TABLE new_table\n_____\nOPTIONS (\n  header = \"true\",\n  delimiter = \"|\"\n)\nLOCATION \"path/to/csv\"\n```\nWhich of the following lines of code fills in the above blank to successfully complete the task?",
     "optionA": "USING DELTA",
     "optionB": "FROM CSV",
     "optionC": "None of these lines of code are needed to successfully complete the task",
@@ -1396,7 +1396,7 @@
   },
   {
     "id": "ab519345",
-    "question": "A data engineer needs to create a table in Databricks using data from their organization's existing SQLite database. They run the following command: Which of the following lines of code fills in the above blank to successfully complete the task?",
+    "question": "A data engineer needs to create a table in Databricks using data from their organization's existing SQLite database. They run the following command:\n```sql\nCREATE TABLE jdbc_customer360\nUSING _____\nOPTIONS (\n  url \"jdbc:sqlite:/customers.db\",\n  dbtable \"customer360\"\n)\n```\nWhich of the following lines of code fills in the above blank to successfully complete the task?",
     "optionA": "org.apache.spark.sql.jdbc",
     "optionB": "sqlite",
     "optionC": "autoloader",
