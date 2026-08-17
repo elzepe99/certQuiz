@@ -17,9 +17,12 @@
  *     { "id": "c19a756b", "verdict": "confirmed",
  *       "references": ["https://..."] },
  *
+ *     { "id": "7a1c0d94", "verdict": "clarified",
+ *       "explanation": "...", "references": ["https://..."] },
+ *
  *     { "id": "b054672a", "verdict": "reasoning",
  *       "explanation": "...", "references": ["https://..."],
- *       "note": "answer stands; mechanism was stated imprecisely" },
+ *       "note": "answer stands; the explanation taught a limit that does not exist" },
  *
  *     { "id": "9f21ab03", "verdict": "corrected",
  *       "was": "A", "correct": "C,D",
@@ -68,7 +71,17 @@ if (!/^\d{4}-\d{2}-\d{2}$/.test(reviewed ?? '')) {
   process.exit(1);
 }
 
-const VERDICTS = new Set(['confirmed', 'reasoning', 'corrected']);
+/**
+ * `corrected` and `reasoning` stamp a visible notice onto the question;
+ * `clarified` and `confirmed` do not.
+ *
+ * The notice is a warning a learner meets mid-study, so it has to mean something
+ * changed that bears on the answer: the key moved, the item is defective, or the
+ * old explanation taught something false. A cleaner rewrite of prose that was
+ * merely thin is invisible work — `clarified` improves the explanation and says
+ * nothing, so the notices that remain keep their weight.
+ */
+const VERDICTS = new Set(['confirmed', 'clarified', 'reasoning', 'corrected']);
 const LETTERS = ['A', 'B', 'C', 'D', 'E'];
 
 /** Split an explanation into prose and its existing reference list. */
@@ -133,7 +146,22 @@ for (const [i, f] of (spec.findings ?? []).entries()) {
 
   if (f.verdict === 'reasoning') {
     if (!f.explanation?.trim()) errors.push(`${where}: verdict 'reasoning' needs a replacement explanation`);
-    if (!f.note?.trim()) errors.push(`${where}: verdict 'reasoning' needs a note`);
+    if (!f.note?.trim()) {
+      errors.push(
+        `${where}: verdict 'reasoning' needs a note naming the false claim or the item defect — ` +
+          `if the old explanation was merely thin, the verdict is 'clarified'`,
+      );
+    }
+  }
+
+  if (f.verdict === 'clarified') {
+    if (!f.explanation?.trim()) errors.push(`${where}: verdict 'clarified' needs a replacement explanation`);
+    if (f.note?.trim()) {
+      errors.push(
+        `${where}: verdict 'clarified' raises no notice, so its note would be discarded — ` +
+          `use 'reasoning' if the old explanation was actually wrong, or drop the note`,
+      );
+    }
   }
 
   planned.push({ f, q, refs });
@@ -157,7 +185,7 @@ if (errors.length) {
   process.exit(1);
 }
 
-const counts = { confirmed: 0, reasoning: 0, corrected: 0 };
+const counts = { confirmed: 0, clarified: 0, reasoning: 0, corrected: 0 };
 let refsAdded = 0;
 
 for (const { f, q, refs } of planned) {
@@ -174,7 +202,9 @@ for (const { f, q, refs } of planned) {
     console.log(`${q.id}  ${from} -> ${q.correct}  ${f.note.slice(0, 84)}`);
   } else if (f.verdict === 'reasoning') {
     stampCorrection(q, { via: 'validation', note: f.note, date: reviewed });
-    console.log(`${q.id}  ${q.correct} (unchanged)  reasoning rewritten`);
+    console.log(`${q.id}  ${q.correct} (unchanged)  explanation was wrong — flagged`);
+  } else if (f.verdict === 'clarified') {
+    console.log(`${q.id}  ${q.correct} (unchanged)  explanation improved — silent`);
   }
   counts[f.verdict]++;
 }
@@ -187,8 +217,9 @@ if (!DRY) {
 
 console.log(
   `\n${DRY ? '[dry run] ' : ''}${planned.length} of ${deck.length} question(s) touched — ` +
-    `${counts.corrected} answer(s) corrected, ${counts.reasoning} reasoning fix(es), ` +
-    `${counts.confirmed} confirmed. ${refsAdded} reference(s) added.`,
+    `${counts.corrected} answer(s) corrected, ${counts.reasoning} flagged reasoning fix(es), ` +
+    `${counts.clarified} silent clarification(s), ${counts.confirmed} confirmed. ` +
+    `${refsAdded} reference(s) added.`,
 );
 
 // Coverage across the WHOLE deck, not just this batch — the point of the pass is

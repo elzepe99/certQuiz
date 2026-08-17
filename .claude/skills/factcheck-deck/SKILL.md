@@ -101,10 +101,33 @@ For each batch of N questions:
 4. **Record a verdict per question** in the findings file (schema below). Every
    question gets one of:
    - `confirmed` — answer right, reasoning sound. Attach the reference.
-   - `reasoning` — answer right, explanation wrong or imprecise. Rewrite the
-     explanation, attach the reference, leave the key alone.
+   - `clarified` — answer right, explanation improved but nothing it said was
+     false. Rewrite the explanation, attach the reference, **no note** — this
+     verdict raises no notice, and the applier rejects a note it would discard.
+   - `reasoning` — answer right, but the explanation was *wrong*. Rewrite it,
+     attach the reference, leave the key alone, and write a note naming the false
+     claim or the item defect.
    - `corrected` — answer wrong. Supply the new key, a rewritten explanation, a
      reference, and a note saying what the documentation established.
+
+   **`clarified` vs `reasoning` — the line that matters.** `reasoning` and
+   `corrected` stamp a warning the learner meets mid-study, so a notice has to
+   earn its place. Stamp one only when the answer moves, the item is defective,
+   or the old explanation would have **misled** someone who believed it:
+
+   | Stamp a notice (`reasoning`)              | Stay silent (`clarified`)          |
+   | ----------------------------------------- | ---------------------------------- |
+   | Taught a limit or field that does not exist | Prose was thin or a bare restatement |
+   | Argued for an option the key does not name  | Did not say why a distractor is wrong |
+   | Contradicted the key in its opening line    | Wording tightened, structure improved |
+   | Cited a retired capability or an exam dump  | A reference was added                |
+   | Item is broken: duplicate options, missing options, unanswerable without a lost image | Explanation rewritten to be clearer about the same, correct mechanism |
+
+   The test: **would a learner who read the old explanation now hold a false
+   belief?** If yes, it is `reasoning` and the note says which belief. If it just
+   reads better now, it is `clarified` and nothing appears on the question. A deck
+   whose notices all say "explanation adjusted" has trained its reader to skip
+   them, which costs you the one place a real answer change is announced.
 
 5. **Write the findings file after every batch, not at the end.** A long run that
    dies at question 120 should resume, not restart.
@@ -208,8 +231,9 @@ Re-run the structural audit, and confirm:
   was actually rendered, not merely search-listed
 - no `�` replacement characters anywhere (an encoding regression)
 
-Then report: total checked, confirmed, reasoning-only fixes, answers corrected —
-and for each corrected answer, one line on what the documentation established.
+Then report: total checked, confirmed, silent clarifications, flagged reasoning
+fixes, answers corrected — and for each corrected answer, one line on what the
+documentation established.
 Say plainly which questions you could not settle, rather than quietly leaving them
 as `confirmed`. An unresolved question the user knows about is fine; one
 misreported as verified is not.

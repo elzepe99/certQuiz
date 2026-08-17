@@ -7,12 +7,7 @@
     "optionC": "To provide and manage the relevant data inputs and variables required for transactional calculations",
     "correct": "C",
     "explanation": "Context Service is a generic module that sits as a layer between applications and procedures, letting each step of a process retrieve and use the data it needs. In Revenue Cloud that is what feeds the transactional calculations: a context definition describes the nodes, attributes, context tags, and the mapping from Salesforce objects, and the pricing procedure reads its inputs from those tags and writes results back to them. Revenue Cloud's end-to-end transactions run on the SalesTransactionContext context definition, which links sales transactions to quotes, assets, and orders.\nThat rules out the other two options: building and managing catalogs and bundles is Product Catalog Management, and generating contracts is handled by the quote-to-contract flow, not by Context Service.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.industries_reference.meta/industries_reference/context_service_overview.htm\nhttps://help.salesforce.com/s/articleView?id=ind.pricing_use_context_definitions.htm&language=en_US&type=5",
-    "_cat": "Context Service",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer C stands. Rewritten because the original explanation presented a fabricated block quote as an 'Exact Extract from Salesforce Revenue Cloud Platform Concepts' and cited two further guides ('CPQ and Billing Integration Guide - Context Service Data Flow', 'Subscription Management Implementation Guide - Transaction Context Handling') that do not exist. The quoted sentence returns no matches anywhere."
-    }
+    "_cat": "Context Service"
   },
   {
     "id": "ef770e8b",
@@ -32,12 +27,7 @@
     "optionC": "Rebuild Index.",
     "correct": "C",
     "explanation": "With Use Indexed Data for Product Listing and Search enabled, Browse Catalog reads from a search index rather than querying products directly, so a newly created product stays invisible until the index is rebuilt. The rebuild is run from Product Catalog Management: open the Product Catalog Management app, click the Index and Search Configuration tile, click Rebuild Index, choose Full Index Rebuild, and wait for Rebuild History to show Completed.\nThe other two options address unrelated subsystems. Rebuild Constraint Model recompiles configuration rules used by the Product Configurator and has no bearing on catalog visibility, and Rebuild Ramp Segment concerns the multi-period structure of ramp deals. Both settings are enabled in this org, which is what makes them plausible distractors, but neither controls what Browse Catalog can see.\nReferences:\nhttps://trailhead.salesforce.com/content/learn/modules/product-catalog-management-with-revenue-cloud/get-started-with-product-catalog-management",
-    "_cat": "Pricing & Discounts",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer C stands and the reasoning was already correct. Rewritten only to remove three fabricated 'Exact Extracts from Salesforce CPQ & Subscription Management Documentation' and a reference block naming two guides that do not exist, replacing them with the documented click path."
-    }
+    "_cat": "Pricing & Discounts"
   },
   {
     "id": "4b342cdb",
@@ -62,12 +52,7 @@
     "optionC": "Prioritize stakeholder preferences for custom bundles so each bundle independently supports different business units.",
     "correct": "B",
     "explanation": "A shared catalog with reusable components is what satisfies both halves of the brief. Product Catalog Management is built for exactly this: attributes are defined once and reused across products, selling models are applied per product so each line of business can sell one-time, term, or evergreen without duplicating records, and bundles are assembled from shared components rather than authored separately. That gives each business unit its own bundling logic and approval requirements while the executive team still gets one catalog to govern and cross-sell from.\nSeparate catalogs per business unit would isolate the logic but defeat the stated goals of reuse, governance, and cross-selling, and would multiply the maintenance burden. Prioritizing stakeholder preferences for independent custom bundles is how catalogs sprawl: it optimizes for the loudest requirement in the room rather than for a structure anyone can maintain.\nReferences:\nhttps://trailhead.salesforce.com/content/learn/modules/revenue-cloud-design/set-up-your-product-offerings",
-    "_cat": "Product Catalog",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer B stands. Rewritten to remove a fabricated 'Exact Extract from Salesforce Revenue Cloud Catalog Management Guide'; no such guide exists."
-    }
+    "_cat": "Product Catalog"
   },
   {
     "id": "bcf374b6",
@@ -112,12 +97,7 @@
     "optionC": "Use a global constant for red so it can be referenced consistently across all constraint rules.",
     "correct": "C",
     "explanation": "The requirement is reuse: the same colour restriction is expected to apply to other products later, so the value should be defined once and referenced from every rule that needs it. Defining it in one shared place means a future change to which colour is blocked is a single edit rather than an edit per rule, and it removes the risk of two rules disagreeing.\nThe other options fail that requirement directly. Hard-coding the literal in each rule is what creates the maintenance problem. A local variable declared separately inside each rule is no better: it still duplicates the value once per rule, so it scales exactly as badly as hard-coding while looking tidier.\nOne caveat on the wording: the Constraint Modeling Language documentation describes types, relations, variables, derived variables, constraints, and annotations, and covers 'high-level global configurations', but it does not define a construct named 'global constant'. Read this item as testing the reuse principle rather than a specific CML keyword.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/cml_what_is_constraint_modeling_language.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/cml_cml_best_practices.htm",
-    "_cat": "Configuration",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer C stands as the only option that satisfies the stated reuse requirement, but the original explanation invented supporting quotes: 'Exact Extracts from Salesforce CPQ Advanced Configurator (Constraint Modeling Language Guide)' quoting 'Global constants enable administrators to define reusable values...'. The word 'constant' does not appear in either the CML overview or the CML Best Practices page. Explanation rewritten to argue the principle and to flag that the option's terminology is not documented CML vocabulary."
-    }
+    "_cat": "Configuration"
   },
   {
     "id": "c41101a6",
@@ -127,12 +107,7 @@
     "optionC": "Enable Lot-based or As-is Renewals.",
     "correct": "C",
     "explanation": "Lot-based and as-is renewals are the Revenue Cloud feature for carrying existing commercial terms into a renewal. The documentation groups them under specialized transaction types and describes using lot-based renewals to honor original purchase prices across multiple transactions, with price uplifts applied to individual lots where needed. That is exactly the situation here: the term contains several upsells at different quantities and negotiated prices, and the rep wants the renewal to reproduce them rather than reprice from the current list.\nCustomizing the Assetize Order flow would be a build where a supported setting already exists. 'Pricing Source on Asset = Last Negotiated Price' is not the documented control for this; renewal pricing behaviour is selected through the renewal transaction type, not by a field on the asset.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.qocal_manage_assets_in_revenue_lifecycle_management.htm&language=en_US&type=5",
-    "_cat": "Pricing & Discounts",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer C stands. The original explanation consisted only of three fabricated 'Exact Extracts from Salesforce Subscription Management Implementation Guide' with no reasoning of its own and no working reference."
-    }
+    "_cat": "Pricing & Discounts"
   },
   {
     "id": "32f0b06f",
@@ -142,12 +117,7 @@
     "optionC": "A configurable bundled product allows users to customize components and attributes.",
     "correct": "C",
     "explanation": "A configurable bundle is the one that lets users customize components and attributes. Salesforce draws the line explicitly: customers cannot customize static bundles, while configurable bundles allow customization during purchase. A configurable tablet bundle lets the customer choose the tablet variant, protection plan, and data plan; a static tablet bundle is a fixed tablet, charger, and back cover.\nThat also disposes of the claim about static products, which by definition do not offer attribute choices at quote time. And simple products do not require a child component before they can be sold — a simple product is sellable on its own, which is what distinguishes it from a bundle.\nReferences:\nhttps://trailhead.salesforce.com/content/learn/modules/product-catalog-management-with-revenue-cloud/create-a-product-bundle\nhttps://help.salesforce.com/s/articleView?id=ind.product_catalog_change_a_configurable_bundle_product_to_a_static_bundle_product.htm&language=en_US&type=5",
-    "_cat": "Product Catalog",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer C stands. Rewritten to remove a fabricated 'Exact Extract from Salesforce CPQ Implementation Guide' and cite the real static-versus-configurable distinction."
-    }
+    "_cat": "Product Catalog"
   },
   {
     "id": "21608eee",
@@ -157,12 +127,7 @@
     "optionC": "By using an integration platform to sync data from the PIM, the pricing spreadsheets, and the ERP into Salesforce nightly, overwriting the Salesforce catalog each time",
     "correct": "A",
     "explanation": "The fix is to make the Salesforce Product Catalog the commercial system of record and have downstream systems consume from it. Product Catalog Management is designed to hold products, attributes, bundle structures, and the selling models and pricing that go with them, so the specifications from the PIM, the finance team's pricing, and the ERP's sellable SKUs converge on one definition that quoting actually runs against. The ERP then receives fulfillment data from that catalog rather than competing with it as a second master.\nReplicating the PIM and ERP structures in custom objects and syncing them with triggers keeps three masters and adds bespoke code to reconcile them, which is the current problem with more moving parts. A nightly integration that overwrites the Salesforce catalog is worse still: it makes the catalog a downstream copy, so any bundle or pricing work done in Salesforce is destroyed on the next run.\nReferences:\nhttps://trailhead.salesforce.com/content/learn/modules/product-catalog-management-with-revenue-cloud/get-started-with-product-catalog-management\nhttps://help.salesforce.com/s/articleView?id=ind.product_catalog_products.htm&language=en_US&type=5",
-    "_cat": "Pricing & Discounts",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer A stands. Rewritten to remove a fabricated 'Exact Extract from Salesforce Revenue Cloud Documents' and to say why the nightly-overwrite option is actively destructive rather than merely suboptimal."
-    }
+    "_cat": "Pricing & Discounts"
   },
   {
     "id": "747e0c6b",
@@ -187,12 +152,7 @@
     "optionC": "Bundle",
     "correct": "B",
     "explanation": "Decomposition Scope limits how many instances of a fulfillment order line item are created, and the documented values run from broad to narrow as Account, Order, Bundle, Order Line Item. Setting the scope to Order creates a single instance of the fulfillment order line item per order.\nThe Salesforce documentation uses this exact scenario as its worked example: there is a technical product called Shipping Service, many commercial products decompose to it because many products require shipping, and you do not want to fulfill each of those Shipping Service instances separately for the same order. The documented resolution is to set the scope of the Shipping Service product to Order, so only one instance is created per order no matter how many products call for shipping.\nBundle would create one instance per bundle within the order, which still produces several shipments when a customer buys several bundles. Account is broader than the requirement and would group across separate orders from the same customer. Note also the documented warning that a child product's scope must not be broader than its parent's.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.dro_decomposition_scope.htm&language=en_US&type=5",
-    "_cat": "Product Catalog",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer B stands and the reasoning was correct. Rewritten because the explanation's supporting quotes were fabricated, attributed to a 'Subscription Management Implementation Guide - Decomposition Scope Settings' and a 'Salesforce Order Management Configuration Guide', and its reference list included 'Revenue Cloud Fulfillment Architecture Notes'. The real article carries the identical Shipping Service example, so the invented sources were unnecessary as well as wrong."
-    }
+    "_cat": "Product Catalog"
   },
   {
     "id": "5b126341",
@@ -212,12 +172,7 @@
     "optionC": "It is only required for amendments that involve a price increase; for other amendments, a quote can be created directly from the account.",
     "correct": "A",
     "explanation": "In the automated amendment lifecycle the Opportunity is optional and serves forecasting; it is not a link in the automation chain. The documented path runs from the Managed Asset viewer on the Account or Contract page to an amendment quote, then an order, then activation, which updates the asset — no Opportunity step appears anywhere in it. Where an opportunity is involved at all, it is through quote syncing, which exists so that quote line changes flow to the opportunity for pipeline reporting.\nThe alternatives both misstate the mechanism. An opportunity reaching Closed Won does not write to the Asset record, because assets are produced by order activation and assetization rather than by a stage change. And there is no rule making opportunities mandatory for price-increasing amendments only.\nReferences:\nhttps://trailhead.salesforce.com/content/learn/modules/asset-lifecycle-management-with-revenue-cloud/manage-customer-asset-amendments\nhttps://help.salesforce.com/s/articleView?id=ind.qocal_considerations_syncing_quotes_and_opportunities_in_revenue_cloud.htm&language=en_US&type=5",
-    "_cat": "Quote & Order",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer A stands. Rewritten to remove a fabricated 'Exact Extract from Salesforce Revenue Cloud Documentation' and to ground the answer in the documented amendment walkthrough, which involves no Opportunity at any step."
-    }
+    "_cat": "Quote & Order"
   },
   {
     "id": "92f06ccd",
@@ -227,12 +182,7 @@
     "optionC": "The entire order is decomposed.",
     "correct": "B",
     "explanation": "Activation is what locks the order. Once an order's status moves from Draft to Activated, items can no longer be edited directly on the order, and this restriction is independent of the user's permissions — which is why granting access to the order management team did not help. Where Enhanced Commerce Orders is enabled the lock is tighter still: an order item that has related records such as an OrderSummary or ChangeOrder, or that carries price-impacting fields such as Quantity and UnitPrice, cannot be changed after activation even for a user holding Edit Activated Orders. After activation, order products also cannot be deleted.\nChanges after that point go through an amendment or change order rather than direct editing. Decomposition describes how a product breaks down into fulfillment line items and is not a locking mechanism, and 'asseized' is not a state in the order lifecycle.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.qocal_view_and_edit_orders.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.order_edit.htm&language=en_US&type=5",
-    "_cat": "Quote & Order",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer B stands. Rewritten because all three supporting quotes were fabricated, attributed to invented sections of the Billing, CPQ, and Subscription Management implementation guides, and the reference block contained no URLs. The real editing restrictions are documented and are more specific than the invented text claimed."
-    }
+    "_cat": "Quote & Order"
   },
   {
     "id": "6a9ce9dd",
@@ -242,12 +192,7 @@
     "optionC": "BSs are manually created, while BSGs are optional.",
     "correct": "A",
     "explanation": "Billing schedules define when and how an order product is invoiced, and a billing schedule group contains one or more billing schedules. Both are created and updated as a consequence of creating, amending, and canceling orders — which is precisely the behaviour the administrator observed. The amendment that added quantity produced additional billing schedules, and those attach to the billing schedule group that already exists for that order product rather than causing a second group to be created. That is expected behaviour, not a defect: keeping one group per order product preserves a single view of everything billed for that line across its amendments.\nThe other options invert the relationship. Billing schedule groups are structural rather than reporting-only, and billing schedules are generated by order activity rather than created by hand.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.billing.htm&language=en_US&type=5\nhttps://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_billingschedule.htm",
-    "_cat": "Billing & Invoicing",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer A stands. Rewritten because the explanation closed with two fabricated 'Exact Extracts from Salesforce Revenue Cloud (Billing Implementation Guide)' and a reference block explicitly labelled 'document/source names only; no URLs', naming guides and a 'Salesforce Revenue Cloud Data Model - Order Product to Billing Schedule Relationships' that do not exist."
-    }
+    "_cat": "Billing & Invoicing"
   },
   {
     "id": "fddbd719",
@@ -307,12 +252,7 @@
     "optionC": "One Asset Actions and two Asset State Periods",
     "correct": "B",
     "explanation": "An asset state period is the span over which an asset holds the same quantity, amount, and monthly recurring revenue, and an asset has as many asset state periods as there are changes — asset actions — during its lifecycle. Activating the first order creates the asset with one asset action for the initial sale and one asset state period covering 50 seats. Amending it to add eight seats and activating that order creates a second asset action, categorized as an upsell, and a second asset state period reflecting the updated quantity of 58. That is two of each.\nOne detail this item does not settle: the amendment here happens on the same day as the original order, which would leave the first asset state period with no elapsed duration. The published documentation states the general one-period-per-action rule and its worked example uses a future-dated amendment, so it does not address whether a same-day amendment collapses the opening period. The general rule is what the answer rests on.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/sforce_api_objects_assetstateperiod.htm\nhttps://trailhead.salesforce.com/content/learn/modules/asset-lifecycle-management-with-revenue-cloud/manage-customer-asset-amendments",
-    "_cat": "Pricing & Discounts",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer B stands on the documented rule that an asset has as many asset state periods as asset actions. Rewritten to drop a fabricated 'Exact Extract from Salesforce Subscription Management Guide' and a three-item reference list of non-existent guides, and to be honest that the stem's same-day timing is not addressed by the documentation."
-    }
+    "_cat": "Pricing & Discounts"
   },
   {
     "id": "394bdad2",
@@ -322,12 +262,7 @@
     "optionC": "Use the pricing procedure's Simulate functionality to trace the price waterfall.",
     "correct": "C",
     "explanation": "Simulate is the diagnostic built into the Pricing Procedure Builder. Clicking Simulate opens a simulation window where you supply the input values — either directly into fields in the simplified view or as JSON in the advanced view — and the results section renders the price waterfall, showing each step that contributed to the final price. That is what identifies which element introduced the unexpected amount, which is the first thing to establish before changing anything.\nThe alternatives are worse than unhelpful. Manually overwriting the disputed total hides the fault and leaves the underlying rule intact for every future quote. Deactivating and reactivating the pricing procedure reveals nothing about rule logic and disrupts pricing for everyone using it in the meantime.\nReferences:\nhttps://trailhead.salesforce.com/content/learn/modules/revenue-cloud-design/configure-pricing-for-products\nhttps://help.salesforce.com/s/articleView?id=ind.pricing_pricing_procedures.htm&language=en_US&type=5",
-    "_cat": "Pricing & Discounts",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer C stands. Rewritten because the three supporting quotes were fabricated, attributed to 'Salesforce Revenue Cloud (Pricing Procedure and CPQ Implementation Guides)', including an invented sentence declaring simulation 'the recommended first diagnostic step'. Simulate genuinely is the right first step; the documentation just never says it in those words."
-    }
+    "_cat": "Pricing & Discounts"
   },
   {
     "id": "464876c9",
@@ -352,12 +287,7 @@
     "optionC": "Modify the Discover Products screen flow to add the Product2 custom field on the product list page container component.",
     "correct": "B",
     "explanation": "Making a Product2 custom field searchable is a two-part job in Product Catalog Management: mark the field as searchable in the Index and Search Configuration, then rebuild the index so existing records are reindexed against the new configuration. Both parts matter — the setting alone changes nothing for products already indexed, which is why the rebuild is not optional.\nThe alternatives address presentation rather than search. Adding a filter to the Browse Catalog list view changes how already-retrieved results are narrowed, and editing the Discover Products screen flow's product list component changes what is displayed, not what the index can match on.\nReferences:\nhttps://trailhead.salesforce.com/content/learn/modules/product-catalog-management-with-revenue-cloud/get-started-with-product-catalog-management\nhttps://help.salesforce.com/s/articleView?language=en_US&id=ind.qocal_set_up_product_discovery.htm&type=5",
-    "_cat": "Product Catalog",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer B stands. Rewritten to remove a fabricated 'Exact Extract from Salesforce Revenue Cloud Documents' and to make clear why both the setting and the rebuild are required."
-    }
+    "_cat": "Product Catalog"
   },
   {
     "id": "ba4a4163",
@@ -367,12 +297,7 @@
     "optionC": "None",
     "correct": "B",
     "explanation": "Billing in advance means invoicing on or before the order product's start date, which is what collecting payment before service begins requires. With an order starting January 1 and a billing type of Advance, the invoice falls on the nearest billing day of month on or before that start date — the 15th of December in this configuration.\nArrears is the opposite convention: the customer is charged after the product or service has been delivered, invoiced on the nearest billing day of month falling after the start date, which would put the invoice in January rather than ahead of it. None is not a billing type that produces an invoice at all.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.blng_advance_and_arrears.htm&language=en_US&type=5\nhttps://trailhead.salesforce.com/content/learn/modules/billing-management-with-revenue-cloud/create-billing-policies-and-treatments",
-    "_cat": "Billing & Invoicing",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer B stands. Rewritten to remove a fabricated 'Exact Extract from Salesforce Billing Implementation Guide' and to state the documented on-or-before versus after rule that actually separates advance from arrears."
-    }
+    "_cat": "Billing & Invoicing"
   },
   {
     "id": "244c6aa0",
@@ -382,12 +307,7 @@
     "optionC": "Create a constraint rule in the Constraint Model at the Product Level.",
     "correct": "C",
     "explanation": "The condition is about one product's own attribute, so the constraint rule belongs to that product's constraint model. Constraint rules are authored against types in the constraint model and evaluated by the configurator as the product is configured, which is where a threshold on the Terabyte attribute can be tested and a warning raised at the moment the user sets it.\nA quote-level constraint would place a product-specific rule where it has to be re-evaluated for every line on every quote, which is both the wrong scope and needless work. A custom Lightning web component would reimplement validation the constraint engine already performs declaratively, and it would only fire wherever that component happens to be used rather than everywhere the product is configured.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.product_configurator_use_the_cml_editor.htm&language=en_US&type=5\nhttps://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/cml_constraints.htm",
-    "_cat": "Product Catalog",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer C stands. Rewritten to remove a fabricated 'Exact Extract from Salesforce CPQ Implementation Guide' and to argue the scope question, which is what separates product-level from quote-level."
-    }
+    "_cat": "Product Catalog"
   },
   {
     "id": "d815a350",
@@ -397,12 +317,7 @@
     "optionC": "For every order line item that decomposes, a single instance of the fulfillment order line item is created combining all order items.",
     "correct": "A",
     "explanation": "Order Line Item is the narrowest decomposition scope and it is also the default when no scope is selected. The documented behaviour is exact: for every order line item that decomposes to the fulfillment order line item, one instance of the fulfillment order line item is created. So an order carrying several line items of the same product produces one fulfillment order line item per order item, not a single combined instance and not several instances each.\nThe two distractors describe the neighbouring scopes. A single combined instance across all order items is what Order scope does, and no scope produces multiple instances per order item — the scopes only ever collapse instances together, never multiply them. The documented breadth ordering is Account, Order, Bundle, Order Line Item, from broad to narrow.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.dro_decomposition_scope.htm&language=en_US&type=5",
-    "_cat": "Subscriptions",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer A stands. Rewritten to state the documented Order Line Item behaviour and to name which scope each distractor actually describes, replacing prose that asserted the outcome without distinguishing the scopes."
-    }
+    "_cat": "Subscriptions"
   },
   {
     "id": "f6c30064",
@@ -412,12 +327,7 @@
     "optionC": "Edit the inherited attributes at the product level and set the 'Is Price Impacting' flag.",
     "correct": "C",
     "explanation": "Salesforce's own walkthrough sets this flag from the product, not from the classification: open the product, and on its Related tab under Overridden Inherited Attributes open the attribute, then on the Product Attribute Definition page select Is Price Impacting. That is an override of an attribute the product inherited, which is exactly what \"for this product only\" calls for (C). Setting the flag on the classification's attribute (A) would apply it to every product sharing that class, and the attribute definition (B) is global metadata describing the attribute itself — neither can scope pricing relevance to a single product. Once the two attributes are marked, Attribute-Based Adjustment records define the actual price changes per attribute-value combination.\nReferences:\nhttps://trailhead.salesforce.com/content/learn/modules/price-management-with-revenue-cloud/implement-attribute-based-pricing",
-    "_cat": "Pricing & Discounts",
-    "corrected": {
-      "date": "2026-08-04",
-      "via": "comments",
-      "note": "Q30 answer C confirmed against the Trailhead attribute-based pricing module; the flag is set per-product under Overridden Inherited Attributes. Explanation rewritten around the documented click path, replacing invented references."
-    }
+    "_cat": "Pricing & Discounts"
   },
   {
     "id": "89816cb1",
@@ -427,12 +337,7 @@
     "optionC": "Update Quote Settings and set \"Create Quotes Without a Related Opportunity\" to False.",
     "correct": "C",
     "explanation": "Quote Settings carries a checkbox called Create Quotes Without a Related Opportunity. Salesforce documents it as the setting that lets sales departments who do not use opportunities do quoting: when it is enabled, creating or selecting an opportunity for a new quote is optional. Setting it to false therefore restores the opportunity as a requirement, which enforces the policy declaratively for every user.\nThere is no Opportunity Settings option called Require Quotes on Opportunities. A validation rule on Quote checking OpportunityId would work, but it is a custom artefact standing in for a setting the platform already provides, and it fires at save time rather than shaping the creation experience.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sales.cpq_quotes_without_opportunities.htm&language=en_US&type=5",
-    "_cat": "Quote & Order",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer C stands. Rewritten to remove a fabricated 'Exact Extract from Salesforce CPQ and Revenue Cloud Implementation Guides' and to cite the real setting, including the documented fact that enabling it makes the opportunity optional."
-    }
+    "_cat": "Quote & Order"
   },
   {
     "id": "826bd7e2",
@@ -442,12 +347,7 @@
     "optionC": "Create a custom flow that runs nightly and generates invoices using the Invoice Preview feature.",
     "correct": "B",
     "explanation": "Recurring invoice runs are a scheduling feature, so the requirement is met by configuration rather than code. An invoice scheduler is defined with a frequency, a start time, whether to post the invoices, and the billing batch it should pick up, and Salesforce supports scheduling invoice batch runs to recur daily, weekly, or monthly. A weekly scheduler starting at 6:00 AM on Mondays picks up the completed billing schedules from the past week.\nA billing treatment referencing an invoice generation time at the product level sets when an individual order product bills, not when the org's invoicing job runs. A nightly custom flow using Invoice Preview would run on the wrong cadence and would use a preview capability rather than generating posted invoices.\nReferences:\nhttps://help.salesforce.com/s/articleView?language=en_US&id=sf.blng_invoice_sched.htm&type=5\nhttps://trailhead.salesforce.com/content/learn/modules/billing-management-with-revenue-cloud/generate-invoices-revenue",
-    "_cat": "Billing & Invoicing",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer B stands. Rewritten to remove a fabricated 'Exact Extract from Salesforce Revenue Cloud Documents' and to name the documented scheduler fields and supported frequencies."
-    }
+    "_cat": "Billing & Invoicing"
   },
   {
     "id": "e2f73f23",
@@ -457,12 +357,7 @@
     "optionC": "Bundle-Based Price and Product Selling Model",
     "correct": "B",
     "explanation": "Two elements are needed because the question asks for two different things: how the bundle is priced, and how conditional discounts are applied to it. The Bundle-Based Price element defines the bundle pricing logic, calculating the adjustment for products sold together as a predefined bundle using bundle-based adjustment entries as its lookup table. The Price Adjustment Matrix then supplies the conditional layer, associating the pricing logic with decision tables so discounts can vary by whatever conditions the business defines.\nThe distractors each break one half. Attribute-Based Price with Volume Discount prices by attribute values and quantity bands, neither of which expresses a bundle. Bundle-Based Price with Product Selling Model gets the bundle pricing right but pairs it with the construct that determines how a product is sold — one-time, term, evergreen — which carries no discount conditions at all.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.pricing_create_bundle_based_adjustments.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=ind.pricing_price_adjustment_matrix.htm&language=en_US&type=5\nhttps://trailhead.salesforce.com/content/learn/modules/price-management-with-revenue-cloud/set-up-bundle-based-pricing",
-    "_cat": "Pricing & Discounts",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer B stands. Rewritten to remove a fabricated 'Exact Extract' and to explain the division of labour between the two elements, which is why the question asks for a pair."
-    }
+    "_cat": "Pricing & Discounts"
   },
   {
     "id": "74259f96",
@@ -482,12 +377,7 @@
     "optionC": "Credit Memo",
     "correct": "C",
     "explanation": "A credit memo is the record that carries a negative balance for later settlement, which is exactly what negative amendments and cancellations produce. Salesforce automates converting negative invoice lines into credit memos and applying those credits against invoices, and the billing settlements console gives central access to invoices, payments, credit memos, and debit memos so balances can be tracked and settled from one place — matching the requirement to reuse the credit before processing payments.\nA debit memo moves the balance the other way, increasing what the customer owes. A cash memo is not a Revenue Cloud billing record.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.billing_credit_memos.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=ind.billing.htm&language=en_US&type=5",
-    "_cat": "Billing & Invoicing",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer C stands. Rewritten to remove a fabricated 'Exact Extract from Salesforce Billing Implementation Guide' and to cite the documented automatic conversion of negative invoice lines to credit memos."
-    }
+    "_cat": "Billing & Invoicing"
   },
   {
     "id": "86417498",
@@ -497,12 +387,7 @@
     "optionC": "DRO automates the entire quote to order lifecycle.",
     "correct": "B",
     "explanation": "Dynamic Revenue Orchestrator automates the order lifecycle and streamlines fulfillment, which is the scope the question is testing. DRO decomposes orders into fulfillment plans, runs those plans through to completion, and accepts amended or cancelled in-flight orders by reconciling the change and updating the orchestration plan — so the single view of where an order stands comes from the fulfillment plan rather than from manual handoffs between sales, finance, and legal.\nThe other options overstate its reach. DRO does not automate the whole revenue lifecycle, which also spans pricing, billing, and revenue recognition, and it does not cover quote to order — quoting and order capture are Transaction Management's job, with DRO picking up once an order exists.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.dro_in_flight_order_changes.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=ind.dro_fulfillment_plan_actions_and_information.htm&language=en_US&type=5",
-    "_cat": "Subscriptions",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer B stands. Rewritten to remove a fabricated 'Exact Extract from Salesforce Subscription Management Implementation Guide' and to say precisely where DRO's scope starts and stops, which is what separates the three options."
-    }
+    "_cat": "Subscriptions"
   },
   {
     "id": "c74d7076",
@@ -512,12 +397,7 @@
     "optionC": "Create Renewal Quote with Asset, Create Order, Create Contract",
     "correct": "B",
     "explanation": "Renewal follows the same shape as any other Revenue Cloud transaction: quote, then order, then activation. Starting from the asset in the Managed Asset viewer produces a renewal quote; from the renewal quote you click Create Order and select Create Single Order; then you activate the order, which is what causes the renewed asset records to be produced.\nBoth distractors put a contract where the order belongs. A contract may exist alongside the renewal — the documentation notes that when you renew from the Contract page layout the contract number is added to the renewal quote or order automatically — but creating or activating a contract is not what completes a renewal. Activation of the order is.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.qocal_renew_assets.htm&language=en_US&type=5\nhttps://trailhead.salesforce.com/content/learn/modules/asset-lifecycle-management-with-revenue-cloud/manage-customer-asset-renewals-and-cancellations",
-    "_cat": "Pricing & Discounts",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer B stands. Rewritten to remove a fabricated 'Exact Extract from Salesforce Subscription Management Implementation Guide' and to explain the role a contract does legitimately play, since that is what makes the distractors tempting."
-    }
+    "_cat": "Pricing & Discounts"
   },
   {
     "id": "2a61d2aa",
@@ -542,12 +422,7 @@
     "optionC": "Select the appropriate context definition in the Product Discovery Settings.",
     "correct": "C",
     "explanation": "Product Discovery is what surfaces catalog products during quoting, and it needs a context definition selected in its settings to supply the data its procedures evaluate. Without that selection the discovery experience has no context to hydrate, so products do not appear even though the catalog and bundles were built correctly.\nThe alternatives address real setup steps that are not this symptom. A product selling model is required for a product to be sellable at all, but the question states the products and bundles were created properly. Selecting a pricing procedure in Salesforce Pricing Setup governs how prices are calculated once products are found; a missing pricing procedure would produce empty prices rather than an empty product list.\nReferences:\nhttps://help.salesforce.com/s/articleView?language=en_US&id=ind.qocal_set_up_product_discovery.htm&type=5\nhttps://help.salesforce.com/s/articleView?id=ind.pricing_use_context_definitions.htm&language=en_US&type=5",
-    "_cat": "Product Catalog",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer C stands. Rewritten to remove a fabricated 'Exact Extract from Salesforce Revenue Cloud Documents' and to distinguish the missing-products symptom from the missing-prices symptom, which is what separates the options."
-    }
+    "_cat": "Product Catalog"
   },
   {
     "id": "894e7d14",
@@ -557,12 +432,7 @@
     "optionC": "The Revenue Cloud Consultant did not assign the Product Discovery User permissions to the sales rep.",
     "correct": "C",
     "explanation": "Browsing the catalog from a quote is gated by the Product Discovery User permission set, which the documented permission table describes as giving access to use the product browsing experience. A sales rep without it does not get the browse entry point on the quote, which is the symptom here.\nThe two distractors are real permission sets that govern different things. Product Configurator covers configuring a product once it has been selected, and Product Configuration Rules Designer is a design-time permission for creating and managing configuration rules in Configurator with Business Rules Engine — neither controls whether the rep can browse the catalog. Note also that both of those only appear at all once Configure Products at Runtime is enabled in Revenue Settings.\nReferences:\nhttps://help.salesforce.com/s/articleView?language=en_US&id=ind.revenue_cloud_permission_sets_table.htm&type=5",
-    "_cat": "Quote & Order",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer C stands. Rewritten against the documented permission set table, which distinguishes Product Discovery User (use the browsing experience) from the two Configurator permission sets the distractors name."
-    }
+    "_cat": "Quote & Order"
   },
   {
     "id": "995de54c",
@@ -572,12 +442,7 @@
     "optionC": "Rate Card Entries",
     "correct": "A",
     "explanation": "A product usage grant is where the entitlement itself is defined. The documented creation steps ask for a granted quantity in units, a drawdown order, a grant type, a unit of measure class and default unit of measure, whether overage is chargeable, and the grant's renewal, rollover, and validity policy — which together are what 'default entitlement' means for a sellable resource such as data storage.\nThe product usage resource is an input to that, not the answer. It names the meterable thing being granted — data storage, computing power, bandwidth — and one of the steps in creating a grant is literally to select a product usage resource. Rate card entries price consumption once it happens; they do not define how much the customer is entitled to.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.um_define_a_product_usage_grant.htm&language=en_US&type=5\nhttps://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/sforce_api_objects_productusagegrant.htm",
-    "_cat": "Product Catalog",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer A stands. Rewritten because the usage resource distractor is genuinely close — the UsageResource object documentation uses 'data storage' as its own example of an entitlement — and the original explanation did not separate the two. The discriminator is that creating a grant requires selecting a resource, so the resource is the subject of the entitlement and the grant is where the entitlement is defined."
-    }
+    "_cat": "Product Catalog"
   },
   {
     "id": "231e4a3f",
@@ -597,12 +462,7 @@
     "optionC": "The Proration element",
     "correct": "C",
     "explanation": "Mid-cycle plan changes are what the Proration element exists for. Proration ensures customers are charged fairly for partial periods when a subscription starts or changes part-way through a cycle, so the element computes the credit for the unused portion of the Standard Data Plan from October 15 and the charge for the used portion of the Unlimited Data Plan over the same remainder of the month.\nThe other two elements do different arithmetic. The Aggregate Price element sums across lines to produce a total rather than apportioning a single line across time. A derived price computes one product's price from another's, which is unrelated to splitting a billing period.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.pricing_subscription_pricing_proration.htm&language=en_US&type=5\nhttps://trailhead.salesforce.com/content/learn/modules/advanced-price-management-with-revenue-cloud/set-up-subscription-pricing-with-proration",
-    "_cat": "Pricing & Discounts",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer C stands. Rewritten to remove a fabricated 'Exact Extract from Salesforce Revenue Cloud Documents' and to say what the two distractor elements actually compute."
-    }
+    "_cat": "Pricing & Discounts"
   },
   {
     "id": "435f2087",
@@ -637,12 +497,7 @@
     "optionC": "Condition Type = All conditions are met (AND) & Custom Logic = 1 AND 2 AND 3",
     "correct": "B",
     "explanation": "Work the requirement back into the three numbered conditions: 1 is Account Source = Partner, 2 is Ordered Quantity > 100, and 3 is Product Category = Accessory. The policy grants the discount to partner accounts ordering more than 100 units, or to any customer ordering more than 100 accessories. That is (1 AND 2) OR (2 AND 3) — condition 2 appears in both arms because the quantity threshold applies to each path independently, which is exactly why a plain All Conditions Are Met (AND) cannot express it.\nOption A's (1 OR 2) AND (2 AND 3) is a different predicate: because it ANDs condition 3 across the whole expression, it would restrict the partner arm to accessories only, which the policy does not say. Option C's straight AND of all three would require an account to be a partner, over quantity, and buying an accessory simultaneously, collapsing two eligibility paths into one and denying the discount to a partner buying anything else.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.pricing_price_adjustment_matrix.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=ind.pricing_pricing_procedures.htm&language=en_US&type=5",
-    "_cat": "Pricing & Discounts",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer B stands, and this one is settled by the boolean logic itself rather than by product documentation. Explanation rewritten to derive the expression from the stated policy and to show precisely how each distractor changes the predicate, which the original did not do."
-    }
+    "_cat": "Pricing & Discounts"
   },
   {
     "id": "db199ded",
@@ -652,12 +507,7 @@
     "optionC": "Attribute Definition and Context Mapping",
     "correct": "C",
     "explanation": "The documentation for creating a contract extraction template states its purpose directly: an extraction template defines the attribute mapping, context mapping, and prompt instructions that generative AI uses to extract contract details from a file. In the creation flow, clicking Create Attribute Definition clones the standard ContractsExtractionContext context definition, and the Attribute Definition and Context Mapping are then populated from that cloned definition and mapping. Those two are the template details that let an existing context definition be selected and used.\nRecord Type is set earlier in the template, alongside Template Name and Target Object, but it identifies which contract record type the template applies to rather than binding a context definition. Field mapping in the sense the distractors use it comes later, when user-defined attributes are mapped to contract fields on the Additional Field Mapping tab.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.sf_contracts_create_a_contract_extraction_template_for_extraction.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=ind.sf_contracts_View_the_Standard_ContractsExtractionContext_Mapping.htm&language=en_US&type=5",
-    "_cat": "General",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer C stands. Rewritten because the original rested on a fabricated 'Exact Extracts from Salesforce Contracts AI Implementation Guide'; the real article states 'The Attribute Definition and Context Mapping are populated with the cloned definition and mapping' almost verbatim, so the invented source was unnecessary."
-    }
+    "_cat": "General"
   },
   {
     "id": "015f552d",
@@ -667,12 +517,7 @@
     "optionC": "type House {\nrelation rooms : Room[0..5];\nrequire(rooms.size > 3, House[MediaRoom=true, color = \"Blue\"})\n};",
     "correct": "B",
     "explanation": "Two things separate the options: the cardinality range syntax and the target of the require statement. CML declares a relation's cardinality as a range in the form Type[min..max], as in the documented example relation accessories : Accessory[1..99]. 'Up to five rooms' with no stated minimum is therefore Room[0..5]. Option A's Room[4,5] is neither the documented range form nor the stated requirement, since it would force at least four rooms.\nBetween the two remaining options, the require statement has to constrain the rooms relation, because that is where a MediaRoom would be selected. Option B does that with rooms[MediaRoom]{color = \"Blue\"}. Option C points the constraint at House[MediaRoom=true, color = \"Blue\"} instead, which targets the parent type rather than the relation and is also malformed — it opens with a bracket and closes with a brace.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/cml_cml_best_practices.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/cml_constraints.htm",
-    "_cat": "Product Catalog",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer B stands. Rewritten to point at the documented Type[min..max] relation syntax, which the CML Best Practices page demonstrates as Accessory[1..99], and to name the two independent defects in option C rather than asserting the answer."
-    }
+    "_cat": "Product Catalog"
   },
   {
     "id": "b1cfb9c8",
@@ -707,12 +552,7 @@
     "optionC": "A custom Renewal checkbox field on the Asset object that, when checked, triggers a Process Builder to create a renewal opportunity",
     "correct": "A",
     "explanation": "Revenue Cloud ships InitiateRenewal as a standard action, and the permission set table lists an InitiateRenewal API permission set that gives a Salesforce Operations Rep read-write access to Asset Lifecycle objects and APIs. Wrapping that action in a screen flow and surfacing the flow as a quick action on the Account or Contract record page is the supported way to give reps one-click renewal, and it matches how Revenue Cloud exposes the rest of the asset lifecycle — amend, renew, and cancel are initiated from the Managed Asset viewer on those same pages.\nThe alternatives rebuild what already exists and do it worse. An Apex trigger that clones a contract and its assets bypasses the renewal transaction entirely, so no renewal quote, order, or asset action is produced. A checkbox driving Process Builder has the same defect and additionally relies on a retired automation tool.\nReferences:\nhttps://help.salesforce.com/s/articleView?language=en_US&id=ind.revenue_cloud_permission_sets_table.htm&type=5\nhttps://help.salesforce.com/s/articleView?id=ind.qocal_manage_assets_in_revenue_lifecycle_management.htm&language=en_US&type=5",
-    "_cat": "Subscriptions",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer A stands. Rewritten to remove a fabricated 'Exact Extract' and to ground the answer in the documented InitiateRenewal permission set and the Managed Asset viewer entry points."
-    }
+    "_cat": "Subscriptions"
   },
   {
     "id": "df252b03",
@@ -722,12 +562,7 @@
     "optionC": "The consultant should review the critical issue, perform root cause analysis, reproduce the issue in the development sandbox, fix it to maintain the go-live date, and deploy it to UAT.",
     "correct": "A",
     "explanation": "The four stakeholders disagree about what category of problem this is, and nothing can be decided until that is resolved. Cross-referencing the issue against the approved business requirements is what settles whether the behaviour departs from what was signed off — a defect — or matches it, in which case the gap is training or a new requirement to be handled through change control. Doing that jointly also keeps the four readings from being resolved by whoever escalates loudest.\nThe alternatives all skip the diagnosis. Escalating for an exception to ship as-is asks a steering committee to rule on a question nobody has framed. Having the consultant unilaterally reproduce and fix it presumes the defect reading is correct, and if the behaviour is in fact as designed, it ships an unrequested scope change to protect a date.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.setup_revenue_cloud.htm&language=en_US&type=5",
-    "_cat": "General",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer A stands. This is a delivery-methodology item rather than a product-feature one, so no Revenue Cloud documentation bears on it; rewritten to remove a fabricated 'Exact Extract' that gave methodology advice the appearance of a vendor citation."
-    }
+    "_cat": "General"
   },
   {
     "id": "9bac03e6",
@@ -737,12 +572,7 @@
     "optionC": "Check Quote and Order Transaction Type field picklist value to be Revenue Lifecycle Management.",
     "correct": "A",
     "explanation": "Revenue Cloud does not introduce its own Quote and Order objects — it writes to the standard ones — so the discriminator has to be a related record rather than a field on the record itself. Records created through Revenue Cloud carry a related Application Usage Assignment with the value Revenue Lifecycle Management, and that assignment is what marks the record as belonging to the Revenue Cloud lifecycle. Salesforce's own guidance on the difference between the New Contract and Create Contract buttons is framed in exactly these terms, describing the out-of-the-box behaviour for a quote and order with App Usage Assignment under Revenue Lifecycle Management.\nThe distractors invent configuration. There is no stock Record Type named Revenue Lifecycle Management delivered on Quote or Order, and no Transaction Type picklist carrying that value; an admin could create either by hand, but neither is how Revenue Cloud identifies its own records.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=004576666&language=en_US&type=1\nhttps://help.salesforce.com/s/articleView?id=ind.qocal_manage_orders_in_revenue_lifecycle_management.htm&language=en_US&type=5",
-    "_cat": "Quote & Order",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer A stands. Rewritten to drop a fabricated 'Exact Extract' and cite the Salesforce knowledge article that describes App Usage Assignment under Revenue Lifecycle Management as the out-of-the-box marker."
-    }
+    "_cat": "Quote & Order"
   },
   {
     "id": "9462b116",
@@ -752,12 +582,7 @@
     "optionC": "Integrate the custom app with the Billing TaxEngineAdapter Apex interface.",
     "correct": "C",
     "explanation": "The TaxEngineAdapter Apex interface is the documented extension point for tax in Revenue Cloud Billing: it accepts information from a tax engine and evaluates it to define tax details, which is precisely what a custom implementation needs in order to have Billing generate and post invoices carrying externally calculated tax. Pointing that interface at the company's existing custom application keeps the legacy tax logic authoritative for the existing products while new products run on Revenue Cloud, and invoices are still produced by Billing rather than assembled by hand.\nOption A names the right interface but the wrong system: the company decided to keep its own custom application, not to adopt a partner AppExchange tax engine. Importing external tax lines by CSV is a manual load rather than an integration, and it would not scale to ongoing invoicing or keep tax current at the point invoices are generated.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/apex_interface_commercetax_TaxEngineAdapter.htm\nhttps://help.salesforce.com/s/articleView?id=ind.qocal_setup_tax_engine.htm&language=en_US&type=5",
-    "_cat": "Billing & Invoicing",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer C stands. Rewritten to remove a fabricated 'Exact Extract' and to state the actual discriminator between options A and C, which is whose application is being integrated rather than which interface is used."
-    }
+    "_cat": "Billing & Invoicing"
   },
   {
     "id": "a6b4c0e0",
@@ -767,12 +592,7 @@
     "optionC": "Have the customer get certified in Revenue Cloud and write their own documentation.",
     "correct": "A",
     "explanation": "Adoption after go-live depends on the customer being able to operate and maintain the solution without the implementation team, which is what knowledge transfer plus durable artefacts — help documentation and session recordings — provides. Recordings and written documentation also survive staff turnover, which conversational support does not.\nThe alternatives each leave a gap. Staying reachable on Slack is useful but is a support channel, not a transfer of capability, and it makes the consultant a permanent dependency. Requiring the customer to become certified and author their own documentation offloads the transfer obligation onto the party that just received the system and has the least context on why it was built the way it was.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.setup_revenue_cloud.htm&language=en_US&type=5",
-    "_cat": "Configuration",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer A stands. A delivery-practice item with no product documentation bearing on it; rewritten to remove a fabricated 'Exact Extract' that dressed generic advice as a vendor citation."
-    }
+    "_cat": "Configuration"
   },
   {
     "id": "6d2955d5",
@@ -792,12 +612,7 @@
     "optionC": "Order Products, Product Attribute Definition",
     "correct": "A",
     "explanation": "Runtime attribute values live on the order line, not on the definition. Order Product Attributes hold the values actually chosen for each ordered item — the configured upload and download speeds for this internet service — while Order Products supply the ordered line itself with its product, quantity, and price. Reporting across those two objects returns what was ordered together with how it was configured.\nProduct Attribute Definition is design-time metadata: it describes that upload and download speed exist as configurable, required attributes, but it holds no customer's value, so a report built on it can never say what any given order specified. That is why it cannot substitute for either object in the keyed pair. The same design appears on the asset side of the model, where Asset State Period Attributes hold runtime values while the attribute definition stays definitional.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/sforce_api_objects_assetstateperiodattribute.htm\nhttps://help.salesforce.com/s/articleView?id=ind.data_model_overview.htm&language=en_US&type=5",
-    "_cat": "Product Catalog",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer A stands. Rewritten to remove a fabricated 'Exact Extract' and to make the definition-versus-runtime distinction explicit, which is the whole discriminator among the three options."
-    }
+    "_cat": "Product Catalog"
   },
   {
     "id": "05d04dbc",
@@ -807,12 +622,7 @@
     "optionC": "Control availability with a disqualification rule.",
     "correct": "C",
     "explanation": "The requirement is to create the fewest records, and that is what selects a disqualification rule. Qualification and disqualification are complementary: a qualification record states where a product may be sold, a disqualification record carves specific criteria out. Because the new product sells everywhere except two countries, one disqualification record naming those two is enough, whereas expressing the same outcome as qualification would mean enumerating the thirty-six permitted countries.\nRecommendation rules are a different mechanism entirely — they suggest related products in the configurator rather than control whether a product may be sold. Salesforce's own guidance on geographic visibility works this way, defining a custom field such as AccountCountry__c on the ProductQualification object and driving qualification and disqualification tables from it.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.product_catalog_qualification_rules.htm&language=en_US&type=5\nhttps://trailhead.salesforce.com/content/learn/modules/product-qualification-and-disqualification-with-agentforce-revenue-management/manage-product-visibility",
-    "_cat": "General",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer C stands. Rewritten to remove a fabricated 'Exact Extract' and to make the record-count argument explicit, since 'minimal number of records' is the phrase in the stem that actually decides between qualification and disqualification."
-    }
+    "_cat": "General"
   },
   {
     "id": "eac1d453",
@@ -837,12 +647,7 @@
     "optionC": "Extend SalesTransactionContext.",
     "correct": "C",
     "explanation": "Extending is the documented way to build on a standard context definition. Salesforce Pricing does not work directly with the SalesTransactionContext__stdctx base definition, and the guidance is to always extend the base context: an extended definition inherits the structure, nodes, and attributes from the base while still allowing custom nodes, attributes, and tags to be added for your own logic. Because the inheritance link is retained, later improvements to the standard definition flow through.\nCloning breaks exactly that link. A cloned definition is a point-in-time copy, so a release that adds new mappings to SalesTransactionContext__stdctx does not reach it. Salesforce documents this as a health check: query ContextDefinition and inspect ClonedFrom and InheritedFrom, where InheritedFrom should be blank if ClonedFrom is populated, and warns that a definition with both populated can cause unexpected pricing errors and should be recreated. Upgrading is not an operation you perform on the standard definition to gain customization.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.pricing_use_context_definitions.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=004259656&language=en_US&type=1",
-    "_cat": "Context Service",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer C stands. Rewritten to remove a fabricated 'Exact Extract' and to cite the two real sources, including the knowledge article whose ClonedFrom/InheritedFrom check is the concrete reason cloning loses upgrades."
-    }
+    "_cat": "Context Service"
   },
   {
     "id": "287332c0",
@@ -867,12 +672,7 @@
     "optionC": "Obligations can be assigned Price Discounts to manage contract pricing agreements.",
     "correct": "A",
     "explanation": "Obligations exist to make contractual commitments trackable as work. Each obligation can be assigned an owner and carry tasks, which turns a clause buried in an executed agreement into something with a responsible person and dated activity that compliance can be measured against. That is the reason to create them in the first place.\nThe other options describe consequences or unrelated capability. Marking an obligation Fulfilled records an outcome, but a status value on its own does not ensure compliance — the ownership and task structure is what drives it there. Price discounts are not managed through obligations; contract pricing is carried by contract item price records.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.sf_contracts_Salesforce_Contracts_Overview.htm&language=en_US",
-    "_cat": "Billing & Invoicing",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer A stands. Rewritten to remove a fabricated 'Exact Extract'. The distinction between A and B is fine — both describe real obligation capabilities — so the explanation now argues why ownership plus tasks is the reason to create obligations while a status value is only a record of outcome."
-    }
+    "_cat": "Billing & Invoicing"
   },
   {
     "id": "3655d2ba",
@@ -892,12 +692,7 @@
     "optionC": "Use the Activate action on the order.",
     "correct": "A",
     "explanation": "Assetization is its own step, driven by the Assetize Order flow. Revenue Cloud ships an Assetize Order permission set granting read-write access to Asset Lifecycle objects and APIs, and documents automating asset creation from orders using flows — that flow is what turns activated order products into assets across the whole order.\nActivating the order is a precondition, not the mechanism: activation locks the order and makes it eligible for downstream processing, but it does not by itself produce asset records. Submit Order for Fulfillment routes the order into fulfillment orchestration, which is a different downstream path from asset creation and does not assetize the order products.\nReferences:\nhttps://help.salesforce.com/s/articleView?language=en_US&id=ind.revenue_cloud_permission_sets_table.htm&type=5\nhttps://help.salesforce.com/s/articleView?id=ind.qocal_asset_lifecycle.htm&language=en_US&type=5",
-    "_cat": "Subscriptions",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer A stands. Rewritten to remove a fabricated 'Exact Extract' and to separate activation (precondition) from assetization (the flow), which is the actual point of the question."
-    }
+    "_cat": "Subscriptions"
   },
   {
     "id": "ef6c3e48",
@@ -917,12 +712,7 @@
     "optionC": "Convert the subscriptions to assets using the Initiate Amendment Action API.",
     "correct": "A",
     "explanation": "Migrating live CPQ subscriptions means landing them as Revenue Cloud assets that the asset lifecycle can then amend, renew, and cancel. The supported route is to represent each subscription as an order line and create the asset from it with the Create or Update Asset From Order Item action, which produces assets carrying the asset actions and asset state periods the lifecycle depends on.\nThat matters because Revenue Cloud is explicit that amend, renew, and cancel work only with assets created through the standard lifecycle by order activation, and that assets migrated from another system or created by hand may lack the required data relationships — if you need to operate on such an asset, you have to create a new order to establish the correct record. So a migration that produces assets without those relationships is not merely untidy, it leaves the assets unusable.\nPlace Sales Transaction is documented as not supporting creation of amendment, renewal, or cancellation quotes or orders, and Initiate Amendment acts on an asset that already exists rather than creating one.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.qocal_manage_assets_in_revenue_lifecycle_management.htm&language=en_US&type=5\nhttps://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/connect_resources_place_sales_transaction.htm",
-    "_cat": "Billing & Invoicing",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer A stands. Rewritten to remove a fabricated 'Exact Extract' and to add the documented warning that migrated or manually created assets may not support amend, renew, or cancel, which is the real reason the migration route matters."
-    }
+    "_cat": "Billing & Invoicing"
   },
   {
     "id": "a98e5518",
@@ -932,12 +722,7 @@
     "optionC": "Skip creating catalogs and use Product records directly.",
     "correct": "B",
     "explanation": "Product Discovery Settings is where catalog behaviour is configured, and setting a default catalog there removes the catalog selection step for orgs that only have one. That is an out-of-the-box setting, which is what the question asks for.\nCustomizing the Product Discovery flow would achieve a similar effect by building something, contradicting the constraint. Skipping catalogs and using product records directly is not available as a path: Product Discovery browses catalogs, categories, and subcategories, and the Products List API itself takes a catalog or category to retrieve products for.\nReferences:\nhttps://help.salesforce.com/s/articleView?language=en_US&id=ind.qocal_set_up_product_discovery.htm&type=5\nhttps://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/connect_resources_products_list.htm",
-    "_cat": "Product Catalog",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer B stands. Rewritten to remove a fabricated 'Exact Extract' and to explain why option C is not merely worse but unavailable, since Product Discovery is catalog-scoped by construction."
-    }
+    "_cat": "Product Catalog"
   },
   {
     "id": "a49cf7c1",
@@ -962,12 +747,7 @@
     "optionC": "One Asset record, with three Asset State Periods of the following dates:\n1st Jan 2025 to 30th Jun 2025\n1st Jan 2025 to 30th Jun 2026\n1st Jan 2025 to 31st Dec 2026",
     "correct": "B",
     "explanation": "Ramp segments describe successive periods of one subscription, not separate purchases, so the quote line produces a single asset. An asset state period is the span over which the asset holds the same quantity, amount, and monthly recurring revenue, and an asset has as many state periods as it has changes — here, three segments give three consecutive periods.\nThe dates follow from the segment terms running back to back from January 1, 2025: six months to June 30, 2025, then twelve months to June 30, 2026, then six months to December 31, 2026. That rules out option C, whose periods all restart on January 1, 2025 and therefore overlap rather than succeed one another, and option A, which would imply the ramp created three separate assets.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/sforce_api_objects_assetstateperiod.htm\nhttps://help.salesforce.com/s/articleView?id=ind.qocal_asset_lifecycle.htm&language=en_US&type=5",
-    "_cat": "Quote & Order",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer B stands. Rewritten to remove a fabricated 'Exact Extract' and to work the segment arithmetic through explicitly, since the dates are what distinguish B from C."
-    }
+    "_cat": "Quote & Order"
   },
   {
     "id": "bc9001d5",
@@ -977,12 +757,7 @@
     "optionC": "Use Product Classification to rationalize the product catalog.",
     "correct": "B",
     "explanation": "The proliferation happens because each skill is modelled as its own product. Attributes remove that cause: one consulting service product carries skill, role, and seniority as attributes whose values are chosen at quote time, so adding a new skill becomes a new picklist value rather than a new SKU. Attribute values can also be made price-impacting, so rate differences between skills are still expressible without separate products.\nProduct categories organise the catalog for browsing but do not reduce how many products exist, so a million SKUs stay a million SKUs. Product classification is genuinely adjacent — it is the construct that groups products and lets attributes be defined once and inherited — but it is the vehicle for reuse rather than the thing that collapses the SKU count; the attributes are what stop a new skill from needing a new record.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.product_catalog_products.htm&language=en_US&type=5\nhttps://trailhead.salesforce.com/content/learn/modules/revenue-cloud-design/set-up-your-product-offerings",
-    "_cat": "Product Catalog",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer B stands, but options B and C are closely related in the real product — classification is how attributes get reused across products — so the explanation now states why attributes rather than classification are the direct answer to SKU proliferation. Also removed a fabricated 'Exact Extract'."
-    }
+    "_cat": "Product Catalog"
   },
   {
     "id": "b0621262",
@@ -992,12 +767,7 @@
     "optionC": "Use the Override Renewal Term option, then renew.",
     "correct": "C",
     "explanation": "Override Renewal Term is the documented option for renewing on dates you choose rather than on the asset's own predefined term. Revenue Cloud offers two renewal behaviours: automatic renewal, which extends at the end of the current term using the asset's predefined renewal term, and Override Renewal Term, which configures a custom renewal period by setting explicit start and end dates. Because the assets here were acquired at different times and some have already expired, there is no single predefined term that fits them, and the documentation specifically covers renewing expired assets and subscriptions by choosing new start and end dates for late renewals.\nEditing the End Date on the assets to make them appear current falsifies the record of what the customer actually held. Amending is the in-term change mechanism and does not renew an asset whose term has already ended.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.qocal_manage_assets_in_revenue_lifecycle_management.htm&language=en_US&type=5\nhttps://trailhead.salesforce.com/content/learn/modules/asset-lifecycle-management-with-revenue-cloud/manage-customer-asset-renewals-and-cancellations",
-    "_cat": "Subscriptions",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer C stands. Rewritten to remove a fabricated 'Exact Extract' and to cite the documented pairing of automatic renewal against Override Renewal Term, plus the explicit support for renewing already-expired assets."
-    }
+    "_cat": "Subscriptions"
   },
   {
     "id": "ca1076cd",
@@ -1052,12 +822,7 @@
     "optionC": "Use Usage Management to automatically ingest, aggregate, and rate consumption data against the products and pricing schedules defined in the Salesforce Product Catalog.",
     "correct": "C",
     "explanation": "Usage Management is the Revenue Cloud capability built for consumption-based products end to end. It covers usage modelling to define the product, rate management to set and adjust rates including tiered rates that fall at higher volumes, and consumption management to ingest and aggregate usage and rate it against the catalog, producing invoice-ready consumption summaries. That spans the whole lifecycle the requirement asks to automate, across storage, data transfer, and API calls alike.\nBuilding it in Apex with custom objects re-implements a shipped capability and takes on the rating, aggregation, and invoicing logic as bespoke code. Digital wallet management is a real part of the picture — it manages entitlements and drawdowns against them — but it handles balances rather than ingesting and rating consumption, so on its own it does not meet the requirement.\nReferences:\nhttps://developer.salesforce.com/docs/platform/data-models/guide/usage-management.html\nhttps://trailhead.salesforce.com/content/learn/modules/usage-management-foundations/get-to-know-usage-management",
-    "_cat": "Pricing & Discounts",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer C stands. Rewritten to remove a fabricated 'Exact Extract' and to say what wallet management actually does, since it is a real adjacent feature rather than an invented distractor."
-    }
+    "_cat": "Pricing & Discounts"
   },
   {
     "id": "122cab6a",
@@ -1082,12 +847,7 @@
     "optionC": "Copy & Edit",
     "correct": "B",
     "explanation": "A standard context definition is read-only, so the valid actions are the two that produce a new definition from it: extend or clone. The documentation states it directly — you extend or clone a standard definition, or clone a custom definition and modify it — and Salesforce Contracts repeats the same rule, that a standard context definition shipped with the product can't be edited or deleted but can be extended or cloned.\nThat rules out both distractors, since each pairs an action with Edit, which is precisely what a standard definition does not allow. Note the two permitted actions are not equivalent in effect: extending keeps the inheritance link so later improvements to the standard definition flow through, while cloning takes a point-in-time copy that does not receive them.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.context_service_context_definitions.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=004259656&language=en_US&type=1",
-    "_cat": "Configuration",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer B stands. Rewritten to remove a fabricated 'Exact Extract' and to cite the real sentence, which names extend and clone as the two operations available on a standard definition."
-    }
+    "_cat": "Configuration"
   },
   {
     "id": "747d4014",
@@ -1097,12 +857,7 @@
     "optionC": "By defining a context-aware rule using the Constraint Model that references the Opportunity’s industry field to enforce product selection or set attribute values",
     "correct": "C",
     "explanation": "Driving which options are available and which are selected by default, from data on a related record, is constraint model work. Constraint rules run in the configurator and can both enforce product selection and set attribute values, so a context-aware rule referencing the Opportunity's industry field shapes the bundle as it is configured rather than after the fact.\nA before-save flow on Quote only validates at save time, which blocks an invalid configuration but never changes what the configurator offers or preselects — the requirement is to determine the options, not to reject bad ones. Option B's description does not correspond to how configuration rules run.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/cml_constraints.htm\nhttps://help.salesforce.com/s/articleView?id=ind.product_configurator_use_the_cml_editor.htm&language=en_US&type=5",
-    "_cat": "Product Catalog",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer C stands. Rewritten to remove a fabricated 'Exact Extract' and to sharpen why A fails — validation at save is a different moment from determining the configurator's available options and defaults."
-    }
+    "_cat": "Product Catalog"
   },
   {
     "id": "69e0bfd0",
@@ -1112,12 +867,7 @@
     "optionC": "Multiple price books and associated price book entries",
     "correct": "A",
     "explanation": "Lease and buy are two ways of selling the same thing, which is exactly what the product selling model represents. Modelling them as selling models against one product, with selling model options carrying the variants, collapses the duplicated catalog the company built to hold a separate record per commercial arrangement. The selling model is a first-class part of the Revenue Cloud catalog — it is selected per product, and price book entries and pricing are resolved against it.\nCommercial and technical products draw a different line, between what the customer buys and what has to be fulfilled behind it, so they do not address lease-versus-buy. Multiple price books with their own entries is close to the problem the company already has: it keeps one product record per commercial arrangement and moves the duplication into pricing.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.product_catalog_products.htm&language=en_US&type=5\nhttps://trailhead.salesforce.com/content/learn/modules/revenue-cloud-design/set-up-your-product-offerings",
-    "_cat": "Product Catalog",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer A stands. Rewritten to remove a fabricated 'Exact Extract' and to explain why the price book option is a trap rather than simply wrong — it relocates the duplication instead of removing it."
-    }
+    "_cat": "Product Catalog"
   },
   {
     "id": "2a788a0c",
@@ -1127,12 +877,7 @@
     "optionC": "Create a description field on Products to provide all the details needed for installation.",
     "correct": "A",
     "explanation": "Technical products are the Revenue Cloud construct for the things that must happen behind a sale but are not themselves what the customer buys. Installation is exactly that, so modelling it as a technical product that commercial products decompose to puts the installation detail into fulfillment, where the installation team receives it as fulfillment order line items. The decomposition scope then controls how many installation instances are created per order line, bundle, or order.\nA commercial product named Installation would appear on the quote as something the customer selects and prices, which is not the intent. A description field on Product carries text but never reaches the fulfillment process, so the installation team would still be reading it off the product record by hand.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.dro_decomposition_scope.htm&language=en_US&type=5\nhttps://trailhead.salesforce.com/content/learn/modules/complex-order-decomposition-and-orchestration-with-revenue-cloud/define-an-order-decomposition",
-    "_cat": "Product Catalog",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer A stands. Rewritten to remove a fabricated 'Exact Extract' and to connect technical products to the decomposition machinery documented in the Decomposition Scope article, which uses the same commercial-to-technical pattern for Shipping Service."
-    }
+    "_cat": "Product Catalog"
   },
   {
     "id": "ab6a9e3d",
@@ -1142,12 +887,7 @@
     "optionC": "Billing Profile",
     "correct": "A",
     "explanation": "The Legal Entity is the object that represents a distinct business unit for financial purposes, and it is what regional billing and tax configuration hangs from. Revenue Cloud's own permission model reflects this: the Accounts Receivables Admin permission set is described as setting up accounting periods and legal entity accounting periods and closing them, so the legal entity is the unit that owns an accounting calendar and, with it, region-specific billing and tax treatment.\nA billing profile carries the invoicing preferences for a customer — delivery method, billing address, payment terms — so it describes the party being billed rather than the regional entity doing the billing. A billing schedule group is purely structural, grouping the billing schedules generated for an order product.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.billing.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?language=en_US&id=ind.revenue_cloud_permission_sets_table.htm&type=5",
-    "_cat": "Billing & Invoicing",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer A stands. Rewritten to remove a fabricated 'Exact Extract'. Flagging that the strongest corroboration I found for Legal Entity owning regional financial configuration is indirect — the Accounts Receivables Admin permission description — rather than a dedicated Legal Entity article."
-    }
+    "_cat": "Billing & Invoicing"
   },
   {
     "id": "5ebe00f0",
@@ -1157,12 +897,7 @@
     "optionC": "Use Asset Action Source to identify the source as Revenue Cloud or Custom App.",
     "correct": "A",
     "explanation": "Assets created through the Revenue Cloud lifecycle are lifecycle-managed, and that property is carried on the asset record itself, so it separates the two populations without anyone adding a field. Revenue Cloud draws a hard line here: amend, renew, and cancel work only with assets created through the standard lifecycle by order activation, and assets migrated from another system or created manually may lack the required data relationships. Cloud Kicks assets, produced by a custom app writing to the standard Asset object, therefore fall on the other side of that line by construction.\nA custom field would work but is not out of the box, which the question rules out. Asset Action Source records where a particular asset action originated, so it describes individual lifecycle events rather than classifying the asset.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.qocal_manage_assets_in_revenue_lifecycle_management.htm&language=en_US&type=5\nhttps://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/sforce_api_objects_asset.htm",
-    "_cat": "Quote & Order",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer A stands. Rewritten to remove a fabricated 'Exact Extract'. Flagging that I confirmed the lifecycle-managed distinction and that it is a property of the asset, but did not render a field-level page naming HasLifecycleManagement specifically."
-    }
+    "_cat": "Quote & Order"
   },
   {
     "id": "f92918e7",
@@ -1182,12 +917,7 @@
     "optionC": "5",
     "correct": "A",
     "explanation": "Attribute-based adjustments are keyed on the combination of attribute values, so the record count is the product of the option counts: three memory sizes multiplied by two contract terms gives six rows. Each row carries the adjustment for one specific pairing, such as 256 GB on a 24-month term.\nThe distractors correspond to counting only one dimension. Three would cover the memory options while ignoring the term, and five looks like three plus two — adding the dimensions rather than multiplying them, which would leave most combinations unpriced. The stem's statement that the price divides equally across months with no interest is there to confirm the monthly figure is derived from the pairing, not to introduce a further dimension.\nReferences:\nhttps://trailhead.salesforce.com/content/learn/modules/price-management-with-revenue-cloud/implement-attribute-based-pricing\nhttps://help.salesforce.com/s/articleView?id=ind.pricing_attribute_based_price.htm&language=en_US&type=5",
-    "_cat": "Pricing & Discounts",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer A stands, and this one is settled by combinatorics rather than by documentation. Rewritten to remove a fabricated 'Exact Extract' and to name what each wrong count corresponds to."
-    }
+    "_cat": "Pricing & Discounts"
   },
   {
     "id": "6f59e427",
@@ -1380,12 +1110,7 @@
     "optionC": "Billing Treatments are only evaluated when no Legal Entity is defined.",
     "correct": "B",
     "explanation": "The more specific assignment wins: a billing treatment set on the order product overrides the one inherited from the product, so this subscription bills in advance. A billing treatment item is where the detail of when and how a customer is billed for an order product is set, and resolving from the order product outward is what allows a single catalog product to be sold on different billing terms in different deals without cloning the product.\nOption A inverts that, which would make an order-level treatment unusable. Option C ties billing treatment evaluation to whether a legal entity is defined; the legal entity carries accounting and regional configuration and does not gate whether billing treatments apply.\nReferences:\nhttps://trailhead.salesforce.com/content/learn/modules/billing-management-with-revenue-cloud/create-billing-policies-and-treatments\nhttps://help.salesforce.com/s/articleView?id=sf.blng_advance_and_arrears.htm&language=en_US&type=5",
-    "_cat": "Billing & Invoicing",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer B stands. Rewritten to state why order-product precedence is the sensible design rather than only asserting it, and to say what a legal entity actually governs."
-    }
+    "_cat": "Billing & Invoicing"
   },
   {
     "id": "ac4ee893",
@@ -1395,12 +1120,7 @@
     "optionC": "Log a support case with Salesforce to enable payment method to be added to the extraction mapping used.",
     "correct": "A",
     "explanation": "Attribute mapping and context mapping live on the contract extraction template. The documentation defines the template as exactly that: it is created to define the attribute mapping, context mapping, and prompt instructions that generative AI uses to extract contract details from a file. Clicking Create Attribute Definition clones the standard ContractsExtractionContext context definition, and the Attribute Definition and Context Mapping are populated from that clone.\nAdding a payment method field that was missed on the first run therefore means editing the extraction template — Edit, Next, Add Attributes, specify the attribute name, type, and data type, then map the new user-defined field to the corresponding contract field for persistence.\nThe AI prompt template governs the instructions given to the model rather than field-level mapping, and no support case is needed for what is a self-service admin task.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.sf_contracts_create_a_contract_extraction_template_for_extraction.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=ind.sf_contracts_View_the_Standard_ContractsExtractionContext_Mapping.htm&language=en_US&type=5",
-    "_cat": "Configuration",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer A confirmed against the documentation and the explanation rewritten to cite it. This is the other half of the 6f99fe4e / ac4ee893 near-duplicate pair from CLAUDE.md; this copy's key was already right, and 6f99fe4e's has been corrected to match."
-    }
+    "_cat": "Configuration"
   },
   {
     "id": "38db2a91",
@@ -1605,12 +1325,7 @@
     "optionC": "MRR = ((20 * $1000) + (30 * $1000) + (40 * $1000)) / 36",
     "correct": "A",
     "explanation": "Monthly recurring revenue is a rate, so it reflects what the customer is contracted to pay right now — not the whole deal spread thin. On January 15, 2026 the subscription is inside its first ramp year, which runs from June 24, 2025, and that year carries a quantity of 20 at US$1,000 per year. The current annual value is therefore 20 x $1,000, and dividing by the twelve months of that year gives the current MRR.\nThe distractors both dilute across the wrong span. Dividing the first year's value by 36 spreads one year's revenue over the entire three-year term, understating the current rate. Summing all three ramp years and dividing by 36 produces the average MRR across the whole deal, which is a different and lower figure than the rate in force today — and by construction it would never equal the MRR of any individual ramp year.\nThis is also why an asset state period is defined as a span holding a constant quantity, amount, and MRR: each ramp year is its own period with its own MRR, and the current one is what MRR means.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/sforce_api_objects_assetstateperiod.htm\nhttps://help.salesforce.com/s/articleView?id=ind.qocal_asset_lifecycle.htm&language=en_US&type=5",
-    "_cat": "Subscriptions",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer A stands. Explanation expanded from a single line to work the arithmetic and to tie the answer to the documented definition of an asset state period as a span of constant quantity, amount, and MRR, which is what makes the current ramp segment the right basis."
-    }
+    "_cat": "Subscriptions"
   },
   {
     "id": "42d9581e",
@@ -1640,12 +1355,7 @@
     "optionC": "Modify the Managed Asset Viewer page layout for users who should not have access to the cancel button.",
     "correct": "B",
     "explanation": "The lifecycle actions in the Managed Asset viewer are gated by their own API permission sets, so removing cancel from most users means unassigning the InitiateCancellation API permission and leaving it with the super users. Salesforce documents the parallel case explicitly: renewing assets from the Managed Asset viewer requires the InitiateRenewal API permission set together with Sales Rep persona permissions, and the permission table lists InitiateAmendment API, InitiateCancellation API, and InitiateRenewal API as separate permission sets granting read-write access to Asset Lifecycle objects and APIs. Because they are separate, cancel can be withdrawn without disturbing amend or renew.\nDeactivating the shared amend, renew, and cancel flow would remove all three actions for everyone, not just cancel for some. A page layout change hides a control rather than revoking the ability, so a determined user or an API call would still reach the action.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.qocal_renew_assets.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?language=en_US&id=ind.revenue_cloud_permission_sets_table.htm&type=5",
-    "_cat": "Subscriptions",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer B stands. Explanation expanded to cite the documented parallel — renewal requires the InitiateRenewal API permission set — and to state why the three Initiate* permission sets being separate is what makes selective removal possible."
-    }
+    "_cat": "Subscriptions"
   },
   {
     "id": "9de3e0b9",
@@ -1750,12 +1460,7 @@
     "optionC": "Three Asset Actions and three Asset State Periods",
     "correct": "A",
     "explanation": "There is one sale here, so there is one asset action — the initial assetization. The ramp is what multiplies the state periods: with Segment Type set to Yearly across a 36-month term, the subscription passes through three successive yearly segments, and because an asset state period is the span over which quantity, amount, and monthly recurring revenue stay constant, each segment is its own period. That gives one asset action and three asset state periods.\nThis is worth holding onto because it qualifies the usual rule. Normally an asset has as many state periods as it has changes, since each amendment adds one of each. A ramp breaks that one-to-one relationship: the periods are created up front from the ramp schedule rather than by separate transactions, so periods can outnumber actions without anything having been amended.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/sforce_api_objects_assetstateperiod.htm\nhttps://help.salesforce.com/s/articleView?id=ind.qocal_asset_lifecycle.htm&language=en_US&type=5",
-    "_cat": "Subscriptions",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer A stands. Explanation expanded to make explicit that a ramp decouples the usual one-state-period-per-asset-action relationship, since that is the point of the question and is also the exception to the rule cited in the non-ramped counterpart question f63e3f43."
-    }
+    "_cat": "Subscriptions"
   },
   {
     "id": "9bb4967d",
@@ -1835,11 +1540,6 @@
     "optionC": "Enable Ramp Deals. Configure Product Ramp Segment with Segment Type of Free Trial and Custom. Associate both of these segment types to the product.",
     "correct": "B",
     "explanation": "Two requirements have to be expressed as ramp segments, and the segment types follow from the shape of each. The free first month is a Free Trial segment. The annual price increases across a minimum 36-month contract are three yearly steps, so the second segment type is Yearly — associating both to the product gives a free month followed by successive yearly segments at rising prices, which is what makes the increases visible to the customer during the sales cycle.\nMonthly segments would express the same 36 months as thirty-six segments, one per month, when the price only changes once a year — far more records to maintain for an identical outcome. Custom segments exist for schedules that do not fit a regular cadence; annual increases over a three-year term are exactly regular, so Custom adds configuration effort without adding capability.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.qocal_asset_lifecycle.htm&language=en_US&type=5\nhttps://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/sforce_api_objects_assetstateperiod.htm",
-    "_cat": "Pricing & Discounts",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer B stands. Explanation expanded from one line to say why Monthly and Custom lose — both can express the requirement, but at materially higher configuration cost, which is what makes Yearly the right answer rather than the only possible one."
-    }
+    "_cat": "Pricing & Discounts"
   }
 ]
