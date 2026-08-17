@@ -248,6 +248,16 @@ guides that do not exist** ("Salesforce Revenue Cloud Platform Concepts", "Reven
 Fulfillment Architecture Notes"), and the quoted sentences return no matches anywhere.
 88 explanations were rewritten to strip them.
 
+**Those 49 rewrites no longer carry a per-question correction notice, and this
+paragraph is the record.** The stripped fabrication is text no learner will ever
+see, the key stands and the current explanation is properly cited, so the notice
+gave a reader nothing to act on — while firing on 49 of 137 questions, which
+trains a reader to skip the notices that do matter. Revenue Cloud now stamps 33:
+4 answer moves, 4 items that could not be settled, 8 defective items, and 17 that
+flag residual uncertainty about the key. The same call was applied to
+`0327f145` in the Databricks deck, whose old citation was live but did not support
+its claim. Per-question provenance for all 50 is in the findings files and in git.
+
 So the deck was generated with a *sound key and invented supporting prose* — the exact
 mirror of the IAM trap, where citations were attached to keys nobody had checked. The
 generalised rule is therefore **not** "few corrections means a bad pass" but: *ask which
