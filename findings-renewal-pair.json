@@ -1,0 +1,28 @@
+{
+  "deck": "public/decks/salesforce-revenue-cloud.json",
+  "reviewed": "2026-08-16",
+  "findings": [
+    {
+      "id": "f5adf9ac",
+      "verdict": "corrected",
+      "was": "A",
+      "correct": "B",
+      "explanation": "The amend, renew, and cancel experience is a screen flow, and Revenue Settings only names which flow runs — it carries no switch that adds a quote-or-order choice. Setup > Revenue Settings > Set Up Flow for Managing Assets takes \"the API name of the screen flow that will be used when amending, renewing, and canceling assets\", defaulting to the predefined runtime_revenue_arcflows__arcFlow, and the documented way to change what that experience offers is the next sentence: \"To use a custom flow, enter the API name of the flow that you created.\" So giving the rep the choice means overriding the standard flow with one of your own and registering it in Revenue Settings.\nChanging Revenue Settings on its own cannot do it. The settings that page documents are Enable Revenue Cloud Features, Create Application Usage Type, the three flow API names, and Configure Products at Runtime — none of them a renewal quote-versus-order toggle. Customizing the Manage Asset component is the wrong layer: the component launches the flow, it does not define what the flow offers.\nOne caveat worth carrying into the exam: the documentation never states outright that the predefined flow withholds the choice. The stem asserts it, and given that, the flow is the only documented place the behaviour can change.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_turn_on_quote_and_order_capture.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_renew_assets.htm&language=en_US&type=5"
+      ],
+      "note": "A->B, and this settles the f5adf9ac / f12dffa3 contradiction recorded in CLAUDE.md. Enabling Revenue Settings documents the amend/renew/cancel experience as a screen flow whose API name is set in Revenue Settings, changed by supplying a custom flow — there is no documented setting that allows renewal quote versus order creation, so 'Change the Revenue Cloud settings' describes a control that does not exist. Both copies now key 'Override the standard Salesforce flow'. Supersedes the earlier note, which kept A on the configuration-over-customization pattern and flagged the setting as unconfirmed."
+    },
+    {
+      "id": "f12dffa3",
+      "verdict": "reasoning",
+      "explanation": "The amend, renew, and cancel experience is a screen flow, and Revenue Settings only names which flow runs — it carries no switch that adds a quote-or-order choice. Setup > Revenue Settings > Set Up Flow for Managing Assets takes \"the API name of the screen flow that will be used when amending, renewing, and canceling assets\", defaulting to the predefined runtime_revenue_arcflows__arcFlow, and the documented way to change what that experience offers is the next sentence: \"To use a custom flow, enter the API name of the flow that you created.\" So giving the rep the choice means overriding the standard flow with one of your own and registering it in Revenue Settings.\nChanging Revenue Settings on its own cannot do it. The settings that page documents are Enable Revenue Cloud Features, Create Application Usage Type, the three flow API names, and Configure Products at Runtime — none of them a renewal quote-versus-order toggle. Customizing the Manage Asset component is the wrong layer: the component launches the flow, it does not define what the flow offers.\nOne caveat worth carrying into the exam: the documentation never states outright that the predefined flow withholds the choice. The stem asserts it, and given that, the flow is the only documented place the behaviour can change.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_turn_on_quote_and_order_capture.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_renew_assets.htm&language=en_US&type=5"
+      ],
+      "note": "Key B confirmed and the contradiction with its near-duplicate f5adf9ac resolved — f5adf9ac's key moved A->B to match, so the deck no longer teaches both answers. The old explanation argued the configuration-over-customization pattern and then declared the item unsettled; Enabling Revenue Settings settles it the other way, documenting the amend/renew/cancel flow's API name as the extension point and a custom flow as the way to change it."
+    }
+  ]
+}
