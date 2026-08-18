@@ -1,0 +1,134 @@
+{
+  "deck": "public/decks/agentforce_specialist_questions.json",
+  "reviewed": "2026-08-17",
+  "findings": [
+    {
+      "id": "668d6ff3",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_actions_common_perms.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "2c9175ff",
+      "verdict": "clarified",
+      "explanation": "A summary is only as good as what the prompt was given. Grounding is what puts the record's real content into the prompt through merge fields, and if the fields chosen are the wrong ones, empty on these records, or missing the case comments where the substance lives, the model writes a fluent summary of thin material. That is the first thing to check when output is consistently off-target.\nThe other explanations do not fit the symptom. A prompt template version is not tied to a particular model in a way that produces wrong-but-plausible content; a version carries a model configuration, and a mismatch fails loudly at deployment rather than quietly degrading summaries. And the Trust Layer masks sensitive values and applies system policies — a misconfiguration there shows up as masked placeholders or refusals, not as a summary drawing on the wrong information.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_ground_template.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_best_practices.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "7173932f",
+      "verdict": "corrected",
+      "was": "B",
+      "correct": "C",
+      "explanation": "Salesforce has a purpose-built element for this. The Add Prompt Instructions element provides data in the form of prompt instructions that are merged into a prompt template in Prompt Builder, and it exists only in template-triggered prompt flows. So the pattern is: the flow makes the callout — through an HTTP Callout action or an External Services invocable action — and then merges the returned data into the template with Add Prompt Instructions.\nThat is the documented route because the template itself cannot call an API. What Prompt Builder can reference through Insert Resource is record fields, flows, Apex, Data 360 DMOs, and related lists; an external service reaches the prompt through the flow or Apex entry in that list, not as a merge field type of its own.\nConverting the JSON payload to an XML merge field is not a supported step and would not change what the template can reference.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.flow_ref_elements_add_prompt.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.flow_concepts_trigger_prompt_template_capability.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_ground_template.htm&language=en_US&type=5"
+      ],
+      "note": "B->C. Salesforce documents no External Service Record merge field for prompt templates — the grounding resources are record fields, flows, Apex, Data 360 DMOs, and related lists. The documented way to merge callout data into a template is the Add Prompt Instructions element in a template-triggered prompt flow, whose stated purpose is providing data that is merged into a prompt template."
+    },
+    {
+      "id": "78924287",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.copilot_actions_ref_answer_questions_with_knowledge.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.data_library_concept.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "cd9ab1cf",
+      "verdict": "clarified",
+      "explanation": "Instructions are what make an action usable by an agent. Salesforce describes action instructions as telling the agent what your action does and when to use it, and says to plan and test them carefully when you create a custom action — because the reasoning engine reads the action's name and instructions, including input and output instructions, when deciding what to run.\nThe other options are not components you configure on a custom action. There is no action trigger: an action is selected by the reasoning engine, not fired by an event. Output types describe the data an action returns and are part of its inputs and outputs, but it is the output instructions — telling the agent how to use what came back — that carry the meaning here.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.copilot_actions_instructions.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.copilot_actions_custom.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "e199bbfa",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_ground_template.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_standard_template_types.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "e68a8732",
+      "verdict": "clarified",
+      "explanation": "Masking is verified from audit data, not from the org's ordinary logs. Salesforce's guidance after configuring data masking is to verify that sensitive data is masked and monitor it over time using generative AI audit data — the audit trail — which records Trust Layer functionality such as masking and toxicity detection and is stored in Data 360 for reporting.\nEncrypting the address field is a different control entirely: encryption protects data at rest in Salesforce and says nothing about what text was sent to the model. Platform event logs do not carry the prompt's masked content.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.generative_ai_audit_data_mask.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.generative_ai_audit_trail.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "432e6ed5",
+      "verdict": "clarified",
+      "explanation": "Salesforce positions its sales agents as productivity multipliers around the selling process rather than replacements for it: they generate prioritised prospect lists, synthesise an account's calls, meetings and email history, nurture leads autonomously, and coach reps on their pitch — work that moves deals along and gives reps back the hours they spent preparing.\nThat is why the automation claim is the wrong reading. No documented sales agent automates the entire sales process; each covers a defined slice with a human still selling. And tracking interactions for later analysis describes activity capture, which is a data-collection feature rather than a reason to deploy an agent.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sales.sales_cloud_agents.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.agent_setup_explore_types.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "54b6a45e",
+      "verdict": "clarified",
+      "explanation": "Related list grounding is built in, so nothing custom is required. Prompt Builder supports related list merge fields, and the fields available come from the page layout of the parent object for the current user — so the Account's standard Opportunities related list can be merged into the template directly.\nTwo rules that come with it are worth knowing. Only related lists present on the object's page layout are available for grounding, and record-level filters are not applied to what is retrieved; the data is rendered as JSON in the resolution. Also note the documented exception: Activities related lists on objects such as Account and Case are not supported.\nFormula fields are not a grounding mechanism, and there is no Einstein related list to reference.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_ground_related_list.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "8b365e6c",
+      "verdict": "clarified",
+      "explanation": "Salesforce states this exact failure in its change set considerations for prompt templates: when you deploy a template with a custom large language model configuration, verify that the target org has a model with the same name — if the model name doesn't match, the deployment fails. A BYO-LLM configuration is not carried across by the change set, so production has to already hold a model registered under the same name.\nThat rules out the other explanations. BYO-LLM is supported in production; nothing about the feature is sandbox-only. And a template does not declare that its model is custom — the model configuration it points to is either resolvable in the target org or it is not.\nRelated considerations from the same page: a version does not auto-activate during deployment unless Deploy Prompt Templates is enabled in the target org, and an active version of a template in use cannot be deleted.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_considerations_changeset.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_changing_llm_configurations.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "a5e3e038",
+      "verdict": "clarified",
+      "explanation": "This is the answer the exam wants, and it describes behaviour Salesforce has since retired — worth knowing both halves. Historically, creating a search index in Data Cloud automatically produced a default retriever named after the index, which you could then use in Prompt Builder or Flow. Salesforce's current documentation states plainly that Data 360 no longer creates a default retriever automatically when you create a search index, though existing default retrievers still work.\nSo today you create the retriever yourself — an individual retriever in AI Models, where you select its search index, define filters, and specify what it returns.\nThe other options were never right. There is no dynamic retriever that selects its parameters at runtime without configuration, and no Apex retriever class is generated for a developer to edit.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_ai_retriever_about.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_ai_retriever_create.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "db26fe88",
+      "verdict": "corrected",
+      "was": "C",
+      "correct": "A",
+      "explanation": "Topic selection and topic behaviour read different fields, and this question asks about selection. Salesforce describes the classification step precisely: the reasoning engine compares the recent conversation history, including the user's most recent message, to the names and classification descriptions of all the subagents available to the agent. So the name and the classification description are what get this topic chosen.\nScope matters afterwards. Once a subagent is selected, the engine collects the subagent's name, scope, and instructions, plus the names and instructions of its actions, to decide what to do next — which is where 'only assist authenticated users' and the 90-day boundary do their work, constraining behaviour rather than winning the match.\nThat distinction is worth carrying into the exam: a vague classification description means the topic is never selected, while a vague scope means it is selected and then behaves badly.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_reasoning_engine.htm&language=en_US&type=5"
+      ],
+      "note": "C->A. Salesforce documents the classification step as comparing the conversation history to the names and classification descriptions of the available subagents. Scope is collected only after a subagent has been selected, to guide its behaviour, so it is not part of choosing the topic."
+    },
+    {
+      "id": "223dd5bd",
+      "verdict": "clarified",
+      "explanation": "Salesforce puts it in one line: activating a template version makes it immutable, and even if deactivated, any version that was ever active remains immutable. To change such a template you save it as a new version — which is also why each version can carry its own model configuration, with only the activated version's configuration in use.\nThe other options describe rules that do not hold. Any version can be activated, not only the latest, which is what makes versioning useful for comparing constructions. And modifications are not silently versioned for you — a draft keeps taking edits until you activate it.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_use_multiple_versions.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_changing_llm_configurations.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "3224ed4d",
+      "verdict": "clarified",
+      "explanation": "Salesforce describes the pipeline in the same terms the answer uses: data preparation for retrieval from a search index involves loading, chunking, vectorizing, and storing content in a search-optimized manner. The chunks are embedded by a supported model — E5-large-v2 and Multilingual-E5-large at 512 tokens, SFR-v2-small at 8,000 — and stored in an index a retriever can query for the passages most similar to a question.\nThat rules out the option claiming no preprocessing: dynamic grounding at run time still depends on content having been chunked and vectorised in advance. And aggregating and normalising structured datasets for governance describes a data modelling exercise, not the preparation behind vector retrieval.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_ai_retriever_about.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_search_index_reference.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_search_index_ground_ai.htm&language=en_US&type=5"
+      ]
+    }
+  ]
+}

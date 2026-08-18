@@ -1,0 +1,115 @@
+{
+  "deck": "public/decks/agentforce_specialist_questions.json",
+  "reviewed": "2026-08-17",
+  "findings": [
+    {
+      "id": "797bec34",
+      "verdict": "clarified",
+      "explanation": "There is a documented path for this, and it is deliberately generic. If the reasoning engine can't find an appropriate subagent for what the user said, the agent moves to an Off-Topic system subagent and tries to bring the conversation back to the subagents it does have — which the user experiences as a general message inviting them to restate the request, not as a failure.\nThe other two options describe mechanisms that are not in play. Messages are not preconfigured per action type; an action that is never selected produces no message of its own. And an error message is a different thing entirely — system messages cover errors, and not understanding a request is not an error.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_reasoning_engine.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.copilot_setup_system_messages.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "63afa960",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_testing_center.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "1a055309",
+      "verdict": "clarified",
+      "explanation": "Salesforce's agent type table describes the Service Agent as intelligently supporting customers with common inquiries and escalating complex issues — which is this scenario exactly: resolve the routine complaints with credits and upgrades, hand the major disruptions to a human. It is also the type built for customer-facing channels, including an Experience Cloud site with built-in authentication.\nThe flex prompt template is the right partner for it because the offers being generated do not fit a standard template type; flex is documented as the type for any use case the others do not cover, with inputs you define.\nNeither alternative is a documented agent type to build. There is no Sales Agent template in the table, and 'custom agent' is not a type either — you customise one of the documented types rather than choosing a generic one.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_setup_explore_types.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_create_flex_prompt_template.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "0b45cf29",
+      "verdict": "clarified",
+      "explanation": "The Standard Agent Action Reference has no general Delete Record action. It ships Create Record, Update Record, Get Record Details, Query Records and their relatives, and the only delete actions in the catalogue are vertical ones — Agentforce IT Service's Delete Configuration Item, Field Service's Delete Temporary Appointment — which are specific to those products.\nSo the agent is not being blocked by a permission; it has no action that deletes records to select in the first place. That is what makes both permission-flavoured options wrong: there is no Agentforce Delete Record Action permission to assign, and granting the agent user delete access on the object would still leave the agent with nothing to call.\nIf deletion is genuinely required, it has to be built — an Apex or flow custom action that performs the delete, subject to the agent user's own permissions.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.copilot_actions_ref.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.copilot_actions_custom.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "6e599964",
+      "verdict": "clarified",
+      "explanation": "Recommending products from a catalogue is not one of the shapes Salesforce ships a template for, and that is precisely when you reach for flex: it is documented as the type for any use case the other template types do not cover, and it is the one where you define the inputs yourself — up to five resources, each named and optionally required.\nA record summary condenses one record for a reader, and an email template produces a message to a recipient. Neither is a way to ask a model to select and justify products against a customer's context.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_create_flex_prompt_template.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_standard_template_types.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "42129525",
+      "verdict": "clarified",
+      "explanation": "When chunking and indexing are already correct, what is left is ranking. Data 360 hybrid search retrieves from a keyword index and a vector index, fuses the results, and then reranks them — and during setup you can configure additional ranking factors such as recency of records and popularity. Salesforce's own example is the one this question needs: use the LastModifiedDate field of an indexed DMO to define the recency of a record.\nThe alternatives make retrieval worse. Disabling the keyword index throws away half of hybrid search, which costs exact-match precision on error codes and part numbers without doing anything about age. Switching from section-aware to fixed-size chunking changes how articles are split, and cutting across section boundaries generally degrades the passages rather than favouring newer ones.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_hybridsearch_fusion_ranking.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "381ae8be",
+      "verdict": "clarified",
+      "explanation": "Too many irrelevant results is a scoping problem, and retrievers are scoped with filters. A custom retriever supports pre-filters that narrow what is eligible to be returned before ranking, so the results the model grounds on are drawn from the right slice of the index.\nRaising the maximum number of results does the opposite of what is needed: a broader dataset dilutes the context window with more of the same irrelevance. Pointing the search index at a different DMO changes what corpus is searched rather than tightening retrieval within the right corpus.\nOne limitation to design around: dynamic pre-filters are not supported when a data library is used with the Answer Questions with Knowledge prompt template — only static pre-filters are. The documented workarounds are a separate library per category or brand, or a custom Apex invocable action that passes filter values at runtime.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.data_library_custom_retriever.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "80590e97",
+      "verdict": "clarified",
+      "explanation": "Salesforce lists this under Prompt Builder Limitations in as many words: audit trail isn't supported, and creating or updating a prompt template isn't tracked in the Setup Audit Trail. For a governance-minded rollout that is the limitation worth knowing, because template changes alter what the LLM is told without leaving the usual trace.\nThe same page disproves the other two options. Custom objects are not restricted to flex templates — a newly created custom object or field simply isn't available in Prompt Builder immediately, and logging out and back in makes it usable. Nor are rich text area fields confined to flex templates.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_limitations.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "3224ed4d",
+      "verdict": "clarified",
+      "explanation": "Preparation is what turns documents into something a retriever can search. In Data 360 the content is loaded, chunked into passages, converted to embeddings by a supported model — E5-large-v2 and Multilingual-E5-large at 512 tokens, SFR-v2-small at 8,000 — and stored in an index built for similarity search, which is what the retriever then queries.\nThat rules out the option claiming no preprocessing: dynamic grounding still depends on content having been chunked and vectorised ahead of time. And the description about aggregating and normalising structured datasets for governance describes a data modelling exercise, not the pipeline behind vector retrieval.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_search_index_ground_ai.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_search_index_reference.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "c15ac147",
+      "verdict": "clarified",
+      "explanation": "The agent works against Salesforce's standard prospect records, not a custom object. Prospects are assigned to a Lead Nurturing agent from the lead, contact, or person account detail page, and its setup and assignment rules are built around those objects — so an org tracking leads in a custom object has nothing for the agent to engage.\nOpportunities are not its scope either: this agent nurtures top-of-funnel prospects, answers their questions and books meetings, rather than working open deals.\nTwo notes for the exam. The option's wording is slightly narrow — contact and person account are supported alongside the standard Lead — and the agent has been renamed Agentforce Lead Nurturing, so current articles are filed under that name.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sales.sales_agent_sdr_assign_manually.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sales.sales_agent_sdr_intro.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "1a438749",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.data_library_concept.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.agent_setup_data_sources.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "818da706",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_testing_center.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "6366295a",
+      "verdict": "clarified",
+      "explanation": "This is a standard action, so nothing has to be built. Salesforce ships Draft or Revise Email, which creates or revises a draft to a recipient based on the user's request — recipient, subject and body — ready to send from the Salesforce email composer, and it runs on the Einstein Sales Emails permission. Grounded in the record and the account's history, that is what saves the rep the review-everything-first hour.\nThe other two standard actions do real work but not this work. Summarize Record condenses a record for reading, and Find Similar Opportunities surfaces comparable deals; neither drafts the outreach.\nNaming note: the action is documented today as Draft or Revise Email, without 'Sales' in the title.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.copilot_actions_ref_draft_or_revise_email.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.copilot_actions_ref.htm&language=en_US&type=5"
+      ]
+    }
+  ]
+}

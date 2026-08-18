@@ -1,0 +1,227 @@
+{
+  "deck": "public/decks/agentforce_specialist_questions.json",
+  "reviewed": "2026-08-17",
+  "findings": [
+    {
+      "id": "acc14d39",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.copilot_actions_custom.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "e6949181",
+      "verdict": "corrected",
+      "was": "C",
+      "correct": "B",
+      "explanation": "Model Playground is not an agent-testing tool. It belongs to AI Models (formerly Einstein Studio) and the Bring Your Own LLM flow: you evaluate a foundation model's response to your prompts under different settings before deploying that model to production. It says nothing about whether an agent selects the right action for a given utterance.\nThe tool Salesforce documents for evaluating many real-world utterances is Agentforce Testing Center, which batch-tests subagent and action selection from a CSV of scenarios. It is not among the options here. Of what is offered, Agent Builder is the one that answers the question: its Preview panel lets you test the agent by inputting utterances, and the canvas shows which subagents were selected and the reasoning behind the selection.\nTreat this item as defective rather than subtle. The best answer to the question as written is Testing Center, and this option set omits it; a near-duplicate of this question elsewhere in the deck does offer Testing Center and keys it.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_builder_tour.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.agent_testing_center.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_ai_foundation_models.htm&language=en_US&type=5"
+      ],
+      "note": "C->B. Model Playground evaluates a foundation model's responses in the Bring Your Own LLM flow, not an agent's action selection, so the original key named the wrong tool. The item is also defective: the documented answer for evaluating multiple real-world utterances is Agentforce Testing Center, which this option set omits (its near-duplicate 63afa960 offers it and keys it). B is the best available option — Agent Builder's Preview panel tests utterances and shows which subagents and actions were selected, and why."
+    },
+    {
+      "id": "6a1ae055",
+      "verdict": "corrected",
+      "was": "A",
+      "correct": "B",
+      "explanation": "The SDR agent — renamed Agentforce Lead Nurturing — runs on email, not Messaging. Its setup connects the agent user record to an email account so the agent can send and receive email, and its documented constraints are email constraints: up to 1,800 emails a day on a Gmail account and 9,800 on Microsoft Exchange, after which the agent stops sending for the day. No Messaging deployment step exists for it, and nothing requires deploying it on the company website.\nSo the channel consideration to be aware of is that this agent works through the email channel. Note the naming: Salesforce renamed Agentforce SDR to Agentforce Lead Nurturing to distinguish it from the Lead Generation agent, so current articles are filed under the new name while the exam still says SDR.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sales.sales_agent_sdr_intro.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sales.sales_agent_sdr_setup_connect_agent_user_email.htm&language=en_US&type=5"
+      ],
+      "note": "A->B. The SDR agent (now Agentforce Lead Nurturing) is set up by connecting an email account to the agent user so it can send and receive email, and its documented limits are email sending limits. No Messaging-channel deployment exists for it, so the original key described a channel the agent does not use."
+    },
+    {
+      "id": "e3b0fcb4",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.generative_ai_audit_trail.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "ec7f56b9",
+      "verdict": "clarified",
+      "explanation": "The Agent API is the documented way to hand verified identity to a downstream agent, and the reason is the variable model. When you start a session you can pass context variables and custom variables, and Salesforce documents that many variables are read-only and can only be set during the start session call: context variables carrying the $Context prefix are not editable after the session has started, with the single exception of $Context.EndUserLanguage. A customer ID passed that way is therefore fixed for the life of the session and cannot be rewritten by the model mid-conversation.\nThe alternatives leak or drift. A custom object queried by SOQL actions during execution puts the identity back into the agent's reasoning loop, where it is only as reliable as the action the planner happens to select. Ordinary conversation variables created by the first agent are editable during the conversation and do not cross into another agent's session, so they neither persist across the handoff nor resist modification.",
+      "references": [
+        "https://developer.salesforce.com/docs/ai/agentforce/guide/agent-api-variables.html"
+      ]
+    },
+    {
+      "id": "2de3ea26",
+      "verdict": "clarified",
+      "explanation": "Reading knowledge articles is a Salesforce permission, and the agent user needs it like any other user. Lightning Knowledge user access documents that reading and searching published knowledge articles requires the Allow View Knowledge permission, so an agent user without it grounds on nothing and answers as though the articles do not exist. That is exactly the symptom described.\nThe fix follows from how Salesforce creates these users: the agent user starts with minimal access so the agent is secure by default, and you expand its access deliberately, based on the principle of least privilege. Granting knowledge read access is one of those deliberate expansions.\nThe other options misdescribe the platform. The agent type license governs which agent template and features are available, not article-level read access. There is no standard Agent Knowledge profile that an agent user must be created under.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.knowledge_setup_users_lex.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.agent_user.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "65e4e8f4",
+      "verdict": "clarified",
+      "explanation": "Two different jobs need two different grants. Managing models is a Data Cloud permission: model management in AI Models — the tool the exam calls Einstein Studio — is granted through the Data Cloud permission sets, which is why an admin-level Data Cloud permission set belongs in the answer. Creating prompt templates is a Prompt Builder permission, and Salesforce lists Prompt Template Manager as the permission required to create or modify prompt templates.\nPrompt Template User only lets someone use an existing template, so any pairing built on it leaves the data scientist unable to author one, and neither Prompt Builder permission grants access to models.\nTwo naming notes for anyone checking this against current documentation: Einstein Studio is now AI Models, its model-building tool is AI Model Builder, and the permission set granting admin-level access to all AI Models features is currently named Data Cloud Architect. The exam-era names are the ones in the options here.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_ai_license_perms.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.copilot_actions_custom.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "a44b4810",
+      "verdict": "clarified",
+      "explanation": "Salesforce states the practice directly on the Testing Center page: testing agents can modify CRM data, so use Testing Center only in your sandbox environment. That is the whole answer — the risk being avoided is a test run writing to live records.\nThe other options fail on their own terms. Running tests in production is the thing the documentation warns against, not a way to ensure accuracy. And capping a run at 50 test cases does not make writes safer; Testing Center is built for large-scale batch runs, and the number of cases has no bearing on whether the org they touch is production.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_testing_center.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "ec49a7e9",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sales.sales_agent_sdr_intro.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "db66ac22",
+      "verdict": "clarified",
+      "explanation": "Model Context Protocol is an open standard that lets AI applications interact with external systems and services through pre-built connections instead of a bespoke integration per tool. In Agentforce you register a third-party MCP server in the Agentforce Registry and allowlist the server tools you want your agents to use, which is what makes an external recommendation model easy for the agent to consume.\nThe alternatives are a different kind of thing. Hugging Face is a model host, not a mechanism for an agent to discover and call a tool. The Agent-to-Agent protocol governs communication between agents, not an agent's consumption of an external predictive model exposed over an API.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_mcp_connect_register.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/ai/agentforce/guide/mcp.html"
+      ]
+    },
+    {
+      "id": "67ac4dbb",
+      "verdict": "clarified",
+      "explanation": "Planning is action selection. Salesforce describes the path of a user message as an iterative classification and reasoning process: the agent first classifies the message into the best-matching subagent, then analyses the available information to decide its next step, which may be running an agent action that calls an Apex class, flow, or prompt template, asking a clarifying question, or answering directly.\nSo the planner's job is to identify which actions answer the utterance. Generating record queries is something a selected action does, not the planning step itself, and real-time translation is a separate language capability rather than the function of the planner.\nOne naming note: what the exam calls the planner service is documented today as the Atlas reasoning engine, and in metadata it is the planner bundle that contains an agent's topics and actions.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_reasoning_engine.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "a5c36a06",
+      "verdict": "corrected",
+      "was": "C",
+      "correct": "B",
+      "explanation": "Grounding alone drafts nothing. Service Replies is the feature that uses generative AI to draft replies for reps during chat and messaging sessions, and Salesforce's own instruction is to add grounding to Service Replies with Service AI Grounding — so reducing handling time with AI-generated responses needs Service Replies turned on as well as grounding.\nThe grounding half then decides where the content comes from. You turn on Service AI Grounding and select the sources: grounding with Knowledge has Einstein use your knowledge articles to draft responses, and it is what lets a rep see the article behind a drafted reply rather than guessing whether the wording came from the model or from the knowledge base.\nThat rules out the other pairings. Grounding with Case grounds on case details, which is not the knowledge base this question asks about, and Service AI Grounding with Knowledge but without Service Replies leaves the org with a grounding configuration and no generated replies to ground.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=service.einstein_replies_intro.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=service.einstein_generative_ai_enable_grounding.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=service.einstein_generative_ai_ground_knowledge.htm&language=en_US&type=5"
+      ],
+      "note": "C->B. Service AI Grounding and Grounding with Knowledge configure what a reply is grounded on, but they do not generate replies. Salesforce documents Service Replies as the feature that drafts responses for reps and says to add grounding to Service Replies with Service AI Grounding, so all three are required for AI-generated replies drawn from the knowledge base. The deck's own explanation already argued for B while the key said C."
+    },
+    {
+      "id": "683fdd78",
+      "verdict": "clarified",
+      "explanation": "A flex prompt template is the type Salesforce documents for any use case the other template types do not cover, and it is the one where you define the inputs yourself. In a flex template you add resources — the objects the prompt draws on — and the builder allows up to 5 of them, which is exactly what five unrelated objects, standard or custom, requires. Each resource gets its own name and API name and can be marked required.\nThe alternatives do not hold up. No bridging custom object is needed to connect unrelated records temporarily, since the template accepts the five objects directly as separate resources. And a prompt-template-triggered flow is not a prompt template type at all; building one would not change what data the template can accept.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_create_flex_prompt_template.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_standard_template_types.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "4311b31c",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_best_practices.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "f97b4b49",
+      "verdict": "clarified",
+      "explanation": "Agentforce Session Tracing is the feature built for exactly this list. It ingests data from the reasoning engine and other sources and combines it under a session ID, and Salesforce describes the log as covering turn-by-turn interactions, reasoning engine executions, actions, prompt and gateway inputs and outputs, error messages, and final responses. The trace data lands in a data model you can query and report on to investigate incidents and behaviour patterns.\nThe other options are narrower by design. Utterance analysis looks at what users said and how those utterances were matched, not at the internal execution of a session, and no Agentforce Analytics feature provides the end-to-end execution log described here.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.generative_ai_session_trace_about.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "3e120a2b",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.generative_ai_trust_arch.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "28b3a429",
+      "verdict": "corrected",
+      "was": "B",
+      "correct": "A",
+      "explanation": "Start from the agent types Salesforce actually documents: Employee Agent, Lead Nurturing (formerly SDR), Sales Coach, Service Agent, Service Assistant, and the Setup agent. There is no general-purpose Sales Agent type to build. The sales-side agents are Prospecting, Engagement and Sales Coach, which work leads and coach reps rather than serve an existing, verified customer in a help center.\nThe scenario is a customer-facing self-service conversation that has to escalate when it exceeds a threshold, and that is the Service Agent: Salesforce describes it as intelligently supporting customers with common inquiries and escalating complex issues, deployable to an Experience Cloud site with built-in authentication. Identity and entitlement checks, quote creation and the prorated calculation are custom actions on that agent, and the escalation above USD 25,000 is a branch in its instructions.\nOne caveat about the wording: the option talks about creating an opportunity for the sales team, while the requirement is a quote. The discriminator is the agent type, not the record the escalation creates.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_setup_explore_types.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=experience.support_add_agent_to_site.htm&language=en_US&type=5"
+      ],
+      "note": "B->A. Salesforce's agent type table has no Sales Agent to build — the sales agents are Lead Nurturing, Prospecting, Engagement and Sales Coach, all of which work prospects or coach reps rather than serve a verified customer in a help center. The Service Agent is the documented customer-facing type, supports Experience Cloud with built-in authentication, and escalates complex issues, so it is the type this scenario calls for. Note that both option tails are loose: the requirement is a quote, and option A says opportunity."
+    },
+    {
+      "id": "456918e7",
+      "verdict": "corrected",
+      "was": "B",
+      "correct": "A",
+      "explanation": "Testing consumes usage, and it can write to your org. Salesforce's considerations for Testing Center state that the use of generative AI capabilities, in either a production or sandbox environment, consumes Einstein Requests and possibly Data 360 credits — so the claim that running tests does not consume Einstein Requests is false. The Testing Center page itself carries the matching warning that running tests consumes requests and credits.\nWhat is true is the data risk: testing agents can modify CRM data, which is why Salesforce tells you to use Testing Center only in your sandbox environment. That makes the statement about risking modification of CRM data in production the accurate one.\nThe remaining option inverts the guidance — Testing Center is not restricted to production; sandbox is the environment it is meant to run in.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_testing_center.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.agent_testing_center_considerations.htm&language=en_US&type=5"
+      ],
+      "note": "B->A. The original key asserted that test runs do not consume Einstein Requests. Salesforce documents the opposite: generative AI use in production or sandbox consumes Einstein Requests and possibly Data 360 credits. The true statement in this set is that testing can modify CRM data, which is why the documentation restricts Testing Center to sandbox."
+    },
+    {
+      "id": "31068c78",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=experience.support_add_agent_to_site.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.agent_setup_explore_types.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "b37ea07b",
+      "verdict": "clarified",
+      "explanation": "GenAiPlannerBundle is the component to include. The Metadata API defines it as a planner for an agent or agent template and, in its own words, a container for all the topics and actions used to interact with a large language model — which is precisely what a deployment touching changed topics, instructions and actions needs to carry across. It has the .genAiPlannerBundle suffix, lives in a per-agent subfolder of genAiPlannerBundles, and is available in API version 64.0 and later.\nThe other two are not real metadata types. There is no EinsteinAiPlannerBundle, and BotBundle is not the agent planner — an agent's conversational shell is represented by Bot and BotVersion, which reference the planner rather than containing the topics and actions themselves.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_genaiplannerbundle.htm",
+        "https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-deploy-metadata.html"
+      ]
+    },
+    {
+      "id": "bbe307d2",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.generative_ai_trust_arch.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "0160ee78",
+      "verdict": "clarified",
+      "explanation": "Salesforce's guidance for agent access is explicit: the agent user is created with minimal access so that the agent is secure by default, and you expand that access to support your use cases based on the principle of least privilege. Keeping sensitive medical research out of reach therefore means simply never granting the agent user permission to view that object or its fields.\nThe alternatives confuse different controls. Role hierarchy position governs record-level sharing, not object permissions, so a low role does not stop an agent user whose profile or permission set grants access to the object. Blanket-disabling every custom object would break the legitimate parts of the agent along with the sensitive one, and is not how object access is configured.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_user.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "06dc0bbf",
+      "verdict": "clarified",
+      "explanation": "Retrieval is only as good as the index behind it, so when the source content changes the index has to reflect that. Salesforce lets you trigger a full rebuild of a search index configuration from the search index list page or the object record view, and the rebuild reprocesses the content of the data model object — which is what restores accurate retrieval after documentation churn.\nThe alternatives make the drift permanent or worse. Leaving embeddings unchanged after the content is updated guarantees the retriever keeps serving the old text. Manually deleting stale chunks is not an exposed operation and would leave the index inconsistent with its source.\nWorth knowing alongside the answer: indexing is not purely manual. After the initial build, a search index picks up new and modified records incrementally, so a full rebuild is the heavier remedy rather than a routine chore.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_search_index_rebuild_search_index.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "2aaa194d",
+      "verdict": "clarified",
+      "explanation": "Model Builder is the tool for models that live outside Salesforce. Bring Your Own Model connects models built on external platforms — Amazon SageMaker among them — to Salesforce with a zero-copy approach, so no data is duplicated, and Bring Your Own Large Language Model does the same for a foundation model hosted externally, adding it as a model configuration you can then use for generative AI.\nApp Builder assembles Lightning pages and Copilot Builder configures an agent's topics and actions; neither connects an externally hosted model.\nA naming note for current documentation: this tool is now AI Model Builder, formerly Einstein Studio Model Builder, and it sits under Data 360.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_ai_license_perms.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_bring_your_own_model.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "7fcd0d22",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=service.einstein_replies_intro.htm&language=en_US&type=5"
+      ]
+    }
+  ]
+}
