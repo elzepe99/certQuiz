@@ -1,0 +1,131 @@
+{
+  "deck": "public/decks/agentforce_specialist_questions.json",
+  "reviewed": "2026-08-17",
+  "findings": [
+    {
+      "id": "0e61252b",
+      "verdict": "clarified",
+      "explanation": "An agent sees what its user can see. The agent user is created with minimal access so the agent is secure by default, and you expand that access deliberately, based on the principle of least privilege — so a brand-new custom object is invisible to the agent until the agent user is granted Read on it through its permission set.\nThe other options misplace the control. Access to a flow is granted by the Run Flows permission or per-flow access, and it governs whether the agent can execute automation, not whether it can read Product Replacement records. And no AI training permission on an object exists; agents ground on data they are permitted to read, they are not trained on objects.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_user.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.agent_actions_common_perms.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "66ad7b37",
+      "verdict": "corrected",
+      "was": "B",
+      "correct": "A",
+      "explanation": "There is no Prompt Builder Scorecard. Salesforce's documented loop for an ineffective template is iteration against real feedback: revise the template and generate a new output — the previous output is not saved and the new one replaces it — and its best practices say plainly to iterate on your prompt templates, trying the same goal different ways, and to get end-user feedback to see how well the template generates the desired response.\nThe closest thing to a metrics surface is Prompt Performance Metrics in Prompt Builder, still in beta, which reports template usage from Data 360. That is a usage signal, not a scorecard that grades a template, and it does not replace the review-and-revise loop.\nChanging the grounding object periodically is not a remedy either. The grounding object is what supplies the record context; swapping it changes what the template is about rather than making it more effective.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.prompt_builder_review_revise.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_best_practices.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_enable_prompt_performance_metrics.htm&language=en_US&type=5"
+      ],
+      "note": "B->A. The Prompt Builder Scorecard named by the original key does not exist in Prompt Builder — a scorecard is an Einstein Prediction Builder feature. Salesforce documents monitoring and refining a template through the review-and-revise loop and end-user feedback, with Prompt Performance Metrics (Beta) as the only reporting surface, so A is the supported answer."
+    },
+    {
+      "id": "41b8067f",
+      "verdict": "corrected",
+      "was": "B",
+      "correct": "A",
+      "explanation": "This is a documented gap with a documented fix, and the fix is not in the template. Salesforce states that standard sales email prompts use hard-coded hyperparameters that are not copied when you use Save As, which is why a copied template produces different or unexpected results. The remedy it gives is to use AI Models (formerly Einstein Studio) to create a model configuration with specific parameters — model gpt-3.5-turbo, temperature 1.0, frequencyPenalty 1.0, presencePenalty 0.5 — which you build and evaluate in Model Playground.\nSo the hyperparameters are set on a model configuration, not typed into the prompt template; there is no field in the template body where they live. And reverting to the standard template abandons the customisation UC wanted rather than solving anything.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_standard_prompt_templates.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_ai_foundation_models.htm&language=en_US&type=5"
+      ],
+      "note": "B->A. Salesforce documents that the standard sales email hyperparameters are hard-coded and not copied by Save As, and directs you to create a model configuration in AI Models (formerly Einstein Studio) with the listed parameters. Hyperparameters are not something you add manually to the prompt template, so the original key described a step that does not exist."
+    },
+    {
+      "id": "a18a8ddd",
+      "verdict": "clarified",
+      "explanation": "The problem described is repetition and inconsistency in how people phrase prompts, which is exactly what a prompt template removes. Prompt Builder lets you write the prompt once, ground it in CRM data with merge fields, and hand users a button instead of a blank box — so the wording is authored once and applied the same way every time.\nThe alternatives address different problems. Building an agent with a Query Records action puts a conversational layer in front of data retrieval rather than standardising a prompt, and Einstein Recommendation Builder produces predictive recommendations rather than generated text.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_standard_template_types.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_best_practices.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "8ad060ca",
+      "verdict": "clarified",
+      "explanation": "Apex behind an agent action is ordinary Apex, and it carries the platform's ordinary deployment rules: to deploy Apex, unit tests must cover at least 75% of your Apex code and those tests must pass. Nothing about being invoked by an agent relaxes that, and the deployment package still has to contain the classes the action depends on or the deployment fails on the missing dependency.\nBoth alternatives describe exemptions that do not exist. Coverage is checked when the code is deployed, not when an agent is activated, so leaving the agent inactive changes nothing. And there is no agent-only carve-out from the coverage requirement.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_code_coverage_intro.htm"
+      ]
+    },
+    {
+      "id": "5f227c57",
+      "verdict": "clarified",
+      "explanation": "Data masking in the Einstein Trust Layer is configured by choosing what counts as sensitive. On the Data Masking tab of Einstein Trust Layer setup, masking is on by default and individual privacy data entities or whole categories can be turned on or off, taking effect within a few minutes. The Trust Layer detects that data, replaces it with placeholder text before the prompt leaves for the model, and keeps the mapping so the response can be demasked on the way back.\nThe other options belong to different mechanisms. There is no per-profile exemption list for masking, and the encryption keys used to protect data are not part of this configuration.\nOne current caveat worth knowing: data masking for LLMs is disabled for agents. It applies to embedded generative AI features such as Einstein Service Replies and Einstein Work Summaries, which is where you configure it.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.generative_ai_trust_setup.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.generative_ai_trust_arch.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "9c22a0d8",
+      "verdict": "clarified",
+      "explanation": "All three requirements point at a data library. A library indexes your knowledge articles and fields, file uploads, or web sources so agents know what to base responses on, and creating one automatically pushes data streams to Data 360, maps the objects, and builds a search index and retriever. Retrieval over that index is semantic rather than keyword, which is what 'semantically search HR policies' asks for, and the agent grounds on it through the Answer Questions with Knowledge action.\nThe immediacy requirement is handled by the same machinery: the index picks up new and modified records incrementally after the initial build, so published Knowledge updates flow through without reconfiguring the agent.\nThe alternatives are worse on their own terms. Searching all internal records and past inquiries widens the surface to unvetted content instead of published policy, and there is no mechanism for manually adding responses 'into the AI model' — you ground a model, you do not load answers into it.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.data_library_concept.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.agent_setup_data_sources.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "fde9ef6d",
+      "verdict": "clarified",
+      "explanation": "Salesforce states the limitation directly in its considerations for grounding with related lists: Activities related lists on objects such as Account and Case are not supported. So an Account prompt template cannot pull the activity history through a related list merge field, however natural that would be for a summary.\nTwo related rules from the same page are worth carrying with it. Only related lists present on the object's page layout are available for grounding, and the fields come from the parent object's layout for the current user. And if a user lacks the related list on their layout or Read permission on the associated object, no related list data is sent to the LLM — the prompt still runs, which is what makes the 'no response at runtime' option wrong rather than merely pessimistic.\nPerson accounts do not remove merge field support for Account either.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_ground_related_list.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "606f05b2",
+      "verdict": "clarified",
+      "explanation": "A data library's default retriever answers general questions over the indexed content; it does not come with product-line filtering or recency ranking. When you need retrieval shaped that way, you build a custom retriever, which is also how you reach more Data 360 source types and ensemble configurations.\nOne limitation is worth knowing before designing around filters: dynamic pre-filters are not supported when a data library is used with the Answer Questions with Knowledge prompt template — only static pre-filters are. The documented workarounds are a separate library per category or brand, or a custom Apex invocable action that passes filter values at runtime.\nSemantic embeddings with default metadata filters is not a configuration Salesforce exposes, and assuming the default retriever ranks by recency is exactly the assumption this question is testing.\nNaming note: retrievers are configured in Data 360; Einstein Studio is the exam-era name for what is now AI Models.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.data_library_custom_retriever.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.data_library_concept.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "ddb9a877",
+      "verdict": "clarified",
+      "explanation": "The output here is a field value that lives on the product record and gets reused downstream, which is what a field generation template produces: generative AI-enabled fields let a user populate a record field with generated content in one click, and the template draws on the record's current data each time it runs.\nA record summary condenses a record for someone reading it rather than writing a durable description into a field, and a sales email template is scoped to a recipient and an email body. Neither leaves you with a consistent product description attached to the product.\nRemember the prerequisite that comes with this template type: the field has to sit on a Lightning record page that uses Dynamic Forms before it can be enabled for generative AI.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.prompt_builder_add_field_gen_to_lightning_record_page.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_standard_template_types.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "a8c6ed93",
+      "verdict": "clarified",
+      "explanation": "Everything this team needs is grounding, and grounding is a no-code configuration. A prompt template assembled in Prompt Builder can merge record fields, related lists, flows, Apex, and Data 360 DMOs into one prompt, which covers past purchases from CRM, interest signals captured in Data 360, and call and email transcripts — all against the standard foundation models, with the Trust Layer applying masking and retention policies on the way through.\nThe alternatives solve a problem this org does not have. Deploying a custom foundational model and fine-tuning one are both code-and-data-science projects, and neither is necessary to make a model reason over data you can already supply as context. Fine-tuning changes what a model knows in general; grounding changes what it is told about this account, which is what a call prep brief requires.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_ground_template.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.generative_ai_trust_arch.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "e58a492d",
+      "verdict": "clarified",
+      "explanation": "Prompt Defense is the Trust Layer's named answer to this threat. Salesforce describes it as the system policies that Prompt Builder and the Prompt Template Connect API apply to decrease the likelihood of the LLM generating something unintended or harmful — instructions telling the model how to behave, such as not answering on content it has no information about — and states that system policies are one way to defend against jailbreaking and prompt injection attacks.\nThe other two Trust Layer features protect different things. Secure data retrieval and grounding controls which records may enter a prompt, enforcing the running user's permissions; data masking replaces sensitive values with placeholders before the prompt leaves Salesforce. Both limit what an attacker could extract, but neither is aimed at an instruction that tries to talk the model out of its rules.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.generative_ai_trust_arch.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "bdc1f672",
+      "verdict": "corrected",
+      "was": "B",
+      "correct": "A",
+      "explanation": "Prompt Builder reaches Data 360 in more than two ways, and the third is direct. Salesforce lists what the Insert Resource button can reference in a prompt template: record fields, flows, Apex, Data 360 DMOs, and related lists. So a data model object can be merged into a template as a resource in its own right — after Data 360 enrichments create the relationship, the DMO appears under the Actions section of the Insert Resources menu and behaves like native Salesforce data.\nThe other two routes named in this option are real as well. Data 360 enrichments surface DMO data as copy fields and related lists on Salesforce objects, and a template-triggered prompt flow can fetch Data 360 data and merge its output into the template's resolution.\nExternal APIs are not the answer: nothing about this requires importing Data 360 data into Prompt Builder from outside, since the platform exposes it natively.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_ground_template.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_ground_dmo.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.flow_concepts_trigger_prompt_template_capability.htm&language=en_US&type=5"
+      ],
+      "note": "B->A. The original key excluded direct DMO access, but Salesforce documents the Insert Resource button as referencing record fields, flows, Apex, Data 360 DMOs, and related lists — so DMOs are available in a template directly, alongside the related-list and prompt-flow routes the old key allowed."
+    }
+  ]
+}

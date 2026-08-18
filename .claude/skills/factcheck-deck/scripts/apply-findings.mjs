@@ -189,11 +189,19 @@ const counts = { confirmed: 0, clarified: 0, reasoning: 0, corrected: 0 };
 let refsAdded = 0;
 
 for (const { f, q, refs } of planned) {
-  const existing = splitExplanation(f.explanation ?? q.explanation);
-  const merged = [...new Set([...existing.refs, ...refs])];
-  refsAdded += merged.length - existing.refs.length;
+  // References already on the question must survive a rewritten explanation. Split
+  // BOTH the incoming prose and the question's current explanation: a finding that
+  // supplies `explanation` carries no References block of its own, so reading refs
+  // only out of the incoming text silently dropped every citation the question
+  // already had. This script must only ever add references — use replace-refs.mjs
+  // to remove one.
+  const incoming = splitExplanation(f.explanation ?? q.explanation);
+  const onQuestion = splitExplanation(q.explanation);
+  const kept = [...new Set([...onQuestion.refs, ...incoming.refs])];
+  const merged = [...new Set([...kept, ...refs])];
+  refsAdded += merged.length - kept.length;
 
-  q.explanation = merged.length ? `${existing.body}\nReferences:\n${merged.join('\n')}` : existing.body;
+  q.explanation = merged.length ? `${incoming.body}\nReferences:\n${merged.join('\n')}` : incoming.body;
 
   if (f.verdict === 'corrected') {
     const from = q.correct;

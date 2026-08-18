@@ -156,9 +156,27 @@ underneath.
 
 ---
 
-## Deck state — as of 2026-08-15
+## Deck state — as of 2026-08-17
 
-1,697 questions across 14 decks. **834 (49%) carry a reference with an actual URL.**
+1,622 questions across 13 decks. **1,091 (67%) carry a reference with an actual URL.**
+
++136 of that is the sharing-visibility pass on 2026-08-17, taking that deck from
+0/136 to 136/136 — the second citations-and-corrections pass over an existing deck,
+after revenue-cloud.
+
+An **agentforce pass ran in the same working tree on the same day** and finished at
+121/121, which is the rest of the jump. Coverage moved 1,020 → 1,033 → 1,091 across
+three measurements in a single session while that pass was running, so re-measure with
+the command below rather than copying any number out of this file.
+
+`git show HEAD:public/decks/claude_questions.json` recovers the removed deck below,
+and restores its ids with it — so Supabase comments left on those questions would
+rebind rather than stay orphaned.
+
+**The claude-questions deck was removed on 2026-08-17** at the repo owner's request —
+74 questions of Claude/Anthropic product trivia, uncited and, in their words, "wrong
+in many ways". It was never a certification deck and nothing in the app referenced it
+beyond its manifest entry. That removal is why the totals dropped from 1,697 / 14 decks.
 
 The jump from 697 is the revenue-cloud pass on 2026-08-15: +137 cited, taking that
 deck from 0/137 to 137/137. No new questions arrived — this is the first pass in the
@@ -174,8 +192,9 @@ but only 834 have a link in it. The **27-question gap** is real content: prose l
 "Salesforce Agentforce Documentation: SDR Agent Setup > Channels" rendered under a
 References heading with nothing to click, plus a handful of empty blocks. It degrades
 gracefully — `linkifySegments` only linkifies real URLs — but it is unverifiable by a
-learner and it inflates any naive coverage count. The gap is now **agentforce 24,
-admin 3**; revenue-cloud's 8 were closed by the 2026-08-15 pass.
+learner and it inflates any naive coverage count. The gap is now **agentforce 13,
+admin 3**; revenue-cloud's 8 were closed by the 2026-08-15 pass, and agentforce's is
+shrinking live as that pass runs.
 
 That corrects a figure this file previously carried. The old row claimed a
 106-question gap split agentforce 73 / revenue-cloud 30 / admin 3. Measured per
@@ -199,14 +218,13 @@ column, not the Cited column.
 | salesforce-integration-architect | 133 | 133 | **Fully checked** — 37 stamps, 15 keys moved. Spot-rechecked 2026-08-10: citations sound, content current, 0 wrong answers found |
 | salesforce-iam-architect | 116 | 116 | **Fully checked** (2026-08-10) — 3 keys moved, 7 reasoning fixes |
 | salesforce-admin | 154 | 33 | Partial; 13 keys moved (ADM-201 merge pass). 3 more render a References block whose URL is broken across lines — one shows a bare `htm` |
-| salesforce-agentforce-specialist | 122 | **0** | **Not cited at all.** 26 questions render a References block containing prose only (79 such lines), no URLs |
+| salesforce-agentforce-specialist | 121 | 121 | **Fully checked** (2026-08-17) — 16 keys moved across 6 batches. Started from 0 cited, with 26 questions rendering a References block of prose only. One duplicate removed (`b7ffd87e`), resolving the pair this file flagged |
 | salesforce-revenue-cloud | 137 | 137 | **Fully checked** (2026-08-15) — 2 keys moved, 88 explanations rewritten. Its defect was **fabricated citations, not wrong answers**: 73 explanations quoted invented "Exact Extracts". 9 questions could not be settled and say so in their own prose |
 | salesforce-data-cloud-consultant | 100 | 0 | Uncited; 4 keys moved via comments |
-| salesforce-sharing-visibility | 136 | 0 | Uncited; 4 reasoning stamps |
+| salesforce-sharing-visibility | 136 | 136 | **Fully checked** (2026-08-17) — 2 keys moved, 6 reasoning fixes, 19 silent clarifications. The 4 earlier 2026-08-04 validation stamps are preserved |
 | salesforce-app-builder | 119 | 119 | **Fully checked** (2026-08-11) — 4 keys moved, 27 reasoning fixes, 3 defective option sets repaired. Q1–50 spot-rechecked: 10 sampled, 1 defect (a mechanism stated backwards), so the earlier batches read sound |
 | salesforce-dld | 138 | 0 | **Untouched** |
 | salesforce-data-architect | 135 | 0 | **Untouched** |
-| claude-questions | 74 | 0 | **Untouched** |
 | salesforce-slack-consultant | 37 | 0 | **Untouched** (smallest — good next target) |
 
 **The IAM deck used to be the trap in this table, and the lesson survives it.**
@@ -264,6 +282,25 @@ generalised rule is therefore **not** "few corrections means a bad pass" but: *a
 layer the generator got wrong.* A pass that moves few keys but rewrites most
 explanations is as real as one that moves many keys. Check the rewrite count alongside
 the correction count before judging either.
+
+**Sharing-visibility (2026-08-17) is a fourth shape: a mostly-sound deck whose defects
+were concentrated in what the explanations *denied*.** Only 2 of 136 keys moved, but
+six explanations asserted things the documentation contradicts, and one of those
+turned a choose-three into an unanswerable item. Its correction rate looks lazy by the
+heuristic above and is not; read the reasoning-fix count as the signal here.
+
+**It also produced the pass's best argument for rendering the doc rather than
+reasoning from one.** An item keys "override the Edit action on mobile only, no change
+for desktop", and three separate sources pointed the other way — `lightning:action
+Override` takes effect in "Lightning Experience, Experience Builder Sites, Salesforce
+Mobile App", the Aura guide says you override "in **both** Lightning Experience and
+mobile", and Considerations for Overriding Standard Buttons says "Button overrides
+affect everywhere that action or behavior is available". A key change was one step
+away. Assign Action Overrides settles it in the opposite direction: "Specify the
+override option for **each user experience**", with a worked example where "the mobile
+override specifies the Salesforce Classic override, so mobile users see the Visualforce
+page". A separate mobile slot exists. Three plausible-sounding pages agreeing is not
+the same as the page that documents the Setup screen.
 
 ### Duplicates
 
@@ -448,6 +485,33 @@ Content rots. Salesforce removed the outbound-message session id in **February
 be taught as a reason to pick an answer — even though outbound messaging remained
 the correct mechanism for that question. Retention windows, limits, and
 feature-capability pairings are the highest-yield things to re-check.
+
+**Two Apex facts every deck in this repo still teaches the old way**, both found on
+sharing-visibility 2026-08-17 and both likely wrong in the Dev II, app-builder and
+admin decks too:
+
+- **`runAs` and FLS.** Using the runAs Method now says a runAs block enforces "the
+  user's sharing rules and **object-level and field-level permissions**… regardless
+  of the sharing mode of the test class". The legacy "runAs only enforces record
+  sharing" is no longer documented anywhere. Two items here keyed on that legacy
+  reading; both were left keyed (it is what the exam tests) and flagged as defective,
+  because the option set now contains more than one true statement.
+- **Apex's default access mode.** "In API version **66.0 and earlier**, Apex runs in
+  system mode by default… In API version **67.0 and later**, Apex runs in **user
+  mode** by default." Separately, an `@AuraEnabled` class that declares no sharing
+  keyword has long used an implicit `with sharing`. So a flat "Apex runs in system
+  mode, therefore you must enforce visibility yourself" is version-dependent.
+
+### 9a. An invented *absence* — the mirror of an invented limit
+Pattern 2 covers explanations that fabricate a limit. The sharing-visibility pass
+found the inverse: an explanation asserting a capability **does not exist** when the
+vendor's own comparison table says it does. The Enterprise Territory Management item
+claimed "you cannot create a public group with Territory or share a report/dashboard
+folder with a territory"; Salesforce's Original-TM-vs-ETM table marks both **Yes for
+both generations**, which turned a choose-three into five true options.
+
+A fabricated negative is harder to notice than a fabricated number, because it reads
+as the explanation being appropriately strict. Check the denials, not only the claims.
 
 ### 10. Defective items that no key can fix
 Some questions are broken, not wrong: a "choose 2" whose second correct option is
