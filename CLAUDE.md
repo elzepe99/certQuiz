@@ -165,7 +165,7 @@ underneath.
 
 ## Deck state — as of 2026-08-17
 
-1,619 questions across 13 decks. **1,091 (67%) carry a reference with an actual URL,
+1,619 questions across 13 decks. **1,128 (70%) carry a reference with an actual URL,
 and the reference gap is now zero** — every question that renders a References block
 has a link in it.
 
@@ -242,7 +242,7 @@ column, not the Cited column.
 | salesforce-app-builder | 119 | 119 | **Fully checked** (2026-08-11) — 4 keys moved, 27 reasoning fixes, 3 defective option sets repaired. Q1–50 spot-rechecked: 10 sampled, 1 defect (a mechanism stated backwards), so the earlier batches read sound |
 | salesforce-dld | 138 | 0 | **Untouched** |
 | salesforce-data-architect | 135 | 0 | **Untouched** |
-| salesforce-slack-consultant | 37 | 0 | **Untouched** (smallest — good next target) |
+| salesforce-slack-consultant | 37 | 37 | **Fully checked** (2026-08-18) — 1 key moved, 3 reasoning fixes, 12 silent clarifications. First non-Salesforce, non-Databricks vendor. **Read the caveat below: only 15 of its 37 questions are decidable by any Slack page**, so the N/N here means less than it does on other decks |
 
 **The IAM deck used to be the trap in this table, and the lesson survives it.**
 Before 2026-08-10 it read as complete at 122/122 cited, but those citations came
@@ -321,6 +321,43 @@ override specifies the Salesforce Classic override, so mobile users see the Visu
 page". A separate mobile slot exists. Three plausible-sounding pages agreeing is not
 the same as the page that documents the Setup screen.
 
+**Slack Consultant (2026-08-18) is a fifth shape, and the one that most needs its
+caveat read: a deck where most questions are not checkable at all.** Only 15 of its
+37 questions turn on a fact any Slack page states. The other 22 are consulting and
+training judgment against strawman distractors ("Replace their computer's sound
+card", "read the user manual during the session"), recoverable by elimination and
+settleable by no documentation. It reaches 37/37 coverage, and **that number carries
+less weight here than on any other deck in this table** — 12 of those citations are
+topical rather than decisive, and are marked as such in the pass report. This is the
+IAM trap's cousin: not citations attached to unchecked answers, but citations
+attached to answers *no citation could check*. When a deck's subject is advice, ask
+what fraction of it documentation could settle before reading its coverage number.
+
+Where the documentation did bite, it bit hard. One key moved (`47e8ec41` C→A: the
+keyed option described a channel-creation "justification" setting Slack does not
+have — pattern 2, an invented capability, wearing process-advice clothing), and
+three explanations taught something false: that Compliance Exports *preserve* data
+for legal hold (Slack's actual mechanism is the native **Legal Holds** feature, and
+it is absent from that item's options), that Slack offers an IP allowlist confining
+member sign-in to an office network (it does not — the documented control is proxy
+header based), and that a propose-then-approve channel workflow is a Slack setting
+(no native channel-creation approval queue exists). Two of those three are invented
+*absences and presences* around the same feature area, which is worth remembering
+the next time a channel-governance item looks reasonable.
+
+**Its five duplicate pairs are a detector blind spot that is the mirror of the
+documented one, and they were left in place.** `find-duplicates.mjs` reports zero
+pairs on this deck, but `#15`/`#34` (both key Org Owner), `#24`/`#32` (both
+Workspace Admin), `#5`/`#17` (both channel naming conventions), `#9`/`#16` (both
+hands-on workshop) and `#2`/`#28` (both channel-activity analytics) are the same
+question reworded, scoring 0.13–0.32 on stem-token Jaccard — far below the 0.72
+gate. The documented blind spot is near-identical stems one decisive word apart
+scoring as SAME; this is reworded stems with an identical keyed answer not
+surfacing at all. **Comparing keyed option text would catch it; stem tokens cannot.**
+The fact-check confirmed both copies of every pair are correct, so these are
+redundancy rather than error — removing them is the repo owner's call, not a
+fact-check outcome, which is why the deck still has 37.
+
 ### What to work on next
 
 Ordered as of 2026-08-18, after the agentforce and sharing-visibility passes landed.
@@ -332,8 +369,7 @@ not verdicts — but a deck with many of them and no citations is where a pass p
 | 1 | data-architect | 135 | 0 | 3 | Untouched, and the largest uncited deck |
 | 2 | dld | 138 | 0 | 1 | Untouched, large, 2 duplicate pairs |
 | 3 | data-cloud-consultant | 100 | 0 | 2 | 4 user comments waiting, 1 duplicate pair |
-| 4 | slack-consultant | 37 | 0 | 2 | Smallest deck in the repo — the cheapest way to run a full pass end to end |
-| 5 | admin | 154 | 36 | 3 | 118 questions still uncited. The 2026-08-17 reference repair covered 8 of them; the rest of the deck has never been checked, and its `sf.` citations are the ones most likely to be dead |
+| 4 | admin | 154 | 36 | 3 | 118 questions still uncited. The 2026-08-17 reference repair covered 8 of them; the rest of the deck has never been checked, and its `sf.` citations are the ones most likely to be dead |
 
 Two things that are **not** deck passes but are queued:
 
@@ -490,6 +526,22 @@ find the article" page under the generic title `Databricks on AWS`, so it looks 
 while the status underneath is a real 404; and several live pages redirect into
 `/archive/` (the JDBC connector page does), which renders fine today and should not
 be cited.
+
+**Slack, tested 2026-08-18, is a third data point and a new sub-shape.**
+`slack.com/help` fails honestly like Databricks — an invented article id returns a
+real **HTTP 404** with no body — so a status check is reliable there. But the URL
+*slug is cosmetic*: resolution is by numeric id alone, and
+`115001915507-Totally-Wrong-Slug-Here` returns the genuine article with its
+canonical title. So on this vendor a plausible-looking slug is no evidence at all,
+and a stale slug is **not** a dead link to be "repaired" — Slack renames articles
+under stable ids. Verify by rendered title, never by slug.
+
+**One more thing that pass established, and it constrains the queued admin work:**
+from a cloud container, `help.salesforce.com` is **not verifiable via `WebFetch`**.
+The real `sf.security_networkaccess` and an invented id both return HTTP 200 with
+the same "Sorry to interrupt / CSS Error" shell, because WebFetch does not execute
+the SPA. Salesforce URL checking needs a real browser; the recipe in 4b still
+applies, but not from a plain fetch tool.
 
 ### 4. Dead citation URLs that return HTTP 200
 `help.salesforce.com` is a single-page app and answers **every** article id — real
