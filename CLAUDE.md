@@ -165,7 +165,9 @@ underneath.
 
 ## Deck state — as of 2026-08-17
 
-1,622 questions across 13 decks. **1,091 (67%) carry a reference with an actual URL.**
+1,619 questions across 13 decks. **1,091 (67%) carry a reference with an actual URL,
+and the reference gap is now zero** — every question that renders a References block
+has a link in it.
 
 +136 of that is the sharing-visibility pass on 2026-08-17, taking that deck from
 0/136 to 136/136 — the second citations-and-corrections pass over an existing deck,
@@ -200,14 +202,16 @@ deck in the repo and the first fact-checked in the same pass that imported it.
 
 Measure coverage with a URL test, not by looking for the `References:` marker. The
 app's parser (`src/lib/quiz.ts`) treats **every** non-empty line after the marker as
-a reference and does not require a URL, so 861 questions render a References section
-but only 834 have a link in it. The **27-question gap** is real content: prose like
-"Salesforce Agentforce Documentation: SDR Agent Setup > Channels" rendered under a
-References heading with nothing to click, plus a handful of empty blocks. It degrades
-gracefully — `linkifySegments` only linkifies real URLs — but it is unverifiable by a
-learner and it inflates any naive coverage count. The gap is now **agentforce 13,
-admin 3**; revenue-cloud's 8 were closed by the 2026-08-15 pass, and agentforce's is
-shrinking live as that pass runs.
+a reference and does not require a URL, so a question can render a References section
+with nothing clickable in it — prose like "Salesforce Agentforce Documentation: SDR
+Agent Setup > Channels", plus the occasional empty block. It degrades gracefully
+(`linkifySegments` only linkifies real URLs) but it is unverifiable by a learner and it
+inflates any naive coverage count.
+
+**That gap is closed as of 2026-08-18: 1,091 marker blocks, 1,091 with a URL.** The
+last of it went with the agentforce pass (24 questions, 88 prose lines) and the admin
+reference repair (3). Keep measuring it anyway — the check is cheap, and the next
+scraped import brings the problem straight back.
 
 That corrects a figure this file previously carried. The old row claimed a
 106-question gap split agentforce 73 / revenue-cloud 30 / admin 3. Measured per
