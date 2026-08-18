@@ -1,0 +1,60 @@
+{
+  "deck": "public/decks/agentforce_specialist_questions.json",
+  "reviewed": "2026-08-17",
+  "findings": [
+    {
+      "id": "0dd5d1d6",
+      "verdict": "clarified",
+      "explanation": "Testing Center is built for scale, and the CSV is how you feed it. Salesforce provides a test template so you can prepare your scenarios as structured data and run them as a batch, and Testing Center then evaluates response accuracy, subagent and action selection, conversation quality, and knowledge retrieval across the whole set. Because agents are non-deterministic, testing across many scenarios is what turns a demo into evidence.\nThe alternatives cannot give repeatable validation. Interacting with the agent in the builder until the answers look right samples a handful of utterances and records nothing you can rerun. Letting pilot users flag bad responses after launch moves the discovery of defects to production, where the cost is customer-visible.\nOne operational rule goes with this: run the batches in a sandbox, since testing agents can modify CRM data, and expect the runs to consume Einstein Requests either way.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_testing_center.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.agent_testing_center_considerations.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "c86206a7",
+      "verdict": "clarified",
+      "explanation": "Flow reaches a prompt template through an action. Salesforce ships a core action for it — Prompt Template Actions, which creates responses based on the LLM response for the specified prompt template and inputs — so in Flow Builder you drop an Action element onto the canvas and select the template you want to run.\nInvocable Apex could technically wrap a call, but it is code where a supported clicks-only element already exists, and Einstein for Flow is not the mechanism for invoking an existing template. Note the direction of travel here, too: this is a flow calling a prompt template, the opposite of a template-triggered prompt flow, where the template calls the flow to gather data.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.flow_ref_elements_actions_generate_prompt_response.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.flow_concepts_trigger_prompt_template_capability.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "63afa960",
+      "verdict": "clarified",
+      "explanation": "Testing Center is the documented tool for evaluating many utterances before an action goes live. It supports large-scale batch testing from scenarios you upload as a CSV, and its evaluations cover subagent and action validation — which is precisely the question being asked here, whether the custom action is selected when it should be.\nThe other options work at different layers. Agentforce Builder's Preview panel does show which subagents and actions an utterance selected and why, but it is one utterance at a time, so it cannot establish behaviour across many real-world phrasings. Prompt Builder authors and tests prompt templates; it has no view of which agent action a request routes to.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_testing_center.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.agent_builder_tour.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "818da706",
+      "verdict": "clarified",
+      "explanation": "Consistent pass or fail comes from validating each test case against an expectation, which is what Testing Center's batch testing does: you upload structured scenarios, and each one is evaluated for response accuracy, subagent and action selection, and knowledge retrieval, so the same suite produces the same verdicts run after run.\nThe alternatives cannot serve as a gate. A customer rating measures satisfaction after the fact and mixes in everything else about the interaction. Scripting over event logs tells you what happened but has no expected result to compare against, so what counts as a failure drifts with whoever wrote the script.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_testing_center.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.agent_testing_center_considerations.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "014997d2",
+      "verdict": "clarified",
+      "explanation": "Salesforce's agent type table describes the Employee Agent as assisting employees by providing access to company knowledge, performing tasks, and streamlining workflows across departments — which is this requirement stated back: marketers finding campaign data, generating content, and completing work without leaving Salesforce.\nThe other two serve different audiences. A Service Agent faces customers, supporting them with common inquiries and escalating complex issues, and Sales Coach works with sales reps on their pitch and role-play rather than with a marketing team's tasks.\nWorth knowing alongside the answer: Employee agents run in employee channels — the Agentforce panel in Lightning Experience, the mobile app, and Slack — and require Flex Credits.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_setup_explore_types.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.agent_deploy_emp_slack.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "78924287",
+      "verdict": "clarified",
+      "explanation": "Publishing the material as Knowledge articles is what makes it reachable. The Answer Questions with Knowledge action answers a user's question from relevant knowledge articles and uploaded files, and a data library indexes those articles so retrieval is semantic rather than keyword — so tutorials and guides that live as articles become answerable content, and updates flow through as the index picks them up.\nThe alternatives do not create anything the agent can retrieve. A prompt template shapes how a response is written but has no corpus of its own to draw on, and a custom field holding tutorial instructions puts prose on a record where nothing indexes or ranks it.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.copilot_actions_ref_answer_questions_with_knowledge.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.data_library_concept.htm&language=en_US&type=5"
+      ]
+    }
+  ]
+}

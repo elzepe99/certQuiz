@@ -1,0 +1,193 @@
+{
+  "deck": "public/decks/agentforce_specialist_questions.json",
+  "reviewed": "2026-08-17",
+  "findings": [
+    {
+      "id": "5e73a591",
+      "verdict": "clarified",
+      "explanation": "A field generation template is exposed by attaching it to the field itself. In Lightning App Builder you open the record page, make sure it uses Dynamic Forms — clicking Upgrade Now on the Record Detail component if it does not — then select the field on the canvas and associate the prompt template with it. The user then gets a button on that field that populates it with generated content.\nNo flow is involved. A screen flow would build a separate interface rather than enabling the field, and an autolaunched flow can call a prompt template as automation but does not put the generation control in front of the user on the record.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.prompt_builder_add_field_gen_to_lightning_record_page.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "48997a5e",
+      "verdict": "clarified",
+      "explanation": "The value of an agent in sales is that a rep can ask for something in their own words and have the platform do the defined work: the reasoning engine classifies the request into a topic and runs the actions assigned to it, grounded in CRM data, with filters and instructions keeping it inside company rules. That is the combination the first option describes — natural language in, governed and grounded actions out, in the flow of work.\nThe other options describe different tools. A step-by-step guided path for accurate data entry is guidance and validation, not an agent. And logging incoming email against the right records is activity capture, which runs quietly in the background rather than responding to what a rep asks for.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_reasoning_engine.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sales.sales_cloud_agents.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "b02b7fbe",
+      "verdict": "clarified",
+      "explanation": "Deterministic means the rule is enforced before the model gets a say, and filters are how Agentforce does that. You add the variable holding the membership tier to the agent's context, then create a filter so the booking actions are available in a conversation only when that variable meets the condition. Salesforce recommends exactly this pattern for customer channels, where filters are used to require authentication for actions that perform tasks for a user.\nTopic instructions cannot give the same guarantee: they are guidance the LLM usually follows, which is not the same as an action being unavailable. Validation rules on the booking objects do prevent bad records, but only at save time — the agent would still offer and attempt the booking, and the customer would meet an error instead of a boundary.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_asset_filters.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "1b821f4b",
+      "verdict": "clarified",
+      "explanation": "Salesforce names the connecting object directly: the email configuration connects your email template to an Agentforce Service agent. You create it in Setup and then link it to one or more routing addresses, which is what puts the agent on the inbound email channel.\nSo nothing happens automatically — an agent does not attach itself to email — and an Omni-Channel flow is the routing mechanism for messaging work rather than the way an email template is bound to a Service agent.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.service_agent_email_configuration.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.service_agent_considerations_1.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "7604dc8f",
+      "verdict": "corrected",
+      "was": "A",
+      "correct": "B",
+      "explanation": "The template type is right in both of the plausible options — populating a field with generated output is what a field generation template does — so the question turns on the prerequisite, and the documented prerequisite is Dynamic Forms.\nSalesforce's procedure makes it a required step: on a record page that is not already using Dynamic Forms you select the Record Detail component and click Upgrade Now, which converts the block of fields into individual field components, and only then can a field be associated with the prompt template. On mobile the same requirement appears as enabling dynamic forms on mobile.\nThere is no Salesforce feature called Dynamic Fields, which is what rules out the original key. And a flex template would not populate the field: flex is for use cases the standard types do not cover, and it does not attach to a field on a record page.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.prompt_builder_add_field_gen_to_lightning_record_page.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.salesforce_app_field_gen.htm&language=en_US&type=5"
+      ],
+      "note": "A->B. Both options name the correct template type, and the discriminator is the consideration. Salesforce documents Dynamic Forms as the prerequisite for enabling a field for generative AI — Upgrade Now on the Record Detail component, and dynamic forms on mobile for the mobile app. Dynamic Fields is not a Salesforce feature."
+    },
+    {
+      "id": "52a560b9",
+      "verdict": "clarified",
+      "explanation": "Deployment moves metadata; it does not turn the agent on. Activating an agent is its own step — Salesforce describes activation as what makes the agent available to your customers or employees once it is deployed to one or more channels — so a sandbox agent that was active arrives in production inactive and stays that way until someone activates it there.\nTwo rules that come with activation are worth knowing: only one version of an agent can be active at a time, and activating a new version replaces the currently active one. That is what makes the zero-downtime pattern work.\nThe flow's own status does not change any of this. An active flow is required for the custom action to run, but it does not activate the agent.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.copilot_setup_activate_deactivate.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_considerations_changeset.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "3c41e65a",
+      "verdict": "corrected",
+      "was": "A",
+      "correct": "C",
+      "explanation": "Salesforce's procedure for the mobile app opens with this step: enable dynamic forms on mobile, then add the prompt template to the Lightning record page. The same requirement appears as a note alongside the desktop instructions — for users to access generative AI-enabled fields in the Salesforce mobile app, you must first enable Dynamic Forms on Mobile.\nThe reason is structural rather than AI-specific. A generative AI-enabled field is an individual field component on the page, and only Dynamic Forms renders fields individually; without it the mobile app shows the old single block of record details with no per-field control to invoke.\nNeither Mobile Generative AI nor Mobile Prompt Responses is a setting in Salesforce.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.salesforce_app_field_gen.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.prompt_builder_add_field_gen_to_lightning_record_page.htm&language=en_US&type=5"
+      ],
+      "note": "A->C. Salesforce's mobile procedure begins 'Enable dynamic forms on mobile', and the desktop article repeats it as the prerequisite for accessing generative AI-enabled fields in the mobile app. The original key named a Mobile Generative AI setting that does not exist."
+    },
+    {
+      "id": "370396f2",
+      "verdict": "corrected",
+      "was": "A",
+      "correct": "C",
+      "explanation": "Prompt Builder has two permission sets, and the one that runs templates without authoring them is Prompt Template User: Salesforce lists it for accessing and running prompt templates outside Prompt Builder, carrying Execute Prompt Templates. Prompt Template Manager is the other one, and it adds Manage Prompt Templates — the create-and-edit rights these reps are supposed not to have.\nSo reps who should use templates but never change them get Prompt Template User. There is no Prompt Execute User permission set in Salesforce, which is what makes the original key impossible to assign.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_enable.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.prompt_builder_add_field_gen_to_lightning_record_page.htm&language=en_US&type=5"
+      ],
+      "note": "A->C. Salesforce documents exactly two Prompt Builder permission sets: Prompt Template Manager (create and manage) and Prompt Template User (run templates outside Prompt Builder). Prompt Execute User does not exist, so the original key named an unassignable permission set."
+    },
+    {
+      "id": "5cf8d8af",
+      "verdict": "clarified",
+      "explanation": "This is what a data library is for. You choose files as the library's data source and upload the PDFs, and creating the library automates the rest — pushing data streams to Data 360, mapping the objects, and building a search index and retriever — so the Service Agent can ground answers on those documents through the Answer Questions with Knowledge action. It is configuration, not code, which is what a clicks-only requirement asks for.\nThe alternatives fail on either trust or effort. Pasting external links into topic instructions gives the model URLs it cannot fetch, so responses stay ungrounded. Ingesting attachments through Data 360 and hand-building an index and retriever would work, but it is the manual version of what the data library does for you, and these PDFs are not attached to Salesforce records at all.\nOne thing to plan for: a library's data source is fixed once chosen — Knowledge, file uploads, or web search — so a file-based library stays file-based.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.data_library_concept.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.data_library_select_fields.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "177ef534",
+      "verdict": "clarified",
+      "explanation": "Sales Coach is the documented agent for this: Salesforce describes it as intelligently giving reps personalised, actionable, stage-specific feedback on their sales pitch or role-play session. Practising objection handling against a simulated buyer and getting feedback tied to the opportunity in front of them is the use case it exists for.\nThe other options do different work. The Lead Nurturing agent — the exam's SDR agent — engages prospects by email and books meetings; it never coaches a rep. And there is no Employee Coach agent in the agent type table.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_setup_explore_types.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sales.sales_cloud_agents.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "f02b7e14",
+      "verdict": "clarified",
+      "explanation": "Determinism comes from a filter, not from wording. You create a variable to hold the verification status, have a Verify Identity action set it, and then filter the case-related actions so they are available only when that variable confirms verification — Salesforce's documented mechanism is exactly this, filters that make subagents and actions usable in a conversation only when conditions on a variable are met, and it recommends them for requiring authentication on customer channels.\nThe two instruction-based options share one flaw: an instruction is guidance to the model, whether it is phrased with Always and Never or set as a global rule to check a variable. The model usually complies, and 'usually' is what this requirement rules out. A filter removes the action from consideration entirely, so there is no instruction for a determined customer to argue past.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_asset_filters.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "c7919e17",
+      "verdict": "clarified",
+      "explanation": "The split is: build and serve in Databricks, connect and consume in Salesforce. You set up the serving endpoint in Databricks — that is the connection point Salesforce documents between Databricks and Data 360 — and then connect that model on the Salesforce side to define prediction criteria and land the inferences as a DMO you can use.\nThat rules out creating the endpoint in Einstein Studio: the endpoint belongs to the platform hosting the model, and Salesforce's role is to consume it with a zero-copy approach rather than to host the model. And no Python SDK connector is part of the documented path.\nNaming note: the tool the exam calls Model Builder is now AI Model Builder, formerly Einstein Studio Model Builder, and it sits under Data 360.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_ai_byom_set_up_your_endpoint_databricks.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_ai_byom_connect_your_external_model_databricks.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_bring_your_own_model.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "81823826",
+      "verdict": "clarified",
+      "explanation": "Action instructions tell the agent what the action does and when to use it, and Salesforce's guidance is to plan them carefully and then test — which is what Agentforce Builder's Preview panel is for, since it shows which subagents and actions an utterance selected and the reasoning behind the selection. Write tightly, then watch what the reasoning engine actually picks.\nThe alternatives miss how selection works. The label is not matched against an utterance; the model weighs names and instructions together against the conversation. And piling on detail is not the goal — long, redundant instructions blur the boundary between one action and the next, which is the failure mode that makes an agent call the wrong thing.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.copilot_actions_instructions.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.agent_builder_tour.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "5697b1fb",
+      "verdict": "clarified",
+      "explanation": "Latency in retrieval is mostly a function of how much has to be searched and returned, so the lever is the retriever's filters: an individual retriever is configured by selecting its search index, defining filters, and specifying what information it returns. Narrow the eligible set and both the search and the prompt assembly get shorter.\nThe other options do not exist or do not help. There is no dynamic mode in which a retriever rewrites the search index structure at run time — indexing is a separate process the retriever reads from. And recency is a ranking factor in hybrid search: it reorders results rather than reducing how many are considered, so it changes what comes first, not how fast.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_ai_retriever_create.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_hybridsearch_fusion_ranking.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "05f6c2b3",
+      "verdict": "clarified",
+      "explanation": "Instructions are read by the machine, not by the user. Salesforce defines action instructions as telling the agent what your action does and when to use it, and the reasoning engine collects the names and instructions of a subagent's actions — including input and output instructions — when it decides what to do next. Good instructions are therefore the difference between an action that gets chosen at the right moment and one that never fires.\nThe other options describe things instructions do not do. They do not set the model's temperature, which is a hyperparameter of the model configuration, and they are not user-facing documentation — a user never sees them and does not call actions by name.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.copilot_actions_instructions.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.agent_reasoning_engine.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "3011c45c",
+      "verdict": "clarified",
+      "explanation": "Temperature is the consistency dial. In a model configuration it governs how deterministic the output is: lower values keep responses close to the most probable continuation, higher values allow more variation. Salesforce's own reproduction recipe for the standard sales email behaviour sets it explicitly, alongside frequency and presence penalties, in a model configuration you build and evaluate in Model Playground.\nPresence penalty does something different — it discourages reusing tokens that have already appeared, which shapes repetition rather than randomness. Variability is not a hyperparameter Salesforce exposes.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_ai_foundation_models.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_standard_prompt_templates.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "1c4982a0",
+      "verdict": "clarified",
+      "explanation": "Employee agents run in employee channels, and Slack is one of them. Salesforce's instruction is to add the Slack connection to your agent and then finish setting up the agent in Slack — which rests on the Salesforce org being connected to the Slack workspace, with users holding the permission that links the two.\nThe other options borrow machinery from customer channels. An Omni-Channel flow routes work to queues and agents in service scenarios, and an embedded service deployment puts a chat window on a website; neither is how an Employee agent reaches Slack.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_deploy_emp_slack.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.agent_setup_explore_types.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "f5501338",
+      "verdict": "clarified",
+      "explanation": "The feature is Utterance Analysis, and it answers exactly this question: it lets you see how users are using agents, what they are requesting, and whether the agent was able to handle those requests, through customisable reports that help you refine subagents and actions. It lives as a dashboard in the Agentforce (Default) folder on the Dashboards tab, tracking users along with the input and the agent's response type, and it refreshes weekly from reports run at the weekend.\nThe alternatives point elsewhere. Audit and feedback data records Trust Layer behaviour such as masking and toxicity rather than request patterns, and there is no agent event logs dashboard — end-to-end execution detail comes from Agentforce Session Tracing.\nOne caveat with a date on it: Agentforce Analytics, which Utterance Analysis belongs to, is scheduled for retirement starting May 2026, with Agent Analytics as the replacement.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.copilot_utterance_analysis.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.generative_ai_session_trace_about.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "52194fa8",
+      "verdict": "clarified",
+      "explanation": "In an Omni-Channel flow, the Route Work action is what hands the conversation to its destination — the element where you choose the agent, queue, or skill that should take the work. That is how a messaging conversation reaches an Agentforce Service agent.\nAssignment and Decision are general flow elements: one sets variable values, the other branches the path. Both may appear in the same flow, but neither routes anything.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.service_agent_escalation.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.agent_parent_deploy.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "16abd9cf",
+      "verdict": "clarified",
+      "explanation": "The requirement is personalised content per customer, and that is generation grounded in data: the prompt merges the customer's behaviour, preferences, and purchase history into the template, and the model writes an email shaped by that record rather than by a static block of copy. Salesforce's description of generated sales email is the same idea — unlike a static template, it creates a new, personalised output every time.\nThe other options are not generative work. Analysing past campaign performance is reporting, and blasting the same automated email to everyone is precisely the undifferentiated approach personalisation is meant to replace.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sales.einstein_sales_emails_draft.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_ground_template.htm&language=en_US&type=5"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "deck": "public/decks/agentforce_specialist_questions.json",
+  "reviewed": "2026-08-17",
+  "findings": [
+    {
+      "id": "3c312af3",
+      "verdict": "corrected",
+      "was": "C",
+      "correct": "B",
+      "explanation": "The default retriever is the cause here, not the cure. It searches the whole index, which is exactly why superseded manuals keep surfacing — broad coverage is the problem being reported.\nThe documented fix is a custom retriever: you create an individual retriever, select its search index, define filters, and specify what it returns, so retrieval is confined to the current product line and to documents recent enough to apply. Where relevance also depends on age, hybrid search lets you configure ranking factors such as recency, using a field like LastModifiedDate on the indexed object.\nDeleting the older records would work only by destroying history that other cases still need — and it treats the index as a store rather than as a view over the source content, which it is not.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_ai_retriever_create.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.data_library_custom_retriever.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_hybridsearch_fusion_ranking.htm&language=en_US&type=5"
+      ],
+      "note": "C->B. The original key recommended keeping the default retriever, whose whole-index coverage is what produces the irrelevant results described. Salesforce documents the custom retriever as the way to narrow retrieval — select the search index, define filters, specify what is returned — with recency ranking available as a hybrid search ranking factor."
+    },
+    {
+      "id": "af0f9726",
+      "verdict": "corrected",
+      "was": "C",
+      "correct": "B",
+      "explanation": "The element is called Add Prompt Instructions. Salesforce defines it as providing data in the form of prompt instructions that are merged into a prompt template in Prompt Builder, and it exists only in template-triggered prompt flows — which is exactly the arrangement here, a flow supplying data to a flex template. The text and resources it evaluates at run time are stored in the $Output global variable, and that output is what lands in the template.\nThere is no Add Flow Instructions element and no Add Flex Instructions element; both names are inventions built from the surrounding vocabulary.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.flow_ref_elements_add_prompt.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.flow_concepts_trigger_prompt_template_capability.htm&language=en_US&type=5"
+      ],
+      "note": "C->B. Salesforce documents one element for this job and names it Add Prompt Instructions. Neither Add Flow Instructions nor Add Flex Instructions exists in Flow Builder, so the original key named a non-existent element."
+    },
+    {
+      "id": "2814c093",
+      "verdict": "clarified",
+      "explanation": "Model Playground is where you evaluate a model's response to your prompts under different settings before deploying it, and the settings it exposes for a Salesforce-enabled foundation model are temperature, frequency penalty, and presence penalty. Salesforce's own worked example uses exactly these three when it tells you how to reproduce the standard sales email behaviour in a model configuration — temperature 1.0, frequencyPenalty 1.0, presencePenalty 0.5, on gpt-3.5-turbo.\nThe other options mix in parameters you do not set here. Top-k sampling is not among the exposed hyperparameters, and output token limits are a property of the model and the request rather than a Model Playground control.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_ai_foundation_models.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_standard_prompt_templates.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "410726e6",
+      "verdict": "clarified",
+      "explanation": "The prompt is not a fixed string — it is assembled per record. Grounding replaces each merge field with that record's real data, so an account with a long description, many related list rows, or a verbose flow output produces a far larger resolved prompt than a sparse one. The token budget covers the resolved prompt plus the generated response, so the same template sails through on most records and trips the limit on the fat ones. That is what makes the failures look random when they are not.\nThe alternatives misplace the cause. Switching to a flex template changes how inputs are defined, not how many tokens a record's data occupies. And the model's context window is a fixed property of the model, not something that shrinks as other customers get busy.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_ground_template.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_enable_resolution.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "0ea26bd8",
+      "verdict": "clarified",
+      "explanation": "Agentforce is a conversational layer over the platform: a user states what they want, the reasoning engine classifies the request into a topic and runs the actions that fulfil it, calling Apex, flows, and prompt templates along the way. It is offered across the Salesforce estate rather than to one audience, with agent types for service, sales, employees, and admins.\nThe other options describe different products. Building and training custom LLMs is not an admin activity — external models are connected through Bring Your Own LLM rather than trained in Salesforce — and training predictive models on historical CRM data is the job of AI Model Builder in Data 360, not of an agent.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_reasoning_engine.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.agent_setup_explore_types.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "4f60aa61",
+      "verdict": "clarified",
+      "explanation": "Service Replies is the generative feature for live conversations: it drafts fluent replies for reps during chat and messaging sessions from the conversation's context, and Salesforce's instruction is to add grounding to Service Replies with Service AI Grounding or an Agentforce Data Library so the recommendations come from your Knowledge base. That combination is what keeps high-volume chat both fast and consistent with published policy.\nReply Recommendations is the predictive predecessor — it surfaces replies learned from your org's closed chat transcripts, with no generative model and no Knowledge grounding. Knowledge recommendations surface articles for the rep to read rather than drafting the response.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=service.einstein_replies_intro.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=service.einstein_generative_ai_enable_grounding.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "f1ad48dc",
+      "verdict": "clarified",
+      "explanation": "A work summary starts from the conversation and is enriched by case data. Einstein predicts and fills a summary, issue, and resolution at the end of a rep-customer conversation or from the Case page, and Service AI Grounding adds the case as a grounding source: case fields, comments, and the case feed — system updates, user comments, email messages, and status changes — are used to give Einstein details for drafting a case summary.\nSo the summary is not built from the transcript alone, which is what rules out the conversation-only option.\nOne precision worth carrying: in Salesforce's grounding table, Knowledge appears as a grounding source for Service Replies for Email rather than for case summaries. Treat the Knowledge half of this answer as the exam's framing rather than as a documented grounding source for Work Summaries.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=service.cc_generative_ai_work_summaries.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=service.einstein_generative_ai_grounding_setup.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "b7ffd87e",
+      "verdict": "clarified",
+      "explanation": "There is no general Delete Record action in the Standard Agent Action Reference. The catalogue ships Create Record, Update Record, Get Record Details, Query Records and their relatives; the only delete actions in it are vertical ones, such as Agentforce IT Service's Delete Configuration Item and Field Service's Delete Temporary Appointment.\nSo this is not a permissions problem. There is no Delete Record Action permission to assign, and granting the agent user delete access on the object would still leave the agent with no action to select.\nIf deletion is genuinely needed, it has to be built as a custom action — an Apex class or flow that performs the delete — and it then runs subject to the agent user's own permissions and the flow's run context.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.copilot_actions_ref.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.copilot_actions_custom.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "b2206ef2",
+      "verdict": "clarified",
+      "explanation": "Testing Center is built for volume: it supports large-scale batch testing and Salesforce provides a CSV template so you can upload your own scenarios and run them as a batch, evaluating response accuracy, subagent and action selection, and knowledge retrieval. That is what makes a large, repeatable set of utterances practical before go-live.\nThe alternatives test less and cost more. Typing utterances one at a time into a preview cannot cover a repeatable suite. Deploying to a QA sandbox and reading utterance analysis measures what happened after the fact rather than validating expected behaviour ahead of activation.\nOne operational rule to remember with it: run tests in a sandbox, since testing agents can modify CRM data, and expect the runs to consume Einstein Requests in either environment.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_testing_center.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.agent_testing_center_considerations.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "6baf71a9",
+      "verdict": "clarified",
+      "explanation": "Salesforce describes an individual retriever by exactly what you get to control: you create it to improve the relevancy of content returned to a prompt, and you customise it by selecting its search index, defining filters, and specifying what information it returns. The default retriever gives you none of those levers — it searches its index broadly and returns what it finds.\nThe other options overstate what a retriever does. An individual retriever fetches from one search index, so it does not aggregate multiple data spaces and DMOs into a unified output — that is what an ensemble retriever is for. And retrievers do not create search indexes or maintain vectors; indexing is a separate process that a retriever reads from.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_ai_retriever_create.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_ai_retriever_about.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "8230cd22",
+      "verdict": "clarified",
+      "explanation": "The two jobs map to two permission sets. Prompt Template Manager is the permission Salesforce lists for creating or modifying prompt templates, and Prompt Template User is what a person needs to access and run prompt templates outside Prompt Builder — which is what 'execute' means here.\nData Cloud permissions belong to a different layer: they govern models, retrievers, and Data 360 objects, so pairing one with either task leaves a gap. A Data Cloud admin permission set does not confer the ability to author a template, and it is not what lets an end user run one.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.copilot_actions_custom.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.prompt_builder_add_field_gen_to_lightning_record_page.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "994e8165",
+      "verdict": "clarified",
+      "explanation": "Prompt Builder is for generating language grounded in your data, so the use case that needs it is the one whose output is text: drafting the support bulletin, assembled from the patch's record data and written in a consistent voice each time.\nThe other two are predictive problems. Scoring an agent's performance and forecasting ticket volume from historical data and seasonality are model territory — built and managed in AI Model Builder in Data 360 — and asking an LLM to produce a score or a forecast from a prompt yields prose shaped like a number rather than a prediction.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_standard_template_types.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_ai_license_perms.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "eba7605b",
+      "verdict": "clarified",
+      "explanation": "Grounding is the step that puts your data into the prompt. Salesforce describes secure data retrieval and grounding as the first thing the Trust Layer does: the LLM needs context from your CRM data to generate a relevant, personalised response, and grounding is the process of adding that context — merge fields drawn from record fields, flows, Apex, Data 360 DMOs, and related lists. It is 'secure' because retrieval respects the executing user's permissions, role-based controls, and field-level security.\nThe other two features protect the exchange rather than enrich it. Data masking replaces sensitive values with placeholders before the prompt leaves Salesforce, and Prompt Defense applies system policies that steer the model away from unintended or harmful output.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.generative_ai_trust_arch.htm&language=en_US&type=5"
+      ]
+    }
+  ]
+}
