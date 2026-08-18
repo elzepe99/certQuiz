@@ -1031,23 +1031,6 @@
     }
   },
   {
-    "id": "f5adf9ac",
-    "question": "A sales rep needs to renew multiple assets. Some assets can be renewed at the same prices and do not require negotiation, so the rep can directly create a renewal order. Other assets need higher prices and require a quote for negotiation. When the sales rep starts the renewal process, they cannot choose whether to create a quote or an order.\n\nHow should a Revenue Cloud Consultant address this issue?",
-    "optionA": "Change the Revenue Cloud settings to allow renewal quote and order creation.",
-    "optionB": "Override the standard Salesforce flow to allow renewal quote and order creation.",
-    "optionC": "Customize the Manage Asset component to allow renewal quote and order creation.",
-    "correct": "B",
-    "explanation": "The amend, renew, and cancel experience is a screen flow, and Revenue Settings only names which flow runs — it carries no switch that adds a quote-or-order choice. Setup > Revenue Settings > Set Up Flow for Managing Assets takes \"the API name of the screen flow that will be used when amending, renewing, and canceling assets\", defaulting to the predefined runtime_revenue_arcflows__arcFlow, and the documented way to change what that experience offers is the next sentence: \"To use a custom flow, enter the API name of the flow that you created.\" So giving the rep the choice means overriding the standard flow with one of your own and registering it in Revenue Settings.\nChanging Revenue Settings on its own cannot do it. The settings that page documents are Enable Revenue Cloud Features, Create Application Usage Type, the three flow API names, and Configure Products at Runtime — none of them a renewal quote-versus-order toggle. Customizing the Manage Asset component is the wrong layer: the component launches the flow, it does not define what the flow offers.\nOne caveat worth carrying into the exam: the documentation never states outright that the predefined flow withholds the choice. The stem asserts it, and given that, the flow is the only documented place the behaviour can change.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.qocal_turn_on_quote_and_order_capture.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=ind.qocal_renew_assets.htm&language=en_US&type=5",
-    "_cat": "Quote & Order",
-    "corrected": {
-      "date": "2026-08-16",
-      "via": "validation",
-      "note": "A->B, and this settles the f5adf9ac / f12dffa3 contradiction recorded in CLAUDE.md. Enabling Revenue Settings documents the amend/renew/cancel experience as a screen flow whose API name is set in Revenue Settings, changed by supplying a custom flow — there is no documented setting that allows renewal quote versus order creation, so 'Change the Revenue Cloud settings' describes a control that does not exist. Both copies now key 'Override the standard Salesforce flow'. Supersedes the earlier note, which kept A on the configuration-over-customization pattern and flagged the setting as unconfirmed.",
-      "from": "A",
-      "to": "B"
-    }
-  },
-  {
     "id": "6f99fe4e",
     "question": "A Cloud Consultant is using Contracts AI to retrieve clauses and contract fields from a PDF. After the initial run, the consultant realizes that a payment method custom field needs to be retrieved that was not initially included.\n\nWhat should the consultant do to retrieve this custom field?",
     "optionA": "Modify the contract extraction template to define the attribute mapping and context mapping for payment method.",
@@ -1059,7 +1042,7 @@
     "corrected": {
       "date": "2026-08-15",
       "via": "validation",
-      "note": "Key moved B to A. This resolves one of the eleven unresolved near-duplicate pairs recorded in CLAUDE.md: 6f99fe4e and ac4ee893 carry the same stem and the same three options but opposite keys, so one of them had to be wrong. The documentation settles it — the extraction template is defined as the place that holds attribute mapping and context mapping — so ac4ee893's key of A is right and this copy's key of B was wrong. Once applied, the pair agrees and becomes a true duplicate; re-run find-duplicates.mjs and pick a keeper.",
+      "note": "Key moved B to A. Attribute mapping and context mapping are documented as living on the contract extraction template — the template is defined as the thing that holds them — so 'Modify the AI prompt template' was wrong. This deck previously carried a near-duplicate of this question keyed the opposite way; once the documentation settled the key, the two agreed and the redundant copy was removed on 2026-08-17.",
       "from": "B",
       "to": "A"
     }
@@ -1115,16 +1098,6 @@
     "_cat": "Billing & Invoicing"
   },
   {
-    "id": "ac4ee893",
-    "question": "A Revenue Cloud Consultant is using Contracts AI to retrieve clauses and contract fields from a PDF. After the initial run, the consultant realizes that a payment method custom field needs to be retrieved that was not initially included.\n\nWhat should the consultant do to retrieve this custom field?",
-    "optionA": "Modify the contract extraction template to define the attribute mapping and context mapping for payment method.",
-    "optionB": "Modify the AI prompt template to define the attribute mapping and context mapping for payment method.",
-    "optionC": "Log a support case with Salesforce to enable payment method to be added to the extraction mapping used.",
-    "correct": "A",
-    "explanation": "Attribute mapping and context mapping live on the contract extraction template. The documentation defines the template as exactly that: it is created to define the attribute mapping, context mapping, and prompt instructions that generative AI uses to extract contract details from a file. Clicking Create Attribute Definition clones the standard ContractsExtractionContext context definition, and the Attribute Definition and Context Mapping are populated from that clone.\nAdding a payment method field that was missed on the first run therefore means editing the extraction template — Edit, Next, Add Attributes, specify the attribute name, type, and data type, then map the new user-defined field to the corresponding contract field for persistence.\nThe AI prompt template governs the instructions given to the model rather than field-level mapping, and no support case is needed for what is a self-service admin task.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.sf_contracts_create_a_contract_extraction_template_for_extraction.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=ind.sf_contracts_View_the_Standard_ContractsExtractionContext_Mapping.htm&language=en_US&type=5",
-    "_cat": "Configuration"
-  },
-  {
     "id": "38db2a91",
     "question": "A company creates large quotes with hundreds of line items. These line items need to be exported in a specific format.\n\nWhat should the sales reps use to generate these line items in the required format?",
     "optionA": "Document Builder",
@@ -1157,12 +1130,7 @@
     "optionC": "Change the Revenue Cloud settings to allow renewal quote and order creation.",
     "correct": "B",
     "explanation": "The amend, renew, and cancel experience is a screen flow, and Revenue Settings only names which flow runs — it carries no switch that adds a quote-or-order choice. Setup > Revenue Settings > Set Up Flow for Managing Assets takes \"the API name of the screen flow that will be used when amending, renewing, and canceling assets\", defaulting to the predefined runtime_revenue_arcflows__arcFlow, and the documented way to change what that experience offers is the next sentence: \"To use a custom flow, enter the API name of the flow that you created.\" So giving the rep the choice means overriding the standard flow with one of your own and registering it in Revenue Settings.\nChanging Revenue Settings on its own cannot do it. The settings that page documents are Enable Revenue Cloud Features, Create Application Usage Type, the three flow API names, and Configure Products at Runtime — none of them a renewal quote-versus-order toggle. Customizing the Manage Asset component is the wrong layer: the component launches the flow, it does not define what the flow offers.\nOne caveat worth carrying into the exam: the documentation never states outright that the predefined flow withholds the choice. The stem asserts it, and given that, the flow is the only documented place the behaviour can change.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ind.qocal_turn_on_quote_and_order_capture.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=ind.qocal_renew_assets.htm&language=en_US&type=5",
-    "_cat": "Subscriptions",
-    "corrected": {
-      "date": "2026-08-16",
-      "via": "validation",
-      "note": "Key B confirmed and the contradiction with its near-duplicate f5adf9ac resolved — f5adf9ac's key moved A->B to match, so the deck no longer teaches both answers. The old explanation argued the configuration-over-customization pattern and then declared the item unsettled; Enabling Revenue Settings settles it the other way, documenting the amend/renew/cancel flow's API name as the extension point and a custom flow as the way to change it."
-    }
+    "_cat": "Subscriptions"
   },
   {
     "id": "e7f19278",

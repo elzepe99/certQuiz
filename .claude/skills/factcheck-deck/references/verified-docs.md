@@ -1178,3 +1178,37 @@ Full list:
 - https://help.salesforce.com/s/articleView?id=sf.prompt_builder_add_merge_fields_sales_email.htm&language=en_US&type=5
 - https://help.salesforce.com/s/articleView?id=sf.prompt_builder_review_revise.htm&language=en_US&type=5
 - https://help.salesforce.com/s/articleView?id=sf.salesforce_app_field_gen.htm&language=en_US&type=5
+
+## Salesforce Admin — verified 2026-08-17 (reference repair on 8 questions)
+
+All rendered in the browser pane and grepped for the term each one is cited for.
+
+- **Close Cases** (Notify contact on case close, predefined case close template) — https://help.salesforce.com/s/articleView?id=service.closing_cases.htm&language=en_US&type=5
+- **Customize Support Settings** (Case Close Template field) — https://help.salesforce.com/s/articleView?id=sf.customize_supportrules.htm&language=en_US&type=5
+- **Controlling Access Using the Role Hierarchy** (Grant Access Using Hierarchies, custom objects only) — https://help.salesforce.com/s/articleView?id=sf.security_controlling_access_using_hierarchies.htm&language=en_US&type=5
+- **Schedule-Triggered Flows** — https://help.salesforce.com/s/articleView?id=platform.flow_concepts_trigger_schedule.htm&language=en_US&type=5
+- **Outbound Message Actions** ("associated with flows, workflow rules, approval processes") — https://help.salesforce.com/s/articleView?id=platform.workflow_managing_outbound_messages.htm&language=en_US&type=5
+- **Visibility Rules on Lightning Pages** — https://help.salesforce.com/s/articleView?id=platform.lightning_page_components_visibility.htm&language=en_US&type=5
+- **Restrict Login IP Addresses in Profiles** (Enforce login IP ranges on every request) — https://help.salesforce.com/s/articleView?id=platform.login_ip_ranges.htm&language=en_US&type=5
+- **Customize Actions with the Enhanced Page Layout Editor** (Salesforce Mobile and Lightning Experience Actions section) — https://help.salesforce.com/s/articleView?id=sf.adding_actions_using_ple.htm&language=en_US&type=5
+- **Use Screen Flows to Interact with Users** — https://help.salesforce.com/s/articleView?id=platform.create_forms_with_screen_flow_components.htm&language=en_US&type=5
+- **Set Trusted IP Ranges for Your Org** — still live at the `sf.` id, re-confirmed
+
+### Known dead — from the same pass
+
+| Dead id | Replacement |
+|---|---|
+| sf.security_sharing_owd_custom_objects.htm | sf.security_controlling_access_using_hierarchies.htm |
+| sf.flow_builder_overview.htm (and platform.flow_builder_overview.htm) | platform.create_forms_with_screen_flow_components.htm, where the claim was about screen flows |
+| sf.flow_concepts_scheduled_start.htm | platform.flow_concepts_trigger_schedule.htm |
+| sf.dynamic_forms_component_visibility.htm | platform.lightning_page_components_visibility.htm |
+| sf.security_enforce_ip_ranges.htm | platform.login_ip_ranges.htm |
+| sf.customize_page_layouts.htm | sf.adding_actions_using_ple.htm |
+| sf.actions_in_lex.htm | platform.actions_in_lex.htm renders, but for an object page layout question sf.adding_actions_using_ple.htm is the page that carries the claim |
+| platform.workflow_outbound_messages.htm | platform.workflow_managing_outbound_messages.htm |
+| platform.flow_ref_elements_actions_outbound_message.htm | constructed during this pass and dead — never shipped |
+| platform.actions_page_layouts.htm | constructed during this pass and dead — never shipped |
+
+**Live but wrong page:** platform.sharing_model_fields.htm renders as
+"Organization-Wide Default Access Settings" and never uses the phrase "Grant Access
+Using Hierarchies" — failure pattern 11, caught by grepping the rendered text.

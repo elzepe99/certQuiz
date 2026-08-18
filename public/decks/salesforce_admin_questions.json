@@ -896,7 +896,7 @@
     "optionD": "Add the Knowledge component to the closed layout",
     "optionE": "",
     "correct": "B,C",
-    "explanation": "Comprehensive and Detailed Explanation From Exact Extract:\n* Add the Notify Contact checkbox to the Close Case page layout; when selected, Salesforce sends a case closure email.\nReferences:\nSalesforce Help: Set Up Case Close Page Layouts (Notify Contact) - (Help) cases_fields_close_case_layout.\nhtm\nSalesforce Help: Support Settings (Case Close Email Template) - (Help) support_settings.htm",
+    "explanation": "Closing a case can send the customer an email without any automation being built for it, and the two settings that do it work as a pair. On the Close Case page layout, Notify Contact is the checkbox the rep sees at close time: Salesforce Help states that if there is a contact on the case, selecting Notify contact on case close sends an email to the contact based on a predefined case close template. That template is the second half — Support Settings carries the Case Close Template field, which names the email template used.\nAn auto-response rule replies to inbound web and email cases as they arrive, not to a status change on close, so it cannot meet the request. Adding the Knowledge component to the close layout surfaces articles for the rep and sends nothing to the customer.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=service.closing_cases.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.customize_supportrules.htm&language=en_US&type=5",
     "_cat": "Service and Support Applications"
   },
   {
@@ -908,7 +908,7 @@
     "optionD": "Screen Flow",
     "optionE": "",
     "correct": "D",
-    "explanation": "Screen flow allows you to create a form that collects user input and performs actions based on that input. You can use screen components to display questions and instructions, and use flow logic to update records or send notifications.\nReferences: https://trailhead.salesforce.com/content/learn/modules/screen-flows/get-started-with-screen-flows\nhttps://help.salesforce.com/s/articleView?id=sf.flow_builder_overview.htm&type=5",
+    "explanation": "Screen flow allows you to create a form that collects user input and performs actions based on that input. You can use screen components to display questions and instructions, and use flow logic to update records or send notifications.\nReferences:\nhttps://trailhead.salesforce.com/content/learn/modules/screen-flows/get-started-with-screen-flows\nhttps://help.salesforce.com/s/articleView?id=platform.create_forms_with_screen_flow_components.htm&language=en_US&type=5",
     "_cat": "Workflow and Process Automation"
   },
   {
@@ -992,7 +992,7 @@
     "optionD": "Configure an owner-based sharing rules.",
     "optionE": "",
     "correct": "A",
-    "explanation": "Grant access using Hierarchies is a setting that can be used to configure the custom object to meet this requirement. Grant access using Hierarchies determines whether access to records of the custom object is granted through the role hierarchy. If this setting is unchecked, managers are unable to see the feedback records from their staff, unless they are given access by other means, such as sharing rules or manual sharing.\nReferences:https://help.salesforce.com/s/articleView?id=sf.security_sharing_owd_custom_objects.\nhtm&type=5",
+    "explanation": "Grant access using Hierarchies is a setting that can be used to configure the custom object to meet this requirement. Grant access using Hierarchies determines whether access to records of the custom object is granted through the role hierarchy. If this setting is unchecked, managers are unable to see the feedback records from their staff, unless they are given access by other means, such as sharing rules or manual sharing.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.security_controlling_access_using_hierarchies.htm&language=en_US&type=5",
     "_cat": "Configuration and Setup"
   },
   {
@@ -1253,7 +1253,7 @@
     "optionD": "Use a process to update the account when it is edited",
     "optionE": "",
     "correct": "C",
-    "explanation": "Flow Builder supports creating a scheduled flow that can run at specified intervals and perform actions on a set of records that meet certaincriteria.\nReferences: https://help.salesforce.com/s/articleView?id=sf.flow_builder_overview.htm&type=5 https://help.\nsalesforce.com/s/articleView?id=sf.flow_concepts_scheduled_start.htm&type=5",
+    "explanation": "Flow Builder supports creating a scheduled flow that can run at specified intervals and perform actions on a set of records that meet certaincriteria.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=platform.flow_concepts_trigger_schedule.htm&language=en_US&type=5",
     "_cat": "Workflow and Process Automation"
   },
   {
@@ -1361,7 +1361,7 @@
     "optionD": "Process Builder",
     "optionE": "",
     "correct": "C",
-    "explanation": "Comprehensive and Detailed Explanation From Exact Extract:\nReferences:\nSalesforce Help: Migrate to Flow / Why Flow is the Preferred Automation Tool - (Help) flows_concepts_process_migration.htm Salesforce Help: Outbound Messages - (Help) workflow_outbound_messages.htm Salesforce Help: Flow HTTP Callout - (Help) flow_external_services_http_callout.htm",
+    "explanation": "An outbound message is configured in Setup and then fired by an automation, and Salesforce documents flows as one of the things it can be associated with: outbound messages can be associated with flows, workflow rules, approval processes, or entitlement processes. A record-triggered flow that runs after the record is saved is therefore the current way to automate one.\nProcess Builder is the distractor to be careful about. It could invoke an outbound message historically, but Salesforce has retired it in favour of Flow, so it is not what an administrator should be told to build today. A case auto-response rule sends an email reply to an inbound case and has nothing to do with a SOAP message to an external endpoint, and task assignment creates work for a user inside Salesforce.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=platform.workflow_managing_outbound_messages.htm&language=en_US&type=5",
     "_cat": "Workflow and Process Automation"
   },
   {
@@ -1531,7 +1531,7 @@
     "optionD": "Record Type Assignment",
     "optionE": "",
     "correct": "C",
-    "explanation": "Component visibility allows you to restrict the visibility of a related list based on a permission set.\nReferences: https://help.salesforce.com/s/articleView?id=sf.dynamic_forms_component_visibility.\nhtm&type=5",
+    "explanation": "Component visibility allows you to restrict the visibility of a related list based on a permission set.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=platform.lightning_page_components_visibility.htm&language=en_US&type=5",
     "_cat": "Object Manager and Lightning App Builder"
   },
   {
@@ -1641,7 +1641,7 @@
     "optionD": "Single sign-on will allow users to log in from anywhere.",
     "optionE": "",
     "correct": "A,C",
-    "explanation": "IP address restrictions allow you to prevent users from accessing Salesforce from outside of their network.\nYou can set IP address restrictions on the profile level or globally for the org. To enforce IP restrictions for API logins, you must select Enforce Login IP Ranges on Every Request in Session Settings.\nReferences: https://help.salesforce.com/s/articleView?id=sf.security_networkaccess.htm&type=5 https://help.\nsalesforce.com/s/articleView?id=sf.security_enforce_ip_ranges.htm&type=5",
+    "explanation": "IP address restrictions allow you to prevent users from accessing Salesforce from outside of their network.\nYou can set IP address restrictions on the profile level or globally for the org. To enforce IP restrictions for API logins, you must select Enforce Login IP Ranges on Every Request in Session Settings.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.security_networkaccess.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=platform.login_ip_ranges.htm&language=en_US&type=5",
     "_cat": "Configuration and Setup"
   },
   {
@@ -1677,7 +1677,7 @@
     "optionD": "Add the Salesforce Mobile and Lightning Experience action to the page layout.",
     "optionE": "",
     "correct": "D",
-    "explanation": "To make a quick action available on the Salesforce mobile app, you need to add it to the Salesforce Mobile and Lightning Experience Actions section of the page layout. You can use the Page Layout Editor to drag and drop the quick action onto the section.\nReferences: https://help.salesforce.com/s/articleView?id=sf.actions_in_lex.htm&type=5 https://help.\nsalesforce.com/s/articleView?id=sf.customize_page_layouts.htm&type=5",
+    "explanation": "To make a quick action available on the Salesforce mobile app, you need to add it to the Salesforce Mobile and Lightning Experience Actions section of the page layout. You can use the Page Layout Editor to drag and drop the quick action onto the section.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.adding_actions_using_ple.htm&language=en_US&type=5",
     "_cat": "Object Manager and Lightning App Builder"
   },
   {
@@ -1830,7 +1830,7 @@
     "optionD": "Validation rules, Assignment rules, Escalation rules, Auto-response rules",
     "optionE": "",
     "correct": "B",
-    "explanation": "Comprehensive and Detailed Explanation From Exact Extract:\nReferences:\nSalesforce Developer Guide: Order of Execution - (Dev Guide) apex_triggers_order_of_execution.htm",
+    "explanation": "The Apex Developer Guide sets out the save order, and for a Case the four rules in these options run in this sequence: after triggers, then assignment rules, then auto-response rules, then workflow rules, and — after the workflow field updates and their re-validation — escalation rules.\nThat ordering is what rules out the alternatives. Validation runs well before any of the four (it is part of the system validation steps that precede the save), so any sequence opening with validation rules and placing assignment or escalation after it misdescribes the save. Escalation rules run last of the four, not second or third: an escalation is evaluated after the record has been written and after workflow has had its turn.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_order_of_execution.htm",
     "_cat": "Workflow and Process Automation"
   },
   {
