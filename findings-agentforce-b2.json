@@ -1,0 +1,105 @@
+{
+  "deck": "public/decks/agentforce_specialist_questions.json",
+  "reviewed": "2026-08-17",
+  "findings": [
+    {
+      "id": "c7094780",
+      "verdict": "clarified",
+      "explanation": "Salesforce gives you a deterministic gate for exactly this, and it does not run through the model. You create filters for subagents and actions so that the agent can use them in a conversation only when certain conditions are met, and the condition can be any variable you specify — here a verification variable set by the verification action. For agents on customer channels Salesforce explicitly recommends using filters to require authentication for subagents and actions that perform tasks for a user.\nThe two alternatives both leave the rule in the model's hands. Instructions in a topic tell the LLM what should happen and are followed probabilistically, not enforced. Checking a variable through natural language prompts during each sensitive action has the same weakness — the check becomes part of the reasoning an attacker is trying to talk past. A filter is evaluated before the action is available at all, so there is nothing to talk past.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_asset_filters.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "11676c36",
+      "verdict": "clarified",
+      "explanation": "A data library automates the plumbing that grounding normally requires. Salesforce describes creating one as automating several configuration steps across Data 360 and Prompt Builder — pushing data streams to Data 360, mapping data objects, and creating a search index and retriever — so linking an agent to your content stops being a manual pipeline build.\nThat retriever is the part that matters at answer time: prompts and agents use it to pull the relevant passages and ground the response in them.\nThe distractors get the retrieval mechanism wrong. Data libraries are not a keyword search index with taxonomical classification, and they are not an OCR-plus-SQL pipeline; retrieval is semantic search over an index built from unstructured and semi-structured content.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.data_library_concept.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "0dd5d1d6",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_testing_center.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "f1260f25",
+      "verdict": "clarified",
+      "explanation": "Toxicity is measured by the Trust Layer and reported through audit data, not through a Setup log. Salesforce's guidance is direct: toxicity scores measure the level of potentially harmful language detected by the Einstein Trust Layer in LLM responses, and to monitor toxicity trends in your org you use Einstein Generative AI Audit and Feedback Data, which is stored in Data 360. Reporting on that data with a toxicity filter is what shows the toxic responses alongside their scores.\nOne detail worth carrying into the exam: isToxicityDetected being true indicates high confidence that the content is toxic, but false does not prove the content is clean — it means only that the model detected nothing.\nThe alternatives either do not exist or do not answer the question. There is no Toxicity Detection log in Setup to export, and an email alert on a threshold notifies someone after the fact without establishing that detection is working across responses.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.generative_ai_audit_toxicity.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.generative_ai_feedback.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "5fc6ac13",
+      "verdict": "clarified",
+      "explanation": "Bring Your Own Large Language Model is the supported path. BYOLLM lets you add a foundation model hosted on an external platform and connect it to Salesforce as a model configuration, which then powers your generative AI — including prompts built in Prompt Builder. You can evaluate the model's responses to your prompts in Model Playground under different settings before deploying it to production.\nThe alternatives rebuild that integration by hand and lose the platform's controls. An Apex callout to an external LLM bypasses the model configuration and the Trust Layer handling that comes with a registered model, and Flow with External Services moves data around rather than registering a model that Prompt Builder can select.\nA naming note: the tool the exam calls Einstein Studio is documented today as AI Models, and its model-building surface is AI Model Builder.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_ai_foundation_models.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "02699cee",
+      "verdict": "corrected",
+      "was": "B",
+      "correct": "A",
+      "explanation": "The two outputs in the preview are the prompt and the answer, in that order. Resolution is the resolved prompt: through a process Salesforce calls prompt resolution, Prompt Builder replaces each merge field in the template with real CRM data from the record you selected, so what you are looking at is the full assembled text that leaves Prompt Builder — through the Trust Layer, where masking and other policies apply — on its way to the model. Response is the model's answer to that resolved prompt.\nSo Resolution answers the question 'what exactly did we send', which is why it is the output you check when a template produces surprising results: a merge field that resolved to the wrong record, or to nothing at all, is visible there and nowhere else.\nMasking is not what Resolution shows. Which sensitive values were replaced is Trust Layer behaviour, reported through audit data rather than in the template preview.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_enable_resolution.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.generative_ai_trust_arch.htm&language=en_US&type=5"
+      ],
+      "note": "B->A. Resolution and Response are two different outputs, and the original key described Response. Salesforce documents resolution as the process that replaces every merge field with real CRM data to produce the resolved prompt — the text that is sent onward — while the response is what the LLM returns."
+    },
+    {
+      "id": "d7a65539",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=service.cc_generative_ai_work_summaries.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "a623ffd0",
+      "verdict": "clarified",
+      "explanation": "The flow's own run context decides what the action can see. Salesforce documents that flows run in user context or system context: in user context the running user's profile and permission sets determine object permissions and field-level access, and in system context access depends on whether the flow runs with sharing or without sharing. A custom agent action calling that flow inherits this — it does not impose a context of its own.\nThat is what makes the other two options wrong. The agent does not always run flows in system mode, so the running user's access cannot be assumed irrelevant. And there is no 'with sharing' permission checkbox in a flow's advanced settings to select; the equivalent choice is the flow's run context, of which system context with sharing is one value.\nWorth pairing with this: the agent user still needs the Run Flows permission, or access granted to that individual flow, before the action can execute at all.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.flow_distribute_context.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.agent_actions_common_perms.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "281cd372",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_reasoning_engine.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "7d3ec7b7",
+      "verdict": "clarified",
+      "explanation": "Prompt Builder is where personalised outreach gets built once and applied at scale. It ships a Sales Email template type, and Salesforce describes the resulting experience plainly: Einstein pulls in a contact's name and information to customise the email, and unlike a static template it creates a new, personalised output every time. Grounding that template in CRM data is what makes each message hyper-relevant rather than merely mail-merged.\nThe alternatives are narrower. Lead follow-up features tell a rep which lead to work next rather than generating the communication, and no sales assistant product replaces the template layer where the content itself is defined.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sales.einstein_sales_emails_draft.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_standard_template_types.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "e6352f25",
+      "verdict": "clarified",
+      "explanation": "A field generation template writes into a field on a Lightning record page, and that page has to be on Dynamic Forms before an individual field can be enabled for generative AI. Salesforce's procedure says so in its step order: on an existing record page that is not already using Dynamic Forms, you select the Record Detail component and click Upgrade Now, which converts the single block of fields into individual field components — only then can you select a field on the canvas and attach the prompt template to it. On mobile the same requirement appears as enabling Dynamic Forms on Mobile.\nThe other options invent prerequisites. There is no 255-character rich-text requirement for the target field, and no API version 59 org setting gates the feature.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.prompt_builder_add_field_gen_to_lightning_record_page.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "014997d2",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_setup_explore_types.htm&language=en_US&type=5"
+      ]
+    }
+  ]
+}

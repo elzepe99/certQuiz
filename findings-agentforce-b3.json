@@ -1,0 +1,116 @@
+{
+  "deck": "public/decks/agentforce_specialist_questions.json",
+  "reviewed": "2026-08-17",
+  "findings": [
+    {
+      "id": "8669895d",
+      "verdict": "clarified",
+      "explanation": "A template-triggered prompt flow exists for exactly this job: Salesforce describes it as the way to provide data to prompt templates in Prompt Builder. The flow performs dynamic logic and actions and its output text is merged into the associated prompt template's resolution, which is how data that no simple merge field can reach — including unified Data 360 objects — gets into the prompt.\nThe other options do not connect to a prompt template. A Data Cloud-triggered flow runs when data changes in Data 360; it reacts to data rather than supplying it to a template at resolution time. There is no unified-object linking flow type.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.flow_concepts_trigger_prompt_template_capability.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_add_flows_with_data_cloud_field_gen.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "f36d01cc",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_create_sales_email_template.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.prompt_builder_add_merge_fields_sales_email.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "0b77359c",
+      "verdict": "clarified",
+      "explanation": "Prompt Builder is a generative tool: it assembles a grounded prompt and has an LLM write text. Drafting a personalised reply to a request for proposal is that shape of problem — the output is language, and the personalisation comes from merge fields resolving against the record.\nThe other two are predictive problems, not generative ones. Forecasting sales trends from historical data and scoring which leads are likely to convert are jobs for predictive models, built and managed as models rather than as prompt templates. Asking an LLM to produce a forecast from a prompt would be generating prose that looks like a number.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_standard_template_types.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sales.einstein_sales_emails_draft.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "e699b633",
+      "verdict": "clarified",
+      "explanation": "In Agentforce Builder an agent's data source is a single selection: on the agent's Data tab you use the dropdown to select an existing library, and the agent grounds the Answer Questions with Knowledge action on that one library. Assignment is a configuration step, not an ownership right — it needs the documented setup permissions rather than being reserved to whoever created the library.\nThe data category claim is not a documented limit either. What a library is limited to is its data source: a library supports Knowledge, file uploads, or web search, and once you choose a source you cannot change it later.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_setup_data_sources.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.data_library_select_fields.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "c86206a7",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.flow_ref_elements_actions_generate_prompt_response.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "03dbb7ca",
+      "verdict": "clarified",
+      "explanation": "Einstein Conversation Insights records and analyses voice and video calls for mentions of specific keywords and phrases, and Call Insights is the part that surfaces them: mentions of competitors, products, pricing, next steps, and the custom keywords you define during setup. That gives the sales team automatic post-call visibility without anyone listening back through the recording.\nCall Summaries condense what happened on a call rather than tracking defined mentions across calls, and Call Explorer is for searching within call content — neither delivers the standing competitor-and-product signal this team asked for.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sales.call_coaching.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sales.call_coaching_setup_insights.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "a11274ab",
+      "verdict": "clarified",
+      "explanation": "The text of an attached file does not live on the article, and it does not live on the link record either. When Data 360 ingests file attachments from CRM objects it deploys three content data streams — Content Document (the document), Content Version (the specific version of the document, which carries the file content), and Content Document Link (the link to the records the file is shared with) — and you then create a search index to enable file attachment ingestion. Data 360 converts that content into searchable vectors, which is what puts PDF text within reach of the agent's retrieval.\nSo the index has to be pointed at the object holding the file content, the version object, not at the link object, which records only what the file is attached to. Raising chunk size or token limits on Knowledge indexing changes how article text is split; it cannot index a file that was never ingested.\nOne thing to know about scale: the initial ingestion covers up to 100,000 of the most recent historical files per CRM object, and new attachments are ingested incrementally after that.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=data.c360_a_unstructured_data_connect_content_document.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "66246094",
+      "verdict": "clarified",
+      "explanation": "A sales email prompt template is scoped by who it is written to and what it may draw on. You choose a Recipient type — the lead, contact, or person account the email addresses — and then, optionally, select an Object to include data from a related object, such as Account, in the generated email. Sender covers the rep's own details, so the account behind the recipient is the third source of merge fields.\nThat is why the account is the answer rather than the opportunity list: the template's related-object slot takes one related object for context, and the account is the documented example. Nothing in the template pulls from a user's organisation record.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_create_sales_email_template.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.prompt_builder_add_merge_fields_sales_email.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "b7737952",
+      "verdict": "clarified",
+      "explanation": "You do not edit a standard prompt template in place. Salesforce's mechanism is an override: overridable standard templates are flagged in the Category column, you create a new version with Save As, and when you activate that custom version it takes the place of the standard one — only one version is active at a time. So customising the standard case summary means authoring a custom Record Summary template for Case and activating it.\nThat is what rules out the option describing direct customisation of the standard template. And summarising the case with the standard agent action changes nothing about the wording the summary comes out with — the action is what runs, the template is what shapes the response.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.prompt_builder_override_standard_template.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "79b1b8b1",
+      "verdict": "clarified",
+      "explanation": "Agentforce is not a thin wrapper over a model endpoint. Salesforce describes the reasoning engine as a series of carefully orchestrated prompts sent to an LLM: the agent classifies the user's message into the best-matching subagent, then decides its next step — running an action, asking for more information, or answering directly — with each step representing one or more LLM calls. The model supplies the language; the platform decides what to ask it and what to do with the answer.\nThat is why neither of the other options describes the mechanism. The agent does not make a raw HTTP callout to an LLM provider from the org, and while a flow can be one of the actions an agent runs, an agent is not simply a flow that invokes a prompt template.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_reasoning_engine.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "7b9b6189",
+      "verdict": "clarified",
+      "explanation": "Einstein Work Summaries fills three things, not one. At the end of a conversation between a rep and a customer, or with a single click from the Case page, Einstein predicts and fills a summary, an issue, and a resolution, which the rep can then review, edit, and save.\nSo the additional fields alongside the summary are the issue and the resolution. Sentiment and emotion analysis is a different capability and is not what Work Summaries writes, and drafting a survey request email is not part of the feature at all.\nNote that the keyed option is misspelled in this item — it reads 'Revolution' where the documented field is Resolution.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=service.cc_generative_ai_work_summaries.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "ce534337",
+      "verdict": "clarified",
+      "explanation": "Both halves of this requirement are settings on the data library, and both exist. Restricting what gets indexed is done in the library's Knowledge settings, and citations are a separate switch: Salesforce's instruction is that to include citations in the agent's output you select Show Sources, and then add your Salesforce Knowledge domain URL so responses link back to the article they were grounded on. If you do not supply a domain URL, the publicly available URL is used.\nThat directly disproves the option claiming it is not possible to display the articles the LLM grounded on. And data categories organise articles for visibility and search; categorising articles as public does not cause sources to be displayed, because displaying sources is the Show Sources setting.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.data_library_select_fields.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.agent_setup_data_sources.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "d58f1670",
+      "verdict": "clarified",
+      "explanation": "Selection is a model decision, not a lookup. Salesforce documents the path of a user message as iterative classification and reasoning: the agent classifies the message into the best-matching subagent, then decides what to do — run one or more actions, ask the user for more information, ask a clarifying question, or respond directly to the request. Each of those steps is one or more LLM calls.\nSo the LLM picks the topic and the action when a match exists, and answers directly when none does. There is no stored list of utterances per topic that the agent matches against, which is what the first option describes, and the reasoning engine does not resolve an action from its name alone — the action's name and instructions inform the model's choice rather than replacing it.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_reasoning_engine.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.copilot_actions_instructions.htm&language=en_US&type=5"
+      ]
+    }
+  ]
+}
