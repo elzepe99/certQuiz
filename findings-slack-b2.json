@@ -1,0 +1,140 @@
+{
+  "deck": "public/decks/Salesforce_Slack_Consultant_Questions.json",
+  "reviewed": "2026-08-18",
+  "findings": [
+    {
+      "id": "ad687de6",
+      "verdict": "clarified",
+      "explanation": "Naming is the one channel-management practice Slack states as a recommendation rather than leaving to taste: it advises using a set of standard prefixes to keep channel names consistent and descriptive. Prefixed channels sort together alphabetically and surface predictably in search, so people can find the right room without asking. Slack ships #help, #proj and #team as defaults and documents #announce, #triage and #event as further conventions; organisations commonly add #project-, #client- and #social-.\nThe other options each break something. Adding everyone to every channel produces the noise that channels exist to contain. Leaving creation entirely unrestricted is the default, not a strategy. Defaulting to private channels forfeits the searchable, joinable history that makes a public channel useful to people who arrive later.",
+      "references": [
+        "https://slack.com/help/articles/217626408-Create-guidelines-for-channel-names"
+      ]
+    },
+    {
+      "id": "016036e7",
+      "verdict": "clarified",
+      "explanation": "This is a discovery problem, and Slack's documented answer to it is a naming convention. Standard prefixes keep names consistent and descriptive, group related channels together alphabetically in the sidebar, and make channels findable by search — which is precisely what employees in a fast-growing organisation are missing. Encoding department and function in the name, as this option describes, is the same idea Slack's own #team-, #proj- and #help- prefixes express. Slack also suggests writing the convention down and pinning it somewhere central so it survives growth.\nDeleting quiet channels attacks a different problem and destroys history along the way; going private-only hides the very channels people are failing to find; and per-person channels fragment discussion further.",
+      "references": [
+        "https://slack.com/help/articles/217626408-Create-guidelines-for-channel-names"
+      ]
+    },
+    {
+      "id": "6febbd25",
+      "verdict": "clarified",
+      "explanation": "Slack's guidance on this is direct: when you are launching a new project, the first step should be creating a channel to keep related information in one place. Bringing the right people into that channel gives the team a shared view of the work, with the messages, decisions and files in one searchable place rather than scattered across inboxes and DMs. For an agency running several client projects at once, a channel per project also pairs naturally with a #project- or #client- naming prefix so the set stays navigable.\nDirect messages lose that shared view and cannot be joined by someone who comes onto the project later. Restricting Slack to announcements wastes the collaboration surface entirely. Adding clients to every internal project channel is a Slack Connect design decision, not a default — internal discussion generally needs somewhere to happen that is not client-visible.",
+      "references": [
+        "https://slack.com/help/articles/1500000019361-Keep-work-organized-with-channels",
+        "https://slack.com/help/articles/217626408-Create-guidelines-for-channel-names"
+      ]
+    },
+    {
+      "id": "4953a8af",
+      "verdict": "clarified",
+      "explanation": "Integration is the capability to lead with here, and it is what Slack itself puts at the centre of the platform: apps connect other software you already use — Google Calendar, OneDrive, internal tools — to Slack, and with those tools in one place teams can streamline work and collaborate more effectively. Workflow Builder extends the same idea to automation without code. For a client worried specifically about collaboration and productivity, that directly addresses the cost of context-switching between tools.\nOf the alternatives, themes are cosmetic and storage is a plan detail rather than a collaboration feature. Anonymous messaging is worth flagging as a distractor: it is not a native Slack capability at all, only something a third-party app could approximate.",
+      "references": [
+        "https://slack.com/help/articles/360001537467-Guide-to-apps-in-Slack"
+      ]
+    },
+    {
+      "id": "a0bf9e87",
+      "verdict": "clarified",
+      "explanation": "Mirroring the organisation is the right starting principle, and Slack frames it the same way: create channels aligned with your company structure and pair them with clear, predictable naming guidelines so the workspace stays organised and easy to navigate. In practice that means channels for teams, channels for projects and a small number of company-wide channels, distinguished by prefix.\nThe alternatives each fail in a way worth naming. A single channel for everything removes the separation that makes any of it readable. Creating many channels up front produces empty rooms that dilute search results and teach people that channels are stale by default — Slack's own advice is that every channel should have a clear purpose in its description. And designing solely around leadership preference misses where the work actually happens.\nOne scope note: on Enterprise Grid the workspace layer is a further design decision above channels, and org-level policies can lock preferences that individual workspaces would otherwise set.",
+      "references": [
+        "https://slack.com/help/articles/217626408-Create-guidelines-for-channel-names",
+        "https://slack.com/help/articles/115005225987-Manage-a-workspace-on-Enterprise-Grid"
+      ]
+    },
+    {
+      "id": "6b9124ed",
+      "verdict": "clarified",
+      "explanation": "Sustained support after cutover is what separates a migration that lands from one that quietly reverts. Slack's own migration guidance treats adoption as a phase rather than an event: it describes a staged rollout in which most enterprises reach majority adoption within about 90 days and full adoption over roughly six months, and it stresses that successful migrations are cultural as much as technical. Troubleshooting, follow-up training and regular check-ins are what fill that period.\nThe alternatives work against it. Dismantling the old platform on day one removes the fallback while people are still learning. Deliberately limiting Slack's functionality hides the capabilities that justify the move. Handing all post-migration questions back to the client discards the expertise that ran the migration.",
+      "references": [
+        "https://slack.com/blog/transformation/teams-to-slack-migration"
+      ]
+    },
+    {
+      "id": "70cfc31f",
+      "verdict": "confirmed",
+      "references": [
+        "https://slack.com/resources/slack-for-admins/launching-slack"
+      ]
+    },
+    {
+      "id": "4c998d54",
+      "verdict": "confirmed",
+      "references": [
+        "https://slack.com/resources/slack-for-admins/launching-slack"
+      ]
+    },
+    {
+      "id": "a401a105",
+      "verdict": "confirmed",
+      "references": [
+        "https://slack.com/blog/transformation/teams-to-slack-migration"
+      ]
+    },
+    {
+      "id": "663ae7a0",
+      "verdict": "confirmed",
+      "references": [
+        "https://slack.com/blog/transformation/teams-to-slack-migration"
+      ]
+    },
+    {
+      "id": "7cdb2278",
+      "verdict": "confirmed",
+      "references": [
+        "https://slack.com/resources/slack-for-admins/launching-slack"
+      ]
+    },
+    {
+      "id": "20885bb7",
+      "verdict": "confirmed",
+      "references": [
+        "https://slack.com/resources/slack-for-admins/launching-slack"
+      ]
+    },
+    {
+      "id": "9f6ca95b",
+      "verdict": "confirmed",
+      "references": [
+        "https://slack.com/resources/slack-for-admins/launching-slack"
+      ]
+    },
+    {
+      "id": "0609296f",
+      "verdict": "confirmed",
+      "references": [
+        "https://slack.com/resources/slack-for-admins/launching-slack"
+      ]
+    },
+    {
+      "id": "24d2ac86",
+      "verdict": "confirmed",
+      "references": [
+        "https://slack.com/resources/slack-for-admins/launching-slack"
+      ]
+    },
+    {
+      "id": "eaa94ffb",
+      "verdict": "confirmed",
+      "references": [
+        "https://slack.com/resources/slack-for-admins/launching-slack"
+      ]
+    },
+    {
+      "id": "bd98bac0",
+      "verdict": "confirmed",
+      "references": [
+        "https://slack.com/resources/slack-for-admins/launching-slack"
+      ]
+    },
+    {
+      "id": "0c94d85c",
+      "verdict": "confirmed",
+      "references": [
+        "https://slack.com/resources/slack-for-admins/launching-slack"
+      ]
+    }
+  ]
+}
