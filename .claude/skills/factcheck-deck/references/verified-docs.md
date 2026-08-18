@@ -518,21 +518,6 @@ id 404s, try `sf.` before assuming the article is gone.
 - **My Domain** — https://help.salesforce.com/s/articleView?id=xcloud.domain_name_overview.htm&language=en_US&type=5
   `platform.` and `sf.` both 404 for this one; only `xcloud.` renders.
 
-**Security and sharing**
-- **Assign Record Types and Page Layouts in Profiles** — https://help.salesforce.com/s/articleView?id=platform.users_profiles_record_types.htm&language=en_US&type=5
-- **Assign Custom Record Types in Permission Sets** — https://help.salesforce.com/s/articleView?id=platform.perm_sets_record_types_assign.htm&language=en_US&type=5
-- **How Is Record Type Access Specified?** — https://help.salesforce.com/s/articleView?id=platform.permissions_record_type_access.htm&language=en_US&type=5
-- **Permission Set Groups** — https://help.salesforce.com/s/articleView?id=platform.perm_set_groups.htm&language=en_US&type=5
-- **Field Permissions** — https://help.salesforce.com/s/articleView?id=platform.users_profiles_field_perms.htm&language=en_US&type=5
-- **"View All" and "Modify All" Permissions Overview** — https://help.salesforce.com/s/articleView?id=platform.users_profiles_view_all_mod_all.htm&language=en_US&type=5
-- **Create Criteria-Based Sharing Rules** — https://help.salesforce.com/s/articleView?id=platform.security_sharing_rules_criteria.htm&language=en_US&type=5
-- **Grant Access to Records with Manual Sharing in Lightning Experience** — https://help.salesforce.com/s/articleView?id=platform.granting_access_to_records_lex.htm&language=en_US&type=5
-- **Considerations for Using Account Teams** — https://help.salesforce.com/s/articleView?id=sales.accountteam_def.htm&language=en_US&type=5
-  Lists Profiles among the account access methods — useful against "profiles never grant record access".
-- **Considerations for Sharing and Accessing Contacts** — https://help.salesforce.com/s/articleView?id=sales.contacts_sharing_considerations.htm&language=en_US&type=5
-- **Salesforce Entity Key Prefix Decoder** — https://help.salesforce.com/s/articleView?id=000385203&language=en_US&type=1
-  User = 005.
-
 **Automation**
 - **Salesforce Workflow Rules & Process Builder End of Support** — https://help.salesforce.com/s/articleView?id=000389396&language=en_US&type=1
 - **Add Actions to Your Process** — https://help.salesforce.com/s/articleView?id=platform.process_action.htm&language=en_US&type=5
@@ -563,6 +548,124 @@ id 404s, try `sf.` before assuming the article is gone.
   `platform.distribution_installing_packages` 404s.
 - **Account Hierarchy: Set Up** — https://help.salesforce.com/s/articleView?id=sales.account_hierarchy_setup_lex.htm&language=en_US&type=5
 - **Considerations for Using Account Hierarchy** — https://help.salesforce.com/s/articleView?id=sales.account_parent_lex.htm&language=en_US&type=5
+
+### Sharing, visibility, and record access
+
+One home for every record-access URL, gathered from the Platform App Builder pass
+(2026-08-11) and the sharing-visibility pass (2026-08-17). Provenance lives on the
+entries that need it, not in the heading — file new sharing URLs here rather than
+starting another pass-named section.
+
+Verification for this section: help articles were rendered in a browser and their
+titles checked; developer guides were fetched through the docs content API, which
+returns real topic content for a live id and nothing for an invented one — a stronger
+check than a browser render on `developer.salesforce.com`, where any book id yields
+the generic shell.
+
+*Profiles, permission sets, record types*
+- **Assign Record Types and Page Layouts in Profiles** — https://help.salesforce.com/s/articleView?id=platform.users_profiles_record_types.htm&language=en_US&type=5
+- **Assign Custom Record Types in Permission Sets** — https://help.salesforce.com/s/articleView?id=platform.perm_sets_record_types_assign.htm&language=en_US&type=5
+- **How Is Record Type Access Specified?** — https://help.salesforce.com/s/articleView?id=platform.permissions_record_type_access.htm&language=en_US&type=5
+- **Permission Set Groups** — https://help.salesforce.com/s/articleView?id=platform.perm_set_groups.htm&language=en_US&type=5
+- **Field Permissions** — https://help.salesforce.com/s/articleView?id=platform.users_profiles_field_perms.htm&language=en_US&type=5
+- **"View All" and "Modify All" Permissions Overview** — https://help.salesforce.com/s/articleView?id=platform.users_profiles_view_all_mod_all.htm&language=en_US&type=5
+- **Create Criteria-Based Sharing Rules** — https://help.salesforce.com/s/articleView?id=platform.security_sharing_rules_criteria.htm&language=en_US&type=5
+- **Grant Access to Records with Manual Sharing in Lightning Experience** — https://help.salesforce.com/s/articleView?id=platform.granting_access_to_records_lex.htm&language=en_US&type=5
+- **Considerations for Using Account Teams** — https://help.salesforce.com/s/articleView?id=sales.accountteam_def.htm&language=en_US&type=5
+  Lists Profiles among the account access methods — useful against "profiles never grant record access".
+- **Considerations for Sharing and Accessing Contacts** — https://help.salesforce.com/s/articleView?id=sales.contacts_sharing_considerations.htm&language=en_US&type=5
+- **Salesforce Entity Key Prefix Decoder** — https://help.salesforce.com/s/articleView?id=000385203&language=en_US&type=1
+  User = 005.
+
+*Org-wide defaults, hierarchy, groups, rules*
+- **Organization-Wide Sharing Defaults** — https://help.salesforce.com/s/articleView?id=sf.security_sharing_owd_about.htm&language=en_US&type=5
+- **Sharing and Record Access Features** — https://help.salesforce.com/s/articleView?id=platform.managing_the_sharing_model.htm&language=en_US&type=5
+- **Controlling Access Using the Role Hierarchy** — https://help.salesforce.com/s/articleView?id=sf.security_controlling_access_using_hierarchies.htm&language=en_US&type=5
+- **Public and Personal Groups** — https://help.salesforce.com/s/articleView?id=platform.user_groups.htm&language=en_US&type=5
+- **Custom Object Security** — https://help.salesforce.com/s/articleView?id=platform.dev_security.htm&language=en_US&type=5
+  Carries the junction-object rule verbatim: viewing a detail record needs "Read
+  permission and read access to the related master record. If the record has two
+  master records in a many-to-many relationship, the user must have read access to
+  **both** master records."
+- **Create a Many-to-Many Object Relationship** — https://help.salesforce.com/s/articleView?id=platform.relationships_manytomany.htm&language=en_US&type=5
+- **Considerations for Object Relationships** — https://help.salesforce.com/s/articleView?id=platform.relationships_considerations.htm&language=en_US&type=5
+- **Defer Sharing Calculations** — https://help.salesforce.com/s/articleView?id=sf.security_sharing_defer_sharing_calculations.htm&language=en_US&type=5
+- **Automatic Recalculation of Org-Wide Defaults and Sharing Rules** — https://help.salesforce.com/s/articleView?id=sf.security_sharing_recalculating_parallel.htm&language=en_US&type=5
+- **Verify Access for a Particular Field** (the Field Accessibility viewer) — https://help.salesforce.com/s/articleView?id=sf.checking_field_accessibility_for_a_particular_field.htm&language=en_US&type=5
+- **Log In as Another User** — https://help.salesforce.com/s/articleView?id=sf.logging_in_as_another_user.htm&language=en_US&type=5
+- **View and Edit Login Hours in Profiles** — https://help.salesforce.com/s/articleView?id=platform.login_hours.htm&language=en_US&type=5
+- **Create Queues** — https://help.salesforce.com/s/articleView?id=sf.users_queue_membership_list.htm&language=en_US&type=5
+  `platform.users_queue_membership_list` is dead; only `sf.` renders.
+- **User Sharing and Visibility** — https://help.salesforce.com/s/articleView?id=platform.security_sharing_users.htm&language=en_US&type=5
+- **Who Can See My File?** — https://help.salesforce.com/s/articleView?language=en_US&id=sf.collab_files_settings_perms.htm&type=5
+- **Access to Report Folders** — https://help.salesforce.com/s/articleView?id=analytics.access_report_folders.htm&language=en_US&type=5
+- **User Permissions for Sharing Reports and Dashboards** — https://help.salesforce.com/s/articleView?id=analytics.analytics_sharing_permissions.htm&language=en_US&type=5
+- **Share a List View with Specific Users via Public Groups** — https://help.salesforce.com/s/articleView?id=000387584&language=en_US&type=1
+- **Considerations and Guidelines for Using Opportunity Teams** — https://help.salesforce.com/s/articleView?id=sales.salesteam_def.htm&language=en_US&type=5
+- **Guidelines for Sharing Price Books** — https://help.salesforce.com/s/articleView?id=sales.products_sharing.htm&language=en_US&type=5
+- **Set Up Content Deliveries** — https://help.salesforce.com/s/articleView?id=sf.content_delivery_about.htm&language=en_US&type=5
+- **Break Up Your Record Details with Dynamic Forms** — https://help.salesforce.com/s/articleView?id=sf.dynamic_forms_overview.htm&language=en_US&type=5
+- **Classic Encryption for Custom Fields** — https://help.salesforce.com/s/articleView?id=sf.fields_about_encrypted_fields.htm&language=en_US&type=5
+- **Synchronize Your Data Encryption with the Background Encryption Service** — https://help.salesforce.com/s/articleView?id=xcloud.security_pe_mass_encryption.htm&language=en_US&type=5
+- **Protection and Privacy Options for Custom Settings** — https://help.salesforce.com/s/articleView?id=platform.cs_schema_settings.htm&language=en_US&type=5
+- **Access Rules When Packaging Custom Metadata Types and Records** — https://help.salesforce.com/s/articleView?id=sf.custommetadatatypes_package_access.htm&language=en_US&type=5
+- **Standard Action Overrides** — https://help.salesforce.com/s/articleView?id=sf.standard_actions_overrides.htm&language=en_US&type=5
+- **Assign Action Overrides** — https://help.salesforce.com/s/articleView?id=platform.assign_action_overrides.htm&language=en_US&type=5
+- **Considerations for Overriding Standard Buttons** — https://help.salesforce.com/s/articleView?id=sf.links_override_considerations.htm&language=en_US&type=5
+- **Comparing Original Territory Management and Salesforce ETM** — https://help.salesforce.com/s/articleView?id=000387747&language=en_US&type=1
+- **Enable Filter-Based Opportunity Territory Assignment** — https://help.salesforce.com/s/articleView?id=sf.tm2_enable_ota.htm&language=en_US&type=5
+
+*Experience Cloud*
+- **Partner User Roles** — https://help.salesforce.com/s/articleView?id=sf.networks_partner_roles_overview.htm&language=en_US&type=5
+- **Grant Portal Super User Access to Partner and Customer Users** — https://help.salesforce.com/s/articleView?id=sf.networks_partner_super_user_access.htm&language=en_US&type=5
+- **Use Share Groups to Share Records Owned by High-Volume Experience Cloud Site Users** — https://help.salesforce.com/s/articleView?id=sf.networks_sharing_light_users.htm&language=en_US&type=5
+- **Control Which Users Experience Cloud Site Users Can See** — https://help.salesforce.com/s/articleView?id=sf.networks_user_sharing.htm&language=en_US&type=5
+- **Experience Cloud User Licenses** — https://help.salesforce.com/s/articleView?id=platform.users_license_types_communities.htm&language=en_US&type=5
+
+*Developer guides — Designing Record Access for Enterprise Scale (DRAES)*
+- **Implicit Sharing** — https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_object_relationships_implicit_sharing.htm
+- **Group Membership Locking** — https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_group_membership_locking.htm
+- **Ownership Data Skew** — https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_group_membership_data_skew.htm
+- **Parent-Child Data Skew** — https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_object_relationships_parent_child_data_skew.htm
+- **Record-Level Locking** — https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_object_relationships_record_level_locking.htm
+- **Deferred Sharing Maintenance** — https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_tools_deferred_sharing_maintenance.htm
+- **Record-Level Access: Under the Hood** (PDF) — https://resources.docs.salesforce.com/latest/latest/en-us/sfdc/pdf/salesforce_record_access_under_the_hood.pdf
+  `check-urls.mjs` reports this **DEAD**, and that verdict is wrong: Node's fetch
+  can't build a certificate chain for `resources.docs.salesforce.com`. `curl`
+  downloads it and a browser offers the file. Don't drop it on the script's say-so.
+
+*Developer guides — Apex, LWC, Visualforce*
+- **Understanding Sharing** — https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing_understanding.htm
+- **Using the runAs Method** — https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_tools_runas.htm
+- **Enforce Sharing Rules** — https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_security_sharing_rules.htm
+- **Enforce Object and Field Permissions** — https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_perms_enforcing.htm
+- **Enforce User Mode for Database Operations** — https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_enforce_usermode.htm
+- **Secure Apex Classes (LWC guide)** — https://developer.salesforce.com/docs/platform/lwc/guide/apex-security.html
+- **Security Guidelines for Apex and Visualforce Development** — https://developer.salesforce.com/docs/atlas.en-us.securityImplGuide.meta/securityImplGuide/review_and_certification.htm
+
+| Fact | What the doc actually says | Article |
+|---|---|---|
+| Implicit sharing and View All | Parent implicit sharing gives "read-only access to the parent account for a user with access to a child case, contact, or opportunity" — but it is explicitly **"Not granted by the View All permission on the child object"**, and child implicit sharing is likewise "not granted by the View All permission on the parent object". So View All on Case does **not** hand the user the accounts | Implicit Sharing (DRAES) |
+| Group Maintenance tables | "Tables that store the data supporting **group membership and inherited access grants**." The four grant types are explicit, group membership, inherited, implicit; explicit grants live in the Object Sharing table | Record-Level Access: Under the Hood |
+| Granular locking concurrency | Enabled **by default** now. The published matrix is exact — "Changing customer or partner account owner" runs concurrently with **territory creation only**, because it is a form of role reparenting | Group Membership Locking (DRAES) |
+| Deferred vs parallel recalculation | Deferral is a **planned-window** tool: suspend, make changes, resume, then manually run a full recalculation. **Parallel** recalculation is the one documented as providing "better resilience to site operations such as patches and server restarts" (Security Implementation Guide through v240) — that is the answer to "recover from a maintenance restart" | Defer Sharing Calculations; Automatic Recalculation |
+| Ownership data skew | ">10,000 records of an object" owned by one user. Remedies: distribute ownership across a **greater** number of users; if you must concentrate it, **don't assign the user a role**; keep them out of public groups used as sharing-rule sources; if they need a role, put it at the **top** of the hierarchy | Ownership Data Skew (DRAES) |
+| runAs and FLS | **Changed, and decks still teach the old rule.** The current page says a runAs block enforces "the user's sharing rules and **object-level and field-level permissions**… regardless of the sharing mode of the test class". The legacy "runAs only enforces record sharing" is no longer what the doc says | Using the runAs Method |
+| Apex default access mode | "In API version **66.0 and earlier**, Apex runs in system mode by default… In API version **67.0 and later**, Apex runs in **user mode** by default." Separately, an `@AuraEnabled` class with no sharing keyword "uses a default or implicit value of **with sharing**". Any explanation stating "Apex runs in system mode" flatly is now version-dependent | Secure Apex Classes (LWC) |
+| `with sharing` and FLS | "Enforcing sharing rules by using the with sharing keyword **doesn't enforce the user's permissions and field-level security**" | Enforce Sharing Rules |
+| Manual share on owner change | "**User managed sharing is removed when the record owner changes**", and "Apex managed sharing **is maintained** across record owner changes" — the discriminator behind every "which share survives a transfer" item | Understanding Sharing |
+| Sharing set available objects | The list "excludes: Objects with an org-wide sharing setting of **Public Read/Write**" and "**Custom objects that don't have an account or contact lookup field**" | Create a Sharing Set |
+| Sharing set across multiple accounts | "If you created a user from a contact to multiple accounts, you can grant access to all records with a lookup to any accounts related to that contact. Select **Contact.RelatedAccount** and Account respectively" — the declarative answer to "agent works for several partner accounts". **Share groups** (not sharing sets) are what's unavailable to Customer Community Plus and Partner Community licences | Create a Sharing Set |
+| Private library files | "Users with **Modify All Data**… However, if the file is in a private library, then **only the file owner** has access to it", and the same sentence again for **View All Data**. A file posted to a record feed is "Privately Shared": owner + Modify All Data or View All Data + record viewers | Who Can See My File? |
+| Partner role hierarchy | "The **three** roles in this hierarchy are Partner User, Partner Manager, or Partner Executive", rolling up to the Channel Manager role. Partner users "can view and edit all data owned by or shared with users **below** them in the hierarchy" | Partner User Roles |
+| Action overrides per experience | There **is** a separate mobile slot: "Specify the override option for **each user experience**", and the worked example is "a Visualforce page for Salesforce Classic and a Lightning component for Lightning Experience. The **mobile override** specifies the Salesforce Classic override, so mobile users see the Visualforce page." A mobile-only override is therefore configurable — don't reason from "Button overrides affect everywhere that action is available", which is about one experience | Assign Action Overrides |
+| ETM vs original Territory Management | Salesforce's comparison table marks **"Share a Report / Dashboard Folder with a Territory" and "Create a Public Group with Territory" as Yes for BOTH**. The genuine ETM-only rows are territory models, territory types/priority, multiple hierarchies, audit trail, Metadata API support, Collaborative Forecasts integration | Comparing Original TM and ETM |
+| Preventing edits to encrypted fields | "Use **validation rules, field-level security settings, or page layout settings** to prevent users from editing encrypted fields." Also: encrypted fields "aren't available for use in filters such as list views, reports, roll-up summary fields, and rule filters", which is why they don't appear in criteria-based sharing rule criteria | Classic Encryption for Custom Fields |
+| Shield: encrypting existing data | No longer support-only. Self-service sync runs from the **Encryption Statistics and Data Sync** page for standard/custom fields, Attachment Content Body, field history and feed tracking — **once every 7 days**; everything else still needs Salesforce Customer Support | Synchronize Your Data Encryption |
+| Site vs Portal user visibility | **Portal** User Visibility = users in the same customer/partner account see each other. **Site** User Visibility = user sharing for authenticated site users, exposing "See other members of this site" per site. Both apply only when the User object's external OWD is **Private** | Control Which Users Site Users Can See |
+| List view sharing targets | "List Views can be shared with **All Users, Only Me, or Groups of Users**"; "sharing a List View with a specific **individual user** is not natively supported" — the documented workaround is a public group of one | Share a List View via Public Groups |
+| Protected custom settings in a package | In a **managed** package, access "is allowed only through the Apex code that is part of that managed package"; the subscriber can't read it. In an **unmanaged** package they behave like public settings | Protection and Privacy Options for Custom Settings |
+
 
 ## Known dead
 
@@ -961,3 +1064,117 @@ listings; two were constructed during the pass.
 **The lesson worth carrying:** the five `sf.*` ids all appeared as titled results in
 web search. Search returning a title is not evidence the URL resolves — for these,
 the article had moved to the `ind.` namespace and the old id 404s. Always render.
+
+## Agentforce Specialist — verified 2026-08-17 (full deck pass, 121 questions)
+
+89 URLs, every one loaded in the browser pane and checked for the term it is cited
+for. Agentforce content lives under these namespaces, which is the first thing to know
+when guessing an id: **ai.** for Agentforce and Einstein generative AI (49 of the 89),
+**data.** for Data 360 / retrievers / models (12), **sales.** and **service.** for the
+cloud-specific agents (12), **platform.** for Flow (4), **sf.** for older platform
+articles that still resolve (6), plus developer.salesforce.com for the Metadata API and
+the Agentforce Developer Guide (5).
+
+Dead ids encountered during this pass — do not cite:
+
+| Dead id | Use instead |
+|---|---|
+| ai.prompt_builder_flex_template.htm | ai.prompt_builder_create_flex_prompt_template.htm |
+| platform.flow_ref_elements_actions_outbound_message.htm | platform.workflow_managing_outbound_messages.htm |
+| ai.copilot_actions_ref_draft_or_revise_sales_email.htm | ai.copilot_actions_ref_draft_or_revise_email.htm (action renamed) |
+| ai.setup_agent_topic_ref_fallback.htm and sf.setup_agent_topic_ref_fallback.htm | ai.agent_reasoning_engine.htm (Off-Topic system subagent) |
+| data.c360_a_unstructured_data_chunking.htm | data.c360_a_search_index_ground_ai.htm |
+| platform.flow_concepts_type_screen.htm | platform.create_forms_with_screen_flow_components.htm |
+| apex_testing_code_coverage.htm | apex_code_coverage_intro.htm |
+
+Full list:
+
+- https://developer.salesforce.com/docs/ai/agentforce/guide/agent-api-variables.html
+- https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-deploy-metadata.html
+- https://developer.salesforce.com/docs/ai/agentforce/guide/mcp.html
+- https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_code_coverage_intro.htm
+- https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_genaiplannerbundle.htm
+- https://help.salesforce.com/s/articleView?id=ai.agent_actions_common_perms.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.agent_asset_filters.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.agent_builder_tour.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.agent_deploy_emp_slack.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.agent_mcp_connect_register.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.agent_parent_deploy.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.agent_reasoning_engine.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.agent_setup_data_sources.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.agent_setup_explore_types.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.agent_testing_center.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.agent_testing_center_considerations.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.agent_user.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.copilot_actions_custom.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.copilot_actions_instructions.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.copilot_actions_ref.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.copilot_actions_ref_answer_questions_with_knowledge.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.copilot_actions_ref_draft_or_revise_email.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.copilot_setup_activate_deactivate.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.copilot_setup_system_messages.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.copilot_utterance_analysis.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.data_library_concept.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.data_library_custom_retriever.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.data_library_select_fields.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.generative_ai_audit_data_mask.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.generative_ai_audit_toxicity.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.generative_ai_audit_trail.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.generative_ai_feedback.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.generative_ai_session_trace_about.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.generative_ai_trust_arch.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.prompt_builder_add_flows_with_data_cloud_field_gen.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.prompt_builder_best_practices.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.prompt_builder_changing_llm_configurations.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.prompt_builder_considerations_changeset.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.prompt_builder_create_flex_prompt_template.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.prompt_builder_create_sales_email_template.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.prompt_builder_enable.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.prompt_builder_enable_prompt_performance_metrics.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.prompt_builder_enable_resolution.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.prompt_builder_ground_dmo.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.prompt_builder_ground_related_list.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.prompt_builder_ground_template.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.prompt_builder_limitations.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.prompt_builder_override_standard_template.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.prompt_builder_standard_prompt_templates.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.prompt_builder_standard_template_types.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.prompt_builder_use_multiple_versions.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.service_agent_considerations_1.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.service_agent_email_configuration.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=ai.service_agent_escalation.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=data.c360_a_ai_byom_connect_your_external_model_databricks.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=data.c360_a_ai_byom_set_up_your_endpoint_databricks.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=data.c360_a_ai_foundation_models.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=data.c360_a_ai_license_perms.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=data.c360_a_ai_retriever_about.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=data.c360_a_ai_retriever_create.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=data.c360_a_bring_your_own_model.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=data.c360_a_hybridsearch_fusion_ranking.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=data.c360_a_search_index_ground_ai.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=data.c360_a_search_index_rebuild_search_index.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=data.c360_a_search_index_reference.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=data.c360_a_unstructured_data_connect_content_document.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=experience.support_add_agent_to_site.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=platform.flow_concepts_trigger_prompt_template_capability.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=platform.flow_distribute_context.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=platform.flow_ref_elements_actions_generate_prompt_response.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=platform.flow_ref_elements_add_prompt.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sales.call_coaching.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sales.call_coaching_setup_insights.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sales.einstein_sales_emails_draft.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sales.sales_agent_sdr_assign_manually.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sales.sales_agent_sdr_intro.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sales.sales_agent_sdr_setup_connect_agent_user_email.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sales.sales_cloud_agents.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=service.cc_generative_ai_work_summaries.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=service.einstein_generative_ai_enable_grounding.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=service.einstein_generative_ai_ground_knowledge.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=service.einstein_generative_ai_grounding_setup.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=service.einstein_replies_intro.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sf.generative_ai_trust_setup.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sf.knowledge_setup_users_lex.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sf.prompt_builder_add_field_gen_to_lightning_record_page.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sf.prompt_builder_add_merge_fields_sales_email.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sf.prompt_builder_review_revise.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sf.salesforce_app_field_gen.htm&language=en_US&type=5

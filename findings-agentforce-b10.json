@@ -1,0 +1,16 @@
+{
+  "deck": "public/decks/agentforce_specialist_questions.json",
+  "reviewed": "2026-08-17",
+  "findings": [
+    {
+      "id": "31068c78",
+      "verdict": "clarified",
+      "explanation": "Both requirements land on the Service Agent. Salesforce describes that type as intelligently supporting customers with common inquiries and escalating complex issues, and documents adding an Agentforce Service Agent to an Experience Cloud site as a self-service portal with built-in authentication — which is what restricts the agent to authenticated partner users on the portal.\nAnswering product questions from the knowledge base is the Answer Questions with Knowledge action grounded on published articles, and submitting a lead is a custom action built on a flow or Apex, so one agent covers both without changing type.\nThe alternatives are scoped elsewhere. The sales-side agents work prospects and coach reps rather than serving partners in a portal, and a commerce agent belongs to the buying experience on an e-commerce channel.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ai.agent_setup_explore_types.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=experience.support_add_agent_to_site.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ai.copilot_actions_custom.htm&language=en_US&type=5"
+      ]
+    }
+  ]
+}
