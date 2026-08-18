@@ -1,0 +1,1085 @@
+{
+  "deck": "public/decks/sharing_visibility_questions_corrected.json",
+  "reviewed": "2026-08-17",
+  "findings": [
+    {
+      "id": "32457136",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing_understanding.htm",
+        "https://resources.docs.salesforce.com/latest/latest/en-us/sfdc/pdf/salesforce_record_access_under_the_hood.pdf"
+      ]
+    },
+    {
+      "id": "42219114",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=analytics.analytics_sharing_permissions.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=analytics.access_report_folders.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "95971092",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.users_queue_membership_list.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "57e4ff8c",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.security_sharing_defer_sharing_calculations.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_tools_deferred_sharing_maintenance.htm"
+      ]
+    },
+    {
+      "id": "68234b0a",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.networks_setting_light_users.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.users_license_types_communities.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "ec162781",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing_understanding.htm",
+        "https://architect.salesforce.com/fundamentals/platform-sharing-architecture"
+      ]
+    },
+    {
+      "id": "437bd895",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.security_sharing_rules_criteria.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.user_groups.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "5511f656",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.dev_security.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.managing_the_sharing_model.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "af9c0811",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.users_license_types_communities.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.networks_partner_roles_overview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "ecf35f6a",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.security_sharing_owd_about.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.managing_the_sharing_model.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "5982cba0",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_security_sharing_rules.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_tools_runas.htm"
+      ]
+    },
+    {
+      "id": "6449a136",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.assign_action_overrides.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.standard_actions_overrides.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "2832551d",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing_understanding.htm",
+        "https://help.salesforce.com/s/articleView?id=platform.security_sharing_rules_criteria.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "7fa7594e",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.security_controlling_access_using_hierarchies.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "921e28b3",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.security_sharing_rules_criteria.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.security_sharing_owd_about.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "1b589ed2",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_object_relationships_implicit_sharing.htm"
+      ]
+    },
+    {
+      "id": "67edf27b",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.users_profiles_field_perms.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.checking_field_accessibility_for_a_particular_field.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "0da8893e",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.custommetadatatypes_package_access.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "f1429a6d",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.networks_partner_roles_overview.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.security_controlling_access_using_hierarchies.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "16f36e7f",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_object_relationships_implicit_sharing.htm"
+      ]
+    },
+    {
+      "id": "741614b9",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.networks_partner_super_user_access.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.users_license_types_communities.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "b893344a",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.security_sharing_rules_criteria.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.security_sharing_rules_owner.htm&type=5&language=en_US"
+      ]
+    },
+    {
+      "id": "6da44329",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing_understanding.htm"
+      ]
+    },
+    {
+      "id": "57ea8ddf",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.networks_partner_roles_overview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "c46ab0fb",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.dynamic_forms_overview.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.checking_field_accessibility_for_a_particular_field.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "3f6904d6",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.dev_security.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.relationships_manytomany.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "89980a66",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.dev_security.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "7f7fa913",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.checking_field_accessibility_for_a_particular_field.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.users_profiles_field_perms.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "f5aa4d62",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.fields_about_encrypted_fields.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.security_sharing_rules_criteria.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "4f9508a6",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.security_sharing_rules_owner.htm&type=5&language=en_US",
+        "https://help.salesforce.com/s/articleView?id=platform.security_sharing_rules_criteria.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "d8e912b9",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_group_membership_data_skew.htm"
+      ]
+    },
+    {
+      "id": "618edffa",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sales.salesteam_def.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "a6f0638d",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing_understanding.htm",
+        "https://help.salesforce.com/s/articleView?id=platform.granting_access_to_records_lex.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "11c6463d",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=analytics.access_report_folders.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=analytics.analytics_sharing_permissions.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "0b41ca5b",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sales.accountteam_def.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "ea780ddf",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=000387584&language=en_US&type=1",
+        "https://help.salesforce.com/s/articleView?id=platform.user_groups.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "b3eeee28",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_tools_runas.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing_understanding.htm"
+      ]
+    },
+    {
+      "id": "f06ffe05",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.dev_security.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.managing_the_sharing_model.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "5314dea1",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?language=en_US&id=sf.collab_files_settings_perms.htm&type=5"
+      ]
+    },
+    {
+      "id": "f3efd3c8",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.networks_user_sharing.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "24abccb1",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sales.accountteam_def.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "117ae517",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing_understanding.htm"
+      ]
+    },
+    {
+      "id": "4bea0db4",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.security_controlling_access_using_hierarchies.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.security_sharing_rules_owner.htm&type=5&language=en_US"
+      ]
+    },
+    {
+      "id": "d40bd22a",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.salesforce_connect.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.salesforce_connect_odata.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "46cf2c6f",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.networks_partner_roles_overview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "db6b37d7",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.granting_access_to_records_lex.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.security_sharing_owd_about.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "42ccc679",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.security_sharing_owd_about.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.managing_the_sharing_model.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "9e11ff8d",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.security_controlling_access_using_hierarchies.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.users_profiles_view_all_mod_all.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "ee79628f",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.tm2_enable_ota.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "6d1a5b71",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.security_controlling_access_using_hierarchies.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.dev_security.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "3f1bd5c8",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing_understanding.htm",
+        "https://resources.docs.salesforce.com/latest/latest/en-us/sfdc/pdf/salesforce_record_access_under_the_hood.pdf"
+      ]
+    },
+    {
+      "id": "194620fe",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing_understanding.htm"
+      ]
+    },
+    {
+      "id": "719e1654",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.users_profiles_field_perms.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "19b83d4f",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=analytics.access_report_folders.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=analytics.analytics_sharing_permissions.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "4e0dddf6",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.security_sharing_owd_about.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "d7d3c195",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing_understanding.htm",
+        "https://help.salesforce.com/s/articleView?id=platform.managing_the_sharing_model.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "983d7217",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.security_sharing_rules_owner.htm&type=5&language=en_US"
+      ]
+    },
+    {
+      "id": "422ad2b2",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.security_controlling_access_using_hierarchies.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.users_profiles_field_perms.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.security_sharing_owd_about.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "d91acca1",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_object_relationships_record_level_locking.htm"
+      ]
+    },
+    {
+      "id": "8ae19d48",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sales.accountteam_def.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "cb6172cb",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.security_sharing_rules_owner.htm&type=5&language=en_US",
+        "https://help.salesforce.com/s/articleView?id=platform.user_groups.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "cdd5ba1f",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.security_controlling_access_using_hierarchies.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.user_groups.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "ffc0447d",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_object_relationships_parent_child_data_skew.htm"
+      ]
+    },
+    {
+      "id": "3b49876e",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.security_sharing_rules_criteria.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.security_controlling_access_using_hierarchies.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.users_profiles_field_perms.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "fb42a7b6",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.networks_partner_roles_overview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "b1f7ddb3",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.content_delivery_about.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "30e22baa",
+      "verdict": "confirmed",
+      "references": [
+        "https://resources.docs.salesforce.com/latest/latest/en-us/sfdc/pdf/salesforce_record_access_under_the_hood.pdf",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing_understanding.htm"
+      ]
+    },
+    {
+      "id": "74a0ea4f",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing_understanding.htm"
+      ]
+    },
+    {
+      "id": "f8cfaa5e",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=analytics.analytics_sharing_permissions.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "276034b7",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing_understanding.htm"
+      ]
+    },
+    {
+      "id": "09e21052",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sales.accountteam_def.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "cf36748a",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.securityImplGuide.meta/securityImplGuide/review_and_certification.htm",
+        "https://help.salesforce.com/s/articleView?id=platform.users_profiles_field_perms.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "4b9d4422",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.security_sharing_owd_about.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.managing_the_sharing_model.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "0fa57dbd",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=000387584&language=en_US&type=1",
+        "https://help.salesforce.com/s/articleView?id=platform.user_groups.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "ca3ab1d9",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.networks_sharing_light_users.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.networks_setting_light_users.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "1ef169fc",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing_understanding.htm"
+      ]
+    },
+    {
+      "id": "83bc5172",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=analytics.access_report_folders.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "fe00eb7f",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_security_sharing_rules.htm",
+        "https://help.salesforce.com/s/articleView?id=sf.security_sharing_owd_about.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "60dad09b",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sales.accountteam_def.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.security_sharing_owd_about.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "2b38c47f",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing_understanding.htm"
+      ]
+    },
+    {
+      "id": "d2a77885",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sales.products_sharing.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "094a753b",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.users_license_types_communities.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.networks_partner_roles_overview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "abd2e57b",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_perms_enforcing.htm"
+      ]
+    },
+    {
+      "id": "6a078f90",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.users_profiles_view_all_mod_all.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "c9f8748f",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.dev_security.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.security_controlling_access_using_hierarchies.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "43e1b231",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.logging_in_as_another_user.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "32ca6c0b",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.security_controlling_access_using_hierarchies.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.security_sharing_owd_about.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "c095ab36",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_security_sharing_rules.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_tools_runas.htm"
+      ]
+    },
+    {
+      "id": "60ea3a4c",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.networks_partner_roles_overview.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.security_controlling_access_using_hierarchies.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "06f9e603",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_object_relationships_implicit_sharing.htm",
+        "https://help.salesforce.com/s/articleView?id=sales.salesteam_def.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "b53a73d3",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.cs_schema_settings.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.custommetadatatypes_package_access.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "33731b3c",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_object_relationships_implicit_sharing.htm",
+        "https://help.salesforce.com/s/articleView?id=sf.security_sharing_rules_owner.htm&type=5&language=en_US"
+      ]
+    },
+    {
+      "id": "2da3072b",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.fields_about_encrypted_fields.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "5cb48d4c",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.checking_field_accessibility_for_a_particular_field.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "b90e1a88",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.networks_setting_light_users.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.users_license_types_communities.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "53a40bfb",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.user_groups.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing_understanding.htm"
+      ]
+    },
+    {
+      "id": "1cb4aa5f",
+      "verdict": "confirmed",
+      "references": [
+        "https://resources.docs.salesforce.com/latest/latest/en-us/sfdc/pdf/salesforce_record_access_under_the_hood.pdf",
+        "https://help.salesforce.com/s/articleView?id=sf.security_controlling_access_using_hierarchies.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "b26eae84",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.granting_access_to_records_lex.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.managing_the_sharing_model.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "ced866bb",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.login_hours.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "7d2c8e5f",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.networks_partner_super_user_access.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.networks_partner_roles_overview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "43b7241d",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.users_profiles_field_perms.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "e4ff9eb3",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.salesforce_connect.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "fe13cd62",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.security_controlling_access_using_hierarchies.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.security_sharing_rules_owner.htm&type=5&language=en_US"
+      ]
+    },
+    {
+      "id": "843915dd",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.security_sharing_owd_about.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.security_controlling_access_using_hierarchies.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.relationships_manytomany.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "5766ea42",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sales.accountteam_def.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "e53d2012",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.networks_partner_super_user_access.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.networks_partner_roles_overview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "79d8546f",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.users_profiles_field_perms.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "2f29255d",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.security_sharing_users.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.users_profiles_view_all_mod_all.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "2606e3be",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.security_sharing_owd_about.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sales.contacts_sharing_considerations.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "a8ae2576",
+      "verdict": "corrected",
+      "was": "B",
+      "correct": "C",
+      "explanation": "Recovering from a Salesforce service restart is what parallel recalculation buys you, not deferral. Salesforce describes asynchronous parallel recalculation of sharing rules as running \"in parallel and asynchronously in the background, which speeds up the process and provides better resilience to site operations such as patches and server restarts\" — that resilience is the documented answer to this scenario.\nDeferred sharing calculations solve a different problem. They are a planned-maintenance tool: an admin suspends group-membership and sharing-rule processing, makes a batch of role, group and rule changes inside a negotiated window, then resumes and manually kicks off a full recalculation. Nothing about deferral helps an org absorb an unplanned restart — and if calculations are still suspended when one happens, access rights are simply stale until someone resumes them.\nGranular locking addresses concurrency between group-maintenance operations, and filter-based opportunity territory assignment is an unrelated Sales feature.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.security_sharing_recalculating_parallel.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.security_sharing_defer_sharing_calculations.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_tools_deferred_sharing_maintenance.htm"
+      ],
+      "note": "Answer moved from Deferred Sharing Rule recalculation to Parallel Sharing Rule Recalculation. Salesforce documents parallel recalculation as providing \"better resilience to site operations such as patches and server restarts\"; deferral is a planned-maintenance-window tool that suspends calculation and requires a manual full recalculation afterwards. (The resilience wording is carried in the Security Implementation Guide through v240; the current help article describes the same asynchronous parallel behaviour.)"
+    },
+    {
+      "id": "a83888b8",
+      "verdict": "corrected",
+      "was": "A",
+      "correct": "D",
+      "explanation": "A sharing set handles the multi-account case directly, and it is the documented mechanism for exactly this shape of problem. Create a Sharing Set for Experience Cloud Site Users covers it: \"If you created a user from a contact to multiple accounts, you can grant access to all records with a lookup to any accounts related to that contact. Select Contact.RelatedAccount and Account respectively, and make sure that the relevant account-contact relationships are active.\"\nThat is the part-time agent scenario. The agent is one contact related to several distributor accounts through Contacts to Multiple Accounts, and Account is itself an available object in a sharing set, so the access mapping grants each agent the distributor accounts their contact is actively related to. Adding or removing an account-contact relationship changes access with no code.\nApex managed sharing on the account share table would also work, but it is a code solution to a problem the platform already solves declaratively, and it has to be maintained as agents move between distributors. Ordinary sharing rules cannot target community users on a per-account basis.\nNote that share groups — a different feature — are the thing unavailable to Customer Community Plus and Partner Community licences. Sharing sets themselves are available.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.networks_setting_light_users.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.users_license_types_communities.htm&language=en_US&type=5"
+      ],
+      "note": "Answer moved from Apex sharing to the sharing set. The previous explanation claimed a sharing set keyed on the account-contact relationship \"only covers the agent's own account\"; the sharing-set documentation says the opposite, naming Contact.RelatedAccount as the mapping for a contact related to multiple accounts."
+    },
+    {
+      "id": "09876cfd",
+      "verdict": "reasoning",
+      "explanation": "Record sharing is the answer this item wants, and it is the answer the exam keys. Read the current documentation carefully, though, because the item is broken against it: Using the runAs Method says that after the user context switches, \"the user's sharing rules and object-level and field-level permissions are enforced\", and repeats it — \"The user's sharing rules and object-level and field-level permissions are enforced within a runAs block, regardless of the sharing mode (with sharing or without sharing) of the test class.\"\nSo all three options describe something runAs enforces today. The reason A is still the best answer is that record sharing is the thing runAs exists for: outside a runAs block Apex generally runs in system mode, where object- and field-level permissions of the running user are not taken into account, and runAs is the only way a test can put itself in a specific user's record-access shoes.\nIf you need to assert object or field permissions in code rather than in a test, that is a separate mechanism — user-mode database operations, or the Schema describe methods isAccessible, isCreateable and isUpdateable.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_tools_runas.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_perms_enforcing.htm"
+      ],
+      "note": "Answer stands, but the old explanation stated that runAs \"does not enforce the user's object permissions or Field-Level Security\" and that \"under runAs, Apex still executes in system mode for CRUD and FLS\". The Apex Developer Guide says the opposite: object-level and field-level permissions are enforced inside a runAs block. Treat the item as defective — all three options are true of runAs as currently documented."
+    },
+    {
+      "id": "e4de4c7a",
+      "verdict": "reasoning",
+      "explanation": "Two of the three keyed considerations are solid. runAs can only be used inside a test method, and it is the way a test validates record-level security (B); and \"Every call to runAs counts against the total number of DML statements issued in the process\" (E). Option D is false for the same reason B is true — runAs is test-only.\nOption A is the legacy statement and no longer matches the documentation. Using the runAs Method now says that inside a runAs block \"the user's sharing rules and object-level and field-level permissions are enforced\", regardless of the test class's sharing mode. On that reading option C — validating field-level permissions — is also true, which makes this a choose-three with four defensible options.\nKeep A as the exam key, but know why it is contested: outside runAs, Apex generally runs in system mode and ignores the running user's object and field permissions, which is the fact the option is reaching for. Inside the block, the documentation says those permissions apply.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_tools_runas.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_perms_enforcing.htm"
+      ],
+      "note": "Key stands, but option A (\"runAs does not enforce user permissions or field-level permissions\") contradicts the current Apex Developer Guide, which states that object-level and field-level permissions are enforced within a runAs block. That also makes option C arguably true, so the choose-three has four defensible options. Flagged as defective rather than re-keyed, because A is the answer the exam tests."
+    },
+    {
+      "id": "43c201b6",
+      "verdict": "reasoning",
+      "explanation": "Of the three options, only isAccessible() names a real mechanism. Enforce Object and Field Permissions documents Schema.DescribeFieldResult.isAccessible() as the check for a field's read access, so calling it before returning the shipment amount is what keeps that field away from sales reps. \"isShareable\" is not an Apex construct, and runAs is a testing method, not a runtime safeguard.\nBe careful about the first complaint in the stem, though: isAccessible() does nothing about it. Records visible to the wrong users is a record-access problem, fixed by the class's sharing declaration (or by running the query in user mode), not by a field describe. No option offered here addresses it.\nOne version note worth carrying: how much Apex enforces by default has moved. In API version 66.0 and earlier Apex runs in system mode by default; in 67.0 and later it runs in user mode, so the running user's permissions and field-level security are enforced unless the code opts into system mode. An @AuraEnabled class that declares no sharing keyword has long used an implicit \"with sharing\".",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_perms_enforcing.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_security_sharing_rules.htm",
+        "https://developer.salesforce.com/docs/platform/lwc/guide/apex-security.html"
+      ],
+      "note": "Answer stands. The old explanation implied isAccessible() fixed both complaints in the stem; it addresses only the field-level one. Nothing in the option set fixes the record-visibility complaint, which needs a sharing declaration or a user-mode query — so the item is defective as printed."
+    },
+    {
+      "id": "28b6b693",
+      "verdict": "reasoning",
+      "explanation": "Option A is the only choice that names a genuine security consideration, and it is the exam key. Option C is disqualified outright — \"isShareable\" does not exist; the Schema describe methods are isAccessible, isCreateable and isUpdateable. Option B is good practice but describes a test, not an implementation concern.\nThe premise inside A has aged, so hold it precisely rather than as a slogan. Secure Apex Classes states that \"In API version 66.0 and earlier, Apex runs in system mode by default\", and that \"In API version 67.0 and later, Apex runs in user mode by default, meaning that the current user's permissions and field-level security (FLS) are enforced during code execution.\" The same page adds that an @AuraEnabled class which sets neither with sharing nor without sharing \"uses a default or implicit value of with sharing\".\nThe durable lesson survives the version change: an LWC that reaches data through Apex does not inherit the UI's security for free, so declare the sharing keyword and the access mode explicitly on every class and query rather than relying on whichever default your API version happens to give you.",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/lwc/guide/apex-security.html",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_enforce_usermode.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_perms_enforcing.htm"
+      ],
+      "note": "Answer stands, but \"Apex runs in system mode\" is version-dependent and is no longer the documented default: from API version 67.0 Apex runs in user mode by default, and an @AuraEnabled class with no sharing keyword already used an implicit \"with sharing\". Explanation rewritten so the option is not learned as a timeless rule."
+    },
+    {
+      "id": "b9762333",
+      "verdict": "reasoning",
+      "explanation": "Ownership data skew is \"when a single user owns more than 10,000 records of an object\", and Salesforce gives two remedies for the parked-leads pattern in this stem. The first is to spread the records: \"Distributing ownership of records across a greater number of users decreases the chance of long-running updates occurring.\" The second is the one that applies when you must keep a dummy owner: \"If you do have a compelling reason for assigning ownership to a small number of users, you can minimize possible performance impacts by not assigning the users to a role\" — which is option D exactly.\nOption A is the intended \"spread the ownership out\" answer, but read it as printed and it says the opposite of the documentation, which names assigning ownership to a small number of users as the risky configuration rather than the fix. Treat A as loosely worded rather than as a rule to memorise.\nThe two rejected options are wrong for specific documented reasons. Salesforce says to keep skewed owners out of public groups that can be the source of a sharing rule, so B makes things worse; and where such a user must have a role, the guidance is to place them in a separate role at the top of the hierarchy and leave them there, not at the bottom, so C is backwards too.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_group_membership_data_skew.htm"
+      ],
+      "note": "Answer stands, but option A as printed inverts the documented remedy — Salesforce prescribes distributing ownership across a greater number of users and describes \"assigning ownership to a small number of users\" as the condition that causes skew. The old explanation read A as \"distributing ownership across many users\", which is not what the option says."
+    },
+    {
+      "id": "9c505fbc",
+      "verdict": "reasoning",
+      "explanation": "All three keyed options are real Enterprise Territory Management capabilities. Salesforce's own comparison of original Territory Management and ETM lists Metadata API Support as No for the original feature and Yes for ETM, Integration with Collaborative Forecasts as No and Yes, and Assignment of Territory on Opportunities as Yes for both (available in ETM since Spring '15).\nThe item is defective, though, because the same table marks the other two options Yes for ETM as well: \"Share a Report / Dashboard Folder with a Territory — Yes\" and \"Create a Public Group with Territory — Yes\". Five options, five true statements, three answer slots.\nIf you want the discriminators that actually separate the two generations, they are the ones the table marks No for original Territory Management: territory models, territory types and priority, multiple hierarchies, audit trail, Metadata API support, Collaborative Forecasts integration, and rule sharing among territories.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=000387747&language=en_US&type=1"
+      ],
+      "note": "Answers stand, but the old explanation asserted that you cannot create a public group with a territory or share a report/dashboard folder with a territory. Salesforce's Territory Management comparison table marks both as available in Enterprise Territory Management, so all five options are true and the choose-three cannot be answered as printed."
+    },
+    {
+      "id": "96a7a404",
+      "verdict": "clarified",
+      "explanation": "An opportunity team is the durable way to bring the product specialist and solution engineer onto this deal. The two mechanisms differ precisely on what happens at a transfer: \"User managed sharing is removed when the record owner changes\", and Salesforce walks through the same behaviour under the hood — \"When a record owner changes, Salesforce deletes its associated sharing rows with Manual row causes.\" Team-based access is not a manual share and is not swept away with them.\nThat matters here because the junior account manager expects the deal to move. Once the opportunity is reassigned, a manual share on it is gone and the specialists silently lose access; the team survives the handover.\nSharing the account instead grants nothing on the opportunity — access flows implicitly from child up to parent, not from parent down to child.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sales.salesteam_def.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing_understanding.htm",
+        "https://resources.docs.salesforce.com/latest/latest/en-us/sfdc/pdf/salesforce_record_access_under_the_hood.pdf"
+      ]
+    },
+    {
+      "id": "dd4f428b",
+      "verdict": "clarified",
+      "explanation": "A sharing set is the scalable answer for site users, and it is configured per profile — \"You can have one sharing set per profile only\" — so a single Delivery mapping covers every user at every distributor instead of 200 per-distributor rules.\nSharing rules are the wrong tool at this scale. Partner users do have roles, but each partner account gets its own three-role hierarchy, so there is no single \"Distributor role\" to target, and a rule per distributor does not scale to 200.\nOne caveat on the mapping. A sharing set grants access to records \"associated with an account or contact that matches the user's account or contact\", and access mappings support indirect lookups. Whether one mapping can reach Delivery records that hang off the customer account rather than the distributor account depends on how the Delivery-to-account relationship is modelled; if the lookup chain does not resolve to the user's own account, the sharing set has to be designed around that. Treat C as the right family of solution rather than a configuration you can copy unexamined.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.networks_setting_light_users.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.networks_partner_roles_overview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "13e3a0cb",
+      "verdict": "clarified",
+      "explanation": "Public Read Only is the setting that satisfies both halves of the requirement. Reps can see every existing lead, which is what stops them entering a duplicate, while edit and reassignment stay with the owner and with users above the owner in the role hierarchy.\nA Private model would hide leads from everyone but their owner and defeat the deduplication goal outright. Public Read/Write hands editing to the whole org, and the transfer variants add reassignment rights the requirement explicitly reserves for the owner. (Note that \"Public Read Only/Transfer\" is not a real Lead setting; the transfer option Salesforce offers is Public Read/Write/Transfer.)",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.security_sharing_owd_about.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.managing_the_sharing_model.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "22d45cc8",
+      "verdict": "clarified",
+      "explanation": "A public group is what you build when the people who need access do not line up with anything the platform already models. Salesforce describes exactly this use: \"Use public groups to streamline sharing records with users in different parts of your company that aren't aligned with a single role.\" Collect the users in the group, then point a sharing rule at it.\nThe role hierarchy models reporting lines, so it cannot express an arbitrary set of users, and a sharing set grants site users access to records tied to their own account or contact — a community mechanism, not a way to hand a group of internal users a set of records.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.user_groups.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.networks_setting_light_users.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "80e1fa53",
+      "verdict": "clarified",
+      "explanation": "Granular locking is the feature that makes large realignments survivable. Without it, the sharing system takes a lock over the whole group-membership table during updates, so unrelated role and group changes queue behind one another and callers see \"could not acquire lock\" errors. With it, \"groups that are in separate hierarchies can be manipulated concurrently\", users can be added to territories and public groups at the same time, and \"a single long-running process, such as a role delete, blocks only a small subset of operations\".\nWorth knowing for current orgs: granular locking is now enabled by default, so this is less a switch you ask Salesforce to flip than a behaviour you design your maintenance processes around. Salesforce publishes a table of which group operations may run concurrently.\nExternal org-wide defaults, skinny tables and Divisions address visibility, query performance and data partitioning respectively — none of them touches recalculation locking.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_group_membership_locking.htm"
+      ]
+    },
+    {
+      "id": "d603efad",
+      "verdict": "clarified",
+      "explanation": "Granular locking replaces the single lock over the entire group-membership table with locks scoped to the parts of the membership graph actually being touched, which is what allows concurrent processing. Salesforce lists the benefits: groups in separate hierarchies can be manipulated concurrently, public groups and roles that do not include territories are not blocked by territory operations, users can be added to territories and public groups at the same time, and user provisioning can run in parallel.\nThe other three are different features. Deferred sharing maintenance suspends recalculation for a planned window rather than parallelising it; parallel sharing rule recalculation speeds up sharing-rule recalculation specifically, not group-membership updates; and implicit sharing is built-in record access between accounts and their children, not a concurrency control.\nNote that granular locking is enabled by default in current orgs — the stem describes the pre-granular-locking behaviour.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_group_membership_locking.htm"
+      ]
+    },
+    {
+      "id": "9dde825b",
+      "verdict": "clarified",
+      "explanation": "Salesforce publishes the concurrency matrix for granular locking, and the row for this scenario is unambiguous: \"Changing customer or partner account owner — Territory creation.\" That single entry is the whole answer; territory creation is the only listed operation that can proceed alongside it.\nRole creation, role deletion and territory deletion all appear elsewhere in the table but not in this row, because changing the owner of a customer or partner account is a form of role reparenting — the partner account's roles move to a new parent — and reparenting still blocks almost all other group updates.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_group_membership_locking.htm"
+      ]
+    },
+    {
+      "id": "ebfaa49e",
+      "verdict": "clarified",
+      "explanation": "Salesforce uses four types of access grant — explicit, group membership, inherited and implicit — and splits them across two families of table. Record-Level Access: Under the Hood defines the Group Maintenance tables as \"Tables that store the data supporting group membership and inherited access grants\", which is options C and A.\nThe division of labour is worth holding onto: the Object Sharing table records grants made to a particular user or group on a particular record, while the Group Maintenance tables record who belongs to which group and who therefore inherits from whom. A query joins the two — record id against Object Sharing, then user or group id against Group Maintenance — so an explicit grant to one user resolves at runtime into access for everyone above them.\nExplicit grants live in the Object Sharing table, and implicit grants are maintained by the system on the objects themselves, so neither belongs in the Group Maintenance tables.",
+      "references": [
+        "https://resources.docs.salesforce.com/latest/latest/en-us/sfdc/pdf/salesforce_record_access_under_the_hood.pdf"
+      ]
+    },
+    {
+      "id": "681f22f4",
+      "verdict": "clarified",
+      "explanation": "Super user access is the feature built for this, and it scales because it is granted per user rather than configured per distributor. Salesforce describes it for Partner Community licences as letting a user \"get insights into the records of other partner users who are at their role level or below them in the account role hierarchy\", covering cases, leads, custom objects and opportunities.\nThat maps onto the requirement exactly. Each partner account has its own Partner User, Partner Manager and Partner Executive hierarchy, so a partner manager with super user access reaches records owned by other partner managers and by partner users at the same distributor, and stops short of the partner executive above them.\nOwnership-based sharing rules would need one rule per distributor across 200 accounts, and a View All permission set would expose every case and container in the org rather than one distributor's.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.networks_partner_super_user_access.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.networks_partner_roles_overview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "e39a74a8",
+      "verdict": "clarified",
+      "explanation": "A file in a private library is visible to its owner and to nobody else. Who Can See My File? makes the point twice over, once for each of the permissions people expect to override it: \"Users with Modify All Data permission have built-in access to files that they don't own… However, if the file is in a private library, then only the file owner has access to it\", and \"Users with View All Data permission can view and preview files that they don't own. However, if the file is in a private library, then only the file owner has access to it.\"\nThe role hierarchy does not enter into it at all — file visibility is not derived from role, so option A is wrong for a different reason than option B.\nOne distinction the stem blurs: a plain upload in Files home is private in the sense that it has not been shared, but the owner plus users with Modify All Data can still find it. Only the private library carves out even those permissions.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?language=en_US&id=sf.collab_files_settings_perms.htm&type=5"
+      ]
+    },
+    {
+      "id": "7afcfb38",
+      "verdict": "clarified",
+      "explanation": "Posting a file to a record's feed puts it in the \"Privately Shared\" state, and Salesforce spells out who that reaches: \"Only the file owner, users with Modify All Data or View All Data permission, and specific file viewers can find and view this file.\" Records are among the entities that pick up viewer permission — \"Groups (including group members) and records have viewer permission for files posted to their feeds\" — so anyone with access to the record can see the file.\nThat makes both A and B correct. The record's Private org-wide default limits who can see the file through the record, but the org-wide View All Data permission reaches it independently.\nIt is not restricted to Susan alone, and the file does not require a shared post link — link sharing is a separate way of making a file privately shared, not a precondition for this one.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?language=en_US&id=sf.collab_files_settings_perms.htm&type=5"
+      ]
+    },
+    {
+      "id": "0f59fb2a",
+      "verdict": "clarified",
+      "explanation": "Turning on encryption for Billing Street, Billing City and Phone through the encryption policy protects data written from that point on; values already stored stay in the clear until they are re-saved or run through background encryption. So the policy change is only half the job, and the second half is a synchronisation step.\nHow that step is triggered has changed since this item was written. Salesforce now supports self-service synchronisation from the Encryption Statistics and Data Sync page in Setup for standard and custom fields, the Attachment Content Body field, and field history and feed tracking — with a limit of once every seven days. For everything outside that list you still contact Salesforce Customer Support. Option A therefore remains correct in substance: an explicit background-encryption pass is required, and Salesforce may still have to run it.\nClassic Encryption is a separate and weaker feature that applies only to custom text fields, so it is not a route to protecting standard Account fields.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=xcloud.security_pe_mass_encryption.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "3f1c2bdd",
+      "verdict": "clarified",
+      "explanation": "Public Read Only gives every internal employee visibility of every lead while keeping edit rights with the owner, which is the baseline this requirement needs. A subset can then be granted edit through sharing rules layered on top — org-wide defaults set the floor, and sharing rules are the exceptions that open access further.\nPrivate would hide leads from everyone but their owners, which is the opposite of \"all employees can view all leads\". Public Read/Write and Public Read/Write/Transfer hand edit, and in the second case transfer, to the whole org, which over-grants.\n(The stem looks garbled: its second sentence repeats \"see leads\" where the requirement it is contrasting must be edit access. Read it as \"a subset of employees should also be able to edit leads\" — that is the only reading on which the four options differ meaningfully.)",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.security_sharing_owd_about.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "d2ab6b1e",
+      "verdict": "clarified",
+      "explanation": "The discriminator here is that support representatives must be able to read the value, not merely that partners must not. That rules out the storage that would otherwise be the obvious choice: in a managed package a protected custom setting is reachable only by Apex inside that package and namespace, and the subscriber cannot read it at all — which hides the key from support staff working in the partner org just as effectively as from the partner.\nAn encrypted field on a packaged custom object keeps the value retrievable while masking it by default: only users with the View Encrypted Data permission see the plain text, and it is masked for everyone else. Grant that permission to the support profile and withhold it from partner profiles and both halves of the requirement are met. A list custom setting protects nothing, and a static variable is not stored data you can look at later.\nWorth stating plainly, because the protection is only as good as the permission hygiene: whoever administers the subscriber org can in principle assign View Encrypted Data, so this design relies on that permission being controlled. Where the value must never be readable by the subscriber at all, protected custom settings or protected custom metadata in a managed package are the stronger option — which is why the related \"how do I secure callout credentials\" item keys those instead.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.cs_schema_settings.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.fields_about_encrypted_fields.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.custommetadatatypes_package_access.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "c0ec1bcc",
+      "verdict": "clarified",
+      "explanation": "View All on Case opens up cases and nothing else, and the detail that decides this item is a documented exception to implicit sharing. Salesforce grants read-only access to a parent account to a user who has access to a child case, contact or opportunity — but the same table lists among that behaviour's conditions: \"Not granted by the View All permission on the child object.\"\nSo the service reps see every case, and still see no accounts, because the Account org-wide default is Private and their case access came from a permission rather than from sharing (D). Contacts controlled by their parent inherit the account's access, so those stay invisible too (B).\nThat is also why C is wrong even though it sounds like the standard implicit-sharing rule: implicit parent access is exactly what View All does not trigger.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_object_relationships_implicit_sharing.htm",
+        "https://help.salesforce.com/s/articleView?id=platform.users_profiles_view_all_mod_all.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "36f6a143",
+      "verdict": "clarified",
+      "explanation": "List views are shown or hidden by their sharing target, and Salesforce describes the available choices as \"All Users, Only Me, or Groups of Users\" — where groups of users covers public groups and roles, including roles and subordinates. Pointing each geography's view at the matching group or role keeps a user's list-view picker down to what is relevant to them.\nIndividual users are not a target: \"sharing a List View with a specific individual user is not natively supported\", and the documented workaround is to wrap that user in a public group — which is option C by another route. Queues are not a list-view sharing target either.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=000387584&language=en_US&type=1",
+        "https://help.salesforce.com/s/articleView?id=platform.user_groups.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "5a108e57",
+      "verdict": "clarified",
+      "explanation": "What the customers are experiencing is the default, and the setting that widens it is Site User Visibility. Salesforce separates the two behaviours: Portal User Visibility means \"portal users in the same customer or partner portal account can see each other\", which is precisely the \"only people in my own account\" symptom; Site User Visibility \"controls whether user sharing is available for authenticated users in your org's sites\", and enabling it exposes the per-site option \"See other members of this site\".\nSo turning on site (community) user visibility is what lets customers see one another — and therefore each other's Chatter posts — beyond their own account. Both settings apply only when the org-wide external default for the User object is Private; if it is Public Read Only, all users already see each other regardless.\nThere is no \"View All for Chatter posts\" setting, Chatter Super User is not the mechanism, and internal-user visibility governs a different direction of the relationship.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.networks_user_sharing.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "fa10f587",
+      "verdict": "clarified",
+      "explanation": "The sharing-set setup page names its own exclusions, and they are exactly the two keyed options. \"The Available Objects list excludes: Objects with an org-wide sharing setting of Public Read/Write\" and \"Custom objects that don't have an account or contact lookup field.\"\nBoth exclusions follow from what a sharing set does. It grants site users access to records associated with the account or contact that matches their own, so a custom object with no account or contact lookup gives the access mapping nothing to follow; and an object already open to everyone has no access left to grant.\nCustom objects as a class are not excluded — they appear in the supported list — and Private is the setting sharing sets exist to extend, not a disqualifier.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.networks_setting_light_users.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "b3fc0de1",
+      "verdict": "clarified",
+      "explanation": "Custom Object Security states the rule for junction objects directly. For an object on the detail side of a master-detail relationship, viewing a record requires \"Read permission and read access to the related master record. If the record has two master records in a many-to-many relationship, the user must have read access to both master records.\"\nThis user has no access to Production Facility at all, so the second condition fails and the junction records are invisible — not partially visible, and not visible minus a link. Detail records also inherit their security from their masters and cannot be permissioned independently, so there is no way to grant the junction on its own.\nAccess in this direction never flows upward either: seeing a junction record would not have granted read on the Production Facility parent, so A is wrong even in the case where the user could see the junction.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.dev_security.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.relationships_manytomany.htm&language=en_US&type=5"
+      ]
+    }
+  ]
+}
