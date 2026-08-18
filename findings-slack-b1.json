@@ -1,0 +1,161 @@
+{
+  "deck": "public/decks/Salesforce_Slack_Consultant_Questions.json",
+  "reviewed": "2026-08-18",
+  "findings": [
+    {
+      "id": "296ced65",
+      "verdict": "reasoning",
+      "explanation": "Of the four options, Compliance Exports is the only one aimed at retrieving message and file data for a legal or regulatory purpose, so it remains the keyed answer. Two cautions matter more than the key here.\nFirst, the terminology is dated. Slack's Guide to Slack import and export tools does not use \"Compliance Exports\" as a current product name. The documented export paths are a standard workspace export of public channels, a self-serve data export tool covering private channels and DMs on Business+ and Enterprise, and the Discovery API export mechanism on Enterprise, which is the route eDiscovery and DLP partners use.\nSecond, and more important: an export retrieves data, it does not preserve it. Slack's actual legal-hold mechanism is a separate, native feature. In an Enterprise organization, someone with the Legal Holds Admin system role can place a legal hold on specific members to preserve their messages and files, and held content is saved regardless of retention settings and regardless of whether members edit or delete it. Data under hold is then read through a JSON export or the Discovery API. That feature is the correct answer to the question as asked, and it does not appear among the options.",
+      "references": [
+        "https://slack.com/help/articles/4401830811795-Create-and-manage-legal-holds",
+        "https://slack.com/help/articles/204897248-Guide-to-Slack-import-and-export-tools"
+      ],
+      "note": "Item is defective: the mechanism Slack actually documents for legal hold — the native Legal Holds feature, driven by the Legal Holds Admin system role — is absent from the option set, so no option is fully correct. The old explanation also claimed Compliance Exports \"allow for the preservation of electronic communications\"; exports retrieve data, legal holds preserve it, and \"Compliance Exports\" is not current Slack terminology."
+    },
+    {
+      "id": "535baa2b",
+      "verdict": "clarified",
+      "explanation": "The Channels tab of the Slack analytics dashboard is the view that reports per-channel usage, and it is the right place to look when deciding how departments are actually using Slack. Slack documents its columns as including Created, Last active, Total membership, Full members, Guests, Messages posted, Members who posted, Members who viewed, and Reactions added. Together those cover both channel creation and channel usage.\nNote one plan limit when reading this data: on the Pro and Business+ plans the Channels tab reports on public channels only. Private-channel analytics are available to owners and admins on Enterprise plans with permission to manage private channels, so on smaller plans a department that works largely in private channels will be under-represented.",
+      "references": [
+        "https://slack.com/help/articles/360057638533-Understand-the-data-in-your-Slack-analytics-dashboard"
+      ]
+    },
+    {
+      "id": "d1ec6012",
+      "verdict": "confirmed",
+      "references": [
+        "https://slack.com/help/articles/212572638-Manage-members-with-SCIM-provisioning"
+      ]
+    },
+    {
+      "id": "d1458b4b",
+      "verdict": "confirmed",
+      "references": [
+        "https://slack.com/help/articles/12914005852819-Slack-data-loss-prevention"
+      ]
+    },
+    {
+      "id": "10bdf793",
+      "verdict": "reasoning",
+      "explanation": "Restricting access by network location is the only one of these four that addresses the requirement at all, so the keyed option stands as the intended answer. Be careful about what Slack actually documents, though.\nSlack's Help Center does not describe a self-serve IP allowlist that limits where members may sign in from. The network-level control it does document is a proxy-based one: an administrator configures an on-premises or cloud proxy to intercept traffic to slack.com and insert the X-Slack-Allowed-Workspaces-Requester and X-Slack-Allowed-Workspaces headers, which list the workspaces employees may reach. That restricts which workspaces are reachable, not the network the user is sitting on. IP allowlisting does appear elsewhere in Slack's platform, but scoped to app OAuth and SCIM tokens rather than to member sign-in.\nAlso note the terminology: Slack now writes \"allowlist\", not \"whitelist\".",
+      "references": [
+        "https://slack.com/help/articles/360024821873-Approve-Slack-workspaces-for-your-network"
+      ],
+      "note": "Answer stands as the best of the four, but the premise is shakier than the old explanation implied: Slack Help does not document an IP allowlist that confines member sign-in to an office network. The documented network control is proxy header based and limits which workspaces are reachable, not the caller's location."
+    },
+    {
+      "id": "96be8a94",
+      "verdict": "confirmed",
+      "references": [
+        "https://slack.com/blog/transformation/teams-to-slack-migration"
+      ]
+    },
+    {
+      "id": "2169924a",
+      "verdict": "reasoning",
+      "explanation": "As an organisational policy this is a reasonable middle path, and it remains the keyed answer: it keeps channel creation open to the people doing the work while giving admins a check on sprawl.\nBe clear about what Slack does and does not provide natively, though. Slack has no built-in request-and-approve workflow for channel creation. What the platform actually exposes is a permission: Workspace Owners and Org Owners adjust which role types can create public channels, create private channels, archive channels and unarchive channels, under Channel Management in workspace settings, or Channel Management Restrictions in organisation settings on Enterprise Grid. Slack does ship approval queues, but for other things — Slack Connect invitations, workspace invitations, and app requests. A propose-then-approve flow for channels has to be run as a process, for example through Workflow Builder or a simple request channel, on top of a permission that restricts who can create.",
+      "references": [
+        "https://slack.com/help/articles/115004988303-Adjust-channel-management-permissions",
+        "https://slack.com/help/articles/360047512554-Use-channel-management-tools"
+      ],
+      "note": "Answer stands as a policy recommendation, but the old explanation presented it as a Slack channel-management setting. There is no native channel-creation approval workflow; Slack's documented setting only controls which role types may create channels."
+    },
+    {
+      "id": "1d57f94c",
+      "verdict": "clarified",
+      "explanation": "Among the roles offered, Org Owner is the one whose scope spans the whole Enterprise organisation rather than a single workspace. Slack documents Org Owners as holding the same level of permissions as the Org Primary Owner, with the exception that they cannot transfer ownership of the org, which puts organisation-wide security policy and compliance work squarely in their remit.\nThe two workspace roles are ruled out by scope: Workspace Owners and Workspace Admins act within one workspace, and Workspace Admins additionally cannot reach the Billing page. Org Admins are genuinely org-level and assist with org settings and policies, but they sit below Org Owners.\nOne detail worth carrying: the single highest role is the Org Primary Owner, of which every Enterprise organisation has exactly one, and only that person can transfer ownership of the org. Org Owner is the right answer here because the Primary Owner is not among the options.",
+      "references": [
+        "https://slack.com/help/articles/360018112273-Types-of-roles-in-Slack"
+      ]
+    },
+    {
+      "id": "e50e9a46",
+      "verdict": "clarified",
+      "explanation": "Checking the audio configuration inside Slack is the right first move, and the only option here that is actual troubleshooting rather than an overreaction.\nSlack's own sequence is worth knowing precisely. It starts even simpler: quit and reopen the desktop app or browser, and if that does not help, restart the device. From there the guidance is to confirm the hardware selection — make sure you have selected the correct microphone and speaker, then test the speaker by clicking Test, which plays a chime if the speaker is unmuted and working. Inside a huddle the same check is available from the three-dots menu as Test Speaker. If audio still fails, the next checks are operating-system microphone permissions and, on Windows, whether the intended headset is the system default output device.",
+      "references": [
+        "https://slack.com/help/articles/115003538426-Troubleshoot-audio-and-video-issues-in-Slack"
+      ]
+    },
+    {
+      "id": "989f370e",
+      "verdict": "clarified",
+      "explanation": "A small set of standing channels plus delegated creation gives a new company structure without freezing it, and it maps onto a setting Slack actually provides.\nThe relevant control is Channel Management in workspace settings, where a Workspace Owner chooses which role types may create public channels, create private channels, archive channels and unarchive channels. On Enterprise Grid the equivalent lives in organisation settings as Channel Management Restrictions. So \"let department heads create additional channels\" is implemented by granting channel-creation to the chosen roles rather than leaving it open to everyone or locking it to executives.\nPair that with a naming convention so the channels that do get created stay findable.",
+      "references": [
+        "https://slack.com/help/articles/115004988303-Adjust-channel-management-permissions"
+      ]
+    },
+    {
+      "id": "d7360bcf",
+      "verdict": "confirmed",
+      "references": [
+        "https://slack.com/help/articles/205138367-Troubleshoot-connection-issues"
+      ]
+    },
+    {
+      "id": "60708c05",
+      "verdict": "confirmed",
+      "references": [
+        "https://slack.com/help/articles/360018112273-Types-of-roles-in-Slack"
+      ]
+    },
+    {
+      "id": "47e8ec41",
+      "verdict": "corrected",
+      "was": "C",
+      "correct": "A",
+      "explanation": "Read the stem literally: it asks which setting adjustment would help. Slack's channel-management settings let a Workspace Owner or Org Owner choose which role types may create public channels, create private channels, archive channels and unarchive channels — reached through Channel Management in workspace settings, or Channel Management Restrictions in organisation settings on Enterprise Grid. Narrowing who may create channels is therefore the only option on this list that names a real setting and that reduces channel proliferation.\nThe two options that sound more balanced are not settings Slack offers. There is no preference anywhere in Slack's channel-management documentation that requires a member to supply a justification or purpose before creating a channel. Nor is there a native policy that archives channels automatically once they go inactive: archiving is a manual action, available to permitted roles individually or in bulk from the channel-management dashboard, and Slack documents no inactivity trigger for it.\nOne caveat on applying this in practice. Slack documents the mechanism, not a ranking of governance strategies, and restricting creation does trade openness for order. Many organisations get a better balance by keeping creation broad and investing in naming conventions and periodic manual archiving instead.",
+      "references": [
+        "https://slack.com/help/articles/115004988303-Adjust-channel-management-permissions",
+        "https://slack.com/help/articles/360047512554-Use-channel-management-tools"
+      ],
+      "note": "The previous key, C, described a setting Slack does not have: no channel-management preference requires a justification when a channel is created. Option D is not a Slack setting either — archiving is manual, with no documented inactivity trigger — so A is the only option naming a real setting adjustment. Item is weak: Slack documents the permission but does not rank channel-governance strategies, and this deck keys the opposite, more permissive answer on two similar questions."
+    },
+    {
+      "id": "6bfcfbed",
+      "verdict": "confirmed",
+      "references": [
+        "https://slack.com/help/articles/360001670528-Security-recommendations-for-approving-apps",
+        "https://slack.com/help/articles/222386767-Manage-app-approval-for-your-workspace"
+      ]
+    },
+    {
+      "id": "6b1ec162",
+      "verdict": "clarified",
+      "explanation": "Channel-level activity is the closest proxy the dashboard offers for collaboration, and the Channels tab is where it lives. Slack documents its columns as including Last active, Messages posted, Members who posted, Members who viewed, Reactions added, Members who reacted and Huddles initiated — a reasonable picture of whether a channel is a live working space or a dormant one.\nWorth knowing when comparing this against the other options: they are not invented. Files uploaded and Messages sent are documented metrics on the Overview tab, and there is separate reporting for apps. The reason to prefer channel engagement is not that the others do not exist, but that a raw per-person message or file count says little about whether people are working together. Note too that on Pro and Business+ the Channels tab covers public channels only.",
+      "references": [
+        "https://slack.com/help/articles/360057638533-Understand-the-data-in-your-Slack-analytics-dashboard"
+      ]
+    },
+    {
+      "id": "cb206cbe",
+      "verdict": "confirmed",
+      "references": [
+        "https://slack.com/help/articles/360018112273-Types-of-roles-in-Slack"
+      ]
+    },
+    {
+      "id": "ff8a88a6",
+      "verdict": "clarified",
+      "explanation": "Org Owner is the right choice here: it is the only option that operates across the entire Enterprise organisation rather than inside one workspace or one slice of it. Slack documents Org Owners as holding the same permissions as the Org Primary Owner, except that they cannot transfer ownership of the org.\nThe alternatives fail on scope. A Workspace Admin acts within a single workspace and cannot even reach the Billing page. Slack's documented role list has no \"User Group Admin\" role — managing user groups is a permission granted to roles, not a role of its own. And an external consultant advises without holding administrative authority.\nFor completeness, the single top role in an Enterprise organisation is the Org Primary Owner, of which there is exactly one, and only that person can transfer ownership.",
+      "references": [
+        "https://slack.com/help/articles/360018112273-Types-of-roles-in-Slack",
+        "https://slack.com/help/articles/201314026-Permissions-by-role-in-Slack"
+      ]
+    },
+    {
+      "id": "79e98f8f",
+      "verdict": "confirmed",
+      "references": [
+        "https://slack.com/help/articles/222386767-Manage-app-approval-for-your-workspace",
+        "https://slack.com/help/articles/360001670528-Security-recommendations-for-approving-apps"
+      ]
+    },
+    {
+      "id": "c2a30421",
+      "verdict": "confirmed",
+      "references": [
+        "https://slack.com/help/articles/115005225987-Manage-a-workspace-on-Enterprise-Grid"
+      ]
+    }
+  ]
+}

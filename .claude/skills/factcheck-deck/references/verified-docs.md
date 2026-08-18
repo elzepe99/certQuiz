@@ -1212,3 +1212,109 @@ All rendered in the browser pane and grepped for the term each one is cited for.
 **Live but wrong page:** platform.sharing_model_fields.htm renders as
 "Organization-Wide Default Access Settings" and never uses the phrase "Grant Access
 Using Hierarchies" — failure pattern 11, caught by grepping the rendered text.
+
+---
+
+# Verified Slack documentation
+
+Added 2026-08-18 during the first Slack pass (Slack Consultant, 37 q). First
+non-Salesforce, non-Databricks vendor in the repo.
+
+## How this vendor fails — tested, per pattern 4a
+
+**`slack.com/help` fails honestly, like `docs.databricks.com` — not like
+`help.salesforce.com`.** Probed a real article against an invented one:
+
+| Probe | Result |
+|---|---|
+| `.../articles/115001915507-Manage-workspace-access-on-Enterprise-Grid` | HTTP 200, full article body |
+| `.../articles/999999999999-Totally-Invented-Article-Slug` | **honest HTTP 404**, no body, no shell |
+
+So a plain status check is reliable and cheap here. No browser rendering needed —
+`WebFetch` returns the real article text, unlike Salesforce Help.
+
+**The Slack-specific catch: the URL slug is cosmetic. Resolution is by numeric id
+alone.** Fetching `115001915507-Totally-Wrong-Slug-Here` returns the genuine
+article, full content, canonical title. Two consequences:
+
+- A citation whose *slug* reads plausibly proves nothing. **Verify by rendered
+  title, never by slug.**
+- A stale slug is **not** a dead link, so do not "repair" one. Slack renames
+  articles under stable ids, and several ids below resolve to titles that differ
+  from their slug — `115001915507` is slugged `...-on-Enterprise-Grid` but titles
+  itself *"Manage workspace access in an Enterprise organization"*, and
+  `115004378828` is slugged `Onboard-your-company-to-Slack` but renders as
+  *"Getting started for workspace creators"*.
+
+**Also established this session, and relevant to the queued admin-deck work:**
+`help.salesforce.com` is **not verifiable via `WebFetch` from a cloud container**.
+The real article `sf.security_networkaccess` and an invented id both return HTTP
+200 with the same "Sorry to interrupt / CSS Error" SPA shell — WebFetch does not
+execute the SPA, so the two are indistinguishable. Salesforce URL checking still
+needs a real browser.
+
+## Settled facts
+
+| Fact | What the documentation says | Article |
+|---|---|---|
+| Role hierarchy | Every Enterprise org has **exactly one Org Primary Owner**; only they can transfer ownership. **Org Owners** hold the same permissions *except* transferring ownership. **Org Admins** sit below, managing org settings and policies | Types of roles in Slack |
+| Workspace Admin and billing | "Workspace Owners can assign Workspace Admins. They help manage members and can perform administrative tasks, but **they can't access the Billing page**" — decisive for the two "no billing access" items | Types of roles in Slack |
+| Roles that do **not** exist | Slack documents **no "Guest Admin" and no "User Group Admin" role.** Guests are *Multi-Channel* / *Single-Channel Guest* account types; managing user groups is a permission, not a role | Permissions by role in Slack |
+| Legal hold | A **native Enterprise feature**, separate from exporting. Someone with the **Legal Holds Admin** system role places a hold; held content is saved "regardless of retention settings or if members edit or delete any content", then read via JSON export or Discovery API | Create and manage legal holds |
+| "Compliance Exports" | **Not current terminology.** The documented export paths are the standard public-channel export, the self-serve data export tool (Business+/Enterprise, covers private channels and DMs), and the **Discovery API** export mechanism (Enterprise) | Guide to Slack import and export tools |
+| Channel-creation settings | The only documented control is **which role types** may *create public channels, create private channels, archive, and unarchive*. Workspace settings → Channel Management; Grid org settings → Channel Management Restrictions | Adjust channel management permissions |
+| **Not documented: justification-on-create** | No Slack setting requires a member to give a reason or purpose before creating a channel. A deck keying this is asserting an invented capability (pattern 2) | Adjust channel management permissions |
+| **Not documented: auto-archive on inactivity** | Archiving is **manual** — individually or in bulk from the channel-management dashboard. Slack documents **no inactivity trigger**. Third-party apps and `admin.conversations.bulkArchive` are the only routes | Use channel management tools |
+| **Not documented: channel-creation approval queue** | Slack ships approval queues for **Slack Connect invitations, workspace invitations, and app requests — not channel creation.** A propose-then-approve flow is a process (Workflow Builder, a request channel), not a setting | Adjust channel management permissions |
+| IP allowlisting for sign-in | **Slack Help does not document a self-serve IP allowlist restricting where members may sign in from.** The documented network control is proxy-based: insert `X-Slack-Allowed-Workspaces-Requester` / `X-Slack-Allowed-Workspaces` headers, which limit *which workspaces* are reachable, not the caller's network. IP allowlisting in Slack docs is scoped to **app OAuth and SCIM tokens**. Terminology is now "allowlist", not "whitelist" | Approve Slack workspaces for your network |
+| Analytics — Channels tab | Documented columns: Created, Workspaces, External organizations, Last active, Total membership, Full members, Guests, Messages posted, Messages posted by members, Members who posted, Members who viewed, Change in members who posted, Reactions added, Members who reacted, Huddles initiated. **On Pro and Business+, public channels only** | Understand the data in your Slack analytics dashboard |
+| Analytics — Overview tab | Total members, Claimed members, Monthly active members, Daily/Weekly/Monthly active people, **Messages sent**, **Files uploaded**. Useful when a deck dismisses those as invented — they are real metrics | Understand the data in your Slack analytics dashboard |
+| SCIM | Provisions and **deactivates** members and Multi-Channel Guests, syncs profile fields and user groups. Business+ and Enterprise (also Free/Pro with a connected Salesforce org). **ADFS does not support automatic de-provisioning** | Manage members with SCIM provisioning |
+| Slack DLP | **Enterprise only.** Scans messages, text-based files and canvases against rules; a DLP Admin chooses whether a rule applies to **Slack Connect conversations**, specific workspaces and conversation types | Slack data loss prevention |
+| App approval | Default is that **members can install apps without approval**. Owners enable approval, pre-approve or restrict apps, and appoint App Managers. Slack: "we review all apps in the Slack Marketplace… **Slack doesn't endorse or certify these apps**" — so directory listing and popularity are explicitly not assurance | Manage app approval / Security recommendations for approving apps |
+| Grid org vs workspace settings | Org policies control workspace preferences; **a lock icon means the preference is locked by an Org Admin**. Unlocked preferences stay adjustable by Workspace Owners/Admins — the documented basis for "global core settings, regional adjustments" | Manage a workspace in an Enterprise organization |
+
+## Confirmed URLs — all rendered and title-checked 2026-08-18
+
+```
+https://slack.com/help/articles/360018112273-Types-of-roles-in-Slack
+https://slack.com/help/articles/201314026-Permissions-by-role-in-Slack
+https://slack.com/help/articles/115005225987-Manage-a-workspace-on-Enterprise-Grid
+https://slack.com/help/articles/115001915507-Manage-workspace-access-on-Enterprise-Grid
+https://slack.com/help/articles/4401830811795-Create-and-manage-legal-holds
+https://slack.com/help/articles/204897248-Guide-to-Slack-import-and-export-tools
+https://slack.com/help/articles/115004988303-Adjust-channel-management-permissions
+https://slack.com/help/articles/360047512554-Use-channel-management-tools
+https://slack.com/help/articles/217626408-Create-guidelines-for-channel-names
+https://slack.com/help/articles/1500000019361-Keep-work-organized-with-channels
+https://slack.com/help/articles/360057638533-Understand-the-data-in-your-Slack-analytics-dashboard
+https://slack.com/help/articles/212572638-Manage-members-with-SCIM-provisioning
+https://slack.com/help/articles/12914005852819-Slack-data-loss-prevention
+https://slack.com/help/articles/222386767-Manage-app-approval-for-your-workspace
+https://slack.com/help/articles/360001670528-Security-recommendations-for-approving-apps
+https://slack.com/help/articles/360000281563-Manage-apps-in-an-Enterprise-organization
+https://slack.com/help/articles/360024821873-Approve-Slack-workspaces-for-your-network
+https://slack.com/help/articles/115003538426-Troubleshoot-audio-and-video-issues-in-Slack
+https://slack.com/help/articles/205138367-Troubleshoot-connection-issues
+https://slack.com/help/articles/360001537467-Guide-to-apps-in-Slack
+https://slack.com/resources/slack-for-admins/launching-slack
+https://slack.com/blog/transformation/teams-to-slack-migration
+```
+
+**Two `slack.com/help` pages that did not carry the claim they looked right for**
+(pattern 11, caught by grepping the rendered text):
+
+- `360001603387-Manage-Slack-connection-issues` renders fine but **never mentions
+  clearing the cache** — it covers app updates, URL allowlisting, WSS domains and
+  antivirus. The page that actually documents "Clear Cache and Restart" as step 1
+  is `205138367-Troubleshoot-connection-issues`.
+- `115004378828-Onboard-your-company-to-Slack` renders as *"Getting started for
+  workspace creators"* and covers initial setup only — **no phased rollout, no
+  role-tailored training, no refreshers.** For rollout and enablement claims use
+  `slack.com/resources/slack-for-admins/launching-slack`.
+
+**Non-help hosts used as citations of record here** — `slack.com/resources/…` and
+`slack.com/blog/…` are Slack-authored but are marketing/guidance, not product
+documentation. Both render, and both are cited only for process guidance (launch
+planning, migration sequencing) that the Help Center does not cover. Prefer a
+`slack.com/help` article whenever one exists.
