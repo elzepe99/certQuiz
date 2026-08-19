@@ -1,0 +1,224 @@
+{
+  "deck": "public/decks/questions_data_architect_merged.json",
+  "reviewed": "2026-08-19",
+  "findings": [
+    {
+      "id": "2720a20e",
+      "verdict": "clarified",
+      "explanation": "The stem names two distinct qualities and each keyed option measures exactly one. Completeness is the share of records where a key field is empty, which a percent-of-blanks report gives directly (C). Consistency is whether the same real value is recorded the same way, which shows up when you group a report by a key field and see how many distinct values it has actually accumulated (B).\nLast-modified dates (A) measure staleness, a third quality nobody asked about. Filling blanks with defaults (D) is remediation — it changes the data instead of reviewing it, and it makes the completeness measurement look better without any of the missing information having arrived.",
+      "references": [
+        "https://architect.salesforce.com/well-architected/trusted/compliant",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm"
+      ]
+    },
+    {
+      "id": "7363aa33",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.custommetadatatypes_overview.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_custommetadatatypes.htm"
+      ]
+    },
+    {
+      "id": "7aacafef",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_techniques_deleting_data.htm",
+        "https://help.salesforce.com/s/articleView?id=xcloud.admin_exportdata.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "22459270",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/asynch_api_planning_guidelines.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_api_loading_data.htm"
+      ]
+    },
+    {
+      "id": "9c969490",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_connector_start.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_external_objects.htm"
+      ]
+    },
+    {
+      "id": "6d6fb137",
+      "verdict": "reasoning",
+      "explanation": "A data dictionary needs both halves of the picture. An entity relationship diagram (C) records how the business entities relate to one another, which is the part no schema dump gives you. The Salesforce Metadata API (D) extracts the technical definitions — objects, fields, types, help text, and the data-classification attributes on each field — so the dictionary reflects what is actually deployed rather than what someone remembers.\nSOQL (A) queries records, not schema, so it cannot describe a field that holds no data yet.\nBe aware this item is loose: option B, a data definition language, is a perfectly ordinary way to capture entity definitions in a data dictionary outside Salesforce, and the stem asks about \"the different applications and systems used within the company\", not about Salesforce alone. B is rejected here only because the item is scoped to Salesforce metadata in practice.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm",
+        "https://architect.salesforce.com/well-architected/trusted/compliant"
+      ],
+      "note": "Item defect: distractor B (a data definition language) is a standard data-dictionary technique for a multi-system landscape, which is what the stem describes. The key is the exam's; the item is not cleanly decidable."
+    },
+    {
+      "id": "0799aef6",
+      "verdict": "clarified",
+      "explanation": "Point-to-point integrations keep systems talking without ever deciding who is right, so every pair can drift independently and the customer sees a different answer depending on which system served them. An MDM solution acting as the customer master fixes the cause: one governed record, survivorship rules that decide which value wins, and centralised integrations so every system reads the same answer.\nImproving the existing links (A) makes the same architecture faster at propagating disagreement. A one-time reconciliation (C) fixes today and nothing after it. Cleansing each system separately (B) leaves all of them independently authoritative, which is exactly the condition producing the complaints.\nThis is an architecture-judgment item; Salesforce documents governance practice rather than naming MDM as the answer here.",
+      "references": [
+        "https://architect.salesforce.com/well-architected/trusted/compliant"
+      ]
+    },
+    {
+      "id": "e3a36fd1",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_general.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_techniques_deleting_data.htm"
+      ]
+    },
+    {
+      "id": "49211aa0",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=000213290&language=en_US&type=1"
+      ]
+    },
+    {
+      "id": "080ab665",
+      "verdict": "clarified",
+      "explanation": "Salesforce's privacy model is built around a single standard entity rather than a preference field on each object. The Individual record is where a person's data privacy and communication preferences live, and the consent data model hangs the rest — authorization form consent, contact point consent, data use purpose — off it. Relating Leads, Person Accounts, Contacts, and Users to Individual records gives one preference store that behaves the same way for every actor type (D).\nCustom fields per object (A) means four copies of the same preference and four places to keep them honest. A bespoke custom object (C) rebuilds Individual with none of the standard consent objects that already work with it. Cases (B) are a service construct and have no role in preference management.",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/data-models/guide/privacy-consent.html",
+        "https://help.salesforce.com/s/articleView?id=platform.individuals_store_data_privacy.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "fc881d63",
+      "verdict": "clarified",
+      "explanation": "The prospects in these CSV files are marketing audience, not sales pipeline — nobody in Sales Cloud works them until one converts. Loading them straight into Marketing Cloud (C) puts the audience where the communications are sent from and keeps the growth out of Sales Cloud storage entirely; a reconciliation process brings across only the prospects that actually become customers.\nRouting the files through CRM Analytics (A) or an external database (B) still needs a second hop into Marketing Cloud and adds a system to operate. Continuing to load Leads and delete them after each sync (D) keeps every one of the storage, automation, and audit costs the stem is trying to escape, and adds a bulk delete every week.\nThis is a cross-cloud architecture-judgment item; Salesforce documents the products rather than ranking these options.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_general.htm",
+        "https://architect.salesforce.com/well-architected/trusted/compliant"
+      ]
+    },
+    {
+      "id": "4c72af32",
+      "verdict": "clarified",
+      "explanation": "External objects hold no data — every report row is fetched live by a web-service callout to the EDW at the moment the report runs. Thousands of reports a day across 10 to 15 external objects therefore turns directly into callout volume, and Salesforce meters it: \"Depending on your qualified Salesforce organization edition, specific governor limits are in place for number of allowed callouts per hour and per day.\" Exceed them and the org becomes \"temporarily unable to access external data sources through Salesforce Connect\" — reporting stops org-wide, not just for the offending report.\nThe maximum records a query returns (A), the server-driven page size (C), and the ceiling on external objects per org (D) are all real limits, but none of them scales with how many times a day the reports run, which is the variable the stem puts in front of you.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=000382494&language=en_US&type=1",
+        "https://help.salesforce.com/s/articleView?id=sf.odata_general_limits.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_external_objects.htm"
+      ]
+    },
+    {
+      "id": "1b5040e4",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_api_loading_data.htm",
+        "https://developer.salesforce.com/blogs/engineering/2013/05/extreme-force-com-data-loading-part-3-suspending-events-that-fire-on-insert"
+      ]
+    },
+    {
+      "id": "660b65ef",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_object_relationships_parent_child_data_skew.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_general.htm"
+      ]
+    },
+    {
+      "id": "b6e90eb0",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm",
+        "https://architect.salesforce.com/well-architected/trusted/compliant"
+      ]
+    },
+    {
+      "id": "6a70c4d2",
+      "verdict": "corrected",
+      "was": "C",
+      "correct": "A",
+      "explanation": "A query timeout on a 50-million-row extract is a selectivity problem, and Salesforce publishes the technique that fixes it. Its LDV extraction guidance has you create an auto-number field with \"Generate Auto Number for existing records\" enabled, add a numeric formula field over it — because \"you cannot use an index with comparison operators such as '<=' or '>' for the text-based auto-number field\" — have Support index that formula field, then extract in ranges: WHERE ExportID__c > 1000000 AND ExportID__c <= 1200000. Each query stays under the index selectivity threshold, so none of them times out. That is option A, described almost word for word.\nAn ETL tool (C) is how you would orchestrate and schedule the extract, but on its own it issues the same unselective SOQL against the same 50 million rows and hits the same timeout — the chunking is the fix, not the tool. The REST API does not \"automatically chunk records by 200\" (B); that number is a query-locator page size and has nothing to do with query execution time. And the SOQL query timeout is not a value Salesforce Support raises on request (D).\nOn a current org, PK Chunking with the Bulk API does the same job with no custom fields, and Salesforce recommends enabling it \"when querying tables with more than 10 million records or when a bulk query consistently times out\". It is not among the options here, but it is what you would reach for first.",
+      "references": [
+        "https://developer.salesforce.com/blogs/engineering/2013/06/extracting-large-data-volume-ldv-in-force-com",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/async_api_headers_enable_pk_chunking.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_infrastructure_indexes.htm"
+      ],
+      "note": "Key moved C to A. Salesforce's own large-data-volume extraction guidance documents the auto-number plus indexed formula field as the chunking technique for exactly this failure, while an ETL tool by itself issues the same unselective query and hits the same timeout. The old explanation dismissed the documented technique as \"fragile to build\"."
+    },
+    {
+      "id": "62817718",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm",
+        "https://architect.salesforce.com/well-architected/trusted/compliant"
+      ]
+    },
+    {
+      "id": "7242428e",
+      "verdict": "clarified",
+      "explanation": "Two different causes need two different fixes. The duplicates and the disagreement about which Account is right come from having no authority: integrating Salesforce with the ERP and naming the ERP the system of truth (B) settles that. The duplicates already in Salesforce, and the ones reps will create tomorrow, need a de-duplication solution plus clear account ownership so somebody is accountable for each record (D).\nA nightly de-dupe and merge job (A) cleans up after a cause nobody addressed. A one-way nightly sync (C) is half of B — it moves data without establishing that the ERP's version wins.\nThis is an architecture-judgment item; Salesforce documents duplicate management and integration mechanisms rather than ranking these pairings.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_duplicaterule.htm",
+        "https://architect.salesforce.com/well-architected/trusted/compliant"
+      ]
+    },
+    {
+      "id": "6df7398a",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_external_objects.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.bigobjects.meta/bigobjects/big_object.htm"
+      ]
+    },
+    {
+      "id": "c9b9df30",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_app_limits_cheatsheet.meta/salesforce_app_limits_cheatsheet/salesforce_app_limits_platform_api.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_general.htm"
+      ]
+    },
+    {
+      "id": "dbda5ce8",
+      "verdict": "clarified",
+      "explanation": "The stem already names PPS as the trusted source for Opportunity Amount, so the design question is not who wins but how to stop the argument. Removing edit access to Amount from sales users through field-level security (C) does that at the platform level, and Forecasts keep reading the same standard Amount field they always did.\nMoving either party to a custom field (A, D) leaves the standard Amount — the field Opportunity Forecasting actually uses — populated by only one of the two, so either forecasts lose the trusted number or they lose the sales users' input entirely. Writing only when Amount is null (B) hands authority to whoever types first, which is the opposite of what the stem says PPS is for.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm",
+        "https://help.salesforce.com/s/articleView?id=platform.users_understanding_license_types.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "cc82d27c",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_api_loading_data.htm",
+        "https://developer.salesforce.com/blogs/engineering/2013/05/extreme-force-com-data-loading-part-3-suspending-events-that-fire-on-insert"
+      ]
+    },
+    {
+      "id": "d944cd7b",
+      "verdict": "reasoning",
+      "explanation": "Native Duplicate Management (A) is the platform answer: matching rules decide what counts as the same customer and duplicate rules alert or block at the moment of entry, in the UI and through the API, without code.\nAn enterprise service bus (B) moves messages between systems and a data warehouse (D) stores copies for analysis; neither compares two customer records or prevents a third.\nOption C names Data.com Clean, which Salesforce has retired — it appears in the Past Product & Feature Retirements list, and its setup article no longer exists. Keep C as the keyed answer because that is what the item tests, but the current equivalent is a third-party enrichment and cleansing service or Data Cloud, and the point that survives is the design one: preventing duplicates at entry and standardising incoming values are two different jobs, and a duplicate rule only does the first.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_duplicaterule.htm",
+        "https://help.salesforce.com/s/articleView?id=005132112&language=en_US&type=1"
+      ],
+      "note": "Answer stands as the exam keys it, but the item is stale: keyed option C names Data.com Clean, a product Salesforce has retired."
+    },
+    {
+      "id": "1cead192",
+      "verdict": "reasoning",
+      "explanation": "Apex can report its own failures by email — a batch job marked Database.Stateful can accumulate failed rows across execute() calls and send them from finish() with Messaging.SingleEmailMessage, which puts the errors in front of the business team without anyone logging into Salesforce (C).\nStoring the leads themselves in a custom object (A) records what did not get processed but reports no reason, and cleansing input with an AppExchange package (D) reduces failures rather than reporting them.\nBe aware this item is weakly constructed. Option B — writing Apex errors to a custom object and reporting on it — is the pattern most production orgs actually use, because it survives inbox rules and supports trend reporting, and it is a direct answer to \"errors should be reported to them\". Nothing in the stem chooses between push and pull, so both B and C are defensible.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_batch_interface.htm"
+      ],
+      "note": "Item defect: distractor B (log Apex errors to a custom object and report on it) answers the stem as well as the keyed option C does, and nothing in the question distinguishes a pushed notification from a queryable error log."
+    },
+    {
+      "id": "ba5e12d5",
+      "verdict": "reasoning",
+      "explanation": "The requirement has two halves — ongoing enrichment and cleansing of 100,000 Accounts, and easy monitoring of data quality metrics — and the item wants the declarative option that covers both rather than code that covers one. Batch Apex (B) and an Account trigger (D) both mean building and maintaining an integration, plus whatever reporting you write on top of it. Prospector (C) is the wrong half of the old product pair: it adds new records rather than cleaning existing ones.\nThe keyed answer names Data.com Clean, and that product no longer exists — Data.com appears in Salesforce's Past Product & Feature Retirements list, and its setup article is gone. As printed, this question has no correct answer on a current org. The durable point is the shape of the right solution: a configured, scheduled enrichment service that writes back match and fill status you can report on, which today means a third-party data quality service or Data Cloud rather than anything native.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=005132112&language=en_US&type=1",
+        "https://architect.salesforce.com/well-architected/trusted/compliant"
+      ],
+      "note": "Item is stale beyond repair: the keyed answer A is Data.com Clean, a retired product, and no remaining option is correct on a current org. Kept as keyed because that is what the exam tests."
+    }
+  ]
+}
