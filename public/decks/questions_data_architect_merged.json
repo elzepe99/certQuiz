@@ -20,7 +20,7 @@
     "optionD": "Use a custom big object to store archived case data.",
     "optionE": "",
     "correct": "D",
-    "explanation": "Big objects are Salesforce's documented store for a long-lived historical archive: they give \"consistent performance, whether you have 1 million records, 100 million, or even 1 billion\", and \"Historical archive\" is one of the three use cases the Big Objects guide names. A 10-year compliance retention of case history is exactly that shape.\nA plain custom object (C) keeps the rows in the transactional store, where the LDV guide's whole remedy is to reduce the number of records the system must process; buying storage (B) does the same thing more expensively. There is no general \"Salesforce Archiving process\" for Case (A) — archiving is something you design, not a switch.\nWorth knowing before you build it: Salesforce does not recommend reporting straight off a big object. View Big Object Data in Reports and Dashboards says that at that scale \"it's not practical to build reports or dashboards directly from that data\", and has you extract a representative subset with Bulk API into a custom object first.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.bigobjects.meta/bigobjects/big_object.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.bigobjects.meta/bigobjects/big_object_query_and_report.htm",
+    "explanation": "Big objects are Salesforce's platform-native store for a long-lived historical archive: they give \"consistent performance, whether you have 1 million records, 100 million, or even 1 billion\", and \"Historical archive\" is one of the three use cases the Big Objects guide names. A 10-year compliance retention of case history is exactly that shape, and it stays inside the org.\nA plain custom object (C) keeps the rows in the transactional store, which is the load the LDV guide's whole remedy is meant to reduce; buying storage (B) does the same thing more expensively.\nOption A is not as empty as it looks — Salesforce Archive is a real, separately purchased product that runs archiving policies to \"regularly offload inactive records, files, and attachments from production\". It is rejected here because it is a licensed add-on rather than something you configure in the org, and because big objects keep the data queryable on-platform for the full retention window.\nWorth knowing before you build it: Salesforce does not recommend reporting straight off a big object. View Big Object Data in Reports and Dashboards says that at that scale \"it's not practical to build reports or dashboards directly from that data\", and has you extract a representative subset with Bulk API into a custom object first.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.bigobjects.meta/bigobjects/big_object.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.bigobjects.meta/bigobjects/big_object_query_and_report.htm\nhttps://www.salesforce.com/platform/data-archiving-solutions/\nhttps://help.salesforce.com/s/articleView?id=xcloud.archive_o_overview.htm&language=en_US&type=5",
     "_cat": "Large Data Volume Considerations"
   },
   {
@@ -643,7 +643,7 @@
     "optionD": "Leverage big object to archive case data and lightning components to show archived data.",
     "optionE": "",
     "correct": "C,D",
-    "explanation": "On-premise/off-platform archival with an integration to surface the data (C) and big objects with Lightning components to display archived cases (D) both move volume off the transactional store while keeping 7-year data accessible. Flat files (A) make the data hard to query, and a standard custom object (B) still consumes storage and degrades performance at millions of rows.",
+    "explanation": "On-premise/off-platform archival with an integration to surface the data (C) and big objects with Lightning components to display archived cases (D) both move volume off the transactional store while keeping 7-year data accessible. Flat files (A) make the data hard to query, and a standard custom object (B) still consumes storage and degrades performance at millions of rows.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.bigobjects.meta/bigobjects/big_object.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_general.htm",
     "_cat": "Large Data Volume Considerations"
   },
   {
@@ -655,7 +655,7 @@
     "optionD": "Use the Streaming API to send Account and Contact data from Salesforce to the OMS.",
     "optionE": "",
     "correct": "C",
-    "explanation": "Only MDM supports the stated requirements: different systems of record per entity, allowed attribute divergence (different names per system), and a consolidated store with cross-references linking the records. Point-to-point sync (A, B) would overwrite the intentionally divergent names and provides no golden-record linkage, and the Streaming API (D) is one-way event delivery, not reconciliation.",
+    "explanation": "Three things in this stem only MDM delivers together: a different system of record per entity (Salesforce for Leads, the OMS for Accounts and Contacts), deliberate attribute divergence (\"John Doe\" in one system and \"Johnny Doe\" in the other), and a consolidated store that cross-references the same real customer across systems.\nPoint-to-point synchronisation (A, B) fails the second requirement outright — whichever side writes last flattens the other's name — and produces no cross-reference store. The Streaming API (D) delivers event messages one way; it reconciles nothing.\nThis is an architecture-judgment item; Salesforce documents the integration mechanisms rather than naming MDM as the answer to this scenario.\nReferences:\nhttps://architect.salesforce.com/well-architected/trusted/compliant\nhttps://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm",
     "_cat": "Master Data Management"
   },
   {
@@ -667,8 +667,13 @@
     "optionD": "Configure the Salesforce Archiving feature to archive older records and remove them from the data storage limits.",
     "optionE": "",
     "correct": "A,B",
-    "explanation": "Analytics/Reporting Snapshots (B) is the native feature for capturing aggregated point-in-time data on a schedule for trend reporting, and pairing it with a purge of detail records reclaims storage. Scheduled batch Apex that rolls detail into a summary object and deletes the originals (A) achieves the same on-platform. The external Data Loader round-trip (C) is fragile, and there is no general native 'Salesforce Archiving feature' for arbitrary custom records (D). Corrected from the source key.",
-    "_cat": "Large Data Volume Considerations"
+    "explanation": "Reporting Snapshots are the native mechanism for exactly this problem: they \"let you report on historical data\" by saving \"tabular or summary report results to fields on a custom object\" on a schedule. Snapshot the trend data, then purge the detail rows behind it (B). Scheduled batch Apex that rolls detail into a summary object and deletes the originals (A) reaches the same place under your own control.\nData Loader (C) extracts and loads; it does not aggregate, so that round trip cannot produce the summary the stem needs.\nOption D is not the empty distractor it once was. Salesforce Archive is a real, separately purchased product whose policies \"regularly offload inactive records, files, and attachments from production\" and shrink the storage footprint. It is not keyed here because it addresses only half the requirement — storage — and does nothing for the historical trend reporting that is the other half.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=analytics.data_about_analytic_snap.htm&language=en_US&type=5\nhttps://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_analyticsnapshot.htm\nhttps://www.salesforce.com/platform/data-archiving-solutions/",
+    "_cat": "Large Data Volume Considerations",
+    "corrected": {
+      "date": "2026-08-19",
+      "via": "validation",
+      "note": "Answer stands. The old explanation rejected option D on the ground that \"there is no general native 'Salesforce Archiving feature'\" — an invented absence. Salesforce Archive exists as a purchasable product with automated archiving policies that remove records from production."
+    }
   },
   {
     "id": "d48ebc5a",
@@ -679,7 +684,7 @@
     "optionD": "Create a lookup relationship field on contact object.",
     "optionE": "",
     "correct": "A",
-    "explanation": "A many-to-many relationship requires a junction object with two master-detail relationships (to Contact and to Conference__c), letting each contact attend many conferences and each conference include many contacts while enforcing referential integrity. A single master-detail or lookup (B, C, D) can only model a one-to-many relationship.",
+    "explanation": "A many-to-many relationship requires a junction object with two master-detail relationships (to Contact and to Conference__c), letting each contact attend many conferences and each conference include many contacts while enforcing referential integrity. A single master-detail or lookup (B, C, D) can only model a one-to-many relationship.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/relationships_among_objects.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm",
     "_cat": "Data Modeling/Database Design"
   },
   {
@@ -690,9 +695,16 @@
     "optionC": "Load one Account record and one Contact record for each individual consumer.",
     "optionD": "Create one Account and load individual consumers as Contacts linked to that one Account.",
     "optionE": "",
-    "correct": "D",
-    "explanation": "Given the options (no Person Accounts choice), the 'bucket account' pattern, one placeholder Account with consumers loaded as Contacts (D), avoids creating a million Accounts and leverages the standard Contact object. Note: loading ~1M Contacts under a single Account causes severe account data skew (a parent with >10K children) and would, in a real implementation, be solved with Person Accounts instead, flag this as a flawed/limited question.",
-    "_cat": "Data Modeling/Database Design"
+    "correct": "C",
+    "explanation": "Salesforce names option D's design as an anti-pattern by its own worked example. Parent-Child Data Skew describes skew as \"a large number of child records (10,000 or more)\" on one parent, and illustrates it with \"a customer with hundreds of thousands of contacts all assigned to one dummy account\" — which is precisely what loading a million consumers as Contacts under a single Account produces. Every insert in the load contends for the same parent row, and every later visibility change forces Salesforce to scan the whole child set, so the design fails the stem's own \"avoid data loading issues\" test. Even the LDV guide's bucket-account workaround says to \"set up several dummy accounts and distribute the contacts among them\", never one.\nOne Account and one Contact per consumer (C) is the standard business-account B2C model when Person Accounts are not on the table — it is the same shape Person Accounts create internally. No parent carries more than one child, so there is no skew and no load contention, and both standard objects keep their full functionality.\nA custom Individual_Consumer__c object (A) throws away everything that works on Contact. Loading consumers as Accounts with no Contacts (B) leaves nothing to attach activities, campaign members, or cases to.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_object_relationships_parent_child_data_skew.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_general.htm",
+    "_cat": "Data Modeling/Database Design",
+    "corrected": {
+      "date": "2026-08-19",
+      "via": "validation",
+      "note": "Key moved D to C. The deck keyed the single-bucket-account pattern, which is the exact configuration Salesforce's Parent-Child Data Skew page uses as its example of what not to do (\"hundreds of thousands of contacts all assigned to one dummy account\"), and which causes the load contention the stem asks to avoid. The LDV guide's own bucket workaround specifies several dummy accounts, not one.",
+      "from": "D",
+      "to": "C"
+    }
   },
   {
     "id": "e1bb3531",
@@ -703,7 +715,7 @@
     "optionD": "Use the Salesforce CLI to query, export, and import",
     "optionE": "",
     "correct": "A",
-    "explanation": "An ETL tool handles the drastic model/field/picklist remapping, transforms values between orgs, and moves 3M records within the timeline through repeatable jobs. Data Import Wizard (B) is capped well below 3M records and cannot do complex transformation; hand-rolled Bulk API scripts (C) and the CLI (D) are far more effort for a transforming org-to-org migration.",
+    "explanation": "The distinguishing requirement is transformation, not volume: Org B has different objects, fields, and picklist values, so every record has to be remapped in flight. An ETL tool is built for that — extract, transform against the new model, load — and can be re-run repeatedly as the mapping is refined across a two-month window.\nData Import Wizard (B) is limited to a small subset of objects and record counts and performs no transformation. A hand-written Bulk API script (C) and the Salesforce CLI (D) can both move three million records, but you would be building the mapping, value translation, and error handling that the ETL layer already provides.\nThis is a tooling-judgment item — Salesforce documents the mechanisms rather than ranking them for an org split.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_api_loading_data.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/asynch_api_planning_guidelines.htm",
     "_cat": "Data Migration"
   },
   {
@@ -715,7 +727,7 @@
     "optionD": "Create a custom object related to the Invoice object with a picklist field for the Type.",
     "optionE": "",
     "correct": "D",
-    "explanation": "The classic Attachment object does not support custom fields, so the supported pattern is a custom object related to Invoice__c that stores each attachment reference plus a Type picklist, enabling grouped reporting. Options A-C all assume you can add or extend picklists on the Attachment object, which is not possible.",
+    "explanation": "The classic Attachment object does not support custom fields, so the supported pattern is a custom object related to Invoice__c that stores each attachment reference plus a Type picklist, enabling grouped reporting. Options A-C all assume you can add or extend picklists on the Attachment object, which is not possible.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/relationships_among_objects.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm",
     "_cat": "Data Modeling/Database Design"
   },
   {
@@ -727,7 +739,7 @@
     "optionD": "Create a visual force tab with the billing system encapsulated within an iframe.",
     "optionE": "",
     "correct": "C",
-    "explanation": "A mashup surfaces the high-volume billing/invoice data live from the on-premise system inside the customer record without copying 1M+ invoices/year into Salesforce, giving sales the consolidated view while avoiding storage cost and stale data. Migrating invoices in (A) consumes storage and goes stale, and an iframe tab (D) does not present the data in the context of the customer record.",
+    "explanation": "A mashup surfaces the high-volume billing/invoice data live from the on-premise system inside the customer record without copying 1M+ invoices/year into Salesforce, giving sales the consolidated view while avoiding storage cost and stale data. Migrating invoices in (A) consumes storage and goes stale, and an iframe tab (D) does not present the data in the context of the customer record.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_techniques_using_mashups.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_general.htm",
     "_cat": "Large Data Volume Considerations"
   },
   {
@@ -739,7 +751,7 @@
     "optionD": "Create a custom object Invoice__c with a Lookup relationship with Opportunity.",
     "optionE": "",
     "correct": "B",
-    "explanation": "With 12M invoices that live in the ERP and only need to be viewed, an external object (Invoice__x) via OData keeps the data off-platform, zero storage cost and always current, while still letting reps see status and amount on the Opportunity through an external/indirect lookup. Custom objects (C, D) would store 12M rows in Salesforce, and the Streaming API (A) is for event delivery, not displaying invoice history.",
+    "explanation": "With 12M invoices that live in the ERP and only need to be viewed, an external object (Invoice__x) via OData keeps the data off-platform, zero storage cost and always current, while still letting reps see status and amount on the Opportunity through an external/indirect lookup. Custom objects (C, D) would store 12M rows in Salesforce, and the Streaming API (A) is for event delivery, not displaying invoice history.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_external_objects.htm\nhttps://help.salesforce.com/s/articleView?id=platform.platform_connect_about.htm&language=en_US&type=5",
     "_cat": "Large Data Volume Considerations"
   },
   {
@@ -751,7 +763,7 @@
     "optionD": "Recommend app exchange packages to support this requirement.",
     "optionE": "",
     "correct": "C",
-    "explanation": "The Geolocation compound field stores latitude and longitude together and supports DISTANCE/GEOLOCATION functions and proximity queries natively. Separate plain number fields (B) lose the compound behavior, a formula field (A) cannot store user-entered coordinates, and an AppExchange package (D) is unnecessary for a built-in field type.",
+    "explanation": "The Geolocation compound field stores latitude and longitude together and supports DISTANCE/GEOLOCATION functions and proximity queries natively. Separate plain number fields (B) lose the compound behavior, a formula field (A) cannot store user-entered coordinates, and an AppExchange package (D) is unnecessary for a built-in field type.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/compound_fields_geolocation.htm\nhttps://help.salesforce.com/s/articleView?id=platform.custom_field_geolocate_overview.htm&language=en_US&type=5",
     "_cat": "Data Modeling/Database Design"
   },
   {
@@ -763,7 +775,7 @@
     "optionD": "Export data out of Salesforce and send to another team to populate company profile and location data",
     "optionE": "",
     "correct": "C",
-    "explanation": "External data providers (data enrichment services) automatically append authoritative company profile and location attributes to leads at scale, ensuring completeness regardless of source. Manual lookup by reps (A) and hand-off to another team (D) do not scale and are error-prone, and reporting on blanks (B) only identifies the gap.",
+    "explanation": "Leads arriving from many sources will be uneven no matter how carefully the forms are built, so completeness has to come from somewhere other than the source. An external data provider appends authoritative company profile and location attributes automatically as records land (C), which is the only option that scales with lead volume.\nAsking reps to look the data up (A) and shipping exports to another team (D) both put a human in the path of every record. Reporting on blanks (B) measures the gap accurately and closes none of it.\nThis is a data-quality judgment item; Salesforce documents enrichment products rather than naming this as the answer.\nReferences:\nhttps://architect.salesforce.com/well-architected/trusted/compliant\nhttps://help.salesforce.com/s/articleView?id=005132112&language=en_US&type=1",
     "_cat": "Master Data Management"
   },
   {
@@ -775,8 +787,13 @@
     "optionD": "Standard list view in-line editing.",
     "optionE": "",
     "correct": "C,D",
-    "explanation": "Collapsing Venue into a picklist raises picklist-specific considerations: the Bulk API restricts how new/unrestricted picklist values are handled during high-volume loads (C), and standard list-view inline editing of a picklist can introduce unvalidated values without governance (D). Master-detail limits (A) and storage (B) are not specific to the picklist denormalization decision. Note: this is a poorly constructed source question, flag for review.",
-    "_cat": "Data Modeling/Database Design"
+    "explanation": "Collapsing Venue from a related object into a picklist on Conference trades relational integrity for a value list, and the consequences are all about how that value list behaves under volume. Loading hundreds of thousands of Conferences a year through the Bulk API puts every Venue value through picklist handling on insert (C), and a picklist is inline-editable from a standard list view (D), so a value can be changed in bulk by anyone with edit access and no relationship to protect it.\nMaster-detail limits (A) stop applying the moment the relationship is removed, and org storage (B) goes down, not up, when two objects become one.\nBe aware this is a weakly constructed item. Neither keyed consideration is stated as a documented rule anywhere in Salesforce's picklist or Bulk API guidance, and the two remaining options are rejected on relevance rather than on any documented fact. The underlying design point — that twenty stable Venues are better modelled as a picklist than as a lookup that 20,000 records each point at — is sound and is documented, as concentrating that many children on one lookup target is textbook lookup skew.\nReferences:\nhttps://developer.salesforce.com/blogs/engineering/2013/04/managing-lookup-skew-to-avoid-record-lock-exceptions\nhttps://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/asynch_api_planning_guidelines.htm",
+    "_cat": "Data Modeling/Database Design",
+    "corrected": {
+      "date": "2026-08-19",
+      "via": "validation",
+      "note": "Item defect: neither keyed consideration (Bulk API picklist limitations, list-view inline editing) corresponds to a documented Salesforce rule, and the distractors are rejected on relevance rather than fact. The key is the exam's; the item is not decidable from documentation."
+    }
   },
   {
     "id": "8060db43",
@@ -787,7 +804,7 @@
     "optionD": "Use the Bulk API in parallel mode.",
     "optionE": "",
     "correct": "C",
-    "explanation": "PK Chunking splits a massive extract into sequential batches by record-ID ranges, letting the Bulk API process each chunk efficiently and avoiding the query timeouts that occur on full table scans of 100M rows. Plain Bulk API parallel mode (D) and successive REST queries (B) still risk timeouts at that volume, and an AppExchange tool (A) adds cost without changing the underlying limits.",
+    "explanation": "PK Chunking is built for this exact volume. The Bulk API guide says it \"splits bulk queries on large tables into chunks based on the record IDs, or primary keys, of the queried records\", and recommends enabling it \"when querying tables with more than 10 million records or when a bulk query consistently times out\". At 100 million records both conditions apply.\nBulk API in parallel mode without chunking (D) still issues one query across the whole table, which is what times out. Successive REST queries (B) page through the same full scan more slowly. A third-party tool (A) runs on the same API and inherits the same limits.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/async_api_headers_enable_pk_chunking.htm",
     "_cat": "Data Migration"
   },
   {
@@ -799,7 +816,7 @@
     "optionD": "Use a third-party AppExchange app to capture changes.",
     "optionE": "",
     "correct": "C",
-    "explanation": "Event Monitoring exposes login, logout, download, API, and package-install events through Event Log Files (and real-time event objects), purpose-built for this audit requirement. Field Audit Trail (A) tracks field value history, not user actions; custom triggers (B) cannot capture login/logout/download events; an AppExchange app (D) is unnecessary given the native capability.",
+    "explanation": "Event Monitoring exposes login, logout, download, API, and package-install events through Event Log Files (and real-time event objects), purpose-built for this audit requirement. Field Audit Trail (A) tracks field value history, not user actions; custom triggers (B) cannot capture login/logout/download events; an AppExchange app (D) is unnecessary given the native capability.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/using_resources_event_log_files.htm\nhttps://www.salesforce.com/platform/shield/",
     "_cat": "Data Governance"
   },
   {
@@ -811,7 +828,7 @@
     "optionD": "Increase CPU for the Salesforce org.",
     "optionE": "",
     "correct": "B",
-    "explanation": "Granular locking changes how Salesforce locks group-membership/role structures so concurrent membership updates and sharing recalculations no longer take a single broad lock, eliminating the 'unable to lock row' contention during user/territory changes. Reducing concurrency (A) is a workaround that hurts throughput, and CPU/Splunk (C, D) do not address row-lock semantics.",
+    "explanation": "Moving users between territories rewrites group membership, and Salesforce \"locks the tables holding group membership information during updates to prevent incompatible simultaneous updates\" — which is where the lock errors come from. Granular locking is the mechanism that narrows those locks: it allows \"some group maintenance operations to proceed simultaneously if there's no hierarchical or other relationship between the roles or groups involved\", so separate role hierarchies and territory-free groups stop blocking each other.\nReducing concurrency (A) trades the error for a slower process. Splunk (C) and more CPU (D) address neither the lock semantics nor the tables involved.\nOne currency note: Salesforce now documents granular locking as the default behaviour rather than something an admin switches on, so on a current org the diagnosis matters more than the toggle.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_group_membership_locking.htm",
     "_cat": "Data Modeling/Database Design"
   },
   {
@@ -823,7 +840,7 @@
     "optionD": "Create an account plan object with a lookup relationship to Account with validation rules to enforce the Account association.",
     "optionE": "",
     "correct": "D",
-    "explanation": "A lookup relationship lets Account Plan keep its own OWD/sharing model (the differing accessibility requirement), and a validation rule enforcing a non-null Account makes the relationship effectively required. Master-detail (A, B) forces the plan to inherit the Account's sharing, violating the accessibility difference, and a lookup without enforcement (C) fails the 'each plan must have an Account' rule.",
+    "explanation": "A lookup relationship lets Account Plan keep its own OWD/sharing model (the differing accessibility requirement), and a validation rule enforcing a non-null Account makes the relationship effectively required. Master-detail (A, B) forces the plan to inherit the Account's sharing, violating the accessibility difference, and a lookup without enforcement (C) fails the 'each plan must have an Account' rule.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/relationships_among_objects.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm",
     "_cat": "Data Modeling/Database Design"
   },
   {
@@ -835,7 +852,7 @@
     "optionD": "Create a text field and make it an external ID.",
     "optionE": "",
     "correct": "A",
-    "explanation": "A restricted picklist enforces the 10 valid values (data quality) and avoids the lookup-driven data skew that would occur if 200,000 Opportunities all pointed at one of 10 ShippingStatus__c records (~20K children each). A lookup or master-detail (B, C) creates exactly that child-record concentration, and a free-text field (D) provides no value control.",
+    "explanation": "A restricted picklist enforces the 10 valid values (data quality) and avoids the lookup-driven data skew that would occur if 200,000 Opportunities all pointed at one of 10 ShippingStatus__c records (~20K children each). A lookup or master-detail (B, C) creates exactly that child-record concentration, and a free-text field (D) provides no value control.\nReferences:\nhttps://developer.salesforce.com/blogs/engineering/2013/04/managing-lookup-skew-to-avoid-record-lock-exceptions\nhttps://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm",
     "_cat": "Data Modeling/Database Design"
   },
   {
@@ -847,7 +864,7 @@
     "optionD": "Defer roll-up summary fields calculation during data migration.",
     "optionE": "",
     "correct": "C",
-    "explanation": "Inserting child Contacts forces locks on the parent Account so its roll-up can recompute; running the load in serial mode with smaller batches ensures only one batch touches a given parent at a time, eliminating contention. Parallel mode (B) still allows concurrent batches to hit the same parent, and roll-up summary recalculation cannot simply be deferred during a load (D).",
+    "explanation": "Every Contact insert has to lock its parent Account so the roll-up summary can recompute. In parallel mode, several batches can hold contacts for the same Account at once, and one of them loses the race. Serial mode processes \"one batch must complete before the next batch starts\", and a smaller batch holds each parent lock for less time — which is the Bulk API guide's own remedy when lock timeouts survive batch reorganisation (C).\nParallel mode with smaller batches (B) shrinks the window without removing the overlap. The Data Loader (A) runs on the same APIs and changes nothing about locking. And there is no defer-roll-up-summary control (D) — deferral exists for sharing calculations, not for roll-ups.\nThe cheaper fix to reach for first, if you control the file: sort the Contacts by AccountId so all children of one Account land in the same batch, which the guide recommends before dropping to serial mode.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/asynch_api_planning_guidelines.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_api_loading_data.htm",
     "_cat": "Data Migration"
   },
   {
@@ -859,7 +876,7 @@
     "optionD": "Sales cloud license",
     "optionE": "",
     "correct": "B",
-    "explanation": "Service Cloud licenses provide case management, knowledge/white-paper, entitlement, and service-contract (fee-based support) capabilities plus standard CRM objects. Sales Cloud (D) lacks the service-specific objects, Platform Starter (A) is limited to one custom app, and 'Salesforce license' (C) is a generic platform license that doesn't specifically target service entitlements.",
+    "explanation": "The requirement that decides this is fee-based support: service contracts and entitlements are Service Cloud functionality, and the Service Cloud feature license is what turns them on for a user. Case management and knowledge for the white papers come with it.\nA Lightning Platform Starter licence (A) does not include the standard CRM service objects. Sales Cloud (D) is the wrong half of the product. The plain \"Salesforce\" user licence (C) is the base licence Service Cloud sits on top of, so naming it alone leaves the entitlement capability unaccounted for.\nLicensing is the area of Salesforce that changes most often and is packaged commercially rather than documented as a rule, so verify the current bundle against Salesforce's licence documentation before relying on this.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=platform.users_understanding_license_types.htm&language=en_US&type=5",
     "_cat": "Salesforce Data Management"
   },
   {
@@ -871,8 +888,13 @@
     "optionD": "Defer sharing calculations of the Salesforce Org.",
     "optionE": "Deactivate approval processes and workflow rules.",
     "correct": "B,D,E",
-    "explanation": "Dropping custom indexes during the load avoids index-maintenance overhead on every insert (B), deferring sharing calculations prevents per-record sharing recalculation (D), and deactivating approval processes/workflow rules stops automation from firing on each row (E), all of which speed a bulk load. Time-zone review (A) and whether the legacy system is in use (C) do not affect load performance.",
-    "_cat": "Data Migration"
+    "explanation": "Two of the three are documented word for word in the LDV guide's Loading Data from the API: \"Use the defer sharing calculation permission to defer sharing calculations until after all data has been loaded\" (D), and \"Disable Apex triggers, workflow rules, and validations during loads; investigate the use of batch Apex to process records after the load is complete\" (E). Salesforce's own Extreme Data Loading series adds that sharing rules and complex relationships should be configured after the load rather than before it.\nThe time zone of the loading user (A) affects how date values are interpreted, not throughput. Whether the legacy system is still running (C) is a cutover question, not a performance one.\nOption B is the item's weak point: removing custom indexes before a load is not among the pre-load steps Salesforce documents. Its published lean-configuration advice covers the sharing model, sharing rules, object relationships, workflow, validation, and triggers — indexes are discussed only as something to add for query speed.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_api_loading_data.htm\nhttps://developer.salesforce.com/blogs/engineering/2013/04/extreme-force-com-data-loading-part-2-load-into-a-lean-salesforce-configuration\nhttps://developer.salesforce.com/blogs/engineering/2013/05/extreme-force-com-data-loading-part-3-suspending-events-that-fire-on-insert",
+    "_cat": "Data Migration",
+    "corrected": {
+      "date": "2026-08-19",
+      "via": "validation",
+      "note": "Answer stands as keyed, but option B is unsupported: the old explanation asserted that dropping custom indexes avoids per-insert index maintenance, and that step does not appear in Salesforce's documented pre-load configuration advice."
+    }
   },
   {
     "id": "d5dd4ffc",
@@ -883,7 +905,7 @@
     "optionD": "Create a Dashboard using Analytics Cloud that will allow the user to create ad-hoc lenses and drill down.",
     "optionE": "",
     "correct": "D",
-    "explanation": "CRM Analytics supports interactive exploration, ad-hoc lenses, drill-down, and on-the-fly filtering on mobile, exactly the experience requested. Standard report-based dashboards (C) are largely static and cannot create ad-hoc lenses, and external-tool approaches (A, B) add integration/security overhead and a non-native mobile experience.",
+    "explanation": "The requirement is exploration, not display: drill down, build a view on the spot, add an ad-hoc filter from a phone. CRM Analytics (Analytics Cloud) is the Salesforce product built for that interaction model, with lenses created on the fly against a dataset (D).\nA standard dashboard (C) renders components from saved reports with filters an admin defined in advance; a user cannot invent a new lens from it. The external-tool options (A, B) put the data and the security model outside Salesforce and hand the user a non-native mobile experience.\nProduct naming here has moved more than once — Wave, Einstein Analytics, Tableau CRM, CRM Analytics — so read option D as naming the Salesforce analytics product rather than a current brand.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.bi_dev_guide_ext_data.meta/bi_dev_guide_ext_data/bi_ext_data_overview.htm",
     "_cat": "Salesforce Data Management"
   },
   {
@@ -895,7 +917,7 @@
     "optionD": "Set up a custom profile for data migration user and assign view encrypted data.",
     "optionE": "",
     "correct": "D",
-    "explanation": "With Classic Encryption, the 'View Encrypted Data' permission lets a user see and export decrypted values, so granting it to the export user resolves the issue, best delivered via a dedicated custom profile (D), since standard profiles have limited editability and shouldn't be repurposed (A). A duplicate plaintext field (B) exposes sensitive data and wastes storage, and custom Apex decryption (C) is unnecessary. Corrected from the source key, which contradicted its own explanation.",
+    "explanation": "Classic Encryption masks an encrypted custom field's value from anyone without the \"View Encrypted Data\" permission, and an export runs as the exporting user, so the export inherits that masking. Granting View Encrypted Data to the user that runs the weekly export is what makes the exported values readable.\nThe reason to build a custom profile (D) rather than reuse a standard one (A) is that standard profiles cannot be edited — permissions on them are fixed, so there is nowhere to add the permission. Copying plaintext into a second field (B) defeats the encryption entirely and doubles the exposure. Decrypting in Apex (C) rebuilds a permission the platform already has.\nWorth noting: this item is about Classic Encryption, a legacy feature. Shield Platform Encryption handles the same problem through a different permission model.\nReferences:\nhttps://www.salesforce.com/platform/shield/\nhttps://help.salesforce.com/s/articleView?id=platform.users_understanding_license_types.htm&language=en_US&type=5",
     "_cat": "Data Governance"
   },
   {
@@ -907,7 +929,7 @@
     "optionD": "Create an Apex trigger to synchronize the Product Family standard picklist field on the Product object.",
     "optionE": "",
     "correct": "B",
-    "explanation": "A self-referential lookup pointing each Product to its parent (B) creates a hierarchy on the standard object, mirroring a tree structure from the product master. Referencing a child (A, C) is backwards for a parent-child tree, master-detail isn't supported as a self-relationship on Product, and the Product Family picklist (D) is a flat categorization, not a hierarchy.",
+    "explanation": "A hierarchy is expressed by pointing each record at its parent, so a self-referential custom lookup on Product2 that references the parent Product (B) reproduces the tree from the master system, and each product's children fall out as its related list.\nPointing at a child (A, C) can only ever record one child per product, which is the wrong end of a one-to-many. Master-detail is not available here for a second reason: Product2 is one of the standard objects that cannot sit on the detail side of a master-detail relationship. The Product Family picklist (D) is a flat category, not a hierarchy, and no trigger makes it into one.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/relationships_among_objects.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm",
     "_cat": "Data Modeling/Database Design"
   },
   {
@@ -919,7 +941,7 @@
     "optionD": "Full name.",
     "optionE": "",
     "correct": "A",
-    "explanation": "A global unique customer number (golden-record key) is a stable, system-independent identifier that links the same customer's records across billing, support, and CRM for cross-system reporting. Email, phone, and name (B, C, D) are mutable and non-unique, so they cannot reliably correlate records.",
+    "explanation": "Cross-system reporting needs a key that means the same thing in every system and never changes. A global unique customer number issued by the MDM hub is that key: it is the golden record's identifier, and each source system's record id maps to it, so a report can join billing, support, and CRM rows for one customer.\nEmail (B), phone (C), and full name (D) are all attributes a customer can change, share, or duplicate. Joining on any of them produces both missed matches and false ones, which is the problem MDM was brought in to solve.\nAn external ID field on the Salesforce side is where that key lives — external ID fields are indexed and support upsert, which is what keeps the mapping usable during integration.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_infrastructure_indexes.htm",
     "_cat": "Master Data Management"
   },
   {
@@ -931,7 +953,7 @@
     "optionD": "Skinny tables are kept in sync with changes to data in the source tables.",
     "optionE": "Skinny tables do not include records that are available in the recycle bin.",
     "correct": "A,D,E",
-    "explanation": "(Variant of the 'What makes skinny tables fast?' question.) Skinny tables hold frequently used fields to avoid joins (A), are auto-synced with the source object (D), and exclude soft-deleted/recycle-bin records (E). They are confined to a single object (not multiple, C) and are not a mechanism for indexing multi-select picklists (B).",
+    "explanation": "All three keyed properties are stated on the Skinny Tables page. Salesforce \"can create skinny tables to contain frequently used fields and to avoid joins\" (A) — the join avoided is between an object's base table and its custom-field table. \"Skinny tables are kept in sync with their source tables when the source tables are modified\" (D). And they \"omit soft-deleted records\", so recycle-bin rows never enter a scan (E).\nOption C inverts the documented rule: \"Skinny tables can't contain fields from other objects.\" Option B invents a capability — a skinny table is a denormalised copy, not an indexing mechanism, and multi-select picklists are not something it indexes.\nTwo details worth carrying: the documented cap is 200 columns, and you cannot build one yourself — \"You can't create, access, or modify skinny tables yourself\"; Salesforce Customer Support enables them.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_infrastructure_skinny_tables.htm",
     "_cat": "Large Data Volume Considerations"
   },
   {
