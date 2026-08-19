@@ -1,0 +1,77 @@
+{
+  "deck": "public/decks/questions_data_architect_merged.json",
+  "reviewed": "2026-08-19",
+  "findings": [
+    { "id": "7677c4b0", "verdict": "clarified",
+      "explanation": "Monitoring means something that keeps producing numbers without anyone remembering to run it. Reports and dashboards built on the quality dimensions the org cares about (B) do that natively, and the Data Quality Analysis Dashboards app from Salesforce Labs (C) packages the same idea — formula fields that score completeness on Leads, Accounts, Contacts, Opportunities and more, surfaced as dashboards — free, and installable without building it yourself.\nCustom objects and fields to \"identify issues\" (A) is a build with no measurement attached. Exporting and checking outside Salesforce (D) is a one-off audit that tells the sales managers nothing next month.",
+      "references": [
+        "https://appexchange.salesforce.com/appxListingDetail?listingId=a0N300000016cshEAA",
+        "https://architect.salesforce.com/well-architected/trusted/compliant"
+      ] },
+
+    { "id": "086174ae", "verdict": "clarified",
+      "explanation": "Salesforce's default advice runs the other way — \"Unless the data absolutely needs to reside in Salesforce, consider data virtualization with Salesforce Connect instead\", because \"More data in your organization ultimately leads to larger data volumes, which can adversely affect performance and add technical debt.\" What makes this stem an exception is its third requirement.\nReporting alone might survive virtualization. Programmatic aggregation and workflow participation do not: external objects do not support Apex triggers, and the automation surface over them is narrow. Once developers need to aggregate the records in Apex and feed them into workflows, the data has to be persisted in Salesforce objects (D).\nBidirectional and unidirectional (A, B) describe which way data flows, not whether it is stored — they answer a different question than the one asked.",
+      "references": [
+        "https://architect.salesforce.com/decision-guides/data-integration",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_external_objects_considerations.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_external_objects.htm"
+      ] },
+
+    { "id": "93c1c39f", "verdict": "reasoning",
+      "explanation": "Field-level audit and recovery means keeping the old values, not just the current ones, and keeping them long enough to recover from something noticed weeks later. That is a storage question before it is a tooling one, so projecting the storage the retained history and backup copies will consume is the design consideration the plan turns on (C).\nPurging old data (A) is the opposite of what a recovery plan needs. A weekly export (D) has a seven-day blast radius and no field-level granularity — it restores a record as it was last Saturday, not the one field somebody corrupted on Wednesday.\nBe aware the item is loose. Option B, an AppExchange backup package, is how most orgs actually get granular field-level recovery, and it answers \"what should the architect consider\" nearly as directly as C does. C is keyed because it names a planning input rather than a product, but the two are not cleanly separated by the stem.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=000383595&language=en_US&type=1",
+        "https://help.salesforce.com/s/articleView?id=xcloud.admin_exportdata.htm&language=en_US&type=5"
+      ],
+      "note": "Item defect: distractor B (an AppExchange backup package) is a reasonable answer to \"what should the architect consider\" for granular field-level recovery, and nothing in the stem separates a planning input from a tooling choice." },
+
+    { "id": "5f012203", "verdict": "clarified",
+      "explanation": "Two of the four requirements pick the relationship between them. Access parity — VTOTime__c must be viewable and editable exactly as its Project__c is — comes free with master-detail, because detail records \"inherit the master's sharing and security settings\". Total hours on the Project record needs a roll-up summary, and roll-up summary fields require a master-detail relationship. Both point at C.\nThe direction matters and options D and A get it backwards: the master-detail field lives on the detail object, so it belongs on VTOTime__c pointing at Project__c, not the reverse. And a formula field on Project__c (B) evaluates against its own record — it cannot sum values across child records, which is precisely the job roll-up summary exists for.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/relationships_among_objects.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm"
+      ] },
+
+    { "id": "c89f52dc", "verdict": "reasoning",
+      "explanation": "Salesforce requires approval before you load-test the platform, and the requirement is concrete: \"Submit an LAP request for approval at least one week before the testing date\", with a test plan document, dates, sandbox org id, business scenario and justification. \"All tests must be pre-approved. Unapproved testing is subject to throttling or blocking.\" That settles B. And the applications worth putting through this are the ones whose behaviour is not already known — heavy custom code, or large data volumes (C).\nOption A is not merely an overstatement; it describes something Salesforce forbids. \"Because Salesforce is a multitenant platform, performance testing is not permitted in production environments. Use a full copy sandbox for testing\", and \"scale tests are only permitted in sandboxes.\" Option D fails for the reason a full copy sandbox is specified in the first place: a sandbox with different data volumes is not a predictor of production.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=000387059&language=en_US&type=1",
+        "https://developer.salesforce.com/blogs/2020/09/introduction-to-performance-testing"
+      ],
+      "note": "Answer stands. The old explanation rejected option A with \"not all apps must be tested in both environments\", which leaves a learner believing production performance testing is sometimes required. Salesforce does not permit performance testing in production at all — it is sandbox-only, and every test needs prior approval." },
+
+    { "id": "228d9ec1", "verdict": "clarified",
+      "explanation": "Two systems are live and both can write, so the first thing to settle is who is right today: naming the legacy CRM the system of record for the transition period (B) removes the ambiguity while the remaining users are still on it. The second is who will be right tomorrow, per object and per field, as functionality moves across — that is what an MDM plan agreed with stakeholders gives you (C), and it is the part that survives the legacy system's retirement.\nReplicating legacy changes into Salesforce (A) is a mechanism you might well implement, but it presumes the authority question is already answered. Refusing to connect the two CRMs (D) is a routing rule, not a governance decision, and it leaves the ERP mediating conflicts nobody has adjudicated.\nThis is an architecture-judgment item; Salesforce documents the integration mechanisms rather than ranking these choices.",
+      "references": [
+        "https://architect.salesforce.com/decision-guides/data-integration",
+        "https://architect.salesforce.com/well-architected/trusted/compliant"
+      ] },
+
+    { "id": "c04b9186", "verdict": "clarified",
+      "explanation": "\"All systems have access to the same customer information\" is a consistency requirement, and consistency needs an arbiter. An MDM strategy supplies one: a golden customer record with survivorship rules deciding which system's value wins for each attribute, which every system then reads (B).\nDeclaring Salesforce the system of record for everything (A) is a decision made before looking at which system is actually authoritative for which data. Loading the customer data into every system (C) creates the copies that drift. Letting each system own what it generates (D) is a reasonable-sounding rule that reproduces exactly the silos the stem is complaining about — the customer's address exists in three places and no rule says which one is current.\nThis is an architecture-judgment item; Salesforce documents integration mechanisms rather than naming MDM as the answer here.",
+      "references": [
+        "https://architect.salesforce.com/well-architected/trusted/compliant",
+        "https://architect.salesforce.com/decision-guides/data-integration"
+      ] },
+
+    { "id": "6aec9626", "verdict": "clarified",
+      "explanation": "Defining quality standards means naming the dimensions you will hold the data to and how each is measured. Duplication standards and matching rules (A) define what counts as the same record. Timeliness and consistency (C) cover how current a value must be and whether the same fact is recorded the same way everywhere. Completeness and accuracy (E) cover whether required information is present and correct — the two complaints the stem actually names.\nPicking key fields in a staging database (B) and choosing an ETL tool (D) are migration decisions. They matter, but they belong to how data moves, not to what \"good\" means, and neither would appear in a standards document.\nThis is a definitional item drawn from general data-governance practice rather than a Salesforce rule.",
+      "references": [
+        "https://architect.salesforce.com/well-architected/trusted/compliant",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_duplicaterule.htm"
+      ] },
+
+    { "id": "82f8541b", "verdict": "clarified",
+      "explanation": "Leads, opportunities, and orders are sales objects, and the Partner Community licence is the external licence that carries them along with reports and dashboards in the site (D). That combination is what a channel sales portal for resellers needs, and it is the line that separates this licence from the customer-facing ones.\nCustomer Community and Customer Community Plus (A, C) are built for service — cases, knowledge, orders — and do not extend to leads and opportunities. Lightning External Apps Starter (B) is sized for custom apps rather than CRM sales objects with reporting.\nThe stem's fourth requirement — no more than 10 custom objects and no extra file storage — is there to tell you the cheaper external licences are not being ruled out by object count, so the sales objects and reporting are what decide it.\nLicensing is packaged commercially and changes often, so confirm the current Experience Cloud licence comparison before relying on this.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.users_understanding_license_types.htm&language=en_US&type=5"
+      ] },
+
+    { "id": "ce519e3c", "verdict": "clarified",
+      "explanation": "Required on a page layout is a UI rule. It applies to the users looking at that layout and to nothing else, so an integration writing through the API sails past it — which is exactly what is happening here.\nBoth keyed options work at a level the API cannot bypass. Marking the field required at the field level makes it universally required, and a universally required field \"must have a value whenever a record is saved within Salesforce, the Lightning Platform API, Connect Offline, Salesforce for Outlook, the Self-Service portal, or automated processes\" (C). A validation rule rejecting blank values (A) runs on every save path too, and gives a message naming the problem.\nDefaulting a value when the field is blank (B) makes the records look complete while losing the fact that the source system sent nothing — the opposite of ensuring the data comes from the source. Option D is not an approach.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.fields_universally_required_field_considerations.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_order_of_execution.htm"
+      ] }
+  ]
+}

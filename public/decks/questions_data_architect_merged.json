@@ -1614,7 +1614,7 @@
     "optionD": "Export data and check for data completeness outside of Salesforce.",
     "optionE": "",
     "correct": "B,C",
-    "explanation": "Data quality reports and dashboards (B) provide ongoing visibility into completeness, accuracy, and consistency, and the free Data Quality Analysis Dashboards AppExchange app (C) packages metrics that surface duplicate, incomplete, and stale records. Custom objects/fields (A) add complexity without measuring quality, and exporting to check externally (D) is manual and not a repeatable monitoring solution.",
+    "explanation": "Monitoring means something that keeps producing numbers without anyone remembering to run it. Reports and dashboards built on the quality dimensions the org cares about (B) do that natively, and the Data Quality Analysis Dashboards app from Salesforce Labs (C) packages the same idea — formula fields that score completeness on Leads, Accounts, Contacts, Opportunities and more, surfaced as dashboards — free, and installable without building it yourself.\nCustom objects and fields to \"identify issues\" (A) is a build with no measurement attached. Exporting and checking outside Salesforce (D) is a one-off audit that tells the sales managers nothing next month.\nReferences:\nhttps://appexchange.salesforce.com/appxListingDetail?listingId=a0N300000016cshEAA\nhttps://architect.salesforce.com/well-architected/trusted/compliant",
     "_cat": "Salesforce Data Management"
   },
   {
@@ -1626,7 +1626,7 @@
     "optionD": "Persistence",
     "optionE": "",
     "correct": "D",
-    "explanation": "Persistence stores the IoT records in Salesforce objects so they can be reported on, aggregated by Apex, and used in workflows, requirements that virtualization (external objects) cannot fully meet because external objects have reporting and automation limitations. Persisting via Bulk API/Platform Events also keeps API and performance limits manageable for the 100K daily volume. Bidirectional/unidirectional integration (A, B) describe direction, not the store-vs-virtualize decision.",
+    "explanation": "Persistence is the answer: store the IoT records in Salesforce objects (D). The third requirement forces it — developers need to aggregate the records in Apex and feed them into workflows, and external objects do not support Apex triggers and have a narrow automation surface, so virtualized data cannot carry that logic. Weekly reporting on persisted records is straightforward once they are objects.\nThat is an exception to Salesforce's default advice, which runs the other way: \"Unless the data absolutely needs to reside in Salesforce, consider data virtualization with Salesforce Connect instead\", because \"More data in your organization ultimately leads to larger data volumes, which can adversely affect performance and add technical debt.\" Virtualization (C) would satisfy the reporting requirement on its own; it is the programmatic aggregation and workflow participation that rule it out here.\nBidirectional and unidirectional (A, B) describe which way data flows, not whether it is stored — they answer a different question than the one asked. At 100,000 records a day, load the persisted records with the Bulk API to keep API consumption in hand.\nReferences:\nhttps://architect.salesforce.com/decision-guides/data-integration\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_external_objects_considerations.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_external_objects.htm",
     "_cat": "Large Data Volume Considerations"
   },
   {
@@ -1638,8 +1638,13 @@
     "optionD": "Schedule a weekly export file.",
     "optionE": "",
     "correct": "C",
-    "explanation": "A field-level audit and recovery plan retains historical field values and backup copies, which consume significant storage, so reviewing projected data storage needs (C) is the key design consideration. Purging old data (A) works against retention, a weekly export (D) is too infrequent and coarse for field-level recovery, and an AppExchange package (B) is a possible tool but not the planning consideration asked for. Note: a dedicated backup app for granular field-level recovery is also a defensible answer, flag for review.",
-    "_cat": "Large Data Volume Considerations"
+    "explanation": "Field-level audit and recovery means keeping the old values, not just the current ones, and keeping them long enough to recover from something noticed weeks later. That is a storage question before it is a tooling one, so projecting the storage the retained history and backup copies will consume is the design consideration the plan turns on (C).\nPurging old data (A) is the opposite of what a recovery plan needs. A weekly export (D) has a seven-day blast radius and no field-level granularity — it restores a record as it was last Saturday, not the one field somebody corrupted on Wednesday.\nBe aware the item is loose. Option B, an AppExchange backup package, is how most orgs actually get granular field-level recovery, and it answers \"what should the architect consider\" nearly as directly as C does. C is keyed because it names a planning input rather than a product, but the two are not cleanly separated by the stem.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=000383595&language=en_US&type=1\nhttps://help.salesforce.com/s/articleView?id=xcloud.admin_exportdata.htm&language=en_US&type=5",
+    "_cat": "Large Data Volume Considerations",
+    "corrected": {
+      "date": "2026-08-19",
+      "via": "validation",
+      "note": "Item defect: distractor B (an AppExchange backup package) is a reasonable answer to \"what should the architect consider\" for granular field-level recovery, and nothing in the stem separates a planning input from a tooling choice."
+    }
   },
   {
     "id": "5f012203",
@@ -1650,7 +1655,7 @@
     "optionD": "Master-Detail field on Project__c to VTOTime__c showing a list of VTOTime__c Records in a related list.",
     "optionE": "",
     "correct": "C",
-    "explanation": "A Master-Detail from VTOTime__c (detail) to Project__c (master) makes the time records inherit the Project's sharing/access (the view/edit-parity requirement) and enables a roll-up summary on Project__c to total volunteer hours. A lookup with a formula (B) cannot sum child records, and the master-detail must originate on the child object, not the parent (D).",
+    "explanation": "Two of the four requirements pick the relationship between them. Access parity — VTOTime__c must be viewable and editable exactly as its Project__c is — comes free with master-detail, because detail records \"inherit the master's sharing and security settings\". Total hours on the Project record needs a roll-up summary, and roll-up summary fields require a master-detail relationship. Both point at C.\nThe direction matters and options D and A get it backwards: the master-detail field lives on the detail object, so it belongs on VTOTime__c pointing at Project__c, not the reverse. And a formula field on Project__c (B) evaluates against its own record — it cannot sum values across child records, which is precisely the job roll-up summary exists for.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/relationships_among_objects.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm",
     "_cat": "Data Modeling/Database Design"
   },
   {
@@ -1662,8 +1667,13 @@
     "optionD": "Application performance benchmarked in a sandbox can also be expected in production.",
     "optionE": "",
     "correct": "B,C",
-    "explanation": "Salesforce requires a performance test plan to be submitted to Customer Support before load/performance testing against the platform (B), and applications with heavy customization or large data volumes are the ones that warrant performance testing (C). Not all apps must be tested in both environments (A), and sandbox benchmarks do not reliably predict production performance due to differing data volumes and infrastructure (D).",
-    "_cat": "Large Data Volume Considerations"
+    "explanation": "Salesforce requires approval before you load-test the platform, and the requirement is concrete: \"Submit an LAP request for approval at least one week before the testing date\", with a test plan document, dates, sandbox org id, business scenario and justification. \"All tests must be pre-approved. Unapproved testing is subject to throttling or blocking.\" That settles B. And the applications worth putting through this are the ones whose behaviour is not already known — heavy custom code, or large data volumes (C).\nOption A is not merely an overstatement; it describes something Salesforce forbids. \"Because Salesforce is a multitenant platform, performance testing is not permitted in production environments. Use a full copy sandbox for testing\", and \"scale tests are only permitted in sandboxes.\" Option D fails for the reason a full copy sandbox is specified in the first place: a sandbox with different data volumes is not a predictor of production.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=000387059&language=en_US&type=1\nhttps://developer.salesforce.com/blogs/2020/09/introduction-to-performance-testing",
+    "_cat": "Large Data Volume Considerations",
+    "corrected": {
+      "date": "2026-08-19",
+      "via": "validation",
+      "note": "Answer stands. The old explanation rejected option A with \"not all apps must be tested in both environments\", which leaves a learner believing production performance testing is sometimes required. Salesforce does not permit performance testing in production at all — it is sandbox-only, and every test needs prior approval."
+    }
   },
   {
     "id": "228d9ec1",
@@ -1674,7 +1684,7 @@
     "optionD": "Do not connect Salesforce and the legacy CRM to each other during this transition period, but do allow both to interact with the ERP.",
     "optionE": "",
     "correct": "B,C",
-    "explanation": "Designating the legacy CRM as the system of record during the transition (B) avoids conflicting writes while both systems are live, and an MDM plan defining system of record per object/record/field (C) governs data quality and ownership across all three systems as Salesforce takes over. Replicating legacy changes into Salesforce (A) and a no-direct-connection rule (D) are tactical choices that don't establish the needed governance.",
+    "explanation": "Two systems are live and both can write, so the first thing to settle is who is right today: naming the legacy CRM the system of record for the transition period (B) removes the ambiguity while the remaining users are still on it. The second is who will be right tomorrow, per object and per field, as functionality moves across — that is what an MDM plan agreed with stakeholders gives you (C), and it is the part that survives the legacy system's retirement.\nReplicating legacy changes into Salesforce (A) is a mechanism you might well implement, but it presumes the authority question is already answered. Refusing to connect the two CRMs (D) is a routing rule, not a governance decision, and it leaves the ERP mediating conflicts nobody has adjudicated.\nThis is an architecture-judgment item; Salesforce documents the integration mechanisms rather than ranking these choices.\nReferences:\nhttps://architect.salesforce.com/decision-guides/data-integration\nhttps://architect.salesforce.com/well-architected/trusted/compliant",
     "_cat": "Master Data Management"
   },
   {
@@ -1686,7 +1696,7 @@
     "optionD": "Let each system be an owner of data it generates.",
     "optionE": "",
     "correct": "B",
-    "explanation": "An MDM strategy creates a governed golden customer record and reconciles it across all systems, so every system references consistent customer information without duplicating or conflicting writes. Forcing Salesforce as SOR for everything (A) ignores other authoritative systems, loading data into all systems (C) creates redundancy and drift, and per-system ownership (D) reproduces the silos MDM resolves.",
+    "explanation": "\"All systems have access to the same customer information\" is a consistency requirement, and consistency needs an arbiter. An MDM strategy supplies one: a golden customer record with survivorship rules deciding which system's value wins for each attribute, which every system then reads (B).\nDeclaring Salesforce the system of record for everything (A) is a decision made before looking at which system is actually authoritative for which data. Loading the customer data into every system (C) creates the copies that drift. Letting each system own what it generates (D) is a reasonable-sounding rule that reproduces exactly the silos the stem is complaining about — the customer's address exists in three places and no rule says which one is current.\nThis is an architecture-judgment item; Salesforce documents integration mechanisms rather than naming MDM as the answer here.\nReferences:\nhttps://architect.salesforce.com/well-architected/trusted/compliant\nhttps://architect.salesforce.com/decision-guides/data-integration",
     "_cat": "Master Data Management"
   },
   {
@@ -1698,7 +1708,7 @@
     "optionD": "Finalize an extract transform load (ETL) tool for data migration",
     "optionE": "Measure data completeness and accuracy",
     "correct": "A,C,E",
-    "explanation": "Data quality standards are defined by the dimensions you will govern: duplication standards/rules (A), timeliness and consistency (C), and completeness and accuracy (E). Choosing staging key fields (B) and selecting an ETL tool (D) are migration/implementation tasks, not the definition of quality standards.",
+    "explanation": "Defining quality standards means naming the dimensions you will hold the data to and how each is measured. Duplication standards and matching rules (A) define what counts as the same record. Timeliness and consistency (C) cover how current a value must be and whether the same fact is recorded the same way everywhere. Completeness and accuracy (E) cover whether required information is present and correct — the two complaints the stem actually names.\nPicking key fields in a staging database (B) and choosing an ETL tool (D) are migration decisions. They matter, but they belong to how data moves, not to what \"good\" means, and neither would appear in a standards document.\nThis is a definitional item drawn from general data-governance practice rather than a Salesforce rule.\nReferences:\nhttps://architect.salesforce.com/well-architected/trusted/compliant\nhttps://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_duplicaterule.htm",
     "_cat": "Data Governance"
   },
   {
@@ -1710,7 +1720,7 @@
     "optionD": "Partner community.",
     "optionE": "",
     "correct": "D",
-    "explanation": "(Variant of the NTO franchise-portal license question.) Partner Community gives external resellers access to Leads, Opportunities, and Orders plus the ability to run reports and dashboards, which a channel sales portal requires. Customer Community / Customer Community Plus (A, C) target customer-service scenarios, and Lightning External Apps Starter (B) does not support reports and dashboards.",
+    "explanation": "Leads, opportunities, and orders are sales objects, and the Partner Community licence is the external licence that carries them along with reports and dashboards in the site (D). That combination is what a channel sales portal for resellers needs, and it is the line that separates this licence from the customer-facing ones.\nCustomer Community and Customer Community Plus (A, C) are built for service — cases, knowledge, orders — and do not extend to leads and opportunities. Lightning External Apps Starter (B) is sized for custom apps rather than CRM sales objects with reporting.\nThe stem's fourth requirement — no more than 10 custom objects and no extra file storage — is there to tell you the cheaper external licences are not being ruled out by object count, so the sales objects and reporting are what decide it.\nLicensing is packaged commercially and changes often, so confirm the current Experience Cloud licence comparison before relying on this.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=platform.users_understanding_license_types.htm&language=en_US&type=5",
     "_cat": "Salesforce Data Management"
   },
   {
@@ -1722,7 +1732,7 @@
     "optionD": "Blame the customer's external system for bad data.",
     "optionE": "",
     "correct": "A,C",
-    "explanation": "A validation rule preventing blank values (A) blocks any record, including API/integration inserts, from saving without the field, and marking the field required at the field level (C) enforces the requirement universally regardless of page layout. Page-layout 'required' does not apply to API inserts, and defaulting a value via workflow (B) masks missing source data rather than ensuring it comes from the source.",
+    "explanation": "Required on a page layout is a UI rule. It applies to the users looking at that layout and to nothing else, so an integration writing through the API sails past it — which is exactly what is happening here.\nBoth keyed options work at a level the API cannot bypass. Marking the field required at the field level makes it universally required, and a universally required field \"must have a value whenever a record is saved within Salesforce, the Lightning Platform API, Connect Offline, Salesforce for Outlook, the Self-Service portal, or automated processes\" (C). A validation rule rejecting blank values (A) runs on every save path too, and gives a message naming the problem.\nDefaulting a value when the field is blank (B) makes the records look complete while losing the fact that the source system sent nothing — the opposite of ensuring the data comes from the source. Option D is not an approach.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=platform.fields_universally_required_field_considerations.htm&language=en_US&type=5\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_order_of_execution.htm",
     "_cat": "Salesforce Data Management"
   }
 ]

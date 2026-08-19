@@ -1318,3 +1318,266 @@ https://slack.com/blog/transformation/teams-to-slack-migration
 documentation. Both render, and both are cited only for process guidance (launch
 planning, migration sequencing) that the Help Center does not cover. Prefer a
 `slack.com/help` article whenever one exists.
+
+---
+
+# Salesforce Data Architect — verified 2026-08-19 (full deck pass, 135 questions)
+
+## How the doc hosts behave from a cloud container — retested, and one prior claim corrected
+
+The session brief for this pass said `help.salesforce.com` is **not** verifiable via
+WebFetch because a real and an invented article both return HTTP 200 with the same
+"Sorry to interrupt / CSS Error" SPA shell. That is true of the **body** and false of
+the **title**. Tested both ways:
+
+| URL | WebFetch `<title>` |
+|---|---|
+| `sf.security_networkaccess.htm` (known live) | **"Set Trusted IP Ranges for Your Org \| Salesforce Help"** |
+| `sf.flow_builder_overview.htm` (known dead, per CLAUDE.md 4b) | **"We looked high and low but couldn't find that page."** |
+| `platform.salesforce_connect_totally_invented_xyz.htm` (invented) | **"We looked high and low but couldn't find that page."** |
+
+So **article existence on help.salesforce.com IS checkable here** — a live article
+returns its own title, a dead or invented id returns the 404 sentence. What is *not*
+checkable is the body, so **failure pattern 11 stays unresolvable on `type=5` pages**:
+you cannot grep the rendered text for the term the citation is meant to support.
+
+**But `type=1` knowledge articles DO return their body.** This is the useful half of the
+discovery and it carried three findings in this pass. `type=1` URLs
+(`articleView?id=000383595&type=1`, `id=005132112&type=1`) render prose that WebFetch
+reads and quotes. `type=5` product-doc URLs return title only.
+
+A **third state** exists and must be treated as unconfirmed, not as live: some help URLs
+return the generic title **"Salesforce Help"** with no article name and no 404 sentence.
+Seen on `sales.managing_duplicates_overview.htm` (which verified-docs already lists as
+confirmed — it may have rotted), `service.entitlements_service_contracts_parent.htm`,
+`sf.users_license_types_communities.htm`, `xcloud.security_pe_overview.htm`. Drop these
+rather than cite them.
+
+**Policy this pass used, and the next one should:** prefer `developer.salesforce.com`
+and `architect.salesforce.com` (both body-verified) for anything a claim rests on; use a
+help.salesforce.com `type=5` URL only when its **rendered title itself carries the fact**
+(e.g. "Salesforce Connect Support for Reports" proves reports on external objects are
+supported); use `type=1` freely, since the body is readable.
+
+### developer.salesforce.com section-id fallback — confirmed again, and it is silent
+
+An invented **guide** id 404s honestly ("Beep boop. That did not compute."). An invented
+**section** id inside a real guide silently returns that guide's overview page with the
+guide's own title. Confirmed on `ldv_deployments_techniques_using_soql_sosl.htm` and
+`ldv_deployments_techniques_deferring_sharing_calculations.htm` — both wrong slugs, both
+returned the LDV introduction with plausible on-topic prose. **Always check the returned
+title names the section you meant**, not the guide.
+
+The Security Guide has largely **migrated off developer.salesforce.com**:
+`securityImplGuide/salesforce_shield.htm`, `security_pe_overview.htm` and
+`security_pe_considerations.htm` all now 301 to `help.salesforce.com/.../xcloud.*`,
+whose titles do not resolve. Shield facts had to be cited from the product page
+`https://www.salesforce.com/platform/shield/`, which renders fully.
+
+`architect.salesforce.com` renders fully and is the best source for governance and
+integration-decision material, which has no equivalent in the developer docs.
+
+**Object Reference object pages return the object index with the right title but a
+catalog body** — confirmed on Attachment, EventLogFile, Individual,
+AccountContactRelation, AuthorizationFormConsent. Do not claim a field-level fact from
+one. Workaround that worked: the *same object page in a smaller guide* often renders
+(`psc_api/sforce_api_objects_accountcontactrelation.htm` gave the real body).
+
+## Settled facts — large data volumes and data architecture
+
+| Fact | Value | Source |
+|---|---|---|
+| Ownership data skew — role placement | "a single user owns more than 10,000 records of an object". Mitigation, verbatim: **"Place them in a separate role at the top of the hierarchy."** "Don't move them out of that top-level role to avoid triggering sharing recalculations." "Keep them out of public groups that can be used as the source for sharing rules." Better still, "not assigning the users to a role". **A low role is the worst placement** — every ancestor inherits access to all the records. This moved a key | Ownership Data Skew (DRAES) |
+| Parent-child data skew | "a large number of child records (10,000 or more)" on one parent. Its worked example is **"a customer with hundreds of thousands of contacts all assigned to one dummy account"** — i.e. the bucket-account pattern is the *anti*-pattern, not the fix. This moved a key | Parent-Child Data Skew (DRAES) |
+| Bucket accounts, if unavoidable | "set up **several** dummy accounts and distribute the contacts among them" — never one. Also "Avoid having any user own more than 10,000 records" and "Distribute child records so that no parent has more than 10,000 child records" | General (LDV) |
+| Lookup skew | "a very large number of records are associated to a single record in the lookup object". Documented remedy list includes **"Using a Picklist Field — Replace lookup fields with picklist fields when you have relatively few values and don't need additional related data"** — the citation for every "picklist not lookup for N status values" item | Managing Lookup Skew (SF Developers blog) |
+| Skinny tables | **Maximum 200 columns, not 100** — a deck taught 100 and it is wrong. "kept in sync with their source tables when the source tables are modified"; "omit soft-deleted records"; "can't contain fields from other objects"; "**You can't create, access, or modify skinny tables yourself**" — Customer Support creates them, per object, never per report. On custom objects plus Account, Contact, Opportunity, Lead, Case | Skinny Tables (LDV) |
+| Index selectivity thresholds | **Standard** indexed field: filter matches <30% of the first million records and <15% of additional records. **Custom** indexed field: <10% of the first million, <5% of additional. AND clauses: indexes apply unless one returns over 20%. OR: all fields must be indexed and together return under 10% | Indexes (LDV) |
+| Default indexed fields | RecordTypeId, Division, CreatedDate, Systemmodstamp (LastModifiedDate), Name, Email (contacts and leads), foreign keys (lookup and master-detail), the record Id. Custom indexes not allowed on long text areas, rich text areas, non-deterministic formulas, encrypted text | Indexes (LDV) |
+| Load operation speed ranking | "**insert() is fastest, update() is next, and upsert() is next after that**" — the citation for splitting a known-new/known-existing load into insert + update rather than one upsert | Loading Data from the API (LDV) |
+| Lock contention during load | "**Group them by parent — group records by the field ParentId in the same batch to minimize locking conflicts.**" Bulk API guide's example: organise AccountTeamMember by AccountId. Serial mode is the *fallback* when parallel still times out — its named triggers are creating users, updating ownership under private sharing, updating user roles, updating territory hierarchies | Loading Data from the API (LDV); General Guidelines for Data Loads |
+| Pre-load lean configuration | Documented steps: defer sharing calculations; load with Public Read/Write and configure sharing rules after; establish complex relationships in a later phase; disable **validation rules, workflow rules, assignment rules and triggers**. **Removing custom indexes is NOT among them** — a deck asserted it and no Salesforce page supports it | Loading Data from the API (LDV); Extreme Data Loading Parts 2 and 3 |
+| Bulk API batch sizing | "Start with the maximum batch size of 10,000 records." Any operation over **2,000 records** is "a good candidate for Bulk API 2.0". SOAP: "use as many batches as possible—up to 200" | General Guidelines for Data Loads; Loading Data from the API (LDV) |
+| PK Chunking | "splits bulk queries on large tables into chunks based on the record IDs". Enable it "when querying tables with **more than 10 million records** or when a bulk query consistently times out". Chunk size 100,000 default, 250,000 max. Header: `Sforce-Enable-PKChunking` | PK Chunking |
+| Pre-PK-Chunking extract technique | Still the documented answer when PK chunking is not offered: create an auto-number field with "Generate Auto Number for existing records", add a **numeric formula field** over it (because "you cannot use an index with comparison operators such as '<=' or '>' for the text-based auto-number field"), have Support index it, then extract in ranges. **This moved a key** — an ETL tool alone issues the same unselective query | Extracting Large Data Volumes (LDV) blog |
+| Recycle bin | Soft delete: "Deleted items remain in the Recycle Bin for **15 days**". Soft-deleted rows still cost query time because "deleted records have to be excluded from any queries". Bulk API **hard delete** bypasses the bin; use it for deletions of a million or more, and "delete the children first" | Deleting Data (LDV, both pages) |
+| Divisions | "a means of partitioning the data of large deployments to reduce the number of records returned by queries and reports". Requires **over one million records in a single object and more than 35 licenses**; enabled by Salesforce Customer Support. A real LDV remedy — do not write it off as a distractor | Divisions (LDV) |
+| Defer sharing calculation | Suspends and resumes **group membership calculation and sharing rule calculation**; lets recalculation "run overnight between business days or over a weekend". Needs the defer-sharing-calculation permission. **There is no equivalent for roll-up summary fields** | Defer Sharing Calculation (LDV) |
+| Granular locking | Now the **default**, not something an admin enables. Lets "some group maintenance operations to proceed simultaneously if there's no hierarchical or other relationship between the roles or groups involved" — the answer to "Group membership operation already in progress" / "could not acquire lock" during user and territory updates | Group Membership Locking (DRAES) |
+| Reporting at LDV | "Minimize the number of: Objects queried in the report, Relationships used to generate the report"; "De-normalize data when practical… Use summarized data stored on the parent record"; "Use report filters that emphasize the use of standard or custom indexed fields"; "Reduce the amount of data by archiving unused records" | Reporting (LDV) |
+| SOQL/SOSL at LDV | "If you use two indexed fields joined by an OR in the WHERE clause… **Break the query into two queries and join the results.**" Avoid negative filters; use IN over long OR chains; avoid cross-object formula fields in filters | SOQL and SOSL (LDV) |
+| SOSL best practice | Verbatim: "**Use single-object searches for greater speed and accuracy**" and "**Keep searches specific and avoid using wildcards, if possible. For example, search with Michael instead of Mi\***" | Searching (LDV) |
+| Extract via API | "Use the getUpdated() and getDeleted() SOAP API to sync an external system with Salesforce at intervals **greater than 5 minutes**"; for over a million records, evaluate Bulk API 2.0's query | Extracting Data from the API (LDV) |
+| Big objects | "consistent performance, whether you have 1 million records, 100 million, or even 1 billion". Three named use cases: 360° customer view, auditing and tracking, **historical archive**. Standard (e.g. FieldHistoryArchive) vs custom. Defined "with Metadata API **or in Setup**". Up to 100 per org. No encryption, no transactions, no standard UI. **Reporting: "it's not practical to build reports or dashboards directly from that data"** — extract a subset with Bulk API into a custom object first | Big Objects; Define and Deploy Custom Big Objects; View Big Object Data in Reports and Dashboards; Big Objects Best Practices |
+| **Async SOQL is retired** | Summer '23. "You must use the **Bulk API or batch Apex** to query or report on custom Big Objects after your org gets upgraded to the Summer '23 release." Any deck keying Async SOQL for big-object reporting is teaching a dead feature | Salesforce Big Objects Async SOQL Retirement (`000394892`, type=1) |
+| **Salesforce Archive is a real product** | Purchasable add-on with automated policies that "regularly offload inactive records, files, and attachments from production" and shrink the storage footprint; archived records can be found, viewed, and restored. **Two deck explanations denied a native archiving feature exists** — that is now a fabricated absence. Distinct from Backup, which is short-term recovery | Data Archiving Solutions (salesforce.com); Find Documentation for Archive Products |
+| Data classification field metadata | `securityClassification` (Public, Internal, Confidential, Restricted, MissionCritical), `complianceGroup` (CCPA, COPPA, GDPR, HIPAA, PCI, PII), `businessOwnerUser`, `businessStatus` — all native CustomField attributes. Well-Architected states the practice: "Classify the data in your org by specifying applicable regulations at the field level to capture who the owner is, the sensitivity level, and whether or not the field is currently in use" | CustomField (Metadata API); Compliant (Well-Architected) |
+| Lookup delete behaviour | `deleteConstraint`: "**Restrict**—Prevents the record from being deleted if it's in a lookup relationship"; Cascade deletes; SetNull is the default. A **required lookup with Restrict** is how you get referential enforcement while each object keeps its own sharing model — master-detail cannot, because detail records "inherit the master's sharing and security settings" | CustomField (Metadata API); Relationships Among Standard Objects and Fields |
+| Product2 and master-detail | Product2 is among the standard objects that **cannot be on the detail side** of a master-detail relationship (with Lead, User, PriceBook2). So a Product hierarchy is a self-referential **lookup** to the parent | Relationships Among Standard Objects and Fields |
+| Duplicate rule actions | `actionOnInsert`/`actionOnUpdate` = **Allow** or **Block**. With Allow, `operationsOnInsert`/`operationsOnUpdate` may include **alert** (shows `alertText`, user may continue) and **report** (adds it to the duplicate report). "Prompt the user *and* give me a report" is therefore Allow + alert + report, never Block | DuplicateRule (Metadata API) |
+| Field history tracking | "**The default limit is 20 fields per object.**" Data retained 18 months. Tracking ~100 fields is not configurable — it needs a custom object written from a trigger | Salesforce Field History Tracking: Storage Limits (`000383595`, type=1) |
+| Universally required field | "must have a value whenever a record is saved within Salesforce, the Lightning Platform **API**, Connect Offline, Salesforce for Outlook, the Self-Service portal, or automated processes". Required *on a page layout* is UI-only and an integration walks straight past it | Considerations for Universally Required Fields |
+| Reporting Snapshots | "lets you report on historical data" by saving "tabular or summary report results to fields on a custom object", on a schedule. The native answer to trend reporting plus a purge of detail rows | Report on Historical Data with Reporting Snapshots; AnalyticSnapshot (Metadata API) |
+| Salesforce Connect OData callout limits | They exist and they bite: "Depending on your qualified Salesforce organization edition, specific governor limits are in place for number of allowed callouts **per hour and per day**", and exceeding them leaves the org "temporarily unable to access external data sources through Salesforce Connect". A search snippet claiming OData adapters have *no* callout limits is wrong — verify on the type=1 article | Proactive Alert Monitoring: Hourly OData XDS Callouts Limit (`000382494`, type=1) |
+| External objects and reports | **Reports on external objects ARE supported** — Salesforce publishes an article titled "Salesforce Connect Support for Reports". Two deck explanations asserted the opposite. Writable external objects also exist ("Writable External Objects in Salesforce Connect"), so "the cross-org adapter is read-only" is likewise unsupported | Salesforce Connect Support for Reports; Writable External Objects in Salesforce Connect |
+| Virtualize vs persist | Salesforce's default is virtualization: "**Unless the data absolutely needs to reside in Salesforce, consider data virtualization with Salesforce Connect instead**", because "More data in your organization ultimately leads to larger data volumes, which can adversely affect performance and add technical debt." What forces persistence is Apex and automation — external objects support no Apex triggers | Data Integration decision guide; Apex Considerations for Salesforce Connect External Objects |
+| Performance testing the platform | **Not permitted in production**: "Because Salesforce is a multitenant platform, performance testing is not permitted in production environments. Use a full copy sandbox"; "scale tests are only permitted in sandboxes". And it needs prior approval: "Submit an LAP request for approval **at least one week before the testing date**… All tests must be pre-approved. Unapproved testing is subject to throttling or blocking", with a test plan document, dates, sandbox org id, scenario and justification | Salesforce Performance and Scale Test FAQs (`000387059`, type=1); Introduction to Performance Testing (blog) |
+| FOR UPDATE | "use FOR UPDATE to lock sObject records while they're being updated in order to prevent race conditions and other thread safety problems"; while locked "no other client or user is allowed to make updates either through code or the Salesforce user interface" | Locking Records |
+| Data.com is retired | Data.com appears in Salesforce's Past Product & Feature Retirements list, and `sf.data_dot_com_clean_implementing.htm` now 404s. **Four questions in this deck key Data.com Clean**; one of them has no correct answer left | Salesforce Past Product & Feature Retirements (`005132112`, type=1) |
+| Batch Apex error reporting | "If you specify Database.Stateful in the class definition, you can maintain state across these transactions", and the page's own sample sends a `Messaging.SingleEmailMessage` from `finish()` — one citation covers both halves of "email the business when the job fails" | Use Batch Apex |
+| Daily API request allocation | Developer Edition 15,000; Enterprise/Professional/Unlimited/Performance "100,000 + (number of licenses x calls per license type) + purchased API Call Add-Ons"; Full sandbox 5,000,000 | API Request Limits and Allocations |
+
+## Confirmed URLs — Large Data Volumes best-practices guide
+
+All rendered and title-checked. The guide is the highest-yield source for this
+certification: nine of its sections carried more than half this deck.
+
+- **Introduction** — https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_introduction.htm
+- **Indexes** — https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_infrastructure_indexes.htm
+- **Skinny Tables** — https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_infrastructure_skinny_tables.htm
+- **Divisions** — https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_infrastructure_divisions.htm
+- **Techniques for Optimizing Performance** — https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_techniques_for_performance.htm
+- **Defer Sharing Calculation** — https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_techniques_deferred_sharing_calculation.htm
+  Note the slug: `techniques_deferred_sharing_calculation`, not `techniques_deferring_…` (that one silently falls back to the intro).
+- **Using Mashups** — https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_techniques_using_mashups.htm
+- **Deleting Data (technique)** — https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_techniques_deleting_data.htm
+- **Best Practices (index)** — https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices.htm
+- **Reporting** — https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_reporting.htm
+- **Loading Data from the API** — https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_api_loading_data.htm
+- **Extracting Data from the API** — https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_api_extracting_data.htm
+- **SOQL and SOSL** — https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_soql_and_sosl.htm
+- **Searching** — https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_searching.htm
+- **Deleting Data (best practice)** — https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_deleting_data.htm
+- **General** — https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_general.htm
+
+## Confirmed URLs — Designing Record Access for Enterprise Scale (DRAES)
+
+Short guide, entirely on point for skew and locking. Not previously used in this repo.
+
+- **Ownership Data Skew** — https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_group_membership_data_skew.htm
+- **Parent-Child Data Skew** — https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_object_relationships_parent_child_data_skew.htm
+- **Group Membership Locking** — https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_group_membership_locking.htm
+
+## Confirmed URLs — big objects, metadata, and platform reference
+
+- **Big Objects** — https://developer.salesforce.com/docs/atlas.en-us.bigobjects.meta/bigobjects/big_object.htm
+- **Define and Deploy Custom Big Objects** — https://developer.salesforce.com/docs/atlas.en-us.bigobjects.meta/bigobjects/big_object_define.htm
+- **View Big Object Data in Reports and Dashboards** — https://developer.salesforce.com/docs/atlas.en-us.bigobjects.meta/bigobjects/big_object_query_and_report.htm
+- **Big Objects Best Practices** — https://developer.salesforce.com/docs/atlas.en-us.bigobjects.meta/bigobjects/big_object_considerations.htm
+- **SOQL with Big Objects** — https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/big_object_querying.htm
+- **CustomField (Metadata API)** — https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm
+  Carries `deleteConstraint`, `externalId`, `unique`, and all four data-classification attributes. One of the most reusable pages in the whole repo.
+- **DuplicateRule (Metadata API)** — https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_duplicaterule.htm
+- **FieldSet (Metadata API)** — https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_fieldset.htm
+- **Custom Metadata Types (CustomObject)** — https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_custommetadatatypes.htm
+- **AnalyticSnapshot (Metadata API)** — https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_analyticsnapshot.htm
+- **CustomObject (Metadata API)** — https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customobject.htm
+- **Relationships Among Standard Objects and Fields** — https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/relationships_among_objects.htm
+- **External Objects (Object Reference)** — https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_external_objects.htm
+- **Geolocation Compound Field** — https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/compound_fields_geolocation.htm
+- **AccountContactRelation (Public Sector guide)** — https://developer.salesforce.com/docs/atlas.en-us.psc_api.meta/psc_api/sforce_api_objects_accountcontactrelation.htm
+  The Object Reference copy renders a catalog; this one renders the real body, including the `IsDirect` direct/indirect flag.
+- **Privacy Consent Data Model** — https://developer.salesforce.com/docs/platform/data-models/guide/privacy-consent.html
+- **PK Chunking** — https://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/async_api_headers_enable_pk_chunking.htm
+- **General Guidelines for Data Loads** — https://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/asynch_api_planning_guidelines.htm
+- **Outbound Messaging (SOAP API)** — https://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_om_outboundmessaging.htm
+- **Locking Records (FOR UPDATE)** — https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/langCon_apex_locking_records.htm
+- **Use Batch Apex** — https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_batch_interface.htm
+- **Triggers** — https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers.htm
+- **Triggers and Order of Execution** — https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_order_of_execution.htm
+- **Apex Considerations for Salesforce Connect External Objects** — https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_external_objects_considerations.htm
+- **Writable External Objects (Apex)** — https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_connector_external_objects_writeable.htm
+- **Get Started with the Apex Connector Framework** — https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_connector_start.htm
+- **API Request Limits and Allocations** — https://developer.salesforce.com/docs/atlas.en-us.salesforce_app_limits_cheatsheet.meta/salesforce_app_limits_cheatsheet/salesforce_app_limits_platform_api.htm
+- **Analytics External Data API overview** — https://developer.salesforce.com/docs/atlas.en-us.bi_dev_guide_ext_data.meta/bi_dev_guide_ext_data/bi_ext_data_overview.htm
+
+## Confirmed URLs — Salesforce Developers blogs (body renders in full)
+
+- **Extracting Large Data Volumes (LDV) in Force.com** — https://developer.salesforce.com/blogs/engineering/2013/06/extracting-large-data-volume-ldv-in-force-com
+- **Managing Lookup Skew to Avoid Record Lock Exceptions** — https://developer.salesforce.com/blogs/engineering/2013/04/managing-lookup-skew-to-avoid-record-lock-exceptions
+- **Extreme Force.com Data Loading, Part 1: Tune Your Data Model** — https://developer.salesforce.com/blogs/engineering/2013/02/extreme-salesforce-data-loading-part-1-tune-your-data-model
+- **Extreme Force.com Data Loading, Part 2: Loading into a Lean Salesforce Configuration** — https://developer.salesforce.com/blogs/engineering/2013/04/extreme-force-com-data-loading-part-2-load-into-a-lean-salesforce-configuration
+- **Extreme Force.com Data Loading, Part 3: Suspending Events that Fire on Insert** — https://developer.salesforce.com/blogs/engineering/2013/05/extreme-force-com-data-loading-part-3-suspending-events-that-fire-on-insert
+- **Introduction to Performance Testing** — https://developer.salesforce.com/blogs/2020/09/introduction-to-performance-testing
+
+## Confirmed URLs — architect.salesforce.com (renders fully)
+
+- **Compliant | Trusted | Well-Architected** — https://architect.salesforce.com/well-architected/trusted/compliant
+  The only rendered Salesforce source found for data governance practice: field-level classification, data dictionaries, security matrices, stakeholder involvement. Carried every governance-judgment item in this deck.
+- **Data Integration decision guide** — https://architect.salesforce.com/decision-guides/data-integration
+  The virtualize-before-you-persist statement.
+
+## Confirmed URLs — help.salesforce.com, type=1 (body readable)
+
+- **Enable the 'Create Audit Fields' Permission in Salesforce** — https://help.salesforce.com/s/articleView?id=000213290&language=en_US&type=1
+- **Salesforce Field History Tracking: Storage Limits and Data Retention** — https://help.salesforce.com/s/articleView?id=000383595&language=en_US&type=1
+- **Salesforce Past Product & Feature Retirements** — https://help.salesforce.com/s/articleView?id=005132112&language=en_US&type=1
+- **Salesforce Big Objects Async SOQL Retirement** — https://help.salesforce.com/s/articleView?id=000394892&language=en_US&type=1
+- **Salesforce Performance and Scale Test FAQs** — https://help.salesforce.com/s/articleView?id=000387059&language=en_US&type=1
+- **Proactive Alert Monitoring: Hourly OData XDS Callouts Limit** — https://help.salesforce.com/s/articleView?id=000382494&language=en_US&type=1
+
+## Confirmed URLs — help.salesforce.com, type=5 (title verified, body NOT readable)
+
+Cite these only where the article **title itself** carries the fact.
+
+- **Salesforce Connect** — https://help.salesforce.com/s/articleView?id=platform.platform_connect_about.htm&language=en_US&type=5
+- **Salesforce Connect Support for Reports** — https://help.salesforce.com/s/articleView?id=platform.platform_connect_considerations_reports.htm&language=en_US&type=5
+- **Cross-Org Adapter for Salesforce Connect** — https://help.salesforce.com/s/articleView?id=platform.xorg_adapter_about.htm&language=en_US&type=5
+- **Writable External Objects in Salesforce Connect** — https://help.salesforce.com/s/articleView?id=sf.platform_connect_considerations_writable_external_objects.htm&language=en_US&type=5
+- **General Limits for Salesforce Connect OData Adapters** — https://help.salesforce.com/s/articleView?id=sf.odata_general_limits.htm&language=en_US&type=5
+- **Export Backup Data from Salesforce** — https://help.salesforce.com/s/articleView?id=xcloud.admin_exportdata.htm&language=en_US&type=5
+- **Report on Historical Data with Reporting Snapshots** — https://help.salesforce.com/s/articleView?id=analytics.data_about_analytic_snap.htm&language=en_US&type=5
+- **Custom Metadata Types** — https://help.salesforce.com/s/articleView?id=platform.custommetadatatypes_overview.htm&language=en_US&type=5
+- **Geolocation Custom Field** — https://help.salesforce.com/s/articleView?id=platform.custom_field_geolocate_overview.htm&language=en_US&type=5
+- **Considerations for Universally Required Fields** — https://help.salesforce.com/s/articleView?id=platform.fields_universally_required_field_considerations.htm&language=en_US&type=5
+- **Considerations for Using Person Accounts** — https://help.salesforce.com/s/articleView?id=sales.account_person_behavior.htm&language=en_US&type=5
+- **Store Customers' Data Privacy Preferences** — https://help.salesforce.com/s/articleView?id=platform.individuals_store_data_privacy.htm&language=en_US&type=5
+- **User Licenses** — https://help.salesforce.com/s/articleView?id=platform.users_understanding_license_types.htm&language=en_US&type=5
+- **Find Documentation for Archive Products** — https://help.salesforce.com/s/articleView?id=xcloud.archive_o_overview.htm&language=en_US&type=5
+- **Restrict Login IP Addresses in Profiles** — https://help.salesforce.com/s/articleView?id=platform.login_ip_ranges.htm&language=en_US&type=5
+- **Set Trusted IP Ranges for Your Org** — https://help.salesforce.com/s/articleView?id=sf.security_networkaccess.htm&language=en_US&type=5
+
+## Confirmed URLs — salesforce.com and AppExchange (render fully)
+
+- **Salesforce Shield** — https://www.salesforce.com/platform/shield/
+  Names Event Monitoring (including Transaction Security Policies that "automatically block risky user actions, and prevent data loss"), Platform Encryption, Field Audit Trail, Data Detect. The developer Security Guide pages for Shield now redirect into unreadable help URLs, so this is the citable source.
+- **Data Archiving Solutions / Salesforce Archive** — https://www.salesforce.com/platform/data-archiving-solutions/
+- **Data Quality Analysis Dashboards (Salesforce Labs, free)** — https://appexchange.salesforce.com/appxListingDetail?listingId=a0N300000016cshEAA
+
+## Known dead — from the Data Architect pass (2026-08-19)
+
+Each returned "We looked high and low but couldn't find that page." unless noted.
+
+- `platform.platform_connect_cross_org.htm` — the cross-org adapter lives at `platform.xorg_adapter_about.htm`
+- `platform.duplicate_management_overview.htm`
+- `platform.account_person.htm` — Person Accounts material is under `sales.account_person_*`
+- `sf.data_dot_com_clean_implementing.htm` — dead, and useful evidence that Data.com Clean is retired
+- `sf.flow_builder_overview.htm` — re-confirmed dead, matching CLAUDE.md 4b
+- `platform.security_transaction_security_intro.htm`
+- `platform.salesforce_connect_totally_invented_xyz.htm` — the deliberate control
+
+**Returned the generic title "Salesforce Help" — treat as unconfirmed, do not cite:**
+`sales.managing_duplicates_overview.htm` (listed as confirmed earlier in this file — it
+may have rotted; re-check before reusing), `sf.consent_mgmt_fields.htm`,
+`service.entitlements_service_contracts_parent.htm`,
+`service.console2_assign_service_feature_license.htm`,
+`sf.users_license_types_communities.htm`, `platform.users_license_types_communities.htm`,
+`data.c360_a_data_governance.htm` (rendered as "Govern and Secure", not the expected
+title), `xcloud.security_pe_overview.htm`, `xcloud.real_time_event_monitoring.htm`,
+`release-notes.rn_api_async_soql.htm`, knowledge articles `000318293` and `000335652`.
+
+**developer.salesforce.com slugs that silently fell back to a guide overview** — the
+dangerous failure, since the returned prose is real and on-topic:
+`ldv_deployments_techniques_using_soql_sosl.htm`,
+`ldv_deployments_techniques_deferring_sharing_calculations.htm`,
+`ldv_deployments_best_practices_loading_data_from_the_api.htm`,
+`apex_metadata_custom_metadata_types.htm`, `apex_classes_email_outbound.htm`,
+`meta_transactionsecuritypolicy.htm`, `real_time_event_monitoring.htm`,
+`transaction_security_policies.htm`, `salesforce_app_limits_platform_objects.htm`,
+`salesforce_app_limits_external_data.htm`, `sforce_api_objects_transactionsecuritypolicy.htm`.
+
+**Redirected off developer.salesforce.com into unreadable help pages:**
+`securityImplGuide/salesforce_shield.htm`, `securityImplGuide/security_pe_overview.htm`,
+`securityImplGuide/security_pe_considerations.htm`,
+`securityImplGuide/tracking_field_history.htm`. The Security Guide has moved to
+`help.salesforce.com/.../xcloud.*`.
