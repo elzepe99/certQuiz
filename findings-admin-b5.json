@@ -1,0 +1,119 @@
+{
+  "deck": "public/decks/salesforce_admin_questions.json",
+  "reviewed": "2026-08-18",
+  "findings": [
+    { "id": "c191e454", "verdict": "clarified",
+      "explanation": "Send Email Action Considerations for Cases states the dependency in one line: \"Turn on Email-to-Case to enable the case-specific Send Email action on cases.\" Until Email-to-Case is on, the action can sit on the layout and still not appear in the case feed.\nThat is why the other options do not help. Email templates supply the body of a message once the action exists. Email alerts are an automation action that sends mail without any user involvement. Email notifications are a user preference. None of them is the switch that turns the case Send Email action on.\nWorth knowing for the exam and for real orgs: enabling Email-to-Case for this purpose does not oblige you to configure routing addresses - the considerations note that this requirement is separate from routing or org-wide addresses.",
+      "references": ["https://help.salesforce.com/s/articleView?id=service.case_interaction_send_email_quick_action_considerations.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=service.setting_up_email-to-case.htm&language=en_US&type=5"] },
+
+    { "id": "952b907a", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.flow_concepts_trigger_schedule.htm&language=en_US&type=5"] },
+
+    { "id": "e713e780", "verdict": "clarified",
+      "explanation": "Multi-factor authentication is the setting that actually raises the bar against unauthorized access: on top of the password, the user has to present a second factor - an authenticator app, a security key, or a built-in authenticator - so a stolen password alone is not enough. Salesforce turns it on org-wide from Identity Verification in Setup.\nThe other three options move security in the wrong direction or do not touch login at all. Disabling TLS requirements would expose sessions that are currently encrypted. Caching and autocomplete on the login page make it easier for the next person at that machine to sign in as the user. Organization-wide defaults govern which records a user can see once they are already inside, not whether the wrong person can get in.",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.security_overview_2fa.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=xcloud.security_mfa_org_wide_setting.htm&language=en_US&type=5"] },
+
+    { "id": "59a0fdfe", "verdict": "clarified",
+      "explanation": "Setup Audit Trail is the record of configuration changes. It names the date, the user, and what was changed; the page shows the 20 most recent entries and the Download link exports the full history for the past 180 days, after which entries are deleted.\nThe distractors each track something else. Debug logs capture what happened during a single transaction - queries, workflow, Apex - not who changed a setting. Field History Tracking records changes to field values on records, which is data rather than configuration. Release Updates (the feature that replaced Critical Updates) announces changes Salesforce is making to the platform, not changes your administrators made.",
+      "references": ["https://help.salesforce.com/s/articleView?id=xcloud.admin_monitorsetup.htm&language=en_US&type=5"] },
+
+    { "id": "3bc13244", "verdict": "clarified",
+      "explanation": "An orphan is a child record with no parent, and master-detail is the relationship that makes that impossible. The relationship field on the detail record is required, so a Shoe cannot be saved without an Account, and it cannot later be left dangling - if the Account is deleted, its Shoes are deleted with it rather than surviving without a parent.\nA plain lookup would allow exactly what the requirement forbids: the field is optional, and deleting the account clears it and leaves the Shoe behind.\nOf the other options, an encrypted lookup does not exist. An indirect lookup is a real relationship type but belongs to external objects, linking them to a standard or custom object by an external id. A hierarchical relationship is real too and is available only on the User object.",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.relationships_considerations.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=platform.overview_of_custom_object_relationships.htm&language=en_US&type=5"] },
+
+    { "id": "f2231f7b", "verdict": "clarified",
+      "explanation": "In a record-triggered flow the triggering record is already loaded and available as the $Record global variable, so its fields are referenced directly - $Record.Email, $Record.AccountId - with no query of any kind.\nIts companion is worth knowing: $Record__Prior holds the values the record had immediately before the save, which is how a flow detects that a particular field changed.\nThe alternatives are all wrong shapes. There is no {!Contact.Id} global variable. An {!Account.Id} record variable refers to the wrong object entirely. And a Get Records element would spend a query retrieving a record the flow was handed for free - which on a before-save flow also loses the performance advantage that makes those flows worth using.",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.flow_ref_resources_global_variables.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=platform.flow_concepts_trigger_record.htm&language=en_US&type=5"] },
+
+    { "id": "532479a7", "verdict": "clarified",
+      "explanation": "The safe sequence is to activate the update in a sandbox first, exercise the customizations and integrations that could be affected, and only then let it take effect in production. That is the whole point of the window Salesforce gives you before auto-activation: it is time to test, not time to wait.\nActivating straight into production skips the test. Allowing auto-activation - in production or in a sandbox - surrenders the choice of when to find out what breaks.\nOne naming note for the current platform: these are now called Release Updates. The Critical Updates node was retired and replaced by Release Updates in Setup, but the guidance is unchanged - test in a sandbox before the enforcement date.",
+      "references": ["https://help.salesforce.com/s/articleView?id=xcloud.release_updates.htm&language=en_US&type=5"] },
+
+    { "id": "be02a4c2", "verdict": "reasoning",
+      "explanation": "The consistency half of this requirement is clear. A global value set is one list of values maintained in one place and shared by picklist fields on more than one object, so the Category field on Account and the Category field on Case draw from the same values and stay in step.\nThe record type half is where this item is weak, and it is worth knowing why. Making values \"respective to record types\" is done by record types themselves: Edit Picklists for Record Types and Business Processes describes selecting a record type and editing the picklist field to change which values it offers. A dependent picklist does something different - it filters one picklist by the value chosen in a controlling picklist on the same record, which has nothing to do with record types.\nThe key is left as the source had it, but treat the second half as unreliable. The mechanism that actually varies values by record type is record-type picklist assignment on the custom picklist field, not a dependent picklist.",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.editing_picklists_for_record_types_and_business_processes.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=platform.customize_recordtype_considerations.htm&language=en_US&type=5"],
+      "note": "The item pairs a global value set, which is right for consistency across objects, with a dependent picklist, which does not vary values by record type - record-type picklist assignment does. The key is unchanged because the documentation does not settle which option the source intended as the second answer, but the dependent-picklist half does not support the stem." },
+
+    { "id": "be16cc1a", "verdict": "reasoning",
+      "explanation": "Reset Passwords for Your Users lists the considerations, and two of them are these options word for word.\n\"Resetting a locked-out user's password automatically unlocks the user's account\" - so an admin dealing with a lockout does not have to click Unlock separately; the reset covers it.\n\"After an admin resets a password, users are sometimes required to activate their devices to successfully log in to Salesforce\" - identity verification treats the next login as coming from an unrecognised device and asks the user to confirm it.\nThe same article rules out the option about single sign-on: only an admin can reset SSO user passwords, so those users cannot help themselves through the forgot password link. And a password reset changes one user's password; it does not alter the password policy, which is org-level or profile-level configuration.",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.resetting_and_expiring_passwords.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=platform.users_unlock.htm&language=en_US&type=5"],
+      "note": "The explanation on this question was about the page layout editor - text belonging to a different item entirely - and never addressed password resets. It has been replaced with the documented considerations, which confirm the existing key." },
+
+    { "id": "08eab7c6", "verdict": "clarified",
+      "explanation": "Knowledge is the feature built for this. Articles hold the documented solutions, and data categories classify them, which does two jobs at once: it organises the knowledge base and it controls who may see which articles.\nThe payoff on the Case page is suggested articles. Case fields can be mapped to data categories, so when a case is saved Salesforce searches for articles sharing its keywords and floats the ones matching the case's category to the top of the list - agents get candidate solutions without leaving the case.\nA custom object to hold popular resolutions rebuilds a weaker version of Knowledge with no article lifecycle, no categorisation and no suggestion engine. An interview flow collects details rather than surfacing answers. Sending agents to global search is what they are already doing too slowly.",
+      "references": ["https://help.salesforce.com/s/articleView?id=service.knowledge_whatis.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=service.category_whatis.htm&language=en_US&type=5"] },
+
+    { "id": "86a0ffaa", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.workflow_managing_outbound_messages.htm&language=en_US&type=5"] },
+
+    { "id": "e8d13165", "verdict": "clarified",
+      "explanation": "Assignment rules are the routing engine for cases, and the phrase that matters in this stem is \"regardless of how they are created\". An active case assignment rule runs on cases arriving from Web-to-Case, Email-to-Case, the API and On-Demand Email-to-Case, as well as ones created in the UI when the rule is applied - so one rule covers every channel.\nEach rule holds ordered entries; an entry that tests Priority sends matching cases to the queue for that priority, and the first matching entry wins.\nEmail-to-Case and Web-to-Case are channels rather than routing tools - they create cases, they do not decide who works them. Auto-response rules reply to the customer and change no ownership at all.",
+      "references": ["https://help.salesforce.com/s/articleView?id=service.creating_assignment_rules.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=service.customize_leadrules.htm&language=en_US&type=5"] },
+
+    { "id": "45a096bd", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.distribution_installing_packages.htm&language=en_US&type=5"] },
+
+    { "id": "3b28d8c6", "verdict": "clarified",
+      "explanation": "A Big Deal Alert is a standard setting that emails people when an opportunity crosses a threshold, which is exactly the \"simple way\" the stem asks for - no automation to build and no code.\nOne detail to carry into the exam: the threshold is a pair, not a single number. Set Up Big Deal Alerts for Opportunities has you enter both a trigger amount in the corporate currency and a trigger probability, and the alert fires when an opportunity reaches both. It fires once; if the amount or probability later fall below the threshold and climb back, it fires again.\nOpportunity update reminders are scheduled nudges to owners about stale records. Kanban alerts flag deals needing attention inside that view only. There is no Key Deals home page component.",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.activating_big_deal_alerts.htm&language=en_US&type=5"] },
+
+    { "id": "82b23e87", "verdict": "clarified",
+      "explanation": "Defining a validation rule comes down to two things you must supply.\nThe error condition formula is the test. It is written so that a result of TRUE means the record is invalid - which trips people up, because the formula describes the condition you want to block, not the one you want to allow.\nThe error message location decides where the message appears: at the top of the page, or attached to a specific field so the user is pointed straight at what to fix.\nNeither of the other two exists here. A formula return type is something you choose when creating a formula field; a validation rule's result is always a Boolean. And there is no active date on a validation rule - it is simply active or inactive.",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.fields_validation_rules_tips.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=platform.fields_validation_considerations.htm&language=en_US&type=5"] },
+
+    { "id": "0424bfcc", "verdict": "clarified",
+      "explanation": "The requirement is conditional - Loss Reason is needed only when the Stage is Closed Lost - and that is precisely what a validation rule expresses and nothing else here can.\nThe rule tests for the combination and blocks the save with a message: stage equals Closed Lost and Loss Reason is blank.\nBoth of the \"required\" options fail because required is unconditional. Marking the field required on the page layout, or required in Object Manager, would demand a loss reason on every opportunity from the moment it is created, including ones that go on to be won. The Object Manager setting is the stricter of the two, applying to the API as well as the UI.\nA workflow rule cannot display an error or stop a save at all; it acts after the record is saved.",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.fields_validation_rules_tips.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=platform.fields_validation_considerations.htm&language=en_US&type=5"] },
+
+    { "id": "b77f33bd", "verdict": "clarified",
+      "explanation": "There is no standard object for shoe designs, so the first step is a custom object.\nThe second step is the relationship, and the constraint decides it. Master-detail would cascade: delete a Product and every design under it is deleted too, which is the opposite of designs that cannot be deleted. A lookup on the Product side leaves each design standing on its own, while still allowing many designs to point at one product and to sit at different stages.\nProtecting the designs from deletion is then a permissions question - withhold Delete on the object - rather than a relationship question.",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.overview_of_custom_object_relationships.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=platform.relationships_considerations.htm&language=en_US&type=5"] },
+
+    { "id": "0eeaeebf", "verdict": "clarified",
+      "explanation": "Of the four options, only one is an automation tool that can create a task and send an email off the back of a record change, and that is Process Builder. A validation rule can only block a save. An outbound message sends record data to an external endpoint. An approval process routes a record for sign-off.\nThe exam answer stands, but build it in Flow. Salesforce ended support for Workflow Rules and Process Builder on 31 December 2025; existing automation still runs and can still be edited, but new work belongs in a record-triggered flow, which does both halves of this requirement - a Create Records element for the welcome task and an email action to the primary contact.",
+      "references": ["https://help.salesforce.com/s/articleView?id=000389396&language=en_US&type=1",
+                     "https://help.salesforce.com/s/articleView?id=platform.flow_concepts_trigger_record.htm&language=en_US&type=5"] },
+
+    { "id": "76248f85", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?language=en_US&id=sf.security_require_2fa_api.htm&type=5"] },
+
+    { "id": "3615e19f", "verdict": "clarified",
+      "explanation": "A permission set grants extra access on top of whatever profile a user already has, which is exactly the shape of this problem: most marketing users should keep read-only access to Campaigns, and a few need edit.\nSo the administrator builds one permission set with the campaign object permissions and assigns it to those few. Nobody's profile changes and no second marketing profile has to be created and then maintained in parallel.\nOrganization-wide defaults move the baseline for everyone, not for a few. The Marketing User checkbox is a different control - it governs campaign management features such as creating campaigns and managing members - and it would not grant object edit access on its own. Field-level security governs individual fields, not the ability to edit the record.",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.perm_sets_overview.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=platform.users_profiles_object_perms.htm&language=en_US&type=5"] },
+
+    { "id": "0aa33a5b", "verdict": "clarified",
+      "explanation": "Opportunity splits are the feature for dividing credit on a deal among the opportunity team. Each team member gets a share, and those shares roll into quota and pipeline reporting so the contribution is visible rather than anecdotal.\nThere are two flavours worth telling apart. Revenue splits divide the amount and must total 100 percent. Overlay splits credit people who helped without owning the revenue - a sales engineer, for example - and are not constrained to total 100 percent.\nStages describe where a deal is, queues hold records awaiting an owner, and list views only filter what you see. None of them allocates credit.",
+      "references": ["https://help.salesforce.com/s/articleView?id=sales.teamselling.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=sales.salesteam_def.htm&language=en_US&type=5"] },
+
+    { "id": "4c6f4b49", "verdict": "clarified",
+      "explanation": "Updating a field on a parent record when a child changes needs an automation tool that can traverse the relationship and write to the related record. Of the options, only Process Builder does that.\nA workflow field update cannot: workflow can update a field on the record that triggered it, and on the master of a master-detail relationship, but not on an arbitrary parent. An approval process routes records for sign-off. A Lightning web component is UI code, not automation, and would only act when someone opened the page.\nAs with the rest of this deck's Process Builder items, the exam answer stands but the modern build is a record-triggered flow on Referral Source with an Update Records element pointed at the parent - Salesforce ended support for Process Builder on 31 December 2025.",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.flow_build_data_update.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=000389396&language=en_US&type=1"] },
+
+    { "id": "2ffa1825", "verdict": "clarified",
+      "explanation": "A record type stamps each record with which process created it, and it is visible, filterable and reportable - so leads entered by the interns can be told apart from the rest simply by their record type, without inventing a custom field for the purpose.\nAssigning that record type to the interns' profile (or via a permission set) means it is the one they get, while everyone else keeps the original.\nWeb-to-Lead creates leads from a form on a website, which is not what interns keying records into Salesforce are doing. A separate Lightning app changes navigation, not the data. Assignment rules decide who owns a lead once it exists; ownership is a poor proxy for who created it, since leads get reassigned.",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.customize_recordtype.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=platform.users_profiles_record_types.htm&language=en_US&type=5"] },
+
+    { "id": "9938615c", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.lightning_page_components_visibility.htm&language=en_US&type=5"] },
+
+    { "id": "dbe75d48", "verdict": "clarified",
+      "explanation": "AppExchange is a marketplace for two kinds of thing: software and people. On the software side it carries apps, components and industry solution templates that can be installed into an org. On the services side it lists certified consulting partners and developers who can be engaged for an implementation.\nThe two rejected options are things you get elsewhere. Data Loader is downloaded from Setup, under Data Loader, not from AppExchange. And standard Lightning components ship with the platform and appear in Lightning App Builder already - what AppExchange offers is third-party components on top of those.",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.dashboards_install_sample_appexchange.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=sf.distribution_installing_packages.htm&language=en_US&type=5"] }
+  ]
+}
