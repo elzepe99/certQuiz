@@ -1212,3 +1212,170 @@ All rendered in the browser pane and grepped for the term each one is cited for.
 **Live but wrong page:** platform.sharing_model_fields.htm renders as
 "Organization-Wide Default Access Settings" and never uses the phrase "Grant Access
 Using Hierarchies" — failure pattern 11, caught by grepping the rendered text.
+
+## Salesforce Admin — full deck pass, 2026-08-18 (154 questions)
+
+Every URL below was rendered and its title confirmed. Two verification tricks were
+established on this pass and are worth reusing:
+
+- **`WebFetch` renders help.salesforce.com properly and reports the 404 honestly.**
+  A real article id comes back with its article text; an invented one comes back
+  with "We looked high and low but couldn't find that page". That makes WebFetch a
+  legitimate first-pass check for this vendor, four calls at a time in parallel —
+  not the useless status-code check the older notes warn about. It sometimes
+  returns only the SPA's nav tree, in which case fall back to the browser.
+- **Four ids per browser call, via a same-origin iframe.** From any
+  help.salesforce.com page, `javascript_tool` can create hidden iframes pointing at
+  `/s/articleView?id=<id>&language=en_US&type=5`, poll `contentDocument.title` until
+  it stops being the generic `Salesforce Help | Article`, and read the body. Keep it
+  to four ids per call — the tool times out at 30s.
+
+**Prefix-swapping remains a guess, and this pass confirms it hard.** Of the eight
+`platform.`/`sales.`/`xcloud.` guesses made for a known-dead `sf.` id, **one** hit.
+Search for the article title instead; the search index returns live ids.
+
+### Users, security, org setup
+- **Considerations for Deactivating Users** — https://help.salesforce.com/s/articleView?id=platform.users_deactivate_considerations.htm&language=en_US&type=5
+- **Cannot deactivate a user receiving cases (case assignment/escalation rules)** — https://help.salesforce.com/s/articleView?id=000383178&language=en_US&type=1
+- **Unlock Users** — https://help.salesforce.com/s/articleView?id=platform.users_unlock.htm&language=en_US&type=5
+- **Reset Passwords for Your Users** — https://help.salesforce.com/s/articleView?id=sf.resetting_and_expiring_passwords.htm&language=en_US&type=5
+- **Freeze or Unfreeze User Accounts** — https://help.salesforce.com/s/articleView?id=sf.users_freeze.htm&language=en_US&type=5
+- **Guidelines for Adding Users** — https://help.salesforce.com/s/articleView?id=sf.users_adding_guidelines.htm&language=en_US&type=5
+- **View Your Org's User Licenses** — https://help.salesforce.com/s/articleView?id=platform.users_license_types_view.htm&language=en_US&type=5
+- **Manage Information About Your Company** — https://help.salesforce.com/s/articleView?id=xcloud.company_information_fields.htm&language=en_US&type=5
+- **Monitor Login History** — https://help.salesforce.com/s/articleView?id=xcloud.users_login_history.htm&language=en_US&type=5
+- **Set Password Policies** — https://help.salesforce.com/s/articleView?id=xcloud.admin_password.htm&language=en_US&type=5
+- **View and Edit Password Policies in Profiles** — https://help.salesforce.com/s/articleView?id=platform.users_profiles_password_policies.htm&language=en_US&type=5
+- **Monitor Setup Changes with Setup Audit Trail** — https://help.salesforce.com/s/articleView?id=xcloud.admin_monitorsetup.htm&language=en_US&type=5
+- **Release Updates** (replaced Critical Updates) — https://help.salesforce.com/s/articleView?id=xcloud.release_updates.htm&language=en_US&type=5
+- **Security Health Check** — https://help.salesforce.com/s/articleView?id=sf.security_health_check.htm&language=en_US&type=5
+- **Multi-Factor Authentication for Salesforce Orgs** — https://help.salesforce.com/s/articleView?id=sf.security_overview_2fa.htm&language=en_US&type=5
+- **Enable MFA for Direct Login** — https://help.salesforce.com/s/articleView?id=xcloud.security_mfa_org_wide_setting.htm&language=en_US&type=5
+- **Multi-Factor Authentication for API Access** — https://help.salesforce.com/s/articleView?language=en_US&id=sf.security_require_2fa_api.htm&type=5
+- **My Domain** — https://help.salesforce.com/s/articleView?id=xcloud.domain_name_overview.htm&language=en_US&type=5
+- **Set the My Domain Login Policy** — https://help.salesforce.com/s/articleView?id=sf.domain_name_setting_login_policy.htm&language=en_US&type=5
+- **Object Permissions** — https://help.salesforce.com/s/articleView?id=platform.users_profiles_object_perms.htm&language=en_US&type=5
+- **Permission Sets** — https://help.salesforce.com/s/articleView?id=sf.perm_sets_overview.htm&language=en_US&type=5
+- **Muting Permission Sets** — https://help.salesforce.com/s/articleView?id=platform.perm_set_groups_muting.htm&language=en_US&type=5
+
+### Objects, fields, record types, pages
+- **Rename Object, Tab, and Field Labels** — https://help.salesforce.com/s/articleView?id=platform.customize_rename.htm&language=en_US&type=5
+- **Manage Deleted Custom Fields** — https://help.salesforce.com/s/articleView?id=sf.fields_managing_deleted_fields.htm&language=en_US&type=5
+- **Notes on Enabling Activities for Custom Objects** — https://help.salesforce.com/s/articleView?id=platform.tracking_activities_for_custom_objects.htm&language=en_US&type=5
+- **Add a custom object to the Related To lookup for an Event or Task** — https://help.salesforce.com/s/articleView?id=000385007&language=en_US&type=1
+- **Tailor Business Processes to Different Record Types Users** — https://help.salesforce.com/s/articleView?id=sf.customize_recordtype.htm&language=en_US&type=5
+- **Edit Picklists for Record Types and Business Processes** — https://help.salesforce.com/s/articleView?id=platform.editing_picklists_for_record_types_and_business_processes.htm&language=en_US&type=5
+- **Considerations for Creating and Updating Record Types and Picklists** — https://help.salesforce.com/s/articleView?id=platform.customize_recordtype_considerations.htm&language=en_US&type=5
+- **Useful Default Field Value Formulas** — https://help.salesforce.com/s/articleView?id=sf.fields_useful_default_field_values.htm&language=en_US&type=5
+- **Standard Lightning Page Components** — https://help.salesforce.com/s/articleView?id=sf.lightning_page_components.htm&language=en_US&type=5
+- **Lightning Pages** — https://help.salesforce.com/s/articleView?id=sf.lightning_page_overview.htm&language=en_US&type=5
+- **Create Dynamic Related Lists in Lightning App Builder** — https://help.salesforce.com/s/articleView?id=platform.lightning_app_builder_create_dynamic_related_list.htm&language=en_US&type=5
+- **Enable Mobile Home for iOS and Android** — https://help.salesforce.com/s/articleView?id=sf.salesforce_app_mobile_home.htm&language=en_US&type=5
+- **Customize the Mobile Only Navigation Menu in the Salesforce Mobile App** — https://help.salesforce.com/s/articleView?id=xcloud.salesforce_app_customize_nav_menu.htm&language=en_US&type=5
+- **Salesforce Console in Lightning Experience** (console apps are built in App Manager) — https://help.salesforce.com/s/articleView?id=service.console_lex_intro.htm&language=en_US&type=5
+- **Work in a Kanban View** — https://help.salesforce.com/s/articleView?id=sf.kanban_use.htm&language=en_US&type=5
+- **What's the Difference Between Standard and Custom Objects?** — https://help.salesforce.com/s/articleView?id=xcloud.basics_object_types.htm&language=en_US&type=5
+
+### Automation, approvals, flow
+- **What Does This Approvals Error from a Classic Approval Process Mean?** — https://help.salesforce.com/s/articleView?id=platform.approvals_troubleshoot.htm&language=en_US&type=5
+  Carries the "Manager undefined" error: the hierarchical field "has no value or specifies an inactive user".
+- **Control Which Records Apply to a Classic Approval Process** — https://help.salesforce.com/s/articleView?id=sf.approvals_create_entrycriteria.htm&language=en_US&type=5
+- **Add Automated Actions to a Classic Approval Process** — https://help.salesforce.com/s/articleView?id=sf.approvals_automated_actions.htm&language=en_US&type=5
+- **Add an Automated Action to Your Classic Approval Process** — https://help.salesforce.com/s/articleView?id=sf.approvals_creating_approval_actions.htm&language=en_US&type=5
+- **Automate Your Approvals with Flow Approval Processes** — https://help.salesforce.com/s/articleView?id=platform.automate_automated_approvals.htm&language=en_US&type=5
+- **Triggers for Flow Approval Processes** — https://help.salesforce.com/s/articleView?id=platform.automate_automated_approvals_concepts_trigger.htm&language=en_US&type=5
+- **Add a Time-Dependent Action to Your Workflow Rule** — https://help.salesforce.com/s/articleView?id=sf.workflow_time_dependent.htm&language=en_US&type=5
+- **Conditionally Show Screen Components** — https://help.salesforce.com/s/articleView?id=platform.flow_ref_elements_screen_conditional_visibility.htm&language=en_US&type=5
+- **Global Variables Resource** (the $Record reference) — https://help.salesforce.com/s/articleView?id=platform.flow_ref_resources_global_variables.htm&language=en_US&type=5
+- **Flow Variable Considerations** (Available for input / output) — https://help.salesforce.com/s/articleView?id=platform.flow_considerations_feature_variable.htm&language=en_US&type=5
+- **Record-Triggered Flow Considerations** — https://help.salesforce.com/s/articleView?id=sf.flow_considerations_trigger_record.htm&language=en_US&type=5
+- **Flow Elements** — https://help.salesforce.com/s/articleView?id=sf.flow_ref_elements.htm&language=en_US&type=5
+- **Update Salesforce Records from a Flow** — https://help.salesforce.com/s/articleView?id=platform.flow_build_data_update.htm&language=en_US&type=5
+- **Considerations for Outbound Messages** — https://help.salesforce.com/s/articleView?id=sf.workflow_om_considerations.htm&language=en_US&type=5
+- **Enable Recurring Tasks in Lightning Experience and the Salesforce Mobile App** — https://help.salesforce.com/s/articleView?id=sf.tasks_enable_recurring_tasks_lex.htm&language=en_US&type=5
+  Recurring tasks are an **org-level** switch in Activity Settings, not a profile permission.
+
+### Service
+- **Escalation Actions** — https://help.salesforce.com/s/articleView?id=service.rules_escalation_actions.htm&language=en_US&type=5
+- **Set Up Assignment Rules** — https://help.salesforce.com/s/articleView?id=service.creating_assignment_rules.htm&language=en_US&type=5
+- **Guidelines for Assignment Rules** — https://help.salesforce.com/s/articleView?id=service.customize_leadrules.htm&language=en_US&type=5
+- **Turn On and Customize Web-to-Case** — https://help.salesforce.com/s/articleView?id=service.setting_up_web-to-case.htm&language=en_US&type=5
+- **Set Up Email-to-Case** — https://help.salesforce.com/s/articleView?id=service.setting_up_email-to-case.htm&language=en_US&type=5
+- **Send Email Action Considerations for Cases** — https://help.salesforce.com/s/articleView?id=service.case_interaction_send_email_quick_action_considerations.htm&language=en_US&type=5
+  "Turn on Email-to-Case to enable the case-specific Send Email action on cases."
+- **Route Work with Omni-Channel** — https://help.salesforce.com/s/articleView?id=service.omnichannel_intro.htm&language=en_US&type=5
+- **Entitlements** — https://help.salesforce.com/s/articleView?id=service.entitlements_overview.htm&language=en_US&type=5
+- **Set Up and Manage Cases** — https://help.salesforce.com/s/articleView?id=service.cases_intro.htm&language=en_US&type=5
+- **Create a Knowledge Base with Salesforce Knowledge** — https://help.salesforce.com/s/articleView?id=service.knowledge_whatis.htm&language=en_US&type=5
+- **Work with Data Categories** — https://help.salesforce.com/s/articleView?id=service.category_whatis.htm&language=en_US&type=5
+- **Automate Repetitive Tasks with Macros** — https://help.salesforce.com/s/articleView?id=service.macros_def.htm&language=en_US&type=5
+- **Set Business Hours** — https://help.salesforce.com/s/articleView?id=sf.customize_supporthours.htm&language=en_US&type=5
+
+### Sales
+- **Manage Settings to Show Changed Deals** (Deal Change Highlights, list + Kanban) — https://help.salesforce.com/s/articleView?id=sales.manage_opportunity_motion.htm&language=en_US&type=5
+- **Map Custom Lead Fields for Lead Conversion** — https://help.salesforce.com/s/articleView?id=sales.customize_mapleads.htm&language=en_US&type=5
+- **Guidelines for Mapping Custom Lead Fields for Lead Conversion** — https://help.salesforce.com/s/articleView?id=sf.customize_mapleads_guidelines.htm&language=en_US&type=5
+- **Displaying and Editing a Campaign Member** (convert a lead from the campaign member detail page) — https://help.salesforce.com/s/articleView?id=sales.campaigns_members_detail.htm&language=en_US&type=5
+- **Manage Campaign Members** — https://help.salesforce.com/s/articleView?id=sales.campaigns_members_landing_page.htm&language=en_US&type=5
+- **Who has access to Campaigns?** (the Marketing User checkbox) — https://help.salesforce.com/s/articleView?id=sales.faq_campaigns_who_has_access.htm&language=en_US&type=5
+- **Einstein Opportunity Scoring** (score 1-99) — https://help.salesforce.com/s/articleView?id=sf.einstein_sales_opportunity_scoring.htm&language=en_US&type=5
+- **Set Up Big Deal Alerts for Opportunities** — https://help.salesforce.com/s/articleView?id=sf.activating_big_deal_alerts.htm&language=en_US&type=5
+  The threshold is a **pair** — trigger amount *and* trigger probability, not amount alone.
+- **Opportunity Teams and Opportunity Splits** — https://help.salesforce.com/s/articleView?id=sales.teamselling.htm&language=en_US&type=5
+
+### Reports and dashboards
+- **Access to Dashboard Folders** — https://help.salesforce.com/s/articleView?id=analytics.access_dashboard_folders.htm&language=en_US&type=5
+- **Filter a Dashboard** — https://help.salesforce.com/s/articleView?id=sf.dashboard_filters_overview.htm&language=en_US&type=5
+- **Configure Dashboard Data Visibility in Lightning Experience** (running user) — https://help.salesforce.com/s/articleView?id=sf.dashboards_view_as.htm&language=en_US&type=5
+- **Control Dashboard Data Visibility** — https://help.salesforce.com/s/articleView?id=analytics.dashboards_view_as_overview.htm&language=en_US&type=5
+- **Edit and Customize Lightning Experience Dashboard Widgets** — https://help.salesforce.com/s/articleView?id=sf.dashboards_components_edit_lex.htm&language=en_US&type=5
+- **Enrich Your Data with Dashboard Text** — https://help.salesforce.com/s/articleView?id=sf.bi_dashboard_widgets_text_add_flex.htm&language=en_US&type=5
+  Note this one sits under **CRM Analytics**, not Lightning dashboards. It carries the
+  "emphasize important data … tell a more compelling data story" wording the decks
+  quote, so cite it alongside the Lightning widgets article rather than alone.
+- **Post Snapshots of Dashboard Widgets to Chatter** — https://help.salesforce.com/s/articleView?id=sf.dashboards_post_to_dashboard_feed.htm&language=en_US&type=5
+- **Categorize Data with Bucket Columns** — https://help.salesforce.com/s/articleView?id=sf.reports_bucketing_overview.htm&language=en_US&type=5
+- **Hide Unused Report Types** — https://help.salesforce.com/s/articleView?id=sf.reports_hide_report_types.htm&language=en_US&type=5
+- **Install the CRM Sample Dashboards from AppExchange** — https://help.salesforce.com/s/articleView?id=sf.dashboards_install_sample_appexchange.htm&language=en_US&type=5
+- **Create Personalized Report Filters** — https://help.salesforce.com/s/articleView?id=release-notes.rn_rd_reports_relative_value_filter.htm&language=en_US&release=242&type=5
+  The documented wording is the "relative value option" on a user field, which resolves
+  to the signed-in user. The `$USER` phrasing decks use is UI shorthand, not doc language.
+- **Delete Multiple Records and Reports** (Mass Delete Records) — https://help.salesforce.com/s/articleView?id=sf.admin_massdelete.htm&language=en_US&type=5
+- **Unlisted Chatter Groups** — https://help.salesforce.com/s/articleView?id=sf.collab_unlisted_groups_overview.htm&language=en_US&type=5
+- **Data Quality (Trailhead)** — https://trailhead.salesforce.com/content/learn/modules/data_quality
+
+### Known dead — from the Salesforce Admin pass (2026-08-18)
+
+Every id below rendered "We looked high and low but couldn't find that page".
+**24 of the 36 legacy ids tested were dead — two thirds.** All were the
+`sf.<id>&type=5` form with no `language` parameter, which is the signature of this
+deck's original scrape.
+
+| Dead id | Live replacement |
+|---|---|
+| sf.customizesupport_web_to_case.htm | service.setting_up_web-to-case.htm |
+| sf.customizesupport_email_to_case.htm | service.setting_up_email-to-case.htm |
+| sf.admin_login.htm | sf.logging_in_as_another_user.htm |
+| sf.customize_escalation.htm, sf.case_escalation.htm | service.rules_escalation_actions.htm |
+| sf.monitoring_login_history.htm (and `platform.`) | xcloud.users_login_history.htm |
+| sf.security_password_policies.htm (and `platform.`) | xcloud.admin_password.htm |
+| sf.customize_salesprocess.htm (and `sales.`) | sf.customize_recordtype.htm |
+| sf.campaigns_leads.htm (and `sales.`) | sales.campaigns_members_detail.htm |
+| sf.leads_assignment_rules.htm (and `sales.`), sf.customize_leadrules.htm, service.customize_casesupport_assign.htm | service.creating_assignment_rules.htm |
+| sf.lightning_page_assignments.htm (and `platform.`) | platform.lightning_app_builder_customize_lex_pages_activate.htm |
+| sf.workflow_om_define.htm | platform.workflow_managing_outbound_messages.htm |
+| sf.flow_ref_global_variables.htm (and `platform.`) | platform.flow_ref_resources_global_variables.htm |
+| sf.forecasts3_big_deal_alerts.htm (and `sales.`) | sf.activating_big_deal_alerts.htm |
+| sf.forecasts3_splits_overview.htm (and `sales.`) | sales.teamselling.htm |
+| sf.monitorsetup.htm (and `xcloud.`) | xcloud.admin_monitorsetup.htm |
+| sf.admin_critical_updates.htm | xcloud.release_updates.htm |
+| sf.perm_sets_muting.htm | platform.perm_set_groups_muting.htm |
+| sf.tasks_recurring.htm | sf.tasks_enable_recurring_tasks_lex.htm |
+| sf.knowledge_overview.htm, service.knowledge_overview.htm | service.knowledge_whatis.htm |
+| sf.knowledge_categories.htm, service.knowledge_categories.htm | service.category_whatis.htm |
+| sf.stages_setup_flow_overview.htm | none — the Stage Setup Flow is no longer documented under that name |
+| analytics.reports_filter_relative_value.htm | constructed and dead — use the release note instead |
+| service.entitlements_and_milestones.htm | service.entitlements_overview.htm |
+| platform.admin_resetpasswords.htm | sf.resetting_and_expiring_passwords.htm |
+| xcloud.users_add.htm, platform.users_add.htm | sf.users_adding_guidelines.htm |
+| platform.users_deactivate_considerations_overview_guide.htm | constructed as a deliberate 404 test; the vendor answered correctly |

@@ -1,0 +1,98 @@
+{
+  "deck": "public/decks/salesforce_admin_questions.json",
+  "reviewed": "2026-08-18",
+  "findings": [
+    { "id": "57a9f154", "verdict": "clarified",
+      "explanation": "Converting an auto-number field to text keeps the data. Considerations for Converting the Field Type of a Custom Field says it in the data-type table: \"If you convert an auto-number field into a text field, the data in that field remains unchanged.\" The generated values stay in place as ordinary text.\nWhat stops is the generation. Once the field is text, Salesforce no longer assigns the next number on insert, so anything created afterwards needs the value supplied.\nRead the article carefully here, because its two halves look contradictory. The general data-loss list includes \"Changing from Auto Number to any other type\" - that covers auto number to number, to date, and so on. Text is the documented exception, called out separately.",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.notes_on_changing_custom_field_types.htm&language=en_US&type=5"] },
+
+    { "id": "d9be4b44", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sales.path_overview.htm&language=en_US&type=5"] },
+
+    { "id": "0049d522", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=ai.copilot_actions_instructions.htm&language=en_US&type=5"] },
+
+    { "id": "3d646528", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=service.rules_escalation_actions.htm&language=en_US&type=5"] },
+
+    { "id": "a72edbf1", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.security_sharing_owd_about.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=platform.security_sharing_rules_criteria.htm&language=en_US&type=5"] },
+
+    { "id": "0eb39a7c", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.users_license_types_view.htm&language=en_US&type=5"] },
+
+    { "id": "1f67bbf5", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=ai.copilot_actions_instructions.htm&language=en_US&type=5"] },
+
+    { "id": "75278521", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.dashboards_components_edit_lex.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=sf.bi_dashboard_widgets_text_add_flex.htm&language=en_US&type=5"] },
+
+    { "id": "0cbd5323", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=ai.copilot_topics_instructions.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=ai.copilot_actions_instructions.htm&language=en_US&type=5"] },
+
+    { "id": "ebcb1c79", "verdict": "clarified",
+      "explanation": "Escalation Actions documents what an escalation action can actually do, and it is a short list: reassign the case, and notify people.\nReassignment sends the case to another support rep or to a support queue - the usual pattern being Level 1 handing off to a Level 2 queue when it has not been resolved in time. Notification is by email, and it can go to the new assignee, to the current case owner, and to as many as five further addresses.\nChanging the case priority and reopening a closed case are not escalation actions. Priority is something you set with a field update from other automation, and reopening a case is a manual or flow-driven change of status.",
+      "references": ["https://help.salesforce.com/s/articleView?id=service.rules_escalation_actions.htm&language=en_US&type=5"] },
+
+    { "id": "c09761e4", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sales.path_overview.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=sales.path_create.htm&language=en_US&type=5"] },
+
+    { "id": "ee4f3d4e", "verdict": "clarified",
+      "explanation": "A screen flow reaches users by being placed somewhere, and for a flow that has to run in the context of a specific case, that somewhere is the Case Lightning record page. In Lightning App Builder you drag the Flow component onto the page and pick the flow; from then on reps see it beside the case details, with the record's id available to the flow.\nA page layout is the wrong instrument - it governs fields, related lists and actions, not Lightning components. The Home page would run the flow without any case in context, which defeats the point. Component visibility filters decide when a component shows, not how a flow gets onto a page at all.",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.create_forms_with_screen_flow_components.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=platform.lightning_page_components_visibility.htm&language=en_US&type=5"] },
+
+    { "id": "26d0b0b1", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.approvals_create_entrycriteria.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=platform.workflow_limits.htm&language=en_US&type=5"] },
+
+    { "id": "fdfedecb", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.dashboards_view_as.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=analytics.dashboards_view_as_overview.htm&language=en_US&type=5"] },
+
+    { "id": "7bbd2652", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.flow_concepts_trigger_schedule.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=sf.admin_massdelete.htm&language=en_US&type=5"] },
+
+    { "id": "f8bb917c", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.what_are_approvals.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=platform.approvals_step_approver.htm&language=en_US&type=5"] },
+
+    { "id": "307b7189", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.dashboards_view_as.htm&language=en_US&type=5"] },
+
+    { "id": "dea1e510", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.admin_massdelete.htm&language=en_US&type=5"] },
+
+    { "id": "b26213ef", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.custom_field_attributes.htm&language=en_US&type=5"] },
+
+    { "id": "644fe387", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.prompt_builder_ground_merge_fields.htm&language=en_US&type=5"] },
+
+    { "id": "d6f431f5", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=ai.copilot_actions_instructions.htm&language=en_US&type=5"] },
+
+    { "id": "87b1a995", "verdict": "clarified",
+      "explanation": "Both of these let a customer raise a case without a rep touching anything.\nWeb-to-Case gathers support requests from your own website: you enable the feature, choose the case fields to expose, generate the HTML form from the Web-to-Case HTML Generator in Setup, and put that form on your site. Every submission creates a case.\nEmail-to-Case turns messages sent to your support addresses into cases automatically, populating case fields from the email.\nThe other two are not self-service channels. Case queues hold cases once they exist so a team can pick them up, and case escalation acts on a case that has been open too long. Neither gives the customer a way to create one.",
+      "references": ["https://help.salesforce.com/s/articleView?id=service.setting_up_web-to-case.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=service.setting_up_email-to-case.htm&language=en_US&type=5"] },
+
+    { "id": "bd1a9ddf", "verdict": "clarified",
+      "explanation": "When an error reproduces for one user and not for the administrator, the difference is in that user's own access, and the way to see it is to log in as them. Log In as Another User puts the administrator into the user's session with their profile, permission sets, role and sharing in force, so the same edit throws the same error and the message can be read directly.\nThe alternatives all inspect the org rather than the user's experience. The setup audit trail records administrative changes, not the validation or access failure a user just hit. Reviewing the sharing model or editing the page layout might eventually explain the cause, but neither reproduces the error, and until it is reproduced there is nothing to diagnose.",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.logging_in_as_another_user.htm&language=en_US&type=5"] },
+
+    { "id": "4bf824b6", "verdict": "clarified",
+      "explanation": "Escalation rules are the time-based tool: a rule entry fires when a case has gone unresolved for a set age, and its escalation actions can reassign the case to a rep or a queue and email the people who need to know. That covers both halves of this requirement - the five-hour clock and the transfer to the right representative.\nBusiness hours matter here as a supporting setting rather than the answer. Escalation ages are measured against business hours, so VIP customers entitled to support around the clock need a 24-hour business hours record attached to the rule, otherwise the five-hour clock would pause overnight.\nAssignment rules only run when the case is created or reassigned, so they cannot act on elapsed time. A queue is a place to hold cases, not a mechanism that moves them.",
+      "references": ["https://help.salesforce.com/s/articleView?id=service.rules_escalation_actions.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=sf.customize_supporthours.htm&language=en_US&type=5"] },
+
+    { "id": "8d3dc667", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=service.closing_cases.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=sf.customize_supportrules.htm&language=en_US&type=5"] }
+  ]
+}
