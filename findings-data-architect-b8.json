@@ -1,0 +1,13 @@
+{
+  "deck": "public/decks/questions_data_architect_merged.json",
+  "reviewed": "2026-08-19",
+  "findings": [
+    { "id": "bd39a845", "verdict": "clarified",
+      "explanation": "The figure above is the model the stem refers to, and the cascade it shows is the whole problem: Time Entry is a junction with master-detail to both Work Item and Resource, each of which rolls its hours up, and those two are themselves master-detail children of Project, which rolls up again. So one Time Entry insert recalculates roll-ups on two parents and then on their shared grandparent — and Project is private, so its sharing is recalculated on top of that.\nLoading that feed regularly is exactly what the LDV guide's remedy is written for: \"Use the defer sharing calculation permission to defer sharing calculations until after all data has been loaded\", then run one recalculation (A).\nReplacing the roll-up summary fields with workflow (B) or triggers (C) swaps a platform-maintained aggregate for custom automation that fires on every one of those inserts — more work per record, not less, and it walks the same two-level cascade by hand. External IDs (D) are how you resolve the parent references during the load; they do nothing about the recalculation cost, which is what the stem is asking about.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_api_loading_data.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_techniques_deferred_sharing_calculation.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_object_relationships_parent_child_data_skew.htm"
+      ] }
+  ]
+}
