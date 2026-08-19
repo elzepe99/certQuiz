@@ -8,7 +8,7 @@
     "optionD": "Enable granular locking to avoid \"UNABLE_TO_LOCK_ROW\" error.",
     "optionE": "",
     "correct": "A",
-    "explanation": "Defer Sharing Calculations lets you suspend group-membership and sharing-rule recalculation during a large user/role/group load, then run one bulk recalculation afterward, which is far cheaper than recalculating per record. Bulk API/parallel processing (B, C) speed DML throughput but do nothing about the sharing-recalculation overhead that is the stated bottleneck; granular locking (D) addresses row-lock contention, not sharing calculations.",
+    "explanation": "Defer Sharing Calculations lets you suspend group-membership and sharing-rule recalculation during a large user/role/group load, then run one bulk recalculation afterward, which is far cheaper than recalculating per record. Bulk API/parallel processing (B, C) speed DML throughput but do nothing about the sharing-recalculation overhead that is the stated bottleneck; granular locking (D) addresses row-lock contention, not sharing calculations.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_api_loading_data.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_techniques_deferred_sharing_calculation.htm",
     "_cat": "Data Migration"
   },
   {
@@ -20,7 +20,7 @@
     "optionD": "Use a custom big object to store archived case data.",
     "optionE": "",
     "correct": "D",
-    "explanation": "Big objects store billions of records without counting against regular storage limits or degrading transactional performance, making them ideal for 10-year audit retention. A standard custom object (C) consumes storage and degrades report/query performance at millions of rows; buying storage (B) is costly and leaves data in the transactional store affecting performance.",
+    "explanation": "Big objects are Salesforce's documented store for a long-lived historical archive: they give \"consistent performance, whether you have 1 million records, 100 million, or even 1 billion\", and \"Historical archive\" is one of the three use cases the Big Objects guide names. A 10-year compliance retention of case history is exactly that shape.\nA plain custom object (C) keeps the rows in the transactional store, where the LDV guide's whole remedy is to reduce the number of records the system must process; buying storage (B) does the same thing more expensively. There is no general \"Salesforce Archiving process\" for Case (A) — archiving is something you design, not a switch.\nWorth knowing before you build it: Salesforce does not recommend reporting straight off a big object. View Big Object Data in Reports and Dashboards says that at that scale \"it's not practical to build reports or dashboards directly from that data\", and has you extract a representative subset with Bulk API into a custom object first.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.bigobjects.meta/bigobjects/big_object.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.bigobjects.meta/bigobjects/big_object_query_and_report.htm",
     "_cat": "Large Data Volume Considerations"
   },
   {
@@ -32,7 +32,7 @@
     "optionD": "Customers are created as Accounts for Residence Account and use Parent Account to relate Business Account.",
     "optionE": "",
     "correct": "A",
-    "explanation": "Account Contact Relationships (ACR) let a single Contact be associated with many Accounts, so one customer record can link to both a Residential and a Business Account, delivering one view without duplication. Person Accounts (B) would create a separate consumer record disconnected from the existing Contact model and cannot cleanly relate to a business Account; Parent Account hierarchy (D) models org structure, not a person spanning two accounts. Corrected from the source key (which contradicted its own explanation).",
+    "explanation": "Contacts to Multiple Accounts, backed by the AccountContactRelation object, lets one Contact be associated with many Accounts. The relation carries an IsDirect flag that distinguishes the contact's own primary account from the additional, indirect ones, so a single customer record can sit against both the Residential and the Business Account without being duplicated.\nPerson Accounts (B) would create a second, separate consumer record for someone already modelled as a Contact. Parent Account (D) models one organisation under another, not one person spanning two accounts. \"Individual objects\" (C) is not the mechanism for this — Individual is the privacy/consent record, not a customer-identity join.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.psc_api.meta/psc_api/sforce_api_objects_accountcontactrelation.htm",
     "_cat": "Data Modeling/Database Design"
   },
   {
@@ -44,7 +44,7 @@
     "optionD": "Number of characters in report query.",
     "optionE": "",
     "correct": "B,C",
-    "explanation": "Each object a report touches adds a join, and joins across 10M accounts and 200M opportunities dominate cost, so limiting cross-object joins (B) keeps the query plan efficient. The volume of rows returned (C) drives processing/rendering time, so a selective indexed filter on stage matters. Concurrency (A) and query character count (D) are not meaningful drivers at LDV.",
+    "explanation": "Each object a report touches adds a join, and joins across 10M accounts and 200M opportunities dominate cost, so limiting cross-object joins (B) keeps the query plan efficient. The volume of rows returned (C) drives processing/rendering time, so a selective indexed filter on stage matters. Concurrency (A) and query character count (D) are not meaningful drivers at LDV.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_reporting.htm",
     "_cat": "Large Data Volume Considerations"
   },
   {
@@ -56,7 +56,7 @@
     "optionD": "Import Order records and Account records separately and populate AccountID in orders using batch Apex.",
     "optionE": "",
     "correct": "B",
-    "explanation": "In a master-detail load, updating a child locks its parent; sorting child Orders by AccountID (B) groups all children of the same Account into one batch so a parent is locked by only one batch at a time. Sorting by OrderID (A) scatters children of the same parent across batches, causing the very lock collisions you are trying to avoid.",
+    "explanation": "In a master-detail load, updating a child locks its parent; sorting child Orders by AccountID (B) groups all children of the same Account into one batch so a parent is locked by only one batch at a time. Sorting by OrderID (A) scatters children of the same parent across batches, causing the very lock collisions you are trying to avoid.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_api_loading_data.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/asynch_api_planning_guidelines.htm",
     "_cat": "Data Migration"
   },
   {
@@ -68,7 +68,7 @@
     "optionD": "Build reports for field information, then export the information to classify and report for Audits.",
     "optionE": "",
     "correct": "B",
-    "explanation": "Data Classification adds native field metadata (Data Owner, Data Sensitivity Level, Compliance Categorization) directly on each field, set declaratively and surfaced in reporting. A custom object (C) duplicates and decouples the classification from the actual field definitions, and Metadata API extracts (A) go stale the moment fields change.",
+    "explanation": "Data Classification adds native field metadata (Data Owner, Data Sensitivity Level, Compliance Categorization) directly on each field, set declaratively and surfaced in reporting. A custom object (C) duplicates and decouples the classification from the actual field definitions, and Metadata API extracts (A) go stale the moment fields change.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm\nhttps://architect.salesforce.com/well-architected/trusted/compliant",
     "_cat": "Data Governance"
   },
   {
@@ -80,8 +80,13 @@
     "optionD": "Leverage middleware tools to bidirectionally send Opportunity data across orgs.",
     "optionE": "Use Salesforce Connect and the cross-org adapter to visualize Opportunities into external objects",
     "correct": "A,D,E",
-    "explanation": "Heroku Connect with Postgres (A) and a middleware/ESB integration (D) both support genuine near-real-time bidirectional sync. The cross-org Salesforce Connect adapter (E) gives real-time virtualized visibility across orgs without copying data. A scheduled daily Apex push (C) violates the near-real-time requirement. Note: the cross-org adapter is read-only, so 'bidirectional' here means each org can view the other's data, not write to it.",
-    "_cat": "Salesforce Data Management"
+    "explanation": "Heroku Connect with Heroku Postgres (A) and a middleware/ESB integration (D) both do genuine bidirectional, near-real-time sync between two orgs. The cross-org adapter for Salesforce Connect (E) is the third: it \"uses Lightning Platform REST API calls to access records in other Salesforce orgs\", surfacing them as external objects that are read on demand rather than copied, so each org sees the other's current Opportunities.\nA scheduled daily Apex push (C) fails the near-real-time requirement outright. A third-party AppExchange tool (B) might work but names no mechanism, so it is the weakest of the four plausible options.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=platform.xorg_adapter_about.htm&language=en_US&type=5\nhttps://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_external_objects.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_connector_external_objects_writeable.htm",
+    "_cat": "Salesforce Data Management",
+    "corrected": {
+      "date": "2026-08-19",
+      "via": "validation",
+      "note": "Answer stands. The old explanation ended by asserting that the cross-org adapter is read-only, so 'bidirectional' could only mean mutual viewing. Salesforce documents writable external objects for Salesforce Connect — the Apex Developer Guide's Writable External Objects page points at 'Writable External Objects Considerations for Salesforce Connect—All Adapters' — so that blanket denial is not supported."
+    }
   },
   {
     "id": "02273426",
@@ -92,7 +97,7 @@
     "optionD": "Patients as Accounts, Payment providers as Accounts, & Doctors as Person Accounts",
     "optionE": "",
     "correct": "C",
-    "explanation": "Patients are individuals with no parent org, so Person Accounts fit; payment providers are organizations, so business Accounts fit; doctors are also individuals serving many patients, so Person Accounts let them relate to many patient records via junction objects. Modeling doctors as Contacts (B) forces them under a single parent Account, conflicting with serving multiple patients. Note: because doctors need login access to patient data, a real implementation would typically also provision them as Users, an option not offered here.",
+    "explanation": "Person Accounts model an individual who is not an employee of some parent organisation, which is what both the patients and the doctors are here; payment providers are organisations, so they are business Accounts. That gives every actor a top-level record that can be related to the others through junction objects, and lets each carry its own sharing.\nModelling doctors as Contacts (B) hangs each doctor under one parent Account, which fits a practice roster but not a doctor who must relate to many independent patients. A and D mix the two in ways that leave one actor type without a workable relationship path.\nThis one is a design-judgment item rather than a documented rule: Salesforce publishes no page that assigns these three actors to these three object types, and Contacts to Multiple Accounts would let a Contact-based doctor relate to many accounts too. Treat it as the best of the offered models, not as a settled fact.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/relationships_among_objects.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.psc_api.meta/psc_api/sforce_api_objects_accountcontactrelation.htm",
     "_cat": "Data Modeling/Database Design"
   },
   {
@@ -104,7 +109,7 @@
     "optionD": "Build reports for customer information and validate.",
     "optionE": "",
     "correct": "B",
-    "explanation": "Native Data Classification metadata on each field (Data Sensitivity Level and Compliance Categorization) works uniformly across standard and custom objects with no code or extra objects. A custom picklist (C) only works where you add it and isn't tied to field metadata; AppExchange tools (A) add cost for what the platform provides natively.",
+    "explanation": "Native Data Classification metadata on each field (Data Sensitivity Level and Compliance Categorization) works uniformly across standard and custom objects with no code or extra objects. A custom picklist (C) only works where you add it and isn't tied to field metadata; AppExchange tools (A) add cost for what the platform provides natively.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm\nhttps://architect.salesforce.com/well-architected/trusted/compliant",
     "_cat": "Data Governance"
   },
   {
@@ -116,7 +121,7 @@
     "optionD": "Suggest MDM solution and link MDM to Salesforce and SAP",
     "optionE": "",
     "correct": "C,D",
-    "explanation": "Routing both CRMs through SAP (C) keeps SAP as the hub/system of record and avoids a brittle CRM-to-CRM link that breeds duplication and circular updates. An MDM solution (D) provides a governed golden record and survivorship across all three systems. A direct legacy-CRM-to-Salesforce integration (A) creates exactly the two-way sync conflicts the hub-and-spoke pattern prevents.",
+    "explanation": "Routing both CRMs through SAP (C) keeps one hub as the system of record and avoids a direct legacy-CRM-to-Salesforce link, which during a phased cutover is where circular updates and duplicates come from. An MDM solution (D) adds the governed golden record and survivorship rules across all three systems, which is what actually keeps them agreeing rather than merely connected.\nA is the anti-pattern the other two avoid; B drops the legacy CRM out of the picture entirely while it is still in use.\nThis is an architecture-judgment item. Salesforce documents the integration mechanisms but publishes no page that picks hub-and-spoke over point-to-point for this scenario, so treat the pair as the best-reasoned answer rather than a cited rule.\nReferences:\nhttps://architect.salesforce.com/well-architected/trusted/compliant\nhttps://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm",
     "_cat": "Master Data Management"
   },
   {
@@ -128,7 +133,7 @@
     "optionD": "Implement an hourly integration to send Salesforce Opportunities to the ERP system.",
     "optionE": "",
     "correct": "B",
-    "explanation": "Outbound Messaging fires a near-real-time SOAP callout to the ERP exactly when Stage = Closed/Won, declaratively and with no code. Nightly polling (C) and hourly batch (D) are not real-time, and MDM (A) governs survivorship, not event-driven one-way push. Note: workflow rules are being retired in favor of record-triggered Flows, but the Outbound Message action remains the mechanism.",
+    "explanation": "Outbound Messaging is the declarative real-time push: it \"allows you to specify that changes to fields within Salesforce can cause messages with field values to be sent to designated external servers\", so a Closed/Won stage change fires a SOAP message to the ERP with no code.\nNightly polling (C) and an hourly batch (D) both fail the real-time requirement. MDM (A) decides which system owns a value; it is not an event-driven push.\nOne currency note: Salesforce ended support for Workflow Rules on 31 December 2025, so a new build would fire the same Outbound Message action from a record-triggered flow. Existing rules keep running, and the mechanism named in the answer is unchanged.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_om_outboundmessaging.htm\nhttps://help.salesforce.com/s/articleView?id=001096524&language=en_US&type=1",
     "_cat": "Salesforce Data Management"
   },
   {
@@ -140,7 +145,7 @@
     "optionD": "Create a before insert and update trigger on account, contact, and lead, and send an error if a duplicate is found using a custom matching criteria.",
     "optionE": "",
     "correct": "B",
-    "explanation": "Native Duplicate Management with the Alert action prompts users about likely matches at save time, and Report populates the Duplicate Record Set/Items objects for reporting, both requirements, declaratively. Block (C) prevents saving rather than merely prompting, contradicting 'prompt the user'; custom triggers (A, D) re-implement what the platform already provides.",
+    "explanation": "Native Duplicate Management with the Alert action prompts users about likely matches at save time, and Report populates the Duplicate Record Set/Items objects for reporting, both requirements, declaratively. Block (C) prevents saving rather than merely prompting, contradicting 'prompt the user'; custom triggers (A, D) re-implement what the platform already provides.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_duplicaterule.htm",
     "_cat": "Salesforce Data Management"
   },
   {
@@ -152,7 +157,7 @@
     "optionD": "Use Find in \"ALL FIELDS\" for faster searches.",
     "optionE": "",
     "correct": "A,B",
-    "explanation": "Narrowing a SOSL search to the specific objects/fields needed reduces the search surface and improves speed and relevance (A), and keeping terms specific while avoiding leading wildcards lets the search index work (B). Searching IN ALL FIELDS (D) broadens scope and slows the search, so it is not a best practice; there is no option to tell SOSL to 'ignore custom indexes' (C). Corrected from the source key.",
+    "explanation": "The LDV guide's Searching best practices state both answers almost word for word: \"Use single-object searches for greater speed and accuracy\" (A) and \"Keep searches specific and avoid using wildcards, if possible. For example, search with Michael instead of Mi*\" (B).\nSearching IN ALL FIELDS (D) does the opposite — it widens the search surface. There is no SOSL option to ignore custom indexes (C); the search index is not something a query opts out of.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_searching.htm",
     "_cat": "Data Modeling/Database Design"
   },
   {
@@ -164,7 +169,7 @@
     "optionD": "Build a custom solution to go to the legacy system and display records.",
     "optionE": "",
     "correct": "C",
-    "explanation": "A mashup (or Salesforce Connect external objects) surfaces historical legacy data inside Salesforce on demand without copying it, satisfying 'as-needed access' while keeping storage and performance lean. Pulling everything in (B) defeats the purpose and consumes storage; a fully custom build (D) is unnecessary effort versus a virtualized display pattern.",
+    "explanation": "A mashup (or Salesforce Connect external objects) surfaces historical legacy data inside Salesforce on demand without copying it, satisfying 'as-needed access' while keeping storage and performance lean. Pulling everything in (B) defeats the purpose and consumes storage; a fully custom build (D) is unnecessary effort versus a virtualized display pattern.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_techniques_using_mashups.htm",
     "_cat": "Large Data Volume Considerations"
   },
   {
@@ -176,7 +181,7 @@
     "optionD": "Create a Workflow Rule to check for duplicate records.",
     "optionE": "",
     "correct": "A,B",
-    "explanation": "Native Matching and Duplicate Rules (B) detect/prevent duplicate Leads at insert time during the import, and an AppExchange de-duplication app (A) adds fuzzy matching and bulk merge beyond standard rules. There is no native 'Lead Mass de-duplication tool' (C), and Workflow Rules (D) cannot block or merge duplicates.",
+    "explanation": "Native Matching and Duplicate Rules (B) detect/prevent duplicate Leads at insert time during the import, and an AppExchange de-duplication app (A) adds fuzzy matching and bulk merge beyond standard rules. There is no native 'Lead Mass de-duplication tool' (C), and Workflow Rules (D) cannot block or merge duplicates.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_duplicaterule.htm",
     "_cat": "Data Migration"
   },
   {
@@ -188,7 +193,7 @@
     "optionD": "UC can leverage a \"tier\"-based approach to classify the record storage need.",
     "optionE": "",
     "correct": "D",
-    "explanation": "A tiered retention model (active 6 months, reference up to 1 year, compliance to 3 years, then purge) lets UC apply the right storage/archival mechanism to each tier. There is no 'custom storage object' exempt from storage limits (A); Backup and Recovery (B) is for restore, not retention policy; the recycle bin (C) is a short-lived soft-delete buffer, not an archive.",
+    "explanation": "A tiered retention model (active 6 months, reference up to 1 year, compliance to 3 years, then purge) lets UC apply the right storage/archival mechanism to each tier. There is no 'custom storage object' exempt from storage limits (A); Backup and Recovery (B) is for restore, not retention policy; the recycle bin (C) is a short-lived soft-delete buffer, not an archive.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_general.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_techniques_deleting_data.htm",
     "_cat": "Large Data Volume Considerations"
   },
   {
@@ -200,7 +205,7 @@
     "optionD": "Inserting 1 million orders distributed across a variety of accounts with lock exceptions eliminated and managed.",
     "optionE": "",
     "correct": "B",
-    "explanation": "Serial mode processes one batch at a time, so it is the right choice precisely when parent-record contention (many orders rolling up to shared accounts) would otherwise cause lock exceptions in parallel mode (B). Option D assumes locks are already eliminated, which removes the very reason to drop to the slower serial mode.",
+    "explanation": "Serial mode exists for exactly one reason, and the Bulk API guidelines name it: use it when parallel mode produces lock timeouts you cannot fix by reorganising batches. Loading a million Orders spread across shared Accounts is the classic case, because every child write locks its parent (B).\nOption D describes locks already eliminated and managed — which removes the only reason to accept serial mode's lower throughput. Batch counts (A, C) are throughput knobs, not the reason to switch modes.\nBefore reaching for serial mode, the guide's cheaper fix is to group the batch by parent: \"If you organize AccountTeamMember records by AccountId so that all records referencing the same account are in a single batch, you minimize the risk of lock contention by multiple batches.\"\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/asynch_api_planning_guidelines.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_api_loading_data.htm",
     "_cat": "Data Migration"
   },
   {
@@ -212,7 +217,7 @@
     "optionD": "Create a custom object in Salesforce that will be used to capture the Reward Program data.",
     "optionE": "",
     "correct": "A",
-    "explanation": "At 100M rows/month, a custom big object stores the data at scale without consuming standard storage or degrading transactional performance, and CRM Analytics can ingest big object data for reporting. A standard custom object (D) would blow past practical storage/performance limits, and big objects are a platform construct, not created 'in Einstein Analytics' (C).",
+    "explanation": "At 100 million rows a month, a custom big object is the only on-platform store that holds the data: big objects give \"consistent performance, whether you have 1 million records, 100 million, or even 1 billion\", and the guide names both \"360° view of the customer\" and \"Historical archive\" as their purpose. A plain custom object (D) is a transactional-store object and does not survive that growth rate.\nBig objects are a Lightning Platform construct defined through Metadata API or Setup — there is no such thing as creating one \"in Einstein Analytics\" (C). Pointing the analytics tool straight at the point-of-sale system (B) leaves the data outside Salesforce entirely, which the requirement rules out.\nOne caveat worth carrying into the design: Salesforce does not have you report directly off a big object at this scale. View Big Object Data in Reports and Dashboards has you extract a representative subset with Bulk API into a custom object and report on that.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.bigobjects.meta/bigobjects/big_object.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.bigobjects.meta/bigobjects/big_object_define.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.bigobjects.meta/bigobjects/big_object_query_and_report.htm",
     "_cat": "Large Data Volume Considerations"
   },
   {
@@ -224,8 +229,13 @@
     "optionD": "Create a custom object to track shipment requests with five lookup custom fields for each item being shipped Implement an archiving process that moves data off-platform after three years.",
     "optionE": "",
     "correct": "C",
-    "explanation": "Standard custom objects support native Salesforce reporting (a stated requirement), and a header/child model handles the variable item list cleanly; an archiving job offloads data past the 3-year window to control LDV. External objects (A, B) cannot be reported on natively, and flattening five items into lookup fields (B, D) is rigid and breaks normalization.",
-    "_cat": "Large Data Volume Considerations"
+    "explanation": "Standard custom objects in a header/detail shape (C) model a request with up to five line items cleanly, and an archiving process that moves data off-platform past the three-year window is the LDV guide's own advice: \"Use a data-tiering strategy that spreads data across multiple objects, and brings in data on demand from another object or external store\", plus \"Reduce the amount of data by archiving unused records.\"\nFlattening five items into five lookup fields (B, D) hard-codes a limit into the schema and breaks as soon as a sixth item appears.\nThe reason to reject the external-object designs (A, B) is not that reports are impossible — Salesforce Connect does support reports on external objects. It is that every read is a live callout to Heroku, so three years of report history depends on that system's latency and availability, and reports that include an external object fetch a bounded number of rows for the primary object. For a reporting requirement over the org's own transactional data, keeping it on-platform and tiering the old rows out is the simpler design.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_general.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_reporting.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_external_objects.htm\nhttps://help.salesforce.com/s/articleView?id=platform.platform_connect_considerations_reports.htm&language=en_US&type=5",
+    "_cat": "Large Data Volume Considerations",
+    "corrected": {
+      "date": "2026-08-19",
+      "via": "validation",
+      "note": "Answer stands. The old explanation rejected the external-object options on the ground that \"external objects cannot be reported on natively\" — an invented absence. Salesforce publishes an article titled \"Salesforce Connect Support for Reports\"; external objects can be used in custom report types, with limitations."
+    }
   },
   {
     "id": "c36f8114",
@@ -236,7 +246,7 @@
     "optionD": "Create two Master-Detail and one Lookup relationship to the parent records.",
     "optionE": "",
     "correct": "B",
-    "explanation": "A required Lookup configured with 'Don't allow deletion of the lookup record that's part of a lookup relationship' both enforces the relationship and blocks parent deletion, while leaving each object its own OWD/sharing model. Master-Detail (C, D) forces the detail to inherit the master's sharing (violating separate sharing), and an object supports at most two master-detail relationships, which three parents would exceed.",
+    "explanation": "A Lookup relationship marked required, with its delete behaviour set to Restrict, satisfies all three requirements at once. Metadata API documents that setting on the field: \"Restrict—Prevents the record from being deleted if it's in a lookup relationship.\" Making the lookup required forces the association; Restrict blocks deletion of a Product, Sender, or Receiver that a Shipment still points at.\nMaster-detail (C, D) fails the third requirement by construction: detail records \"inherit the master's sharing and security settings\", so Shipment could not keep a sharing model separate from its parents.\nA VLOOKUP formula (A) is a validation-rule function, not a relationship, and creates no link at all.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/relationships_among_objects.htm",
     "_cat": "Data Modeling/Database Design"
   },
   {
@@ -248,7 +258,7 @@
     "optionD": "Store the master key on the contact object as an external ID (Field for referential imports)",
     "optionE": "",
     "correct": "D",
-    "explanation": "An External ID field on Contact lets the MDM master key act as a stable, indexed cross-system correlation key and enables upsert-by-external-ID during integrations. A separate custom (B) or external (C) object adds a join and complicates matching, and storing the key only in Heroku (A) keeps it off the Contact records that must be matched on it.",
+    "explanation": "An External ID field on Contact lets the MDM master key act as a stable, indexed cross-system correlation key and enables upsert-by-external-ID during integrations. A separate custom (B) or external (C) object adds a join and complicates matching, and storing the key only in Heroku (A) keeps it off the Contact records that must be matched on it.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_infrastructure_indexes.htm",
     "_cat": "Master Data Management"
   },
   {
@@ -260,7 +270,7 @@
     "optionD": "Create a validation rule on the Contact object to check if the current user is not the owner.",
     "optionE": "",
     "correct": "A",
-    "explanation": "Delete is governed by OWD/role hierarchy and the object Delete profile permission, none of which expresses 'only the owner may delete' while still allowing everyone to edit, so a before-delete trigger comparing UserInfo.getUserId() to OwnerId and calling addError() is the correct enforcement point. Removing Delete from the profile (C) blocks owners too, and validation rules (D) do not fire on delete.",
+    "explanation": "Delete is an all-or-nothing profile permission plus OWD; neither can express \"everyone may edit, only the owner may delete\". A trigger can: Apex triggers fire \"Before or after a delete operation\", so a before delete trigger comparing UserInfo.getUserId() to OwnerId and calling addError() is the enforcement point.\nRemoving Delete from the profile (C) blocks the owner as well. Public Read Only (B) would take away the org-wide edit access the stem requires. Validation rules (D) are part of the save order for insert, update, and upsert — the order of execution documents no delete path for them, so nothing fires when a record is deleted.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_order_of_execution.htm",
     "_cat": "Data Modeling/Database Design"
   },
   {
@@ -272,7 +282,7 @@
     "optionD": "Engage with business units and IT to assess current operational systems and data models.",
     "optionE": "",
     "correct": "C,D",
-    "explanation": "A governance assessment starts top-down with executive sponsorship to set strategy, scope, and authority (C), then maps the current state by engaging business units and IT on existing systems and data models (D). Project velocity (A) and DB performance metrics (B) are delivery/operational concerns that do not establish governance scope or data-landscape understanding.",
+    "explanation": "A first governance assessment establishes authority and then maps the current state: executive sponsorship sets enterprise data strategy, scope, and the mandate to enforce it (C), and business units together with IT are who can describe the operational systems and data models actually in use (D).\nProject velocity (A) and database performance metrics (B) are delivery and operations concerns; neither tells you what data exists, who owns it, or what the enterprise wants from it.\nSalesforce publishes governance guidance rather than a prescribed sequence of first steps, so this item rests on general data-governance practice rather than on a rule that a specific page states.\nReferences:\nhttps://architect.salesforce.com/well-architected/trusted/compliant",
     "_cat": "Data Governance"
   },
   {
@@ -284,7 +294,7 @@
     "optionD": "You have a large amount of data that you don't want to copy into your Salesforce org.",
     "optionE": "You need to small amounts of external data at any one time.",
     "correct": "A,D,E",
-    "explanation": "Salesforce Connect fits when you need real-time access to source-of-truth data (A), when the volume is too large to want copied in (D), and when each interaction pulls only small slices on demand (E). If you actually want to copy subsets in (B), an ETL/Bulk API load is appropriate; VPN exposure (C) is an infrastructure detail, not a deciding factor for the OData connector.",
+    "explanation": "Salesforce Connect fits when you need real-time access to source-of-truth data (A), when the volume is too large to want copied in (D), and when each interaction pulls only small slices on demand (E). If you actually want to copy subsets in (B), an ETL/Bulk API load is appropriate; VPN exposure (C) is an infrastructure detail, not a deciding factor for the OData connector.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_external_objects.htm\nhttps://help.salesforce.com/s/articleView?id=platform.platform_connect_about.htm&language=en_US&type=5",
     "_cat": "Large Data Volume Considerations"
   },
   {
@@ -296,7 +306,7 @@
     "optionD": "Contact Salesforce to enable Defer Sharing Rules",
     "optionE": "",
     "correct": "D",
-    "explanation": "Moving reps between groups triggers sharing-rule recalculation across 5M Shipments and 50M Shipment Items; Deferred Sharing Recalculation lets admins batch membership changes and run one recalculation, avoiding prolonged locks and slowdowns. Archiving (A) and skinny tables (B) help query/report performance but not membership-change recalculation, and Public Read/Write (C) violates the required Private model.",
+    "explanation": "Moving reps between groups triggers sharing-rule recalculation across 5M Shipments and 50M Shipment Items; Deferred Sharing Recalculation lets admins batch membership changes and run one recalculation, avoiding prolonged locks and slowdowns. Archiving (A) and skinny tables (B) help query/report performance but not membership-change recalculation, and Public Read/Write (C) violates the required Private model.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_techniques_deferred_sharing_calculation.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_infrastructure_skinny_tables.htm",
     "_cat": "Data Modeling/Database Design"
   },
   {
