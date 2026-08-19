@@ -165,13 +165,17 @@ underneath.
 
 ## Deck state — as of 2026-08-19
 
-1,619 questions across 13 decks. **1,263 (78%) carry a reference with an actual URL,
+1,619 questions across 13 decks. **1,381 (85%) carry a reference with an actual URL,
 and the reference gap is still zero** — every question that renders a References block
 has a link in it.
 
-+135 of that is the data-architect pass on 2026-08-19, taking the largest uncited deck
-from 0/135 to 135/135. Re-measure with the command below rather than copying this
-number; three passes have now moved it in a single session.
+Three passes moved that number, and all three landed in the same merge: the admin pass
+on 2026-08-19 (+118, taking that deck from 36/154 to 154/154), the data-architect pass
+on 2026-08-19 (+135, taking the largest uncited deck from 0/135 to 135/135), and the
+slack-consultant pass on 2026-08-18 (+37, from 0/37 to 37/37). Most of the admin number
+is not new research: 47 of those questions *already had* citations that the app was
+silently refusing to render. See failure pattern 4c. Re-measure with the command below
+rather than copying any of these numbers.
 
 +136 of that is the sharing-visibility pass on 2026-08-17, taking that deck from
 0/136 to 136/136 — the second citations-and-corrections pass over an existing deck,
@@ -212,10 +216,24 @@ Agent Setup > Channels", plus the occasional empty block. It degrades gracefully
 (`linkifySegments` only linkifies real URLs) but it is unverifiable by a learner and it
 inflates any naive coverage count.
 
-**That gap is closed as of 2026-08-18: 1,091 marker blocks, 1,091 with a URL.** The
-last of it went with the agentforce pass (24 questions, 88 prose lines) and the admin
-reference repair (3). Keep measuring it anyway — the check is cheap, and the next
-scraped import brings the problem straight back.
+**That gap closed on 2026-08-18 and is still zero: 1,209 marker blocks, 1,209 with a
+URL.** The last of it went with the agentforce pass (24 questions, 88 prose lines) and
+the admin reference repair (3). Keep measuring it anyway — the check is cheap, and the
+next scraped import brings the problem straight back.
+
+**A block that renders with a URL in it is still only two of the three things that can
+go wrong.** The third is a block that never renders at all, which no URL test catches
+because there is nothing to test. That is failure pattern 4c, and it is what the admin
+deck was hiding.
+
+**Use the app's own regex when you measure, not `^References:`.** This file used to
+describe the parser as splitting on a `References:` line "at the start of a line".
+The actual expression at `src/lib/quiz.ts:9` is
+`/(^|\n)\s*References?\s*:?\s*\n?/i` — it tolerates leading whitespace, a missing
+colon, and the singular "Reference". The two agree on today's decks, but they diverge
+in the direction that matters: a naive `^References:` count can report a block the app
+never renders. The command below uses the app's expression and also counts the
+questions where a marker exists but the parser cannot see it.
 
 That corrects a figure this file previously carried. The old row claimed a
 106-question gap split agentforce 73 / revenue-cloud 30 / admin 3. Measured per
@@ -224,8 +242,15 @@ question, the gap is 39; 73 is close to agentforce's count of URL-less reference
 questions. Count questions, and re-measure rather than copying the previous row:
 
 ```sh
-node -e "const fs=require('fs'),p=require('path');const d='public/decks';let m=0,c=0;fs.readdirSync(d).filter(f=>f.endsWith('.json')&&!/manifest|deck-template/.test(f)).forEach(f=>{const qs=JSON.parse(fs.readFileSync(p.join(d,f),'utf8'));if(!Array.isArray(qs))return;qs.forEach(q=>{const e=q.explanation||'';const i=e.search(/^References:/mi);if(i>=0){m++;if(/https:\/\//.test(e.slice(i)))c++;}})});console.log('marker',m,'cited',c,'gap',m-c)"
+node -e "const fs=require('fs'),p=require('path');const d='public/decks';const APP=/(^|\n)\s*References?\s*:?\s*\n?/i;let m=0,c=0,h=0;fs.readdirSync(d).filter(f=>f.endsWith('.json')&&!/manifest|deck-template/.test(f)).forEach(f=>{const qs=JSON.parse(fs.readFileSync(p.join(d,f),'utf8'));if(!Array.isArray(qs))return;qs.forEach(q=>{const e=q.explanation||'';const x=e.match(APP);if(x){m++;if(/https:\/\//.test(e.slice(x.index+x[0].length)))c++;}else if(/References?\s*:/i.test(e))h++;})});console.log('renders',m,'cited',c,'gap',m-c,'| marker present but UNPARSED',h)"
 ```
+
+The last number is the one this file kept missing. It was **48** before the admin pass
+— 47 in admin, 1 elsewhere — and is **1** now. That survivor is **`46cb24ed` in the
+dld deck**: its marker sits mid-sentence, and its two references are bare
+`help.salesforce.com/...` strings with no scheme, so they would not linkify even if the
+block rendered. Fix it when dld gets its pass.
+
 Reference coverage is a *necessary* signal but **not a sufficient one** — the skill
 requires a citation on every verdict including `confirmed`, so a fully checked deck
 always reaches N/N, but a deck can reach N/N without its answers ever having been
@@ -238,7 +263,7 @@ column, not the Cited column.
 | salesforce-platform-developer-2 | 147 | 147 | **Fully checked** — 8 rounds, 2 keys moved. Deduped 148 → 147 on 2026-08-17 |
 | salesforce-integration-architect | 133 | 133 | **Fully checked** — 37 stamps, 15 keys moved. Spot-rechecked 2026-08-10: citations sound, content current, 0 wrong answers found. Its **27 in-app comments were already worked through** — they are the largest comment set in the repo and read like open disputes ("It is B", "Might be D"), but the repo owner confirmed on 2026-08-17 that they were addressed. Do not re-triage them as new signal |
 | salesforce-iam-architect | 116 | 116 | **Fully checked** (2026-08-10) — 3 keys moved, 7 reasoning fixes |
-| salesforce-admin | 154 | 36 | Partial; 13 keys moved (ADM-201 merge pass). **8 questions had their references repaired on 2026-08-17**, and the repair found more than line-wrapping: of the 9 distinct `sf.` article ids those blocks cited, **only `sf.security_networkaccess` still renders**. The rest 404 behind HTTP 200 — see failure pattern 4b |
+| salesforce-admin | 154 | 154 | **Fully checked** (2026-08-19) — 2 keys moved, 5 flagged, 60 explanations rewritten. 13 keys had already moved in the ADM-201 merge pass. Its real defect was the citation layer: only 36 questions rendered a References block, **47 more carried a marker the parser could not see**, and **24 of the 36 legacy `sf.` ids tested were dead** — see failure patterns 4b and 4c |
 | salesforce-agentforce-specialist | 121 | 121 | **Fully checked** (2026-08-17) — 16 keys moved across 6 batches. Started from 0 cited, with 26 questions rendering a References block of prose only. One duplicate removed (`b7ffd87e`), resolving the pair this file flagged |
 | salesforce-revenue-cloud | 135 | 135 | **Fully checked** (2026-08-15) — 2 keys moved, 88 explanations rewritten. Its defect was **fabricated citations, not wrong answers**: 73 explanations quoted invented "Exact Extracts". 9 questions could not be settled and say so in their own prose. Deduped 137 → 135 on 2026-08-17 |
 | salesforce-data-cloud-consultant | 100 | 0 | Uncited; 4 keys moved via comments |
@@ -264,9 +289,10 @@ integration), `efc3d13e` B→C (one MFA prompt across mixed login paths comes fr
 session security levels, not the org-wide MFA setting), `9f507c0e` A,B→B,D
 (Embedded Login is not one of the four documented login page types).
 
-Clean across all 14 decks right now: zero `U+FFFD` replacement characters, zero
-literal `"Option B"` placeholder strings, zero keys pointing at empty options,
-zero missing ids.
+Clean across all 13 decks right now (re-measured 2026-08-19): zero `U+FFFD`
+replacement characters, zero literal `"Option B"` placeholder strings, zero keys
+pointing at empty options, zero missing ids. The count said 14 until this
+re-measurement — the claude-questions removal above had left it stale.
 
 **The Databricks deck is the counter-example to the IAM trap above, and worth
 reading as one.** It also reaches N/N coverage, but its pass moved 8 keys and
@@ -364,24 +390,26 @@ fact-check outcome, which is why the deck still has 37.
 
 ### What to work on next
 
-Ordered as of 2026-08-19, after the data-architect pass landed.
-The audit-lead counts come from `node scripts/audit-deck.mjs <deck>` and are leads,
-not verdicts — but a deck with many of them and no citations is where a pass pays best.
+Ordered as of 2026-08-19, after the admin, data-architect and slack passes all landed.
+Two decks remain, both uncited and both untouched — the partially-cited middle ground
+is gone. The audit-lead counts come from `node scripts/audit-deck.mjs <deck>` and are
+leads, not verdicts.
 
 | # | Deck | Q | Cited | Audit leads | Why it is here |
 |---|---|---:|---:|---:|---|
-| 1 | dld | 138 | 0 | 1 | Untouched, and now the largest uncited deck. 2 duplicate pairs |
+| 1 | dld | 138 | 0 | 1 | Untouched, and now the largest uncited deck. 2 duplicate pairs. Also holds `46cb24ed`, the repo's last unparsed reference marker |
 | 2 | data-cloud-consultant | 100 | 0 | 2 | Untouched. 4 user comments waiting, 1 duplicate pair |
-| 3 | admin | 154 | 36 | 3 | 118 questions still uncited. The 2026-08-17 reference repair covered 8 of them; the rest of the deck has never been checked, and its `sf.` citations are the ones most likely to be dead — **and they are now cheap to check, see the doc-surface note below** |
 
 Things that are **not** deck passes but are queued:
 
 - **The 7 remaining Salesforce near-duplicate pairs** below — each needs the
   documentation to say which copy is right, except where the option *text* already
   agrees (check that first; that is what `f62513eb`/`c74b1c3e` turned out to be).
-- **The admin deck's remaining citations have not been rendered.** Eight blocks were
-  repaired and 8 of the 9 `sf.` ids behind them were dead. The other 25 cited admin
-  questions were never checked that way, so treat that 36 as unverified.
+- **Every deck cited before 2026-08-18 should have its links re-rendered.** The admin
+  pass found two thirds of that deck's legacy `sf.` ids dead, and the app-builder, IAM,
+  Dev II and integration decks were cited in the same era and in the same style. The
+  check is now cheap — four ids per browser call, see the recipe in
+  `references/verified-docs.md` — so this is an afternoon, not a pass.
 
 ### Open items from the data-architect pass (2026-08-19)
 
@@ -650,6 +678,40 @@ is supposed to support, which is failure pattern 11 in the same pass —
 `platform.sharing_model_fields` renders fine but never says "Grant Access Using
 Hierarchies", so it was the wrong page for the question citing it.
 
+**The admin pass on 2026-08-19 put a rate on this: 24 of 36 legacy ids dead, two
+thirds.** Every one was the `sf.<id>&type=5` form with no `language` parameter, which
+is this repo's scrape signature — so that shape is a reliable smell. It also killed
+the prefix-swap shortcut for good: of eight `platform.`/`sales.`/`xcloud.` guesses at
+a known-dead `sf.` id, **one** hit. Search for the article *title* instead; the search
+index only returns ids that exist.
+
+Two things also got faster, both recorded in `references/verified-docs.md`: `WebFetch`
+does render help.salesforce.com and *does* report "We looked high and low" honestly,
+so it works as a parallel first pass; and a same-origin iframe driven from
+`javascript_tool` checks four ids in one call.
+
+### 4c. A citation that renders nowhere because the marker is mid-sentence
+Distinct from a dead link, and invisible to every check that greps for `References:`.
+The app splits on `/(^|\n)\s*References?\s*:?\s*\n?/i` (`src/lib/quiz.ts:9`), which
+requires the marker at the start of a line. A generator that wrote
+`...role, or permissions. References: https://help.salesforce.com/...` produces a
+question that looks cited in the JSON and renders **no links at all** — the URL is just
+prose the reader cannot click.
+
+The admin deck had **47** of these against 36 that rendered, so more than half its
+citation work was invisible. Some were corrupted further by line-wrapping mid-URL
+(`https://help.salesforce.` + newline + `com/s/...`), which no amount of marker-fixing
+would linkify.
+
+`apply-findings.mjs` will not rescue these on its own: it reads existing references
+with the same expression, so it cannot see them either, and a `confirmed` verdict
+leaves the broken text sitting in the body. **Supply a rewritten `explanation` with the
+stray marker stripped** — verdict `clarified` — and the applier emits a clean block and
+drops the unreachable URLs with it.
+
+One survivor remains repo-wide: `46cb24ed` in dld. Measure with the command in Deck
+state, which counts this case explicitly.
+
 ### 5. Scrape damage in options and code
 Freecram scrapes arrive corrupted in specific ways:
 - Options that are the literal strings `"Option B"`, `"Option C"`, `"Option D"`.
@@ -689,6 +751,15 @@ Content rots. Salesforce removed the outbound-message session id in **February
 be taught as a reason to pick an answer — even though outbound messaging remained
 the correct mechanism for that question. Retention windows, limits, and
 feature-capability pairings are the highest-yield things to re-check.
+
+**Three Setup features the admin deck still names by a retired label** (2026-08-19).
+None changes an answer — the mechanism survived the rename — but an explanation that
+teaches the old name sends a learner looking for a node that is not there:
+*Critical Updates* is now **Release Updates**; the *Stage Setup Flow* is no longer
+documented under that name, and its configuration now lives in opportunity stage and
+lead status setup alongside Path; and Process Builder items still key correctly, since
+the 31 Dec 2025 date was end of *support*, not removal. Say the current name in the
+prose and leave the key alone.
 
 **Two Apex facts every deck in this repo still teaches the old way**, both found on
 sharing-visibility 2026-08-17 and both likely wrong in the Dev II, app-builder and
