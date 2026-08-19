@@ -1,0 +1,91 @@
+{
+  "deck": "public/decks/salesforce_admin_questions.json",
+  "reviewed": "2026-08-18",
+  "findings": [
+    { "id": "3037b817", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.approvals_troubleshoot.htm&language=en_US&type=5"] },
+
+    { "id": "50404cc9", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=000385007&language=en_US&type=1",
+                     "https://help.salesforce.com/s/articleView?id=platform.tracking_activities_for_custom_objects.htm&language=en_US&type=5"] },
+
+    { "id": "036bd684", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sales.customize_mapleads.htm&language=en_US&type=5"] },
+
+    { "id": "7a1ab0a9", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sales.manage_opportunity_motion.htm&language=en_US&type=5"] },
+
+    { "id": "32afb676", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.flow_ref_elements_screen_conditional_visibility.htm&language=en_US&type=5"] },
+
+    { "id": "98a15ab1", "verdict": "corrected", "was": "A", "correct": "B",
+      "explanation": "Salesforce blocks the deactivation outright when the user is still referenced by an active case assignment or escalation rule. The documented error is \"You cannot deactivate this user. You cannot deactivate a user who is receiving cases or notifications as part of your case assignment/escalation rules.\" The fix is to edit the rule entries in Setup and replace the user with an active user or a queue, then deactivate.\nBeing the running user of a dashboard is not a blocker. Considerations for Deactivating Users lists exactly four things that stop a deactivation - certain system user types, a user selected in a custom hierarchy field, the sole recipient of a workflow email alert, and a Customer Portal Administrator - and a dashboard running user is not among them. What the documentation says about dashboards is milder: when you deactivate a user who owns or runs a dashboard, the dashboard does not return expected results. That is a broken dashboard to clean up afterwards, not a wall in front of the deactivation.\nOpportunity teams and account teams are not blockers either; deactivated users are simply removed from other people's default teams.",
+      "references": ["https://help.salesforce.com/s/articleView?id=000383178&language=en_US&type=1",
+                     "https://help.salesforce.com/s/articleView?id=platform.users_deactivate_considerations.htm&language=en_US&type=5"],
+      "note": "The key pointed at the dashboard running user, which the documentation does not list as a deactivation blocker - it only warns that such a dashboard stops returning expected results. An active case assignment or escalation rule referencing the user does produce a hard error that prevents deactivation, and that is the documented answer. The old explanation had the two options exactly inverted, calling the dashboard a hard system block and saying assignment rules usually permit deactivation." },
+
+    { "id": "981a6656", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.dashboards_install_sample_appexchange.htm&language=en_US&type=5"] },
+
+    { "id": "a63b1272", "verdict": "reasoning",
+      "explanation": "Treat this item as unsettled. The scenario - reps receiving an escalated conversation with no visibility of what the customer already told the AI - is a real Agentforce concern, and the intended answer is that the reps' Case page is not surfacing the preceding conversation, so the transcript exists but is not on screen for them.\nCurrent Salesforce documentation does not name an agent history component, and Transfer Conversations from an Agent with an Omni-Channel Flow describes the Escalation subagent and the outbound Omni-Channel flow without specifying any Case page component that carries the transcript to the rep. Option D - a handoff that opens a new case rather than continuing the existing session - would produce the same symptom and cannot be ruled out from the documentation.\nThe key is left where the source put it, but the component name in the option is not one you should memorise as Salesforce terminology.",
+      "references": ["https://help.salesforce.com/s/articleView?id=ai.service_agent_escalation.htm&language=en_US&type=5"],
+      "note": "This item could not be settled against documentation. The keyed option names an agent history component that current Agentforce documentation does not describe, and option D would explain the same symptom. The key is unchanged, but do not treat the option wording as official terminology." },
+
+    { "id": "ce311cff", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.setting_the_fiscal_year.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=sf.customize_supporthours.htm&language=en_US&type=5"] },
+
+    { "id": "177095a2", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.customize_rename.htm&language=en_US&type=5"] },
+
+    { "id": "73169c29", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=analytics.access_dashboard_folders.htm&language=en_US&type=5"] },
+
+    { "id": "cea6caee", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.users_unlock.htm&language=en_US&type=5"] },
+
+    { "id": "39ebd532", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.customize_supportrules.htm&language=en_US&type=5"] },
+
+    { "id": "57f8b23a", "verdict": "clarified",
+      "explanation": "Salesforce reports support a single filter that personalises itself per viewer. Set a filter on a user field - Owner, Opportunity Owner, Created By - and choose the relative value option; the filter value then resolves to the currently signed-in user, so one saved report shows each rep only their own records. Create Personalized Report Filters documents this and notes it is supported only for user-related fields such as Username and Owner fields.\nThat is why one report beats the alternatives. Building a separate report per rep does not scale. Changing the org-wide default for the object to Private would restrict visibility generally, but the reps here are supposed to keep seeing each other's records - they only want this one report scoped to themselves, which is a reporting concern, not a sharing concern. Saving the report in a private folder hides the report from everyone else rather than filtering its rows.",
+      "references": ["https://help.salesforce.com/s/articleView?id=release-notes.rn_rd_reports_relative_value_filter.htm&language=en_US&release=242&type=5"] },
+
+    { "id": "0cadd1e2", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.adding_actions_using_ple.htm&language=en_US&type=5"] },
+
+    { "id": "154ff957", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.users_deactivate_considerations.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=platform.granting_access_to_records_lex.htm&language=en_US&type=5"] },
+
+    { "id": "5ca89056", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.what_are_approvals.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=platform.create_forms_with_screen_flow_components.htm&language=en_US&type=5"] },
+
+    { "id": "8b0dd43b", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=service.macros_def.htm&language=en_US&type=5"] },
+
+    { "id": "b8b50c29", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.lightning_page_components_visibility.htm&language=en_US&type=5"] },
+
+    { "id": "48ce1490", "verdict": "clarified",
+      "explanation": "A schedule-triggered flow is the right tool for cleaning up data that is already in the org. It runs on a schedule you set - once, or daily, or weekly - and processes every record matching its criteria, so it can sweep the whole Lead table, find the Lead Source values that read Website or Online, and rewrite them to the standard Web.\nA record-triggered flow only fires when a record is created or updated, so it would fix new bad values going forward but would never touch the historical records that are the actual problem here. A screen flow needs a person to run it record by record. There is no such thing as a segment-triggered flow in Flow Builder.",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.flow_concepts_trigger_schedule.htm&language=en_US&type=5"] },
+
+    { "id": "75de9c35", "verdict": "confirmed",
+      "references": ["https://trailhead.salesforce.com/content/learn/modules/data_quality"] },
+
+    { "id": "9d407d53", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.approvals_create_entrycriteria.htm&language=en_US&type=5"] },
+
+    { "id": "bb27462f", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.security_sharing_owd_about.htm&language=en_US&type=5"] },
+
+    { "id": "8b250773", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=service.omnichannel_intro.htm&language=en_US&type=5"] },
+
+    { "id": "0a88ffb9", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=service.entitlements_overview.htm&language=en_US&type=5"] }
+  ]
+}

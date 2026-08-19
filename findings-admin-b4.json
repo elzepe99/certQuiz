@@ -1,0 +1,112 @@
+{
+  "deck": "public/decks/salesforce_admin_questions.json",
+  "reviewed": "2026-08-18",
+  "findings": [
+    { "id": "8aea4354", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.create_forms_with_screen_flow_components.htm&language=en_US&type=5"] },
+
+    { "id": "3561a6c6", "verdict": "clarified",
+      "explanation": "Three separate mechanisms are needed because the requirement has three separate jobs.\nAuto-response rules send the immediate acknowledgement. They match an incoming case against criteria - here a Case Reason of Installation - and reply to the contact with an email template as the case is created.\nQueues are how the case reaches the right agents. A queue holds cases for a group of users who can then take ownership, which is what \"assigned to the appropriate agents\" means in practice; an assignment rule routes the case into that queue.\nEscalation rules handle the four-hour clock. A rule entry ages the case from creation, and its escalation actions reassign it and email support management once the threshold passes.\nMacros and entitlements do not fit. A macro is a manual shortcut a rep runs, so it cannot fire on its own after four hours. Entitlements define what level of support a customer is owed rather than routing or escalating any individual case.",
+      "references": ["https://help.salesforce.com/s/articleView?id=service.creating_assignment_rules.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=service.rules_escalation_actions.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=sf.users_queue_membership_list.htm&language=en_US&type=5"] },
+
+    { "id": "6caa5c2f", "verdict": "clarified",
+      "explanation": "Login History is the record of what actually happened when the user tried to sign in. Monitor Login History describes it as the place an admin can monitor every attempt to log in to Salesforce and to Experience Cloud sites, holding up to 20,000 records covering the past six months.\nWhat makes it the diagnostic tool is the Status column. Each attempt carries a login status code naming the reason it failed - wrong password, restricted IP, outside login hours, failed identity verification - alongside the timestamp, the source IP address, the browser and the login type. That turns \"the user cannot log in\" into a specific cause.\nThe other options are all things you would check after the history tells you where to look. Password policies and password history describe the rules in force, not this user's attempts, and a security token matters only for API and email client logins.",
+      "references": ["https://help.salesforce.com/s/articleView?id=xcloud.users_login_history.htm&language=en_US&type=5"] },
+
+    { "id": "c39b0409", "verdict": "clarified",
+      "explanation": "Set Password Policies covers what an admin can actually configure at org level: password history, length and complexity requirements, expiration, and what happens when someone forgets or mistypes a password.\nThat maps onto three of these options. Maximum invalid login attempts sets how many wrong passwords are tolerated before the account locks. Password complexity requirements govern the mix of character types a password must contain. Number of days until expiration forces a periodic change.\nThe two that are wrong are wrong in different ways. There is no setting that requires the use of a password manager app. And while Salesforce does block a small set of weak passwords, \"prohibited password values\" is not one of the configurable password policies in Setup.",
+      "references": ["https://help.salesforce.com/s/articleView?id=xcloud.admin_password.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=platform.users_profiles_password_policies.htm&language=en_US&type=5"] },
+
+    { "id": "72a0b976", "verdict": "clarified",
+      "explanation": "A sales process is the ordered set of opportunity stages a deal moves through. Record types exist precisely so one org can run more than one of them: Salesforce describes record types as the way to offer different business processes, picklist values, and page layouts to different users.\nSo a genuinely different business model gets its own sales process, with its own stage values, paired with a record type that assigns it to the people selling the concierge offering. Existing opportunities keep the original process untouched.\nThe alternatives address other problems. A quick action creates or updates a record. An approval process routes something for sign-off. An opportunity product is a line item on a deal. None of them changes the stages a deal travels through.",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.customize_recordtype.htm&language=en_US&type=5"] },
+
+    { "id": "4419a83a", "verdict": "clarified",
+      "explanation": "The word that decides this item is \"selected\". Reps are not updating every open order, they are choosing which ones to update, and a choice needs a screen.\nSo the answer is a screen flow, placed on the Account page - the record where the address actually changed. The flow can query the account's open orders, present them for selection, and write the new shipping address to the ones the rep picks.\nAn autolaunched flow has no user interface at all, so on either object it would update every matching order with no chance to exclude any. Putting the screen flow on the Order page is the wrong context: the rep would be on one order at a time, which is the opposite of updating a chosen set in one pass.",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.create_forms_with_screen_flow_components.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=platform.flow_concepts_trigger_record.htm&language=en_US&type=5"] },
+
+    { "id": "045926e2", "verdict": "clarified",
+      "explanation": "Path displays the stages and guides reps through them, but it does not enforce anything - a user can still set Status back to an earlier value, and Path will happily show them there. Enforcement is a validation rule.\nThe rule compares the new value against the old one. Because PRIORVALUE and ISCHANGED are available in validation formulas, a rule can detect that Status moved from a later step to an earlier one and block the save with an error.\nThe other options cannot refuse a save. A global value set standardises which values exist across fields but imposes no order. Predefined field values pre-populate a field on an action. Dependent picklists filter one picklist by another's value, which is about available choices, not about the direction of travel between them.",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.fields_validation_rules_tips.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=platform.fields_validation_considerations.htm&language=en_US&type=5"] },
+
+    { "id": "a8d31e32", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.security_controlling_access_using_hierarchies.htm&language=en_US&type=5"] },
+
+    { "id": "ee07bdba", "verdict": "clarified",
+      "explanation": "Probability is a standard field on Opportunity that Salesforce populates from the stage - each stage value carries a default probability, and moving the stage overwrites the field.\nIt is not, however, read-only. Adding Probability to the page layout as an editable field lets reps type their own number over the stage-derived default. Note that a later stage change writes the default back, so a manual value survives only until the deal moves.\nThe other options miss the request. A new stage picklist value changes the process rather than making the existing field editable. A custom field would sit beside the standard one and be ignored by forecasting. Forecasting consumes the probability and forecast category; it does not control whether reps can edit the field.",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.customize_layout.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=sales.faq_forecasts_category_mapping.htm&language=en_US&type=5"] },
+
+    { "id": "ab489b08", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.users_deactivate_considerations.htm&language=en_US&type=5"] },
+
+    { "id": "b3aeaf96", "verdict": "clarified",
+      "explanation": "Converting the lead from the campaign member detail page is documented behaviour: Displaying and Editing a Campaign Member states that if the campaign member is based on a lead, you can convert the lead from that page.\nThat route matters because of what it preserves. Conversion produces the account, contact and opportunity, and the existing campaign member record is carried over to the new contact, so the person's membership and status history stay attached to the campaign rather than being lost with the lead.\nThe alternatives all break that link. Deleting the lead destroys the campaign member record with it. Cloning creates a record with no campaign history behind it. Adding a contact to the campaign afterwards produces a fresh membership dated today, which is not the same as the history from the open house.",
+      "references": ["https://help.salesforce.com/s/articleView?id=sales.campaigns_members_detail.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=sales.customize_mapleads.htm&language=en_US&type=5"] },
+
+    { "id": "0d87e06c", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sales.customize_mapleads.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=sf.customize_mapleads_guidelines.htm&language=en_US&type=5"] },
+
+    { "id": "4063708c", "verdict": "clarified",
+      "explanation": "Assignment rules are the routing mechanism. Set Up Assignment Rules describes them as conditions that determine how leads or cases are processed, assigning each to a specified user or queue.\nFor this requirement the rule entries test address fields - City, State/Province, Country, or postal code ranges - and send matching leads to the rep who owns that territory. Entries are evaluated in order, so the first match wins and a final catch-all entry can hold anything that fits no rule.\nNothing else here routes a record. A formula field derives a value for display; it assigns nothing. Escalation rules act on cases after time has passed, not on new leads. A validation rule can only block a save.",
+      "references": ["https://help.salesforce.com/s/articleView?id=service.creating_assignment_rules.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=service.customize_leadrules.htm&language=en_US&type=5"] },
+
+    { "id": "3bdb4138", "verdict": "clarified",
+      "explanation": "Standard objects ship with Salesforce; custom objects are ones you build. Account, Case and Contract are all standard, and all three are ordinary parts of a support implementation - the customer, the issue being worked, and the agreement that governs the level of service owed.\nTicket and Request are not Salesforce objects at all. They are the names other help desk products use for what Salesforce calls a Case, which is exactly why they make good distractors: an evaluator arriving from another tool expects to find them and does not.",
+      "references": ["https://help.salesforce.com/s/articleView?id=xcloud.basics_object_types.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=service.cases_intro.htm&language=en_US&type=5"] },
+
+    { "id": "c2a95184", "verdict": "clarified",
+      "explanation": "Campaign management is gated by a checkbox on the user record rather than by object permissions alone. Who has access to Campaigns? sets out the split: depending on sharing, users can view campaigns, view the advanced campaign setup, or run campaign reports, but only designated marketing users get to create and manage them.\nSo a user who can see the campaign but cannot add members or change member statuses is almost always missing the Marketing User checkbox. Note that the checkbox works alongside ordinary permissions rather than replacing them - the user still needs read and edit access to campaigns and to the leads or contacts being added.\nA permission set cannot substitute, because this is a user-record attribute rather than an object permission. Granting more access to leads and contacts does not unlock campaign member management. Updating records through Data Loader works around the symptom instead of fixing the access.",
+      "references": ["https://help.salesforce.com/s/articleView?id=sales.faq_campaigns_who_has_access.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=sales.campaigns_members_landing_page.htm&language=en_US&type=5"] },
+
+    { "id": "f467f78f", "verdict": "clarified",
+      "explanation": "Related list columns are a page layout property. In the page layout editor you open the Cases related list's properties and choose which fields appear as columns, in what order, and how the rows sort.\nBecause each layout carries its own version of that related list, assigning one layout to Sales and another to Customer Care gives each team its own column set on the same Account page - created date and status for one, owner, status and contact for the other.\nThe other editors do different jobs: compact layouts drive the highlights panel and mobile preview, search layouts control results and list columns for search, and lookup filters restrict which records a lookup field will accept.",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.customize_layout.htm&language=en_US&type=5"] },
+
+    { "id": "91817bb4", "verdict": "clarified",
+      "explanation": "Report folder access is granted per folder, to public groups, roles or territories, at View, Edit or Manage level - and it does not cascade, since report folders in Lightning are a flat list rather than a true hierarchy. Each folder has to be shared on its own terms.\nThat is what makes these two the right pair. Sharing the Helpdesk folder with Support Agents at View access lets them run those reports without touching R&D. Sharing the Support Reports folder with Support Managers at Edit access gives managers the run-and-modify rights they were asked for.\nThe two rejected options both misfire on the agents' restriction. Sharing the parent Support Reports folder with Support Agents would be an attempt to grant access by containment, and sharing R&D with managers at Edit is already covered without addressing what agents may see.",
+      "references": ["https://help.salesforce.com/s/articleView?id=analytics.access_report_folders.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=analytics.analytics_sharing_permissions.htm&language=en_US&type=5"] },
+
+    { "id": "14bbd3a3", "verdict": "clarified",
+      "explanation": "Company Settings is where org-wide defaults for a global user base live. Manage Information About Your Company describes the Company Information page as holding the org's key attributes, default language, default locale and currency among them.\nDefault Language sets the language of labels, buttons, tabs and help text for everyone who has not overridden it personally. Currency Locale sets the corporate currency and the format numbers and currency fields take. Both are exactly the sort of thing a global rollout has to settle centrally.\nLogin Hours and Password Policy are security settings rather than company settings - login hours are configured per profile, and password policies under Security Controls.",
+      "references": ["https://help.salesforce.com/s/articleView?id=xcloud.company_information_fields.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=sf.setting_the_fiscal_year.htm&language=en_US&type=5"] },
+
+    { "id": "1c029e7f", "verdict": "clarified",
+      "explanation": "A Lightning record page is assigned, and one of the things you can assign it to is an app. Activating a record page offers Org Default, App Default, and an App, Record Type, and Profile combination - so the same object can render one page inside the Sales Console and a different one inside the Service Console.\nSetting each page as the app default for its own console is therefore the whole answer, and it needs no other configuration.\nThe alternatives change the wrong dimension. Page layout assignments govern fields and related lists by profile and record type, not which Lightning page renders. Record types would force an artificial data distinction to achieve a display difference. Different profiles would split users who may well need both apps.",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.lightning_app_builder_customize_lex_pages_activate.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=platform.lightning_page_types.htm&language=en_US&type=5"] },
+
+    { "id": "c9181352", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.fields_managing_deleted_fields.htm&language=en_US&type=5"] },
+
+    { "id": "2915050c", "verdict": "clarified",
+      "explanation": "Classic approval processes accept automated actions at four points - initial submission, each approval step, final approval or rejection, and recall - and the actions available are the workflow action types: field updates, email alerts, tasks, and outbound messages.\nField Update and Email Alert are therefore both available, and both are the ones this scenario would use: stamp a status field as the time-off request advances, and mail the requester and the approver.\nA Chatter post is not among the automated actions a classic approval process can attach. Neither is an autolaunched flow - to involve a flow you either move to Flow Approval Processes or have a record-triggered flow react to the field the approval process updated.",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.approvals_automated_actions.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=platform.approvals_automated_actions.htm&language=en_US&type=5"] },
+
+    { "id": "c1c37914", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.workflow_time_dependent.htm&language=en_US&type=5"] },
+
+    { "id": "4d0aaac5", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.lightning_app_builder_create_dynamic_related_list.htm&language=en_US&type=5"] },
+
+    { "id": "dcc3ab15", "verdict": "clarified",
+      "explanation": "Six teams with a fixed membership is the case account teams were designed for. Enable account teams, then have each user build a default account team of their account manager, engineer and assistant; that team is then added automatically to the accounts they own, with the access level and role each member should have.\nThe alternative of manual sharing puts the same work on people every time an account is created, and nothing keeps it consistent.\nOpportunity teams with splits solve a different problem - crediting revenue across a deal - and would not give collaborative access to the account itself. Assigning account ownership to a queue is not possible for accounts, and a queue holds records for claiming rather than sharing them with a standing team.",
+      "references": ["https://help.salesforce.com/s/articleView?id=sales.accountteam_def.htm&language=en_US&type=5"] },
+
+    { "id": "1fa46a19", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sales.faq_forecasts_category_mapping.htm&language=en_US&type=5"] }
+  ]
+}
