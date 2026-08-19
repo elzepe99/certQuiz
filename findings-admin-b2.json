@@ -1,0 +1,90 @@
+{
+  "deck": "public/decks/salesforce_admin_questions.json",
+  "reviewed": "2026-08-18",
+  "findings": [
+    { "id": "1ae04c79", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.customize_supporthours.htm&language=en_US&type=5"] },
+
+    { "id": "061bd870", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.notes_on_changing_custom_field_types.htm&language=en_US&type=5"] },
+
+    { "id": "0408c3f8", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=service.rules_escalation_actions.htm&language=en_US&type=5"] },
+
+    { "id": "53e999c6", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.kanban_use.htm&language=en_US&type=5"] },
+
+    { "id": "6e12dd2e", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.dashboard_filters_overview.htm&language=en_US&type=5"] },
+
+    { "id": "8058ccdf", "verdict": "clarified",
+      "explanation": "The requirement has two halves: a record has to enter a review because it crosses a threshold, and it has to get there without anyone clicking anything. Approvals are the review mechanism, and Flow is what makes the submission automatic.\nFlow Approval Processes are the current form of this. They can be built as record-triggered, so an opportunity crossing 100,000 dollars is submitted for the CFO's sign-off the moment it is saved. The older equivalent is a record-triggered flow that calls the Submit for Approval action against a classic approval process; either way, the automation is what removes the manual step.\nThe Submit for Approval button is the manual path the requirement rules out - it needs a user to press it. Einstein Next Best Action recommends actions to users, it does not route records for authorisation. Apex triggers could be made to work but are code where a declarative tool already covers the case.",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.automate_automated_approvals.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=platform.automate_automated_approvals_concepts_trigger.htm&language=en_US&type=5"] },
+
+    { "id": "f7935d50", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.workflow_managing_outbound_messages.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=platform.what_are_approvals.htm&language=en_US&type=5"] },
+
+    { "id": "98f643f0", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.salesforce_app_mobile_home.htm&language=en_US&type=5"] },
+
+    { "id": "75a6edb8", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.login_hours.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=platform.login_ip_ranges.htm&language=en_US&type=5"] },
+
+    { "id": "532d0949", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.overview_of_custom_object_relationships.htm&language=en_US&type=5"] },
+
+    { "id": "2085c46e", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=service.console_lex_intro.htm&language=en_US&type=5"] },
+
+    { "id": "24d30683", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.einstein_sales_opportunity_scoring.htm&language=en_US&type=5"] },
+
+    { "id": "c6364b77", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.users_freeze.htm&language=en_US&type=5"] },
+
+    { "id": "3a88eed3", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.collab_unlisted_groups_overview.htm&language=en_US&type=5"] },
+
+    { "id": "225ec7dd", "verdict": "clarified",
+      "explanation": "Three of these are documented traits of a master-detail relationship.\nRoll-up summary fields only exist on the master side of a master-detail relationship - that is the one relationship type that lets a parent count, sum, or take the minimum or maximum of a field on its children. The master can be a standard object or a custom object; the detail side is always custom. And the detail record has no owner of its own: ownership and record-level sharing are inherited from the master.\nThe two that are wrong are wrong on specifics. An object can have at most two master-detail relationships, not five. And permissions on a detail record are the opposite of independent - they are derived from the master, which is what makes the relationship tight rather than loose.",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.relationships_considerations.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=platform.fields_about_roll_up_summary_fields.htm&language=en_US&type=5"] },
+
+    { "id": "78b894fb", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.faq_data_import_wizard_what_kind_objects.htm&language=en_US&type=5"] },
+
+    { "id": "9881d4a4", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.editing_picklists_for_record_types_and_business_processes.htm&language=en_US&type=5"] },
+
+    { "id": "3bf6aa88", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sales.path_overview.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=platform.fields_validation_rules_tips.htm&language=en_US&type=5"] },
+
+    { "id": "8a82b5df", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.dashboards_post_to_dashboard_feed.htm&language=en_US&type=5"] },
+
+    { "id": "2b6f1886", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.reports_bucketing_overview.htm&language=en_US&type=5"] },
+
+    { "id": "da7f0e3d", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.reports_hide_report_types.htm&language=en_US&type=5"] },
+
+    { "id": "9f08b9dc", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.security_sharing_owd_about.htm&language=en_US&type=5",
+                     "https://help.salesforce.com/s/articleView?id=sf.security_controlling_access_using_hierarchies.htm&language=en_US&type=5"] },
+
+    { "id": "4faeff3d", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.fields_about_roll_up_summary_fields.htm&language=en_US&type=5"] },
+
+    { "id": "7856a477", "verdict": "corrected", "was": "B", "correct": "D",
+      "explanation": "Activate or Deactivate Your Agent states the behaviour outright: \"Deactivating an agent interrupts any ongoing user conversations. Users aren't notified that an agent is deactivated. The agent sends the system error message as a response to any messages.\" That is exactly what the keyed option describes.\nSo deactivation is not a graceful drain. There is no version pinning that lets sessions started before the change finish on the old configuration, and nothing pauses and resumes. A user mid-conversation simply gets the system error message back, with no explanation that anything has changed.\nThe window does not close either. If the agent uses the Agentforce panel, the panel stays available until the user closes it and cannot be reopened until the agent is active again; on an Enhanced Chat deployment the chat window still appears, but the agent does not join the conversation.\nThe practical consequence is the reason Salesforce documents agent versions: to change an agent without taking the live one out of service, work on a separate version rather than deactivating the active one.",
+      "references": ["https://help.salesforce.com/s/articleView?id=ai.copilot_setup_activate_deactivate.htm&language=en_US&type=5"],
+      "note": "The key said ongoing conversations continue on the deactivated agent until it is reactivated. The documentation says the opposite - deactivating interrupts ongoing conversations and the agent responds to any further messages with the system error message, which is the option the key had listed as wrong." },
+
+    { "id": "b7e12d88", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=platform.users_profiles_object_perms.htm&language=en_US&type=5"] }
+  ]
+}
