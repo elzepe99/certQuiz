@@ -379,13 +379,13 @@
     },
     {
       "id": "bd39a845",
-      "verdict": "reasoning",
-      "explanation": "Loading a large, regular feed of child time-entry records into a privately-shared parent makes Salesforce recalculate sharing as each batch lands, on top of recomputing the parent's roll-up summaries. The LDV guide's remedy for the sharing half is explicit: \"Use the defer sharing calculation permission to defer sharing calculations until after all data has been loaded\", then run one recalculation.\nReplacing roll-up summary fields with workflow (B) or triggers (C) swaps a platform-maintained aggregate for custom automation that fires on every one of those inserts — more work per record, not less. External IDs (D) are how you resolve the parent reference during the load; they do nothing about the recalculation cost that is the problem here.",
+      "verdict": "clarified",
+      "explanation": "The figure above is the model the stem refers to, and the cascade it shows is the whole problem: Time Entry is a junction with master-detail to both Work Item and Resource, each of which rolls its hours up, and those two are themselves master-detail children of Project, which rolls up again. So one Time Entry insert recalculates roll-ups on two parents and then on their shared grandparent — and Project is private, so its sharing is recalculated on top of that.\nLoading that feed regularly is exactly what the LDV guide's remedy is written for: \"Use the defer sharing calculation permission to defer sharing calculations until after all data has been loaded\", then run one recalculation (A).\nReplacing the roll-up summary fields with workflow (B) or triggers (C) swaps a platform-maintained aggregate for custom automation that fires on every one of those inserts — more work per record, not less, and it walks the same two-level cascade by hand. External IDs (D) are how you resolve the parent references during the load; they do nothing about the recalculation cost, which is what the stem is asking about.",
       "references": [
         "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_api_loading_data.htm",
-        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_techniques_deferred_sharing_calculation.htm"
-      ],
-      "note": "Item defect: the stem says \"as shown in the image\" but the data-model exhibit did not survive scraping. The stem's prose describes the model well enough to answer, so the question is still answerable — but the image is not coming back."
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_techniques_deferred_sharing_calculation.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_object_relationships_parent_child_data_skew.htm"
+      ]
     },
     {
       "id": "58b81f44",
@@ -1095,7 +1095,7 @@
     {
       "id": "086174ae",
       "verdict": "clarified",
-      "explanation": "Salesforce's default advice runs the other way — \"Unless the data absolutely needs to reside in Salesforce, consider data virtualization with Salesforce Connect instead\", because \"More data in your organization ultimately leads to larger data volumes, which can adversely affect performance and add technical debt.\" What makes this stem an exception is its third requirement.\nReporting alone might survive virtualization. Programmatic aggregation and workflow participation do not: external objects do not support Apex triggers, and the automation surface over them is narrow. Once developers need to aggregate the records in Apex and feed them into workflows, the data has to be persisted in Salesforce objects (D).\nBidirectional and unidirectional (A, B) describe which way data flows, not whether it is stored — they answer a different question than the one asked.",
+      "explanation": "Persistence is the answer: store the IoT records in Salesforce objects (D). The third requirement forces it — developers need to aggregate the records in Apex and feed them into workflows, and external objects do not support Apex triggers and have a narrow automation surface, so virtualized data cannot carry that logic. Weekly reporting on persisted records is straightforward once they are objects.\nThat is an exception to Salesforce's default advice, which runs the other way: \"Unless the data absolutely needs to reside in Salesforce, consider data virtualization with Salesforce Connect instead\", because \"More data in your organization ultimately leads to larger data volumes, which can adversely affect performance and add technical debt.\" Virtualization (C) would satisfy the reporting requirement on its own; it is the programmatic aggregation and workflow participation that rule it out here.\nBidirectional and unidirectional (A, B) describe which way data flows, not whether it is stored — they answer a different question than the one asked. At 100,000 records a day, load the persisted records with the Bulk API to keep API consumption in hand.",
       "references": [
         "https://architect.salesforce.com/decision-guides/data-integration",
         "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_external_objects_considerations.htm",
