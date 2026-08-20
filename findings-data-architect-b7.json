@@ -1,0 +1,13 @@
+{
+  "deck": "public/decks/questions_data_architect_merged.json",
+  "reviewed": "2026-08-19",
+  "findings": [
+    { "id": "086174ae", "verdict": "clarified",
+      "explanation": "Persistence is the answer: store the IoT records in Salesforce objects (D). The third requirement forces it — developers need to aggregate the records in Apex and feed them into workflows, and external objects do not support Apex triggers and have a narrow automation surface, so virtualized data cannot carry that logic. Weekly reporting on persisted records is straightforward once they are objects.\nThat is an exception to Salesforce's default advice, which runs the other way: \"Unless the data absolutely needs to reside in Salesforce, consider data virtualization with Salesforce Connect instead\", because \"More data in your organization ultimately leads to larger data volumes, which can adversely affect performance and add technical debt.\" Virtualization (C) would satisfy the reporting requirement on its own; it is the programmatic aggregation and workflow participation that rule it out here.\nBidirectional and unidirectional (A, B) describe which way data flows, not whether it is stored — they answer a different question than the one asked. At 100,000 records a day, load the persisted records with the Bulk API to keep API consumption in hand.",
+      "references": [
+        "https://architect.salesforce.com/decision-guides/data-integration",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_external_objects_considerations.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_external_objects.htm"
+      ] }
+  ]
+}

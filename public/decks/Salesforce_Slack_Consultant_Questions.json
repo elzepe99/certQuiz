@@ -8,8 +8,13 @@
     "optionD": "Two-factor authentication for all users",
     "optionE": "",
     "correct": "C",
-    "explanation": "Compliance Exports are crucial for legal firms as they allow for the preservation of electronic communications, which is essential for meeting the requirements of legal hold during investigations. Periodic data exports are for general backups and do not specifically cater to legal hold requirements. Custom retention settings manage the lifespan of messages but are not tailored for legal investigations. Two-factor authentication enhances security but doesn't address the specific needs of legal hold in potential litigation.",
-    "_cat": "Compliance & Data Governance"
+    "explanation": "Of the four options, Compliance Exports is the only one aimed at retrieving message and file data for a legal or regulatory purpose, so it remains the keyed answer. Two cautions matter more than the key here.\nFirst, the terminology is dated. Slack's Guide to Slack import and export tools does not use \"Compliance Exports\" as a current product name. The documented export paths are a standard workspace export of public channels, a self-serve data export tool covering private channels and DMs on Business+ and Enterprise, and the Discovery API export mechanism on Enterprise, which is the route eDiscovery and DLP partners use.\nSecond, and more important: an export retrieves data, it does not preserve it. Slack's actual legal-hold mechanism is a separate, native feature. In an Enterprise organization, someone with the Legal Holds Admin system role can place a legal hold on specific members to preserve their messages and files, and held content is saved regardless of retention settings and regardless of whether members edit or delete it. Data under hold is then read through a JSON export or the Discovery API. That feature is the correct answer to the question as asked, and it does not appear among the options.\nReferences:\nhttps://slack.com/help/articles/4401830811795-Create-and-manage-legal-holds\nhttps://slack.com/help/articles/204897248-Guide-to-Slack-import-and-export-tools",
+    "_cat": "Compliance & Data Governance",
+    "corrected": {
+      "date": "2026-08-18",
+      "via": "validation",
+      "note": "Item is defective: the mechanism Slack actually documents for legal hold — the native Legal Holds feature, driven by the Legal Holds Admin system role — is absent from the option set, so no option is fully correct. The old explanation also claimed Compliance Exports \"allow for the preservation of electronic communications\"; exports retrieve data, legal holds preserve it, and \"Compliance Exports\" is not current Slack terminology."
+    }
   },
   {
     "id": "535baa2b",
@@ -20,7 +25,7 @@
     "optionD": "Number of direct messages sent",
     "optionE": "",
     "correct": "C",
-    "explanation": "Examining channel creation and usage statistics is crucial for understanding how different departments are utilizing Slack, which can inform resource allocation decisions. Emoji usage is not relevant, time in calls is not comprehensive, and direct message counts don't offer department-wide insights.",
+    "explanation": "The Channels tab of the Slack analytics dashboard is the view that reports per-channel usage, and it is the right place to look when deciding how departments are actually using Slack. Slack documents its columns as including Created, Last active, Total membership, Full members, Guests, Messages posted, Members who posted, Members who viewed, and Reactions added. Together those cover both channel creation and channel usage.\nNote one plan limit when reading this data: on the Pro and Business+ plans the Channels tab reports on public channels only. Private-channel analytics are available to owners and admins on Enterprise plans with permission to manage private channels, so on smaller plans a department that works largely in private channels will be under-represented.\nReferences:\nhttps://slack.com/help/articles/360057638533-Understand-the-data-in-your-Slack-analytics-dashboard",
     "_cat": "Analytics & Reporting"
   },
   {
@@ -32,7 +37,7 @@
     "optionD": "Would you prefer using Slack on desktop or mobile?",
     "optionE": "",
     "correct": "B",
-    "explanation": "Understanding the client's strategic objectives and how they envision Slack supporting these goals is crucial to aligning the implementation with broader organizational aims. Branding preferences are minor details, channel count is a tactical detail that should follow strategic alignment, and desktop/mobile preference doesn't relate to long-term objectives.",
+    "explanation": "Understanding the client's strategic objectives and how they envision Slack supporting these goals is crucial to aligning the implementation with broader organizational aims. Branding preferences are minor details, channel count is a tactical detail that should follow strategic alignment, and desktop/mobile preference doesn't relate to long-term objectives.\nReferences:\nhttps://slack.com/resources/slack-for-admins/launching-slack",
     "_cat": "Discovery & Consulting"
   },
   {
@@ -44,7 +49,7 @@
     "optionD": "Designing the grid based solely on the preferences of the top management team",
     "optionE": "",
     "correct": "A",
-    "explanation": "The best practice in grid design is to tailor the structure to mirror the organization's internal structure, with channels for departments, projects, and company-wide communication. A single channel leads to disorganization, too many upfront channels cause underutilization and confusion, and designing solely around management preferences ignores broader organizational needs.",
+    "explanation": "Mirroring the organisation is the right starting principle, and Slack frames it the same way: create channels aligned with your company structure and pair them with clear, predictable naming guidelines so the workspace stays organised and easy to navigate. In practice that means channels for teams, channels for projects and a small number of company-wide channels, distinguished by prefix.\nThe alternatives each fail in a way worth naming. A single channel for everything removes the separation that makes any of it readable. Creating many channels up front produces empty rooms that dilute search results and teach people that channels are stale by default — Slack's own advice is that every channel should have a clear purpose in its description. And designing solely around leadership preference misses where the work actually happens.\nOne scope note: on Enterprise Grid the workspace layer is a further design decision above channels, and org-level policies can lock preferences that individual workspaces would otherwise set.\nReferences:\nhttps://slack.com/help/articles/217626408-Create-guidelines-for-channel-names\nhttps://slack.com/help/articles/115005225987-Manage-a-workspace-on-Enterprise-Grid",
     "_cat": "Enterprise Grid & Channel Design"
   },
   {
@@ -56,7 +61,7 @@
     "optionD": "Focus primarily on private channels to keep discussions confidential",
     "optionE": "",
     "correct": "B",
-    "explanation": "Using clear and descriptive naming conventions helps users easily understand the purpose of each channel, leading to better organization and more efficient use of Slack. Adding everyone to every channel causes information overload, unrestricted creation leads to clutter, and focusing on private channels limits open communication.",
+    "explanation": "Naming is the one channel-management practice Slack states as a recommendation rather than leaving to taste: it advises using a set of standard prefixes to keep channel names consistent and descriptive. Prefixed channels sort together alphabetically and surface predictably in search, so people can find the right room without asking. Slack ships #help, #proj and #team as defaults and documents #announce, #triage and #event as further conventions; organisations commonly add #project-, #client- and #social-.\nThe other options each break something. Adding everyone to every channel produces the noise that channels exist to contain. Leaving creation entirely unrestricted is the default, not a strategy. Defaulting to private channels forfeits the searchable, joinable history that makes a public channel useful to people who arrive later.\nReferences:\nhttps://slack.com/help/articles/217626408-Create-guidelines-for-channel-names",
     "_cat": "Channel Management"
   },
   {
@@ -68,7 +73,7 @@
     "optionD": "An emphasis on the number of Slack licenses to be purchased by the client",
     "optionE": "",
     "correct": "B",
-    "explanation": "A vision statement should include specific, measurable goals that align with the client's broader business objectives, ensuring the vision is clear, achievable, and supports overall goals. Listing every feature doesn't necessarily align with specific needs, technical specs should support rather than define the vision, and license count is a logistical detail.",
+    "explanation": "A vision statement should include specific, measurable goals that align with the client's broader business objectives, ensuring the vision is clear, achievable, and supports overall goals. Listing every feature doesn't necessarily align with specific needs, technical specs should support rather than define the vision, and license count is a logistical detail.\nReferences:\nhttps://slack.com/resources/slack-for-admins/launching-slack",
     "_cat": "Discovery & Consulting"
   },
   {
@@ -80,7 +85,7 @@
     "optionD": "Manual deactivation of user accounts by Slack Workspace Admins",
     "optionE": "",
     "correct": "B",
-    "explanation": "Integrating Slack with the organization's active directory enables automated account management, ensuring employee access is promptly updated in the event of turnover. Password reminders don't address deactivation, two-factor authentication doesn't manage account status automatically, and manual deactivation is less efficient and may cause delays.",
+    "explanation": "Integrating Slack with the organization's active directory enables automated account management, ensuring employee access is promptly updated in the event of turnover. Password reminders don't address deactivation, two-factor authentication doesn't manage account status automatically, and manual deactivation is less efficient and may cause delays.\nReferences:\nhttps://slack.com/help/articles/212572638-Manage-members-with-SCIM-provisioning",
     "_cat": "Security & Identity Management"
   },
   {
@@ -92,7 +97,7 @@
     "optionD": "Permit all employees to accept Slack Connect invitations without any restrictions",
     "optionE": "",
     "correct": "B",
-    "explanation": "Implementing a DLP integration for Slack Connect channels helps ensure efficient collaboration with external stakeholders while safeguarding sensitive data. Automatic approval might not adequately vet connections, unrestricted file sharing could expose data, and unrestricted invitation acceptance poses a security risk.",
+    "explanation": "Implementing a DLP integration for Slack Connect channels helps ensure efficient collaboration with external stakeholders while safeguarding sensitive data. Automatic approval might not adequately vet connections, unrestricted file sharing could expose data, and unrestricted invitation acceptance poses a security risk.\nReferences:\nhttps://slack.com/help/articles/12914005852819-Slack-data-loss-prevention",
     "_cat": "Slack Connect & Security"
   },
   {
@@ -104,7 +109,7 @@
     "optionD": "Providing a series of lectures by Slack experts without interactive elements",
     "optionE": "",
     "correct": "B",
-    "explanation": "For teaching advanced Slack functionalities, a hands-on workshop where experienced users actively engage in creating complex workflows and integrating third-party apps is highly effective, allowing direct application in a practical setting. Self-study lacks immediate hands-on experience, exams don't constitute experiential learning, and lectures without interaction lack practical engagement.",
+    "explanation": "For teaching advanced Slack functionalities, a hands-on workshop where experienced users actively engage in creating complex workflows and integrating third-party apps is highly effective, allowing direct application in a practical setting. Self-study lacks immediate hands-on experience, exams don't constitute experiential learning, and lectures without interaction lack practical engagement.\nReferences:\nhttps://slack.com/resources/slack-for-admins/launching-slack",
     "_cat": "Training & Enablement"
   },
   {
@@ -116,8 +121,13 @@
     "optionD": "Frequent mandatory password changes for all users",
     "optionE": "",
     "correct": "B",
-    "explanation": "IP whitelisting is the most effective measure to ensure Slack can only be accessed from the organization's office premises, as it allows access only from specific, pre-approved IP addresses. Two-factor authentication doesn't restrict by location, private channels don't restrict physical access location, and password changes don't control location of access.",
-    "_cat": "Security & Identity Management"
+    "explanation": "Restricting access by network location is the only one of these four that addresses the requirement at all, so the keyed option stands as the intended answer. Be careful about what Slack actually documents, though.\nSlack's Help Center does not describe a self-serve IP allowlist that limits where members may sign in from. The network-level control it does document is a proxy-based one: an administrator configures an on-premises or cloud proxy to intercept traffic to slack.com and insert the X-Slack-Allowed-Workspaces-Requester and X-Slack-Allowed-Workspaces headers, which list the workspaces employees may reach. That restricts which workspaces are reachable, not the network the user is sitting on. IP allowlisting does appear elsewhere in Slack's platform, but scoped to app OAuth and SCIM tokens rather than to member sign-in.\nAlso note the terminology: Slack now writes \"allowlist\", not \"whitelist\".\nReferences:\nhttps://slack.com/help/articles/360024821873-Approve-Slack-workspaces-for-your-network",
+    "_cat": "Security & Identity Management",
+    "corrected": {
+      "date": "2026-08-18",
+      "via": "validation",
+      "note": "Answer stands as the best of the four, but the premise is shakier than the old explanation implied: Slack Help does not document an IP allowlist that confines member sign-in to an office network. The documented network control is proxy header based and limits which workspaces are reachable, not the caller's location."
+    }
   },
   {
     "id": "96be8a94",
@@ -128,7 +138,7 @@
     "optionD": "Advising the client to stop using the old platform right away to accelerate adoption of Slack",
     "optionE": "",
     "correct": "B",
-    "explanation": "The first essential step is to conduct a thorough needs analysis, understanding the client's current communication workflow, needs, and how Slack can be integrated. This is crucial for a tailored and effective migration strategy. Transferring data first skips understanding needs, training before analysis and planning is premature, and abruptly stopping the old platform disrupts operations.",
+    "explanation": "The first essential step is to conduct a thorough needs analysis, understanding the client's current communication workflow, needs, and how Slack can be integrated. This is crucial for a tailored and effective migration strategy. Transferring data first skips understanding needs, training before analysis and planning is premature, and abruptly stopping the old platform disrupts operations.\nReferences:\nhttps://slack.com/blog/transformation/teams-to-slack-migration",
     "_cat": "Migration"
   },
   {
@@ -140,8 +150,13 @@
     "optionD": "Use only direct messaging for focused discussions and a few public channels for general communication",
     "optionE": "",
     "correct": "C",
-    "explanation": "Enabling a policy that allows employees to propose new channels with admin approval combines the benefits of open communication with the need for focused, relevant discussions. Restricting to admins only may limit organic growth, unrestricted creation leads to clutter, and relying only on direct messages overly restricts diverse communication needs.",
-    "_cat": "Channel Management"
+    "explanation": "As an organisational policy this is a reasonable middle path, and it remains the keyed answer: it keeps channel creation open to the people doing the work while giving admins a check on sprawl.\nBe clear about what Slack does and does not provide natively, though. Slack has no built-in request-and-approve workflow for channel creation. What the platform actually exposes is a permission: Workspace Owners and Org Owners adjust which role types can create public channels, create private channels, archive channels and unarchive channels, under Channel Management in workspace settings, or Channel Management Restrictions in organisation settings on Enterprise Grid. Slack does ship approval queues, but for other things — Slack Connect invitations, workspace invitations, and app requests. A propose-then-approve flow for channels has to be run as a process, for example through Workflow Builder or a simple request channel, on top of a permission that restricts who can create.\nReferences:\nhttps://slack.com/help/articles/115004988303-Adjust-channel-management-permissions\nhttps://slack.com/help/articles/360047512554-Use-channel-management-tools",
+    "_cat": "Channel Management",
+    "corrected": {
+      "date": "2026-08-18",
+      "via": "validation",
+      "note": "Answer stands as a policy recommendation, but the old explanation presented it as a Slack channel-management setting. There is no native channel-creation approval workflow; Slack's documented setting only controls which role types may create channels."
+    }
   },
   {
     "id": "20885bb7",
@@ -152,7 +167,7 @@
     "optionD": "Limiting training to only observing demonstrations by experienced Slack users without user interaction",
     "optionE": "",
     "correct": "C",
-    "explanation": "The core of the experiential learning approach involves encouraging users to actively explore and use Slack features through guided, practical activities and real-world scenario simulations. Written documentation lacks the hands-on component, lecture-based training lacks practical immersion, and observation without interaction fails to fully engage users.",
+    "explanation": "The core of the experiential learning approach involves encouraging users to actively explore and use Slack features through guided, practical activities and real-world scenario simulations. Written documentation lacks the hands-on component, lecture-based training lacks practical immersion, and observation without interaction fails to fully engage users.\nReferences:\nhttps://slack.com/resources/slack-for-admins/launching-slack",
     "_cat": "Training & Enablement"
   },
   {
@@ -164,7 +179,7 @@
     "optionD": "Relying on the admins to self-learn advanced features through trial and error",
     "optionE": "",
     "correct": "B",
-    "explanation": "For a startup with rapidly evolving needs, an ongoing and adaptable training program for admins is key, with regular updates and refresher courses ensuring proficiency. A one-time session isn't sufficient for continuous learning, focusing on company history doesn't build practical skills, and self-learning through trial and error can be inconsistent.",
+    "explanation": "For a startup with rapidly evolving needs, an ongoing and adaptable training program for admins is key, with regular updates and refresher courses ensuring proficiency. A one-time session isn't sufficient for continuous learning, focusing on company history doesn't build practical skills, and self-learning through trial and error can be inconsistent.\nReferences:\nhttps://slack.com/resources/slack-for-admins/launching-slack",
     "_cat": "Training & Enablement"
   },
   {
@@ -176,7 +191,7 @@
     "optionD": "Org Owner",
     "optionE": "",
     "correct": "D",
-    "explanation": "Org Owners in Slack's Enterprise Grid have the highest level of permissions, including overseeing the entire Slack environment, setting organization-wide security policies, and managing compliance across multiple workspaces. Workspace Owners control only individual workspaces, Workspace Admins manage specific workspace settings, and Org Admins have broad but not the same level of control as Org Owners.",
+    "explanation": "Among the roles offered, Org Owner is the one whose scope spans the whole Enterprise organisation rather than a single workspace. Slack documents Org Owners as holding the same level of permissions as the Org Primary Owner, with the exception that they cannot transfer ownership of the org, which puts organisation-wide security policy and compliance work squarely in their remit.\nThe two workspace roles are ruled out by scope: Workspace Owners and Workspace Admins act within one workspace, and Workspace Admins additionally cannot reach the Billing page. Org Admins are genuinely org-level and assist with org settings and policies, but they sit below Org Owners.\nOne detail worth carrying: the single highest role is the Org Primary Owner, of which every Enterprise organisation has exactly one, and only that person can transfer ownership of the org. Org Owner is the right answer here because the Primary Owner is not among the options.\nReferences:\nhttps://slack.com/help/articles/360018112273-Types-of-roles-in-Slack",
     "_cat": "Administration Roles"
   },
   {
@@ -188,7 +203,7 @@
     "optionD": "Provide a lecture on the theoretical aspects of Slack without practical application or user interaction",
     "optionE": "",
     "correct": "B",
-    "explanation": "Engaging participants in a hands-on workshop where they actively use Slack to collaborate on a simulated project is key to experiential learning, allowing practical application with real-time guidance and feedback. A non-interactive presentation lacks hands-on experience, observation alone doesn't allow active engagement, and a theoretical lecture fails to provide immersive learning.",
+    "explanation": "Engaging participants in a hands-on workshop where they actively use Slack to collaborate on a simulated project is key to experiential learning, allowing practical application with real-time guidance and feedback. A non-interactive presentation lacks hands-on experience, observation alone doesn't allow active engagement, and a theoretical lecture fails to provide immersive learning.\nReferences:\nhttps://slack.com/resources/slack-for-admins/launching-slack",
     "_cat": "Training & Enablement"
   },
   {
@@ -200,7 +215,7 @@
     "optionD": "Encourage the use of personal channels for individual projects",
     "optionE": "",
     "correct": "B",
-    "explanation": "A clear and consistent channel naming convention, including aspects like department and function, aids employees in quickly identifying and accessing relevant channels. Deleting less active channels doesn't address discovery of existing relevant channels, exclusive private channels hinder transparency, and personal channels lead to fragmentation.",
+    "explanation": "This is a discovery problem, and Slack's documented answer to it is a naming convention. Standard prefixes keep names consistent and descriptive, group related channels together alphabetically in the sidebar, and make channels findable by search — which is precisely what employees in a fast-growing organisation are missing. Encoding department and function in the name, as this option describes, is the same idea Slack's own #team-, #proj- and #help- prefixes express. Slack also suggests writing the convention down and pinning it somewhere central so it survives growth.\nDeleting quiet channels attacks a different problem and destroys history along the way; going private-only hides the very channels people are failing to find; and per-person channels fragment discussion further.\nReferences:\nhttps://slack.com/help/articles/217626408-Create-guidelines-for-channel-names",
     "_cat": "Channel Management"
   },
   {
@@ -212,7 +227,7 @@
     "optionD": "Advise them to only communicate via text messages and avoid using calls",
     "optionE": "",
     "correct": "A",
-    "explanation": "The first and most practical step in troubleshooting audio issues during Slack calls is to check the audio settings within Slack and ensure speakers or headphones are properly connected and configured. Replacing the sound card is an extreme measure, assuming a platform-wide bug without checking settings first is not recommended, and avoiding calls doesn't address the issue.",
+    "explanation": "Checking the audio configuration inside Slack is the right first move, and the only option here that is actual troubleshooting rather than an overreaction.\nSlack's own sequence is worth knowing precisely. It starts even simpler: quit and reopen the desktop app or browser, and if that does not help, restart the device. From there the guidance is to confirm the hardware selection — make sure you have selected the correct microphone and speaker, then test the speaker by clicking Test, which plays a chime if the speaker is unmuted and working. Inside a huddle the same check is available from the three-dots menu as Test Speaker. If audio still fails, the next checks are operating-system microphone permissions and, on Windows, whether the intended headset is the system default output device.\nReferences:\nhttps://slack.com/help/articles/115003538426-Troubleshoot-audio-and-video-issues-in-Slack",
     "_cat": "Troubleshooting"
   },
   {
@@ -224,7 +239,7 @@
     "optionD": "Instructing the team to only watch pre-recorded tutorials without engaging in any live, interactive Slack usage",
     "optionE": "",
     "correct": "B",
-    "explanation": "Conducting a role-playing exercise where the marketing team uses Slack to plan, discuss, and execute a mock campaign is a highly effective experiential learning activity, enabling direct application in a relevant context. Focusing on technical specs doesn't address practical application, reading manuals without exercises lacks hands-on experience, and watching pre-recorded tutorials lacks live interaction.",
+    "explanation": "Conducting a role-playing exercise where the marketing team uses Slack to plan, discuss, and execute a mock campaign is a highly effective experiential learning activity, enabling direct application in a relevant context. Focusing on technical specs doesn't address practical application, reading manuals without exercises lacks hands-on experience, and watching pre-recorded tutorials lacks live interaction.\nReferences:\nhttps://slack.com/resources/slack-for-admins/launching-slack",
     "_cat": "Training & Enablement"
   },
   {
@@ -236,7 +251,7 @@
     "optionD": "Automatically subscribe all users to every channel",
     "optionE": "",
     "correct": "B",
-    "explanation": "Creating a few essential channels for general topics while allowing department heads to create additional channels as needed ensures a structured foundation while providing flexibility for department-specific needs. Unrestricted creation leads to disorganization, restricting to executives only is overly restrictive, and automatic subscription to every channel causes information overload.",
+    "explanation": "A small set of standing channels plus delegated creation gives a new company structure without freezing it, and it maps onto a setting Slack actually provides.\nThe relevant control is Channel Management in workspace settings, where a Workspace Owner chooses which role types may create public channels, create private channels, archive channels and unarchive channels. On Enterprise Grid the equivalent lives in organisation settings as Channel Management Restrictions. So \"let department heads create additional channels\" is implemented by granting channel-creation to the chosen roles rather than leaving it open to everyone or locking it to executives.\nPair that with a naming convention so the channels that do get created stay findable.\nReferences:\nhttps://slack.com/help/articles/115004988303-Adjust-channel-management-permissions",
     "_cat": "Channel Management"
   },
   {
@@ -248,7 +263,7 @@
     "optionD": "How often do your employees use Slack's custom emoji feature?",
     "optionE": "",
     "correct": "B",
-    "explanation": "Asking about specific challenges with team communication and collaboration is most useful for understanding how the client might expand their use of Slack, helping identify pain points and areas where advanced features could help. Mobile installation counts, listing other software tools, and emoji usage frequency don't directly address expansion needs.",
+    "explanation": "Asking about specific challenges with team communication and collaboration is most useful for understanding how the client might expand their use of Slack, helping identify pain points and areas where advanced features could help. Mobile installation counts, listing other software tools, and emoji usage frequency don't directly address expansion needs.\nReferences:\nhttps://slack.com/blog/transformation/teams-to-slack-migration",
     "_cat": "Discovery & Consulting"
   },
   {
@@ -260,7 +275,7 @@
     "optionD": "A third-party IT service provider not involved in the migration project",
     "optionE": "",
     "correct": "C",
-    "explanation": "The client should first contact the Partner's consulting team for any technical issues during migration, as this team is responsible for overseeing the migration and can resolve or escalate issues appropriately. Slack's customer service isn't the primary contact for migration issues, attempting independent resolution could cause complications, and involving an uninvolved third-party provider can lead to miscommunication.",
+    "explanation": "The client should first contact the Partner's consulting team for any technical issues during migration, as this team is responsible for overseeing the migration and can resolve or escalate issues appropriately. Slack's customer service isn't the primary contact for migration issues, attempting independent resolution could cause complications, and involving an uninvolved third-party provider can lead to miscommunication.\nReferences:\nhttps://slack.com/blog/transformation/teams-to-slack-migration",
     "_cat": "Migration"
   },
   {
@@ -272,7 +287,7 @@
     "optionD": "Recommend a complete overhaul of the user's computer system",
     "optionE": "",
     "correct": "A",
-    "explanation": "The first and most practical step in addressing slow loading times and frequent disconnections is to advise the user to clear the cache and data for the Slack application, which can resolve performance-impacting issues. Escalating to engineering should be a later step, sending a company-wide email is unnecessary and disruptive, and a full system overhaul is an extreme measure.",
+    "explanation": "The first and most practical step in addressing slow loading times and frequent disconnections is to advise the user to clear the cache and data for the Slack application, which can resolve performance-impacting issues. Escalating to engineering should be a later step, sending a company-wide email is unnecessary and disruptive, and a full system overhaul is an extreme measure.\nReferences:\nhttps://slack.com/help/articles/205138367-Troubleshoot-connection-issues",
     "_cat": "Troubleshooting"
   },
   {
@@ -284,7 +299,7 @@
     "optionD": "User Group Admin",
     "optionE": "",
     "correct": "B",
-    "explanation": "Workspace Admins have the capabilities to manage workspace settings, oversee channel creation, and handle user permissions, but they do not have access to billing information, making this role ideal for the described need. Workspace Owners have access to all workspace settings including billing, Org Owners control the entire organization's settings including billing, and User Group Admins are focused mainly on managing user groups.",
+    "explanation": "Workspace Admins have the capabilities to manage workspace settings, oversee channel creation, and handle user permissions, but they do not have access to billing information, making this role ideal for the described need. Workspace Owners have access to all workspace settings including billing, Org Owners control the entire organization's settings including billing, and User Group Admins are focused mainly on managing user groups.\nReferences:\nhttps://slack.com/help/articles/360018112273-Types-of-roles-in-Slack",
     "_cat": "Administration Roles"
   },
   {
@@ -295,9 +310,16 @@
     "optionC": "Enable a policy where new channels can be created freely, but require a justification for each",
     "optionD": "Implement an automatic archiving policy for inactive channels",
     "optionE": "",
-    "correct": "C",
-    "explanation": "This setting allows for the flexibility of creating new channels as needed while ensuring that each new channel has a clear purpose, thereby managing information flow effectively. Restricting to administrators only may stifle open communication culture, unlimited creation could lead to information overload, and automatic archiving doesn't address initial channel creation and purpose.",
-    "_cat": "Channel Management"
+    "correct": "A",
+    "explanation": "Read the stem literally: it asks which setting adjustment would help. Slack's channel-management settings let a Workspace Owner or Org Owner choose which role types may create public channels, create private channels, archive channels and unarchive channels — reached through Channel Management in workspace settings, or Channel Management Restrictions in organisation settings on Enterprise Grid. Narrowing who may create channels is therefore the only option on this list that names a real setting and that reduces channel proliferation.\nThe two options that sound more balanced are not settings Slack offers. There is no preference anywhere in Slack's channel-management documentation that requires a member to supply a justification or purpose before creating a channel. Nor is there a native policy that archives channels automatically once they go inactive: archiving is a manual action, available to permitted roles individually or in bulk from the channel-management dashboard, and Slack documents no inactivity trigger for it.\nOne caveat on applying this in practice. Slack documents the mechanism, not a ranking of governance strategies, and restricting creation does trade openness for order. Many organisations get a better balance by keeping creation broad and investing in naming conventions and periodic manual archiving instead.\nReferences:\nhttps://slack.com/help/articles/115004988303-Adjust-channel-management-permissions\nhttps://slack.com/help/articles/360047512554-Use-channel-management-tools",
+    "_cat": "Channel Management",
+    "corrected": {
+      "date": "2026-08-18",
+      "via": "validation",
+      "note": "The previous key, C, described a setting Slack does not have: no channel-management preference requires a justification when a channel is created. Option D is not a Slack setting either — archiving is manual, with no documented inactivity trigger — so A is the only option naming a real setting adjustment. Item is weak: Slack documents the permission but does not rank channel-governance strategies, and this deck keys the opposite, more permissive answer on two similar questions.",
+      "from": "C",
+      "to": "A"
+    }
   },
   {
     "id": "6bfcfbed",
@@ -308,7 +330,7 @@
     "optionD": "Restrict the installation of any third-party apps to prevent possible breaches",
     "optionE": "",
     "correct": "C",
-    "explanation": "A detailed review of each app's security and compliance measures is essential for a healthcare organization to ensure adherence to HIPAA regulations while balancing utility of third-party apps. Automatic approval based on claimed compliance may overlook specific HIPAA aspects, popularity doesn't guarantee compliance, and completely restricting third-party apps could limit useful productivity tools that are actually compliant.",
+    "explanation": "A detailed review of each app's security and compliance measures is essential for a healthcare organization to ensure adherence to HIPAA regulations while balancing utility of third-party apps. Automatic approval based on claimed compliance may overlook specific HIPAA aspects, popularity doesn't guarantee compliance, and completely restricting third-party apps could limit useful productivity tools that are actually compliant.\nReferences:\nhttps://slack.com/help/articles/360001670528-Security-recommendations-for-approving-apps\nhttps://slack.com/help/articles/222386767-Manage-app-approval-for-your-workspace",
     "_cat": "Compliance & Data Governance"
   },
   {
@@ -320,7 +342,7 @@
     "optionD": "Provide one large, detailed manual on Slack and expect all employees to self-learn from it without any guided training",
     "optionE": "",
     "correct": "A",
-    "explanation": "Designing a diverse learning curriculum that begins with basic functionalities and progresses to advanced features, tailored to specific department needs and user roles, ensures a comprehensive and effective learning experience. Assuming uniform proficiency can leave some users behind, focusing only on basics neglects advanced needs, and relying solely on self-learning from a manual can be overwhelming.",
+    "explanation": "Designing a diverse learning curriculum that begins with basic functionalities and progresses to advanced features, tailored to specific department needs and user roles, ensures a comprehensive and effective learning experience. Assuming uniform proficiency can leave some users behind, focusing only on basics neglects advanced needs, and relying solely on self-learning from a manual can be overwhelming.\nReferences:\nhttps://slack.com/resources/slack-for-admins/launching-slack",
     "_cat": "Training & Enablement"
   },
   {
@@ -332,7 +354,7 @@
     "optionD": "Frequency of app integration usage",
     "optionE": "",
     "correct": "B",
-    "explanation": "Focusing on active channels and their engagement levels provides valuable insights into how team members are collaborating and participating in workspace discussions, which is crucial for assessing and improving team productivity. Number of files uploaded doesn't directly correlate with collaboration, total messages per user may not reflect meaningful collaboration, and app integration frequency doesn't directly indicate collaboration effectiveness.",
+    "explanation": "Channel-level activity is the closest proxy the dashboard offers for collaboration, and the Channels tab is where it lives. Slack documents its columns as including Last active, Messages posted, Members who posted, Members who viewed, Reactions added, Members who reacted and Huddles initiated — a reasonable picture of whether a channel is a live working space or a dormant one.\nWorth knowing when comparing this against the other options: they are not invented. Files uploaded and Messages sent are documented metrics on the Overview tab, and there is separate reporting for apps. The reason to prefer channel engagement is not that the others do not exist, but that a raw per-person message or file count says little about whether people are working together. Note too that on Pro and Business+ the Channels tab covers public channels only.\nReferences:\nhttps://slack.com/help/articles/360057638533-Understand-the-data-in-your-Slack-analytics-dashboard",
     "_cat": "Analytics & Reporting"
   },
   {
@@ -344,7 +366,7 @@
     "optionD": "Recommending that the client handles all post-migration queries internally without external support",
     "optionE": "",
     "correct": "B",
-    "explanation": "In the final phase, providing extensive post-migration support is crucial, including troubleshooting help, additional training sessions as needed, and regular check-ins to ensure the client is adapting well to Slack. Dismantling the old platform immediately can be disruptive, limiting functionality may hinder full adoption of benefits, and post-migration support should ideally involve the external consulting team's expertise.",
+    "explanation": "Sustained support after cutover is what separates a migration that lands from one that quietly reverts. Slack's own migration guidance treats adoption as a phase rather than an event: it describes a staged rollout in which most enterprises reach majority adoption within about 90 days and full adoption over roughly six months, and it stresses that successful migrations are cultural as much as technical. Troubleshooting, follow-up training and regular check-ins are what fill that period.\nThe alternatives work against it. Dismantling the old platform on day one removes the fallback while people are still learning. Deliberately limiting Slack's functionality hides the capabilities that justify the move. Handing all post-migration questions back to the client discards the expertise that ran the migration.\nReferences:\nhttps://slack.com/blog/transformation/teams-to-slack-migration",
     "_cat": "Migration"
   },
   {
@@ -356,7 +378,7 @@
     "optionD": "Leave the employees to explore and learn Slack on their own without providing any structured training",
     "optionE": "",
     "correct": "A",
-    "explanation": "A flexible, phased training approach is effective for a company-wide Slack rollout. Starting with basic training ensures foundational understanding, while advanced sessions and regular refresher courses help maintain proficiency and adaptation. A single intensive session can be overwhelming, focusing solely on technical aspects neglects practical day-to-day usage, and self-exploration without guidance can lead to inconsistent learning.",
+    "explanation": "A flexible, phased training approach is effective for a company-wide Slack rollout. Starting with basic training ensures foundational understanding, while advanced sessions and regular refresher courses help maintain proficiency and adaptation. A single intensive session can be overwhelming, focusing solely on technical aspects neglects practical day-to-day usage, and self-exploration without guidance can lead to inconsistent learning.\nReferences:\nhttps://slack.com/resources/slack-for-admins/launching-slack",
     "_cat": "Training & Enablement"
   },
   {
@@ -368,7 +390,7 @@
     "optionD": "The unlimited storage capacity for files and data",
     "optionE": "",
     "correct": "B",
-    "explanation": "The integration of Slack with various productivity tools and apps is a key feature that enhances team collaboration and productivity, allowing teams to streamline workflows by accessing and managing tools directly within Slack. Customization of appearance doesn't directly impact collaboration, anonymous messaging may not align with promoting open and accountable communication, and storage capacity isn't the primary feature addressing collaboration concerns.",
+    "explanation": "Integration is the capability to lead with here, and it is what Slack itself puts at the centre of the platform: apps connect other software you already use — Google Calendar, OneDrive, internal tools — to Slack, and with those tools in one place teams can streamline work and collaborate more effectively. Workflow Builder extends the same idea to automation without code. For a client worried specifically about collaboration and productivity, that directly addresses the cost of context-switching between tools.\nOf the alternatives, themes are cosmetic and storage is a plan detail rather than a collaboration feature. Anonymous messaging is worth flagging as a distractor: it is not a native Slack capability at all, only something a third-party app could approximate.\nReferences:\nhttps://slack.com/help/articles/360001537467-Guide-to-apps-in-Slack",
     "_cat": "Discovery & Consulting"
   },
   {
@@ -380,7 +402,7 @@
     "optionD": "External IT Support, hired to handle technical aspects of Slack management",
     "optionE": "",
     "correct": "A",
-    "explanation": "The Workspace Admin role is appropriate for managing day-to-day operations such as user permissions and channel settings in a startup environment, importantly without access to sensitive billing information. The Org Owner role has broader powers including billing access which isn't needed here, Guest Admin is too limited and focused specifically on guest accounts, and External IT Support doesn't provide the same integrated day-to-day management.",
+    "explanation": "The Workspace Admin role is appropriate for managing day-to-day operations such as user permissions and channel settings in a startup environment, importantly without access to sensitive billing information. The Org Owner role has broader powers including billing access which isn't needed here, Guest Admin is too limited and focused specifically on guest accounts, and External IT Support doesn't provide the same integrated day-to-day management.\nReferences:\nhttps://slack.com/help/articles/360018112273-Types-of-roles-in-Slack",
     "_cat": "Administration Roles"
   },
   {
@@ -392,7 +414,7 @@
     "optionD": "Encouraging clients to join all project channels to provide continuous feedback",
     "optionE": "",
     "correct": "A",
-    "explanation": "Creating dedicated channels for each project allows the agency to centralize all communications, updates, and file sharing related to that project, enhancing team collaboration and project management. Relying solely on direct messages leads to fragmented communication, limiting Slack to announcements underutilizes its capabilities, and including clients in all project channels may lead to information overload and hinder internal discussions.",
+    "explanation": "Slack's guidance on this is direct: when you are launching a new project, the first step should be creating a channel to keep related information in one place. Bringing the right people into that channel gives the team a shared view of the work, with the messages, decisions and files in one searchable place rather than scattered across inboxes and DMs. For an agency running several client projects at once, a channel per project also pairs naturally with a #project- or #client- naming prefix so the set stays navigable.\nDirect messages lose that shared view and cannot be joined by someone who comes onto the project later. Restricting Slack to announcements wastes the collaboration surface entirely. Adding clients to every internal project channel is a Slack Connect design decision, not a default — internal discussion generally needs somewhere to happen that is not client-visible.\nReferences:\nhttps://slack.com/help/articles/1500000019361-Keep-work-organized-with-channels\nhttps://slack.com/help/articles/217626408-Create-guidelines-for-channel-names",
     "_cat": "Channel Management"
   },
   {
@@ -404,7 +426,7 @@
     "optionD": "External Consultant, who periodically reviews and advises on the Slack setup",
     "optionE": "",
     "correct": "A",
-    "explanation": "The Org Owner role is best suited for having the highest level of control and oversight over the entire Slack environment, as they have full access to administrative settings, workspace management, and data, essential for a large corporation. Workspace Admins manage specific workspaces without organization-wide control, User Group Admins lack the broader administrative powers needed, and External Consultants typically only advise without direct control.",
+    "explanation": "Org Owner is the right choice here: it is the only option that operates across the entire Enterprise organisation rather than inside one workspace or one slice of it. Slack documents Org Owners as holding the same permissions as the Org Primary Owner, except that they cannot transfer ownership of the org.\nThe alternatives fail on scope. A Workspace Admin acts within a single workspace and cannot even reach the Billing page. Slack's documented role list has no \"User Group Admin\" role — managing user groups is a permission granted to roles, not a role of its own. And an external consultant advises without holding administrative authority.\nFor completeness, the single top role in an Enterprise organisation is the Org Primary Owner, of which there is exactly one, and only that person can transfer ownership.\nReferences:\nhttps://slack.com/help/articles/360018112273-Types-of-roles-in-Slack\nhttps://slack.com/help/articles/201314026-Permissions-by-role-in-Slack",
     "_cat": "Administration Roles"
   },
   {
@@ -416,7 +438,7 @@
     "optionD": "Providing a general overview of Slack without delving into specific admin roles and responsibilities",
     "optionE": "",
     "correct": "B",
-    "explanation": "For Slack admins, a comprehensive curriculum covering a wide range of topics is essential, from basic functionalities to advanced admin controls and security settings, ensuring admins are well-equipped to manage the platform effectively. Focusing only on basic functionalities may leave admins unprepared, concentrating solely on APIs limits the scope of training, and a general overview without specifics doesn't adequately prepare admins for their roles.",
+    "explanation": "For Slack admins, a comprehensive curriculum covering a wide range of topics is essential, from basic functionalities to advanced admin controls and security settings, ensuring admins are well-equipped to manage the platform effectively. Focusing only on basic functionalities may leave admins unprepared, concentrating solely on APIs limits the scope of training, and a general overview without specifics doesn't adequately prepare admins for their roles.\nReferences:\nhttps://slack.com/resources/slack-for-admins/launching-slack",
     "_cat": "Training & Enablement"
   },
   {
@@ -428,7 +450,7 @@
     "optionD": "Only permit apps that are developed in-house",
     "optionE": "",
     "correct": "C",
-    "explanation": "Implementing a process where the IT department must approve all app installations allows the company to ensure that each app complies with strict data security regulations, maintaining control over app security. Allowing all employees to install any app provides no control over security, not all apps in the App Directory meet specific security needs, and restricting to only in-house apps may overly limit beneficial third-party apps that comply with regulations.",
+    "explanation": "Implementing a process where the IT department must approve all app installations allows the company to ensure that each app complies with strict data security regulations, maintaining control over app security. Allowing all employees to install any app provides no control over security, not all apps in the App Directory meet specific security needs, and restricting to only in-house apps may overly limit beneficial third-party apps that comply with regulations.\nReferences:\nhttps://slack.com/help/articles/222386767-Manage-app-approval-for-your-workspace\nhttps://slack.com/help/articles/360001670528-Security-recommendations-for-approving-apps",
     "_cat": "Security & Identity Management"
   },
   {
@@ -440,7 +462,7 @@
     "optionD": "Limit Slack usage to headquarters and restrict access in other regions",
     "optionE": "",
     "correct": "C",
-    "explanation": "This approach balances the need for a consistent company-wide policy with the flexibility to cater to regional specificities, ensuring both alignment and adaptability. A one-size-fits-all approach may not suit diverse regional needs, allowing full regional independence could lead to a lack of consistency, and restricting usage to headquarters unduly limits communication opportunities in regional offices.",
+    "explanation": "This approach balances the need for a consistent company-wide policy with the flexibility to cater to regional specificities, ensuring both alignment and adaptability. A one-size-fits-all approach may not suit diverse regional needs, allowing full regional independence could lead to a lack of consistency, and restricting usage to headquarters unduly limits communication opportunities in regional offices.\nReferences:\nhttps://slack.com/help/articles/115005225987-Manage-a-workspace-on-Enterprise-Grid",
     "_cat": "Enterprise Grid & Channel Design"
   }
 ]

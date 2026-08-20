@@ -1,0 +1,165 @@
+{
+  "deck": "public/decks/questions_data_architect_merged.json",
+  "reviewed": "2026-08-19",
+  "findings": [
+    { "id": "3c855a77", "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_general.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_techniques_deleting_data.htm"
+      ] },
+
+    { "id": "03d3d67f", "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_external_objects.htm",
+        "https://help.salesforce.com/s/articleView?id=platform.platform_connect_about.htm&language=en_US&type=5"
+      ] },
+
+    { "id": "83a2f38e", "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.bigobjects.meta/bigobjects/big_object_define.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.bigobjects.meta/bigobjects/big_object.htm"
+      ] },
+
+    { "id": "835bdddc", "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_infrastructure_skinny_tables.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_reporting.htm"
+      ] },
+
+    { "id": "a666ee8e", "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_om_outboundmessaging.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_fieldset.htm"
+      ] },
+
+    { "id": "c99f1959", "verdict": "clarified",
+      "explanation": "The LDV guide ranks the operations directly: \"Use the fastest operation possible—insert() is fastest, update() is next, and upsert() is next after that.\" Because UC already knows which 200,000 rows are new and which 100,000 exist, splitting the work into a pure insert and a pure update (D) uses the two fastest operations and skips upsert's per-row external-ID match entirely.\nUpsert (C) is the convenient answer and the slower one. Deleting and reloading everything (B) throws away record ids, history, and anything related to them. The Streaming API (A) delivers event messages; it is not a load mechanism.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_api_loading_data.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm"
+      ] },
+
+    { "id": "b335ae04", "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_general.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_techniques_deleting_data.htm"
+      ] },
+
+    { "id": "18c03f25", "verdict": "clarified",
+      "explanation": "A staging database is where two legacy sources can be reconciled against each other before either one reaches Salesforce: key both on External IDs, merge and cleanse there, then load once. External ID fields carry the cross-system key and are indexed, which is what makes the merge and the later upsert possible.\nDuplicate rules (B) and upsert (D) both do their work inside the target org, so the first load still puts unresolved duplicates and unvalidated values into Salesforce. Migrating one database into the other (A) cleans nothing; it just moves the problem.\nSalesforce documents the mechanisms rather than prescribing this sequence, so treat the staging-first pattern as the best-reasoned option here rather than a rule a specific page states.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_api_loading_data.htm"
+      ] },
+
+    { "id": "494f56e1", "verdict": "clarified",
+      "explanation": "System of record is a governance decision, not something the integration topology reveals. Three systems all write Account and Opportunity here, so no mechanical rule picks a winner: reviewing each data flow with the business users who understand which system is authoritative for which attribute (D) is the only approach that produces a defensible answer per object or field.\nOrigination (A) ignores that a downstream system may be authoritative for values it owns. Last-writer-wins (C) is an accident of scheduling. \"Whoever updates it\" (B) collapses the moment two systems update the same field — which is the situation described.\nSalesforce publishes governance guidance rather than a rule that decides this, so this rests on general data-governance practice.",
+      "references": [
+        "https://architect.salesforce.com/well-architected/trusted/compliant"
+      ] },
+
+    { "id": "bc6a239c", "verdict": "reasoning",
+      "explanation": "Integrating a third-party address validation and enrichment service (C) is the strategy that scales: it verifies and standardises millions of addresses against authoritative reference data automatically. Phoning each business (A) or staffing a manual validation team (B) does not scale to several million records by any reading.\nOption D is the exam's second answer, and it names a product Salesforce has retired. Data.com appears in Salesforce's Past Product & Feature Retirements list, and the Data.com Clean setup article no longer exists. Keep D as the keyed answer because that is what the item tests, but a current implementation would use a third-party enrichment service or Data Cloud rather than Data.com Clean.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=005132112&language=en_US&type=1"
+      ],
+      "note": "Answer stands as the exam keys it, but the item is stale: keyed option D names Data.com Clean, which Salesforce has retired and which appears in its Past Product & Feature Retirements list." },
+
+    { "id": "65d0445b", "verdict": "clarified",
+      "explanation": "An enterprise governance body needs members with definitional authority over data. Data Domain Stewards (B) own the quality rules and definitions for their domain, and Analytics/BI Owners (A) own the enterprise metrics those definitions have to serve — between them they can decide what a field means and what \"good\" looks like across business units.\nSalesforce Administrators (C) implement decisions inside one org, and Operational Data Users (D) consume the data; both are essential stakeholders and neither sets cross-business-unit policy.\nSalesforce publishes governance guidance rather than a prescribed committee roster, so this item rests on general data-governance practice rather than a documented rule.",
+      "references": [
+        "https://architect.salesforce.com/well-architected/trusted/compliant"
+      ] },
+
+    { "id": "f0db132b", "verdict": "reasoning",
+      "explanation": "Filtering on indexed fields (A) is the LDV guide's own reporting advice — \"Use report filters that emphasize the use of standard or custom indexed fields\" — because a selective, indexed filter is what keeps the optimizer off a full scan. Skinny tables (C) are the other documented remedy: Salesforce builds them \"to contain frequently used fields and to avoid joins\", and they omit soft-deleted records, so a wide, high-volume object reports much faster.\nSharing a report with fewer people (D) changes nothing about how long the query runs.\nTwo things to hold on to about this item. Option C misstates how skinny tables work: they are per object, not per report, and \"You can't create, access, or modify skinny tables yourself\" — you request them from Salesforce Customer Support. And option B is not really wrong: the LDV guide documents Divisions as \"a means of partitioning the data of large deployments to reduce the number of records returned by queries and reports\", for orgs over a million records in a single object with more than 35 licences. Divisions are a heavier, org-wide commitment than the keyed pair, which is why they are not the answer here, but the option set treats a documented remedy as a distractor.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_reporting.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_infrastructure_skinny_tables.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_infrastructure_indexes.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_infrastructure_divisions.htm"
+      ],
+      "note": "Answer stands, but the item is defective in two ways: keyed option C describes creating a skinny table per report, which nobody can do (skinny tables are per object and are created by Salesforce Customer Support), and distractor B names Divisions, which the LDV guide documents as a real remedy for exactly this problem." },
+
+    { "id": "fee3c3cb", "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/data-models/guide/privacy-consent.html"
+      ] },
+
+    { "id": "08d19a88", "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=xcloud.admin_exportdata.htm&language=en_US&type=5"
+      ] },
+
+    { "id": "7320edf2", "verdict": "clarified",
+      "explanation": "Keeping disparate systems in agreement takes two things: a mechanism that moves the data, and a rule that decides which value wins. Integrating Salesforce with the ERP environment (A) is the mechanism; an MDM strategy (C) supplies the single source of truth and the survivorship rules, without which two-way sync just propagates conflicts.\nWorkbench (B) is an ad-hoc tool for one-off admin work, not a synchronisation mechanism. Reports and dashboards (D) observe divergence after the fact; they never resolve it.\nThis is an architecture-judgment item — Salesforce documents the integration options but publishes no page that names this pair.",
+      "references": [
+        "https://architect.salesforce.com/well-architected/trusted/compliant",
+        "https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_external_objects.htm"
+      ] },
+
+    { "id": "198da736", "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_general.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_techniques_deferred_sharing_calculation.htm"
+      ] },
+
+    { "id": "4bce9573", "verdict": "clarified",
+      "explanation": "Salesforce Shield bundles Event Monitoring, Platform Encryption, Field Audit Trail, and Data Detect. Three of the customer's mandates land inside that bundle: detailed monitoring of user activity is Event Monitoring (A); blocking exports is a Transaction Security Policy, which Salesforce describes as automatically blocking risky user actions to prevent data loss (D); and protecting PII and financial records at rest is Platform Encryption (E).\nThe other two requirements are real but are met elsewhere. Restricting access by geography (B) is done with profile Login IP Ranges and org trusted IP ranges, not with Shield. Withholding PII from sales users (C) is field-level security and sharing.",
+      "references": [
+        "https://www.salesforce.com/platform/shield/",
+        "https://help.salesforce.com/s/articleView?id=platform.login_ip_ranges.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.security_networkaccess.htm&language=en_US&type=5"
+      ] },
+
+    { "id": "0492a3b0", "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_techniques_deleting_data.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_deleting_data.htm"
+      ] },
+
+    { "id": "9463eb8c", "verdict": "reasoning",
+      "explanation": "The Skinny Tables page states all three keyed properties. They \"omit soft-deleted records\" (A). Salesforce \"can create skinny tables to contain frequently used fields and to avoid joins\" (B) — the join it avoids is between the base table and the custom-field table. And \"Skinny tables are kept in sync with their source tables when the source tables are modified\" (C), which is what makes them usable without a refresh step.\nOption D is the inverse of the documented rule: \"Skinny tables can't contain fields from other objects.\"\nOption E is simply wrong on its number. The documented cap is \"Skinny tables can contain a maximum of 200 columns\", not 100.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_infrastructure_skinny_tables.htm"
+      ],
+      "note": "Answer stands. The old explanation accepted option E's \"100-column cap\" as a real limit that merely wasn't a performance driver. The documented maximum is 200 columns, so E is false on its face, not just irrelevant." },
+
+    { "id": "bd39a845", "verdict": "reasoning",
+      "explanation": "Loading a large, regular feed of child time-entry records into a privately-shared parent makes Salesforce recalculate sharing as each batch lands, on top of recomputing the parent's roll-up summaries. The LDV guide's remedy for the sharing half is explicit: \"Use the defer sharing calculation permission to defer sharing calculations until after all data has been loaded\", then run one recalculation.\nReplacing roll-up summary fields with workflow (B) or triggers (C) swaps a platform-maintained aggregate for custom automation that fires on every one of those inserts — more work per record, not less. External IDs (D) are how you resolve the parent reference during the load; they do nothing about the recalculation cost that is the problem here.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_api_loading_data.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_techniques_deferred_sharing_calculation.htm"
+      ],
+      "note": "Item defect: the stem says \"as shown in the image\" but the data-model exhibit did not survive scraping. The stem's prose describes the model well enough to answer, so the question is still answerable — but the image is not coming back." },
+
+    { "id": "58b81f44", "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_duplicaterule.htm"
+      ] },
+
+    { "id": "f7f8df0e", "verdict": "clarified",
+      "explanation": "An ETL tool transforms mismatched data types in flight — that is the T in ETL — so it maps legacy types to Salesforce types, cleanses, and loads in one pipeline (C). Standing up a staging database first (A) or writing stored procedures against one (B) adds infrastructure to do work the ETL layer already does. Data Loader (D) reads a CSV and writes it; it performs no type transformation, so a mismatched source would simply fail on load.\nThis is a tooling-judgment item: Salesforce documents the load mechanisms rather than ranking ETL against a staging database for this scenario.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_api_loading_data.htm"
+      ] },
+
+    { "id": "c3169fdf", "verdict": "confirmed",
+      "references": [
+        "https://architect.salesforce.com/well-architected/trusted/compliant"
+      ] },
+
+    { "id": "bc9fbe75", "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/langCon_apex_locking_records.htm"
+      ] },
+
+    { "id": "e022ee79", "verdict": "reasoning",
+      "explanation": "Migrating a relational schema starts by deciding what actually needs to live in Salesforce rather than porting the whole database (A), mapping the elements that survive onto Salesforce objects (B), and then realising that model with custom objects and fields (E).\nOption C is a strict subset of B — mapping to custom objects is one outcome of mapping to objects, since much of a legacy model lands on standard objects such as Account, Contact, and Opportunity. That is why B is keyed over C.\nBe aware this item is loose: option D, analysing the legacy model with its application owner, is at least as defensible a third choice as E, and the two are not mutually exclusive. Treat A and B as the solid pair and the third slot as the item's weak point.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/relationships_among_objects.htm",
+        "https://architect.salesforce.com/well-architected/trusted/compliant"
+      ],
+      "note": "Item defect: option C is a strict subset of keyed option B, and distractor D (analyse the legacy data model with its owner) is at least as defensible as keyed option E. The key is the exam's, but the third choice is not decidable from the stem." }
+  ]
+}
