@@ -165,15 +165,17 @@ underneath.
 
 ## Deck state — as of 2026-08-19
 
-1,619 questions across 13 decks. **1,209 (75%) carry a reference with an actual URL,
-and the reference gap is now zero** — every question that renders a References block
+1,619 questions across 13 decks. **1,381 (85%) carry a reference with an actual URL,
+and the reference gap is still zero** — every question that renders a References block
 has a link in it.
 
-+118 of that is the admin pass on 2026-08-19, taking that deck from 36/154 to
-154/154 — the third citations-and-corrections pass over an existing deck, after
-revenue-cloud and sharing-visibility. Most of that number is not new research: 47 of
-those questions *already had* citations that the app was silently refusing to render.
-See failure pattern 4c.
+Three passes moved that number, and all three landed in the same merge: the admin pass
+on 2026-08-19 (+118, taking that deck from 36/154 to 154/154), the data-architect pass
+on 2026-08-19 (+135, taking the largest uncited deck from 0/135 to 135/135), and the
+slack-consultant pass on 2026-08-18 (+37, from 0/37 to 37/37). Most of the admin number
+is not new research: 47 of those questions *already had* citations that the app was
+silently refusing to render. See failure pattern 4c. Re-measure with the command below
+rather than copying any of these numbers.
 
 +136 of that is the sharing-visibility pass on 2026-08-17, taking that deck from
 0/136 to 136/136 — the second citations-and-corrections pass over an existing deck,
@@ -268,8 +270,8 @@ column, not the Cited column.
 | salesforce-sharing-visibility | 136 | 136 | **Fully checked** (2026-08-17) — 2 keys moved, 6 reasoning fixes, 19 silent clarifications. The 4 earlier 2026-08-04 validation stamps are preserved |
 | salesforce-app-builder | 119 | 119 | **Fully checked** (2026-08-11) — 4 keys moved, 27 reasoning fixes, 3 defective option sets repaired. Q1–50 spot-rechecked: 10 sampled, 1 defect (a mechanism stated backwards), so the earlier batches read sound |
 | salesforce-dld | 138 | 0 | **Untouched** |
-| salesforce-data-architect | 135 | 0 | **Untouched** |
-| salesforce-slack-consultant | 37 | 0 | **Untouched** (smallest — good next target) |
+| salesforce-data-architect | 135 | 135 | **Fully checked** (2026-08-19) — 3 keys moved, 18 reasoning fixes, 58 silent clarifications. Its defect shape is **the invented absence**: five explanations denied a capability that exists (external objects can't be reported on ×2, the cross-org Connect adapter is read-only, no native archiving feature exists ×2). Also one fabricated limit (skinny tables taught at 100 columns; documented cap is **200**) and three stale products — Data.com Clean (4 questions), Async SOQL (retired Summer '23), granular locking now the default |
+| salesforce-slack-consultant | 37 | 37 | **Fully checked** (2026-08-18) — 1 key moved, 3 reasoning fixes, 12 silent clarifications. First non-Salesforce, non-Databricks vendor. **Read the caveat below: only 15 of its 37 questions are decidable by any Slack page**, so the N/N here means less than it does on other decks |
 
 **The IAM deck used to be the trap in this table, and the lesson survives it.**
 Before 2026-08-10 it read as complete at 122/122 cited, but those citations came
@@ -349,20 +351,56 @@ override specifies the Salesforce Classic override, so mobile users see the Visu
 page". A separate mobile slot exists. Three plausible-sounding pages agreeing is not
 the same as the page that documents the Setup screen.
 
+**Slack Consultant (2026-08-18) is a fifth shape, and the one that most needs its
+caveat read: a deck where most questions are not checkable at all.** Only 15 of its
+37 questions turn on a fact any Slack page states. The other 22 are consulting and
+training judgment against strawman distractors ("Replace their computer's sound
+card", "read the user manual during the session"), recoverable by elimination and
+settleable by no documentation. It reaches 37/37 coverage, and **that number carries
+less weight here than on any other deck in this table** — 12 of those citations are
+topical rather than decisive, and are marked as such in the pass report. This is the
+IAM trap's cousin: not citations attached to unchecked answers, but citations
+attached to answers *no citation could check*. When a deck's subject is advice, ask
+what fraction of it documentation could settle before reading its coverage number.
+
+Where the documentation did bite, it bit hard. One key moved (`47e8ec41` C→A: the
+keyed option described a channel-creation "justification" setting Slack does not
+have — pattern 2, an invented capability, wearing process-advice clothing), and
+three explanations taught something false: that Compliance Exports *preserve* data
+for legal hold (Slack's actual mechanism is the native **Legal Holds** feature, and
+it is absent from that item's options), that Slack offers an IP allowlist confining
+member sign-in to an office network (it does not — the documented control is proxy
+header based), and that a propose-then-approve channel workflow is a Slack setting
+(no native channel-creation approval queue exists). Two of those three are invented
+*absences and presences* around the same feature area, which is worth remembering
+the next time a channel-governance item looks reasonable.
+
+**Its five duplicate pairs are a detector blind spot that is the mirror of the
+documented one, and they were left in place.** `find-duplicates.mjs` reports zero
+pairs on this deck, but `#15`/`#34` (both key Org Owner), `#24`/`#32` (both
+Workspace Admin), `#5`/`#17` (both channel naming conventions), `#9`/`#16` (both
+hands-on workshop) and `#2`/`#28` (both channel-activity analytics) are the same
+question reworded, scoring 0.13–0.32 on stem-token Jaccard — far below the 0.72
+gate. The documented blind spot is near-identical stems one decisive word apart
+scoring as SAME; this is reworded stems with an identical keyed answer not
+surfacing at all. **Comparing keyed option text would catch it; stem tokens cannot.**
+The fact-check confirmed both copies of every pair are correct, so these are
+redundancy rather than error — removing them is the repo owner's call, not a
+fact-check outcome, which is why the deck still has 37.
+
 ### What to work on next
 
-Ordered as of 2026-08-19, after the admin pass landed. Four decks remain, and all four
-are uncited and untouched — the partially-cited middle ground is gone. The audit-lead
-counts come from `node scripts/audit-deck.mjs <deck>` and are leads, not verdicts.
+Ordered as of 2026-08-19, after the admin, data-architect and slack passes all landed.
+Two decks remain, both uncited and both untouched — the partially-cited middle ground
+is gone. The audit-lead counts come from `node scripts/audit-deck.mjs <deck>` and are
+leads, not verdicts.
 
 | # | Deck | Q | Cited | Audit leads | Why it is here |
 |---|---|---:|---:|---:|---|
-| 1 | data-architect | 135 | 0 | 3 | Untouched, and the largest uncited deck |
-| 2 | dld | 138 | 0 | 1 | Untouched, large, 2 duplicate pairs. Also holds `46cb24ed`, the repo's last unparsed reference marker |
-| 3 | data-cloud-consultant | 100 | 0 | 2 | 4 user comments waiting, 1 duplicate pair |
-| 4 | slack-consultant | 37 | 0 | 2 | Smallest deck in the repo — the cheapest way to run a full pass end to end |
+| 1 | dld | 138 | 0 | 1 | Untouched, and now the largest uncited deck. 2 duplicate pairs. Also holds `46cb24ed`, the repo's last unparsed reference marker |
+| 2 | data-cloud-consultant | 100 | 0 | 2 | Untouched. 4 user comments waiting, 1 duplicate pair |
 
-Two things that are **not** deck passes but are queued:
+Things that are **not** deck passes but are queued:
 
 - **The 7 remaining Salesforce near-duplicate pairs** below — each needs the
   documentation to say which copy is right, except where the option *text* already
@@ -372,6 +410,73 @@ Two things that are **not** deck passes but are queued:
   Dev II and integration decks were cited in the same era and in the same style. The
   check is now cheap — four ids per browser call, see the recipe in
   `references/verified-docs.md` — so this is an afternoon, not a pass.
+
+### Open items from the data-architect pass (2026-08-19)
+
+Recorded for a later session. Nothing here blocks the deck — it is at 135/135 and
+validates clean.
+
+**Repo-owner decisions, not fact-check outcomes:**
+
+1. **`ba5e12d5` has no correct answer on a current org.** Its keyed option A is
+   Data.com Clean, a retired product, and no remaining option works. Kept as keyed
+   with a notice saying so. Removing or rewriting the item is your call.
+2. **Three more questions key Data.com Clean** — `bc6a239c`, `d944cd7b`, and
+   `ba5e12d5` above. Each carries a notice; none was re-keyed, because the exam still
+   tests them.
+3. **`d0fb5008` keys Async SOQL**, retired Summer '23. No option offers its
+   replacement (Bulk API or batch Apex), so the item is stale as printed.
+4. **11 intra-deck near-duplicate pairs that `find-duplicates.mjs` does not see.**
+   Four are already self-labelled "(Variant)" in their own prose. Removal is a
+   dedupe decision, not a fact-check one — all copies were checked and are correct.
+
+**A tooling change worth making, and this pass is the second deck to justify it:**
+
+5. **`find-duplicates.mjs` should compare keyed option text, not only stem tokens.**
+   The Slack pass found reworded stems with an identical keyed answer scoring far
+   below the gate; this deck confirms it on Salesforce. Measured here:
+
+   | Pair | Stem Jaccard | Keyed-option-text Jaccard |
+   |---|---:|---:|
+   | `23b3dd3a` / `b8dcc15e` (granular locking) | 0.10 | **1.00** |
+   | `9a854137` / `82f8541b` (Partner Community) | 0.11 | **0.67** |
+   | `2381fc3c` / `62817718` (data classification) | 0.04 | **0.50** |
+   | `9463eb8c` / `4a391507` (skinny tables) | 0.12 | 0.31 |
+   | `660b65ef` / `94c7d168` (B2C modelling) | 0.15 | 0.29 |
+
+   The 0.72 stem gate catches none of them. A second pass over keyed option text
+   would catch the top three outright.
+
+6. **`apply-findings.mjs` cannot clear a stale `corrected` stamp.** When a later pass
+   downgrades a question from `reasoning` to `clarified`, the old notice stays on the
+   question and the applier says nothing. Hit for real on `bd39a845` in this pass and
+   removed by hand. Either let `clarified` clear an existing stamp, or add an explicit
+   `unstamp` verdict.
+
+**Verification debt to be honest about:**
+
+7. **22 of this deck's citations are help.salesforce.com `type=5` URLs verified by
+   title only.** Their existence is confirmed; their *bodies* are not readable from a
+   cloud container, so failure pattern 11 is unresolved on those specific links. They
+   were only used where the article title itself carries the fact.
+8. **~19 questions are not settleable by any vendor documentation** — governance,
+   MDM strategy, and tooling-judgment items. Each says so in its own prose rather than
+   pretending to a citation it does not have. Three licensing items (`653108ec`,
+   `9a854137`, `82f8541b`) rest on commercially packaged bundles that change often.
+9. **`sales.managing_duplicates_overview.htm`, listed as confirmed earlier in
+   `verified-docs.md`, now returns the generic "Salesforce Help" title.** It may have
+   rotted. Re-check before reusing it.
+
+**The doc-surface finding that makes the admin deck cheaper than it looks:**
+
+10. **help.salesforce.com IS title-verifiable from a cloud container via WebFetch** —
+    a dead id returns "We looked high and low but couldn't find that page.", a live one
+    returns its own article title. And **`type=1` knowledge articles return their full
+    body**, while `type=5` product-doc pages return only the title. That contradicts the
+    working assumption this file has carried since 4b, and it means the admin deck's
+    dead-`sf.`-citation problem can be triaged without a browser. Full detail, including
+    the three-state behaviour and the developer.salesforce.com silent-fallback trap, is
+    in the Data Architect section of `verified-docs.md`.
 
 ### Duplicates
 
@@ -519,6 +624,22 @@ find the article" page under the generic title `Databricks on AWS`, so it looks 
 while the status underneath is a real 404; and several live pages redirect into
 `/archive/` (the JDBC connector page does), which renders fine today and should not
 be cited.
+
+**Slack, tested 2026-08-18, is a third data point and a new sub-shape.**
+`slack.com/help` fails honestly like Databricks — an invented article id returns a
+real **HTTP 404** with no body — so a status check is reliable there. But the URL
+*slug is cosmetic*: resolution is by numeric id alone, and
+`115001915507-Totally-Wrong-Slug-Here` returns the genuine article with its
+canonical title. So on this vendor a plausible-looking slug is no evidence at all,
+and a stale slug is **not** a dead link to be "repaired" — Slack renames articles
+under stable ids. Verify by rendered title, never by slug.
+
+**One more thing that pass established, and it constrains the queued admin work:**
+from a cloud container, `help.salesforce.com` is **not verifiable via `WebFetch`**.
+The real `sf.security_networkaccess` and an invented id both return HTTP 200 with
+the same "Sorry to interrupt / CSS Error" shell, because WebFetch does not execute
+the SPA. Salesforce URL checking needs a real browser; the recipe in 4b still
+applies, but not from a plain fetch tool.
 
 ### 4. Dead citation URLs that return HTTP 200
 `help.salesforce.com` is a single-page app and answers **every** article id — real
