@@ -273,6 +273,14 @@ column, not the Cited column.
 | salesforce-data-architect | 135 | 135 | **Fully checked** (2026-08-19) — 3 keys moved, 18 reasoning fixes, 58 silent clarifications. Its defect shape is **the invented absence**: five explanations denied a capability that exists (external objects can't be reported on ×2, the cross-org Connect adapter is read-only, no native archiving feature exists ×2). Also one fabricated limit (skinny tables taught at 100 columns; documented cap is **200**) and three stale products — Data.com Clean (4 questions), Async SOQL (retired Summer '23), granular locking now the default |
 | salesforce-slack-consultant | 37 | 37 | **Fully checked** (2026-08-18) — 1 key moved, 3 reasoning fixes, 12 silent clarifications. First non-Salesforce, non-Databricks vendor. **Read the caveat below: only 15 of its 37 questions are decidable by any Slack page**, so the N/N here means less than it does on other decks |
 
+**Every citation in app-builder, IAM, Dev II and integration was re-rendered on
+2026-08-20 — 370 distinct URLs, zero dead.** The admin deck's two-thirds-dead `sf.` ids
+did not generalise to the decks cited in the same era, because the real signature is a
+**missing `language` parameter**, not the date. The sweep did fix 15 stale `#fragment`
+anchors in integration (failure pattern 4d) and overturned this file's "third state"
+claim about help.salesforce.com. So these four rows are now link-verified as well as
+content-checked — which is more than any other row in this table can say.
+
 **The IAM deck used to be the trap in this table, and the lesson survives it.**
 Before 2026-08-10 it read as complete at 122/122 cited, but those citations came
 from a pass that verified *structure*, not answers — only `c18bee92` had ever been
@@ -405,11 +413,15 @@ Things that are **not** deck passes but are queued:
 - **The 7 remaining Salesforce near-duplicate pairs** below — each needs the
   documentation to say which copy is right, except where the option *text* already
   agrees (check that first; that is what `f62513eb`/`c74b1c3e` turned out to be).
-- **Every deck cited before 2026-08-18 should have its links re-rendered.** The admin
-  pass found two thirds of that deck's legacy `sf.` ids dead, and the app-builder, IAM,
-  Dev II and integration decks were cited in the same era and in the same style. The
-  check is now cheap — four ids per browser call, see the recipe in
-  `references/verified-docs.md` — so this is an afternoon, not a pass.
+- **~~Re-render the links on every deck cited before 2026-08-18~~ — done 2026-08-20,
+  and the premise was wrong.** All 370 citation URLs across app-builder, IAM, Dev II and
+  integration were rendered and title-checked: **zero dead links**. The admin deck's rot
+  did not generalise, because the signature is not the era — it is the **missing
+  `language` parameter**. Every dead admin id was `sf.<id>&type=5` with no `language`;
+  all 200 help URLs in these four decks carry `language=en_US`, and all 200 render.
+  Check that parameter before budgeting a re-render on any other deck. The pass did fix
+  **15 stale anchor fragments** in integration and corrected two doc-surface claims —
+  see failure pattern 4d and the 2026-08-20 section of `references/verified-docs.md`.
 
 ### Open items from the data-architect pass (2026-08-19)
 
@@ -463,9 +475,13 @@ validates clean.
    MDM strategy, and tooling-judgment items. Each says so in its own prose rather than
    pretending to a citation it does not have. Three licensing items (`653108ec`,
    `9a854137`, `82f8541b`) rest on commercially packaged bundles that change often.
-9. **`sales.managing_duplicates_overview.htm`, listed as confirmed earlier in
-   `verified-docs.md`, now returns the generic "Salesforce Help" title.** It may have
-   rotted. Re-check before reusing it.
+9. **~~`sales.managing_duplicates_overview.htm` may have rotted~~ — resolved 2026-08-20:
+   it is live** ("Manage Duplicate Records"), and so are the other three URLs that this
+   file and `verified-docs.md` had written off the same way. The generic "Salesforce
+   Help" title is **a WebFetch race, not a page state** — the shell title, read before
+   the SPA swaps the article title in. There are two states, not three: a real title, or
+   the "We looked high and low" 404 sentence. Treat a generic title as *unresolved* and
+   re-check it in the browser; never drop a citation on it.
 
 **The doc-surface finding that makes the admin deck cheaper than it looks:**
 
@@ -711,6 +727,24 @@ drops the unreachable URLs with it.
 
 One survivor remains repo-wide: `46cb24ed` in dld. Measure with the command in Deck
 state, which counts this case explicitly.
+
+### 4d. A live citation whose `#fragment` no longer exists
+
+The quietest of the four, because every check in this repo passes it: the page renders,
+the title is right, the content is still on the page — but the anchor the citation deep-
+links to was renamed, so the reader lands at the top of a very long document and has to
+hunt for the section the explanation is talking about.
+
+Found on 2026-08-20 on the most-cited URL in the integration deck.
+`architect.salesforce.com/.../integration-patterns.html` moved to a kebab-case anchor
+scheme, orphaning **15 questions** across two fragments
+(`#Remote_Process_Invocation___Fire_And_Forget` →
+`#remote-process-invocation--fire-and-forget`, and the Request-and-Reply pair). A dead
+fragment returns HTTP 200, the correct title, and no error of any kind.
+
+**When a citation carries a `#fragment`, verify the fragment, not just the page.** In the
+browser: `document.getElementById(...)` returns non-null, or `window.scrollY` actually
+moved after navigating. Neither WebFetch nor a title check can see this.
 
 ### 5. Scrape damage in options and code
 Freecram scrapes arrive corrupted in specific ways:
