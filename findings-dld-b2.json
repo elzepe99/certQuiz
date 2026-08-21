@@ -1,0 +1,138 @@
+{
+  "deck": "public/decks/salesforce_dld_questions_corrected.json",
+  "reviewed": "2026-08-20",
+  "findings": [
+    {
+      "id": "9ef00f77",
+      "verdict": "clarified",
+      "explanation": "A refresh copies production values wholesale, so every External ID in the refreshed org still names a record in the connected production systems. Left alone, UAT orchestration reaches straight back into production-equivalent records - which is why rewriting those identifiers belongs in the post-refresh plan alongside endpoints, credentials and named credentials.\nSalesforce provides the hook for it: an Apex class implementing the SandboxPostCopy interface runs \"at the end of the sandbox copy using a special Automated Process user\", and the documented uses are exactly this kind of preparation - create users, \"run sanitizing code on records\", and perform other setup tasks. Scripting the External ID remap there makes it repeatable on every refresh rather than a manual step someone forgets.\nPointing UAT at production integrations and rolling transactions back is the risk itself, deleting all data throws away the production-like shape the refresh was for, and masking the value only hides it from users - the integration still sends it.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_interface_System_SandboxPostCopy.htm",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_refresh.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "5c2251da",
+      "verdict": "clarified",
+      "explanation": "Salesforce names staging as a Full sandbox use case directly: the Full sandbox is \"intended to be used as a testing environment\" supporting \"performance testing, load testing, and staging\", and it is \"a replica of your production org, including all data, such as object records and attachments, and metadata\". So at the moment it is created or refreshed, a staging sandbox mirrors production - which is the whole point of the final pre-production rehearsal.\nThe other statements fail on documented behaviour. A sandbox can sit on a preview instance and take the next major release weeks ahead of production, so staging and production are not always on the same version. There is no administrator-scheduled auto-refresh; a refresh is requested manually. And the interval that governs a Full sandbox is 29 days, not two weeks.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_refresh.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_preview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "3f3e8dd7",
+      "verdict": "reasoning",
+      "explanation": "Hub-and-spoke is the pattern Salesforce actually endorses for this: one org holds the customer master and the line-of-business orgs integrate to it, and the org-strategy guidance notes that \"using a hub/spoke or reporting hub can also help you achieve your Customer 360 requirements\". The complete-graph topology reaches a 360 view by a different route - every org integrates directly with every other and reads customer data where it was created - which is why it is the second keyed option.\nBe careful with that second one in practice. The same guidance warns where point-to-point multi-org integration ends up: \"before too long you have a spider web of integrations, data replication, and very brittle point-to-point connections\". It is a recognised topology, not a recommended one, and its cost grows with the square of the org count.\nThe single package option is the one that cannot work at all. A managed package distributes metadata and code to each org; it does not federate live records across org boundaries, so installing it everywhere leaves the customer data exactly as scattered as before.",
+      "references": [
+        "https://developer.salesforce.com/blogs/developer-relations/2014/10/enterprise-architecture-multi-org-strategy"
+      ],
+      "note": "Answer stands, but the item is weak. The old explanation presented the complete-graph topology as simply \"suitable when ownership stays distributed\"; Salesforce's own org-strategy guidance describes that architecture as a brittle point-to-point spider web. Consolidating into a single org - the first distractor - also delivers a 360 view, so this item is really testing which of three named multi-org topologies can deliver one, not which approach is best."
+    },
+    {
+      "id": "2825c32c",
+      "verdict": "clarified",
+      "explanation": "Scratch orgs are a Dev Hub feature, so an org already using them has Dev Hub enabled - that prerequisite is met and re-enabling it is not the missing step. What remains is a single toggle. The Salesforce DX Developer Guide gives the path: from Setup, enter Dev Hub in the Quick Find box, select Dev Hub, and select \"Enable Unlocked Packages and Second-Generation Managed Packages\". One setting gates both package types, which is why no option that turns on only one of them describes a real Setup screen.\nWorth knowing before you flip it: \"After you enable this setting, you can't disable it.\"",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_setup_enable_secondgen_pkg.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs.htm"
+      ]
+    },
+    {
+      "id": "50c2ae4b",
+      "verdict": "clarified",
+      "explanation": "Two documented facts decide this. First, \"sandbox templates are only available for use with Full or Partial Copy sandboxes\" - so pairing a template with a Developer Pro sandbox describes something the platform will not do. Second, Developer and Developer Pro sandboxes copy metadata only; no production records arrive in them at all, whatever their storage allocation, so any option built on one ends in a manual Data Loader run every single week.\nThat leaves the Partial Copy refresh with a template, which seeds a representative sample of production data automatically on each refresh - up to 10,000 records per selected object. Its 5-day refresh interval comfortably supports a weekend refresh between cohorts, and the refresh itself wipes the previous week's work, which is the requirement to delete the data at week end.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.data_sandbox_templates.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_refresh.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=000381868&language=en_US&type=1"
+      ]
+    },
+    {
+      "id": "cd632689",
+      "verdict": "clarified",
+      "explanation": "The release lands four weeks out and the platform upgrade six weeks out, so production is still on the current version on go-live day and the existing sandboxes already match it. Testing that has been running for two months against that version stays valid.\nRefreshing now is what would break it. During the transition between major releases Salesforce creates preview sandboxes by default, so a refresh in this window puts the sandbox on the next release and every completed test has to be re-run against a platform version production will not be on at go-live. A Full sandbox also cannot be refreshed more often than every 29 days, so that decision could not be undone before the release. Delaying until after the upgrade gives up the current-version window the business asked for.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_preview.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_refresh.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "46cb24ed",
+      "verdict": "clarified",
+      "explanation": "The premise of the option that rules cloning out has been false since Spring '20: Salesforce supports cloning a sandbox whose release version differs from production, which is exactly the case for a DevPro1 already upgraded to the preview release. So the restriction that option invokes no longer exists, and cloning is available.\nCloning is also what the scenario needs. A clone of DevPro1 hands the Service Cloud stream an environment that already contains the completed Sales Cloud work, with no metadata migration to build and no chance of missing a dependency. Putting a second stream into DevPro1 itself would have two teams changing one org while a three-month release is in flight, and pushing back on the requirement is not an architectural option.\nOne caveat to plan around: a cross-version clone \"may take significantly longer than a standard sandbox refresh, especially during sandbox preview release months\", it can run for hours or days with no service level agreement, and Salesforce suggests a brand-new sandbox as the faster route when time is tight. With four weeks to deliver, start the clone immediately and keep that fallback in view.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=000380490&language=en_US&type=1",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_preview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "d7b0ee0b",
+      "verdict": "clarified",
+      "explanation": "The platform upgrade arrives on Salesforce's schedule, so the only useful move is to meet the new release early in an environment that already has it. That is precisely what sandbox preview is for: a preview sandbox \"provides early access to new features and lets you test your configurations before the production upgrade\". Find which sandboxes are on preview instances, take the affected feature there, and refactor it while production is still on the current release.\nThe alternatives all avoid the work rather than doing it. Waiting for Salesforce to accommodate custom code that a documented change breaks is not a strategy the customer controls. Raising the API version of a class does not put the runtime on the new release, so it tests nothing about the actual behaviour change. And deferring the upgrade to a date of the org's choosing is not something a customer can request for a major release.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_preview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "36974ea1",
+      "verdict": "reasoning",
+      "explanation": "Both keyed options relieve the constraint the way the documentation describes. A publicly posted AppExchange managed package is exempt from the subscriber org's allocations - \"the custom objects that are contained in a managed package that's publicly posted on AppExchange don't count against the allocations for your Salesforce edition\", and the same exemption covers Lightning apps, custom apps and custom tabs. Installing the quoting app as such a package therefore adds capability without consuming the capacity that is nearly gone. Upgrading the edition raises the ceiling itself: Professional Edition allows 50 custom objects, Enterprise Edition 200.\nAn unmanaged package is the opposite trade - its components land as ordinary org metadata and count against every allocation. More user licences buy seats, not schema, and do not move the object, tab or app allocations at all.\nTwo currency notes. \"Aloha\" is legacy vocabulary for this exemption; current documentation frames it as a managed package publicly posted on AppExchange, with no separate certification named. And the custom tab allocation is no longer the tight constraint the exam-era wording implies - Professional Edition is documented at 1,210 custom tabs and Enterprise at 1,225. Custom objects, at 50 against 200, are where the edition difference actually bites.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=xcloud.overview_limits_professional.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=xcloud.overview_limits_enterprise.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/platform/isvforce/guide/dev-package-limits-for-pe-ge.html"
+      ],
+      "note": "Answer stands. The old explanation taught stale allocations - Professional Edition at 10 custom tabs and Enterprise at 25. Current documentation puts them at 1,210 and 1,225; the real edition constraint is custom objects, 50 against 200."
+    },
+    {
+      "id": "ef3368a2",
+      "verdict": "clarified",
+      "explanation": "The three keyed steps are the release-readiness loop. Refreshing a sandbox inside the release preview window puts it on an instance that takes the next release early - during that window Salesforce creates preview sandboxes by default - which gives the team a version of the platform production will not see for weeks. Regression testing there is what converts that access into information, and reading the release notes catches the features that switch themselves on and the behaviour changes no test was written for.\nThe two rejected steps misplace who controls what. Upgrade timing is set by Salesforce and cannot be scheduled by the customer. And a SOAP integration keeps working against the WSDL it was built on, since older API versions remain supported; regenerating it is work you do when you want something new, not release preparation.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_preview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "cb26f076",
+      "verdict": "reasoning",
+      "explanation": "A Full sandbox can be refreshed only once every 29 days, so aligning it with production after every deployment is not something the platform allows - which rules out the refresh-driven option and forces the two that work. Copying new and changed records from production on a daily schedule keeps the data current between refreshes, so a bug reported this morning can be reproduced against records that resemble this morning's. Running every deployment through the sandbox first keeps its metadata in step with production, so a defect reproduced there is a defect in the code rather than an artefact of drift.\nThe remaining option describes an action that does not exist. Salesforce documents one refresh mechanism, which \"updates its metadata from the source org\" and, for a clone or a template-based sandbox, \"updates the org's data and its metadata\". What you can choose is which data a refresh copies, not whether to refresh data on its own.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_refresh.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5"
+      ],
+      "note": "Answer stands. The old explanation claimed a Refresh Data action exists and is \"only available for Partial Copy and Developer Pro sandboxes\". There is no such action: Salesforce documents a single refresh that updates metadata, and data too for clones and template-based sandboxes."
+    },
+    {
+      "id": "a2bf19b2",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/blogs/2014/12/salesforce1-enterprise-environment-management",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "7f719fb9",
+      "verdict": "clarified",
+      "explanation": "Production takes the new release a week before go-live, so the staging environment has to be on that release when the final rehearsal runs - otherwise the deployment is proven against a platform version production is no longer on. The lever for that is the preview window, which sits roughly a month or more ahead of the earliest production upgrade: a sandbox created or refreshed inside it is placed on a preview instance and receives the release early. Making that arrangement about six weeks out, then deploying to Staging a week before go-live, gives a rehearsal on the same version production will be running.\nThe alternatives fail on timing. A refresh started a week out can run for days on a Full sandbox with no guarantee of finishing, and a refresh two weeks out risks falling outside the preview window and landing on the old release - after which the 29-day interval blocks a second attempt.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_preview.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_refresh.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=000380490&language=en_US&type=1"
+      ]
+    },
+    {
+      "id": "21da735a",
+      "verdict": "corrected",
+      "was": "D",
+      "correct": "C",
+      "explanation": "Salesforce's org-strategy guidance decides this on the enterprise operating model, whose axes are business process standardization and business process integration. Standardization is the CEO's explicit goal and integration is explicitly not required, which is the Replication quadrant.\nThe recommendation for that quadrant names both halves of this option: companies \"can (and probably should) have multiple orgs, however you should consider deploying a managed package from a central org into all of the replicated business units\". The package is the standardization mechanism - processes are built once centrally and installed into each acquired org, which keeps them identical without merging orgs that share no customers.\nSingle-org is the guidance for the Unification and Coordination quadrants, where process integration is high. It is not high here, so consolidating buys the complexity of one org serving several lines of business and none of the shared-data benefit that would repay it.",
+      "references": [
+        "https://developer.salesforce.com/blogs/developer-relations/2014/10/enterprise-architecture-multi-org-strategy"
+      ],
+      "note": "Answer moved D to C. High standardization with no integration requirement is the Replication quadrant, whose documented recommendation is multiple orgs plus a managed package deployed from a central org, not a single org. This is the same scenario as question 4 of this domain, which keyed the single-org option under a different letter and moved for the same reason."
+    }
+  ]
+}

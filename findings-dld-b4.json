@@ -1,0 +1,148 @@
+{
+  "deck": "public/decks/salesforce_dld_questions_corrected.json",
+  "reviewed": "2026-08-20",
+  "findings": [
+    {
+      "id": "60b6639e",
+      "verdict": "clarified",
+      "explanation": "What the release team needs is something they can deploy without touching the architect's environment, and the Metadata API defines exactly that artefact: deploy() and retrieve() \"move metadata (XML files) between a Salesforce org and a local file system\", where the payload is a .zip containing the component files plus a package.xml manifest naming them and the API version. Hand over that pair and the team can validate and deploy it into production with any Metadata API client.\nThe alternatives are not deployable artefacts. A change set lives inside the org that created it and cannot be exported to another org's inbound list. readMetadata reads a component's definition one type at a time and produces nothing installable, and a spreadsheet of component names still leaves someone to assemble the payload by hand. The setup audit trail is a log of what changed, not the changes themselves.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/file_based.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy.htm"
+      ]
+    },
+    {
+      "id": "051864d9",
+      "verdict": "reasoning",
+      "explanation": "Running a subset means setting the test level explicitly: RunSpecifiedTests, where \"only the tests that you specify in the runTests option are run\", passed on DeployOptions to the deploy() call. That is the documented mechanism and the first keyed statement.\nRunLocalTests is not a subset in any useful sense - it runs \"all tests in your org... except the ones that originate from installed managed and unlocked packages\", which on a mature org is most of the suite.\nOne correction to carry away: the granularity is the class, not the method. The runTests option is documented as \"a list of Apex tests to run during deployment. Specify the class name, one name per instance\", and the Salesforce CLI behaves the same way - its --tests flag takes test class names. There is no ClassName.methodName form for a deployment, so any claim that DeployOptions accepts individual test methods is false, however it is worded.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy.htm",
+        "https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_start.html"
+      ],
+      "note": "This item is defective and the key is kept only because no valid second answer exists in its option set. DeployOptions.runTests takes class names only - \"specify the class name, one name per instance\" - so the keyed statement about specifying individual test methods is false, as is the option asserting method-level support. Only the RunSpecifiedTests statement is true, which leaves this choose-2 with one correct option."
+    },
+    {
+      "id": "73b40778",
+      "verdict": "reasoning",
+      "explanation": "User references really do travel inside the component XML rather than being stripped out - a dashboard's runningUser field holds \"the username of the user whose role and sharing settings are used to determine the data shown in the dashboard\", and workflow email alerts carry their recipients the same way. On deployment Salesforce resolves those usernames against the target org, which is why the usual advice is to make sure the referenced users exist there first. Salesforce never creates a user as part of a deployment, and it does not discard the fields either, so the two remaining options are false outright.\nThe dashboard case has a documented fallback that is worth knowing, because it fails quietly rather than loudly: \"when you deploy a dashboard and the value in this field is not defined or does not correspond to a valid user, the field is populated with the username of the user performing the deployment\". The deployment succeeds and the dashboard now runs as whoever deployed it - which can show every user data they should not see. Check running users after a deployment rather than trusting that a clean result means they came across intact.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_dashboard.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/file_based.htm"
+      ],
+      "note": "Answer stands, but the old explanation was wrong about dashboards specifically. It said a missing username stops the deployment until it is resolved; the Metadata API documents the opposite for a dashboard runningUser - the field is silently populated with the username of the user performing the deployment, so the deployment succeeds with the wrong running user."
+    },
+    {
+      "id": "947a218f",
+      "verdict": "clarified",
+      "explanation": "The requirement is selective exposure between two packages owned by the same company, and Salesforce provides one annotation for exactly that. @NamespaceAccessible makes \"public Apex in a package available to other packages that use the same namespace\", applying to classes, methods, interfaces, properties and abstract classes in a second-generation package. Without it, public Apex in a 2GP package is not reachable from another package at all.\nSo the Service team builds its package in the shared namespace and annotates only the methods the Sales team is meant to call; everything else stays invisible. Note the escape hatch the annotation exists to avoid - global Apex is \"always available across all namespaces, and needs no annotation\", which would expose the functions to anyone, not just the Sales package.\nTwo packages in different namespaces have no such channel, a single package throws away the separation the two teams need, and the annotation named after one of the products does not exist.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_annotation_NamespaceAccessible.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_unlocked_pkg_intro.htm"
+      ]
+    },
+    {
+      "id": "ae8b6e7f",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_unlocked_pkg_intro.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs.htm"
+      ]
+    },
+    {
+      "id": "0b8c5d16",
+      "verdict": "clarified",
+      "explanation": "The artefact decides the command. A .zip is Metadata API format - the package.xml-and-components layout that deploy() consumes - while the source-format commands expect an unpacked Salesforce DX project directory. Since the same artefact is being validated and then deployed, both steps have to use the Metadata API form of the command; pairing one of each fails at whichever step is handed a layout it cannot read.\nCurrency note: these sfdx-style commands belong to the previous CLI generation. The current equivalents are sf project deploy validate and sf project deploy start, which accept a Metadata API format directory or zip through a dedicated flag. The reasoning the question tests is unchanged - match the command family to the artefact format - but the command names have moved on.",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_start.html",
+        "https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_validate.html",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/file_based.htm"
+      ]
+    },
+    {
+      "id": "b06f104c",
+      "verdict": "clarified",
+      "explanation": "Three independent production orgs have no deployment connection between them, so change sets cannot reach across them at all - a change set travels between a production org and its own sandboxes. That leaves a package, and the choice is about what happens after installation. A managed package is versioned and upgradeable, so the shared standard features can be pushed forward centrally release after release while each region keeps its own local customizations around them. An unmanaged package installs once and is then just ordinary metadata in each org, with no upgrade path - the three orgs would diverge from the first regional edit onward.\nWorth knowing when you make this call for real: Salesforce positions unlocked packages as the right type \"for most use cases\" when you are not distributing on AppExchange, and they are versioned and upgradeable in the same way. This option set does not offer them, but for internal multi-org distribution they are the modern equivalent of the answer here rather than a lesser one.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.changesets_about_connection.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_unlocked_pkg_intro.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.packagingGuide.meta/packagingGuide/packaging_developing_unmanaged.htm"
+      ]
+    },
+    {
+      "id": "45cad6f6",
+      "verdict": "clarified",
+      "explanation": "Apex tests are the largest single variable in a deployment window, because the platform runs them as part of the deploy and their cost grows with the suite. Component type matters too: Salesforce notes that \"changes made to sharing rules or group settings, or structural changes in role hierarchy, can cause Apex code to recompile\", and that deploying profile or permission set changes alongside sharing rules \"triggers a calculation each time you attempt to deploy, which can be time-consuming if there are multiple failures\". And an org full of working users is a slower target - record and metadata contention during the deploy is exactly why the guidance is to release \"at times when most users are off the system\".\nThat last point also disposes of the off-peak option: deploying off-peak is the recommendation, not a cause of slowness. Constraints on what the team may change before and after a deployment shape the process, not the platform's processing time.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy.htm"
+      ]
+    },
+    {
+      "id": "47bcc6c5",
+      "verdict": "clarified",
+      "explanation": "A destructive deployment is an ordinary deploy with one extra manifest. Salesforce documents it directly: \"to delete components, use the same procedure as with deploying components, but also include a delete manifest file that's named destructiveChanges.xml and list the components to delete in this manifest\". The ordinary manifest still has to be there - package.xml must \"list no components to deploy, include the API version, and be in the same directory as destructiveChanges.xml\".\nSo both keyed files are required and the other two options are not. The API version in package.xml simply has to be one the platform still supports, not the newest. And purgeOnDelete is optional - \"to bypass the Recycle Bin, set the purgeOnDelete option to true\" - which changes where the deleted components go, not whether the call works.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy_deleting_files.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy.htm"
+      ]
+    },
+    {
+      "id": "69e82cf5",
+      "verdict": "clarified",
+      "explanation": "Two requirements decide it: the contractor deploys repeatedly from their own org into the customer's, and the customer ends up owning the code outright. An unmanaged package does both - it is documented as the vehicle for \"a one-time drop of applications that require customization after installation\", and once installed its components are ordinary metadata that UC can read, edit and extend.\nA managed package is built for the opposite outcome. It is the format \"used by Salesforce partners to distribute and sell applications to customers\", it locks its components against modification in the subscriber org, and it keeps control with the publisher - the contractor - which is precisely the arrangement UC does not want. Change sets cannot cross two unrelated orgs, since they require a deployment connection between a production org and its own sandboxes, and an IDE edits and deploys but packages nothing for repeated installation.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.packagingGuide.meta/packagingGuide/packaging_developing_unmanaged.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.pkg1_dev.meta/pkg1_dev/sharing_apps.htm",
+        "https://help.salesforce.com/s/articleView?id=sf.changesets_about_connection.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "acf27c9e",
+      "verdict": "clarified",
+      "explanation": "A deployment is validated against the API version declared in its manifest, not against whatever the platform happens to be running. A field introduced in the later version does not exist in the earlier version's schema, so a script pinned to the older version cannot describe it and the deployment fails on an unknown field. Raising the version in package.xml is the fix, and it is the only fix - the platform's own version does not rescue a manifest that claims an older one.\nThe option blaming platform support is a different claim, and a checkable one: Salesforce supports each API version \"for a minimum of 3 years from the date of first release\", and the currently retired band is versions 21.0 through 30.0, retired as of Summer '25 (7.0 through 20.0 went in Summer '22). Versions 31.0 and above remain supported, so an older-but-supported version is a real scenario rather than an impossible one - which is exactly why the manifest version is where the failure comes from.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/api_rest_eol.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy.htm"
+      ]
+    },
+    {
+      "id": "821c2331",
+      "verdict": "clarified",
+      "explanation": "A rollback has two halves, and only one of them is a redeploy. Restoring the changed components is straightforward - deploy the pre-release metadata captured beforehand. Removing components the release added is not, because a deployment never deletes anything: the Metadata API only removes what a destructiveChanges.xml manifest names, alongside a package.xml that lists no components and carries the API version. Scripting that removal is what makes the rollback repeatable and reviewable, where deleting components by hand in Setup is unrepeatable and easy to get wrong under pressure.\nTaking the backup as a sandbox created from production gives a complete, self-consistent snapshot of the pre-deployment state to redeploy from, rather than a retrieval whose completeness depends on the manifest someone wrote at the time.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy_deleting_files.htm",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "0ab782ac",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm",
+        "https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_start.html"
+      ]
+    },
+    {
+      "id": "c60fdc56",
+      "verdict": "clarified",
+      "explanation": "Two teams merging into one org need a model where each can release without waiting on the other, and that is what package development provides: work is organized into versioned packages built from source, so each team ships an artefact that is tested and installed on its own schedule. Scratch orgs give every feature branch a reproducible environment, and continuous integration falls out of the same source-driven arrangement.\nThe alternatives all pick a winner rather than solving the problem. Standardizing on either team's current model settles an argument about habit, not about how two streams share one org, and change sets in particular give no versioning and no independent release path. The one remaining option misdescribes the package model - it is CLI and source driven, not a declarative point-and-click alternative.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_unlocked_pkg_intro.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm"
+      ]
+    },
+    {
+      "id": "8d278dc8",
+      "verdict": "corrected",
+      "was": "D",
+      "correct": "A",
+      "explanation": "Salesforce gates Apex metadata access on package certification, but it provides a switch for exactly the situation this question describes - a package still in testing. The rule is stated plainly: Apex classes in a package that has not passed security review \"can't access public or protected metadata unless the Deploy Metadata from Non-Certified Package Versions via Apex org preference is enabled\". That preference lives in Setup under Apex Settings and has to be turned on in the target org by an administrator.\nSo the failure is a missing org preference in the org being tested against, not a missing certification. Certification would also lift the restriction, but waiting for security review before you can test the package is the wrong way round, and the preference exists so that uncertified packages can be exercised in a real org first.\nThe remaining options misplace the setting or the mechanism: it is an org preference under Apex Settings, not something configured on a custom metadata type, and switching to the Tooling API does not avoid the restriction, which is about what packaged Apex may do in a subscriber org rather than which API it calls.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_metadata_security.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_metadata.htm"
+      ],
+      "note": "Answer moved D to A. The Apex Developer Guide documents the exact control: Apex in a non-security-reviewed package cannot reach subscriber metadata unless the \"Deploy Metadata from Non-Certified Package Versions via Apex\" org preference is enabled, in Setup under Apex Settings. The old explanation asserted that no such Apex Settings toggle exists and that certification was the only route."
+    }
+  ]
+}
