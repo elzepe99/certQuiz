@@ -1,0 +1,136 @@
+{
+  "deck": "public/decks/salesforce_dld_questions_corrected.json",
+  "reviewed": "2026-08-20",
+  "findings": [
+    {
+      "id": "716287d1",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_unlocked_pkg_intro.htm",
+        "https://trailhead.salesforce.com/content/learn/modules/unlocked-packages-for-customers/break-up-your-metadata"
+      ]
+    },
+    {
+      "id": "e06083f5",
+      "verdict": "clarified",
+      "explanation": "Sandbox Types and Templates names the Full sandbox as the one intended to be used as a testing environment that supports \"performance testing, load testing, and staging\", because it is \"a replica of your production org, including all data, such as object records and attachments, and metadata\". Reproducing a slow Visualforce page needs exactly that: view state, query plans and render times all track the data volume behind the page, and Developer (metadata only, 200 MB) and Developer Pro (metadata only, 1 GB) copy no production data at all. A Partial Copy carries only a sample defined by a sandbox template, capped at 10,000 records per selected object, so it cannot reproduce a volume-driven symptom either.\nNote also that Salesforce does not permit performance or scale testing in production, so a Full sandbox is not merely the best environment for this work - it is the sanctioned one.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_environments.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "106ad44b",
+      "verdict": "clarified",
+      "explanation": "The Salesforce DX Developer Guide defines the scratch org as \"a source-driven and disposable deployment of Salesforce code and metadata\", and lists the moments to spin one up almost word for word as this option states them: start a new project, start a new feature branch, test a new feature, start automated testing, or start from a fresh org. That is the environment the package development model is built on - the org is described by the project's source and configuration files, so it can be recreated identically by any developer or by a CI job.\nSandboxes remain valid for org-development work, but a sandbox is a copy of an org rather than an expression of source, which is the coupling the package model exists to remove.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_unlocked_pkg_intro.htm"
+      ]
+    },
+    {
+      "id": "1292cd74",
+      "verdict": "corrected",
+      "was": "C",
+      "correct": "D",
+      "explanation": "Salesforce's org-strategy guidance places this decision on the enterprise operating model, whose two axes are business process standardization and business process integration. The CEO's two statements put this company precisely in the Replication quadrant: standardization is high, integration is explicitly not required.\nFor that quadrant the guidance is direct - companies \"can (and probably should) have multiple orgs, however you should consider deploying a managed package from a central org into all of the replicated business units\". A centrally built managed or unlocked package is what carries the standardized processes into each business unit's org, which is what this option describes.\nA single org is the recommendation for the Unification and Coordination quadrants, where process integration is high. Here it is not: the business units have different customers and different expertise, so consolidating them buys none of the shared-data benefit that would justify the added complexity of one org serving many lines of business.",
+      "references": [
+        "https://developer.salesforce.com/blogs/developer-relations/2014/10/enterprise-architecture-multi-org-strategy"
+      ],
+      "note": "Answer moved C to D. Salesforce's operating-model guidance maps high standardization with no integration requirement to the Replication quadrant, whose documented recommendation is multiple orgs plus a managed package deployed from a central org - not a single org."
+    },
+    {
+      "id": "52e1dadf",
+      "verdict": "clarified",
+      "explanation": "Both keyed options reach production-like volume without moving regulated data downstream. Salesforce Data Mask runs \"in full or partial sandboxes\" and is installed as a managed package in production, with the masking job executing only in the sandbox so production is never touched; the result cannot be unmasked, which is what makes a masked Full sandbox safe to hand to a testing team. Generating synthetic data that mirrors production's row counts and distribution reaches the same volumes with no real records involved at all.\nA Partial Copy refresh still copies real production records, so it does not satisfy the regulation, and Query Analyzer in production inspects query plans rather than providing an environment to test in.\nCurrency note: the article is now titled \"Secure Your Sandbox Data with Salesforce Data Mask (Legacy)\". The managed package reaches end of service on 31 December 2026 and Salesforce directs customers to Data Mask & Seed. The masking approach is unchanged; the product name is not.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.data_mask_overview.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "c4030b0e",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_environments.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "69a9ff36",
+      "verdict": "clarified",
+      "explanation": "On the operating-model framework Salesforce uses for org strategy, this new business unit is low on both axes: it shares no customers with the others, so there is no process integration to preserve, and it needs its own processes, so there is no standardization to enforce. That is the Diversification quadrant, where the guidance is that such companies \"will probably always have multiple orgs\" because the work to consolidate different business processes and data models into one org \"is usually very complicated\".\nA stand-alone org therefore gives the new unit full autonomy at no cost to anyone else. Wiring it into the customer 360 hub, or deploying it inside that hub, buys integration for records that do not overlap; reusing another unit's org imposes that unit's processes on a business chosen for its flexibility.",
+      "references": [
+        "https://developer.salesforce.com/blogs/developer-relations/2014/10/enterprise-architecture-multi-org-strategy"
+      ]
+    },
+    {
+      "id": "711da2f7",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/blogs/developer-relations/2014/10/enterprise-architecture-multi-org-strategy",
+        "https://help.salesforce.com/s/articleView?language=en_US&id=sales.managing_duplicates_overview.htm&type=5"
+      ]
+    },
+    {
+      "id": "631e1af5",
+      "verdict": "clarified",
+      "explanation": "A preview sandbox sits on an instance that takes the next Salesforce release early; a non-preview sandbox stays on the release production is running. Carrying a deployment train across both means components are built and tested against two different platform versions at once.\nThe documented lever is the refresh itself. During the transition between major releases Salesforce creates preview sandboxes by default - to get a non-preview sandbox in that window you must have the option enabled by Salesforce support and then explicitly choose Request Non-Preview. So refreshing the non-preview sandboxes inside the preview window is what brings the whole train onto the same release.\nRolling a sandbox back off the new release is not something support does, and refreshing whenever the release management team has time is how the split arose in the first place.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_preview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "3079812f",
+      "verdict": "clarified",
+      "explanation": "Every fact in the scenario pushes the same way on Salesforce's operating-model framework for org strategy: different sales processes and a stated preference for innovation over standardization put the business low on standardization, and two units serving separate territories under different local law share no process integration. That is the Diversification quadrant, where the guidance is that these companies \"will probably always have multiple orgs\" - the work to force different business processes and data models into one org \"is usually very complicated\".\nThe three rejected options all standardize the sales process, which is the one thing the business explicitly said it does not want during the expansion phase, and one of them additionally imposes a single locale on units that operate in different languages.",
+      "references": [
+        "https://developer.salesforce.com/blogs/developer-relations/2014/10/enterprise-architecture-multi-org-strategy"
+      ]
+    },
+    {
+      "id": "91f88d7e",
+      "verdict": "clarified",
+      "explanation": "The decisive constraint is the refresh interval, not the size of the release. A Full sandbox can be refreshed only every 29 days, which cannot serve a UAT environment feeding weekly minor releases; a Partial Copy refreshes every 5 days and carries a sample of production data defined by a sandbox template, which is enough to accept a small change. Major releases every four weeks fit the Full sandbox cadence, and they are the ones that need a production-sized, fully populated org to be accepted in.\nThat also rules out sharing one Full Copy across both cadences: a single Full sandbox cannot be refreshed on a weekly rhythm at all. Developer Pro and Developer sandboxes copy metadata only, so no business user can run acceptance testing against real data in them.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_environments.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/blogs/2014/12/salesforce1-enterprise-environment-management"
+      ]
+    },
+    {
+      "id": "162eb8ef",
+      "verdict": "reasoning",
+      "explanation": "Both keyed options come straight from Salesforce's environment-management guidance. Of the developer sandboxes it says: \"I typically expect these sandboxes to be refreshed after a working feature has been successfully migrated upstream\" - so a developer starts each new piece of work from the state that was just proven upstream. And it states the governing principle for every other environment: production is your only pristine environment, which is why refreshes only ever flow from production outward and every downstream org is understood to be drifting.\nThe same source rejects the integration-sandbox option rather than supporting it: it recommends refreshing the system integration sandbox \"as often as is practical\", and for that reason advises against using a Full sandbox there, since its 29-day refresh limit is too slow. Refreshing on whatever day the interval first allows lets the calendar rather than the delivery pipeline decide.",
+      "references": [
+        "https://developer.salesforce.com/blogs/2014/12/salesforce1-enterprise-environment-management",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_environments.htm&language=en_US&type=5"
+      ],
+      "note": "Answer stands. The old explanation conceded that the integration-sandbox option \"is sometimes argued\" and that frequent integration refreshes break partner connections. The source it rests on says the opposite: refresh the system integration sandbox as often as is practical, and avoid a Full sandbox there precisely because 29 days is too infrequent."
+    },
+    {
+      "id": "c50db85c",
+      "verdict": "clarified",
+      "explanation": "Both keyed options are the challenges Salesforce's own org-strategy guidance names for a single org serving many lines of business: \"Your data model becomes much more complex and controversial as you increase your scope in the org\", and \"Your apex design will need to be very mature to support a large enterprise model\" - every line of business shares one execution context, so trigger frameworks, governor limits and separation of concerns have to be engineered rather than left to convention.\nThe two distractors describe capabilities the platform handles well: sharing and visibility are configured declaratively through the role hierarchy, sharing rules and territories, and multi-currency is a standard org setting with dated exchange rates.",
+      "references": [
+        "https://developer.salesforce.com/blogs/developer-relations/2014/10/enterprise-architecture-multi-org-strategy"
+      ]
+    },
+    {
+      "id": "96992a86",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/blogs/developer-relations/2014/10/enterprise-architecture-multi-org-strategy"
+      ]
+    },
+    {
+      "id": "db8dd0f5",
+      "verdict": "clarified",
+      "explanation": "The requirement names the Partial Copy sandbox's documented limit almost exactly: a Partial Copy carries \"standard and custom object records and Attachments up to 5 GB, with a maximum of 10,000 records per selected object\", with the objects chosen through a sandbox template. So the testing team's 10,000 records per object arrive automatically on creation, with no data load to build or run.\nA Full sandbox would also hold the data but copies the entire production database and takes far longer to provision and refresh, and the question asks for the fastest approach. Developer and Developer Pro sandboxes copy metadata only, so both of those options end in a manual Data Loader run for every object.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=000381868&language=en_US&type=1",
+        "https://help.salesforce.com/s/articleView?id=sf.data_sandbox_templates.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,194 @@
+{
+  "deck": "public/decks/salesforce_dld_questions_corrected.json",
+  "reviewed": "2026-08-20",
+  "findings": [
+    {
+      "id": "4ebcf84d",
+      "verdict": "clarified",
+      "explanation": "Both keyed advantages are about where information lives. An Agile tool consolidates the project's artefacts - stories, acceptance criteria, decisions, links to the change that implemented each one - into one place the whole team reads, instead of a scatter of documents and message threads. And it makes status continuously visible: the board shows what is in progress and what is blocked, and the sprint reports show whether the work will land, without anyone assembling a status update by hand.\nThe rejected options are outcomes rather than features. Better stakeholder relationships may follow from the visibility, but no tool delivers them. Gate-based governance is a process a business chooses to impose; a tool can record the gates but does not supply the authority behind them.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/scrum-and-kanban-at-salesforce/learn-about-kanban",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "28e4ec67",
+      "verdict": "clarified",
+      "explanation": "The question is specifically about supporting Scrum, so the features to look for are the ones Scrum's artefacts require. A prioritized product backlog is the ordered list everything else is drawn from. A sprint backlog holds what the team has committed to for the current sprint, pulled from that product backlog. And work items have to be assignable, because a sprint is executed by named people picking up specific stories.\nA Kanban board is a genuinely useful feature and the reason it is the odd one out is framework rather than quality - it belongs to Kanban, where \"the workflow is mapped into columns\" and work is pulled continuously rather than committed sprint by sprint. Email notification on change is a generic capability of nearly any tracker and tells you nothing about whether the tool supports Scrum.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/scrum-and-kanban-at-salesforce/learn-about-scrum",
+        "https://trailhead.salesforce.com/content/learn/modules/scrum-and-kanban-at-salesforce/learn-about-kanban"
+      ]
+    },
+    {
+      "id": "02921bb0",
+      "verdict": "clarified",
+      "explanation": "New scope arriving late in the build is a risk to be surfaced, not a decision for the project team to take on the spot. Both keyed actions start the same way - escalate it to the stakeholders with an impact assessment - and then offer the two levers that can absorb it: more resources, or more time. Which one is pulled, or whether something else is dropped instead, is the stakeholders' call because they own the budget and the date.\nThe two rejected responses both end the conversation at the project team's level. Telling the subject matter expert that a new developer environment is the answer confuses provisioning with scope. Telling them the platform cannot support tracking additional container types is not true - and asserting a platform limitation to avoid a scope conversation is the more damaging of the two, because it closes off a requirement the business may genuinely need.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management",
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "4f44277d",
+      "verdict": "clarified",
+      "explanation": "The size of the request decides which body answers it. A 30% increase in project cost is a funding decision, and funding sits with the executive steering committee - the sponsors who own the budget and can weigh the extra spend against the consequence of missing a compliance deadline in three months.\nThe other bodies each own something narrower. A change control board governs what enters the release and whether a change is approved for deployment, working inside the budget that has already been granted. A project management committee runs delivery - plans, resources, and schedules - against that same envelope. A security review committee rules on security posture, which may well be involved in defining what these compliance requirements demand, but is not empowered to fund the work.\nNote that this division of authority is organizational governance rather than a documented Salesforce rule; the references orient rather than decide it.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management",
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "5e784c10",
+      "verdict": "clarified",
+      "explanation": "Salesforce's deployment guidance says this directly: release \"at times when most users are off the system\", \"avoid peak hours when everyone's actively using the system\", and steer clear of the period \"right before holidays or major events\". A seasonal business heading into its busiest weeks is that case exactly - the same defect that would be an inconvenience in a quiet month becomes lost revenue when every user and customer is transacting at once, and the team's capacity to respond is lowest precisely when the stakes are highest.\nThe rejected options each trade away a control at the moment it is most needed. Making declarative changes directly in production removes the testing that a busy period makes more important, not less. Skipping regression testing for minor changes assumes the minor label is reliable. And having developers run user acceptance testing removes the independent business judgment that acceptance testing exists to provide.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=000384452&language=en_US&type=1"
+      ]
+    },
+    {
+      "id": "376e5852",
+      "verdict": "clarified",
+      "explanation": "Scope, time and cost cannot all be fixed at once, and here two of the three already are: the board has set the budget and the release date. The third is not merely flexible but unknown - the requirements will be decided later by a public community vote, so nobody can yet say what has been committed to. That is the risk, and it exists before any methodology is chosen.\nThe two methodology options invert cause and effect. Choosing Agile or Waterfall is a response to this situation, not the risk within it - and neither creates capacity that the fixed date and budget do not contain. Soliciting requirements from an external community is unusual but legitimate; the problem is not where the requirements come from, it is that the commitments were made before they existed.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-agile-basics/learn-the-basics-of-agile",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "c0976a29",
+      "verdict": "clarified",
+      "explanation": "Effort tracking earns its place by improving the team's own forecasting. Recording an estimate, then the actual, then the remaining effort gives the developer the feedback loop that makes the next estimate better, and gives the team a velocity stable enough to plan with. That is the inspect-and-adapt habit applied to estimation rather than to the product.\nThe three rejected reasons all repurpose estimates as a management instrument, and each one destroys the data that makes the practice work. Using estimates to identify developers who are slacking teaches the team to pad every estimate. Tracking hours for compensation turns a planning tool into a timesheet. And committing to a timeline based solely on developer estimates treats a forecast with known variance as a promise, which is how a team ends up defending an estimate rather than reporting reality.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/scrum-and-kanban-at-salesforce/learn-about-scrum",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-agile-basics/learn-the-basics-of-agile"
+      ]
+    },
+    {
+      "id": "2b7730d8",
+      "verdict": "clarified",
+      "explanation": "The three keyed practices cover the three things that go wrong on deployment night. A rollback strategy has to be designed in advance, because reversing a release is not a single command - restoring changed components means redeploying the previous state, and removing new ones means a destructiveChanges manifest naming them. Announcing the maintenance window ahead of time lets users plan around it, which is also the point of Salesforce's advice to release when most users are off the system. And freezing configuration changes in production during the window keeps an administrator's edit from colliding with the release - the platform enforces part of this itself, since a deployment takes an org lock that blocks setup changes until it completes.\nAlerting users on the day of the deployment is the same communication too late to be acted on. Aligning releases with Salesforce's own upgrades stacks two sources of change on one weekend, which makes any resulting defect harder to attribute, not easier.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy_deleting_files.htm",
+        "https://help.salesforce.com/s/articleView?id=000384452&language=en_US&type=1"
+      ]
+    },
+    {
+      "id": "9c991e6c",
+      "verdict": "clarified",
+      "explanation": "Agile flexes scope against a fixed time and cost, and this commitment has removed the flex while leaving the scope undefined. Both risks follow from that. Nobody can say today whether a complete system is achievable in three months, because there is no agreed definition of complete - so the feasibility of the promise is unknown rather than optimistic. And whatever does fit inside the window will be decided by prioritization as the work proceeds, which means the delivered functionality may not be the functionality the business needed.\nThe two rejected statements are wrong about Agile itself. Changing requirements is what the method is designed to accommodate - the Agile Manifesto values \"responding to change over following a plan\" - and nothing about a customer community makes it unsuitable for iterative delivery.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-agile-basics/learn-the-basics-of-agile",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "d292fd5d",
+      "verdict": "clarified",
+      "explanation": "A communication plan is judged on predictability and content. Predictability means a named list of stakeholders who each know what they will receive and when, so nobody has to ask and nobody is surprised. Content means the substance stakeholders need to make decisions - status against plan, timelines, and the impacts of what has changed since the last update, including the bad news.\nThe two rejected characteristics fail on those tests. Communicating on a need-to-know basis makes each disclosure a judgment call by the sender, which produces exactly the surprises that erode trust. And soliciting feedback on open architectural questions is real work that should be happening, but it is a design activity carried out with specific people, not a property of the plan that keeps the project's stakeholders informed.\nNote that this is communication practice rather than a platform fact; the reference is orienting rather than decisive.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "51fb3e72",
+      "verdict": "clarified",
+      "explanation": "Three needs are described - requirements for the developers, defects for the testers, and ad hoc status for stakeholders - and they are three views of the same underlying work items. A project management tool holds all of them in one place, which matters most for a distributed team: the requirement, the defect raised against it, and the status report drawn from both stay connected without anyone reconciling separate systems.\nThe alternatives each cover one slice at best. A code repository versions the source and can link a commit to a work item, but it does not manage requirements or defect workflow. An analytics platform reports on data it is given and does not capture the work. Spreadsheets can hold a list, but they have no workflow, no concurrent editing discipline for a distributed team, and no live status for stakeholders to pull.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm"
+      ]
+    },
+    {
+      "id": "d1940574",
+      "verdict": "clarified",
+      "explanation": "Size the release to the change. A workflow rule and a trigger on the opportunity renewal process is a small, well-bounded piece of work, so it belongs in the minor release stream rather than being held for a major one. What it is not is invisible: it changes what sales users see when they renew an opportunity, so it needs training and change communication to go with it. That pairing - minor release, real change management - is what the answer captures.\nAligning it with a Salesforce major release would be worse on both counts. It delays a small change for months, and it lands the org's change at the same moment as the platform's, so any resulting defect is harder to attribute. Salesforce upgrades arrive on Salesforce's schedule and are not a release slot a customer can book, and neither an interim category cleared with Support nor a patch aligned to a Salesforce patch describes a real planning option here.\nCurrency note: Workflow Rules reached end of support at the end of 2025, with Flow as the replacement, so equivalent automation built today would be a record-triggered flow.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_preview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "2c90c553",
+      "verdict": "clarified",
+      "explanation": "A change control board exists to decide whether a change may proceed, and each seat brings one kind of authority to that decision. The technical architect's is technical: whether the release is sound enough to go to production - its design, its risk, its dependencies, its rollback path - and the meeting is where that judgment is recorded as an approval or a rejection.\nThe three rejected activities are all real architect work happening somewhere else. Prioritizing the product roadmap with business stakeholders is a planning forum. Troubleshooting errors from the last release is incident work that may produce input to this meeting but is not conducted in it. And code review belongs in the development flow, well before a release reaches a control board - if code quality is first examined at the CCB, the gate is in the wrong place.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "92fc13de",
+      "verdict": "clarified",
+      "explanation": "Prioritization needs a list and a forum, and the two keyed options supply one each. A single backlog in a project management tool is what lets requests be compared against each other rather than each being argued on its own merits as it arrives. The centre of excellence is where that ranking is decided against business goals by people with the standing to decide it - Salesforce's org-strategy guidance describes the CoE as the body that manages business architecture and common standards across the enterprise, which is the authority this needs.\nThe rejected options fail the speed requirement or the purpose. A formal IT review at year end is the opposite of quick feedback. Quality checks and design standards both matter, but they govern how a request is built once it has been accepted, not whether it should be.",
+      "references": [
+        "https://developer.salesforce.com/blogs/developer-relations/2014/10/enterprise-architecture-multi-org-strategy",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "2de25757",
+      "verdict": "clarified",
+      "explanation": "The executive sponsor owns the project's business case and its funding, and scope is what connects those two things - a change to scope changes the cost, the date, or the benefit being claimed. So approving scope changes is the responsibility that follows directly from what the sponsor holds.\nThe rejected duties belong to people the sponsor relies on. Communicating status is the project manager's job, and the sponsor is one of its recipients. Methodology is a delivery decision, made against criteria the governance bodies set. And building executive dashboards is implementation work that a sponsor may commission but does not perform.\nNote that role definitions of this kind are organizational practice rather than a documented Salesforce rule; the reference is orienting rather than decisive.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "b5cde063",
+      "verdict": "clarified",
+      "explanation": "A long-running project and a production defect move on different clocks, so they need different paths to production. Salesforce's environment-management guidance names a dedicated environment for exactly this - a production fix sandbox generated for urgent defects only, holding the minimum needed to reproduce and correct the problem. The fix is built and tested there, deploys to production on its own, and is then merged back into the project work so the long-running branch picks it up.\nEvery alternative couples the two. Fixing critical bugs inside the ongoing development sandboxes means the fix cannot ship until the project does, which is months away. Fixing them there and then pushing those changes to production separately sounds targeted but drags whatever else that sandbox contains toward production with it, since the environment holds months of unfinished work. And keeping the teams apart until the end and merging in a Full Copy sandbox postpones every integration problem to the worst possible moment.",
+      "references": [
+        "https://developer.salesforce.com/blogs/2014/12/salesforce1-enterprise-environment-management",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "598ef283",
+      "verdict": "clarified",
+      "explanation": "Release planning decides what the team will do, so both keyed decisions are about the team's own process: when a feature release gets retested if defects are found, and how existing functionality is regression tested so the release does not break what already works. Those are choices with real trade-offs - the size of the regression suite, what is automated, how much re-test a late fix triggers - and nobody else can make them.\nThe two rejected options ask for control the customer does not have. Salesforce upgrades its instances on its own schedule, and the customer-facing lever is the preview window - a preview sandbox \"provides early access to new features and lets you test your configurations before the production upgrade\" - which is a way to get ahead of the upgrade rather than to postpone it. For the same reason there is no route to roll a Salesforce release back. Plan around the upgrade calendar; do not plan to move it.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_preview.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "c4e0249f",
+      "verdict": "clarified",
+      "explanation": "The benefit of wiring the tracker to the build pipeline is that the story record becomes the place where the state of its code is visible. A commit tied to a story triggers the pipeline, and both the automated test results and the build status come back to that story - so a developer, or anyone reading the board, can see whether the work is green without opening the CI tool and matching commits to stories by hand.\nThe two rejected benefits are things the tracker already does on its own. Developers can collaborate on a story in any issue tracker, integrated or not, and the burn chart is drawn from the tracker's own estimates and status transitions. Neither improves when CI is connected, which is what makes them the wrong answers to a question about what the integration buys.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "7e6cdb08",
+      "verdict": "clarified",
+      "explanation": "Two things are wrong with fixing the bug in the user acceptance testing sandbox, and the keyed answers address one each. First, the environment: UAT is in use, and building an emergency fix there disturbs the testing other people are relying on while mixing the fix into whatever else that environment holds. A sandbox stood up as a hotfix environment isolates the change so that what reaches production is the fix and nothing else - Salesforce's environment-management guidance describes exactly this, a sandbox generated for urgent defects only.\nSecond, the governance: a defect discovered in production is a production change like any other. Tight timelines change how quickly the change control process runs, not whether it runs - the approval, the record of what was deployed and the rollback plan are what make the fix reversible if it makes things worse.\nSpeed is a real constraint here, but the option that treats UAT as the fastest route is measuring only the first step and ignoring the contaminated test environment and the unapproved production change it leaves behind.",
+      "references": [
+        "https://developer.salesforce.com/blogs/2014/12/salesforce1-enterprise-environment-management",
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "d098ec60",
+      "verdict": "clarified",
+      "explanation": "The organization has already built the answer: a hotfix sandbox is one of the environments it maintains, and it exists precisely so that a production emergency has a path that does not run through the release pipeline. Salesforce's environment-management guidance describes the same environment - a sandbox for urgent defects only - and the discipline that goes with it: fix, test, deploy, then merge the fix back into the in-flight release work so the next release does not undo it.\nThe rejected routes each borrow an environment that is doing something else. Staging is holding the validated state of the next planned release, so deploying a fix from there ships that release early. Development to UAT to production is the full pipeline, which is correct for planned work and too slow for a P1. And following the standard release process is the right answer to a different question - the point of a defined hotfix path is that emergencies are handled by an agreed exception rather than by suspending governance.",
+      "references": [
+        "https://developer.salesforce.com/blogs/2014/12/salesforce1-enterprise-environment-management",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "b19ac21f",
+      "verdict": "clarified",
+      "explanation": "The risk is the dependency between two work-streams running at once. The integration is being built against a legacy system that is itself being upgraded, so the interface it targets is moving while it is being built - a slip or a design change on either side lands on the other, and the commitment made to the board covers both programmes as one date. That coupling is what makes the plan fragile, and managing it needs an explicit joint plan: agreed interface contracts, aligned milestones, and a shared view of what happens to the combined date if either side moves.\nA Salesforce release falling near the deadline is a scheduled, published event that can be planned around, and the preview window exists so a team can test against the new version in advance. The methodology each team has chosen is a way of organizing work, not a risk in itself - two teams can deliver on different methods provided the dependencies between them are managed.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_preview.htm&language=en_US&type=5"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1252 @@
+{
+  "deck": "public/decks/salesforce_dld_questions_corrected.json",
+  "reviewed": "2026-08-20",
+  "findings": [
+    {
+      "id": "716287d1",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_unlocked_pkg_intro.htm",
+        "https://trailhead.salesforce.com/content/learn/modules/unlocked-packages-for-customers/break-up-your-metadata"
+      ]
+    },
+    {
+      "id": "e06083f5",
+      "verdict": "clarified",
+      "explanation": "Sandbox Types and Templates names the Full sandbox as the one intended to be used as a testing environment that supports \"performance testing, load testing, and staging\", because it is \"a replica of your production org, including all data, such as object records and attachments, and metadata\". Reproducing a slow Visualforce page needs exactly that: view state, query plans and render times all track the data volume behind the page, and Developer (metadata only, 200 MB) and Developer Pro (metadata only, 1 GB) copy no production data at all. A Partial Copy carries only a sample defined by a sandbox template, capped at 10,000 records per selected object, so it cannot reproduce a volume-driven symptom either.\nNote also that Salesforce does not permit performance or scale testing in production, so a Full sandbox is not merely the best environment for this work - it is the sanctioned one.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_environments.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "106ad44b",
+      "verdict": "clarified",
+      "explanation": "The Salesforce DX Developer Guide defines the scratch org as \"a source-driven and disposable deployment of Salesforce code and metadata\", and lists the moments to spin one up almost word for word as this option states them: start a new project, start a new feature branch, test a new feature, start automated testing, or start from a fresh org. That is the environment the package development model is built on - the org is described by the project's source and configuration files, so it can be recreated identically by any developer or by a CI job.\nSandboxes remain valid for org-development work, but a sandbox is a copy of an org rather than an expression of source, which is the coupling the package model exists to remove.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_unlocked_pkg_intro.htm"
+      ]
+    },
+    {
+      "id": "1292cd74",
+      "verdict": "corrected",
+      "was": "C",
+      "correct": "D",
+      "explanation": "Salesforce's org-strategy guidance places this decision on the enterprise operating model, whose two axes are business process standardization and business process integration. The CEO's two statements put this company precisely in the Replication quadrant: standardization is high, integration is explicitly not required.\nFor that quadrant the guidance is direct - companies \"can (and probably should) have multiple orgs, however you should consider deploying a managed package from a central org into all of the replicated business units\". A centrally built managed or unlocked package is what carries the standardized processes into each business unit's org, which is what this option describes.\nA single org is the recommendation for the Unification and Coordination quadrants, where process integration is high. Here it is not: the business units have different customers and different expertise, so consolidating them buys none of the shared-data benefit that would justify the added complexity of one org serving many lines of business.",
+      "references": [
+        "https://developer.salesforce.com/blogs/developer-relations/2014/10/enterprise-architecture-multi-org-strategy"
+      ],
+      "note": "Answer moved C to D. Salesforce's operating-model guidance maps high standardization with no integration requirement to the Replication quadrant, whose documented recommendation is multiple orgs plus a managed package deployed from a central org - not a single org."
+    },
+    {
+      "id": "52e1dadf",
+      "verdict": "clarified",
+      "explanation": "Both keyed options reach production-like volume without moving regulated data downstream. Salesforce Data Mask runs \"in full or partial sandboxes\" and is installed as a managed package in production, with the masking job executing only in the sandbox so production is never touched; the result cannot be unmasked, which is what makes a masked Full sandbox safe to hand to a testing team. Generating synthetic data that mirrors production's row counts and distribution reaches the same volumes with no real records involved at all.\nA Partial Copy refresh still copies real production records, so it does not satisfy the regulation, and Query Analyzer in production inspects query plans rather than providing an environment to test in.\nCurrency note: the article is now titled \"Secure Your Sandbox Data with Salesforce Data Mask (Legacy)\". The managed package reaches end of service on 31 December 2026 and Salesforce directs customers to Data Mask & Seed. The masking approach is unchanged; the product name is not.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.data_mask_overview.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "c4030b0e",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_environments.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "69a9ff36",
+      "verdict": "clarified",
+      "explanation": "On the operating-model framework Salesforce uses for org strategy, this new business unit is low on both axes: it shares no customers with the others, so there is no process integration to preserve, and it needs its own processes, so there is no standardization to enforce. That is the Diversification quadrant, where the guidance is that such companies \"will probably always have multiple orgs\" because the work to consolidate different business processes and data models into one org \"is usually very complicated\".\nA stand-alone org therefore gives the new unit full autonomy at no cost to anyone else. Wiring it into the customer 360 hub, or deploying it inside that hub, buys integration for records that do not overlap; reusing another unit's org imposes that unit's processes on a business chosen for its flexibility.",
+      "references": [
+        "https://developer.salesforce.com/blogs/developer-relations/2014/10/enterprise-architecture-multi-org-strategy"
+      ]
+    },
+    {
+      "id": "711da2f7",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/blogs/developer-relations/2014/10/enterprise-architecture-multi-org-strategy",
+        "https://help.salesforce.com/s/articleView?language=en_US&id=sales.managing_duplicates_overview.htm&type=5"
+      ]
+    },
+    {
+      "id": "631e1af5",
+      "verdict": "clarified",
+      "explanation": "A preview sandbox sits on an instance that takes the next Salesforce release early; a non-preview sandbox stays on the release production is running. Carrying a deployment train across both means components are built and tested against two different platform versions at once.\nThe documented lever is the refresh itself. During the transition between major releases Salesforce creates preview sandboxes by default - to get a non-preview sandbox in that window you must have the option enabled by Salesforce support and then explicitly choose Request Non-Preview. So refreshing the non-preview sandboxes inside the preview window is what brings the whole train onto the same release.\nRolling a sandbox back off the new release is not something support does, and refreshing whenever the release management team has time is how the split arose in the first place.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_preview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "3079812f",
+      "verdict": "clarified",
+      "explanation": "Every fact in the scenario pushes the same way on Salesforce's operating-model framework for org strategy: different sales processes and a stated preference for innovation over standardization put the business low on standardization, and two units serving separate territories under different local law share no process integration. That is the Diversification quadrant, where the guidance is that these companies \"will probably always have multiple orgs\" - the work to force different business processes and data models into one org \"is usually very complicated\".\nThe three rejected options all standardize the sales process, which is the one thing the business explicitly said it does not want during the expansion phase, and one of them additionally imposes a single locale on units that operate in different languages.",
+      "references": [
+        "https://developer.salesforce.com/blogs/developer-relations/2014/10/enterprise-architecture-multi-org-strategy"
+      ]
+    },
+    {
+      "id": "91f88d7e",
+      "verdict": "clarified",
+      "explanation": "The decisive constraint is the refresh interval, not the size of the release. A Full sandbox can be refreshed only every 29 days, which cannot serve a UAT environment feeding weekly minor releases; a Partial Copy refreshes every 5 days and carries a sample of production data defined by a sandbox template, which is enough to accept a small change. Major releases every four weeks fit the Full sandbox cadence, and they are the ones that need a production-sized, fully populated org to be accepted in.\nThat also rules out sharing one Full Copy across both cadences: a single Full sandbox cannot be refreshed on a weekly rhythm at all. Developer Pro and Developer sandboxes copy metadata only, so no business user can run acceptance testing against real data in them.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_environments.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/blogs/2014/12/salesforce1-enterprise-environment-management"
+      ]
+    },
+    {
+      "id": "162eb8ef",
+      "verdict": "reasoning",
+      "explanation": "Both keyed options come straight from Salesforce's environment-management guidance. Of the developer sandboxes it says: \"I typically expect these sandboxes to be refreshed after a working feature has been successfully migrated upstream\" - so a developer starts each new piece of work from the state that was just proven upstream. And it states the governing principle for every other environment: production is your only pristine environment, which is why refreshes only ever flow from production outward and every downstream org is understood to be drifting.\nThe same source rejects the integration-sandbox option rather than supporting it: it recommends refreshing the system integration sandbox \"as often as is practical\", and for that reason advises against using a Full sandbox there, since its 29-day refresh limit is too slow. Refreshing on whatever day the interval first allows lets the calendar rather than the delivery pipeline decide.",
+      "references": [
+        "https://developer.salesforce.com/blogs/2014/12/salesforce1-enterprise-environment-management",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_environments.htm&language=en_US&type=5"
+      ],
+      "note": "Answer stands. The old explanation conceded that the integration-sandbox option \"is sometimes argued\" and that frequent integration refreshes break partner connections. The source it rests on says the opposite: refresh the system integration sandbox as often as is practical, and avoid a Full sandbox there precisely because 29 days is too infrequent."
+    },
+    {
+      "id": "c50db85c",
+      "verdict": "clarified",
+      "explanation": "Both keyed options are the challenges Salesforce's own org-strategy guidance names for a single org serving many lines of business: \"Your data model becomes much more complex and controversial as you increase your scope in the org\", and \"Your apex design will need to be very mature to support a large enterprise model\" - every line of business shares one execution context, so trigger frameworks, governor limits and separation of concerns have to be engineered rather than left to convention.\nThe two distractors describe capabilities the platform handles well: sharing and visibility are configured declaratively through the role hierarchy, sharing rules and territories, and multi-currency is a standard org setting with dated exchange rates.",
+      "references": [
+        "https://developer.salesforce.com/blogs/developer-relations/2014/10/enterprise-architecture-multi-org-strategy"
+      ]
+    },
+    {
+      "id": "96992a86",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/blogs/developer-relations/2014/10/enterprise-architecture-multi-org-strategy"
+      ]
+    },
+    {
+      "id": "db8dd0f5",
+      "verdict": "clarified",
+      "explanation": "The requirement names the Partial Copy sandbox's documented limit almost exactly: a Partial Copy carries \"standard and custom object records and Attachments up to 5 GB, with a maximum of 10,000 records per selected object\", with the objects chosen through a sandbox template. So the testing team's 10,000 records per object arrive automatically on creation, with no data load to build or run.\nA Full sandbox would also hold the data but copies the entire production database and takes far longer to provision and refresh, and the question asks for the fastest approach. Developer and Developer Pro sandboxes copy metadata only, so both of those options end in a manual Data Loader run for every object.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=000381868&language=en_US&type=1",
+        "https://help.salesforce.com/s/articleView?id=sf.data_sandbox_templates.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "9ef00f77",
+      "verdict": "clarified",
+      "explanation": "A refresh copies production values wholesale, so every External ID in the refreshed org still names a record in the connected production systems. Left alone, UAT orchestration reaches straight back into production-equivalent records - which is why rewriting those identifiers belongs in the post-refresh plan alongside endpoints, credentials and named credentials.\nSalesforce provides the hook for it: an Apex class implementing the SandboxPostCopy interface runs \"at the end of the sandbox copy using a special Automated Process user\", and the documented uses are exactly this kind of preparation - create users, \"run sanitizing code on records\", and perform other setup tasks. Scripting the External ID remap there makes it repeatable on every refresh rather than a manual step someone forgets.\nPointing UAT at production integrations and rolling transactions back is the risk itself, deleting all data throws away the production-like shape the refresh was for, and masking the value only hides it from users - the integration still sends it.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_interface_System_SandboxPostCopy.htm",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_refresh.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "5c2251da",
+      "verdict": "clarified",
+      "explanation": "Salesforce names staging as a Full sandbox use case directly: the Full sandbox is \"intended to be used as a testing environment\" supporting \"performance testing, load testing, and staging\", and it is \"a replica of your production org, including all data, such as object records and attachments, and metadata\". So at the moment it is created or refreshed, a staging sandbox mirrors production - which is the whole point of the final pre-production rehearsal.\nThe other statements fail on documented behaviour. A sandbox can sit on a preview instance and take the next major release weeks ahead of production, so staging and production are not always on the same version. There is no administrator-scheduled auto-refresh; a refresh is requested manually. And the interval that governs a Full sandbox is 29 days, not two weeks.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_refresh.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_preview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "3f3e8dd7",
+      "verdict": "reasoning",
+      "explanation": "Hub-and-spoke is the pattern Salesforce actually endorses for this: one org holds the customer master and the line-of-business orgs integrate to it, and the org-strategy guidance notes that \"using a hub/spoke or reporting hub can also help you achieve your Customer 360 requirements\". The complete-graph topology reaches a 360 view by a different route - every org integrates directly with every other and reads customer data where it was created - which is why it is the second keyed option.\nBe careful with that second one in practice. The same guidance warns where point-to-point multi-org integration ends up: \"before too long you have a spider web of integrations, data replication, and very brittle point-to-point connections\". It is a recognised topology, not a recommended one, and its cost grows with the square of the org count.\nThe single package option is the one that cannot work at all. A managed package distributes metadata and code to each org; it does not federate live records across org boundaries, so installing it everywhere leaves the customer data exactly as scattered as before.",
+      "references": [
+        "https://developer.salesforce.com/blogs/developer-relations/2014/10/enterprise-architecture-multi-org-strategy"
+      ],
+      "note": "Answer stands, but the item is weak. The old explanation presented the complete-graph topology as simply \"suitable when ownership stays distributed\"; Salesforce's own org-strategy guidance describes that architecture as a brittle point-to-point spider web. Consolidating into a single org - the first distractor - also delivers a 360 view, so this item is really testing which of three named multi-org topologies can deliver one, not which approach is best."
+    },
+    {
+      "id": "2825c32c",
+      "verdict": "clarified",
+      "explanation": "Scratch orgs are a Dev Hub feature, so an org already using them has Dev Hub enabled - that prerequisite is met and re-enabling it is not the missing step. What remains is a single toggle. The Salesforce DX Developer Guide gives the path: from Setup, enter Dev Hub in the Quick Find box, select Dev Hub, and select \"Enable Unlocked Packages and Second-Generation Managed Packages\". One setting gates both package types, which is why no option that turns on only one of them describes a real Setup screen.\nWorth knowing before you flip it: \"After you enable this setting, you can't disable it.\"",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_setup_enable_secondgen_pkg.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs.htm"
+      ]
+    },
+    {
+      "id": "50c2ae4b",
+      "verdict": "clarified",
+      "explanation": "Two documented facts decide this. First, \"sandbox templates are only available for use with Full or Partial Copy sandboxes\" - so pairing a template with a Developer Pro sandbox describes something the platform will not do. Second, Developer and Developer Pro sandboxes copy metadata only; no production records arrive in them at all, whatever their storage allocation, so any option built on one ends in a manual Data Loader run every single week.\nThat leaves the Partial Copy refresh with a template, which seeds a representative sample of production data automatically on each refresh - up to 10,000 records per selected object. Its 5-day refresh interval comfortably supports a weekend refresh between cohorts, and the refresh itself wipes the previous week's work, which is the requirement to delete the data at week end.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.data_sandbox_templates.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_refresh.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=000381868&language=en_US&type=1"
+      ]
+    },
+    {
+      "id": "cd632689",
+      "verdict": "clarified",
+      "explanation": "The release lands four weeks out and the platform upgrade six weeks out, so production is still on the current version on go-live day and the existing sandboxes already match it. Testing that has been running for two months against that version stays valid.\nRefreshing now is what would break it. During the transition between major releases Salesforce creates preview sandboxes by default, so a refresh in this window puts the sandbox on the next release and every completed test has to be re-run against a platform version production will not be on at go-live. A Full sandbox also cannot be refreshed more often than every 29 days, so that decision could not be undone before the release. Delaying until after the upgrade gives up the current-version window the business asked for.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_preview.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_refresh.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "46cb24ed",
+      "verdict": "clarified",
+      "explanation": "The premise of the option that rules cloning out has been false since Spring '20: Salesforce supports cloning a sandbox whose release version differs from production, which is exactly the case for a DevPro1 already upgraded to the preview release. So the restriction that option invokes no longer exists, and cloning is available.\nCloning is also what the scenario needs. A clone of DevPro1 hands the Service Cloud stream an environment that already contains the completed Sales Cloud work, with no metadata migration to build and no chance of missing a dependency. Putting a second stream into DevPro1 itself would have two teams changing one org while a three-month release is in flight, and pushing back on the requirement is not an architectural option.\nOne caveat to plan around: a cross-version clone \"may take significantly longer than a standard sandbox refresh, especially during sandbox preview release months\", it can run for hours or days with no service level agreement, and Salesforce suggests a brand-new sandbox as the faster route when time is tight. With four weeks to deliver, start the clone immediately and keep that fallback in view.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=000380490&language=en_US&type=1",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_preview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "d7b0ee0b",
+      "verdict": "clarified",
+      "explanation": "The platform upgrade arrives on Salesforce's schedule, so the only useful move is to meet the new release early in an environment that already has it. That is precisely what sandbox preview is for: a preview sandbox \"provides early access to new features and lets you test your configurations before the production upgrade\". Find which sandboxes are on preview instances, take the affected feature there, and refactor it while production is still on the current release.\nThe alternatives all avoid the work rather than doing it. Waiting for Salesforce to accommodate custom code that a documented change breaks is not a strategy the customer controls. Raising the API version of a class does not put the runtime on the new release, so it tests nothing about the actual behaviour change. And deferring the upgrade to a date of the org's choosing is not something a customer can request for a major release.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_preview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "36974ea1",
+      "verdict": "reasoning",
+      "explanation": "Both keyed options relieve the constraint the way the documentation describes. A publicly posted AppExchange managed package is exempt from the subscriber org's allocations - \"the custom objects that are contained in a managed package that's publicly posted on AppExchange don't count against the allocations for your Salesforce edition\", and the same exemption covers Lightning apps, custom apps and custom tabs. Installing the quoting app as such a package therefore adds capability without consuming the capacity that is nearly gone. Upgrading the edition raises the ceiling itself: Professional Edition allows 50 custom objects, Enterprise Edition 200.\nAn unmanaged package is the opposite trade - its components land as ordinary org metadata and count against every allocation. More user licences buy seats, not schema, and do not move the object, tab or app allocations at all.\nTwo currency notes. \"Aloha\" is legacy vocabulary for this exemption; current documentation frames it as a managed package publicly posted on AppExchange, with no separate certification named. And the custom tab allocation is no longer the tight constraint the exam-era wording implies - Professional Edition is documented at 1,210 custom tabs and Enterprise at 1,225. Custom objects, at 50 against 200, are where the edition difference actually bites.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=xcloud.overview_limits_professional.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=xcloud.overview_limits_enterprise.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/platform/isvforce/guide/dev-package-limits-for-pe-ge.html"
+      ],
+      "note": "Answer stands. The old explanation taught stale allocations - Professional Edition at 10 custom tabs and Enterprise at 25. Current documentation puts them at 1,210 and 1,225; the real edition constraint is custom objects, 50 against 200."
+    },
+    {
+      "id": "ef3368a2",
+      "verdict": "clarified",
+      "explanation": "The three keyed steps are the release-readiness loop. Refreshing a sandbox inside the release preview window puts it on an instance that takes the next release early - during that window Salesforce creates preview sandboxes by default - which gives the team a version of the platform production will not see for weeks. Regression testing there is what converts that access into information, and reading the release notes catches the features that switch themselves on and the behaviour changes no test was written for.\nThe two rejected steps misplace who controls what. Upgrade timing is set by Salesforce and cannot be scheduled by the customer. And a SOAP integration keeps working against the WSDL it was built on, since older API versions remain supported; regenerating it is work you do when you want something new, not release preparation.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_preview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "cb26f076",
+      "verdict": "reasoning",
+      "explanation": "A Full sandbox can be refreshed only once every 29 days, so aligning it with production after every deployment is not something the platform allows - which rules out the refresh-driven option and forces the two that work. Copying new and changed records from production on a daily schedule keeps the data current between refreshes, so a bug reported this morning can be reproduced against records that resemble this morning's. Running every deployment through the sandbox first keeps its metadata in step with production, so a defect reproduced there is a defect in the code rather than an artefact of drift.\nThe remaining option describes an action that does not exist. Salesforce documents one refresh mechanism, which \"updates its metadata from the source org\" and, for a clone or a template-based sandbox, \"updates the org's data and its metadata\". What you can choose is which data a refresh copies, not whether to refresh data on its own.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_refresh.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5"
+      ],
+      "note": "Answer stands. The old explanation claimed a Refresh Data action exists and is \"only available for Partial Copy and Developer Pro sandboxes\". There is no such action: Salesforce documents a single refresh that updates metadata, and data too for clones and template-based sandboxes."
+    },
+    {
+      "id": "a2bf19b2",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/blogs/2014/12/salesforce1-enterprise-environment-management",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "7f719fb9",
+      "verdict": "clarified",
+      "explanation": "Production takes the new release a week before go-live, so the staging environment has to be on that release when the final rehearsal runs - otherwise the deployment is proven against a platform version production is no longer on. The lever for that is the preview window, which sits roughly a month or more ahead of the earliest production upgrade: a sandbox created or refreshed inside it is placed on a preview instance and receives the release early. Making that arrangement about six weeks out, then deploying to Staging a week before go-live, gives a rehearsal on the same version production will be running.\nThe alternatives fail on timing. A refresh started a week out can run for days on a Full sandbox with no guarantee of finishing, and a refresh two weeks out risks falling outside the preview window and landing on the old release - after which the 29-day interval blocks a second attempt.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_preview.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_refresh.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=000380490&language=en_US&type=1"
+      ]
+    },
+    {
+      "id": "21da735a",
+      "verdict": "corrected",
+      "was": "D",
+      "correct": "C",
+      "explanation": "Salesforce's org-strategy guidance decides this on the enterprise operating model, whose axes are business process standardization and business process integration. Standardization is the CEO's explicit goal and integration is explicitly not required, which is the Replication quadrant.\nThe recommendation for that quadrant names both halves of this option: companies \"can (and probably should) have multiple orgs, however you should consider deploying a managed package from a central org into all of the replicated business units\". The package is the standardization mechanism - processes are built once centrally and installed into each acquired org, which keeps them identical without merging orgs that share no customers.\nSingle-org is the guidance for the Unification and Coordination quadrants, where process integration is high. It is not high here, so consolidating buys the complexity of one org serving several lines of business and none of the shared-data benefit that would repay it.",
+      "references": [
+        "https://developer.salesforce.com/blogs/developer-relations/2014/10/enterprise-architecture-multi-org-strategy"
+      ],
+      "note": "Answer moved D to C. High standardization with no integration requirement is the Replication quadrant, whose documented recommendation is multiple orgs plus a managed package deployed from a central org, not a single org. This is the same scenario as question 4 of this domain, which keyed the single-org option under a different letter and moved for the same reason."
+    },
+    {
+      "id": "93601ed1",
+      "verdict": "clarified",
+      "explanation": "Change sets cannot leave the family they belong to. They travel over a deployment connection, and \"a deployment connection alone doesn't enable change sets to be sent between orgs\" - each org must additionally be authorized to send and receive. Those connections exist between a production org and its own sandboxes, not between one region's production org and another's, so a change set cannot carry this app across independent regional instances.\nMetadata API tooling has no such boundary. Both the Ant Migration Tool and the Salesforce Extensions for VS Code authenticate to whichever org you point them at and deploy the same retrieved component set into each one, which is what shipping a single app to every regional production org requires. The Developer Console edits one org in place and deploys nothing.\nCurrency note: Salesforce retired the Ant Migration Tool in Spring '24. It still runs, but receives no new functionality beyond API v59.0, and the Salesforce CLI is now the supported command-line route to the same Metadata API.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.changesets_about_connection.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/file_based.htm",
+        "https://developer.salesforce.com/blogs/2024/01/moving-on-from-the-ant-migration-tool-to-sf-cli-v2"
+      ]
+    },
+    {
+      "id": "8846055b",
+      "verdict": "clarified",
+      "explanation": "The requirement is an unattended, repeatable step that runs before every outbound deployment, so the tool has to be scriptable. The Ant-based migration tool is the only listed option that is: it is a command-line client for the Metadata API that a build server can invoke with no human present. Change sets are point-and-click by design, Workbench is an interactive browser tool, and the IDE is a developer's workstation environment - none of the three can be driven by a scheduler.\nCurrency note: Salesforce retired the Ant Migration Tool in Spring '24. It continues to function but gains no functionality beyond API v59.0, and the Salesforce CLI is the supported command-line client for the same Metadata API today. The reasoning the question tests is unchanged - scriptable API tooling automates, declarative tooling does not - but a pipeline being built now should use the CLI.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/file_based.htm",
+        "https://developer.salesforce.com/blogs/2024/01/moving-on-from-the-ant-migration-tool-to-sf-cli-v2"
+      ]
+    },
+    {
+      "id": "3a0f40db",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.changesets_inbound_deploy.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.changesets_about_connection.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "96a9af62",
+      "verdict": "reasoning",
+      "explanation": "Two levers actually shorten the deployment window. Choosing RunSpecifiedTests runs only the named tests instead of every test in the org, which is usually where the hours go on a large release. And a deployment that has already been validated against the target org can be promoted with quick deploy, which \"takes less time than a standard deploy because it skips running Apex tests. These tests were previously run as part of the validation\".\nThe eligibility window matters when you plan the release: the job ID returned by a validation \"is valid for 10 days from when you started the validation\". Validate early enough to be inside that window on deployment night and the production step becomes a promotion rather than a fresh test run.\nValidating without then using quick deploy simply moves the same work earlier - the real deployment still runs everything again. Splitting the release into groups adds ordering constraints and repeated overhead rather than removing any.",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_quick.html",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy.htm"
+      ],
+      "note": "Answer stands. The old explanation put the quick-deploy eligibility window at 4 days; Salesforce documents the validation job ID as valid for 10 days from when the validation started."
+    },
+    {
+      "id": "8771e8d4",
+      "verdict": "clarified",
+      "explanation": "The two orgs are independent production orgs, so nothing that relies on a deployment connection can reach both: change sets move between a production org and its own sandboxes, and a sandbox deploys only to the org it belongs to. That removes both change-set options outright, whatever is built in them. Salesforce-to-Salesforce is a record-sharing feature - it publishes and subscribes to data between orgs and moves no metadata at all.\nA package is the mechanism designed for this shape: build the standardized functions once in a packaging org, version them, and install the same version into each subsidiary's org. Upgrades then travel the same path, which is what keeps the two orgs standardized over time rather than only on day one.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.changesets_about_connection.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_unlocked_pkg_intro.htm"
+      ]
+    },
+    {
+      "id": "63d84f51",
+      "verdict": "clarified",
+      "explanation": "The split that decides this is metadata versus data. Custom metadata type records are metadata: the type and its records both move through change sets, packages and the Metadata API, so the configuration the Apex classes read arrives in the same deployment that delivers the classes. Custom setting records are ordinary data - the definition deploys, the values do not - which is why they have to be recreated in the target org by hand or by a separate load, in a second step that can be forgotten or done wrong.\nMoving the configuration to a custom metadata type therefore makes the release self-contained and repeatable across every environment. Populating custom settings manually before the classes land keeps the two-step problem and only reorders it, and scripting the whole deployment changes the tool without changing the fact that the setting values are still data.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.custommetadatatypes_overview.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_custommetadatatypes.htm"
+      ]
+    },
+    {
+      "id": "1e158c90",
+      "verdict": "clarified",
+      "explanation": "A change of field type is not a metadata edit that lands instantly - it triggers a per-record data conversion. Salesforce warns that \"the conversion runs in the background\" and that \"in some cases, the conversion can take over 24 hours to complete\", with picklist-to-text and date/time-to-time among the slowest, and deployments also face a ceiling on the total number of field type conversions they can carry. On an org with real data volume that is by far the most likely reason a routine change set suddenly takes hours.\nNew custom objects and fields are created empty, so there is nothing to convert. Profile and permission set changes rewrite access metadata, which is comparatively cheap. And a change set's duration plainly does depend on what is in it, which is what makes the first option self-refuting.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.notes_on_changing_custom_field_types.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "ef47a1bd",
+      "verdict": "clarified",
+      "explanation": "The question is not how to move metadata but how to know where each feature currently sits. Change sets and the CLI both deploy without recording a pipeline-level history, and a spreadsheet is accurate only until the next deployment nobody logs. What the DevOps team is describing - an environment map, per-feature version state, deployment history and diffs between orgs - is the function of a purpose-built release management product layered over the same APIs.\nCurrency note: Salesforce now ships DevOps Center as a native option, and it appears alongside change sets and the Metadata API in Salesforce's own list of ways to deploy changes. It provides source-tracked work items and a pipeline view without a third-party licence, so an org choosing tooling today should evaluate it before the AppExchange products this item points to.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.deploy_overview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "6d1e8ed6",
+      "verdict": "clarified",
+      "explanation": "Two habits keep a package strategy honest. Install each package version into a scratch org or sandbox before it reaches production - installation exercises dependencies, namespace resolution and version ordering, none of which the build step proves. And check the Metadata Coverage Report, which lists every metadata type against the channels that can carry it, including Metadata API, change sets, unlocked packaging, managed packaging and source tracking; it is how you find out that a component you intended to package cannot be packaged before the split is designed around it.\nThe rejected options invert the model. One monolithic package restores the single tangled unit that packaging exists to break up, and version control is more important under package development, not less - the package version is built from source, so the repository is the record of what a version contains.",
+      "references": [
+        "https://developer.salesforce.com/docs/metadata-coverage",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_unlocked_pkg_intro.htm"
+      ]
+    },
+    {
+      "id": "46826f40",
+      "verdict": "reasoning",
+      "explanation": "Salesforce documents both keyed limits in the same place: \"You can deploy or retrieve up to 10,000 files at once\", and \"the maximum size of the deployed or retrieved .zip file is 39 MB\". Base-64 encoding inflates the payload, so the compressed archive has to stay under roughly that figure before encoding to fit inside the SOAP message limit.\nThat also settles the two distractors. The file cap applies symmetrically to deploy and retrieve, so no option that lets retrieve exceed it is correct, and 400 MB is not the archive limit under any reading.\nOne figure to have right: the companion limit on the uncompressed contents is \"600 MB or 629,145,600 bytes\", not 400 MB. Both constraints apply at once - a package can fail the uncompressed ceiling while its .zip is comfortably under 39 MB.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_app_limits_cheatsheet.meta/salesforce_app_limits_cheatsheet/salesforce_app_limits_platform_metadata.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy.htm"
+      ],
+      "note": "Answer stands. The old explanation taught the uncompressed limit as 400 MB; Salesforce documents it as 600 MB (629,145,600 bytes). The 39 MB .zip figure it gave is correct."
+    },
+    {
+      "id": "edf98922",
+      "verdict": "corrected",
+      "was": "D",
+      "correct": "A",
+      "explanation": "The question sets one criterion - shortest possible time - and an unmanaged package is the mechanism Salesforce documents for exactly this situation: unmanaged packages are used \"for distributing open-source projects to developers, or as a one-time drop of applications that require customization after installation\". Build the package from the app already running in ETO's org, install it in NTO's org, and the components land as ordinary metadata that NTO's admins can then edit.\nA managed package is built for a different job: it is the format \"used by Salesforce partners to distribute and sell applications to customers\", and it requires a globally unique namespace registered for the packaging org before anything can be uploaded. That is setup work this transfer does not need, and it buys the wrong outcome - installed managed components are locked against modification in the subscriber org, so NTO's own team could not adapt the app they just acquired. Creating users in ETO's org leaves the sales team working in the wrong system, and rebuilding the app is the slowest path of all.\nThe trade the unmanaged route accepts is that the publisher \"can't change or upgrade\" an unmanaged package after installation - there is no upgrade channel back to ETO. For a one-time transfer of an app NTO is taking ownership of, that is the intended behaviour rather than a loss.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.packagingGuide.meta/packagingGuide/packaging_developing_unmanaged.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.pkg1_dev.meta/pkg1_dev/sharing_apps.htm"
+      ],
+      "note": "Answer moved D to A. Salesforce documents the unmanaged package as the one-time drop of an application that is customized after installation, which is this scenario and the fastest route. A managed package targets partner distribution, needs a registered namespace first, and locks its components against edits in the installing org - so it is both slower to produce and wrong for an app NTO will now own and modify."
+    },
+    {
+      "id": "27a5139f",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/file_based.htm"
+      ]
+    },
+    {
+      "id": "7e0cf4e3",
+      "verdict": "clarified",
+      "explanation": "A deployment takes an org lock on the target, and the lock is over metadata rather than the org as a whole. Salesforce describes the behaviour directly: administrative changes that affect large numbers of records - including metadata deployments - lock the relevant setup area so that simultaneous conflicting changes cannot corrupt data or metadata, and the lock is self-resolving with no manual removal. So an administrator attempting a setup change against production while the deployment runs meets an Org Administration Locked error.\nNothing in that stops ordinary work. Users keep reading and writing records throughout, which is why a production deployment does not require an outage window for the business.\nThe source org is not involved. A change set is validated and deployed against the target, so the sandbox it came from stays fully editable.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=000384452&language=en_US&type=1",
+        "https://help.salesforce.com/s/articleView?id=platform.changesets_inbound_deploy.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "7ae89b27",
+      "verdict": "clarified",
+      "explanation": "The two options that begin by uninstalling are disqualified by what uninstalling costs. Salesforce's own conversion procedure spells out the sequence - export all the data from the package's objects, uninstall it, install the replacement, and import the data back - and across five orgs carrying live integrations and local processes built on those objects, that is a destructive migration, not a tooling change. Doing nothing is not an answer either, since the goal is to bring the code under CI/CD.\nThat leaves splitting the package by layer: leave the data model where it is, so the objects, fields and every integration and local customization bound to them keep their identity, and move the classes, pages and components into an unlocked package that can be built from source on every commit.\nPlan the removal carefully, because taking components out of a released managed package is a controlled operation rather than a simple edit - Salesforce supports removing metadata components from second-generation managed packages through a documented process, and in most cases removal marks the component deprecated rather than hard-deleting it from subscriber orgs.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.pkg1_dev.meta/pkg1_dev/convert_to_managed_package.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.pkg2_dev.meta/pkg2_dev/sfdx_dev_dev2gp_remove_md_components.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_unlocked_pkg_intro.htm"
+      ]
+    },
+    {
+      "id": "023258c0",
+      "verdict": "clarified",
+      "explanation": "The requirement names the Tooling API's defining feature. Salesforce describes it as giving \"fine-grained access to an org's metadata\", where \"Tooling API's SOQL capabilities for many metadata types allow you to retrieve smaller pieces of metadata\" and \"smaller retrieves improve performance, which makes Tooling API a better fit for developing interactive applications\" - which is precisely a Java application querying and amending individual metadata components.\nThe Metadata API works the other way: deploy() and retrieve() \"move metadata (XML files) between a Salesforce org and a local file system\" in bulk, with no SOQL against metadata at all. The User Interface API returns records and the layout information needed to render them, not metadata definitions.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_tooling.meta/api_tooling/intro_api_tooling.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/file_based.htm"
+      ]
+    },
+    {
+      "id": "f629a361",
+      "verdict": "clarified",
+      "explanation": "The obstacle is that CPQ's behaviour is configured in records - product rules, price rules, option and constraint records on managed-package objects - and the Metadata API moves \"metadata (XML files) between a Salesforce org and a local file system\". Records are outside its remit entirely, so no amount of change-set or package work carries a CPQ configuration between orgs.\nThat pushes the answer toward tooling built for relationship-aware reference data: a commercial deployer, or an open-source SFDX data plugin driven from the same pipeline with the configuration held in version control. Either way the configuration becomes a reviewable, replayable artefact rather than a manual rebuild per environment.\nManual CSV loads through Data Loader break on the lookups between these objects, since every parent record acquires a new Id in the target org, and a hand-built Apex framework recreates that same mapping problem as code the team then has to maintain. Note that the specific products named here are practitioner tooling rather than a Salesforce recommendation - what the documentation settles is why the native deployment path cannot do this job.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/file_based.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_app_limits_cheatsheet.meta/salesforce_app_limits_cheatsheet/salesforce_app_limits_platform_metadata.htm"
+      ]
+    },
+    {
+      "id": "60b6639e",
+      "verdict": "clarified",
+      "explanation": "What the release team needs is something they can deploy without touching the architect's environment, and the Metadata API defines exactly that artefact: deploy() and retrieve() \"move metadata (XML files) between a Salesforce org and a local file system\", where the payload is a .zip containing the component files plus a package.xml manifest naming them and the API version. Hand over that pair and the team can validate and deploy it into production with any Metadata API client.\nThe alternatives are not deployable artefacts. A change set lives inside the org that created it and cannot be exported to another org's inbound list. readMetadata reads a component's definition one type at a time and produces nothing installable, and a spreadsheet of component names still leaves someone to assemble the payload by hand. The setup audit trail is a log of what changed, not the changes themselves.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/file_based.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy.htm"
+      ]
+    },
+    {
+      "id": "051864d9",
+      "verdict": "reasoning",
+      "explanation": "Running a subset means setting the test level explicitly: RunSpecifiedTests, where \"only the tests that you specify in the runTests option are run\", passed on DeployOptions to the deploy() call. That is the documented mechanism and the first keyed statement.\nRunLocalTests is not a subset in any useful sense - it runs \"all tests in your org... except the ones that originate from installed managed and unlocked packages\", which on a mature org is most of the suite.\nOne correction to carry away: the granularity is the class, not the method. The runTests option is documented as \"a list of Apex tests to run during deployment. Specify the class name, one name per instance\", and the Salesforce CLI behaves the same way - its --tests flag takes test class names. There is no ClassName.methodName form for a deployment, so any claim that DeployOptions accepts individual test methods is false, however it is worded.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy.htm",
+        "https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_start.html"
+      ],
+      "note": "This item is defective and the key is kept only because no valid second answer exists in its option set. DeployOptions.runTests takes class names only - \"specify the class name, one name per instance\" - so the keyed statement about specifying individual test methods is false, as is the option asserting method-level support. Only the RunSpecifiedTests statement is true, which leaves this choose-2 with one correct option."
+    },
+    {
+      "id": "73b40778",
+      "verdict": "reasoning",
+      "explanation": "User references really do travel inside the component XML rather than being stripped out - a dashboard's runningUser field holds \"the username of the user whose role and sharing settings are used to determine the data shown in the dashboard\", and workflow email alerts carry their recipients the same way. On deployment Salesforce resolves those usernames against the target org, which is why the usual advice is to make sure the referenced users exist there first. Salesforce never creates a user as part of a deployment, and it does not discard the fields either, so the two remaining options are false outright.\nThe dashboard case has a documented fallback that is worth knowing, because it fails quietly rather than loudly: \"when you deploy a dashboard and the value in this field is not defined or does not correspond to a valid user, the field is populated with the username of the user performing the deployment\". The deployment succeeds and the dashboard now runs as whoever deployed it - which can show every user data they should not see. Check running users after a deployment rather than trusting that a clean result means they came across intact.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_dashboard.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/file_based.htm"
+      ],
+      "note": "Answer stands, but the old explanation was wrong about dashboards specifically. It said a missing username stops the deployment until it is resolved; the Metadata API documents the opposite for a dashboard runningUser - the field is silently populated with the username of the user performing the deployment, so the deployment succeeds with the wrong running user."
+    },
+    {
+      "id": "947a218f",
+      "verdict": "clarified",
+      "explanation": "The requirement is selective exposure between two packages owned by the same company, and Salesforce provides one annotation for exactly that. @NamespaceAccessible makes \"public Apex in a package available to other packages that use the same namespace\", applying to classes, methods, interfaces, properties and abstract classes in a second-generation package. Without it, public Apex in a 2GP package is not reachable from another package at all.\nSo the Service team builds its package in the shared namespace and annotates only the methods the Sales team is meant to call; everything else stays invisible. Note the escape hatch the annotation exists to avoid - global Apex is \"always available across all namespaces, and needs no annotation\", which would expose the functions to anyone, not just the Sales package.\nTwo packages in different namespaces have no such channel, a single package throws away the separation the two teams need, and the annotation named after one of the products does not exist.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_annotation_NamespaceAccessible.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_unlocked_pkg_intro.htm"
+      ]
+    },
+    {
+      "id": "ae8b6e7f",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_unlocked_pkg_intro.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs.htm"
+      ]
+    },
+    {
+      "id": "0b8c5d16",
+      "verdict": "clarified",
+      "explanation": "The artefact decides the command. A .zip is Metadata API format - the package.xml-and-components layout that deploy() consumes - while the source-format commands expect an unpacked Salesforce DX project directory. Since the same artefact is being validated and then deployed, both steps have to use the Metadata API form of the command; pairing one of each fails at whichever step is handed a layout it cannot read.\nCurrency note: these sfdx-style commands belong to the previous CLI generation. The current equivalents are sf project deploy validate and sf project deploy start, which accept a Metadata API format directory or zip through a dedicated flag. The reasoning the question tests is unchanged - match the command family to the artefact format - but the command names have moved on.",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_start.html",
+        "https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_validate.html",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/file_based.htm"
+      ]
+    },
+    {
+      "id": "b06f104c",
+      "verdict": "clarified",
+      "explanation": "Three independent production orgs have no deployment connection between them, so change sets cannot reach across them at all - a change set travels between a production org and its own sandboxes. That leaves a package, and the choice is about what happens after installation. A managed package is versioned and upgradeable, so the shared standard features can be pushed forward centrally release after release while each region keeps its own local customizations around them. An unmanaged package installs once and is then just ordinary metadata in each org, with no upgrade path - the three orgs would diverge from the first regional edit onward.\nWorth knowing when you make this call for real: Salesforce positions unlocked packages as the right type \"for most use cases\" when you are not distributing on AppExchange, and they are versioned and upgradeable in the same way. This option set does not offer them, but for internal multi-org distribution they are the modern equivalent of the answer here rather than a lesser one.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.changesets_about_connection.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_unlocked_pkg_intro.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.packagingGuide.meta/packagingGuide/packaging_developing_unmanaged.htm"
+      ]
+    },
+    {
+      "id": "45cad6f6",
+      "verdict": "clarified",
+      "explanation": "Apex tests are the largest single variable in a deployment window, because the platform runs them as part of the deploy and their cost grows with the suite. Component type matters too: Salesforce notes that \"changes made to sharing rules or group settings, or structural changes in role hierarchy, can cause Apex code to recompile\", and that deploying profile or permission set changes alongside sharing rules \"triggers a calculation each time you attempt to deploy, which can be time-consuming if there are multiple failures\". And an org full of working users is a slower target - record and metadata contention during the deploy is exactly why the guidance is to release \"at times when most users are off the system\".\nThat last point also disposes of the off-peak option: deploying off-peak is the recommendation, not a cause of slowness. Constraints on what the team may change before and after a deployment shape the process, not the platform's processing time.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy.htm"
+      ]
+    },
+    {
+      "id": "47bcc6c5",
+      "verdict": "clarified",
+      "explanation": "A destructive deployment is an ordinary deploy with one extra manifest. Salesforce documents it directly: \"to delete components, use the same procedure as with deploying components, but also include a delete manifest file that's named destructiveChanges.xml and list the components to delete in this manifest\". The ordinary manifest still has to be there - package.xml must \"list no components to deploy, include the API version, and be in the same directory as destructiveChanges.xml\".\nSo both keyed files are required and the other two options are not. The API version in package.xml simply has to be one the platform still supports, not the newest. And purgeOnDelete is optional - \"to bypass the Recycle Bin, set the purgeOnDelete option to true\" - which changes where the deleted components go, not whether the call works.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy_deleting_files.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy.htm"
+      ]
+    },
+    {
+      "id": "69e82cf5",
+      "verdict": "clarified",
+      "explanation": "Two requirements decide it: the contractor deploys repeatedly from their own org into the customer's, and the customer ends up owning the code outright. An unmanaged package does both - it is documented as the vehicle for \"a one-time drop of applications that require customization after installation\", and once installed its components are ordinary metadata that UC can read, edit and extend.\nA managed package is built for the opposite outcome. It is the format \"used by Salesforce partners to distribute and sell applications to customers\", it locks its components against modification in the subscriber org, and it keeps control with the publisher - the contractor - which is precisely the arrangement UC does not want. Change sets cannot cross two unrelated orgs, since they require a deployment connection between a production org and its own sandboxes, and an IDE edits and deploys but packages nothing for repeated installation.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.packagingGuide.meta/packagingGuide/packaging_developing_unmanaged.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.pkg1_dev.meta/pkg1_dev/sharing_apps.htm",
+        "https://help.salesforce.com/s/articleView?id=sf.changesets_about_connection.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "acf27c9e",
+      "verdict": "clarified",
+      "explanation": "A deployment is validated against the API version declared in its manifest, not against whatever the platform happens to be running. A field introduced in the later version does not exist in the earlier version's schema, so a script pinned to the older version cannot describe it and the deployment fails on an unknown field. Raising the version in package.xml is the fix, and it is the only fix - the platform's own version does not rescue a manifest that claims an older one.\nThe option blaming platform support is a different claim, and a checkable one: Salesforce supports each API version \"for a minimum of 3 years from the date of first release\", and the currently retired band is versions 21.0 through 30.0, retired as of Summer '25 (7.0 through 20.0 went in Summer '22). Versions 31.0 and above remain supported, so an older-but-supported version is a real scenario rather than an impossible one - which is exactly why the manifest version is where the failure comes from.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/api_rest_eol.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy.htm"
+      ]
+    },
+    {
+      "id": "821c2331",
+      "verdict": "clarified",
+      "explanation": "A rollback has two halves, and only one of them is a redeploy. Restoring the changed components is straightforward - deploy the pre-release metadata captured beforehand. Removing components the release added is not, because a deployment never deletes anything: the Metadata API only removes what a destructiveChanges.xml manifest names, alongside a package.xml that lists no components and carries the API version. Scripting that removal is what makes the rollback repeatable and reviewable, where deleting components by hand in Setup is unrepeatable and easy to get wrong under pressure.\nTaking the backup as a sandbox created from production gives a complete, self-consistent snapshot of the pre-deployment state to redeploy from, rather than a retrieval whose completeness depends on the manifest someone wrote at the time.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy_deleting_files.htm",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "0ab782ac",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm",
+        "https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_start.html"
+      ]
+    },
+    {
+      "id": "c60fdc56",
+      "verdict": "clarified",
+      "explanation": "Two teams merging into one org need a model where each can release without waiting on the other, and that is what package development provides: work is organized into versioned packages built from source, so each team ships an artefact that is tested and installed on its own schedule. Scratch orgs give every feature branch a reproducible environment, and continuous integration falls out of the same source-driven arrangement.\nThe alternatives all pick a winner rather than solving the problem. Standardizing on either team's current model settles an argument about habit, not about how two streams share one org, and change sets in particular give no versioning and no independent release path. The one remaining option misdescribes the package model - it is CLI and source driven, not a declarative point-and-click alternative.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_unlocked_pkg_intro.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm"
+      ]
+    },
+    {
+      "id": "8d278dc8",
+      "verdict": "corrected",
+      "was": "D",
+      "correct": "A",
+      "explanation": "Salesforce gates Apex metadata access on package certification, but it provides a switch for exactly the situation this question describes - a package still in testing. The rule is stated plainly: Apex classes in a package that has not passed security review \"can't access public or protected metadata unless the Deploy Metadata from Non-Certified Package Versions via Apex org preference is enabled\". That preference lives in Setup under Apex Settings and has to be turned on in the target org by an administrator.\nSo the failure is a missing org preference in the org being tested against, not a missing certification. Certification would also lift the restriction, but waiting for security review before you can test the package is the wrong way round, and the preference exists so that uncertified packages can be exercised in a real org first.\nThe remaining options misplace the setting or the mechanism: it is an org preference under Apex Settings, not something configured on a custom metadata type, and switching to the Tooling API does not avoid the restriction, which is about what packaged Apex may do in a subscriber org rather than which API it calls.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_metadata_security.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_metadata.htm"
+      ],
+      "note": "Answer moved D to A. The Apex Developer Guide documents the exact control: Apex in a non-security-reviewed package cannot reach subscriber metadata unless the \"Deploy Metadata from Non-Certified Package Versions via Apex\" org preference is enabled, in Setup under Apex Settings. The old explanation asserted that no such Apex Settings toggle exists and that certification was the only route."
+    },
+    {
+      "id": "b00849d8",
+      "verdict": "clarified",
+      "explanation": "The failures are random because nobody can see the change that caused them. Permission sets are metadata, so the fix is to stop treating them as untracked admin clicks: retrieve them into the repository, commit them like any other change, and let continuous integration run the test suite against the result. Salesforce makes the same argument for the org development model - \"a source repo can help to mitigate the pain point of keeping environments in sync. By externalizing the changes for each release, the team knows that the source repo reflects what they are delivering\" - and a build that fails on the commit tells the developer which permission change broke which query, at the moment it happened.\nThe alternatives address something else. Profiles have the same invisibility problem as permission sets, so switching between them changes nothing. SOSL is a different search language, not a defence against a field the running user can no longer see. And daily refreshes across every sandbox would destroy in-flight work to fix a visibility problem that source control solves.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/org-development-model/plan-for-changes-to-your-org2",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm"
+      ]
+    },
+    {
+      "id": "4e87b7fd",
+      "verdict": "clarified",
+      "explanation": "The two goals pull in opposite directions, so they get different answers in different places. In the CI sandboxes, run everything: RunLocalTests executes \"all tests in your org... except the ones that originate from installed managed and unlocked packages\", which is what surfaces the old test classes that new functionality has invalidated - the stated goal of improving them. Time there costs nothing a user notices.\nProduction is where the clock matters, so narrow the set: RunSpecifiedTests means \"only the tests that you specify in the runTests option are run\", which trims the deployment window to the tests that cover what is being deployed. Note the granularity - runTests takes class names, one per entry, not individual methods.\nThe remaining options either skip testing in production, which the platform does not allow for a production deployment, or claim sandboxes cannot run tests at all.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm"
+      ]
+    },
+    {
+      "id": "daf3611e",
+      "verdict": "clarified",
+      "explanation": "The symptom names the cause: the teams need more time to understand the code after each sprint, which is a readability and consistency problem rather than a skill problem. Shared, enforced code standards are what make five teams' output legible to each other - naming, structure, error handling and trigger patterns that a reader can predict. The sprint review is the recurring point where the rising defect count becomes visible as a trend and the team can change how it works, rather than absorbing it sprint after sprint.\nA central board approving every change converts a quality problem into a queue, and it removes the incentive for teams to own quality themselves. Using version history to identify who produced a bug is available in any repository, but attribution does not reduce defects and it discourages the honest reporting that does.\nNote that this item is a team-process judgment rather than a platform fact - no Salesforce documentation settles it. The reference below is the closest official guidance on governance and change-management practice, and is orienting rather than decisive.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "058e3da6",
+      "verdict": "clarified",
+      "explanation": "Nothing is rolling back and no data is being lost - reports and dashboards are metadata, and a deployment overwrites the version in the target org with the version in the payload. The executives edit them in production; the pipeline still carries the older definitions that were captured when the branch was cut; the next release reinstates those. The platform is doing exactly what it was told.\nThe fix is to make the source reflect reality: retrieve the report and dashboard metadata from production regularly and merge it into the development branches, so the next release carries forward the executives' work rather than replacing it. That is the discipline the org development model is built on - \"by externalizing the changes for each release, the team knows that the source repo reflects what they are delivering\".\nA data warehouse addresses reporting on data, not the loss of report definitions. Taking edit rights away from the executives removes the symptom by removing the capability. And backing the reports up immediately before each release and reimporting afterwards is the same merge done manually, once per release, with no protection against a second team editing in between.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/org-development-model/plan-for-changes-to-your-org2",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/file_based.htm"
+      ]
+    },
+    {
+      "id": "9fd8746c",
+      "verdict": "clarified",
+      "explanation": "The two keyed answers attack the two ways a migration fails. Scoping the relevant data with its dependencies, and writing the verification scripts in advance, is what turns \"the load finished\" into \"the load is correct\" - parent records before children, external ids mapped, record counts and field-level checks proving integrity rather than assuming it. Rehearsing the whole migration in a Full sandbox with the real legacy extract is what exposes everything a design review cannot: the transformations that fail on genuine values, the records that violate validation rules nobody remembered, and the elapsed time of the load against the cutover window. A Full sandbox is the environment for that because it is \"a replica of your production org, including all data\" and is sized like production.\nPhasing users onto the new system in parallel is a cutover strategy - useful, but it manages the business risk of switching over rather than the risk that the data arrives wrong. And rehearsing with generated test data hides precisely the defects a real extract would reveal.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_api_loading_data.htm"
+      ]
+    },
+    {
+      "id": "6e79fdb4",
+      "verdict": "confirmed",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/org-development-model/plan-for-changes-to-your-org2",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm"
+      ]
+    },
+    {
+      "id": "1f8fa592",
+      "verdict": "clarified",
+      "explanation": "The first reason is a platform rule, not a preference: \"by default, test methods don't support HTTP callouts, so tests that perform callouts fail\", and the documented way through is to \"enable HTTP callout testing by instructing Apex to generate mock responses in tests, using Test.setMock\". Any code path that makes a callout therefore needs a mock before it can be tested at all.\nThe second is the general purpose of mocking: it replaces the dependencies a unit under test would otherwise reach - other classes, external services, unpredictable state - with responses the developer chooses, so the test asserts on the logic being tested rather than on whatever the dependency happened to return that day.\nThe two rejected statements do not describe real mechanisms. Batchable is an interface a class implements, and mocking does not let a test skip the batch execution; the way to exercise batch code in a test is to run it between Test.startTest and Test.stopTest. And shortening a long-running process is a side effect of removing a dependency, not a reason mocks exist.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_restful_http_testing.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_interface_httpcalloutmock.htm"
+      ]
+    },
+    {
+      "id": "19382561",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm",
+        "https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_start.html"
+      ]
+    },
+    {
+      "id": "d1099662",
+      "verdict": "clarified",
+      "explanation": "Apex tests are isolated from org data by default, so the records a test needs have to be created by the test. Salesforce documents the static resource route for bulk data: store the records as \"a comma-delimited file ending with a .csv extension\" whose \"first line of the file must contain the field names\", then instantiate them in one line with Test.loadData, which \"returns a list of sObjects that correspond to each record inserted\". That keeps large fixtures out of the Apex and lets QA contribute rows.\nFor code that calls out, the data has to come from a mock instead, because \"test methods don't support HTTP callouts, so tests that perform callouts fail\" - an HttpCalloutMock implementation supplies the response the test needs, deterministically.\nThe rejected options both make a test depend on something outside the org at run time. A test that reads from middleware or a data-sync service is slow, non-deterministic, and fails when the external system does - which in a deployment means the deployment fails.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_load_data.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_restful_http_testing.htm"
+      ]
+    },
+    {
+      "id": "bf46c00b",
+      "verdict": "clarified",
+      "explanation": "Inconsistency across many teams is a coverage problem, and only an automated check covers everything. Salesforce ships one for this: Code Analyzer \"brings together different code-scanning engines, such as PMD, RetireJS, and ESLint, under a single, unified experience\", runs from the CLI so it can be wired \"into your build and deployment processes\", and supports custom PMD rules for patterns specific to a team's own coding practices. Every commit from every team is then measured against the same rules, whoever wrote it.\nThe alternatives are weaker at exactly this. Two-reviewer pull requests raise the cost of every change and still vary with whichever two people are reading. A release-management centre of excellence governs process rather than syntax. And regression tests prove behaviour, which is a different property - inconsistently named variables pass every test in the suite.",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/salesforce-code-analyzer/guide/code-analyzer.html",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm"
+      ]
+    },
+    {
+      "id": "d6c3d18a",
+      "verdict": "clarified",
+      "explanation": "The question is whether the org holds up under call-centre volume, which is what load testing measures - drive the expected concurrent volume at the Lead object and observe whether throughput and response times stay acceptable while every validation and workflow rule fires on each save. Performance testing is the companion measurement, timing the individual transaction so you can tell a slow rule apart from a saturated system.\nUnit tests answer a different question entirely: whether the rules are correct, not how they behave under concurrency. Stress testing deliberately pushes past the expected peak to find the breaking point.\nBefore any of this is scheduled, note the rules Salesforce places on it: \"because Salesforce is a multitenant platform, performance testing is not permitted in production environments. Use a full copy sandbox\", and tests must be approved in advance - submit the request \"at least one week before the testing date\", since \"unapproved testing is subject to throttling or blocking\".",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=000387059&language=en_US&type=1",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "a44349e1",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_api_loading_data.htm",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "59848aee",
+      "verdict": "clarified",
+      "explanation": "Salesforce answers this in one sentence: \"You can call Aura accessibility tests in two environments. For JavaScript tests, use $A.test.assertAccessible(). For WebDriver tests, use auraTestingUtil.assertAccessible().\" Both evaluate the rendered DOM against Salesforce's accessibility rules and return an empty string on success or the failing rules on failure, so the same checks run whether the component is exercised from a JavaScript test or driven through a browser.\nThe two rejected options are not environments the framework provides - there is no AuraDriver test type and no ACCTEST harness. Naming the method that belongs to each environment is what the question is really testing, since calling the JavaScript form from a WebDriver test does not work.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/accessibility_write_tests.htm"
+      ]
+    },
+    {
+      "id": "82bf81bd",
+      "verdict": "clarified",
+      "explanation": "Both keyed limits are design-time constraints on the shape of the reference data itself. Relationship queries cannot traverse indefinitely: \"in each specified relationship, no more than five levels can be specified in a child-to-parent relationship\", and there are ceilings on breadth too - no more than 55 child-to-parent relationships and no more than 20 parent-to-child relationships in a single query. A reference model nested more deeply than that cannot be read in one query no matter how the code is written. Circular relationship chains are the other structural trap: a cycle among related reference objects cannot be loaded or traversed in a defined order.\nOne version detail worth carrying: the parent-to-child depth moved. It is up to five levels in API version 58.0 and later, but only two levels in 57.0 and earlier, so a query that works today can fail against an older manifest version.\nApex CPU time and HTTP response size are real limits, but they bind at run time on a particular transaction rather than constraining how the reference data may be modelled.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql_relationships_query_limits.htm"
+      ]
+    },
+    {
+      "id": "c7cb14ef",
+      "verdict": "clarified",
+      "explanation": "The risk is two developers editing the same component in one org, where the second save silently wins - there is no merge step in a sandbox. The primary answer removes the shared surface: give each developer their own environment, so their work is isolated until they commit, and let the repository and continuous integration perform the merge into the shared Developer Pro sandbox. That is the standard org development arrangement, where each team member customizes in their own Developer sandbox and the source repo becomes the record of what is being delivered.\nThe fallback answer accepts a single environment but still adds the repository, which is what gives the team a history to recover from and a place to resolve conflicts, plus explicit coordination over the components more than one person touches.\nSwapping the sandbox type changes the data it holds and nothing about concurrent editing. Managed packages are a distribution format, not a mechanism for merging one team's in-progress work with another's.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/org-development-model/plan-for-changes-to-your-org2",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "4c9df2a3",
+      "verdict": "clarified",
+      "explanation": "The bottleneck is one person catching problems that should never have reached them, so both answers move work off that person. Written standards plus training change what developers submit - the recurring findings become habits rather than review comments. A static analyser in the pipeline catches the mechanical half automatically: Salesforce's own Code Analyzer unifies engines such as PMD, RetireJS and ESLint, runs from the CLI so it fits \"into your build and deployment processes\", and supports custom rules for a team's own conventions. What reaches the technical lead is then design and logic, which is the part that actually needs their judgment.\nAdding a second senior reviewer doubles the reviewing capacity without reducing the volume of findings, and it removes another experienced developer from delivery. Skipping review entirely trades a delivery delay for defects found later, at higher cost, by users.",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/salesforce-code-analyzer/guide/code-analyzer.html",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm"
+      ]
+    },
+    {
+      "id": "19f08b3e",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm",
+        "https://developer.salesforce.com/docs/platform/salesforce-code-analyzer/guide/code-analyzer.html"
+      ]
+    },
+    {
+      "id": "21b6ccf3",
+      "verdict": "reasoning",
+      "explanation": "Eight years of changes by rotating vendors produces accretion, and the three keyed findings are its structural signatures. Hand-rolled JSON and string-parsing utilities are redundant because Apex has native support - System.JSON serializes and deserializes Apex objects directly, with createParser and createGenerator for lower-level work - so code predating that survives as dead weight. Multiple triggers on one object is the classic consequence of successive teams each adding their own rather than extending what exists, and the platform gives no guarantee about the order in which they fire. And logic duplicated across Visualforce pages and Apex classes is what happens when each vendor builds beside the previous work instead of refactoring it.\nA caution about the two options this item excludes: they are not impossible, only not the findings you would predict from this history. Unit test failures are common in long-lived orgs, usually because tests depend on org data or hardcoded ids rather than because a release broke them. And Salesforce's versioning commitment applies to code pinned to an API version - it is not a promise that an upgrade can never affect existing behaviour, which is precisely why release preview windows and regression testing in an upgraded sandbox exist.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_class_System_Json.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_order_of_execution.htm",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_preview.htm&language=en_US&type=5"
+      ],
+      "note": "Answer stands. The old explanation ruled out two options by claiming Salesforce's backward-compatibility guarantee means platform upgrades never break existing unit tests. That is not what versioning promises, and it contradicts two other questions in this deck, which key on refreshing into the release preview window and regression testing an upgraded sandbox precisely because a release can break existing behaviour."
+    },
+    {
+      "id": "42760192",
+      "verdict": "confirmed",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/org-development-model/plan-for-changes-to-your-org2",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm"
+      ]
+    },
+    {
+      "id": "9cb20e73",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_code_coverage_intro.htm"
+      ]
+    },
+    {
+      "id": "6156a463",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_load_data.htm"
+      ]
+    },
+    {
+      "id": "9845d66b",
+      "verdict": "reasoning",
+      "explanation": "Both keyed statements describe the Lightning Testing Service, which is what this item is built on: LTS wrapped standard JavaScript frameworks for Aura, exposed a $T helper object for creating and retrieving component instances asynchronously, and ran its suite from a test app in the org whose page reported pass and fail results on screen. Jest belongs to Lightning Web Components rather than Aura, which is why the option pairing Jest with Aura is the odd one out.\nRead this item as history rather than instruction. Salesforce now states plainly: \"We used to recommend Lightning Testing Service (LTS) but it's deprecated and no longer supported.\" The current recommendations for testing Lightning components are Jest, UTAM, Jasmine, Mocha, Selenium and WebdriverIO. A team standing up component testing today should choose from that list and should not install LTS, whatever this item's key says.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/lightning_testing_intro.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/accessibility_write_tests.htm"
+      ],
+      "note": "Answer stands as what the exam tests, but the whole item rests on a retired tool. Salesforce's own guide now says the Lightning Testing Service \"is deprecated and no longer supported\", and points to Jest, UTAM, Jasmine, Mocha, Selenium and WebdriverIO instead. Do not act on this item's advice to install LTS."
+    },
+    {
+      "id": "12f79a7f",
+      "verdict": "clarified",
+      "explanation": "The complaint is the manual re-entry in every sandbox, and that is decided by whether the records are metadata or data. Custom metadata type records are metadata: the type and its records travel together through change sets, packages and the Metadata API, so a new service centre is entered once and arrives in every environment with the next deployment. They are also queryable in SOQL, which is what the web forms need.\nBoth custom settings options fail on the same point - the definition is metadata but the records are data, so someone must populate them again in each org, which is exactly the manual work to be eliminated. A custom object has the same problem and adds a data model for reference data that never changes at run time.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.custommetadatatypes_overview.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_custommetadatatypes.htm"
+      ]
+    },
+    {
+      "id": "feeeb5f2",
+      "verdict": "reasoning",
+      "explanation": "Validation rules are the cleanest of these to cover with an executable test. They fire on every insert and update as part of the standard save order, so a test method can attempt a save with invalid data, catch the DmlException, and assert on the message - the rule's logic is verified directly, with no configuration needed to provoke it.\nThe comparison is a matter of difficulty, not possibility, and that is where the old reasoning went wrong. Workflow rules and processes also execute during the save order in a test, and their field updates can be asserted by requerying the record afterwards. Case assignment rules are the genuine outlier: Apex controls them explicitly through Database.DMLOptions, where setting assignmentRuleHeader.useDefaultRule tells the system to \"use the default (active) assignment rule for the case or lead\" - so a test that simply inserts a Case is not exercising the rule at all unless it sets that option.\nCurrency note: two of the options name automation Salesforce has moved on from. Workflow Rules and Process Builder reached end of support at the end of 2025, with Flow as the replacement, so new automation being written for test coverage today would be Flow rather than either of them.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_class_Database_AssignmentRuleHeader.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_order_of_execution.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_code_coverage_intro.htm"
+      ],
+      "note": "Answer stands. The old explanation claimed the behaviour of workflow rules and processes \"cannot be directly asserted\" in unit tests. They do execute during the save order in a test and their effects can be asserted; the option that genuinely does not run unless Apex asks for it is the assignment rule, via Database.DMLOptions.assignmentRuleHeader."
+    },
+    {
+      "id": "0a6666e2",
+      "verdict": "clarified",
+      "explanation": "Testing for adverse conditions means two things here. Data has to include the values that should fail - nulls, boundary values, oversized inputs, bulk volumes - because a suite built only from valid records proves the happy path and nothing else. And the tests have to run as more than one kind of user: much of what breaks in an enterprise org breaks because of who is running the code, so exercising the logic under different profiles and permission sets is what catches missing object and field access before a user finds it.\nThe two rejected options describe the opposite of Apex testing convention. Tests do not see org data by default - isolation is the default behaviour, which is precisely why a test creates the records it needs - and that includes creating any custom setting values the code under test reads.\nOne detail worth having right when you use System.runAs for this: the documentation now states that a runAs block enforces the user's sharing rules and their object-level and field-level permissions, regardless of the sharing mode of the test class. The older understanding that runAs affects record sharing only is out of date.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_code_coverage_intro.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_load_data.htm"
+      ]
+    },
+    {
+      "id": "91eb375c",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_api_loading_data.htm",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "c4314d7d",
+      "verdict": "clarified",
+      "explanation": "Salesforce publishes the ranking, and it is not close. Its review of AppExchange submissions states that \"object and field level security (CRUD/FLS) enforcement vulnerabilities are the top reason (by a significant margin) for failing the AppExchange security review\" - code that queries or writes without first checking whether the running user may see or change the object and fields involved. In the same published list, cross-site scripting sits at number eight and SOQL injection at number ten, so both are real findings but far less frequent.\nThe reason it dominates is structural: a packaged class runs in orgs whose permission configurations the developer has never seen, so anything that assumes access is a finding by default.\nCurrency note on the remedy: the modern way to satisfy this is to run queries and DML in user mode rather than hand-writing permission checks, with Security.stripInaccessible available to remove fields the running user cannot access from results.",
+      "references": [
+        "https://developer.salesforce.com/blogs/2023/08/the-top-20-vulnerabilities-found-in-the-appexchange-security-review",
+        "https://developer.salesforce.com/docs/atlas.en-us.packagingGuide.meta/packagingGuide/security_review_guidelines.htm"
+      ]
+    },
+    {
+      "id": "6fcd633a",
+      "verdict": "clarified",
+      "explanation": "Coverage is already above the platform's requirement, so it is not what is letting the defects through. Salesforce says as much: unit tests \"must cover at least 75% of your Apex code, and those tests must pass\", but \"code coverage serves as one indication of test effectiveness, but doesn't guarantee test effectiveness. The quality of the tests also matters\". Raising the number to 95% buys more executed lines, not more assertions about behaviour anyone cares about.\nThe two keyed answers attack the real gaps. Deriving test classes from the test scripts makes the automated tests exercise the scenarios the business actually described, including the edge cases a coverage-driven test never reaches. Sharper acceptance criteria shrink the gap the defects are escaping through - much of what is being logged as a defect is a difference of interpretation between what was specified and what was built.\nHaving the analyst who wrote the plan also write the test classes removes the independent second reading, which is the point of having both.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_code_coverage_intro.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm"
+      ]
+    },
+    {
+      "id": "0788a944",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm",
+        "https://developer.salesforce.com/docs/platform/salesforce-code-analyzer/guide/code-analyzer.html"
+      ]
+    },
+    {
+      "id": "1655aa24",
+      "verdict": "clarified",
+      "explanation": "The three keyed advantages are the shape of Salesforce DX itself. Source lives on the developer's machine and in version control rather than only inside an org, which is the shift the whole model rests on. Scratch orgs are available on demand - \"a source-driven and disposable deployment of Salesforce code and metadata\" - so an environment can be created per feature branch or per CI run. And package versions can be installed into any org from Salesforce's own package registry, which is how the same artefact reaches each environment.\nThe two rejected options name things that do not exist in that form. Execute Anonymous runs a block of Apex in an org; it deploys no metadata. And there is no native rollback command in the CLI - reversing a deployment means deploying the previous state and removing new components with a destructiveChanges manifest.\nNaming note: the commands have moved from the sfdx force: form to the current sf ones, so package installation today is sf package install rather than the older syntax.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_unlocked_pkg_intro.htm",
+        "https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_start.html"
+      ]
+    },
+    {
+      "id": "9164ffe1",
+      "verdict": "clarified",
+      "explanation": "Regression is a timing problem: the break is introduced during development and discovered by users after release. Only automated tests running on every commit close that gap, which is why the answer is unit and functional test automation inside continuous integration - the suite runs against each change, and a failure names the commit that caused it.\nRunning test suites by hand from the Developer Console is the same tests without the trigger, so it depends on someone remembering, at the moment it matters, on every release. Freezing development and re-architecting addresses the existing defects while guaranteeing the next release reintroduces the problem, because nothing has changed about how regressions are caught. And Apex Hammer is Salesforce's own process for validating that a platform release does not break customer tests - it runs on Salesforce's side, and no customer can invoke it as a regression suite.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_code_coverage_intro.htm"
+      ]
+    },
+    {
+      "id": "11f1d00f",
+      "verdict": "clarified",
+      "explanation": "The reason is architectural rather than technical: production is shared infrastructure, so a test designed to drive one org to its breaking point degrades service for every other tenant on the same instance. Salesforce states the rule directly - \"because Salesforce is a multitenant platform, performance testing is not permitted in production environments. Use a full copy sandbox\", and \"scale tests are only permitted in sandboxes\".\nThe prohibition comes with a process rather than a flat refusal. Testing in a sandbox needs prior approval, submitted \"at least one week before the testing date\" with a test plan, dates, the sandbox org id and the scenario, and \"unapproved testing is subject to throttling or blocking\".\nThe rejected options invent physical causes - a shortage of CPU, a network block, congestion - where the actual constraint is the obligation Salesforce has to its other customers on that instance.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=000387059&language=en_US&type=1",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "2d70511f",
+      "verdict": "clarified",
+      "explanation": "A CI/CD pipeline can only include techniques that run unattended on every change, and both keyed answers qualify. Static analysis runs at commit time against the source: Salesforce's own Code Analyzer unifies engines such as PMD, RetireJS and ESLint behind one CLI command, is designed to be integrated \"into your build and deployment processes\", and reports violations before the code has executed. Automated browser tests run after the deployment step and exercise the assembled application through the UI, which is the only layer that catches a break between components that each pass their own unit tests.\nThe two rejected techniques both need something the pipeline cannot supply. Business verification testing needs business users making judgments, which happens after a release reaches them. And stress testing is not permitted against production at all, and needs advance approval even in a sandbox, so it cannot sit in a pipeline that runs on every merge.",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/salesforce-code-analyzer/guide/code-analyzer.html",
+        "https://help.salesforce.com/s/articleView?id=000387059&language=en_US&type=1",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm"
+      ]
+    },
+    {
+      "id": "065657fa",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/lightning_testing_intro.htm",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_preview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "34e34718",
+      "verdict": "clarified",
+      "explanation": "The requirement is a response time at a stated concurrency - under 5 seconds with 1,500 concurrent users - which is the definition of a load test: drive the expected volume and measure what the system does at that volume. Unit tests establish correctness at any scale, integration testing establishes that the systems exchange data correctly, and neither produces a page response time.\nStress testing is the near miss. It deliberately exceeds the expected peak to find where the system fails, which answers a different question, and it cannot be run where the users are: \"performance testing is not permitted in production environments. Use a full copy sandbox\", with tests approved in advance and unapproved testing \"subject to throttling or blocking\". Plan the load test in a Full sandbox, sized like production, and submit the request before booking the window.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=000387059&language=en_US&type=1",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "1e990e83",
+      "verdict": "clarified",
+      "explanation": "Fixing in the test sandbox and shipping from there breaks the direction the pipeline depends on. Changes flow one way - development, then test, then production - and a fix that enters halfway leaves the development sandbox without it. The next release from development then overwrites the fix in production, and the defect returns with an authoritative-looking deployment behind it. That is the failure mode the deadline pressure is hiding.\nSo the fix belongs in the development sandbox, migrates into the test environment where the same team that found the issue verifies it, and reaches production through the route every other change takes. Back-porting from test to development afterwards reverses the flow and depends on someone remembering to do it, and deploying from development straight to production skips the verification step that produced the list of issues in the first place.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/org-development-model/plan-for-changes-to-your-org2",
+        "https://developer.salesforce.com/blogs/2014/12/salesforce1-enterprise-environment-management"
+      ]
+    },
+    {
+      "id": "bdae5231",
+      "verdict": "clarified",
+      "explanation": "A steering committee governs; it does not deliver. Its two roles here are both decisions about policy rather than practice: setting the criteria by which any given project is judged suitable for Agile or for Waterfall, and then approving the departures from that policy when a particular project needs one. Both are exception-and-standard decisions that need authority above any single project.\nDesigning a methodology is specialist work that a delivery or PMO function does, and enforcing that corporate stage gates appear in the process is an assurance activity carried out on each project, not a committee decision.\nNote that this item is governance practice rather than a Salesforce platform fact - no vendor documentation settles who sits on a steering committee. The references below describe the surrounding release governance and are orienting rather than decisive.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management",
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "1371e84d",
+      "verdict": "clarified",
+      "explanation": "The distinction that decides this is who each field is for. On a custom field, description is \"description of the field\" - documentation aimed at whoever maintains the org - while inlineHelpText \"represents the content of field-level help\", which renders next to the input for the end user. An admin trying to work out whether a field is still in use needs the first, and putting maintenance notes in the second shows them to every user filling in the form.\nThe practical advantage is that both descriptions are field metadata: they are retrieved, deployed and version-controlled with the component itself, so the documentation cannot drift away from what it documents. A separate register of objects and fields is accurate only until the next change nobody records, which is the situation the admins are already in.\nRequiring every custom field on every page layout is a different matter entirely and would make the problem worse, not better.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/file_based.htm"
+      ]
+    },
+    {
+      "id": "bc626241",
+      "verdict": "clarified",
+      "explanation": "A minor-change policy is a decision to accept some risk, not to abandon control, so the three practices that matter are the ones that keep the change visible and reversible. Every change still gets tested, because low risk is an estimate rather than a guarantee. Every change is documented and made on a predictable cadence, so the org's current state can be reconstructed later and two admins do not edit the same thing on the same afternoon.\nThe third is the consequence nobody plans for: changes made directly in production do not flow backwards. Downstream sandboxes keep the state they were refreshed with, so the next release from a sandbox can overwrite a production-only change unless it has been reapplied there. Refreshing is what closes that gap, and a Full sandbox can only take that refresh every 29 days.\nThe two rejected options are the extremes - that minor changes need no documentation at all, and that a change policy is impossible without CI/CD. Neither follows.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_refresh.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "f3d07cd1",
+      "verdict": "clarified",
+      "explanation": "Waterfall front-loads analysis, and its advantages are the ones that follow from having done that work before anything is built. Complex processes and their interactions are documented and agreed before coding starts, which is valuable exactly when the cost of discovering a dependency late is high. And because scope is settled early, milestones, timelines and estimates rest on something more solid than a guess, which is what makes the plan defensible to a business merging two operations.\nThe other two statements describe the opposite model. Accommodating change late in the process by folding it into the requirements is Agile's premise - the Agile Manifesto values \"responding to change over following a plan\" - and Waterfall treats late change as rework against a signed baseline. Nor are Waterfall's start-up costs low: the design effort is the front of the project, not the back.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-agile-basics/learn-the-basics-of-agile",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "cf2eecac",
+      "verdict": "clarified",
+      "explanation": "Unused features are a discovery failure rather than a delivery failure - the team is building things correctly and building the wrong things. User-centred design moves the discovery upstream: watch how the work is actually done, prototype with the people who will use it, and test usability before committing the build. What ships then matches a need someone has, which is the only durable route to adoption.\nThe alternatives treat the symptom. A different UI framework changes how a feature is implemented, not whether anyone wanted it. Weekly emails naming the least engaged users apply pressure to individuals for a product problem. Stopping development leaves the same unused features in place and adds a delivery halt to the adoption problem.\nNote that this is a design and adoption judgment rather than a platform fact; the references describe the surrounding lifecycle practice and are orienting rather than decisive.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-agile-basics/learn-the-basics-of-agile"
+      ]
+    },
+    {
+      "id": "387dd40b",
+      "verdict": "clarified",
+      "explanation": "Salesforce frames application lifecycle management as five phases - plan, build, test, deploy, monitor - and says it \"provides structure, guiding your changes from initial requirements through deployment and ongoing monitoring\". The three keyed benefits are what that structure buys: a predictable release cadence instead of ad hoc pushes, protection for functionality that already works because every change is tested before promotion, and fewer defects reaching production because the pipeline gates them at each stage.\nThe two rejected options sit outside the process rather than being produced by it. Training users after each release is change management, which a reliable release cadence makes possible but which ALM does not itself perform. Defining what project success means is a governance decision taken before the lifecycle starts.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm"
+      ]
+    },
+    {
+      "id": "c5a6781c",
+      "verdict": "clarified",
+      "explanation": "The admins cannot tell what is in use, and both keyed answers create the record that would tell them. Requiring project deliverable documentation as a condition of delivery means each project leaves behind a statement of what it built and why, so the next person inherits intent rather than archaeology. A standard for deprecation handles the other half - the fields and classes that outlived their purpose - by defining how something is marked as going, communicated, and eventually removed, instead of being left in place forever because nobody is certain it is dead.\nThe rejected options address adjacent problems. An adoption plan measures usage by people, not by metadata. A governance framework aimed at business strategy operates above this question. And requiring integrations to be declarative constrains how things are built without recording what was built or why.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm"
+      ]
+    },
+    {
+      "id": "17935246",
+      "verdict": "clarified",
+      "explanation": "A centre of excellence needs the authority to decide and the capability to carry decisions out, which is what the two keyed groups supply. Executive sponsors bring the mandate, the funding and the ability to settle disputes between business units that no delivery team can settle. The programme team - architects, leads, project managers - is what turns those decisions into standards, reviews and a working pipeline. Salesforce's own org-strategy guidance describes the function in the same terms: a global centre of excellence should manage the business architecture and common standards across all of an enterprise's Salesforce instances.\nFrontline groups such as inside sales users and call centre agents are the people the CoE exists to serve, and their input belongs in requirements and design reviews. Seating them on the governing body neither gives them what they need nor gives the CoE what it needs.",
+      "references": [
+        "https://developer.salesforce.com/blogs/developer-relations/2014/10/enterprise-architecture-multi-org-strategy",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "bc9a1ad1",
+      "verdict": "clarified",
+      "explanation": "The complaint is about visibility of work status, and two of these frameworks are built on exactly that. Salesforce's own description of Kanban states it directly: \"one of the basic elements of Kanban is to make everything visible, creating consistent transparency of work items\" - work is written onto cards, the workflow is mapped into columns, and the position of every card shows its state at a glance, so \"it's easy for teams to know when delays occur\". Scrum reaches the same place through its ceremonies and values: teams are expected to be transparent about progress and to speak up when assumptions turn out wrong, and the inspect-and-adapt cadence puts that in front of everyone on a fixed rhythm.\nWaterfall publishes a schedule, which is a plan rather than a status - it says what should be happening this week, not what is. And DevOps monitoring reports on how the deployed system is performing, which is a different subject from where the teams' work has got to.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/scrum-and-kanban-at-salesforce/learn-about-kanban",
+        "https://trailhead.salesforce.com/content/learn/modules/scrum-and-kanban-at-salesforce/learn-about-scrum"
+      ]
+    },
+    {
+      "id": "004b8e73",
+      "verdict": "clarified",
+      "explanation": "Agile's two strengths here are the ones the Agile Manifesto states as values. Requirements that arrive later are handled by design rather than treated as a breach of the plan - \"responding to change over following a plan\" - which is what a business growing at scale needs when next quarter's requirement is not yet known. And the work is delivered in many small increments, so stakeholders see and use working functionality early instead of waiting for a single delivery at the end: \"working software over comprehensive documentation\".\nThe two rejected statements describe what the Manifesto was reacting against. Careful documentation at every step and a full understanding of the whole build before work begins are the strengths of the \"document-heavy, design-it-all-up-front process\" the Agile signatories identified as the source of large, expensive, often-aborted projects.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-agile-basics/learn-the-basics-of-agile"
+      ]
+    },
+    {
+      "id": "26ed97a3",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/blogs/developer-relations/2014/10/enterprise-architecture-multi-org-strategy",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "3639bf51",
+      "verdict": "clarified",
+      "explanation": "An architecture review board rules on decisions that are expensive to reverse and that constrain everything built afterwards. Choosing between SAML single sign-on and delegated authentication is one: it fixes how identity is established for every user and integration, and unwinding it later touches every connected system. So is deciding whether a requirement becomes a new custom object or a record type on an existing one - that choice propagates into sharing, reporting, automation and every integration that queries the object, and it is very costly to change once data exists.\nThe other two decisions belong elsewhere. Which testing tool tracks integration requirements is a delivery-tooling choice. Whether the project runs Agile or Waterfall is a methodology decision for the sponsor or steering committee - it shapes how the work is organized, not how the system is built.\nNote that the division of authority between an ARB and other governance bodies is organizational practice rather than a documented Salesforce rule; the references orient rather than decide it.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management",
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "70a0c1d5",
+      "verdict": "clarified",
+      "explanation": "The constraint is stated in the question: the outstanding items are low effort, do not need experienced resources, and the answer must not add cost. Hiring staff or engaging a partner both fail the last test directly. Dropping the items fails the first - they are described as valuable enhancements, so removing them from the backlog resolves the queue by discarding the value.\nA citizen development programme is the option that adds capacity without adding spend: business users build the low-risk, declarative items themselves inside guard-rails that IT sets - naming and design standards, a review step, a defined boundary for what a citizen developer may touch and what must come to the platform team. The governance is what separates it from ungoverned admin sprawl, and it is the part that has to be designed rather than assumed.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management",
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "a0fc764b",
+      "verdict": "clarified",
+      "explanation": "Waterfall pays for itself when the cost of getting the design wrong is higher than the cost of designing it all first. Many systems with dependencies between components is one such case - interfaces, data flows and sequencing have to be agreed across teams before anyone builds, because a late change in one component ripples through the others. Regulatory requirements validated by an outside agency is the other: the phase artefacts and traceable documentation Waterfall produces are the evidence the validation runs on, and an iterative process that leaves that documentation until later has nothing to submit.\nThe two rejected situations are where iterating is cheap and change is expected. A live application taking incremental changes from a small team can ship, learn and adjust continuously, and an in-house project with an open timeline and flexible requirements has no fixed baseline for Waterfall to protect.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-agile-basics/learn-the-basics-of-agile",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "ece03577",
+      "verdict": "clarified",
+      "explanation": "Agile suits work whose right answer emerges from use. Updating a customer-facing process so it can be adjusted quickly is exactly that - the requirement is to keep changing it, and the Agile Manifesto's \"responding to change over following a plan\" describes the operating model that supports it. The second situation is the enabler rather than the motivation: heavy investment in DevOps means automated testing and fast, repeatable deployment, and without that machinery short iterations collapse under their own release overhead. Agile cadence is only sustainable when shipping is cheap.\nThe rejected situations both have a fixed baseline. Well-defined requirements with complex front-to-back interactions reward designing the interfaces up front. And a third party working to a fixed scope, budget and timeline is contracted against a specification, which is the arrangement Waterfall exists to serve.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-agile-basics/learn-the-basics-of-agile",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm"
+      ]
+    },
+    {
+      "id": "20a0373a",
+      "verdict": "clarified",
+      "explanation": "The requirement is that streams with different release dates do not block each other, so the branching model has to let work live apart from the mainline until its own release is ready. GitHub flow does that: each stream develops on its own branch, is reviewed through a pull request, and merges on its own schedule.\nTrunk-based development assumes the opposite and is the reason it is wrong here - it depends on very short-lived branches integrated into a single trunk continuously, which works when everyone releases together and fights the requirement when they do not. Scratch-org-based development describes how environments are provisioned, not how branches are organized, and the fourth option is not a branching model at all.\nOne caveat for real use: teams with genuinely staggered release dates often adopt a model with explicit release branches, which is a closer fit than either option here. This item's option set does not offer one, so the feature-branch model is the best available answer rather than the whole answer.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm",
+        "https://trailhead.salesforce.com/content/learn/modules/org-development-model/plan-for-changes-to-your-org2"
+      ]
+    },
+    {
+      "id": "1fca2746",
+      "verdict": "clarified",
+      "explanation": "The question asks which steps apply to any Salesforce development project, so the answer has to be tool-agnostic. Environment management, validation, and assembling the release qualify: every project needs somewhere to build and test, needs its changes verified before promotion, and needs the changes gathered into something deployable. Salesforce's current framing of the lifecycle is the same shape - plan, build, test, deploy, monitor.\nThe two rejected options are choices made within those steps rather than steps themselves. Continuous integration is a practice a team may or may not adopt, and change sets are one deployment tool among several - a project using the Metadata API or packages performs the same release step without them.\nCurrency note: the classic Salesforce Development Lifecycle Guide that this vocabulary comes from has been retired, and the lifecycle is now described through the five phases above and through DevOps Center.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management",
+        "https://help.salesforce.com/s/articleView?id=sf.deploy_overview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "41c787b2",
+      "verdict": "clarified",
+      "explanation": "Regulation and audit turn every production change into something that has to be justified afterwards, so the two answers are both about evidence. Reviewing every change against security principles has to include hotfixes, because the emergency path is where controls are most often skipped and where an auditor will look first. Explicit stakeholder approval is what produces the record that the change was authorized, by someone entitled to authorize it, before it happened.\nThe rejected options overreach in different directions. Eliminating every manual step is an admirable target but not a requirement - a documented, approved manual step is auditable, and some post-deployment configuration cannot be automated. And verifying functionality in production after deployment is the wrong order: validation belongs in a pre-production environment, and a regulated change that has to be tested in production has been released before it was proven.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "6a25c420",
+      "verdict": "clarified",
+      "explanation": "The developer needs to know why the class exists, which is a requirements question rather than a testing one. A requirements traceability matrix is the artefact that carries that link: each requirement is mapped forward to the design elements and components that implement it and to the tests that verify it, so a class can be traced back to the business need that produced it a year ago.\nThe three rejected artefacts all describe testing rather than intent. Acceptance test scripts say what a tester did, an execution plan says how and when tests were run, and a sign-off document records that someone accepted the result. Any of them may mention the feature by name, but none states why the code was written.\nWorth pairing with the practice that would have avoided the problem: the field and object description attributes are metadata and travel with the component, so intent recorded there stays attached to the thing it describes.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "ade048ca",
+      "verdict": "clarified",
+      "explanation": "Transparency is the principle being described, and it is foundational to Scrum rather than incidental: teams are expected to be honest and clear about timing, progress, plans and obstacles, to speak up when help is needed, and to report back when an assumption turns out to be wrong. That visibility is what makes inspection possible, and inspection is what makes adaptation possible - each sprint's inspect-and-adapt point depends on the previous one having been reported truthfully.\nThe three rejected statements each invert something. Avoiding change to working software contradicts continuous improvement. Refusing to test because testing is someone else's work contradicts the cross-functional team, where the team as a whole is accountable for a done increment. And changing scope daily is not embracing change - the sprint exists precisely so that change is absorbed between sprints rather than during them.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/scrum-and-kanban-at-salesforce/learn-about-scrum",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-agile-basics/learn-the-basics-of-agile"
+      ]
+    },
+    {
+      "id": "227cab5e",
+      "verdict": "clarified",
+      "explanation": "The three keyed tools are the ones the lifecycle cannot run without. A version control repository holds the source and its history, and it is what makes the source rather than an org the record of what is being delivered. A continuous integration tool is what executes the build, the tests and the deployment on every change instead of when someone remembers. An issue tracking tool holds the work itself - the stories and defects that the plan and build phases operate on - which is what connects a deployed change back to the request that caused it.\nThe two rejected options are infrastructure rather than lifecycle tooling. A database management system sits under an application, and middleware moves data between systems at run time; neither participates in planning, building, testing or releasing a change.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management",
+        "https://trailhead.salesforce.com/content/learn/modules/org-development-model/plan-for-changes-to-your-org2"
+      ]
+    },
+    {
+      "id": "4ebcf84d",
+      "verdict": "clarified",
+      "explanation": "Both keyed advantages are about where information lives. An Agile tool consolidates the project's artefacts - stories, acceptance criteria, decisions, links to the change that implemented each one - into one place the whole team reads, instead of a scatter of documents and message threads. And it makes status continuously visible: the board shows what is in progress and what is blocked, and the sprint reports show whether the work will land, without anyone assembling a status update by hand.\nThe rejected options are outcomes rather than features. Better stakeholder relationships may follow from the visibility, but no tool delivers them. Gate-based governance is a process a business chooses to impose; a tool can record the gates but does not supply the authority behind them.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/scrum-and-kanban-at-salesforce/learn-about-kanban",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "28e4ec67",
+      "verdict": "clarified",
+      "explanation": "The question is specifically about supporting Scrum, so the features to look for are the ones Scrum's artefacts require. A prioritized product backlog is the ordered list everything else is drawn from. A sprint backlog holds what the team has committed to for the current sprint, pulled from that product backlog. And work items have to be assignable, because a sprint is executed by named people picking up specific stories.\nA Kanban board is a genuinely useful feature and the reason it is the odd one out is framework rather than quality - it belongs to Kanban, where \"the workflow is mapped into columns\" and work is pulled continuously rather than committed sprint by sprint. Email notification on change is a generic capability of nearly any tracker and tells you nothing about whether the tool supports Scrum.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/scrum-and-kanban-at-salesforce/learn-about-scrum",
+        "https://trailhead.salesforce.com/content/learn/modules/scrum-and-kanban-at-salesforce/learn-about-kanban"
+      ]
+    },
+    {
+      "id": "02921bb0",
+      "verdict": "clarified",
+      "explanation": "New scope arriving late in the build is a risk to be surfaced, not a decision for the project team to take on the spot. Both keyed actions start the same way - escalate it to the stakeholders with an impact assessment - and then offer the two levers that can absorb it: more resources, or more time. Which one is pulled, or whether something else is dropped instead, is the stakeholders' call because they own the budget and the date.\nThe two rejected responses both end the conversation at the project team's level. Telling the subject matter expert that a new developer environment is the answer confuses provisioning with scope. Telling them the platform cannot support tracking additional container types is not true - and asserting a platform limitation to avoid a scope conversation is the more damaging of the two, because it closes off a requirement the business may genuinely need.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management",
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "4f44277d",
+      "verdict": "clarified",
+      "explanation": "The size of the request decides which body answers it. A 30% increase in project cost is a funding decision, and funding sits with the executive steering committee - the sponsors who own the budget and can weigh the extra spend against the consequence of missing a compliance deadline in three months.\nThe other bodies each own something narrower. A change control board governs what enters the release and whether a change is approved for deployment, working inside the budget that has already been granted. A project management committee runs delivery - plans, resources, and schedules - against that same envelope. A security review committee rules on security posture, which may well be involved in defining what these compliance requirements demand, but is not empowered to fund the work.\nNote that this division of authority is organizational governance rather than a documented Salesforce rule; the references orient rather than decide it.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management",
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "5e784c10",
+      "verdict": "clarified",
+      "explanation": "Salesforce's deployment guidance says this directly: release \"at times when most users are off the system\", \"avoid peak hours when everyone's actively using the system\", and steer clear of the period \"right before holidays or major events\". A seasonal business heading into its busiest weeks is that case exactly - the same defect that would be an inconvenience in a quiet month becomes lost revenue when every user and customer is transacting at once, and the team's capacity to respond is lowest precisely when the stakes are highest.\nThe rejected options each trade away a control at the moment it is most needed. Making declarative changes directly in production removes the testing that a busy period makes more important, not less. Skipping regression testing for minor changes assumes the minor label is reliable. And having developers run user acceptance testing removes the independent business judgment that acceptance testing exists to provide.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=000384452&language=en_US&type=1"
+      ]
+    },
+    {
+      "id": "376e5852",
+      "verdict": "clarified",
+      "explanation": "Scope, time and cost cannot all be fixed at once, and here two of the three already are: the board has set the budget and the release date. The third is not merely flexible but unknown - the requirements will be decided later by a public community vote, so nobody can yet say what has been committed to. That is the risk, and it exists before any methodology is chosen.\nThe two methodology options invert cause and effect. Choosing Agile or Waterfall is a response to this situation, not the risk within it - and neither creates capacity that the fixed date and budget do not contain. Soliciting requirements from an external community is unusual but legitimate; the problem is not where the requirements come from, it is that the commitments were made before they existed.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-agile-basics/learn-the-basics-of-agile",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "c0976a29",
+      "verdict": "clarified",
+      "explanation": "Effort tracking earns its place by improving the team's own forecasting. Recording an estimate, then the actual, then the remaining effort gives the developer the feedback loop that makes the next estimate better, and gives the team a velocity stable enough to plan with. That is the inspect-and-adapt habit applied to estimation rather than to the product.\nThe three rejected reasons all repurpose estimates as a management instrument, and each one destroys the data that makes the practice work. Using estimates to identify developers who are slacking teaches the team to pad every estimate. Tracking hours for compensation turns a planning tool into a timesheet. And committing to a timeline based solely on developer estimates treats a forecast with known variance as a promise, which is how a team ends up defending an estimate rather than reporting reality.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/scrum-and-kanban-at-salesforce/learn-about-scrum",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-agile-basics/learn-the-basics-of-agile"
+      ]
+    },
+    {
+      "id": "2b7730d8",
+      "verdict": "clarified",
+      "explanation": "The three keyed practices cover the three things that go wrong on deployment night. A rollback strategy has to be designed in advance, because reversing a release is not a single command - restoring changed components means redeploying the previous state, and removing new ones means a destructiveChanges manifest naming them. Announcing the maintenance window ahead of time lets users plan around it, which is also the point of Salesforce's advice to release when most users are off the system. And freezing configuration changes in production during the window keeps an administrator's edit from colliding with the release - the platform enforces part of this itself, since a deployment takes an org lock that blocks setup changes until it completes.\nAlerting users on the day of the deployment is the same communication too late to be acted on. Aligning releases with Salesforce's own upgrades stacks two sources of change on one weekend, which makes any resulting defect harder to attribute, not easier.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy_deleting_files.htm",
+        "https://help.salesforce.com/s/articleView?id=000384452&language=en_US&type=1"
+      ]
+    },
+    {
+      "id": "9c991e6c",
+      "verdict": "clarified",
+      "explanation": "Agile flexes scope against a fixed time and cost, and this commitment has removed the flex while leaving the scope undefined. Both risks follow from that. Nobody can say today whether a complete system is achievable in three months, because there is no agreed definition of complete - so the feasibility of the promise is unknown rather than optimistic. And whatever does fit inside the window will be decided by prioritization as the work proceeds, which means the delivered functionality may not be the functionality the business needed.\nThe two rejected statements are wrong about Agile itself. Changing requirements is what the method is designed to accommodate - the Agile Manifesto values \"responding to change over following a plan\" - and nothing about a customer community makes it unsuitable for iterative delivery.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-agile-basics/learn-the-basics-of-agile",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "d292fd5d",
+      "verdict": "clarified",
+      "explanation": "A communication plan is judged on predictability and content. Predictability means a named list of stakeholders who each know what they will receive and when, so nobody has to ask and nobody is surprised. Content means the substance stakeholders need to make decisions - status against plan, timelines, and the impacts of what has changed since the last update, including the bad news.\nThe two rejected characteristics fail on those tests. Communicating on a need-to-know basis makes each disclosure a judgment call by the sender, which produces exactly the surprises that erode trust. And soliciting feedback on open architectural questions is real work that should be happening, but it is a design activity carried out with specific people, not a property of the plan that keeps the project's stakeholders informed.\nNote that this is communication practice rather than a platform fact; the reference is orienting rather than decisive.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "51fb3e72",
+      "verdict": "clarified",
+      "explanation": "Three needs are described - requirements for the developers, defects for the testers, and ad hoc status for stakeholders - and they are three views of the same underlying work items. A project management tool holds all of them in one place, which matters most for a distributed team: the requirement, the defect raised against it, and the status report drawn from both stay connected without anyone reconciling separate systems.\nThe alternatives each cover one slice at best. A code repository versions the source and can link a commit to a work item, but it does not manage requirements or defect workflow. An analytics platform reports on data it is given and does not capture the work. Spreadsheets can hold a list, but they have no workflow, no concurrent editing discipline for a distributed team, and no live status for stakeholders to pull.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm"
+      ]
+    },
+    {
+      "id": "d1940574",
+      "verdict": "clarified",
+      "explanation": "Size the release to the change. A workflow rule and a trigger on the opportunity renewal process is a small, well-bounded piece of work, so it belongs in the minor release stream rather than being held for a major one. What it is not is invisible: it changes what sales users see when they renew an opportunity, so it needs training and change communication to go with it. That pairing - minor release, real change management - is what the answer captures.\nAligning it with a Salesforce major release would be worse on both counts. It delays a small change for months, and it lands the org's change at the same moment as the platform's, so any resulting defect is harder to attribute. Salesforce upgrades arrive on Salesforce's schedule and are not a release slot a customer can book, and neither an interim category cleared with Support nor a patch aligned to a Salesforce patch describes a real planning option here.\nCurrency note: Workflow Rules reached end of support at the end of 2025, with Flow as the replacement, so equivalent automation built today would be a record-triggered flow.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_preview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "2c90c553",
+      "verdict": "clarified",
+      "explanation": "A change control board exists to decide whether a change may proceed, and each seat brings one kind of authority to that decision. The technical architect's is technical: whether the release is sound enough to go to production - its design, its risk, its dependencies, its rollback path - and the meeting is where that judgment is recorded as an approval or a rejection.\nThe three rejected activities are all real architect work happening somewhere else. Prioritizing the product roadmap with business stakeholders is a planning forum. Troubleshooting errors from the last release is incident work that may produce input to this meeting but is not conducted in it. And code review belongs in the development flow, well before a release reaches a control board - if code quality is first examined at the CCB, the gate is in the wrong place.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "92fc13de",
+      "verdict": "clarified",
+      "explanation": "Prioritization needs a list and a forum, and the two keyed options supply one each. A single backlog in a project management tool is what lets requests be compared against each other rather than each being argued on its own merits as it arrives. The centre of excellence is where that ranking is decided against business goals by people with the standing to decide it - Salesforce's org-strategy guidance describes the CoE as the body that manages business architecture and common standards across the enterprise, which is the authority this needs.\nThe rejected options fail the speed requirement or the purpose. A formal IT review at year end is the opposite of quick feedback. Quality checks and design standards both matter, but they govern how a request is built once it has been accepted, not whether it should be.",
+      "references": [
+        "https://developer.salesforce.com/blogs/developer-relations/2014/10/enterprise-architecture-multi-org-strategy",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "2de25757",
+      "verdict": "clarified",
+      "explanation": "The executive sponsor owns the project's business case and its funding, and scope is what connects those two things - a change to scope changes the cost, the date, or the benefit being claimed. So approving scope changes is the responsibility that follows directly from what the sponsor holds.\nThe rejected duties belong to people the sponsor relies on. Communicating status is the project manager's job, and the sponsor is one of its recipients. Methodology is a delivery decision, made against criteria the governance bodies set. And building executive dashboards is implementation work that a sponsor may commission but does not perform.\nNote that role definitions of this kind are organizational practice rather than a documented Salesforce rule; the reference is orienting rather than decisive.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "b5cde063",
+      "verdict": "clarified",
+      "explanation": "A long-running project and a production defect move on different clocks, so they need different paths to production. Salesforce's environment-management guidance names a dedicated environment for exactly this - a production fix sandbox generated for urgent defects only, holding the minimum needed to reproduce and correct the problem. The fix is built and tested there, deploys to production on its own, and is then merged back into the project work so the long-running branch picks it up.\nEvery alternative couples the two. Fixing critical bugs inside the ongoing development sandboxes means the fix cannot ship until the project does, which is months away. Fixing them there and then pushing those changes to production separately sounds targeted but drags whatever else that sandbox contains toward production with it, since the environment holds months of unfinished work. And keeping the teams apart until the end and merging in a Full Copy sandbox postpones every integration problem to the worst possible moment.",
+      "references": [
+        "https://developer.salesforce.com/blogs/2014/12/salesforce1-enterprise-environment-management",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "598ef283",
+      "verdict": "clarified",
+      "explanation": "Release planning decides what the team will do, so both keyed decisions are about the team's own process: when a feature release gets retested if defects are found, and how existing functionality is regression tested so the release does not break what already works. Those are choices with real trade-offs - the size of the regression suite, what is automated, how much re-test a late fix triggers - and nobody else can make them.\nThe two rejected options ask for control the customer does not have. Salesforce upgrades its instances on its own schedule, and the customer-facing lever is the preview window - a preview sandbox \"provides early access to new features and lets you test your configurations before the production upgrade\" - which is a way to get ahead of the upgrade rather than to postpone it. For the same reason there is no route to roll a Salesforce release back. Plan around the upgrade calendar; do not plan to move it.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_preview.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "c4e0249f",
+      "verdict": "clarified",
+      "explanation": "The benefit of wiring the tracker to the build pipeline is that the story record becomes the place where the state of its code is visible. A commit tied to a story triggers the pipeline, and both the automated test results and the build status come back to that story - so a developer, or anyone reading the board, can see whether the work is green without opening the CI tool and matching commits to stories by hand.\nThe two rejected benefits are things the tracker already does on its own. Developers can collaborate on a story in any issue tracker, integrated or not, and the burn chart is drawn from the tracker's own estimates and status transitions. Neither improves when CI is connected, which is what makes them the wrong answers to a question about what the integration buys.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "7e6cdb08",
+      "verdict": "clarified",
+      "explanation": "Two things are wrong with fixing the bug in the user acceptance testing sandbox, and the keyed answers address one each. First, the environment: UAT is in use, and building an emergency fix there disturbs the testing other people are relying on while mixing the fix into whatever else that environment holds. A sandbox stood up as a hotfix environment isolates the change so that what reaches production is the fix and nothing else - Salesforce's environment-management guidance describes exactly this, a sandbox generated for urgent defects only.\nSecond, the governance: a defect discovered in production is a production change like any other. Tight timelines change how quickly the change control process runs, not whether it runs - the approval, the record of what was deployed and the rollback plan are what make the fix reversible if it makes things worse.\nSpeed is a real constraint here, but the option that treats UAT as the fastest route is measuring only the first step and ignoring the contaminated test environment and the unapproved production change it leaves behind.",
+      "references": [
+        "https://developer.salesforce.com/blogs/2014/12/salesforce1-enterprise-environment-management",
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "d098ec60",
+      "verdict": "clarified",
+      "explanation": "The organization has already built the answer: a hotfix sandbox is one of the environments it maintains, and it exists precisely so that a production emergency has a path that does not run through the release pipeline. Salesforce's environment-management guidance describes the same environment - a sandbox for urgent defects only - and the discipline that goes with it: fix, test, deploy, then merge the fix back into the in-flight release work so the next release does not undo it.\nThe rejected routes each borrow an environment that is doing something else. Staging is holding the validated state of the next planned release, so deploying a fix from there ships that release early. Development to UAT to production is the full pipeline, which is correct for planned work and too slow for a P1. And following the standard release process is the right answer to a different question - the point of a defined hotfix path is that emergencies are handled by an agreed exception rather than by suspending governance.",
+      "references": [
+        "https://developer.salesforce.com/blogs/2014/12/salesforce1-enterprise-environment-management",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "b19ac21f",
+      "verdict": "clarified",
+      "explanation": "The risk is the dependency between two work-streams running at once. The integration is being built against a legacy system that is itself being upgraded, so the interface it targets is moving while it is being built - a slip or a design change on either side lands on the other, and the commitment made to the board covers both programmes as one date. That coupling is what makes the plan fragile, and managing it needs an explicit joint plan: agreed interface contracts, aligned milestones, and a shared view of what happens to the combined date if either side moves.\nA Salesforce release falling near the deadline is a scheduled, published event that can be planned around, and the preview window exists so a team can test against the new version in advance. The methodology each team has chosen is a way of organizing work, not a risk in itself - two teams can deliver on different methods provided the dependencies between them are managed.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_preview.htm&language=en_US&type=5"
+      ]
+    }
+  ]
+}
