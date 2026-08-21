@@ -1,0 +1,86 @@
+{
+  "deck": "public/decks/data_cloud_consultant_questions.json",
+  "reviewed": "2026-08-21",
+  "findings": [
+    { "id": "dab6989b", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_batch_transform_formula.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_considerations_formula_fields.htm&language=en_US&type=5"] },
+
+    { "id": "7fc59544", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_insights.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_calculated_insights_in_segments.htm&language=en_US&type=5"] },
+
+    { "id": "dc2c1055", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_contact_points.htm&language=en_US&type=5"] },
+
+    { "id": "3ce5cecc", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_consent_management.htm&language=en_US&type=5"] },
+
+    { "id": "6c28ea56", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_web_mobile_app_connector.htm&language=en_US&type=5"] },
+
+    { "id": "a82aca1f", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_data_explorer.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_profile_explorer.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_identity_resolution.htm&language=en_US&type=5"] },
+
+    { "id": "6c5846b5", "verdict": "clarified",
+      "explanation": "Category is chosen on the data stream, and Salesforce is explicit that you can't change it after the data stream is saved. The category also pins the target DMO: a DMO's category is set when the DMO is created and can't be changed afterwards, so once Order-Headers is mapped to Sales Order under Engagement, Sales Order is an Engagement-category DMO and only Engagement DLOs can map to it thereafter (D). The category does not flip to Profile on a later mapping (B), does not accumulate both categories (C), and is not freely interchangeable (A). The practical consequence shows up in the mapping requirements, which differ by category: Profile and Other DMOs require the primary key to be mapped before the mapping can be saved, while Engagement DMOs require both the primary key and an event date-time field.",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_category.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_required_data_mappings.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_map_custom_data_model_objects.htm&language=en_US&type=5"] },
+
+    { "id": "056ea0e6", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_insights.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_calculated_insights_in_segments.htm&language=en_US&type=5"] },
+
+    { "id": "086bbfd8", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_salesforce_crm_connector.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_data_stream_schedule.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=000389693&language=en_US&type=1"] },
+
+    { "id": "575074ec", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_primary_key.htm&language=en_US&type=5"] },
+
+    { "id": "0c1d58b4", "verdict": "corrected", "was": "B", "correct": "C",
+      "explanation": "Salesforce's documented mechanism for sharing criteria across segments is the nested segment: its help page opens with \"Reuse filters and maintain consistency in your data by using an existing segment built on profile objects to build a new nested segment.\" Build the monthly exclusion criteria once as a segment, nest it inside each brand team's segment, and the monthly update is made in one place. A container is a different thing entirely — it is created automatically on the segment canvas when you filter on a related attribute, it scopes those attributes to the same data row of the container's DMO, and it belongs to the segment it sits in. Containers are not shareable or reusable across segments, so there is no reusable container block to maintain. A data kit (A) packages configuration for deployment between orgs rather than sharing logic within one, and copying a segment per brand (D) is exactly the duplication the requirement is trying to avoid.",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_nested_segments.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=sf.c360_a_container_basics.htm&language=en_US&type=5"],
+      "note": "Answer moved B->C. The keyed reusable container block is not a Data Cloud feature: a container is auto-created for related-attribute filters and is scoped to its own segment. Nested segments are what the documentation names for reusing filters and maintaining consistency, and the old explanation dismissed that correct option as less efficient." },
+
+    { "id": "d9f0e781", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_insights.htm&language=en_US&type=5"] },
+
+    { "id": "aa78cb1b", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_data_package_kits.htm&language=en_US&type=5"] },
+
+    { "id": "9d9d4efd", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_find_segments_in_cloud_file_storage.htm&language=en_US&type=5"] },
+
+    { "id": "480f5379", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_data_spaces.htm&language=en_US&type=5"] },
+
+    { "id": "3128d558", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_data_ingestion.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_data_stream_schedule.htm&language=en_US&type=5"] },
+
+    { "id": "b35887c5", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_insights.htm&language=en_US&type=5"] },
+
+    { "id": "a0813551", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_create_marketing_cloud_data_extension.htm&language=en_US&type=5"] },
+
+    { "id": "1148d70c", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_consent_management.htm&language=en_US&type=5"] },
+
+    { "id": "d45cb02d", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_create_commerce_cloud_starter_bundle.htm&language=en_US&type=5"] },
+
+    { "id": "8fb738c4", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_create_commerce_cloud_starter_bundle.htm&language=en_US&type=5"] },
+
+    { "id": "e80443fb", "verdict": "clarified",
+      "explanation": "Two things commonly empty the related-attribute payload. First, the lookback window: Salesforce documents that for engagement data, activation supports a 90-day lookback window, and engagement records outside it aren't considered when selecting output values (A). Note that a profile can still qualify for the segment on an engagement date up to 24 months old, which is exactly why members appear in the activation while their related attributes come back blank. Second, the relationship path: related attributes are reached through a defined path from the activation DMO, so selecting the wrong path returns nothing (C). Segmenting on profile rather than engagement data (B) changes who is in the segment, not whether related attributes populate, and a Unified Contact Point (D) governs contact-point selection rather than related-attribute resolution. Two limits are worth holding onto alongside this: with a rapid segment publish the lookback window shrinks to seven days, and activation supports up to 25 values per related attribute and 300 related attributes per activation.",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_considerations_for_related_attributes.htm&language=en_US&type=5"] },
+
+    { "id": "746c2926", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=xcloud.sdp_recipe_stringfunctions.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_primary_key.htm&language=en_US&type=5"] },
+
+    { "id": "d0a0a5f3", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_match_rules.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_match_rules_criteria_fuzzy_normalized.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_resolution_troubleshooting_ci_consolidation_rate.htm&language=en_US&type=5"] },
+
+    { "id": "29f828ca", "verdict": "corrected", "was": "C", "correct": "A",
+      "explanation": "Activation for Data Cloud Segments defines activation membership as the grouping of fields from different data model objects (DMOs) to include in an activation, and adds that if you use an identity resolution ruleset to unify your data you must use the Unified Individual DMO as the activation membership. So the object chosen for activation membership is a Data Model Object (A). There is no Data Segmentation Object in Data Cloud; the object that records who belongs to a segment is the Segment Membership DMO (type Segment_Membership, for example Individual_SM__dlm), which is itself a DMO rather than a separate class of object. A Data Lake Object (D) holds ingested source data before harmonisation and is not what an activation publishes.",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_activation_for_a_segment.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_segment_membership_data.htm&language=en_US&type=5"],
+      "note": "Answer moved C->A. Data Segmentation Object is an invented entity — Data Cloud has no such object. Activation membership is documented as a grouping of Data Model Objects, and the Unified Individual DMO is required when an identity resolution ruleset is in use." }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "deck": "public/decks/data_cloud_consultant_questions.json",
+  "reviewed": "2026-08-21",
+  "findings": [
+    { "id": "884376a2", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_segmentation_troubleshooting.htm&language=en_US&type=5"] },
+
+    { "id": "a76eedab", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_match_rules.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_match_rules_criteria_fuzzy_normalized.htm&language=en_US&type=5"] },
+
+    { "id": "84996fff", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_data_cloud.htm&language=en_US&type=5"] },
+
+    { "id": "4dea9b59", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_streaming_transform_overview.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_salesforce_crm_connector.htm&language=en_US&type=5"] },
+
+    { "id": "8f5494a9", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_publish_segment.htm&language=en_US&type=5"] },
+
+    { "id": "e64df7b2", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_data_cloud.htm&language=en_US&type=5"] },
+
+    { "id": "0b277734", "verdict": "reasoning",
+      "explanation": "Last Number Of Days is the rolling relative-date operator: Salesforce defines it as finding audience members where an event occurs in the last number of days until the current day and time, which is exactly \"visited within the previous 7 days\" (D). Is Between (A) needs two static dates, and Next Number Of Days (C) looks forward. Greater Than Last Number Of Days is a real operator, but it does the opposite of what this use case needs — it finds events occurring *before* the specified number of days, up to the beginning of the current day — so option B is wrong on behaviour rather than on existence. Note the operator list is case-sensitive in the documentation as Last Number Of Days, and date operators evaluate against your Salesforce org time zone.",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_datatype_expression_operators.htm&language=en_US&type=5"],
+      "note": "Answer stands. The old explanation claimed \"Greater than Last Number of\" is not a standard Data Cloud operator — Greater Than Last Number Of Days is documented, and it selects events older than the window rather than not existing." },
+
+    { "id": "0b702723", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_insights.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_calculated_insights_in_segments.htm&language=en_US&type=5"] },
+
+    { "id": "5ce00e3e", "verdict": "clarified",
+      "explanation": "Activation attribute names are set on the activation itself, not upstream (C). Salesforce documents this as the Output Name field — the preferred name — which by default shows the attribute's API name with system prefixes and suffixes stripped, and which you override to match the destination's naming convention. Data 360 then uses that value as the column header in the activated file. Output names must be unique across every attribute in the activation, including attributes drawn from different DMOs, and may contain only alphanumeric characters. Renaming in the data stream (B) or on the data model object (D) would change the source for every downstream consumer, and a formula field (A) derives a value rather than renaming a column.",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_preferred_attribute_name.htm&language=en_US&type=5"] },
+
+    { "id": "8446b713", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_streaming_transform_overview.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_contact_points.htm&language=en_US&type=5"] },
+
+    { "id": "b16bbc31", "verdict": "reasoning",
+      "explanation": "Value suggestions are computed asynchronously after data is modeled, and Salesforce states plainly that it can take up to 24 hours for suggested values to appear — which is why a user who has just modeled new data sees nothing (D). Three details are worth holding onto from the same page: value suggestions can be enabled for up to 500 attributes across the org, suggested values are retained for 30 days, and for an attribute with more than 1,000 values the 1,000 most frequently occurring values are shown alphabetically. Option A's \"first 50 values\" is not a Data Cloud limit. Option B is not the cause here either, though it is not simply false: when the DMO's category is Other, value suggestion is available for one-to-one and many-to-one relationships and is not available for one-to-many. Permissions (C) govern access rather than suggestion availability.",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_suggested_values_in_segments.htm&language=en_US&type=5"],
+      "note": "Answer stands. The old explanation asserted that the 50-value limit in option A \"is real\" — it is not. The documented cap is the 1,000 most frequently occurring values, and the relationship-type caveat in option B was dismissed as simply false when it holds for Other-category DMOs on one-to-many relationships." },
+
+    { "id": "859419eb", "verdict": "reasoning",
+      "explanation": "The intent of option C — prefer the order source over other sources — is the right instinct, and it is kept as the answer because it is what this item tests. Be aware of two things the current documentation says, though. Reconciliation rules do not apply to contact points such as email, phone or address: all contact points remain part of the unified profile, and Salesforce directs you to the source priority order on the activation to deliver a contact point from the desired source to a target. And the Source Priority reconciliation rule sorts data lake objects, not data model objects, from most to least preferred. So on a current org the reliable way to make order-sourced addresses reach a destination is source priority on the activation, which is the mechanism this deck keys correctly elsewhere.",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_reconciliation_rules.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_contact_points.htm&language=en_US&type=5"],
+      "note": "Item defect: the keyed action is configuring reconciliation rules on Contact Point Address, but Salesforce documents that reconciliation rules do not apply to contact points, and that Source Priority sorts DLOs rather than DMOs. Key kept as the closest to the item's intent; no option describes the documented mechanism." },
+
+    { "id": "860708a5", "verdict": "clarified",
+      "explanation": "The permission set that lets a user inspect ingested rows and still change the modeling is the Data Aware Specialist (D) — Salesforce describes it as being able to map data to the data model and create data streams, identity resolution rulesets, and calculated insights, which covers both halves of the requirement. Data Cloud User (C) is view-only and so cannot make changes, and the Architect set (option B's Data Cloud Admin) grants all functionality including Data Cloud Setup, which is more than the minimum asked for. Note that the option text uses pre-September-2025 naming: as of 4 Sept 2025 the standard permission sets were renamed, and this one is now simply Data Cloud Data Aware Specialist, while Data Cloud Admin is now Data Cloud Architect.",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_userpermissions.htm&language=en_US&type=5"] },
+
+    { "id": "a032b276", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_insights.htm&language=en_US&type=5"] },
+
+    { "id": "87c989ff", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_data_cloud.htm&language=en_US&type=5"] },
+
+    { "id": "53f152a2", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_required_data_mappings.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_map_custom_data_model_objects.htm&language=en_US&type=5"] },
+
+    { "id": "57588274", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_salesforce_crm_connector.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_data_stream_schedule.htm&language=en_US&type=5"] },
+
+    { "id": "b0006afc", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_publish_segment.htm&language=en_US&type=5"] },
+
+    { "id": "ddf8624d", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_create_crm_data_stream.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_salesforce_crm_connector.htm&language=en_US&type=5"] },
+
+    { "id": "98a2f67b", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_identity_resolution.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_insights.htm&language=en_US&type=5"] },
+
+    { "id": "7001f646", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_considerations_for_related_attributes.htm&language=en_US&type=5"] },
+
+    { "id": "625b0134", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_file_name_examples.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_find_segments_in_cloud_file_storage.htm&language=en_US&type=5"] },
+
+    { "id": "d0755ebe", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_identity_resolution.htm&language=en_US&type=5"] },
+
+    { "id": "1d6366ff", "verdict": "clarified",
+      "explanation": "The set scoped to segmentation work without data-source or reporting rights is the one this option calls Data Cloud Marketing Specialist (A). Salesforce describes it as being able to create segments, with full access to Segment, Activations, Query Editor, Data Actions and Data Transforms, and view-only access to Data Streams, DLOs, DMOs, Identity Resolution, Insights and Profile Explorer — so the user can build and activate segments but cannot manage data sources. The Marketing Manager set (B) adds overall segmentation strategy and the creation of activation targets, Data Aware Specialist (C) carries the data-modeling rights this user is meant not to have, and Data Cloud User (D) is view-only. Note the naming: as of 4 Sept 2025 this permission set is called Data Cloud Activation Specialist, and Data Cloud Marketing Manager is now Data Cloud Activation Manager.",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_userpermissions.htm&language=en_US&type=5"] },
+
+    { "id": "8a1c3eba", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_considerations_for_related_attributes.htm&language=en_US&type=5"] }
+  ]
+}

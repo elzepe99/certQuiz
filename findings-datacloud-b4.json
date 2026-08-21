@@ -1,0 +1,88 @@
+{
+  "deck": "public/decks/data_cloud_consultant_questions.json",
+  "reviewed": "2026-08-21",
+  "findings": [
+    { "id": "d917a833", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_suggested_values_in_segments.htm&language=en_US&type=5"] },
+
+    { "id": "4caa9078", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_segments.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=sf.c360_a_container_basics.htm&language=en_US&type=5"] },
+
+    { "id": "ff10adbd", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_data_deletion_request.htm&language=en_US&type=5"] },
+
+    { "id": "7539b43f", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_category.htm&language=en_US&type=5"] },
+
+    { "id": "300d941c", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.c360_a_container_basics.htm&language=en_US&type=5"] },
+
+    { "id": "ee3e98b9", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_segmentation_troubleshooting.htm&language=en_US&type=5"] },
+
+    { "id": "b985f235", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_data_cloud.htm&language=en_US&type=5"] },
+
+    { "id": "e652607d", "verdict": "clarified",
+      "explanation": "Value suggestions are computed asynchronously after data is modeled, and Salesforce states that it can take up to 24 hours for suggested values to appear — so a user who has just modeled new data is most likely still waiting (A). The other options describe limits that either do not exist or are not the cause here: there is no 50-value cap, the documented behaviour is that an attribute with more than 1,000 values shows the 1,000 most frequently occurring values alphabetically (D); permissions govern access rather than suggestion availability (B); and the relationship caveat in C is narrower than stated — for a DMO in the Other category, value suggestion works on one-to-one and many-to-one relationships and is unavailable on one-to-many. Value suggestions are enabled per Text field from the DMO record home, for up to 500 attributes across the org, and are retained for 30 days.",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_suggested_values_in_segments.htm&language=en_US&type=5"] },
+
+    { "id": "ffde1996", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_activation_for_a_segment.htm&language=en_US&type=5"] },
+
+    { "id": "f687a6b9", "verdict": "reasoning",
+      "explanation": "Raising the limit is a legitimate lever and is kept as the answer: Salesforce says outright that because Data 360 is built to scale, some limits can be adjusted to meet your business needs by working with your account executive, and concurrent publishing is a real constraint — the limits page caps rapid concurrent publishes at 20. Be aware, though, that Salesforce's own remedy for the error \"Too many segments are trying to publish at the same time\" is to wait for some segments to finish and to change the publish schedule for some of your segments. Staggering publish start times is therefore the documented first response, and it does not conflict with this scenario's constraints — offsetting when each segment starts changes neither the set of segments nor how often each one runs. Reducing the number of segments (B) is the option genuinely ruled out by the requirements, and rapid publish (A) is a per-segment publishing mode rather than a fix for queue contention.",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_segmentation_troubleshooting.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_limits_and_guidelines.htm&language=en_US&type=5"],
+      "note": "Answer stands, but the old explanation dismissed option D on a false premise — it claimed staggering schedules compromises the requirement to keep all segments at the same frequency, which it does not. Salesforce's Troubleshoot Segment Errors page names changing the publish schedule as the remedy for simultaneous publishes, so this item has two defensible options." },
+
+    { "id": "0a109a96", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_data_spaces.htm&language=en_US&type=5"] },
+
+    { "id": "64df83e0", "verdict": "clarified",
+      "explanation": "Salesforce states the consequences in one sentence: deleting a ruleset permanently removes all unified customer data, eliminates dependencies on data model objects, stops all processing of the ruleset, and deletes the history of previous runs. That is options B and C. Source profile data is untouched (A and D) — the ingested records remain in the data lake and can be unified again by a new ruleset, which is why the loss is of the unified output rather than the raw data. Two practical points: deletion takes up to 24 hours to complete and previous unification data can't be recovered afterwards, so where the goal is to change matching behaviour while keeping the same ruleset name and ID, update the match or reconciliation rules instead of deleting.",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_identity_resolution_deletion.htm&language=en_US&type=5"] },
+
+    { "id": "c50c16e0", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_data_cloud.htm&language=en_US&type=5"] },
+
+    { "id": "98eda96e", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_data_types.htm&language=en_US&type=5"] },
+
+    { "id": "caf7811f", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_match_rules.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_required_data_mappings.htm&language=en_US&type=5"] },
+
+    { "id": "282c475b", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_category.htm&language=en_US&type=5"] },
+
+    { "id": "e99bd25d", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_insights.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_publish_segment.htm&language=en_US&type=5"] },
+
+    { "id": "49ee75cb", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_segments.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_activation_for_a_segment.htm&language=en_US&type=5"] },
+
+    { "id": "de949f0f", "verdict": "reasoning",
+      "explanation": "The safe reading is that a calculated insight can be extended but not narrowed: new dimensions can be added to an existing insight (A), while removing an existing dimension (B) or an existing measure (C) is not available, because downstream segments and activations may already depend on them. Treat this item's option set with care, though — adding a new measure (D) is also possible, so A is not uniquely correct as printed, and the distinction the question is reaching for is between adding and removing rather than between dimensions and measures. If you are planning an insight that others will build on, the rule worth carrying is the one this item half-expresses: design the dimensions and measures you need up front, because you can extend the insight later but you cannot take pieces away.",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_insights.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_calculated_insights_in_segments.htm&language=en_US&type=5"],
+      "note": "Item defect: options A and D are both true, so the item has no single correct answer as printed. The previous explanation acknowledged this and resolved it by deferring to what \"the source\" marked correct — an exam dump is not an authority, and the reasoning has been replaced." },
+
+    { "id": "4627a1a2", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.c360_a_container_basics.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_considerations_for_related_attributes.htm&language=en_US&type=5"] },
+
+    { "id": "01c4c7ad", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_calculated_insights_in_segments.htm&language=en_US&type=5"] },
+
+    { "id": "4a344343", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_batch_transform_formula.htm&language=en_US&type=5"] },
+
+    { "id": "579f07b4", "verdict": "corrected", "was": "C", "correct": "A",
+      "explanation": "Value suggestion is a property of the data model object, not of the segment. Salesforce's page on the feature says you can enable value suggestions for DMO fields whose data type is Text, and that you enable or deactivate the feature in the DMO record home — so the switch lives in the data-modeling area where the DMO is created and mapped (A), and the org can have it enabled on up to 500 attributes. Segment Setup (C) is where the suggestions are consumed rather than enabled: you drag the attribute onto the canvas and start typing in the Value field. Data Transformation (B) and Data Stream Setup (D) act on the DLO before the data reaches the model. Note that no option names the DMO record home exactly, which is the weakness in this item's wording; Data Mapping is the option that describes the right stage.",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_suggested_values_in_segments.htm&language=en_US&type=5"],
+      "note": "Answer moved C->A. Value suggestion is enabled from the DMO record home, on the data-model side, not in Segment Setup — the segment canvas is where suggestions are used. No option names the DMO record home exactly, so A is the option describing the correct stage." },
+
+    { "id": "4ea7fff4", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_data_ingestion.htm&language=en_US&type=5"] },
+
+    { "id": "0e845e09", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_data_cloud.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_profile_explorer.htm&language=en_US&type=5"] }
+  ]
+}

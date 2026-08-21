@@ -7,7 +7,7 @@
     "optionC": "To transform a date-time field into a date field for use in data mapping",
     "optionD": "To remove duplicate rows of data from the data stream",
     "correct": "C",
-    "explanation": "Formula fields in data stream ingestion are used to derive new values from existing fields at the point of ingestion. Converting a datetime field into a plain date field is a classic use case — it produces a new field that can then be cleanly mapped to a DMO attribute. Concatenating ingestion sequences (A), adding external identifiers to rulesets (B), and deduplication (D) are not functions of formula fields.",
+    "explanation": "Formula fields in data stream ingestion are used to derive new values from existing fields at the point of ingestion. Converting a datetime field into a plain date field is a classic use case — it produces a new field that can then be cleanly mapped to a DMO attribute. Concatenating ingestion sequences (A), adding external identifiers to rulesets (B), and deduplication (D) are not functions of formula fields.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_batch_transform_formula.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_considerations_formula_fields.htm&language=en_US&type=5",
     "_cat": "Data Ingestion and Modeling"
   },
   {
@@ -19,7 +19,7 @@
     "optionD": "Related attributes",
     "optionE": "Streaming insights",
     "correct": "A,C,D",
-    "explanation": "When building a segment in Data Cloud the available filter criteria are: Direct attributes (fields directly on the segmented DMO), Related attributes (fields reachable via DMO relationships), and Calculated Insights (pre-computed metrics or dimensions). Data stream attributes (B) cannot be used directly in segmentation — data must first be mapped to a DMO. Streaming insights (E) are near-real-time aggregations used for data actions, not segment criteria.",
+    "explanation": "When building a segment in Data Cloud the available filter criteria are: Direct attributes (fields directly on the segmented DMO), Related attributes (fields reachable via DMO relationships), and Calculated Insights (pre-computed metrics or dimensions). Data stream attributes (B) cannot be used directly in segmentation — data must first be mapped to a DMO. Streaming insights (E) are near-real-time aggregations used for data actions, not segment criteria.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_insights.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_calculated_insights_in_segments.htm&language=en_US&type=5",
     "_cat": "Segmentation and Insights"
   },
   {
@@ -30,7 +30,7 @@
     "optionC": "Ensure Marketing Cloud is prioritized as the first data source in the Source Priority reconciliation rule",
     "optionD": "Set the default reconciliation rule to Last Updated",
     "correct": "B",
-    "explanation": "Reconciliation rules determine which field value wins on the unified profile, but the contact point that is actually sent in an activation is governed by the source priority order configured on the activation itself. By ordering preferred sources first, NTO ensures the highest-quality email address is delivered to the target. Making a field a match rule (A) affects identity resolution, not which contact point is activated. Setting Source Priority only on the ruleset (C) controls the unified profile attribute, not the activated contact point. Last Updated (D) reconciliation applies to profile attributes, not to selecting the best email for activation.",
+    "explanation": "Reconciliation rules determine which field value wins on the unified profile, but the contact point that is actually sent in an activation is governed by the source priority order configured on the activation itself. By ordering preferred sources first, NTO ensures the highest-quality email address is delivered to the target. Making a field a match rule (A) affects identity resolution, not which contact point is activated. Setting Source Priority only on the ruleset (C) controls the unified profile attribute, not the activated contact point. Last Updated (D) reconciliation applies to profile attributes, not to selecting the best email for activation.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_contact_points.htm&language=en_US&type=5",
     "_cat": "Act on Data"
   },
   {
@@ -41,7 +41,7 @@
     "optionC": "Map sensitive data to the same DMO for ease of deletion",
     "optionD": "Carefully consider asking for sensitive data such as age, gender, or ethnicity",
     "correct": "D",
-    "explanation": "Data ethics in Data Cloud implementations requires consultants to apply data minimization and proportionality — only collect data that is necessary and appropriate. Sensitive attributes like age, gender, and ethnicity carry heightened privacy risk and regulatory obligations (GDPR, CCPA), so their collection should be carefully justified. Broad collection of all available data (B) violates minimization principles. Granting leadership access for audits (A) requires proper controls, not blanket access. Grouping sensitive data in one DMO (C) is an operational concern, not an ethical principle.",
+    "explanation": "Data ethics in Data Cloud implementations requires consultants to apply data minimization and proportionality — only collect data that is necessary and appropriate. Sensitive attributes like age, gender, and ethnicity carry heightened privacy risk and regulatory obligations (GDPR, CCPA), so their collection should be carefully justified. Broad collection of all available data (B) violates minimization principles. Granting leadership access for audits (A) requires proper controls, not blanket access. Grouping sensitive data in one DMO (C) is an operational concern, not an ethical principle.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_consent_management.htm&language=en_US&type=5",
     "_cat": "Data Cloud Overview"
   },
   {
@@ -52,7 +52,7 @@
     "optionC": "Any data streams associated with the connector will be automatically deleted upon deleting the app from Data Cloud Setup",
     "optionD": "The connector schema can be updated to delete an existing field",
     "correct": "B",
-    "explanation": "When configuring the Web and Mobile Application Connector, Data Cloud automatically generates a Tenant Specific Endpoint URL that the SDK uses to send events. No standard schema is pre-created (A) — the schema is defined based on what the developer instruments. Deleting the app from setup does not cascade-delete data streams (C). Fields on a connector schema cannot be deleted once created (D) — only new fields can be added.",
+    "explanation": "When configuring the Web and Mobile Application Connector, Data Cloud automatically generates a Tenant Specific Endpoint URL that the SDK uses to send events. No standard schema is pre-created (A) — the schema is defined based on what the developer instruments. Deleting the app from setup does not cascade-delete data streams (C). Fields on a connector schema cannot be deleted once created (D) — only new fields can be added.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_web_mobile_app_connector.htm&language=en_US&type=5",
     "_cat": "Data Cloud Setup and Administration"
   },
   {
@@ -64,7 +64,7 @@
     "optionD": "Profile Explorer",
     "optionE": "Data Actions",
     "correct": "A,C,D",
-    "explanation": "To validate data on a unified profile, consultants use: Identity Resolution (A) — review match and reconciliation statistics and run the ruleset; Data Explorer (C) — inspect rows in any DLO or DMO; and Profile Explorer (D) — look up a specific unified individual and see all their linked source records and contact points. Query APL (B) is for querying data but not purpose-built for profile validation. Data Actions (E) trigger downstream events and are not validation tools.",
+    "explanation": "To validate data on a unified profile, consultants use: Identity Resolution (A) — review match and reconciliation statistics and run the ruleset; Data Explorer (C) — inspect rows in any DLO or DMO; and Profile Explorer (D) — look up a specific unified individual and see all their linked source records and contact points. Query APL (B) is for querying data but not purpose-built for profile validation. Data Actions (E) trigger downstream events and are not validation tools.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_explorer.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_profile_explorer.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_identity_resolution.htm&language=en_US&type=5",
     "_cat": "Data Cloud Setup and Administration"
   },
   {
@@ -75,7 +75,7 @@
     "optionC": "Sales Order DMO gets assigned to both the Profile and Engagement categories when mapping a Profile DLO",
     "optionD": "Only Engagement category DLOs can be mapped to the Sales Order DMO. Sales Order gets assigned to the Engagement Category",
     "correct": "D",
-    "explanation": "Once a DLO is mapped to a DMO with a specific category, that DMO becomes associated with that category. Future DLOs mapped to the same DMO must use the same category — in this case, Engagement. The category is locked to the DMO, so only Engagement-category DLOs can subsequently map to the Sales Order DMO. The category does not flip or accumulate based on later mappings (B, C), and it is not freely interchangeable (A).",
+    "explanation": "Category is chosen on the data stream, and Salesforce is explicit that you can't change it after the data stream is saved. The category also pins the target DMO: a DMO's category is set when the DMO is created and can't be changed afterwards, so once Order-Headers is mapped to Sales Order under Engagement, Sales Order is an Engagement-category DMO and only Engagement DLOs can map to it thereafter (D). The category does not flip to Profile on a later mapping (B), does not accumulate both categories (C), and is not freely interchangeable (A). The practical consequence shows up in the mapping requirements, which differ by category: Profile and Other DMOs require the primary key to be mapped before the mapping can be saved, while Engagement DMOs require both the primary key and an event date-time field.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_category.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_required_data_mappings.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_map_custom_data_model_objects.htm&language=en_US&type=5",
     "_cat": "Data Ingestion and Modeling"
   },
   {
@@ -86,7 +86,7 @@
     "optionC": "Streaming insight and segment",
     "optionD": "Streaming insight and data action",
     "correct": "B",
-    "explanation": "This use case requires aggregating historical deposit totals over five years and filtering on advisory service usage — both are batch analytical computations, making Calculated Insights the right tool. The resulting metric is then used to build a segment that targets those customers for campaigns. Streaming insights (C, D) work on near-real-time windows, not multi-year historical aggregations. A data action (A, D) triggers an event for individual records, not a batch audience for campaigns.",
+    "explanation": "This use case requires aggregating historical deposit totals over five years and filtering on advisory service usage — both are batch analytical computations, making Calculated Insights the right tool. The resulting metric is then used to build a segment that targets those customers for campaigns. Streaming insights (C, D) work on near-real-time windows, not multi-year historical aggregations. A data action (A, D) triggers an event for individual records, not a batch audience for campaigns.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_insights.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_calculated_insights_in_segments.htm&language=en_US&type=5",
     "_cat": "Segmentation and Insights"
   },
   {
@@ -97,7 +97,7 @@
     "optionC": "Partial refresh",
     "optionD": "Full refresh",
     "correct": "D",
-    "explanation": "The first deployment of a CRM Connector data stream always performs a Full refresh to load all existing records from the Salesforce org into Data Cloud. Subsequent runs use incremental refreshes to sync only changed records. Manual refresh (B) is a user-triggered action available after initial deployment. Partial refresh (C) is not a standard Data Cloud refresh type.",
+    "explanation": "The first deployment of a CRM Connector data stream always performs a Full refresh to load all existing records from the Salesforce org into Data Cloud. Subsequent runs use incremental refreshes to sync only changed records. Manual refresh (B) is a user-triggered action available after initial deployment. Partial refresh (C) is not a standard Data Cloud refresh type.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_salesforce_crm_connector.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_stream_schedule.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=000389693&language=en_US&type=1",
     "_cat": "Data Ingestion and Modeling"
   },
   {
@@ -108,7 +108,7 @@
     "optionC": "Select a field as a primary key and then add a key qualifier",
     "optionD": "Remove duplicates from the data source and then select a primary key",
     "correct": "B",
-    "explanation": "When no single field can serve as a unique primary key, the correct approach is to create a composite key using a formula field that concatenates two or more source fields that together produce a unique value. Data Cloud does not auto-generate a default primary key (A). A key qualifier is used alongside an existing primary key, not as a substitute for one (C). Removing duplicates (D) is a data quality step but does not create a key where none exists.",
+    "explanation": "When no single field can serve as a unique primary key, the correct approach is to create a composite key using a formula field that concatenates two or more source fields that together produce a unique value. Data Cloud does not auto-generate a default primary key (A). A key qualifier is used alongside an existing primary key, not as a substitute for one (C). Removing duplicates (D) is a data quality step but does not create a key where none exists.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_primary_key.htm&language=en_US&type=5",
     "_cat": "Data Ingestion and Modeling"
   },
   {
@@ -118,9 +118,16 @@
     "optionB": "Create a reusable container block with common criteria",
     "optionC": "Create a nested segment",
     "optionD": "Create a segment and copy it for each brand",
-    "correct": "B",
-    "explanation": "A reusable container block lets you define segment criteria once and embed that block across multiple segments. When the criteria change (e.g., monthly exclusion rule updates), updating the container block propagates the change to every segment that uses it — eliminating duplication and manual updates. A data kit (A) packages configuration for deployment between orgs, not for shared segment logic. A nested segment (C) embeds one full segment into another and is less efficient for shared exclusion logic. Copying segments (D) creates maintenance overhead with no linkage between copies.",
-    "_cat": "Segmentation and Insights"
+    "correct": "C",
+    "explanation": "Salesforce's documented mechanism for sharing criteria across segments is the nested segment: its help page opens with \"Reuse filters and maintain consistency in your data by using an existing segment built on profile objects to build a new nested segment.\" Build the monthly exclusion criteria once as a segment, nest it inside each brand team's segment, and the monthly update is made in one place. A container is a different thing entirely — it is created automatically on the segment canvas when you filter on a related attribute, it scopes those attributes to the same data row of the container's DMO, and it belongs to the segment it sits in. Containers are not shareable or reusable across segments, so there is no reusable container block to maintain. A data kit (A) packages configuration for deployment between orgs rather than sharing logic within one, and copying a segment per brand (D) is exactly the duplication the requirement is trying to avoid.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_nested_segments.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.c360_a_container_basics.htm&language=en_US&type=5",
+    "_cat": "Segmentation and Insights",
+    "corrected": {
+      "date": "2026-08-21",
+      "via": "validation",
+      "note": "Answer moved B->C. The keyed reusable container block is not a Data Cloud feature: a container is auto-created for related-attribute filters and is scoped to its own segment. Nested segments are what the documentation names for reusing filters and maintaining consistency, and the old explanation dismissed that correct option as less efficient.",
+      "from": "B",
+      "to": "C"
+    }
   },
   {
     "id": "d9f0e781",
@@ -130,7 +137,7 @@
     "optionC": "Set the journey entry schedule to run every hour",
     "optionD": "Set the insights aggregation time window to 1 hour",
     "correct": "D",
-    "explanation": "Streaming insights use an aggregation time window to define how often the insight is computed and evaluated. Setting the aggregation time window to 1 hour causes the insight — and any associated data action — to fire every hour based on the rolling window of streaming data. The activation schedule (A) controls segment-based activations, not data actions from streaming insights. Ingestion batch frequency (B) affects when data arrives, not when the action fires. The Journey entry schedule (C) controls entry into the Journey independently of Data Cloud's trigger cadence.",
+    "explanation": "Streaming insights use an aggregation time window to define how often the insight is computed and evaluated. Setting the aggregation time window to 1 hour causes the insight — and any associated data action — to fire every hour based on the rolling window of streaming data. The activation schedule (A) controls segment-based activations, not data actions from streaming insights. Ingestion batch frequency (B) affects when data arrives, not when the action fires. The Journey entry schedule (C) controls entry into the Journey independently of Data Cloud's trigger cadence.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_insights.htm&language=en_US&type=5",
     "_cat": "Act on Data"
   },
   {
@@ -141,7 +148,7 @@
     "optionC": "Create a data kit",
     "optionD": "Package as an AppExchange application",
     "correct": "C",
-    "explanation": "Data kits are the native Data Cloud mechanism for packaging and deploying configurations — including data streams, mappings, and other metadata — from one Data Cloud org to another. They are purpose-built for this promotion pattern. The Metadata API (A) does not support Data Cloud-specific metadata types. The CRM Connector (B) is for ingesting Salesforce CRM data, not for configuration migration. AppExchange packaging (D) is an ISV distribution model, not a deployment pattern for customer orgs.",
+    "explanation": "Data kits are the native Data Cloud mechanism for packaging and deploying configurations — including data streams, mappings, and other metadata — from one Data Cloud org to another. They are purpose-built for this promotion pattern. The Metadata API (A) does not support Data Cloud-specific metadata types. The CRM Connector (B) is for ingesting Salesforce CRM data, not for configuration migration. AppExchange packaging (D) is an ISV distribution model, not a deployment pattern for customer orgs.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_package_kits.htm&language=en_US&type=5",
     "_cat": "Data Cloud Setup and Administration"
   },
   {
@@ -152,7 +159,7 @@
     "optionC": "The .csv file",
     "optionD": "The .zip file",
     "correct": "B",
-    "explanation": "When Data Cloud activates to Amazon S3, two files are written: a .csv file containing the actual data payload (the segment members and their attributes), and a .json manifest file containing metadata about the segment — such as segment name, activation ID, run timestamp, and schema details. The destination system reads the .json file to understand the structure and context of the activation before processing the .csv.",
+    "explanation": "When Data Cloud activates to Amazon S3, two files are written: a .csv file containing the actual data payload (the segment members and their attributes), and a .json manifest file containing metadata about the segment — such as segment name, activation ID, run timestamp, and schema details. The destination system reads the .json file to understand the structure and context of the activation before processing the .csv.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_find_segments_in_cloud_file_storage.htm&language=en_US&type=5",
     "_cat": "Act on Data"
   },
   {
@@ -163,7 +170,7 @@
     "optionC": "Separate the brands into six different data spaces",
     "optionD": "Create a batch data transform to generate a DLO for the Outlet brand",
     "correct": "B",
-    "explanation": "Data spaces provide logical partitions within a single Data Cloud org, ensuring that segments and activations only reference data within that space. Isolating just the Outlet brand into its own data space efficiently enforces the separation requirement without the overhead of six separate spaces (C). Business Unit Aware activation (A) applies to Marketing Cloud BUs, not to data isolation within Data Cloud. A batch data transform (D) creates a new DLO but does not enforce segmentation boundaries.",
+    "explanation": "Data spaces provide logical partitions within a single Data Cloud org, ensuring that segments and activations only reference data within that space. Isolating just the Outlet brand into its own data space efficiently enforces the separation requirement without the overhead of six separate spaces (C). Business Unit Aware activation (A) applies to Marketing Cloud BUs, not to data isolation within Data Cloud. A batch data transform (D) creates a new DLO but does not enforce segmentation boundaries.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_spaces.htm&language=en_US&type=5",
     "_cat": "Data Cloud Setup and Administration"
   },
   {
@@ -174,7 +181,7 @@
     "optionC": "Use streaming ingestion to first load the last 90 days of data, and then use bulk ingestion to synchronize future data as it becomes available",
     "optionD": "Use bulk ingestion to first load the last 90 days of data, and then use streaming ingestion to synchronize future data as it becomes available",
     "correct": "D",
-    "explanation": "The best-practice pattern for this scenario is to use bulk (batch) ingestion for the initial historical backfill — it is designed for large volumes of historical data — and then switch to streaming ingestion for ongoing near-real-time updates as new activity logs arrive. Streaming ingestion is not suited for large historical loads (B, C). Using bulk for ongoing sync (A) introduces latency that conflicts with the 'as it becomes available' requirement.",
+    "explanation": "The best-practice pattern for this scenario is to use bulk (batch) ingestion for the initial historical backfill — it is designed for large volumes of historical data — and then switch to streaming ingestion for ongoing near-real-time updates as new activity logs arrive. Streaming ingestion is not suited for large historical loads (B, C). Using bulk for ongoing sync (A) introduces latency that conflicts with the 'as it becomes available' requirement.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_ingestion.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_stream_schedule.htm&language=en_US&type=5",
     "_cat": "Data Ingestion and Modeling"
   },
   {
@@ -185,7 +192,7 @@
     "optionC": "Ensure the activations are set to Incremental Activation and automatically publish every hour",
     "optionD": "Ensure the segments are set to Rapid Publish and set to refresh every hour",
     "correct": "A",
-    "explanation": "Because data arrives nightly and activations depend on calculated insights from that fresh data, the correct approach is to chain the processes: after ingestion completes, use a Flow (triggered by a data action or change event on the data stream) to refresh calculated insights and then refresh segments before activations run. Hourly calculated insight refreshes (B) are not aligned to the nightly ingestion window. Incremental activation (C) and Rapid Publish (D) affect how activations are sent, not the sequencing of dependency refreshes.",
+    "explanation": "Because data arrives nightly and activations depend on calculated insights from that fresh data, the correct approach is to chain the processes: after ingestion completes, use a Flow (triggered by a data action or change event on the data stream) to refresh calculated insights and then refresh segments before activations run. Hourly calculated insight refreshes (B) are not aligned to the nightly ingestion window. Incremental activation (C) and Rapid Publish (D) affect how activations are sent, not the sequencing of dependency refreshes.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_insights.htm&language=en_US&type=5",
     "_cat": "Act on Data"
   },
   {
@@ -196,7 +203,7 @@
     "optionC": "Marketing Cloud Data Extension Data Stream",
     "optionD": "Email Studio Starter Data Bundle",
     "correct": "C",
-    "explanation": "The Marketing Cloud Data Extension Data Stream connector allows Data Cloud to directly ingest data from Marketing Cloud Data Extensions on a scheduled basis — including subscriber profile attributes — without requiring custom automation. Automation Studio with Profile file API (A) requires custom scripting and file drops. Marketing Cloud Connect API (B) is primarily for CRM synchronization, not Data Cloud ingestion. The Email Studio Starter Data Bundle (D) is a pre-packaged bundle for email engagement data, not general subscriber profile attributes.",
+    "explanation": "The Marketing Cloud Data Extension Data Stream connector allows Data Cloud to directly ingest data from Marketing Cloud Data Extensions on a scheduled basis — including subscriber profile attributes — without requiring custom automation. Automation Studio with Profile file API (A) requires custom scripting and file drops. Marketing Cloud Connect API (B) is primarily for CRM synchronization, not Data Cloud ingestion. The Email Studio Starter Data Bundle (D) is a pre-packaged bundle for email engagement data, not general subscriber profile attributes.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_create_marketing_cloud_data_extension.htm&language=en_US&type=5",
     "_cat": "Data Ingestion and Modeling"
   },
   {
@@ -207,7 +214,7 @@
     "optionC": "Include the Unified Profile during segmentation for any applicable channels of engagement",
     "optionD": "Include the Consent Status for any applicable channels of engagement in the filter criteria for each segment",
     "correct": "D",
-    "explanation": "To honor consent during segmentation, the consultant must add the Consent Status field for each relevant engagement channel as a filter criterion in the segment itself. This ensures that only individuals who have given consent for a specific channel (e.g., email, SMS) are included in the segment before activation. Applying consent only at activation (A) is a later control but best practice is to enforce it at segmentation. Party Identification (B) is an identity object, not a consent mechanism. The Unified Profile (C) is the entity being segmented, not a consent filter.",
+    "explanation": "To honor consent during segmentation, the consultant must add the Consent Status field for each relevant engagement channel as a filter criterion in the segment itself. This ensures that only individuals who have given consent for a specific channel (e.g., email, SMS) are included in the segment before activation. Applying consent only at activation (A) is a later control but best practice is to enforce it at segmentation. Party Identification (B) is an identity object, not a consent mechanism. The Unified Profile (C) is the entity being segmented, not a consent filter.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_consent_management.htm&language=en_US&type=5",
     "_cat": "Segmentation and Insights"
   },
   {
@@ -218,7 +225,7 @@
     "optionC": "The B2C Commerce Order Bundle does not ingest any historical data and only ingests new orders from that point on",
     "optionD": "The B2C Commerce Order Bundle ingests 30 days of historical data",
     "correct": "D",
-    "explanation": "The B2C Commerce Order Bundle ingests 30 days of historical order data at initial setup. If NTO requires more than 30 days of order history in Data Cloud, a custom extract or additional ingestion method will need to supplement the bundle. This is a key limitation to communicate during scoping.",
+    "explanation": "The B2C Commerce Order Bundle ingests 30 days of historical order data at initial setup. If NTO requires more than 30 days of order history in Data Cloud, a custom extract or additional ingestion method will need to supplement the bundle. This is a key limitation to communicate during scoping.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_create_commerce_cloud_starter_bundle.htm&language=en_US&type=5",
     "_cat": "Data Ingestion and Modeling"
   },
   {
@@ -229,7 +236,7 @@
     "optionC": "Direct Sales Product entity ingestion",
     "optionD": "B2C Commerce Starter Bundles plus a custom extract",
     "correct": "D",
-    "explanation": "The B2C Commerce Starter Bundles only ingest 30 days of historical order data. To bring two years of transactional history, NTO must use the Starter Bundle in combination with a custom extract (e.g., via S3 or Ingestion API) to backfill the remaining historical data. The bundle alone (A) is insufficient. Direct Sales Order or Product entity ingestion (B, C) are not standard Data Cloud ingestion paths for B2C Commerce.",
+    "explanation": "The B2C Commerce Starter Bundles only ingest 30 days of historical order data. To bring two years of transactional history, NTO must use the Starter Bundle in combination with a custom extract (e.g., via S3 or Ingestion API) to backfill the remaining historical data. The bundle alone (A) is insufficient. Direct Sales Order or Product entity ingestion (B, C) are not standard Data Cloud ingestion paths for B2C Commerce.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_create_commerce_cloud_starter_bundle.htm&language=en_US&type=5",
     "_cat": "Data Ingestion and Modeling"
   },
   {
@@ -240,7 +247,7 @@
     "optionC": "The correct path is selected for the related attributes",
     "optionD": "The activated profiles have a Unified Contact Point",
     "correct": "A,C",
-    "explanation": "For engagement-based related attributes in activations, two common causes of missing data are: (A) Engagement data has a 90-day lookback limit — events older than 90 days will not appear in the payload; and (C) if the wrong DMO relationship path is selected for the related attribute, no data is returned. Segmenting on profile vs. engagement data (B) affects who is in the segment, not whether related attributes populate in the payload. Unified Contact Points (D) are required for activation contact selection, not for related attribute resolution.",
+    "explanation": "Two things commonly empty the related-attribute payload. First, the lookback window: Salesforce documents that for engagement data, activation supports a 90-day lookback window, and engagement records outside it aren't considered when selecting output values (A). Note that a profile can still qualify for the segment on an engagement date up to 24 months old, which is exactly why members appear in the activation while their related attributes come back blank. Second, the relationship path: related attributes are reached through a defined path from the activation DMO, so selecting the wrong path returns nothing (C). Segmenting on profile rather than engagement data (B) changes who is in the segment, not whether related attributes populate, and a Unified Contact Point (D) governs contact-point selection rather than related-attribute resolution. Two limits are worth holding onto alongside this: with a rapid segment publish the lookback window shrinks to seven days, and activation supports up to 25 values per related attribute and 300 related attributes per activation.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_considerations_for_related_attributes.htm&language=en_US&type=5",
     "_cat": "Act on Data"
   },
   {
@@ -251,7 +258,7 @@
     "optionC": "COALE",
     "optionD": "CAST",
     "correct": "A",
-    "explanation": "CONCAT is the formula function used in Data Cloud data stream formula fields to combine two or more string values into a single value, making it the correct choice for creating a composite key from Customer Region and Customer Identifier. COMBIN is not a Data Cloud formula function. COALE (COALESCE) returns the first non-null value from a list. CAST converts a field from one data type to another.",
+    "explanation": "CONCAT is the formula function used in Data Cloud data stream formula fields to combine two or more string values into a single value, making it the correct choice for creating a composite key from Customer Region and Customer Identifier. COMBIN is not a Data Cloud formula function. COALE (COALESCE) returns the first non-null value from a list. CAST converts a field from one data type to another.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=xcloud.sdp_recipe_stringfunctions.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_primary_key.htm&language=en_US&type=5",
     "_cat": "Data Ingestion and Modeling"
   },
   {
@@ -262,7 +269,7 @@
     "optionC": "Include additional attributes in the existing matching rules",
     "optionD": "Reduce the number of matching rules",
     "correct": "B",
-    "explanation": "The consolidation rate measures how far source records collapse into unified profiles, so raising it means matching more aggressively. Match rules within a ruleset are evaluated independently — a record pair unified by any one of them is merged — so adding rules gives records more chances to match and drives the rate up (B). The other options all tighten matching or miss the mechanism: adding attributes to an existing rule (C) piles on criteria that must all be satisfied at once, reducing matches; removing rules (D) removes opportunities to match and lowers the rate further; and reconciliation rules (A) only decide which value wins on an already-unified profile, never whether two records match.",
+    "explanation": "The consolidation rate measures how far source records collapse into unified profiles, so raising it means matching more aggressively. Match rules within a ruleset are evaluated independently — a record pair unified by any one of them is merged — so adding rules gives records more chances to match and drives the rate up (B). The other options all tighten matching or miss the mechanism: adding attributes to an existing rule (C) piles on criteria that must all be satisfied at once, reducing matches; removing rules (D) removes opportunities to match and lowers the rate further; and reconciliation rules (A) only decide which value wins on an already-unified profile, never whether two records match.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_match_rules.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_match_rules_criteria_fuzzy_normalized.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_resolution_troubleshooting_ci_consolidation_rate.htm&language=en_US&type=5",
     "_cat": "Identity Resolution",
     "corrected": {
       "date": "2026-08-04",
@@ -279,9 +286,16 @@
     "optionB": "Data Activation Object",
     "optionC": "Data Segmentation Object",
     "optionD": "Data Lake Object",
-    "correct": "C",
-    "explanation": "When configuring an activation in Data Cloud, the activation membership is based on the Data Segmentation Object (DSO) — the object that tracks which individuals belong to a segment. The DSO is what gets activated to the target system. Data Model Objects (A) are the harmonized data objects used for profiling and segmentation logic. Data Activation Objects and Data Lake Objects (B, D) are not the correct object type for activation membership.",
-    "_cat": "Act on Data"
+    "correct": "A",
+    "explanation": "Activation for Data Cloud Segments defines activation membership as the grouping of fields from different data model objects (DMOs) to include in an activation, and adds that if you use an identity resolution ruleset to unify your data you must use the Unified Individual DMO as the activation membership. So the object chosen for activation membership is a Data Model Object (A). There is no Data Segmentation Object in Data Cloud; the object that records who belongs to a segment is the Segment Membership DMO (type Segment_Membership, for example Individual_SM__dlm), which is itself a DMO rather than a separate class of object. A Data Lake Object (D) holds ingested source data before harmonisation and is not what an activation publishes.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_activation_for_a_segment.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_segment_membership_data.htm&language=en_US&type=5",
+    "_cat": "Act on Data",
+    "corrected": {
+      "date": "2026-08-21",
+      "via": "validation",
+      "note": "Answer moved C->A. Data Segmentation Object is an invented entity — Data Cloud has no such object. Activation membership is documented as a grouping of Data Model Objects, and the Unified Individual DMO is required when an identity resolution ruleset is in use.",
+      "from": "C",
+      "to": "A"
+    }
   },
   {
     "id": "884376a2",
@@ -291,7 +305,7 @@
     "optionC": "Segment population count failed",
     "optionD": "Segment can't be published",
     "correct": "A",
-    "explanation": "The 'Segment is too complex' error occurs when a segment's query exceeds computational limits — typically due to deep nesting of segments or too many joined DMOs. The recommended resolution is to pre-compute complex logic using Calculated Insights and then reference the insight results as direct attributes in the segment, reducing runtime query complexity. The other errors relate to concurrency (B), infrastructure failures (C), or publish configuration issues (D), not query complexity.",
+    "explanation": "The 'Segment is too complex' error occurs when a segment's query exceeds computational limits — typically due to deep nesting of segments or too many joined DMOs. The recommended resolution is to pre-compute complex logic using Calculated Insights and then reference the insight results as direct attributes in the segment, reducing runtime query complexity. The other errors relate to concurrency (B), infrastructure failures (C), or publish configuration issues (D), not query complexity.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_segmentation_troubleshooting.htm&language=en_US&type=5",
     "_cat": "Segmentation and Insights"
   },
   {
@@ -302,7 +316,7 @@
     "optionC": "Email Address and Phone",
     "optionD": "Fuzzy First Name, Exact Last Name, and Email",
     "correct": "A",
-    "explanation": "In a healthcare context where false positives (incorrectly merging distinct patients) carry serious risk, matching on a unique system-assigned identifier — the Patient ID via the Party Identification object — provides the most precise and deterministic match. Common PII like name and email (B, D) can be shared across family members or patients with similar demographics, risking incorrect unification. Email and phone (C) also carry false-positive risk in healthcare settings.",
+    "explanation": "In a healthcare context where false positives (incorrectly merging distinct patients) carry serious risk, matching on a unique system-assigned identifier — the Patient ID via the Party Identification object — provides the most precise and deterministic match. Common PII like name and email (B, D) can be shared across family members or patients with similar demographics, risking incorrect unification. Email and phone (C) also carry false-positive risk in healthcare settings.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_match_rules.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_match_rules_criteria_fuzzy_normalized.htm&language=en_US&type=5",
     "_cat": "Identity Resolution"
   },
   {
@@ -313,7 +327,7 @@
     "optionC": "Build a source of truth for consent management across all unified individuals",
     "optionD": "Ingest customer interaction across different touch points, harmonize, and build a data model for analytical reporting",
     "correct": "D",
-    "explanation": "Data Cloud's core value proposition is ingesting data from multiple sources (dealership CRM, website, service records, marketing), harmonizing it into unified customer profiles, and enabling analytical and activation use cases. This is a textbook Data Cloud use case. Archive with version management (A) is a data governance/DMS capability. Cookie-based personalization (B) is a web analytics / CDP edge use case beyond standard Data Cloud. Consent management as a source of truth (C) is a partial capability, not a primary use case.",
+    "explanation": "Data Cloud's core value proposition is ingesting data from multiple sources (dealership CRM, website, service records, marketing), harmonizing it into unified customer profiles, and enabling analytical and activation use cases. This is a textbook Data Cloud use case. Archive with version management (A) is a data governance/DMS capability. Cookie-based personalization (B) is a web analytics / CDP edge use case beyond standard Data Cloud. Consent management as a source of truth (C) is a partial capability, not a primary use case.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_cloud.htm&language=en_US&type=5",
     "_cat": "Data Cloud Overview"
   },
   {
@@ -324,7 +338,7 @@
     "optionC": "Sales and Service bundle",
     "optionD": "Data actions and Lightning web components",
     "correct": "A",
-    "explanation": "Streaming transforms in Data Cloud allow real-time processing of data as it arrives from the Salesforce CRM Connector, enabling near-real-time integration. The CRM Connector with streaming capability pushes standard field changes in real time. Data model triggers (B) do not exist as a standard Data Cloud feature. The Sales and Service bundle (C) is a pre-packaged ingestion connector, not a real-time integration mechanism. Data actions with LWCs (D) are used to surface Data Cloud data inside Salesforce UI, not for real-time CRM integration.",
+    "explanation": "Streaming transforms in Data Cloud allow real-time processing of data as it arrives from the Salesforce CRM Connector, enabling near-real-time integration. The CRM Connector with streaming capability pushes standard field changes in real time. Data model triggers (B) do not exist as a standard Data Cloud feature. The Sales and Service bundle (C) is a pre-packaged ingestion connector, not a real-time integration mechanism. Data actions with LWCs (D) are used to surface Data Cloud data inside Salesforce UI, not for real-time CRM integration.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_streaming_transform_overview.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_salesforce_crm_connector.htm&language=en_US&type=5",
     "_cat": "Data Ingestion and Modeling"
   },
   {
@@ -335,7 +349,7 @@
     "optionC": "Skip the activation",
     "optionD": "Stop the publish schedule",
     "correct": "D",
-    "explanation": "To temporarily pause a segment activation while preserving the segment configuration for future use, the correct action is to stop the publish schedule. This halts the activation runs without removing the segment or its activation configuration, making it easy to resume later. Deactivating the segment (A) removes it from active status and may affect downstream dependencies. Deleting (B) is permanent. 'Skip the activation' (C) is not a standard Data Cloud function.",
+    "explanation": "To temporarily pause a segment activation while preserving the segment configuration for future use, the correct action is to stop the publish schedule. This halts the activation runs without removing the segment or its activation configuration, making it easy to resume later. Deactivating the segment (A) removes it from active status and may affect downstream dependencies. Deleting (B) is permanent. 'Skip the activation' (C) is not a standard Data Cloud function.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_publish_segment.htm&language=en_US&type=5",
     "_cat": "Act on Data"
   },
   {
@@ -346,7 +360,7 @@
     "optionC": "Tableau",
     "optionD": "Einstein Analytics",
     "correct": "C",
-    "explanation": "Tableau is the recommended and natively integrated tool for visualizing and analyzing unified customer data from Data Cloud. Tableau can connect directly to Data Cloud via the Query API or direct connector to build dashboards and reports on unified profiles. Salesforce CLI (A) is a developer tool for deployment and metadata. Heroku (B) is an application platform. Einstein Analytics / CRM Analytics (D) can connect to Data Cloud but Tableau is the primary visualization tool called out in the Data Cloud ecosystem.",
+    "explanation": "Tableau is the recommended and natively integrated tool for visualizing and analyzing unified customer data from Data Cloud. Tableau can connect directly to Data Cloud via the Query API or direct connector to build dashboards and reports on unified profiles. Salesforce CLI (A) is a developer tool for deployment and metadata. Heroku (B) is an application platform. Einstein Analytics / CRM Analytics (D) can connect to Data Cloud but Tableau is the primary visualization tool called out in the Data Cloud ecosystem.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_cloud.htm&language=en_US&type=5",
     "_cat": "Data Cloud Setup and Administration"
   },
   {
@@ -357,8 +371,13 @@
     "optionC": "Next Number of Days",
     "optionD": "Last Number of Days",
     "correct": "D",
-    "explanation": "The 'Last Number of Days' operator is a rolling relative date operator that automatically filters for records where the date field falls within the specified number of days prior to today — exactly what is needed for 'visited within the previous 7 days.' 'Is Between' (A) requires static start and end dates. 'Greater than Last Number of' (B) is not a standard Data Cloud operator. 'Next Number of Days' (C) is forward-looking.",
-    "_cat": "Segmentation and Insights"
+    "explanation": "Last Number Of Days is the rolling relative-date operator: Salesforce defines it as finding audience members where an event occurs in the last number of days until the current day and time, which is exactly \"visited within the previous 7 days\" (D). Is Between (A) needs two static dates, and Next Number Of Days (C) looks forward. Greater Than Last Number Of Days is a real operator, but it does the opposite of what this use case needs — it finds events occurring *before* the specified number of days, up to the beginning of the current day — so option B is wrong on behaviour rather than on existence. Note the operator list is case-sensitive in the documentation as Last Number Of Days, and date operators evaluate against your Salesforce org time zone.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_datatype_expression_operators.htm&language=en_US&type=5",
+    "_cat": "Segmentation and Insights",
+    "corrected": {
+      "date": "2026-08-21",
+      "via": "validation",
+      "note": "Answer stands. The old explanation claimed \"Greater than Last Number of\" is not a standard Data Cloud operator — Greater Than Last Number Of Days is documented, and it selects events older than the window rather than not existing."
+    }
   },
   {
     "id": "0b702723",
@@ -368,7 +387,7 @@
     "optionC": "Calculated insight",
     "optionD": "Batch data transform",
     "correct": "C",
-    "explanation": "The stem imposes two requirements, and one of them is decisive: the result must be available for segmentation. Streaming insights cannot be used in the segmentation or activation phases of Data Cloud, which rules out option B however well its real-time character otherwise fits a 24-hour window. A calculated insight can aggregate the visit count per candidate and is usable as a segmentation attribute (C), and the resulting segment can then be activated to the recruiting system, satisfying both halves of the requirement. Streaming and batch data transforms (A and D) reshape data without evaluating a threshold condition at all.",
+    "explanation": "The stem imposes two requirements, and one of them is decisive: the result must be available for segmentation. Streaming insights cannot be used in the segmentation or activation phases of Data Cloud, which rules out option B however well its real-time character otherwise fits a 24-hour window. A calculated insight can aggregate the visit count per candidate and is usable as a segmentation attribute (C), and the resulting segment can then be activated to the recruiting system, satisfying both halves of the requirement. Streaming and batch data transforms (A and D) reshape data without evaluating a threshold condition at all.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_insights.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_calculated_insights_in_segments.htm&language=en_US&type=5",
     "_cat": "Segmentation and Insights",
     "corrected": {
       "date": "2026-08-04",
@@ -386,7 +405,7 @@
     "optionC": "Set preferred attribute names when configuring activation",
     "optionD": "Update field names in the data model object",
     "correct": "C",
-    "explanation": "When configuring an activation to a Cloud File Storage target (such as Amazon S3), Data Cloud allows consultants to set preferred attribute names (aliases) for each attribute included in the activation. This renames the column headers in the output file to match the destination system's naming convention without altering the underlying DMO or data stream. Modifying the data stream (B) or DMO (D) changes the source, affecting all downstream uses. Formula fields in an activation (A) can derive new values but are not a rename mechanism.",
+    "explanation": "Activation attribute names are set on the activation itself, not upstream (C). Salesforce documents this as the Output Name field — the preferred name — which by default shows the attribute's API name with system prefixes and suffixes stripped, and which you override to match the destination's naming convention. Data 360 then uses that value as the column header in the activated file. Output names must be unique across every attribute in the activation, including attributes drawn from different DMOs, and may contain only alphanumeric characters. Renaming in the data stream (B) or on the data model object (D) would change the source for every downstream consumer, and a formula field (A) derives a value rather than renaming a column.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_preferred_attribute_name.htm&language=en_US&type=5",
     "_cat": "Act on Data"
   },
   {
@@ -397,7 +416,7 @@
     "optionC": "Ingest the Contact object and then create a calculated insight to normalize the phone numbers, and then map to the Contact Point Phone data map object",
     "optionD": "Ingest the Contact object and create formula fields in the Contact data stream on the phone numbers, and then map to the Contact Point Phone data map object",
     "correct": "B",
-    "explanation": "The Contact Point Phone DMO expects one row per phone number. Since the Contact record has three phone fields (columns), they must be pivoted into rows before mapping. The correct approach is to use a streaming transform to normalize the three phone column values into a new DLO with three rows per contact — one per phone type — which can then be mapped to the Contact Point Phone DMO. Direct mapping of three columns to Contact Point Phone (A) would only capture one phone per record. Calculated insights (C) are not designed for data normalization into new DLOs. Formula fields (D) transform values within a row but don't pivot columns into rows.",
+    "explanation": "The Contact Point Phone DMO expects one row per phone number. Since the Contact record has three phone fields (columns), they must be pivoted into rows before mapping. The correct approach is to use a streaming transform to normalize the three phone column values into a new DLO with three rows per contact — one per phone type — which can then be mapped to the Contact Point Phone DMO. Direct mapping of three columns to Contact Point Phone (A) would only capture one phone per record. Calculated insights (C) are not designed for data normalization into new DLOs. Formula fields (D) transform values within a row but don't pivot columns into rows.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_streaming_transform_overview.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_contact_points.htm&language=en_US&type=5",
     "_cat": "Data Ingestion and Modeling"
   },
   {
@@ -408,8 +427,13 @@
     "optionC": "Value suggestion requires Data Aware Specialist permissions at a minimum",
     "optionD": "Value suggestion is still processing and takes up to 24 hours to be available",
     "correct": "D",
-    "explanation": "After new data is modeled or a new DMO is mapped, value suggestion (the picklist of available attribute values in the segment builder) is computed asynchronously and can take up to 24 hours to populate. This is the most common cause of a user not seeing suggested values after recent data modeling. The 50-value limit (A) is real but applies to how many suggestions are shown, not why they are absent entirely. Value suggestion works on related attributes (B is false). Permissions (C) affect access, not suggestion availability.",
-    "_cat": "Segmentation and Insights"
+    "explanation": "Value suggestions are computed asynchronously after data is modeled, and Salesforce states plainly that it can take up to 24 hours for suggested values to appear — which is why a user who has just modeled new data sees nothing (D). Three details are worth holding onto from the same page: value suggestions can be enabled for up to 500 attributes across the org, suggested values are retained for 30 days, and for an attribute with more than 1,000 values the 1,000 most frequently occurring values are shown alphabetically. Option A's \"first 50 values\" is not a Data Cloud limit. Option B is not the cause here either, though it is not simply false: when the DMO's category is Other, value suggestion is available for one-to-one and many-to-one relationships and is not available for one-to-many. Permissions (C) govern access rather than suggestion availability.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_suggested_values_in_segments.htm&language=en_US&type=5",
+    "_cat": "Segmentation and Insights",
+    "corrected": {
+      "date": "2026-08-21",
+      "via": "validation",
+      "note": "Answer stands. The old explanation asserted that the 50-value limit in option A \"is real\" — it is not. The documented cap is the 1,000 most frequently occurring values, and the relationship-type caveat in option B was dismissed as simply false when it holds for Other-category DMOs on one-to-many relationships."
+    }
   },
   {
     "id": "859419eb",
@@ -419,8 +443,13 @@
     "optionC": "Select the address details on the Contact Point Address. Change the reconciliation rules for the specific address attributes to Source Priority and move the Order DMO to the top",
     "optionD": "Change the default reconciliation rules for Individual to Source Priority",
     "correct": "C",
-    "explanation": "To prefer order-sourced address data on the unified profile, the consultant must configure the Contact Point Address reconciliation rules using Source Priority and place the Order-linked DMO at the top of the priority list. This ensures order addresses win over addresses from other sources. Moving the Individual DMO to the bottom (A) would deprioritize profile-sourced addresses but doesn't explicitly prioritize order data. Default rules (B) don't distinguish source preference. Changing Individual reconciliation rules (D) affects profile attributes, not Contact Point Address.",
-    "_cat": "Identity Resolution"
+    "explanation": "The intent of option C — prefer the order source over other sources — is the right instinct, and it is kept as the answer because it is what this item tests. Be aware of two things the current documentation says, though. Reconciliation rules do not apply to contact points such as email, phone or address: all contact points remain part of the unified profile, and Salesforce directs you to the source priority order on the activation to deliver a contact point from the desired source to a target. And the Source Priority reconciliation rule sorts data lake objects, not data model objects, from most to least preferred. So on a current org the reliable way to make order-sourced addresses reach a destination is source priority on the activation, which is the mechanism this deck keys correctly elsewhere.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_reconciliation_rules.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_contact_points.htm&language=en_US&type=5",
+    "_cat": "Identity Resolution",
+    "corrected": {
+      "date": "2026-08-21",
+      "via": "validation",
+      "note": "Item defect: the keyed action is configuring reconciliation rules on Contact Point Address, but Salesforce documents that reconciliation rules do not apply to contact points, and that Source Priority sorts DLOs rather than DMOs. Key kept as the closest to the item's intent; no option describes the documented mechanism."
+    }
   },
   {
     "id": "860708a5",
@@ -430,7 +459,7 @@
     "optionC": "Data Cloud User",
     "optionD": "Data Cloud for Marketing Data Aware Specialist",
     "correct": "D",
-    "explanation": "The Data Cloud for Marketing Data Aware Specialist permission set grants the ability to view data in Data Explorer (review ingested rows) and make changes to data mappings and model configurations. Data Cloud User (C) has read-only capabilities and cannot make changes. Data Cloud Admin (B) has full administrative access — more than the minimum required. Data Cloud for Marketing Specialist (A) focuses on segmentation and activation, not data inspection and modeling.",
+    "explanation": "The permission set that lets a user inspect ingested rows and still change the modeling is the Data Aware Specialist (D) — Salesforce describes it as being able to map data to the data model and create data streams, identity resolution rulesets, and calculated insights, which covers both halves of the requirement. Data Cloud User (C) is view-only and so cannot make changes, and the Architect set (option B's Data Cloud Admin) grants all functionality including Data Cloud Setup, which is more than the minimum asked for. Note that the option text uses pre-September-2025 naming: as of 4 Sept 2025 the standard permission sets were renamed, and this one is now simply Data Cloud Data Aware Specialist, while Data Cloud Admin is now Data Cloud Architect.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_userpermissions.htm&language=en_US&type=5",
     "_cat": "Data Cloud Setup and Administration"
   },
   {
@@ -441,7 +470,7 @@
     "optionC": "Use a streaming insight paired with a data action",
     "optionD": "Use streaming data transform combined with a data action",
     "correct": "C",
-    "explanation": "This use case requires real-time monitoring and immediate notification — classic streaming insight + data action pattern. A streaming insight evaluates transaction volume against a threshold (normal range) as transactions arrive in near-real time. When the threshold condition is met, the associated data action fires the notification. Calculated insights (A) are batch-processed and too slow for real-time detection. Streaming data transforms (B, D) reshape incoming data but don't evaluate threshold conditions or trigger notifications.",
+    "explanation": "This use case requires real-time monitoring and immediate notification — classic streaming insight + data action pattern. A streaming insight evaluates transaction volume against a threshold (normal range) as transactions arrive in near-real time. When the threshold condition is met, the associated data action fires the notification. Calculated insights (A) are batch-processed and too slow for real-time detection. Streaming data transforms (B, D) reshape incoming data but don't evaluate threshold conditions or trigger notifications.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_insights.htm&language=en_US&type=5",
     "_cat": "Act on Data"
   },
   {
@@ -452,7 +481,7 @@
     "optionC": "Migrate the existing data into the Customer 360 Data Model",
     "optionD": "Use calculated insights to determine the benefits of Data Cloud for this company",
     "correct": "A",
-    "explanation": "The Data Cloud lifecycle begins with discovery and scoping — identifying the business use cases, which data sources are needed to support them, and assessing data quality. Without this foundational step, all subsequent configuration decisions lack business alignment. Data space partitioning (B), data migration (C), and calculated insights (D) are all later phases that depend on the use-case and data-source inventory established in the first phase.",
+    "explanation": "The Data Cloud lifecycle begins with discovery and scoping — identifying the business use cases, which data sources are needed to support them, and assessing data quality. Without this foundational step, all subsequent configuration decisions lack business alignment. Data space partitioning (B), data migration (C), and calculated insights (D) are all later phases that depend on the use-case and data-source inventory established in the first phase.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_cloud.htm&language=en_US&type=5",
     "_cat": "Data Cloud Overview"
   },
   {
@@ -463,7 +492,7 @@
     "optionC": "Map additional fields to the Contact Point Address DMO",
     "optionD": "Make sure that the total account records are high enough for identity resolution",
     "correct": "C",
-    "explanation": "Contact Point Address is a standard DMO with required fields. A 1-to-1 relationship save error typically occurs because mandatory fields on the Contact Point Address DMO have not been mapped. Mapping additional required fields resolves the validation error. Changing cardinality (A) would be appropriate if the business requirement changed, not to fix a save error. Mapping other contact point objects (B) is unrelated. Record volume (D) has no bearing on relationship configuration errors.",
+    "explanation": "Contact Point Address is a standard DMO with required fields. A 1-to-1 relationship save error typically occurs because mandatory fields on the Contact Point Address DMO have not been mapped. Mapping additional required fields resolves the validation error. Changing cardinality (A) would be appropriate if the business requirement changed, not to fix a save error. Mapping other contact point objects (B) is unrelated. Record volume (D) has no bearing on relationship configuration errors.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_required_data_mappings.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_map_custom_data_model_objects.htm&language=en_US&type=5",
     "_cat": "Data Ingestion and Modeling"
   },
   {
@@ -474,7 +503,7 @@
     "optionC": "Formula fields are refreshed at regular sync intervals and are updated at the next full refresh",
     "optionD": "The CRM Connector allows standard fields to stream into Data Cloud in real time",
     "correct": "D",
-    "explanation": "The Salesforce CRM Connector supports real-time streaming of standard field changes — when a standard field on a CRM object is updated, that change is streamed into Data Cloud near-instantaneously. CRM data can be manually refreshed (A is false). Synchronization intervals are not customizable to 15 minutes (B is false — the connector runs on a fixed schedule). Formula fields are only updated on a full refresh cycle, not incremental sync (C is partially true but D is the correct true statement from the options).",
+    "explanation": "The Salesforce CRM Connector supports real-time streaming of standard field changes — when a standard field on a CRM object is updated, that change is streamed into Data Cloud near-instantaneously. CRM data can be manually refreshed (A is false). Synchronization intervals are not customizable to 15 minutes (B is false — the connector runs on a fixed schedule). Formula fields are only updated on a full refresh cycle, not incremental sync (C is partially true but D is the correct true statement from the options).\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_salesforce_crm_connector.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_stream_schedule.htm&language=en_US&type=5",
     "_cat": "Data Ingestion and Modeling"
   },
   {
@@ -485,7 +514,7 @@
     "optionC": "Dashboard",
     "optionD": "Report",
     "correct": "C,D",
-    "explanation": "Segment publish history data is surfaced through standard Salesforce reporting objects. Dashboards (C) and Reports (D) built on the Segment object or related Data Cloud reporting objects can display the last publish time for each segment. Profile Explorer (A) is used to inspect individual unified profiles, not segment-level metadata. Calculated Insights (B) are for computing metrics from data model objects, not for reporting on segment publish times.",
+    "explanation": "Segment publish history data is surfaced through standard Salesforce reporting objects. Dashboards (C) and Reports (D) built on the Segment object or related Data Cloud reporting objects can display the last publish time for each segment. Profile Explorer (A) is used to inspect individual unified profiles, not segment-level metadata. Calculated Insights (B) are for computing metrics from data model objects, not for reporting on segment publish times.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_publish_segment.htm&language=en_US&type=5",
     "_cat": "Data Cloud Setup and Administration"
   },
   {
@@ -496,7 +525,7 @@
     "optionC": "Confirm the Ingest Object permission is enabled in the Salesforce CRM org",
     "optionD": "Confirm that the Modify Object permission is enabled in the Data Cloud org",
     "correct": "B",
-    "explanation": "When a custom object does not appear in the New Data Stream configuration for the CRM Connector, the most common cause is that the connected user in the source Salesforce CRM org does not have View All permission on that custom object. The CRM Connector uses the source org's API to list available objects — if the connected user can't see the object, it won't appear. Permissions in the Data Cloud org (A, D) control Data Cloud-side access, not CRM object visibility. 'Ingest Object' (C) is not a standard Salesforce permission.",
+    "explanation": "When a custom object does not appear in the New Data Stream configuration for the CRM Connector, the most common cause is that the connected user in the source Salesforce CRM org does not have View All permission on that custom object. The CRM Connector uses the source org's API to list available objects — if the connected user can't see the object, it won't appear. Permissions in the Data Cloud org (A, D) control Data Cloud-side access, not CRM object visibility. 'Ingest Object' (C) is not a standard Salesforce permission.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_create_crm_data_stream.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_salesforce_crm_connector.htm&language=en_US&type=5",
     "_cat": "Data Cloud Setup and Administration"
   },
   {
@@ -507,7 +536,7 @@
     "optionC": "Calculated Insight > Refresh Data Stream > Identity Resolution",
     "optionD": "Identity Resolution > Refresh Data Stream > Calculated Insight",
     "correct": "A",
-    "explanation": "The correct sequence in the Data Cloud pipeline is: (1) Refresh Data Stream — ingest the new S3 data into the data lake; (2) Run Identity Resolution — merge the new raw data into unified profiles; (3) Refresh Calculated Insight — compute the 30-day spend metric against the freshly unified profile data. Calculating insights before identity resolution (B) means the metric runs on unresolved data. Running identity resolution before ingestion (D) processes stale data. Computing insights first (C) makes no sense without the data in place.",
+    "explanation": "The correct sequence in the Data Cloud pipeline is: (1) Refresh Data Stream — ingest the new S3 data into the data lake; (2) Run Identity Resolution — merge the new raw data into unified profiles; (3) Refresh Calculated Insight — compute the 30-day spend metric against the freshly unified profile data. Calculating insights before identity resolution (B) means the metric runs on unresolved data. Running identity resolution before ingestion (D) processes stale data. Computing insights first (C) makes no sense without the data in place.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_identity_resolution.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_insights.htm&language=en_US&type=5",
     "_cat": "Data Ingestion and Modeling"
   },
   {
@@ -518,7 +547,7 @@
     "optionC": "The desired attributes reside on different related paths",
     "optionD": "Activations can only include 1-to-1 attributes",
     "correct": "C",
-    "explanation": "In Data Cloud activations, related attributes must be reachable via the same DMO relationship path. If the desired attributes exist on a different path from the one already selected in the activation, they will not appear in the attribute picker. Each activation can only traverse one related path at a time (prior to multi-path support). Segmenting on profile vs. other data (A) affects the segment, not activation attribute availability. Attributes being used elsewhere (B) does not block them. Activations support 1-to-many related attributes, not just 1-to-1 (D is false).",
+    "explanation": "In Data Cloud activations, related attributes must be reachable via the same DMO relationship path. If the desired attributes exist on a different path from the one already selected in the activation, they will not appear in the attribute picker. Each activation can only traverse one related path at a time (prior to multi-path support). Segmenting on profile vs. other data (A) affects the segment, not activation attribute availability. Attributes being used elsewhere (B) does not block them. Activations support 1-to-many related attributes, not just 1-to-1 (D is false).\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_considerations_for_related_attributes.htm&language=en_US&type=5",
     "_cat": "Act on Data"
   },
   {
@@ -529,7 +558,7 @@
     "optionC": "Include campaign identifier in the filename specification",
     "optionD": "Include campaign identifier in the segment name",
     "correct": "A,C",
-    "explanation": "Data Cloud's Amazon S3 activation generates filenames based on the activation name and the filename specification configured in the activation settings. Including the Campaign ID in the activation name (A) embeds it in the default filename. Including it in the filename specification (C) gives explicit control over the output file name. Hard coding it as an attribute (B) would add it as a data column, not in the filename. Including it in the segment name (D) doesn't influence the activation output filename.",
+    "explanation": "Data Cloud's Amazon S3 activation generates filenames based on the activation name and the filename specification configured in the activation settings. Including the Campaign ID in the activation name (A) embeds it in the default filename. Including it in the filename specification (C) gives explicit control over the output file name. Hard coding it as an attribute (B) would add it as a data column, not in the filename. Including it in the segment name (D) doesn't influence the activation output filename.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_file_name_examples.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_find_segments_in_cloud_file_storage.htm&language=en_US&type=5",
     "_cat": "Act on Data"
   },
   {
@@ -540,7 +569,7 @@
     "optionC": "Data Mapping",
     "optionD": "Identity Resolution",
     "correct": "D",
-    "explanation": "After data streams are ingested and mapped, Identity Resolution must be run before segmentation can operate on unified profiles. Identity Resolution merges records from multiple sources into Unified Individuals — the entity that segmentation targets. Without it, segments would run on unresolved raw data rather than the consolidated 360-degree view. Data Mapping (C) is part of the ingestion step, not a post-ingestion requirement. Calculated Insights (B) and Activation (A) come after segmentation, not before.",
+    "explanation": "After data streams are ingested and mapped, Identity Resolution must be run before segmentation can operate on unified profiles. Identity Resolution merges records from multiple sources into Unified Individuals — the entity that segmentation targets. Without it, segments would run on unresolved raw data rather than the consolidated 360-degree view. Data Mapping (C) is part of the ingestion step, not a post-ingestion requirement. Calculated Insights (B) and Activation (A) come after segmentation, not before.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_identity_resolution.htm&language=en_US&type=5",
     "_cat": "Identity Resolution"
   },
   {
@@ -551,7 +580,7 @@
     "optionC": "Data Cloud Data Aware Specialist",
     "optionD": "Data Cloud User",
     "correct": "A",
-    "explanation": "The Data Cloud Marketing Specialist permission set grants access to create, manage, and publish segments and activations, but does not include permissions to create reports or manage data sources (data streams, mappings). This is the minimum permission set scoped specifically for marketing practitioners focused on segmentation and activation. Data Cloud Marketing Manager (B) includes broader permissions. Data Aware Specialist (C) includes data source and modeling access. Data Cloud User (D) is read-only.",
+    "explanation": "The set scoped to segmentation work without data-source or reporting rights is the one this option calls Data Cloud Marketing Specialist (A). Salesforce describes it as being able to create segments, with full access to Segment, Activations, Query Editor, Data Actions and Data Transforms, and view-only access to Data Streams, DLOs, DMOs, Identity Resolution, Insights and Profile Explorer — so the user can build and activate segments but cannot manage data sources. The Marketing Manager set (B) adds overall segmentation strategy and the creation of activation targets, Data Aware Specialist (C) carries the data-modeling rights this user is meant not to have, and Data Cloud User (D) is view-only. Note the naming: as of 4 Sept 2025 this permission set is called Data Cloud Activation Specialist, and Data Cloud Marketing Manager is now Data Cloud Activation Manager.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_userpermissions.htm&language=en_US&type=5",
     "_cat": "Data Cloud Setup and Administration"
   },
   {
@@ -562,7 +591,7 @@
     "optionC": "Apply a filter to Purchase Order Date to exclude orders older than 30 days",
     "optionD": "Use SQL in Marketing Cloud Engagement to remove orders older than 30 days",
     "correct": "C",
-    "explanation": "When related attributes are added to an activation, the segment filter (last 30 days) controls which individuals are included, but all related records for those individuals are returned unless a related attribute filter is applied. To restrict the activation to only include orders from the last 30 days, a filter on the Purchase Order Date must be added within the related attribute configuration in the activation itself. Data space filters (B) operate at the data visibility level, not activation attribute filtering. SQL in Marketing Cloud (D) is a post-activation workaround. Data graphs (A) are not relevant to this scenario.",
+    "explanation": "When related attributes are added to an activation, the segment filter (last 30 days) controls which individuals are included, but all related records for those individuals are returned unless a related attribute filter is applied. To restrict the activation to only include orders from the last 30 days, a filter on the Purchase Order Date must be added within the related attribute configuration in the activation itself. Data space filters (B) operate at the data visibility level, not activation attribute filtering. SQL in Marketing Cloud (D) is a post-activation workaround. Data graphs (A) are not relevant to this scenario.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_considerations_for_related_attributes.htm&language=en_US&type=5",
     "_cat": "Act on Data"
   },
   {
@@ -573,8 +602,13 @@
     "optionC": "Data Explorer",
     "optionD": "Query API",
     "correct": "C,D",
-    "explanation": "To validate unified profile data after identity resolution: Data Explorer (C) lets the consultant inspect rows in the Unified Individual DMO and related DMOs to confirm records merged correctly. The Query API (D) allows querying unified profile data programmatically to verify field values and linkages. Identity Resolution (A) is the process being validated, not a validation tool itself. Data Actions (B) trigger downstream events and are not used for data validation.",
-    "_cat": "Identity Resolution"
+    "explanation": "Data Explorer lets you inspect the rows of any DLO or DMO, including the Unified Individual, to confirm that source records merged as expected (C), and the Query API returns unified profile data programmatically so field values and linkages can be verified outside the UI (D). Data Actions (B) publish events downstream and are not an inspection surface. Option A is the weak part of this item rather than a clean distractor: Identity Resolution does carry a validation surface of its own — the Resolution Summary reports match and reconciliation statistics after each ruleset run, and this deck keys exactly that as a valid way to validate a unified profile elsewhere. Treat C and D as the answer because they inspect the resulting data directly, but do not take from this item that identity resolution offers nothing to check.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_explorer.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_resolution_summary.htm&language=en_US&type=5",
+    "_cat": "Identity Resolution",
+    "corrected": {
+      "date": "2026-08-21",
+      "via": "validation",
+      "note": "Item defect: three of the four options are defensible. The Resolution Summary is a documented way to validate identity resolution output, so option A is not simply wrong, and this deck's own question on the same topic keys Identity Resolution as a validation feature. Key kept as the two that inspect profile data directly."
+    }
   },
   {
     "id": "0147d0c4",
@@ -584,7 +618,7 @@
     "optionC": "Individuals who made a purchase of at least one red shoes and nothing else",
     "optionD": "Individuals who purchased at least one of any red product or purchased at least one pair of shoes",
     "correct": "A",
-    "explanation": "Two separate containers linked by AND evaluate independently. The first container finds individuals who have at least one GoodsProduct where Color = red (any red product). The second container finds individuals who have at least one GoodsProduct where PrimaryProductCategory = shoes (any shoes). AND means both conditions must be true — but they are evaluated as separate events, not as a single product. The result is individuals who bought at least one red thing AND at least one pair of shoes (not necessarily a single red shoe). Option B describes a single-product match; C requires exclusivity; D describes OR logic.",
+    "explanation": "Attributes placed in the same container act on the same data row of the container's object; attributes placed in separate containers are evaluated independently of each other. Salesforce's own worked example is this question: put yellow in one container and scarf in another, and the query engine looks for customers who purchased any yellow product and purchased a scarf of any color — not a yellow scarf. So two containers joined by AND return individuals who bought at least one red product and, separately, at least one pair of shoes (A). Option B is what you would get by putting Color and PrimaryProductCategory in the same container, C adds an exclusivity the filter never expresses, and D is OR logic.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.c360_a_container_basics.htm&language=en_US&type=5",
     "_cat": "Segmentation and Insights"
   },
   {
@@ -595,7 +629,7 @@
     "optionC": "Create custom fields on the standard Individual DMO",
     "optionD": "Duplicate the standard Individual DMO and add the additional fields",
     "correct": "C",
-    "explanation": "The correct approach is to add custom fields directly to the standard Individual DMO. This keeps all individual profile data — standard and custom — on the same object, making it available for both segmentation (which operates on the Individual/Unified Individual) and identity resolution (which uses the Individual DMO). Creating a separate custom DMO (A, B) would require additional relationship mapping and won't be used directly in identity resolution. Duplicating the standard DMO (D) is not a supported pattern.",
+    "explanation": "The correct approach is to add custom fields directly to the standard Individual DMO. This keeps all individual profile data — standard and custom — on the same object, making it available for both segmentation (which operates on the Individual/Unified Individual) and identity resolution (which uses the Individual DMO). Creating a separate custom DMO (A, B) would require additional relationship mapping and won't be used directly in identity resolution. Duplicating the standard DMO (D) is not a supported pattern.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_map_custom_data_model_objects.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_required_data_mappings.htm&language=en_US&type=5",
     "_cat": "Data Ingestion and Modeling"
   },
   {
@@ -606,7 +640,7 @@
     "optionC": "To use harmonized data to more accurately understand the customer and business impact",
     "optionD": "To eliminate the need for separate business intelligence and IT data management tools",
     "correct": "A,C",
-    "explanation": "Data Cloud's core capabilities are (A) ingesting data from multiple sources and unifying it through identity resolution to create a single customer view, and (C) using that harmonized unified data to generate insights about customers and business impact. Cross-channel message orchestration (B) is the domain of Marketing Cloud Journeys, not Data Cloud itself. Eliminating BI and IT tools (D) is not a Data Cloud value proposition — it complements those tools rather than replacing them.",
+    "explanation": "Data Cloud's core capabilities are (A) ingesting data from multiple sources and unifying it through identity resolution to create a single customer view, and (C) using that harmonized unified data to generate insights about customers and business impact. Cross-channel message orchestration (B) is the domain of Marketing Cloud Journeys, not Data Cloud itself. Eliminating BI and IT tools (D) is not a Data Cloud value proposition — it complements those tools rather than replacing them.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_cloud.htm&language=en_US&type=5",
     "_cat": "Data Cloud Overview"
   },
   {
@@ -617,7 +651,7 @@
     "optionC": "Create two identity resolution rules in the same data space",
     "optionD": "Use two data spaces",
     "correct": "D",
-    "explanation": "Data spaces provide complete logical separation of data within a single Data Cloud org — separate identity resolution, segmentation, and activation contexts. For legal requirements that mandate separation between business and personal loan customers, two data spaces is the correct architectural pattern. The same Contact DLO data can be referenced in both spaces as needed. Duplicating the Individual DMO (A) or Contact DLO (B) creates maintenance overhead without enforcing legal separation. Two identity resolution rulesets in the same data space (C) share the same data pool and do not provide legal separation.",
+    "explanation": "Data spaces provide complete logical separation of data within a single Data Cloud org — separate identity resolution, segmentation, and activation contexts. For legal requirements that mandate separation between business and personal loan customers, two data spaces is the correct architectural pattern. The same Contact DLO data can be referenced in both spaces as needed. Duplicating the Individual DMO (A) or Contact DLO (B) creates maintenance overhead without enforcing legal separation. Two identity resolution rulesets in the same data space (C) share the same data pool and do not provide legal separation.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_spaces.htm&language=en_US&type=5",
     "_cat": "Data Cloud Setup and Administration"
   },
   {
@@ -628,7 +662,7 @@
     "optionC": "Harmonize data from multiple sources with a standardized and extendable data model",
     "optionD": "Safeguard critical business data by serving as a centralized system for backup and disaster recovery",
     "correct": "A,C",
-    "explanation": "Data Cloud's primary use cases are: (A) creating unified customer profiles and activating them to deliver personalized, relevant experiences; and (C) harmonizing data from disparate sources into the standardized Customer 360 Data Model. Enterprise data governance lifecycle (B) and backup/disaster recovery (D) are not Data Cloud use cases — these are addressed by dedicated data governance platforms and backup solutions respectively.",
+    "explanation": "Data Cloud's primary use cases are: (A) creating unified customer profiles and activating them to deliver personalized, relevant experiences; and (C) harmonizing data from disparate sources into the standardized Customer 360 Data Model. Enterprise data governance lifecycle (B) and backup/disaster recovery (D) are not Data Cloud use cases — these are addressed by dedicated data governance platforms and backup solutions respectively.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_cloud.htm&language=en_US&type=5",
     "_cat": "Data Cloud Overview"
   },
   {
@@ -639,7 +673,7 @@
     "optionC": "Metrics on metrics",
     "optionD": "Streaming data transform",
     "correct": "C",
-    "explanation": "Metrics on metrics (also known as multi-dimensional calculated insights) allow a consultant to first calculate a base metric (e.g., total revenue per channel) and then compute a higher-level metric on top of it (e.g., LTV as the sum of channel revenues). This is exactly what is needed — LTV overall plus channel-level breakdowns. Flow Orchestration (A) automates processes, not metric computation. Nested segments (B) filter populations, not compute revenue metrics. Streaming transforms (D) reshape incoming data, not compute aggregated insights.",
+    "explanation": "Metrics on metrics (also known as multi-dimensional calculated insights) allow a consultant to first calculate a base metric (e.g., total revenue per channel) and then compute a higher-level metric on top of it (e.g., LTV as the sum of channel revenues). This is exactly what is needed — LTV overall plus channel-level breakdowns. Flow Orchestration (A) automates processes, not metric computation. Nested segments (B) filter populations, not compute revenue metrics. Streaming transforms (D) reshape incoming data, not compute aggregated insights.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_insights.htm&language=en_US&type=5",
     "_cat": "Segmentation and Insights"
   },
   {
@@ -650,7 +684,7 @@
     "optionC": "Cloud Marketing Manager",
     "optionD": "Data Cloud Admin",
     "correct": "D",
-    "explanation": "Setting up and configuring Segment Intelligence in Data Cloud requires the Data Cloud Admin permission set. Segment Intelligence setup involves configuring data sources, connecting to CRM Analytics, and managing the intelligence framework — all administrative tasks. Data Aware Specialist (A) covers data inspection and modeling. Data Cloud User (B) is read-only. Cloud Marketing Manager (C) is not a standard Data Cloud permission set name.",
+    "explanation": "Setting up Segment Intelligence is administrative work — connecting sources and configuring the feature — so it needs the permission set that grants all Data Cloud functionality, which this option calls Data Cloud Admin (D). Data Aware Specialist (A) covers data mapping and modeling, Data Cloud User (B) is view-only, and Cloud Marketing Manager (C) is not a permission set name at all. Note the naming: as of 4 Sept 2025 the standard permission sets were renamed and this one is now Data Cloud Architect, described as giving access to all functionality within Data 360 including Data Cloud Setup, data mapping, data streams, identity resolution rulesets and insights.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_userpermissions.htm&language=en_US&type=5",
     "_cat": "Data Cloud Setup and Administration"
   },
   {
@@ -661,7 +695,7 @@
     "optionC": "Sales Order > Individual > Unified Individual",
     "optionD": "Sales Order > Unified Individual",
     "correct": "A",
-    "explanation": "To calculate LTV at the Unified Individual level, the calculated insight must join from Unified Individual through Unified Link Individual (the bridge object that maps unified profiles back to their source Individual records) and then to Sales Order (which holds transactional data). This is the correct join path in the Data Cloud unified data model. Joining directly to Individual (B) skips the unified layer. Joining from Sales Order upward (C) is an unconventional path that doesn't reflect the calculated insight join direction. Skipping Unified Link Individual (D) is not a valid join path.",
+    "explanation": "To calculate LTV at the Unified Individual level, the calculated insight must join from Unified Individual through Unified Link Individual (the bridge object that maps unified profiles back to their source Individual records) and then to Sales Order (which holds transactional data). This is the correct join path in the Data Cloud unified data model. Joining directly to Individual (B) skips the unified layer. Joining from Sales Order upward (C) is an unconventional path that doesn't reflect the calculated insight join direction. Skipping Unified Link Individual (D) is not a valid join path.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_identity_resolution.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_insights.htm&language=en_US&type=5",
     "_cat": "Segmentation and Insights"
   },
   {
@@ -671,9 +705,16 @@
     "optionB": "Edit and update the data in the source system prior to sending to Data Cloud",
     "optionC": "Assign the PhoneNumber field type when creating the data stream",
     "optionD": "Create a calculated insight after ingestion",
-    "correct": "C",
-    "explanation": "Assigning the PhoneNumber field type during data stream configuration causes Data Cloud to automatically normalize and validate the phone number into E164 format at ingestion time. This is the most efficient approach — no custom formulas, no source system changes, no post-ingestion processing required. Formula fields (A) can perform string manipulation but do not natively handle E164 normalization across all international formats. Editing the source (B) is inefficient and not always feasible. Calculated insights (D) are computed after ingestion and are not designed for field-level data standardization.",
-    "_cat": "Data Ingestion and Modeling"
+    "correct": "A",
+    "explanation": "Assigning the phone data type does not standardize anything. Salesforce states it plainly: Data 360 doesn't validate the format of the phone number, the phone data type is modeled on the text data type, and any valid text value is accepted for ingestion into a phone field. Choosing that type only marks the field's intent. The same page points at the actual mechanism — formula functions that work with text values accept phone data type input, and you can convert the text output of those functions back into a phone data type — so a formula field applied at ingestion is what normalizes the varying formats into E164 (A). Fixing the data upstream (B) works but is the opposite of efficient and is often outside your control, and a calculated insight (D) computes metrics after ingestion rather than reshaping the stored field. The E164 requirement itself is real: it is the only format accepted for SMS sending, so the normalization has to happen somewhere.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_types.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_considerations_formula_fields.htm&language=en_US&type=5",
+    "_cat": "Data Ingestion and Modeling",
+    "corrected": {
+      "date": "2026-08-21",
+      "via": "validation",
+      "note": "Answer moved C->A. The keyed claim that assigning the PhoneNumber field type standardizes numbers into E164 is contradicted by the Data Types page, which says Data 360 does not validate phone format and accepts any text. The same page names formula functions as the supported way to transform the value.",
+      "from": "C",
+      "to": "A"
+    }
   },
   {
     "id": "f3b19bee",
@@ -683,7 +724,7 @@
     "optionC": "Cities only containing 'San Jose'",
     "optionD": "Cities only containing 'San Jose' or 'SAN JOSE'",
     "correct": "A",
-    "explanation": "Salesforce documents segmentation queries as honoring exact matching on special characters and accents while not being case-sensitive. So 'Is Equal To' on City matches every casing of the entered value — 'San Jose', 'SAN JOSE', 'san jose', and 'San jose' alike (A) — and the remaining options each admit only a subset of those casings. Two boundaries are worth holding onto: case-insensitive is not a partial match, so 'San Jose, CA' is still excluded; and accents are matched exactly, which is why Salesforce's own example notes that a query for 'Canon City' finds 'canon city' but does not find 'Cañon City'.",
+    "explanation": "Salesforce documents segmentation queries as honoring exact matching on special characters and accents while not being case-sensitive. So 'Is Equal To' on City matches every casing of the entered value — 'San Jose', 'SAN JOSE', 'san jose', and 'San jose' alike (A) — and the remaining options each admit only a subset of those casings. Two boundaries are worth holding onto: case-insensitive is not a partial match, so 'San Jose, CA' is still excluded; and accents are matched exactly, which is why Salesforce's own example notes that a query for 'Canon City' finds 'canon city' but does not find 'Cañon City'.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_datatype_expression_operators.htm&language=en_US&type=5",
     "_cat": "Segmentation and Insights",
     "optionE": "",
     "corrected": {
@@ -702,7 +743,7 @@
     "optionC": "The metadata regarding the segment definition",
     "optionD": "The manifest of origin sources within Data Cloud",
     "correct": "B",
-    "explanation": "When Data Cloud activates to Amazon S3, the .csv file contains the activated data payload — the segment members and their selected attributes (contact points, related attributes, etc.). The .json file (not .csv) contains the metadata about the segment definition, activation ID, and schema. Audit logs (A) are available in Salesforce's audit trail, not in the S3 output. The manifest of origin sources (D) is also in the .json manifest file, not the .csv.",
+    "explanation": "When Data Cloud activates to Amazon S3, the .csv file contains the activated data payload — the segment members and their selected attributes (contact points, related attributes, etc.). The .json file (not .csv) contains the metadata about the segment definition, activation ID, and schema. Audit logs (A) are available in Salesforce's audit trail, not in the S3 output. The manifest of origin sources (D) is also in the .json manifest file, not the .csv.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_find_segments_in_cloud_file_storage.htm&language=en_US&type=5",
     "_cat": "Act on Data"
   },
   {
@@ -713,7 +754,7 @@
     "optionC": "Map name to the Individual object and email address to the Contact Point Email object",
     "optionD": "Map all fields to the Individual object, adding a custom field for the email address",
     "correct": "C",
-    "explanation": "For identity resolution to work correctly, name fields must be mapped to the Individual DMO and email addresses must be mapped to the Contact Point Email DMO. This separation follows the Data Cloud standard data model — the Individual DMO holds identity attributes, while Contact Point objects hold contact details. Identity resolution matching rules reference these specific DMOs. Mapping everything to a custom object (A) or the Individual DMO alone (D) prevents the standard identity resolution rules from functioning. There is no standard 'Customer' object in Data Cloud's data model (B).",
+    "explanation": "For identity resolution to work correctly, name fields must be mapped to the Individual DMO and email addresses must be mapped to the Contact Point Email DMO. This separation follows the Data Cloud standard data model — the Individual DMO holds identity attributes, while Contact Point objects hold contact details. Identity resolution matching rules reference these specific DMOs. Mapping everything to a custom object (A) or the Individual DMO alone (D) prevents the standard identity resolution rules from functioning. There is no standard 'Customer' object in Data Cloud's data model (B).\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_required_data_mappings.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_contact_points.htm&language=en_US&type=5",
     "_cat": "Identity Resolution"
   },
   {
@@ -724,7 +765,7 @@
     "optionC": "Select contact points",
     "optionD": "Add the calculated insight in the activation",
     "correct": "B,C",
-    "explanation": "When configuring any Marketing Cloud activation in Data Cloud, two required actions are: (B) Choose a segment — the activation must be linked to a segment that defines the population to activate; and (C) Select contact points — Marketing Cloud requires a contact point (e.g., email address) to identify where to send the activation. Additional attributes (A) are optional enhancements. The calculated insight (D) is already embedded in the segment's criteria — it does not need to be separately added to the activation.",
+    "explanation": "When configuring any Marketing Cloud activation in Data Cloud, two required actions are: (B) Choose a segment — the activation must be linked to a segment that defines the population to activate; and (C) Select contact points — Marketing Cloud requires a contact point (e.g., email address) to identify where to send the activation. Additional attributes (A) are optional enhancements. The calculated insight (D) is already embedded in the segment's criteria — it does not need to be separately added to the activation.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_activation_for_a_segment.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_contact_points.htm&language=en_US&type=5",
     "_cat": "Act on Data"
   },
   {
@@ -735,7 +776,7 @@
     "optionC": "The new DMO does not have a relationship to the individual DMO",
     "optionD": "Segmentation is only supported for the Individual and Unified Individual DMOs",
     "correct": "B",
-    "explanation": "In Data Cloud, only DMOs of category Profile are available as the primary segmentation object (the 'Segment On' object). If the newly created custom DMO was mapped with the Engagement or Other category, it will not appear in the segment builder as a segmentation target. The DMO must be assigned the Profile category for direct segmentation. Lack of ingested data (A) doesn't hide the DMO from the segment builder. A relationship to Individual (C) enables related-attribute segmentation but is not required for the DMO to appear. Segmentation supports multiple profile-category DMOs, not just Individual (D is false).",
+    "explanation": "In Data Cloud, only DMOs of category Profile are available as the primary segmentation object (the 'Segment On' object). If the newly created custom DMO was mapped with the Engagement or Other category, it will not appear in the segment builder as a segmentation target. The DMO must be assigned the Profile category for direct segmentation. Lack of ingested data (A) doesn't hide the DMO from the segment builder. A relationship to Individual (C) enables related-attribute segmentation but is not required for the DMO to appear. Segmentation supports multiple profile-category DMOs, not just Individual (D is false).\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_category.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_segments.htm&language=en_US&type=5",
     "_cat": "Segmentation and Insights"
   },
   {
@@ -746,7 +787,7 @@
     "optionC": "Choose the Multiple Investments segment, choose the Email contact point, and add related attribute Fund Type",
     "optionD": "Include Fund Name and Fund Type by default for post processing in the target system",
     "correct": "B",
-    "explanation": "The activation must: (1) use the Multiple Investments segment; (2) select the Email contact point for delivery; (3) include Fund Name as a related attribute for personalization content; and (4) add a related attribute filter for Fund Type = 'Mutual Fund' to ensure only mutual fund investments (not other investment types) are included in the payload. Option C omits the filter so non-mutual-fund investments could be included. Option A configures a filter but no segment. Option D defers personalization logic to the target system, which is inefficient.",
+    "explanation": "The activation must: (1) use the Multiple Investments segment; (2) select the Email contact point for delivery; (3) include Fund Name as a related attribute for personalization content; and (4) add a related attribute filter for Fund Type = 'Mutual Fund' to ensure only mutual fund investments (not other investment types) are included in the payload. Option C omits the filter so non-mutual-fund investments could be included. Option A configures a filter but no segment. Option D defers personalization logic to the target system, which is inefficient.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_considerations_for_related_attributes.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_contact_points.htm&language=en_US&type=5",
     "_cat": "Act on Data"
   },
   {
@@ -757,7 +798,7 @@
     "optionC": "Streaming insight",
     "optionD": "Formula fields",
     "correct": "C",
-    "explanation": "Streaming insights are designed for near-real-time aggregations over rolling time windows on streaming data — including data arriving via the Interaction SDK (web events) and Mobile SDK. A 15-minute aggregation window is a classic streaming insight use case. Batch transforms (A) and Calculated Insights (B) are scheduled batch operations not suited for sub-hour rolling windows. Formula fields (D) operate at the field level during ingestion, not for aggregations over time windows.",
+    "explanation": "Streaming insights are designed for near-real-time aggregations over rolling time windows on streaming data — including data arriving via the Interaction SDK (web events) and Mobile SDK. A 15-minute aggregation window is a classic streaming insight use case. Batch transforms (A) and Calculated Insights (B) are scheduled batch operations not suited for sub-hour rolling windows. Formula fields (D) operate at the field level during ingestion, not for aggregations over time windows.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_insights.htm&language=en_US&type=5",
     "_cat": "Segmentation and Insights"
   },
   {
@@ -768,7 +809,7 @@
     "optionC": "By implementing automatic data recovery procedures",
     "optionD": "By limiting data access to essential personnel",
     "correct": "A",
-    "explanation": "Data Cloud is built on Salesforce's hyperforce infrastructure, which distributes data across multiple geographic regions and data centers. This distributed architecture provides high availability (no single point of failure) and fault tolerance (data remains accessible even if one region experiences an outage). Single data center with backups (B) is a less resilient pattern. Automatic recovery (C) is a feature but not the primary mechanism for high availability. Access control (D) is a security measure, not a high availability strategy.",
+    "explanation": "Data Cloud is built on Salesforce's hyperforce infrastructure, which distributes data across multiple geographic regions and data centers. This distributed architecture provides high availability (no single point of failure) and fault tolerance (data remains accessible even if one region experiences an outage). Single data center with backups (B) is a less resilient pattern. Automatic recovery (C) is a feature but not the primary mechanism for high availability. Access control (D) is a security measure, not a high availability strategy.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_cloud.htm&language=en_US&type=5",
     "_cat": "Data Cloud Overview"
   },
   {
@@ -779,7 +820,7 @@
     "optionC": "Dedicated S3 data sources in activation setup",
     "optionD": "Separate user credentials for data stream and activation target",
     "correct": "A",
-    "explanation": "Data Cloud supports configuring separate Amazon S3 connections — one configured as the ingestion data source (in Data Cloud Setup > Connected Apps / Data Streams) and another as the activation target. Using dedicated S3 data sources in Data Cloud setup for ingestion, and a separate S3 bucket configured in the activation target settings, allows complete separation of ingestion and activation buckets. Multiple connectors (B) is the mechanism, but 'dedicated S3 data sources in Data Cloud setup' (A) is the specific correct phrasing. Separate credentials alone (D) don't enforce bucket separation.",
+    "explanation": "Data Cloud supports configuring separate Amazon S3 connections — one configured as the ingestion data source (in Data Cloud Setup > Connected Apps / Data Streams) and another as the activation target. Using dedicated S3 data sources in Data Cloud setup for ingestion, and a separate S3 bucket configured in the activation target settings, allows complete separation of ingestion and activation buckets. Multiple connectors (B) is the mechanism, but 'dedicated S3 data sources in Data Cloud setup' (A) is the specific correct phrasing. Separate credentials alone (D) don't enforce bucket separation.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_ingestion.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_create_cloud_file_storage_activation_target.htm&language=en_US&type=5",
     "_cat": "Data Cloud Setup and Administration"
   },
   {
@@ -790,7 +831,7 @@
     "optionC": "Other Data",
     "optionD": "Engagement Data",
     "correct": "A",
-    "explanation": "Employee records from an HR database represent individual person profiles — they contain demographic and identity attributes about people. The Profile data stream category is the correct choice for data that describes who a person is, enabling it to be mapped to the Individual DMO and used for identity resolution and segmentation. Contact Data (B) is not a standard Data Cloud data stream category. Other Data (C) is used for non-profile, non-engagement reference data. Engagement Data (D) is for behavioral/transactional event data.",
+    "explanation": "Profile is the category for data that describes who someone is, and Salesforce's Category page names this case directly: choose Profile if your dataset is a list of individuals with identifiers, a list of businesses or accounts, or a list of employees or any other population that you want to segment on (A). Employee records from an HR system are exactly that. Engagement (D) is for time-series event data and requires an event date-time field to be nominated at setup, Other (C) is for reference data that is neither, and Contact Data (B) is not a Data Cloud data stream category. Worth remembering when you pick: the category can't be changed after the data stream is saved.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_category.htm&language=en_US&type=5",
     "_cat": "Data Ingestion and Modeling"
   },
   {
@@ -801,7 +842,7 @@
     "optionC": "Neither team member; Data Cloud shows all schedules in GMT",
     "optionD": "Both team members; Data Cloud adjusts the segment and activation schedules to the time zone of the logged-in user",
     "correct": "D",
-    "explanation": "Data Cloud displays segment and activation schedules in the time zone of the currently logged-in user, as set in their Salesforce user profile settings. This means both the Pacific and Eastern team members will each see schedules converted to their own local time zone. The org's default time zone is used for scheduling execution, but the UI display adapts per-user. Neither GMT-only (C) nor org-timezone-only (A) behavior applies.",
+    "explanation": "Segment and activation schedule fields display the publish schedule start date and time in the logged-in user's time zone, so each team member sees their own local time (D). The org time zone is not irrelevant, though — it still governs other segmentation behaviour, notably the date-based operators such as Last Number Of Days. Two practical consequences: your org sets the publish time zone on the initial segment save, and a later change to the org's time zone is not picked up by existing segments unless you resave them.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_time_zones.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_datatype_expression_operators.htm&language=en_US&type=5",
     "_cat": "Data Cloud Setup and Administration"
   },
   {
@@ -812,7 +853,7 @@
     "optionC": "Creates additional rulesets",
     "optionD": "Leverages match rules",
     "correct": "B",
-    "explanation": "When multiple source records are merged into a unified individual and those records have conflicting values for the same attribute (e.g., different addresses), identity resolution uses reconciliation rules to determine which value to use on the unified profile. Reconciliation rules can be set to Last Updated, Most Occurring, Source Priority, or other strategies. Match rules (D) are used to determine whether two records represent the same individual — they don't select attribute values. Contact points and rulesets (A, C) are separate constructs.",
+    "explanation": "When multiple source records are merged into a unified individual and those records have conflicting values for the same attribute (e.g., different addresses), identity resolution uses reconciliation rules to determine which value to use on the unified profile. Reconciliation rules can be set to Last Updated, Most Occurring, Source Priority, or other strategies. Match rules (D) are used to determine whether two records represent the same individual — they don't select attribute values. Contact points and rulesets (A, C) are separate constructs.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_reconciliation_rules.htm&language=en_US&type=5",
     "_cat": "Identity Resolution"
   },
   {
@@ -823,7 +864,7 @@
     "optionC": "The CRM connector's synchronization times can be customized to up to 15-minute intervals",
     "optionD": "CRM data cannot be manually refreshed and must wait for the next scheduled synchronization",
     "correct": "A",
-    "explanation": "When a schema change occurs on a CRM object — such as adding or removing a field that is part of the data stream — the CRM Connector automatically triggers a full refresh to ensure the data lake is consistent with the new schema. Incremental refreshes handle row-level changes; schema changes require a full reload. The 600K deletion threshold (B) triggers a full refresh for deletions, not an incremental — so B is technically partially correct but A is the cleaner true statement. Synchronization times are not customizable by the user (C is false). CRM data can be manually refreshed (D is false).",
+    "explanation": "When a schema change occurs on a CRM object — such as adding or removing a field that is part of the data stream — the CRM Connector automatically triggers a full refresh to ensure the data lake is consistent with the new schema. Incremental refreshes handle row-level changes; schema changes require a full reload. The 600K deletion threshold (B) triggers a full refresh for deletions, not an incremental — so B is technically partially correct but A is the cleaner true statement. Synchronization times are not customizable by the user (C is false). CRM data can be manually refreshed (D is false).\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_stream_edit_settings.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_crm_store_deleted_data_stream_records.htm&language=en_US&type=5",
     "_cat": "Data Ingestion and Modeling"
   },
   {
@@ -834,7 +875,7 @@
     "optionC": "Check if the file exists in the specified bucket location",
     "optionD": "Check if correct permissions are configured for the S3 user",
     "correct": "A,C",
-    "explanation": "A 'NO FILE FOUND' error on an S3 data stream refresh means Data Cloud attempted to read the file and either couldn't find it or couldn't access it. The two areas to investigate are: (A) Permissions for the Data Cloud user/connected credentials — if permissions are misconfigured, Data Cloud cannot read the bucket, which can manifest as a not-found error; and (C) Whether the file actually exists in the configured bucket path — if the upstream process didn't deliver the file, there is nothing to ingest. Checking if the data source is enabled in Setup (B) would prevent configuration at all, not a refresh failure. S3 user permissions (D) overlaps with A but A is the more precise check within Data Cloud's configuration.",
+    "explanation": "A 'NO FILE FOUND' error on an S3 data stream refresh means Data Cloud attempted to read the file and either couldn't find it or couldn't access it. The two areas to investigate are: (A) Permissions for the Data Cloud user/connected credentials — if permissions are misconfigured, Data Cloud cannot read the bucket, which can manifest as a not-found error; and (C) Whether the file actually exists in the configured bucket path — if the upstream process didn't deliver the file, there is nothing to ingest. Checking if the data source is enabled in Setup (B) would prevent configuration at all, not a refresh failure. S3 user permissions (D) overlaps with A but A is the more precise check within Data Cloud's configuration.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_streams.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_ingestion.htm&language=en_US&type=5",
     "_cat": "Data Ingestion and Modeling"
   },
   {
@@ -845,7 +886,7 @@
     "optionC": "Data Cloud will initiate a full refresh of data from S3 and will update the formula on all records",
     "optionD": "Data Cloud will only update the formula on a go-forward basis for new records",
     "correct": "C",
-    "explanation": "When a formula field is updated on a data stream using the S3 Connector in upsert mode, Data Cloud triggers a full refresh of the data stream — re-ingesting all records from S3 and applying the updated formula to every record. This ensures historical data reflects the new formula logic. An incremental refresh (A) would only process new/changed records, missing historical ones. Formula updates are supported for upsert streams (B is false). Go-forward-only updates (D) would leave historical records with stale formula values.",
+    "explanation": "When a formula field is updated on a data stream using the S3 Connector in upsert mode, Data Cloud triggers a full refresh of the data stream — re-ingesting all records from S3 and applying the updated formula to every record. This ensures historical data reflects the new formula logic. An incremental refresh (A) would only process new/changed records, missing historical ones. Formula updates are supported for upsert streams (B is false). Go-forward-only updates (D) would leave historical records with stale formula values.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_full_replace.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_considerations_formula_fields.htm&language=en_US&type=5",
     "_cat": "Data Ingestion and Modeling"
   },
   {
@@ -856,7 +897,7 @@
     "optionC": "Transformation formulas",
     "optionD": "Global picklists",
     "correct": "A",
-    "explanation": "Value suggestion is the Data Cloud feature that presents users with a dropdown of available attribute values when building segment criteria. When enabled on a DMO attribute, it indexes the distinct values and surfaces them as selectable options in the segment builder, making it easy to pick from known values rather than typing them manually. Data harmonization (B) is a broader concept. Transformation formulas (C) are for field derivation during ingestion. Global picklists (D) are a Salesforce CRM feature, not native to Data Cloud segmentation.",
+    "explanation": "Value suggestion is the Data Cloud feature that presents users with a dropdown of available attribute values when building segment criteria. When enabled on a DMO attribute, it indexes the distinct values and surfaces them as selectable options in the segment builder, making it easy to pick from known values rather than typing them manually. Data harmonization (B) is a broader concept. Transformation formulas (C) are for field derivation during ingestion. Global picklists (D) are a Salesforce CRM feature, not native to Data Cloud segmentation.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_suggested_values_in_segments.htm&language=en_US&type=5",
     "_cat": "Segmentation and Insights"
   },
   {
@@ -867,7 +908,7 @@
     "optionC": "Related attributes",
     "optionD": "Streaming insight",
     "correct": "B",
-    "explanation": "Segmentation exclude rules (exclusion containers) allow a consultant to add an exclusion condition to an existing segment — in this case, excluding individuals who made a purchase within the last week. This is cleaner than modifying the main segment criteria and clearly communicates the suppression intent. Batch transforms (A) reshape data, not filter segments. Related attributes (C) add data to an activation payload, not exclude segment members. Streaming insights (D) enable real-time event actions, not segment suppression.",
+    "explanation": "Segmentation exclude rules (exclusion containers) allow a consultant to add an exclusion condition to an existing segment — in this case, excluding individuals who made a purchase within the last week. This is cleaner than modifying the main segment criteria and clearly communicates the suppression intent. Batch transforms (A) reshape data, not filter segments. Related attributes (C) add data to an activation payload, not exclude segment members. Streaming insights (D) enable real-time event actions, not segment suppression.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_segments.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=sf.c360_a_container_basics.htm&language=en_US&type=5",
     "_cat": "Segmentation and Insights"
   },
   {
@@ -878,7 +919,7 @@
     "optionC": "Data deletion requests are submitted for Individual profiles",
     "optionD": "Data deletion requests submitted to Data Cloud are passed to all connected Salesforce clouds",
     "correct": "A,C",
-    "explanation": "Two considerations matter when Consent API is used for right-to-be-forgotten. Deletion requests are reprocessed at 30, 60, and 90 days, so that any data for the individual that arrived after the original request is also removed and full deletion can be verified (A), and requests are submitted against Individual profiles, which is the entity Data Cloud deletes by (C). Option D inverts the actual behaviour and is the trap here: a deletion request submitted to Data Cloud is not propagated outward, and Salesforce is explicit that you must submit deletion requests separately in every connected system and Salesforce cloud. The one-hour processing claim (B) is not the documented commitment.",
+    "explanation": "Two considerations matter when Consent API is used for right-to-be-forgotten. Deletion requests are reprocessed at 30, 60, and 90 days, so that any data for the individual that arrived after the original request is also removed and full deletion can be verified (A), and requests are submitted against Individual profiles, which is the entity Data Cloud deletes by (C). Option D inverts the actual behaviour and is the trap here: a deletion request submitted to Data Cloud is not propagated outward, and Salesforce is explicit that you must submit deletion requests separately in every connected system and Salesforce cloud. The one-hour processing claim (B) is not the documented commitment.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_deletion_request.htm&language=en_US&type=5",
     "_cat": "Data Cloud Overview",
     "corrected": {
       "date": "2026-08-04",
@@ -896,7 +937,7 @@
     "optionC": "Sales Order",
     "optionD": "Profile",
     "correct": "B",
-    "explanation": "The Engagement category is required for data streams that will be used in date and time-based operations — such as 'events in the last 7 days' or time-window aggregations in calculated insights and streaming insights. Engagement-type DMOs have an Event Time field that enables temporal filtering and aggregation. Profile-category DMOs (D) are for static identity attributes and do not support the same time-based operations. Individual and Sales Order (A, C) are specific DMO types, not data stream category types.",
+    "explanation": "The Engagement category is required for data streams that will be used in date and time-based operations — such as 'events in the last 7 days' or time-window aggregations in calculated insights and streaming insights. Engagement-type DMOs have an Event Time field that enables temporal filtering and aggregation. Profile-category DMOs (D) are for static identity attributes and do not support the same time-based operations. Individual and Sales Order (A, C) are specific DMO types, not data stream category types.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_category.htm&language=en_US&type=5",
     "_cat": "Data Ingestion and Modeling"
   },
   {
@@ -907,7 +948,7 @@
     "optionC": "Place the attributes for product and product type as direct attributes",
     "optionD": "Place the attributes for product color and product type in a single container",
     "correct": "D",
-    "explanation": "To find customers who purchased black pants — meaning a single product that is both black AND pants — both attributes must be evaluated against the same product record. Placing both Product Color = Black and Product Type = Pants in a single container ensures they are applied as AND conditions on the same Order Product row. Placing them in separate containers (A) evaluates them independently across any product in any order — a customer who bought black shoes and white pants would incorrectly qualify. Direct attributes (C) only work for attributes on the primary segmented DMO, not related objects.",
+    "explanation": "To find customers who purchased black pants — meaning a single product that is both black AND pants — both attributes must be evaluated against the same product record. Placing both Product Color = Black and Product Type = Pants in a single container ensures they are applied as AND conditions on the same Order Product row. Placing them in separate containers (A) evaluates them independently across any product in any order — a customer who bought black shoes and white pants would incorrectly qualify. Direct attributes (C) only work for attributes on the primary segmented DMO, not related objects.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.c360_a_container_basics.htm&language=en_US&type=5",
     "_cat": "Segmentation and Insights"
   },
   {
@@ -918,7 +959,7 @@
     "optionC": "Refine segmentation criteria to limit up to five custom data model objects (DMOs)",
     "optionD": "Space out the segment schedules to reduce DLO load",
     "correct": "A,B",
-    "explanation": "When a segment exceeds the DLO reference limit: (A) Splitting the segment into smaller, more focused segments reduces the number of DLOs each individual segment references; and (B) Pre-computing complex multi-DLO logic in a Calculated Insight and referencing that insight in the segment dramatically reduces the number of DLOs the segment query must join at runtime. Limiting to five custom DMOs (C) is a good practice but not a specific documented remedy for this error. Spacing out schedules (D) addresses concurrency, not DLO count.",
+    "explanation": "When a segment exceeds the DLO reference limit: (A) Splitting the segment into smaller, more focused segments reduces the number of DLOs each individual segment references; and (B) Pre-computing complex multi-DLO logic in a Calculated Insight and referencing that insight in the segment dramatically reduces the number of DLOs the segment query must join at runtime. Limiting to five custom DMOs (C) is a good practice but not a specific documented remedy for this error. Spacing out schedules (D) addresses concurrency, not DLO count.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_segmentation_troubleshooting.htm&language=en_US&type=5",
     "_cat": "Segmentation and Insights"
   },
   {
@@ -929,7 +970,7 @@
     "optionC": "Salesforce flows",
     "optionD": "Salesforce reports and dashboards",
     "correct": "C",
-    "explanation": "Salesforce Flows can monitor Data Cloud data stream failure events and orchestrate multi-step notifications — sending a Slack message, sending an email, creating a Case record, and updating a dashboard — all from a single automation. Flows are the appropriate tool for orchestrating cross-system notifications and record creation based on Data Cloud events. Data actions (A) trigger from insight thresholds, not data stream failures. Query Editor (B) is a manual querying tool. Reports and dashboards (D) display data but don't trigger proactive notifications.",
+    "explanation": "Salesforce Flows can monitor Data Cloud data stream failure events and orchestrate multi-step notifications — sending a Slack message, sending an email, creating a Case record, and updating a dashboard — all from a single automation. Flows are the appropriate tool for orchestrating cross-system notifications and record creation based on Data Cloud events. Data actions (A) trigger from insight thresholds, not data stream failures. Query Editor (B) is a manual querying tool. Reports and dashboards (D) display data but don't trigger proactive notifications.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_cloud.htm&language=en_US&type=5",
     "_cat": "Data Cloud Setup and Administration"
   },
   {
@@ -940,7 +981,7 @@
     "optionC": "Value suggestion can only work on direct attributes and not related attributes",
     "optionD": "Value suggestion will only return results for the first 50 values of a specific attribute",
     "correct": "A",
-    "explanation": "After new data is modeled, value suggestion processing can take up to 24 hours to populate available values in the segment builder. This is the most common cause of missing suggestions immediately after data modeling. See Q36 for the canonical explanation.",
+    "explanation": "Value suggestions are computed asynchronously after data is modeled, and Salesforce states that it can take up to 24 hours for suggested values to appear — so a user who has just modeled new data is most likely still waiting (A). The other options describe limits that either do not exist or are not the cause here: there is no 50-value cap, the documented behaviour is that an attribute with more than 1,000 values shows the 1,000 most frequently occurring values alphabetically (D); permissions govern access rather than suggestion availability (B); and the relationship caveat in C is narrower than stated — for a DMO in the Other category, value suggestion works on one-to-one and many-to-one relationships and is unavailable on one-to-many. Value suggestions are enabled per Text field from the DMO record home, for up to 500 attributes across the org, and are retained for 30 days.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_suggested_values_in_segments.htm&language=en_US&type=5",
     "_cat": "Segmentation and Insights"
   },
   {
@@ -951,7 +992,7 @@
     "optionC": "Unified Contact",
     "optionD": "Individual",
     "correct": "B",
-    "explanation": "When identity resolution is used, multiple source Individual records are merged into a Unified Individual — the single consolidated customer profile. Segmentation and activation membership should target the Unified Individual to ensure each customer is represented once, with the best available data from all sources. Segmenting on Individual (D) would count each source record separately, potentially activating the same person multiple times. Subscriber (A) and Unified Contact (C) are not standard Data Cloud segmentation entities.",
+    "explanation": "When identity resolution is used, multiple source Individual records are merged into a Unified Individual — the single consolidated customer profile. Segmentation and activation membership should target the Unified Individual to ensure each customer is represented once, with the best available data from all sources. Segmenting on Individual (D) would count each source record separately, potentially activating the same person multiple times. Subscriber (A) and Unified Contact (C) are not standard Data Cloud segmentation entities.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_activation_for_a_segment.htm&language=en_US&type=5",
     "_cat": "Act on Data"
   },
   {
@@ -962,8 +1003,13 @@
     "optionC": "Increase the Data Cloud segmentation concurrency limit",
     "optionD": "Adjust the publish schedule start time of each segment to prevent overlapping processes",
     "correct": "C",
-    "explanation": "When multiple segments publish simultaneously and cause delays, the root cause is often a concurrency limit on segment publication. Increasing the Data Cloud segmentation concurrency limit allows more segments to publish in parallel, reducing queue time without changing frequency or removing segments. Enabling rapid publish (A) reduces fidelity for time-sensitive segments but doesn't address concurrency. Reducing segments (B) and staggering schedules (D) both compromise the stated requirement to retain all segments at the same frequency.",
-    "_cat": "Segmentation and Insights"
+    "explanation": "Raising the limit is a legitimate lever and is kept as the answer: Salesforce says outright that because Data 360 is built to scale, some limits can be adjusted to meet your business needs by working with your account executive, and concurrent publishing is a real constraint — the limits page caps rapid concurrent publishes at 20. Be aware, though, that Salesforce's own remedy for the error \"Too many segments are trying to publish at the same time\" is to wait for some segments to finish and to change the publish schedule for some of your segments. Staggering publish start times is therefore the documented first response, and it does not conflict with this scenario's constraints — offsetting when each segment starts changes neither the set of segments nor how often each one runs. Reducing the number of segments (B) is the option genuinely ruled out by the requirements, and rapid publish (A) is a per-segment publishing mode rather than a fix for queue contention.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_segmentation_troubleshooting.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_limits_and_guidelines.htm&language=en_US&type=5",
+    "_cat": "Segmentation and Insights",
+    "corrected": {
+      "date": "2026-08-21",
+      "via": "validation",
+      "note": "Answer stands, but the old explanation dismissed option D on a false premise — it claimed staggering schedules compromises the requirement to keep all segments at the same frequency, which it does not. Salesforce's Troubleshoot Segment Errors page names changing the publish schedule as the remedy for simultaneous publishes, so this item has two defensible options."
+    }
   },
   {
     "id": "0a109a96",
@@ -973,7 +1019,7 @@
     "optionC": "Create a batch transform to split data between different data spaces",
     "optionD": "Navigate to the Data Space tab and select the object to be included in the new data space",
     "correct": "D",
-    "explanation": "DMOs and DLOs must be explicitly added to a data space before they can be used for mapping within that space. The consultant should navigate to the Data Space configuration and add the relevant object to the target data space. This makes it available for data stream mapping in that space. Creating a new data stream (A) or using Data Copy (B) are unnecessary — the object just needs to be included in the data space. Batch transforms (C) do not control data space membership.",
+    "explanation": "DMOs and DLOs must be explicitly added to a data space before they can be used for mapping within that space. The consultant should navigate to the Data Space configuration and add the relevant object to the target data space. This makes it available for data stream mapping in that space. Creating a new data stream (A) or using Data Copy (B) are unnecessary — the object just needs to be included in the data space. Batch transforms (C) do not control data space membership.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_spaces.htm&language=en_US&type=5",
     "_cat": "Data Cloud Setup and Administration"
   },
   {
@@ -984,7 +1030,7 @@
     "optionC": "Dependencies on data model objects will be removed",
     "optionD": "All source profile data will be removed",
     "correct": "B,C",
-    "explanation": "Deleting an identity resolution ruleset has two key impacts: (B) All unified individual data that was generated by that ruleset is deleted — the merged profiles are removed from the Unified Individual DMO; and (C) Any dependencies the ruleset created on DMOs (relationship mappings used for matching) are also removed. Source Individual records (A, D) in the data lake are not deleted — only the unified output is removed. The raw ingested data remains intact and can be re-unified with a new ruleset.",
+    "explanation": "Salesforce states the consequences in one sentence: deleting a ruleset permanently removes all unified customer data, eliminates dependencies on data model objects, stops all processing of the ruleset, and deletes the history of previous runs. That is options B and C. Source profile data is untouched (A and D) — the ingested records remain in the data lake and can be unified again by a new ruleset, which is why the loss is of the unified output rather than the raw data. Two practical points: deletion takes up to 24 hours to complete and previous unification data can't be recovered afterwards, so where the goal is to change matching behaviour while keeping the same ruleset name and ID, update the match or reconciliation rules instead of deleting.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_identity_resolution_deletion.htm&language=en_US&type=5",
     "_cat": "Identity Resolution"
   },
   {
@@ -995,7 +1041,7 @@
     "optionC": "Master Data Management",
     "optionD": "Data Marketplace",
     "correct": "A,B",
-    "explanation": "For a customer with multiple disjointed data sources, the two most relevant Data Cloud functional areas are: (A) Data Harmonization — mapping disparate source data into a standardized data model so it can be used consistently; and (B) Unified Profiles — merging harmonized data across sources through identity resolution to create a single 360-degree customer view. Master Data Management (C) is a related discipline but not a specific Data Cloud capability. Data Marketplace (D) is for acquiring third-party data, not managing existing sources.",
+    "explanation": "For a customer with multiple disjointed data sources, the two most relevant Data Cloud functional areas are: (A) Data Harmonization — mapping disparate source data into a standardized data model so it can be used consistently; and (B) Unified Profiles — merging harmonized data across sources through identity resolution to create a single 360-degree customer view. Master Data Management (C) is a related discipline but not a specific Data Cloud capability. Data Marketplace (D) is for acquiring third-party data, not managing existing sources.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_cloud.htm&language=en_US&type=5",
     "_cat": "Data Cloud Overview"
   },
   {
@@ -1006,7 +1052,7 @@
     "optionC": "Decimal",
     "optionD": "Serial",
     "correct": "A",
-    "explanation": "Text fields store values as alphanumeric strings exactly as provided — including leading zeros. Number, Decimal, and Serial fields store values as numeric types and automatically strip leading zeros when parsing and storing the value. For a purchase order number like '00123', only a Text field preserves the '00' prefix. This is a key data modeling decision when ingesting identifiers that look numeric but must retain their full string representation.",
+    "explanation": "Text fields store values as alphanumeric strings exactly as provided — including leading zeros. Number, Decimal, and Serial fields store values as numeric types and automatically strip leading zeros when parsing and storing the value. For a purchase order number like '00123', only a Text field preserves the '00' prefix. This is a key data modeling decision when ingesting identifiers that look numeric but must retain their full string representation.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_types.htm&language=en_US&type=5",
     "_cat": "Data Ingestion and Modeling"
   },
   {
@@ -1017,7 +1063,7 @@
     "optionC": "Individual object",
     "optionD": "Contact Identification object",
     "correct": "A",
-    "explanation": "The Party Identification DMO is the standard Data Cloud object for storing alternative or secondary identifiers for an individual — such as loyalty IDs, passport numbers, or any custom identifier that is distinct from the system primary key. By mapping the Loyalty ID to the Party Identification object and creating an exact match rule on that field, the consultant enables identity resolution to unify profiles based on shared loyalty IDs. There is no standard 'Loyalty Identification' or 'Contact Identification' object in Data Cloud (B, D). The Individual object (C) holds core identity attributes, not secondary IDs.",
+    "explanation": "The Party Identification DMO is the standard Data Cloud object for storing alternative or secondary identifiers for an individual — such as loyalty IDs, passport numbers, or any custom identifier that is distinct from the system primary key. By mapping the Loyalty ID to the Party Identification object and creating an exact match rule on that field, the consultant enables identity resolution to unify profiles based on shared loyalty IDs. There is no standard 'Loyalty Identification' or 'Contact Identification' object in Data Cloud (B, D). The Individual object (C) holds core identity attributes, not secondary IDs.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_match_rules.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_required_data_mappings.htm&language=en_US&type=5",
     "_cat": "Identity Resolution"
   },
   {
@@ -1028,7 +1074,7 @@
     "optionC": "Escalation Date",
     "optionD": "Creation Date",
     "correct": "D",
-    "explanation": "The Event Time field in Data Cloud represents when the event or record originated — for Case data, this is the Creation Date (the moment the case was opened). Event Time is used for time-based filtering in streaming insights and segmentation. Creation Date is the most semantically accurate choice for when the case 'happened.' Last Modified Date (A) represents when it was last changed, not when it occurred. Resolution Date (B) and Escalation Date (C) represent downstream states, not the originating event time.",
+    "explanation": "The Event Time field in Data Cloud represents when the event or record originated — for Case data, this is the Creation Date (the moment the case was opened). Event Time is used for time-based filtering in streaming insights and segmentation. Creation Date is the most semantically accurate choice for when the case 'happened.' Last Modified Date (A) represents when it was last changed, not when it occurred. Resolution Date (B) and Escalation Date (C) represent downstream states, not the originating event time.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_category.htm&language=en_US&type=5",
     "_cat": "Data Ingestion and Modeling"
   },
   {
@@ -1039,7 +1085,7 @@
     "optionC": "Review segments to ensure they're refreshed after the data is ingested",
     "optionD": "Review calculated insights to make sure they're run after the segments are refreshed",
     "correct": "B,C",
-    "explanation": "A 24-hour delay in data reaching activation suggests a pipeline sequencing issue. The two areas to check are: (B) Calculated insights must run before segments are refreshed — if insights run after segment refresh, the segment uses stale insight data; and (C) Segments must be refreshed after data ingestion completes — if the segment refresh runs before new data is ingested, it operates on the previous day's data. These two sequencing gaps together can create up to 24-hour delays. Data transformations run before calculated insights (A describes the wrong order). Calculated insights running after segment refresh (D) is the problem scenario, not the fix.",
+    "explanation": "A 24-hour delay in data reaching activation suggests a pipeline sequencing issue. The two areas to check are: (B) Calculated insights must run before segments are refreshed — if insights run after segment refresh, the segment uses stale insight data; and (C) Segments must be refreshed after data ingestion completes — if the segment refresh runs before new data is ingested, it operates on the previous day's data. These two sequencing gaps together can create up to 24-hour delays. Data transformations run before calculated insights (A describes the wrong order). Calculated insights running after segment refresh (D) is the problem scenario, not the fix.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_insights.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_publish_segment.htm&language=en_US&type=5",
     "_cat": "Act on Data"
   },
   {
@@ -1050,7 +1096,7 @@
     "optionC": "User preferences for marketing outreach",
     "optionD": "Geographical divisions",
     "correct": "B",
-    "explanation": "The most common cause of a population difference between a Data Cloud segment and the resulting Marketing Cloud data extension count is that the segment contains unified individuals who belong to multiple Marketing Cloud business units. Filtering the segment by business unit ensures that only individuals with contact points in the relevant business unit are activated, aligning the counts. Journeys (A) affect who enters a campaign flow, not base segment size. User preferences (C) and geographical divisions (D) are criteria that could be applied but are not the standard answer to this specific population mismatch problem.",
+    "explanation": "The most common cause of a population difference between a Data Cloud segment and the resulting Marketing Cloud data extension count is that the segment contains unified individuals who belong to multiple Marketing Cloud business units. Filtering the segment by business unit ensures that only individuals with contact points in the relevant business unit are activated, aligning the counts. Journeys (A) affect who enters a campaign flow, not base segment size. User preferences (C) and geographical divisions (D) are criteria that could be applied but are not the standard answer to this specific population mismatch problem.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_segments.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_activation_for_a_segment.htm&language=en_US&type=5",
     "_cat": "Act on Data"
   },
   {
@@ -1061,8 +1107,13 @@
     "optionC": "Existing measures can be removed",
     "optionD": "New measures can be added",
     "correct": "A",
-    "explanation": "Calculated insights in Data Cloud have specific modification rules: new dimensions can be added to an existing calculated insight after creation. However, existing dimensions and measures cannot be removed once the insight is published (they are locked to preserve downstream dependencies). New measures can also be added, but A (new dimensions) is the answer highlighted as correct in the source. Removing existing dimensions (B) or measures (C) is not permitted. Adding new measures (D) is possible but the question specifically asked what the consultant needs to be aware of regarding modification constraints — adding dimensions is the key allowed change.",
-    "_cat": "Segmentation and Insights"
+    "explanation": "The safe reading is that a calculated insight can be extended but not narrowed: new dimensions can be added to an existing insight (A), while removing an existing dimension (B) or an existing measure (C) is not available, because downstream segments and activations may already depend on them. Treat this item's option set with care, though — adding a new measure (D) is also possible, so A is not uniquely correct as printed, and the distinction the question is reaching for is between adding and removing rather than between dimensions and measures. If you are planning an insight that others will build on, the rule worth carrying is the one this item half-expresses: design the dimensions and measures you need up front, because you can extend the insight later but you cannot take pieces away.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_insights.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_calculated_insights_in_segments.htm&language=en_US&type=5",
+    "_cat": "Segmentation and Insights",
+    "corrected": {
+      "date": "2026-08-21",
+      "via": "validation",
+      "note": "Item defect: options A and D are both true, so the item has no single correct answer as printed. The previous explanation acknowledged this and resolved it by deferring to what \"the source\" marked correct — an exam dump is not an authority, and the reasoning has been replaced."
+    }
   },
   {
     "id": "4627a1a2",
@@ -1072,7 +1123,7 @@
     "optionC": "Data Cloud segmentation will automatically select the optimal container path",
     "optionD": "The resulting segment will not be generated",
     "correct": "B",
-    "explanation": "Container paths in segmentation determine how DMOs are joined when evaluating criteria. Different paths through the data model can yield different join cardinalities — the same logical criteria applied via different paths can produce different population counts (either over-counting or under-counting). Selecting the wrong path may result in a segment that is larger than expected (due to fan-out from a one-to-many join) or smaller (if the path excludes records). Data Cloud does not automatically suggest or select the optimal path (A, C). The segment will still generate — just with potentially incorrect membership (D is false).",
+    "explanation": "Container paths in segmentation determine how DMOs are joined when evaluating criteria. Different paths through the data model can yield different join cardinalities — the same logical criteria applied via different paths can produce different population counts (either over-counting or under-counting). Selecting the wrong path may result in a segment that is larger than expected (due to fan-out from a one-to-many join) or smaller (if the path excludes records). Data Cloud does not automatically suggest or select the optimal path (A, C). The segment will still generate — just with potentially incorrect membership (D is false).\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.c360_a_container_basics.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_considerations_for_related_attributes.htm&language=en_US&type=5",
     "_cat": "Segmentation and Insights"
   },
   {
@@ -1083,7 +1134,7 @@
     "optionC": "The calculated insight must contain a dimension including the Individual or Unified Individual Id",
     "optionD": "The primary key of the segmented table must be a dimension in the calculated insight",
     "correct": "C,D",
-    "explanation": "For a calculated insight to appear in the segmentation canvas, two conditions must be met: (C) The insight must include a dimension that contains the Individual Id or Unified Individual Id — this links the insight back to the individual being segmented; and (D) The primary key of the table being segmented must appear as a dimension in the calculated insight — this allows Data Cloud to join the insight to the segmented entity. Metrics being numeric-only (A) is generally true but not the requirement for appearance in the canvas. The primary key being a metric (B) is incorrect — it must be a dimension.",
+    "explanation": "For a calculated insight to appear in the segmentation canvas, two conditions must be met: (C) The insight must include a dimension that contains the Individual Id or Unified Individual Id — this links the insight back to the individual being segmented; and (D) The primary key of the table being segmented must appear as a dimension in the calculated insight — this allows Data Cloud to join the insight to the segmented entity. Metrics being numeric-only (A) is generally true but not the requirement for appearance in the canvas. The primary key being a metric (B) is incorrect — it must be a dimension.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_calculated_insights_in_segments.htm&language=en_US&type=5",
     "_cat": "Segmentation and Insights"
   },
   {
@@ -1094,7 +1145,7 @@
     "optionC": "Create one batch data transform per data stream",
     "optionD": "Create one batch data transform that creates a new DLO",
     "correct": "D",
-    "explanation": "A batch data transform that creates a new DLO is the correct approach for normalizing casing and replacing nulls across a dataset. The transform can apply PROPER() case functions and COALESCE/IFNULL logic across all records, writing the cleaned data to a new DLO that is then mapped and activated. Formula fields at ingestion (B) work on individual records at ingest time but are less suited for cross-record normalization and null replacement at scale. A streaming insight + data action (A) is for real-time event triggers, not batch data cleansing. One transform per data stream (C) is less efficient than a single transform that creates one consolidated DLO.",
+    "explanation": "A batch data transform that creates a new DLO is the correct approach for normalizing casing and replacing nulls across a dataset. The transform can apply PROPER() case functions and COALESCE/IFNULL logic across all records, writing the cleaned data to a new DLO that is then mapped and activated. Formula fields at ingestion (B) work on individual records at ingest time but are less suited for cross-record normalization and null replacement at scale. A streaming insight + data action (A) is for real-time event triggers, not batch data cleansing. One transform per data stream (C) is less efficient than a single transform that creates one consolidated DLO.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_batch_transform_formula.htm&language=en_US&type=5",
     "_cat": "Data Ingestion and Modeling"
   },
   {
@@ -1104,9 +1155,16 @@
     "optionB": "Data Transformation",
     "optionC": "Segment Setup",
     "optionD": "Data Stream Setup",
-    "correct": "C",
-    "explanation": "Value suggestion is enabled per attribute at the segment level — specifically in the Segment Setup configuration where DMO attributes are configured for use in the segment builder. When setting up a segment, the consultant can enable value suggestion on specific text attributes, which triggers the background indexing process. It is not enabled during Data Mapping (A), Data Transformation (B), or Data Stream Setup (D) — those steps focus on ingestion and modeling, not segmentation UX configuration.",
-    "_cat": "Segmentation and Insights"
+    "correct": "A",
+    "explanation": "Data Mapping is the right stage, because value suggestion is a property of the data model object rather than of any segment. Salesforce's page on the feature says you can enable value suggestions for DMO fields whose data type is Text, and that you enable or deactivate the feature in the DMO record home — the data-modeling area where the DMO is created and mapped — with a ceiling of 500 attributes across the org. The segment canvas is where the suggestions are consumed rather than switched on: you drag the attribute in and start typing in the Value field, and it can take up to 24 hours after modeling for values to appear. Data Transformation and Data Stream Setup both act on the data lake object before anything reaches the model. Note that no option names the DMO record home exactly, which is this item's wording weakness; Data Mapping is the option that describes the correct stage.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_suggested_values_in_segments.htm&language=en_US&type=5",
+    "_cat": "Segmentation and Insights",
+    "corrected": {
+      "date": "2026-08-21",
+      "via": "validation",
+      "note": "Answer moved C->A. Value suggestion is enabled from the DMO record home, on the data-model side, not in Segment Setup — the segment canvas is where suggestions are used. No option names the DMO record home exactly, so A is the option describing the correct stage.",
+      "from": "C",
+      "to": "A"
+    }
   },
   {
     "id": "4ea7fff4",
@@ -1116,7 +1174,7 @@
     "optionC": "Ingestion API",
     "optionD": "Marketing Cloud Personalization Connector",
     "correct": "C",
-    "explanation": "The Ingestion API is Data Cloud's mechanism for streaming data from external systems in near-real-time. It accepts JSON payloads via REST API calls, making it ideal for an inventory management system to push level changes as they occur — fast, scalable, and programmable. The Cloud Storage Connector (A) is for batch file-based ingestion, not real-time streaming. Commerce Cloud Connector (B) is specific to Salesforce B2C/B2B Commerce. Marketing Cloud Personalization Connector (D) is for behavioral personalization data, not inventory.",
+    "explanation": "The Ingestion API is Data Cloud's mechanism for streaming data from external systems in near-real-time. It accepts JSON payloads via REST API calls, making it ideal for an inventory management system to push level changes as they occur — fast, scalable, and programmable. The Cloud Storage Connector (A) is for batch file-based ingestion, not real-time streaming. Commerce Cloud Connector (B) is specific to Salesforce B2C/B2B Commerce. Marketing Cloud Personalization Connector (D) is for behavioral personalization data, not inventory.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_ingestion.htm&language=en_US&type=5",
     "_cat": "Data Ingestion and Modeling"
   },
   {
@@ -1127,7 +1185,7 @@
     "optionC": "Lightning Web Components",
     "optionD": "Query APL",
     "correct": "B,C",
-    "explanation": "To surface unified Data Cloud profile data (including associated cases) directly on a Salesforce Contact record for service agents: (B) The Profile API allows querying unified individual data from Data Cloud programmatically; and (C) Lightning Web Components can be built to call the Profile API and display the results embedded on the Contact record page. Data Actions (A) trigger events from Data Cloud outward, not display data inward. Query APL (D) is Data Cloud's query language for analytics, not for embedding real-time data in Salesforce UI.",
+    "explanation": "To surface unified Data Cloud profile data (including associated cases) directly on a Salesforce Contact record for service agents: (B) The Profile API allows querying unified individual data from Data Cloud programmatically; and (C) Lightning Web Components can be built to call the Profile API and display the results embedded on the Contact record page. Data Actions (A) trigger events from Data Cloud outward, not display data inward. Query APL (D) is Data Cloud's query language for analytics, not for embedding real-time data in Salesforce UI.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_data_cloud.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_profile_explorer.htm&language=en_US&type=5",
     "_cat": "Act on Data"
   }
 ]
