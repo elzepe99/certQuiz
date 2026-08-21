@@ -51,7 +51,17 @@ scripts/
                       compares options with operators intact; the prose normalizer
                       it uses elsewhere flattens `<=` and `>` (and `=` and `==`) to
                       the same string, which on a code deck reports the two answers
-                      as identical when the operator IS the question
+                      as identical when the operator IS the question.
+                      Its remaining findings on the checked decks are noise, not
+                      debt — sharing-visibility reports 10, the repo high, and a
+                      2026-08-21 spot-check of three (42219114, c9f8748f, ced866bb)
+                      found every explanation naming its key correctly. The
+                      "argues against its own key" check is keyword overlap, and
+                      "answer count does not match choose N" misfires whenever a
+                      single option contains the N things ("which two permissions"
+                      answered by one option naming both). Treat a nonzero count on
+                      an already-checked deck as expected; the number that matters
+                      is whether it MOVED after your own rewrites landed
   find-duplicates.mjs near-duplicate detector — see "Duplicates"
   remove-questions.mjs  removes questions by id; refuses ids bound in
                         src/diagrams/registry.ts. Until 2026-08-17 its indent
@@ -163,45 +173,30 @@ underneath.
 
 ---
 
-## Deck state — as of 2026-08-20
+## Deck state — as of 2026-08-21
 
-1,619 questions across 13 decks. **All 1,619 carry a reference with an actual URL — the
-first time every deck has reached full coverage.** The reference gap is zero and the
-unparsed-marker count is zero.
+**1,619 questions across 13 decks, all 1,619 cited with a real URL. Coverage is
+complete and has stopped moving**: gap zero, unparsed-marker count zero, re-measured
+2026-08-21 with every deck pass merged and nothing in flight. Earlier revisions of this
+section carried a running "re-measure, a concurrent session is citing in this tree"
+warning against each pass; that warning has been retired because there is no next deck
+to cite. Run the command below anyway before trusting the number — it is cheap, and the
+next scraped import brings the whole problem back.
 
-The last 100 are the **data-cloud-consultant pass on 2026-08-21**, which closed the final
-uncited deck. The 138 before that were the dld pass, which landed as PR #17 from a
-separate session while this one was running — re-measure rather than trusting either
-number.
+The passes that got there, newest first: data-cloud-consultant 2026-08-21 (100, closing
+the last uncited deck), dld 2026-08-20 (138, PR #17), admin and data-architect
+2026-08-19 (154 and 135), slack-consultant 2026-08-18 (37), sharing-visibility and
+agentforce 2026-08-17 (136 and 121), revenue-cloud and databricks 2026-08-15 (135 and
+148). Per-pass detail is in the deck table below and in the `findings-*.json` files.
 
-The jump from 1,381 is the **dld pass on 2026-08-20**: +163, taking that deck from
-0/138 to 138/138 and clearing the repo's last unparsed reference marker with it.
+Most of the admin number was not new research: 47 of those questions *already had*
+citations the app was silently refusing to render. See failure pattern 4c.
 
-That number was measured while a **separate session was concurrently citing the
-data-cloud-consultant deck in the same working tree** (25/100 when last checked), so it
-was already rising as it was written. Re-measure with the command below rather than
-trusting this line — this file has been caught by exactly this before.
-
-Three passes moved that number, and all three landed in the same merge: the admin pass
-on 2026-08-19 (+118, taking that deck from 36/154 to 154/154), the data-architect pass
-on 2026-08-19 (+135, taking the largest uncited deck from 0/135 to 135/135), and the
-slack-consultant pass on 2026-08-18 (+37, from 0/37 to 37/37). Most of the admin number
-is not new research: 47 of those questions *already had* citations that the app was
-silently refusing to render. See failure pattern 4c. Re-measure with the command below
-rather than copying any of these numbers.
-
-+136 of that is the sharing-visibility pass on 2026-08-17, taking that deck from
-0/136 to 136/136 — the second citations-and-corrections pass over an existing deck,
-after revenue-cloud.
-
-An **agentforce pass ran in the same working tree on the same day** and finished at
-121/121, which is the rest of the jump. Coverage moved 1,020 → 1,033 → 1,091 across
-three measurements in a single session while that pass was running, so re-measure with
-the command below rather than copying any number out of this file.
-
-`git show HEAD:public/decks/claude_questions.json` recovers the removed deck below,
-and restores its ids with it — so Supabase comments left on those questions would
-rebind rather than stay orphaned.
+`git show 2dadd33^:public/decks/claude_questions.json` recovers the removed deck below
+(74 questions), and restores its ids with it — so Supabase comments left on those
+questions would rebind rather than stay orphaned. **This line used to say `HEAD:` and
+had silently stopped working**: `HEAD` was the removal commit only on the day the line
+was written. Pin the commit, not the ref, in any recovery command you leave behind.
 
 **The claude-questions deck was removed on 2026-08-17** at the repo owner's request —
 74 questions of Claude/Anthropic product trivia, uncited and, in their words, "wrong
@@ -214,13 +209,6 @@ a pair its own fact-check had turned from `DIFFERS` into `SAME`. Nothing was los
 all three pairs were identical in options and in key. That pass also repaired eight
 admin reference blocks against rendered documentation (see the admin row).
 
-The jump from 697 is the revenue-cloud pass on 2026-08-15: +137 cited, taking that
-deck from 0/137 to 137/137. No new questions arrived — this is the first pass in the
-repo that only added citations and corrections to an existing deck rather than
-importing one. Before it, the jump from 1,549 / 549 was the Databricks deck arriving
-fully checked the same day: +148 questions, all 148 cited, the first non-Salesforce
-deck in the repo and the first fact-checked in the same pass that imported it.
-
 Measure coverage with a URL test, not by looking for the `References:` marker. The
 app's parser (`src/lib/quiz.ts`) treats **every** non-empty line after the marker as
 a reference and does not require a URL, so a question can render a References section
@@ -229,10 +217,12 @@ Agent Setup > Channels", plus the occasional empty block. It degrades gracefully
 (`linkifySegments` only linkifies real URLs) but it is unverifiable by a learner and it
 inflates any naive coverage count.
 
-**That gap closed on 2026-08-18 and is still zero: 1,209 marker blocks, 1,209 with a
-URL.** The last of it went with the agentforce pass (24 questions, 88 prose lines) and
-the admin reference repair (3). Keep measuring it anyway — the check is cheap, and the
-next scraped import brings the problem straight back.
+**That gap closed on 2026-08-18 and is still zero: 1,619 marker blocks, 1,619 with a
+URL** (re-measured 2026-08-21; the 1,209 this line used to carry was the count at the
+time it was written, three deck passes ago). The last of the gap went with the
+agentforce pass (24 questions, 88 prose lines) and the admin reference repair (3). Keep
+measuring it anyway — the check is cheap, and the next scraped import brings the problem
+straight back.
 
 **A block that renders with a URL in it is still only two of the three things that can
 go wrong.** The third is a block that never renders at all, which no URL test catches
@@ -312,9 +302,9 @@ integration), `efc3d13e` B→C (one MFA prompt across mixed login paths comes fr
 session security levels, not the org-wide MFA setting), `9f507c0e` A,B→B,D
 (Embedded Login is not one of the four documented login page types).
 
-Clean across all 13 decks right now (re-measured 2026-08-19): zero `U+FFFD`
-replacement characters, zero literal `"Option B"` placeholder strings, zero keys
-pointing at empty options, zero missing ids. The count said 14 until this
+Clean across all 13 decks right now (re-measured 2026-08-21, all 1,619 questions): zero
+`U+FFFD` replacement characters, zero literal `"Option B"` placeholder strings, zero keys
+pointing at empty options, zero missing ids. The deck count said 14 until the 2026-08-19
 re-measurement — the claude-questions removal above had left it stale.
 
 **The Databricks deck is the counter-example to the IAM trap above, and worth
@@ -416,11 +406,22 @@ fact-check outcome, which is why the deck still has 37.
 As of 2026-08-21, **every deck has had a full documentation pass and every question is
 cited.** There is no next deck. What remains is cross-cutting work, below.
 
-Things that are **not** deck passes but are queued:
+Things that are **not** deck passes but are queued, most actionable first:
 
-- **The 7 remaining Salesforce near-duplicate pairs** below — each needs the
-  documentation to say which copy is right, except where the option *text* already
-  agrees (check that first; that is what `f62513eb`/`c74b1c3e` turned out to be).
+- **4 near-duplicate pairs still need a documentation call** — `e6949181`/`63afa960`
+  (agentforce, Agent Builder vs Testing Center), `717f2404`/`cfcdee5c` (IAM, Refresh
+  vs Access Token), and `c095ab36`/`b3eeee28` and `681f22f4`/`7d2c8e5f`
+  (sharing-visibility). Check whether the option *text* already agrees before reaching
+  for the docs; that is what `f62513eb`/`c74b1c3e` turned out to be. The detector
+  reports 11 pairs in total — the other 7 are settled, see Duplicates below.
+- **Two tooling fixes, each now argued for by three separate passes.** Give
+  `find-duplicates.mjs` a second pass over *keyed option text* (data-architect open
+  item 5), and give `apply-findings.mjs` a way to clear a stale `corrected` stamp
+  (data-architect open item 6 — `VERDICTS` at `apply-findings.mjs:84` is still a
+  four-set with no `unstamp`).
+- **Product renames that are the repo owner's call, not a fact-check outcome** —
+  Data Cloud → Data 360 across 100 stems, and the four renamed Data Cloud permission
+  sets. See the data-cloud-consultant open items.
 - **~~Re-render the links on every deck cited before 2026-08-18~~ — done 2026-08-20,
   and the premise was wrong.** All 370 citation URLs across app-builder, IAM, Dev II and
   integration were rendered and title-checked: **zero dead links**. The admin deck's rot
@@ -664,17 +665,24 @@ fix was to move the explanation onto the clean copy and drop the corrupted one.
 **Check both option sets before accepting the suggested keeper** — a long
 explanation is easy to transfer, a destroyed option set is not.
 
-**7 Salesforce pairs remain and must not be merged.** They read alike but their keys
+**4 Salesforce pairs remain and must not be merged.** They read alike but their keys
 point at genuinely different option text, so one of each pair is either wrong or a
 distinct question — resolving them is a fact-check, not a dedupe:
 
 | Deck | Pair |
 |---|---|
-| agentforce-specialist | `e6949181` vs `63afa960` — Model Playground vs Testing Center |
-| agentforce-specialist | `0b45cf29` vs `b7ffd87e` |
-| data-cloud-consultant | `b16bbc31` vs `e652607d` — "takes up to 24 hours" vs "available soon" |
-| iam-architect | `cfcdee5c` vs `717f2404` |
+| agentforce-specialist | `e6949181` vs `63afa960` — **Agent Builder** vs Testing Center |
+| iam-architect | `cfcdee5c` vs `717f2404` — Access Token vs Refresh Token |
 | sharing-visibility | `b3eeee28` vs `c095ab36`; `681f22f4` vs `7d2c8e5f` — partner *manager* vs *individual* partner users |
+
+Two rows left that table on 2026-08-21, and both corrections are worth knowing.
+`0b45cf29` vs `b7ffd87e` is gone because **`b7ffd87e` was removed in the agentforce
+pass on 2026-08-17** and the row outlived it — check that both ids still exist before
+budgeting work on a pair. And the agentforce row said "Model Playground vs Testing
+Center" when `e6949181` in fact keys **Agent Builder**; anyone resolving it from this
+table would have been checking the wrong option. `b16bbc31` vs `e652607d` also left the
+table, resolved as redundancy rather than error — see data-cloud-consultant open item 8,
+which names `b16bbc31` as the copy to keep.
 
 Four Databricks pairs also remain, all checked and all legitimately distinct:
 `7e554787` vs `17bff8a1` differ in their *stems* (`ON VIOLATION FAIL UPDATE` vs
