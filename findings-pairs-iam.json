@@ -1,0 +1,21 @@
+{
+  "deck": "public/decks/salesforce_iam_architect_questions_corrected.json",
+  "reviewed": "2026-08-21",
+  "findings": [
+    {
+      "id": "717f2404",
+      "verdict": "clarified",
+      "explanation": "The User-Agent (implicit grant) flow uses three of the concepts listed: Client ID (D) identifies the connected app in the initial redirect, Scopes (C) declare what the issued token may access, and a Refresh Token (E) can come back alongside the access token.\nThe distinction from the Web Server flow is the absence of an Authorization Code (B) - the implicit grant returns the access token directly in the redirect URL fragment, with no server-to-server exchange step. A Verification Code (A) belongs to the Device flow.\nThe refresh token deserves care, because the strict OAuth 2.0 specification does not allow one in the implicit grant and Salesforce's implementation extends it. Requesting the scope is necessary but not sufficient: Salesforce documents that \"the refresh token for the user-agent flow is only issued if you requested scope=refresh_token\" AND the redirect URL meets one of a small set of conditions - a custom protocol, a matching host using the oauth2/success servlet, or one of the mobileauth.salesforce.com URLs. So E is right for this flow as Salesforce implements it, but a plain https redirect URL with the scope requested still gets no refresh token.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=xcloud.remoteaccess_oauth_user_agent_flow.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "cfcdee5c",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_web_server_flow.htm&language=en_US&type=5"
+      ]
+    }
+  ]
+}

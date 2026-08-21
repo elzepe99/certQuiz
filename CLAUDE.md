@@ -412,12 +412,14 @@ cited.** There is no next deck. What remains is cross-cutting work, below.
 
 Things that are **not** deck passes but are queued, most actionable first:
 
-- **4 near-duplicate pairs still need a documentation call** — `e6949181`/`63afa960`
-  (agentforce, Agent Builder vs Testing Center), `717f2404`/`cfcdee5c` (IAM, Refresh
-  vs Access Token), and `c095ab36`/`b3eeee28` and `681f22f4`/`7d2c8e5f`
-  (sharing-visibility). Check whether the option *text* already agrees before reaching
-  for the docs; that is what `f62513eb`/`c74b1c3e` turned out to be. The detector
-  reports 11 pairs in total — the other 7 are settled, see Duplicates below.
+- **~~4 near-duplicate pairs need a documentation call~~ — resolved 2026-08-21, and
+  none was a duplicate.** All four are distinct questions; three were decided by
+  comparing option sets rather than by any vendor page. Two explanations were fixed
+  along the way (both claimed `isAccessible` is not a real Apex member — it is), and
+  `7d2c8e5f` was found defective and kept as keyed. Detail in Duplicates below.
+- **6 newly detected pairs have never been read** — the ones the keyed-answer pass
+  surfaced on 2026-08-21, listed in Duplicates. Five look like true duplicates; each
+  needs both option sets read before any removal.
 - **~~Two tooling fixes~~ — both done 2026-08-21, and the first one only half
   works.** `apply-findings.mjs` now takes `"unstamp": true` on a `clarified` or
   `confirmed` finding; it is a flag rather than the verdict the old note asked for,
@@ -716,15 +718,32 @@ fix was to move the explanation onto the clean copy and drop the corrupted one.
 **Check both option sets before accepting the suggested keeper** — a long
 explanation is easy to transfer, a destroyed option set is not.
 
-**4 Salesforce pairs remain and must not be merged.** They read alike but their keys
-point at genuinely different option text, so one of each pair is either wrong or a
-distinct question — resolving them is a fact-check, not a dedupe:
+**All 4 remaining Salesforce pairs were resolved on 2026-08-21, and none was a
+duplicate.** Every one turned out to be two distinct questions, for one of two
+reasons — and the split is worth knowing before spending documentation time on the
+next such pair:
 
-| Deck | Pair |
-|---|---|
-| agentforce-specialist | `e6949181` vs `63afa960` — **Agent Builder** vs Testing Center |
-| iam-architect | `cfcdee5c` vs `717f2404` — Access Token vs Refresh Token |
-| sharing-visibility | `b3eeee28` vs `c095ab36`; `681f22f4` vs `7d2c8e5f` — partner *manager* vs *individual* partner users |
+| Pair | Deck | Why they differ |
+|---|---|---|
+| `e6949181` / `63afa960` | agentforce | **Different option sets.** Only `63afa960` offers Testing Center, the documented answer; `e6949181` omits it and keys Agent Builder as the best available. Both keys right |
+| `717f2404` / `cfcdee5c` | iam | **Complementary questions.** One asks about the User-Agent (implicit) flow, the other the Web Server (authorization code) flow. Both keys verified |
+| `c095ab36` / `b3eeee28` | sharing-visibility | **Different option sets.** Only `c095ab36` offers `with sharing`; `b3eeee28` omits it, leaving runAs the only real safeguard. Both keys right |
+| `681f22f4` / `7d2c8e5f` | sharing-visibility | **Different role in the stem.** Partner *manager* vs partner *user*, which the super-user role table treats differently. Both keep their keys, but `7d2c8e5f` is defective — see below |
+
+**The generalisable lesson: check the option sets before the documentation.** Three
+of these four were decided by which options each copy offers, not by any vendor page —
+the same shape as `f62513eb`/`c74b1c3e`. A pair whose stems match and whose *option
+sets* differ is almost never a duplicate; it is one question that got harder or easier
+in the retelling, and both copies can be correctly keyed at once. Only the IAM pair
+needed the docs at all, and that was to confirm two flows rather than to choose between
+copies.
+
+**`7d2c8e5f` is defective and was kept as keyed.** Super user access reaches records
+"at their role level or below" — for the Partner **User** role that means same-role
+records only, so the stem's "any user, regardless of role, at the same distributor" is
+not delivered by its key or by any other option. Its explanation now says so. Its twin
+`681f22f4` asks about the partner **manager** role, where the same mechanism does reach
+what its stem describes, so that one is simply correct.
 
 Two rows left that table on 2026-08-21, and both corrections are worth knowing.
 `0b45cf29` vs `b7ffd87e` is gone because **`b7ffd87e` was removed in the agentforce
@@ -1033,6 +1052,20 @@ both generations**, which turned a choose-three into five true options.
 
 A fabricated negative is harder to notice than a fabricated number, because it reads
 as the explanation being appropriately strict. Check the denials, not only the claims.
+
+**A second instance, found 2026-08-21 in the same deck, and this one is subtler because
+the denial is half true.** Two questions dismiss their distractors with "the isShareable
+and isAccessible keywords are not valid Apex constructs". `isShareable` is indeed not a
+member of Apex's `Schema.DescribeSObjectResult` — but **`isAccessible()` is**, documented
+as returning "true if the current user can see this object". The distractor still fails,
+for a better reason: it is a describe *method* reporting object-level access, not a
+keyword, and it says nothing about individual record visibility. Both explanations were
+rewritten to say that; neither key moved.
+
+The lesson is about the shape of the fix, not the fact. When an explanation dismisses
+two distractors in one breath, **check them separately** — a sentence that is right
+about one and wrong about the other reads as confidently as one that is right about
+both, and the reader has no way to tell which half to trust.
 
 ### 10. Defective items that no key can fix
 Some questions are broken, not wrong: a "choose 2" whose second correct option is
