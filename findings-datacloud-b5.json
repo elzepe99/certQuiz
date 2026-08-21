@@ -1,0 +1,9 @@
+{
+  "deck": "public/decks/data_cloud_consultant_questions.json",
+  "reviewed": "2026-08-21",
+  "findings": [
+    { "id": "579f07b4", "verdict": "clarified",
+      "explanation": "Data Mapping is the right stage, because value suggestion is a property of the data model object rather than of any segment. Salesforce's page on the feature says you can enable value suggestions for DMO fields whose data type is Text, and that you enable or deactivate the feature in the DMO record home — the data-modeling area where the DMO is created and mapped — with a ceiling of 500 attributes across the org. The segment canvas is where the suggestions are consumed rather than switched on: you drag the attribute in and start typing in the Value field, and it can take up to 24 hours after modeling for values to appear. Data Transformation and Data Stream Setup both act on the data lake object before anything reaches the model. Note that no option names the DMO record home exactly, which is this item's wording weakness; Data Mapping is the option that describes the correct stage.",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_suggested_values_in_segments.htm&language=en_US&type=5"] }
+  ]
+}
