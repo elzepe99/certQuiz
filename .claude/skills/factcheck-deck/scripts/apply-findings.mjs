@@ -27,9 +27,20 @@
  *     { "id": "9f21ab03", "verdict": "corrected",
  *       "was": "A", "correct": "C,D",
  *       "explanation": "...", "references": ["https://..."],
- *       "note": "what the documentation established" }
+ *       "note": "what the documentation established" },
+ *
+ *     { "id": "bd39a845", "verdict": "clarified", "unstamp": true,
+ *       "explanation": "...", "references": ["https://..."] }
  *   ]
  * }
+ *
+ * `unstamp` clears a `corrected` record a previous pass left behind, for when a
+ * later reading downgrades a question and the old notice no longer describes
+ * anything a reader can see. It rides on `clarified` or `confirmed` rather than
+ * being its own verdict, because the case it was built for needs both halves at
+ * once: `bd39a845` in the data-architect pass went from `reasoning` to
+ * `clarified`, so it needed a rewritten explanation AND the stale notice gone.
+ * A verdict can only do one of those, which is why it is a flag.
  */
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
@@ -164,6 +175,22 @@ for (const [i, f] of (spec.findings ?? []).entries()) {
     }
   }
 
+  if (f.unstamp) {
+    // Only the two silent verdicts can clear a notice; `corrected` and
+    // `reasoning` write a fresh one, so asking for both is a contradiction.
+    if (f.verdict !== 'clarified' && f.verdict !== 'confirmed') {
+      errors.push(
+        `${where}: 'unstamp' only applies to 'clarified' or 'confirmed' — ` +
+          `'${f.verdict}' stamps a new notice of its own`,
+      );
+    }
+    if (!q.corrected) {
+      errors.push(
+        `${where}: 'unstamp' but the question carries no correction notice — findings are stale`,
+      );
+    }
+  }
+
   planned.push({ f, q, refs });
 }
 
@@ -187,6 +214,7 @@ if (errors.length) {
 
 const counts = { confirmed: 0, clarified: 0, reasoning: 0, corrected: 0 };
 let refsAdded = 0;
+let unstamped = 0;
 
 for (const { f, q, refs } of planned) {
   // References already on the question must survive a rewritten explanation. Split
@@ -214,6 +242,14 @@ for (const { f, q, refs } of planned) {
   } else if (f.verdict === 'clarified') {
     console.log(`${q.id}  ${q.correct} (unchanged)  explanation improved — silent`);
   }
+
+  if (f.unstamp) {
+    const stale = q.corrected;
+    delete q.corrected;
+    unstamped++;
+    console.log(`${q.id}  notice cleared — was: ${(stale.note ?? '').slice(0, 66)}`);
+  }
+
   counts[f.verdict]++;
 }
 
@@ -227,7 +263,8 @@ console.log(
   `\n${DRY ? '[dry run] ' : ''}${planned.length} of ${deck.length} question(s) touched — ` +
     `${counts.corrected} answer(s) corrected, ${counts.reasoning} flagged reasoning fix(es), ` +
     `${counts.clarified} silent clarification(s), ${counts.confirmed} confirmed. ` +
-    `${refsAdded} reference(s) added.`,
+    `${refsAdded} reference(s) added` +
+    (unstamped ? `, ${unstamped} stale notice(s) cleared.` : '.'),
 );
 
 // Coverage across the WHOLE deck, not just this batch — the point of the pass is

@@ -62,7 +62,11 @@ scripts/
                       answered by one option naming both). Treat a nonzero count on
                       an already-checked deck as expected; the number that matters
                       is whether it MOVED after your own rewrites landed
-  find-duplicates.mjs near-duplicate detector — see "Duplicates"
+  find-duplicates.mjs near-duplicate detector. Two entry paths since 2026-08-21:
+                      stem Jaccard >= 0.72, or IDF-weighted keyed-answer overlap
+                      >= 0.6 with stems still >= 0.6 (those print a `*`). The
+                      stem floor on the second path is load-bearing, not timid —
+                      see "Duplicates"
   remove-questions.mjs  removes questions by id; refuses ids bound in
                         src/diagrams/registry.ts. Until 2026-08-17 its indent
                         detection matched the first indented `"`, which is the
@@ -414,11 +418,14 @@ Things that are **not** deck passes but are queued, most actionable first:
   (sharing-visibility). Check whether the option *text* already agrees before reaching
   for the docs; that is what `f62513eb`/`c74b1c3e` turned out to be. The detector
   reports 11 pairs in total — the other 7 are settled, see Duplicates below.
-- **Two tooling fixes, each now argued for by three separate passes.** Give
-  `find-duplicates.mjs` a second pass over *keyed option text* (data-architect open
-  item 5), and give `apply-findings.mjs` a way to clear a stale `corrected` stamp
-  (data-architect open item 6 — `VERDICTS` at `apply-findings.mjs:84` is still a
-  four-set with no `unstamp`).
+- **~~Two tooling fixes~~ — both done 2026-08-21, and the first one only half
+  works.** `apply-findings.mjs` now takes `"unstamp": true` on a `clarified` or
+  `confirmed` finding; it is a flag rather than the verdict the old note asked for,
+  because the case it was built for (`bd39a845`) needed a rewritten explanation *and*
+  the notice gone, and a verdict can only do one. `find-duplicates.mjs` now has its
+  keyed-option-text pass — **read the Duplicates section before trusting it**, because
+  the naive version floods and what shipped is narrower than what was asked for. It did
+  find 6 unknown pairs, 5 of them true duplicates.
 - **Product renames that are the repo owner's call, not a fact-check outcome** —
   Data Cloud → Data 360 across 100 stems, and the four renamed Data Cloud permission
   sets. See the data-cloud-consultant open items.
@@ -468,11 +475,21 @@ validates clean.
    The 0.72 stem gate catches none of them. A second pass over keyed option text
    would catch the top three outright.
 
-6. **`apply-findings.mjs` cannot clear a stale `corrected` stamp.** When a later pass
-   downgrades a question from `reasoning` to `clarified`, the old notice stays on the
-   question and the applier says nothing. Hit for real on `bd39a845` in this pass and
-   removed by hand. Either let `clarified` clear an existing stamp, or add an explicit
-   `unstamp` verdict.
+   **Built 2026-08-21, and this prediction was wrong.** A keyed-text pass does not
+   catch the top three, because the guard that makes it usable at all — a 0.6 stem
+   floor, without which it reports 64 pairs of which ~6 are real — excludes every row
+   in this table, all of which score under 0.16 on stems. What it catches instead is a
+   different shape entirely: OCR-damaged twins that fell *just* under 0.72. Six of
+   those surfaced, five true duplicates. **These five pairs remain a manual read.**
+   See the Duplicates section for the measurements.
+
+6. **~~`apply-findings.mjs` cannot clear a stale `corrected` stamp~~ — fixed
+   2026-08-21.** Pass `"unstamp": true` on a `clarified` or `confirmed` finding. It is
+   a flag rather than the `unstamp` *verdict* suggested here, because `bd39a845` — the
+   case that motivated it — needed a rewritten explanation *and* the notice cleared,
+   and a verdict can only do one of those. The script refuses the flag on `corrected`
+   and `reasoning`, which write a fresh notice, and refuses it when there is no notice
+   to clear.
 
 **Verification debt to be honest about:**
 
@@ -637,9 +654,43 @@ identical. A token-overlap check found **28 near-duplicate pairs**. Measure with
 similarity, never equality:
 
 ```sh
-# intra-deck pairs, Jaccard >= 0.72 on stem tokens longer than 3 chars
+# intra-deck pairs: stems at Jaccard >= 0.72, or keyed answers >= 0.6 with stems >= 0.6
 node scripts/find-duplicates.mjs
 ```
+
+**The keyed-option-text second pass shipped on 2026-08-21, and it is narrower than
+the three passes that asked for it expected.** The proposal was to compare keyed
+option text instead of stem tokens. Measured before building it, a keyed-text gate
+with no stem floor reports **64 extra pairs on this repo and roughly 6 are real** —
+every Salesforce deck is full of distinct questions that legitimately share a short
+answer, so "both key Flow Builder" or "both key Approval Process" is not evidence of
+anything. Two guards make it usable: the comparison is **IDF-weighted against the
+deck's own keyed answers**, so matching on "granular locking" counts and matching on
+"Flow Builder" barely does; and a pair still needs its stems to overlap at 0.6.
+
+What that buys is the **OCR-damaged twin whose stem fell just under the gate** —
+`4f119a16` reads "lightninglayout-items im one column" where its twin reads
+"lightning-layout-items in one column", and that one mangled sentence cost it 0.02.
+Six such pairs surfaced, marked `*` in the output, five of them true duplicates:
+
+| Pair | Deck | What it is |
+|---|---|---|
+| `f9c8f7b9`/`4f119a16` | dev-2 | same LWC layout question, one copy OCR-mangled |
+| `fb30207f`/`1698e7ee` | dev-2 | same `lightning-record-edit-form` question; "Validation rules" vs "Custom validation rules" |
+| `e22e750b`/`66dcd37c` | databricks | same groupBy question; one copy has `sales df` for `sales_df` |
+| `42c11595`/`c59ebbbc` | databricks | same webhook-alert question, different scenario wrapper |
+| `1292cd74`/`21da735a` | dld | same multi-org acquisition question, both keying multi-org strategy |
+| `ea780ddf`/`36f6a143` | sharing-visibility | **not** a duplicate — a choose-1 and its self-labelled "(Variant)" choose-2 |
+
+None has been removed; that is a dedupe decision, and each needs both option sets
+read first per the `weight()` warning above.
+
+**What it still does not catch, and cannot without flooding:** pairs whose stems were
+*rewritten* rather than damaged. `23b3dd3a`/`b8dcc15e` key identical text and score
+**0.10** on stems, so no stem floor reaches them while excluding the 64. The
+data-architect table below lists four more of that shape. They need a human reading
+the deck — the tool is not going to find them, and the open item that asked for this
+should be read as partly closed, not closed.
 
 **16 were removed on 2026-08-11** — same question, and the *keyed option text*
 matched even where the letter did not. The keeper was the copy with the longer
