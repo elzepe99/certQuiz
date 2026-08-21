@@ -1748,3 +1748,110 @@ dangerous failure, since the returned prose is real and on-topic:
 `securityImplGuide/security_pe_considerations.htm`,
 `securityImplGuide/tracking_field_history.htm`. The Security Guide has moved to
 `help.salesforce.com/.../xcloud.*`.
+
+---
+
+# Legacy citation re-render — 2026-08-20
+
+A sweep of every citation URL in the four decks cited before 2026-08-18 —
+app-builder, IAM, Dev II, integration. **370 distinct URLs, 900 reference lines,
+535 questions.** 131 were already confirmed in this file; the remaining **239 were
+rendered and title-checked in this pass**.
+
+**Result: zero dead links.** Not one URL in those four decks 404s.
+
+That is the opposite of the admin deck, and the reason is visible in the URL shape.
+The admin deck's dead ids were all `sf.<id>&type=5` **with no `language` parameter** —
+this repo's scrape signature, of which 24 of 36 were dead. **All 200 help URLs in
+these four decks carry `language=en_US`**, and all 200 render. So the signature is
+not "cited before 2026-08-18"; it is the missing `language` parameter. Check that
+first on any deck before budgeting a re-render pass.
+
+Per-host outcome:
+
+| Host | URLs | Dead |
+|---|---:|---:|
+| developer.salesforce.com | 160 | 0 |
+| help.salesforce.com | 200 (69 newly checked) | 0 |
+| trailhead.salesforce.com | 5 | 0 |
+| architect.salesforce.com | 5 | 0 |
+
+## The "third state" is a WebFetch race, not a page state — correction
+
+This file previously recorded a third outcome on help.salesforce.com: some ids return
+the generic title **"Salesforce Help"** with no article name and no 404 sentence, and
+said to *"Drop these rather than cite them."* **That guidance was wrong and would have
+discarded live citations.**
+
+All four documented examples were re-checked in the in-app browser, which waits for the
+SPA to finish. Every one is live:
+
+| id | WebFetch title | Browser title |
+|---|---|---|
+| `sales.managing_duplicates_overview.htm` | Salesforce Help | **Manage Duplicate Records** |
+| `service.entitlements_service_contracts_parent.htm` | Salesforce Help | **Service Contracts** |
+| `xcloud.security_pe_overview.htm` | Salesforce Help | **Strengthen Your Data's Security with Shield Platform Encryption** |
+| `sf.users_license_types_communities.htm` | Salesforce Help | **Experience Cloud User Licenses** |
+
+The generic title is what the shell serves *before* the SPA swaps in the article
+title. WebFetch sometimes reads it too early. The tell is that
+`sf.users_license_types_communities.htm` — on that same drop-list — returned its real
+title via WebFetch in this pass: it simply won the race that time.
+
+**So there are two states, not three: a real title, or the "We looked high and low"
+404 sentence.** A generic "Salesforce Help" is *unresolved, not dead* — re-check it in
+the browser before doing anything. This also resolves open item 9 from the Data
+Architect pass: `sales.managing_duplicates_overview.htm` has not rotted.
+
+## architect.salesforce.com refuses WebFetch
+
+Every architect.salesforce.com URL returns **HTTP 403 Forbidden** to WebFetch — a bot
+block, not a dead page. All five render normally in the browser. Use the browser pane
+for this host; a 403 here is no evidence about the page.
+
+## A failure shape no title check catches: the stale anchor
+
+Found on the single most-cited URL in the integration deck.
+`architect.salesforce.com/.../integration-patterns.html` is live, is the right page,
+and its body still describes both patterns — but the page was restructured onto a
+kebab-case anchor scheme, and **the anchors 15 questions deep-linked to no longer
+exist**:
+
+| Cited fragment | Current id |
+|---|---|
+| `#Remote_Process_Invocation___Fire_And_Forget` | `#remote-process-invocation--fire-and-forget` |
+| `#Remote_Process_Invocation___Request_And_Reply` | `#remote-process-invocation--request-and-reply` |
+
+A dead fragment does not 404 and does not change the title — the browser silently
+lands at the top of a 139,000-character page. Every URL check in this repo passes it.
+**When a citation carries a `#fragment`, verify the fragment resolves, not just the
+page** — `document.getElementById(...)` in the browser, or check `window.scrollY`
+moved. Both replacements above were confirmed to resolve and scroll.
+
+## Live but renamed — verify by rendered title, never by slug
+
+The Slack lesson repeats on Salesforce hosts. These render fine under a title that
+does not match their id or slug; none is a dead link and none should be "repaired":
+
+| URL id / slug | Renders as |
+|---|---|
+| `sf.remoteaccess_oauth_web_sso_flow.htm` | SAML Assertion Flow for Accessing the API |
+| `platform.customize_lex_nav_menus_create.htm` | Lightning App Navigation Bar Items |
+| trailhead `sales-cloud-platform-quick-look` | Agentforce Sales Basics |
+| trailhead `mrkt_cloud_basics` | Digital Marketing Suite - Strategy & Engagement |
+
+## Guide-title-only results — benign here
+
+Three developer.salesforce.com pages returned the *guide* title rather than a section
+title, which is the silent section-id fallback signature. All three are genuine
+overview/landing pages whose real title is the guide name, confirmed by a sibling
+section in the same guide resolving normally: `bigobjects/big_object.htm`,
+`change_data_capture/cdc_intro.htm`,
+`bi_dev_guide_ext_data/bi_ext_data_overview.htm`. Treat the signature as a prompt to
+check a sibling, not as proof of fallback.
+
+## Still unresolved
+
+`object_reference/sforce_api_objects_opportunity.htm` renders with the correct title
+but, per the Object Reference note earlier in this file, serves a catalog body. Its
+title is confirmed; a field-level claim resting on it is not. One question cites it.
