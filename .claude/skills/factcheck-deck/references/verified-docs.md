@@ -1855,3 +1855,157 @@ check a sibling, not as proof of fallback.
 `object_reference/sforce_api_objects_opportunity.htm` renders with the correct title
 but, per the Object Reference note earlier in this file, serves a catalog body. Its
 title is confirmed; a field-level claim resting on it is not. One question cites it.
+
+---
+
+# Development Lifecycle & Deployment (dld) — full deck pass, 2026-08-20
+
+138 questions, 69 distinct URLs, all rendered. **5 keys moved, 10 reasoning fixes.**
+
+## The doc-host finding that made this pass cheap — and it contradicts the 4a/4b entries above
+
+Run from a **local Windows machine**, `WebFetch` renders `help.salesforce.com` and returns
+**full article bodies**, including `type=5` product-doc pages — not just titles. The Data
+Architect pass (from a cloud container) recorded `type=5` as title-only and `type=1` as
+full-body; that split does **not** hold here. Both return bodies.
+
+So the environment the pass runs in changes what the tooling can see. **Test the host from
+wherever you are before budgeting browser time.** Specifics confirmed on this pass:
+
+| Host / shape | Behaviour from a local machine |
+|---|---|
+| `help.salesforce.com` `type=5` | Full article body. `platform.`, `sf.`, `sales.`, `xcloud.` prefixes all render |
+| `help.salesforce.com` `type=1` | Full article body |
+| A dead help id | Honest **"We looked high and low but couldn't find that page."** — reliable 404 signal |
+| `help.salesforce.com` `release-notes.*` | **SPA shell only** ("Sorry to interrupt / CSS Error"). Needs a browser; use the equivalent `type=1` knowledge article instead |
+| Some `sf.`/`platform.` pages, intermittently | Return the **nav tree only**, no body. Not a 404 — retry or cite a sibling. Hit on `sf.release_updates_manage`, `platform.notes_on_changing_custom_field_types` |
+| `developer.salesforce.com` atlas guides | Full body. **Silent section-id fallback confirmed again** — a wrong slug returns the *guide landing page* with no error. Caught 3 times this pass |
+| `developer.salesforce.com/docs/platform/...html` (new-style) | Full body |
+| `architect.salesforce.com` | **HTTP 403 to WebFetch.** Browser only — this is new, and it is why architect.salesforce.com citations need a browser |
+| `trailhead.salesforce.com` | Full unit body, including quoted prose |
+| Salesforce Developers **blogs** | Full body |
+
+## Settled facts — environments, deployment, ALM
+
+| Fact | Value | Source |
+|---|---|---|
+| Sandbox refresh intervals | Developer **1 day**, Developer Pro **1 day**, Partial Copy **5 days**, Full **29 days**, "calculated from when you request a sandbox creation or refresh" | Refresh Your Sandbox |
+| Partial Copy record cap | "standard and custom object records and Attachments up to 5 GB, with a **maximum of 10,000 records per selected object**" — the 10,000 figure is *not* on the sandbox-types page, it is in knowledge article `000381868` | Guidance for Partial Copy Sandbox Creation |
+| Sandbox templates | "only available for use with **Full or Partial Copy** sandboxes" — so pairing a template with a Developer Pro sandbox describes something the platform will not do | Create or Edit Sandbox Templates |
+| Full sandbox purpose | The type documented for "performance testing, load testing, and **staging**"; "a replica of your production org, including all data" | Sandbox Types and Templates |
+| Sandbox preview default | During the transition between major releases Salesforce **creates preview sandboxes by default**; a non-preview sandbox needs the option enabled by Support plus an explicit "Request Non-Preview" | What are Preview and Non-Preview Sandboxes? |
+| Sandbox clone across versions | Allowed **since Spring '20**. But it "may take significantly longer than a standard sandbox refresh, especially during sandbox preview release months" — hours to over a week, **no SLA** — and Salesforce suggests a brand-new sandbox when speed matters | `000380490` |
+| Data Mask | Runs "in **full or partial** sandboxes", installed as a managed package in production, irreversible. **Now titled "(Legacy)" — end of service 31 Dec 2026**, superseded by Data Mask & Seed | Secure Your Sandbox Data with Salesforce Data Mask (Legacy) |
+| Quick deploy window | The validation job ID "is valid for **10 days** from when you started the validation"; quick deploy "skips running Apex tests" | `sf project deploy quick` |
+| `runTests` granularity | **Class names only.** The task page is explicit: "**You can specify only test classes. You can't specify individual test methods.**", with `setRunTests` taking an array of class names. The field reference agrees — "Specify the class name, one name per instance" — as does the CLI `--tests` flag. **The exam dumps key the opposite and are wrong.** Narrowing the set has a floor: "if the code coverage of an Apex component in the deployment is less than 75%, the deployment fails" | **Running a Subset of Tests in a Deployment** ; deploy() ; `sf project deploy start` |
+| testLevel values | NoTestRun, RunSpecifiedTests, **RunRelevantTests**, RunLocalTests ("all tests in your org, except the ones that originate from installed managed and unlocked packages"), RunAllTestsInOrg | deploy() |
+| Metadata API deploy limits | **10,000 files**, **39 MB** compressed .zip, and **600 MB / 629,145,600 bytes** uncompressed. The old "400 MB unzipped" figure is stale | Metadata Limits (cheat sheet) |
+| Destructive deploy | Needs `destructiveChanges.xml` **plus** a `package.xml` that must "list no components to deploy, include the API version, and be in the same directory". `purgeOnDelete` is optional | Deleting Components from an Organization |
+| Deployment org lock | A deployment takes an **org lock** on the *target* that blocks setup/metadata changes ("Org Administration Locked"); it is self-resolving with no manual removal, and **users keep reading and writing data** throughout | `000384452` |
+| Dashboard `runningUser` on deploy | **Does not fail the deployment.** "When you deploy a dashboard and the value in this field is not defined or does not correspond to a valid user, the field is populated with the username of the user performing the deployment." Silent, and a data-visibility hazard | Dashboard (Metadata API) |
+| Apex metadata access in packages | Apex in a non-security-reviewed package "can't access public or protected metadata unless the **Deploy Metadata from Non-Certified Package Versions via Apex** org preference is enabled" — Setup, Apex Settings. **This moved a key** | Security Considerations (Apex Metadata) |
+| Unmanaged vs managed package | Unmanaged = "distributing open-source projects to developers, or as a **one-time drop of applications that require customization after installation**"; publisher "can't change or upgrade them"; components editable in the installing org. Managed = "used by Salesforce partners to distribute and sell applications", needs a globally unique namespace, locks components. **This moved a key** | Developing and Distributing Unmanaged Packages ; First-Generation Managed Packages |
+| Removing components from a released managed package | Possible for 2GP via Partner Support request; most components are "marked as deprecated" in subscriber orgs, but **non-global Apex classes, Apex triggers and non-global Visualforce components are hard deleted** on upgrade | Remove Metadata Components from 2GP |
+| Deployment connection scope | Exists "between all orgs affiliated with a production org", and "a deployment connection alone doesn't enable change sets to be sent between orgs" — so change sets **cannot** cross two independent production orgs | Deployment Connections for Change Sets |
+| Ant Migration Tool | **Retired in Spring '24.** Still functions but gets "no new functionality" beyond **API v59.0**; Salesforce CLI is the successor | Moving on from the Ant Migration Tool to sf CLI (v2) |
+| API version support | "**Versions 31.0 through 67.0** are actively supported"; 21.0–30.0 retired Summer '25; 7.0–20.0 retired Summer '22. Minimum 3 years support per version; a retired version returns **410 GONE** | API End-of-Life Policy |
+| Edition allocations | Professional: **50** custom objects, 255 custom apps, **1,210** custom tabs. Enterprise: **200** custom objects, 260 apps, **1,225** tabs. Components in "a managed package that's publicly posted on AppExchange don't count against the allocations". The exam-era "PE 10 tabs / EE 25 tabs" is **stale** | Professional / Enterprise Edition Allocations ; Limits for Group and Professional Editions |
+| SOQL relationship depth | Child-to-parent **5 levels**, max 55 per query. Parent-to-child **5 levels in API 58.0+**, but only **2 levels in 57.0 and earlier**; max 20 per query | Understanding Relationship Query Limitations |
+| Security review #1 failure | "Object & field level security (**CRUD/FLS**) enforcement vulnerabilities are the top reason (**by a significant margin**) for failing the AppExchange security review." XSS is #8, SOQL injection is #10 | The Top 20 Vulnerabilities Found in the AppExchange Security Review |
+| Assignment rules in tests | Only run when Apex asks: `Database.DMLOptions.assignmentRuleHeader.useDefaultRule` — "the system uses the default (active) assignment rule for the case or lead". Workflow rules and processes **do** run in the save order during a test | DmlOptions.AssignmentRuleHeader ; Triggers and Order of Execution |
+| Multiple triggers per object | "If more than one trigger is defined on an object for the same event, **the order of trigger execution isn't guaranteed**" | Triggers and Order of Execution |
+| Code coverage | "at least **75%**… and those tests must pass". And explicitly not a quality measure: "Code coverage serves as one indication of test effectiveness, but doesn't guarantee test effectiveness" | Code Coverage |
+| Aura accessibility tests | "You can call Aura accessibility tests in **two environments**. For JavaScript tests, use `$A.test.assertAccessible()`. For WebDriver tests, use `auraTestingUtil.assertAccessible()`" | Write Aura Component Accessibility Tests |
+| Lightning Testing Service | **"We used to recommend Lightning Testing Service (LTS) but it's deprecated and no longer supported."** Current recommendations: Jest, UTAM, Jasmine, Mocha, Selenium, WebdriverIO | Testing Components (Aura) |
+| Performance/scale testing | "scale tests are only permitted in sandboxes"; submit an LAP request "at least one week before the testing date"; "All tests must be pre-approved. Unapproved testing is subject to throttling or blocking". Performance up to 120 RPS via Support; scale above 120 RPS needs a paid add-on | Salesforce Performance and Scale Test FAQs (`000387059`) |
+| Deployment timing | Release "at times when most users are off the system"; "avoid peak hours"; avoid "right before holidays or major events". Profile/permission-set changes deployed with sharing rules "trigger a calculation each time you attempt to deploy" | Deployment Best Practices |
+| ALM phases (current) | **Plan, Build, Test, Deploy, Monitor.** The classic *Development Lifecycle Guide* is **retired** | Salesforce ALM: Quick Look (Trailhead) |
+| Org strategy operating model | Axes are business process **standardization** and **integration**. Unification: "as few orgs as possible". **Replication: "can (and probably should) have multiple orgs, however you should consider deploying a managed package from a central org into all of the replicated business units"**. Coordination: few orgs, web-services integration. Diversification: "will probably always have multiple orgs". **This moved two keys** | Enterprise Architecture: Single-org versus Multi-org Strategy |
+| Single-org drawbacks (verbatim) | "Your data model becomes much more complex and controversial as you increase your scope in the org"; "Your apex design will need to be very mature to support a large enterprise model"; multi-org point-to-point becomes "a spider web of integrations, data replication, and very brittle point-to-point connections" | same |
+| Environment roles | Dev sandboxes "refreshed after a working feature has been successfully migrated upstream"; **"Your Salesforce Production Org is Your Only 'Pristine' Environment"**; system integration sandbox refreshed "**as often as is practical**" (so *not* a Full sandbox — 29 days is too slow); System Test = Full Copy; Stage refreshed "prior to EACH production deployment"; **Pfix** = a sandbox generated for urgent defects only | Salesforce1 Platform Enterprise Environment Management |
+| Kanban / Scrum (verbatim, Salesforce own words) | Kanban: "one of the basic elements of Kanban is to make everything visible, creating consistent transparency of work items". Scrum: "teams are honest and clear about timing, planning, and obstacles"; five values are focus, courage, openness, commitment, respect | Scrum and Kanban at Salesforce (Trailhead) |
+
+## Confirmed URLs — all 68 rendered 2026-08-20, zero dead
+
+**Sandboxes and environments**
+- https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=platform.data_sandbox_environments.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=platform.data_sandbox_refresh.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=platform.data_sandbox_preview.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sf.data_sandbox_templates.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=000381868&language=en_US&type=1 — Guidance for Partial Copy Sandbox Creation and Refreshes
+- https://help.salesforce.com/s/articleView?id=000380490&language=en_US&type=1 — Sandbox Clone with Different Version from Production
+- https://help.salesforce.com/s/articleView?id=platform.data_mask_overview.htm&language=en_US&type=5
+- https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_interface_System_SandboxPostCopy.htm
+
+**Deployment**
+- https://help.salesforce.com/s/articleView?id=sf.deploy_overview.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=platform.changesets_inbound_deploy.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=sf.changesets_about_connection.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=000384452&language=en_US&type=1 — Org Administration Locked Error
+- https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/file_based.htm
+- https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy.htm
+- https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy_run_specific_tests.htm — Running a Subset of Tests in a Deployment. **Read this before answering anything about RunSpecifiedTests**; it settles class-vs-method granularity in one sentence, which the `runTests` field entry alone does not
+- https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy_deleting_files.htm
+- https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_dashboard.htm
+- https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm
+- https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_custommetadatatypes.htm
+- https://developer.salesforce.com/docs/atlas.en-us.salesforce_app_limits_cheatsheet.meta/salesforce_app_limits_cheatsheet/salesforce_app_limits_platform_metadata.htm
+- https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/api_rest_eol.htm
+- https://developer.salesforce.com/blogs/2024/01/moving-on-from-the-ant-migration-tool-to-sf-cli-v2
+
+**Salesforce CLI / DX / packaging**
+- https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_start.html
+- https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_validate.html
+- https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_quick.html
+- https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs.htm
+- https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_unlocked_pkg_intro.htm
+- https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_setup_enable_secondgen_pkg.htm — Enable Unlocked Packaging; the toggle is literally "Enable Unlocked Packages and Second-Generation Managed Packages", and "after you enable this setting, you can't disable it"
+- https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm
+- https://developer.salesforce.com/docs/metadata-coverage
+- https://developer.salesforce.com/docs/atlas.en-us.packagingGuide.meta/packagingGuide/packaging_developing_unmanaged.htm
+- https://developer.salesforce.com/docs/atlas.en-us.packagingGuide.meta/packagingGuide/security_review_guidelines.htm — now titled "Pass the **AgentExchange** Security Review"
+- https://developer.salesforce.com/docs/atlas.en-us.pkg1_dev.meta/pkg1_dev/sharing_apps.htm
+- https://developer.salesforce.com/docs/atlas.en-us.pkg1_dev.meta/pkg1_dev/convert_to_managed_package.htm
+- https://developer.salesforce.com/docs/atlas.en-us.pkg2_dev.meta/pkg2_dev/sfdx_dev_dev2gp_remove_md_components.htm
+- https://developer.salesforce.com/docs/platform/isvforce/guide/dev-package-limits-for-pe-ge.html
+- https://help.salesforce.com/s/articleView?id=xcloud.overview_limits_professional.htm&language=en_US&type=5
+- https://help.salesforce.com/s/articleView?id=xcloud.overview_limits_enterprise.htm&language=en_US&type=5
+
+**Apex, testing, APIs**
+- https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_code_coverage_intro.htm
+- https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_load_data.htm
+- https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_restful_http_testing.htm
+- https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_interface_httpcalloutmock.htm
+- https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_class_Database_AssignmentRuleHeader.htm
+- https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_class_System_Json.htm
+- https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_annotation_NamespaceAccessible.htm
+- https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_metadata.htm
+- https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_metadata_security.htm
+- https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_order_of_execution.htm
+- https://developer.salesforce.com/docs/atlas.en-us.api_tooling.meta/api_tooling/intro_api_tooling.htm
+- https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql_relationships_query_limits.htm
+- https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/lightning_testing_intro.htm
+- https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/accessibility_write_tests.htm
+- https://developer.salesforce.com/docs/platform/salesforce-code-analyzer/guide/code-analyzer.html
+- https://developer.salesforce.com/blogs/2023/08/the-top-20-vulnerabilities-found-in-the-appexchange-security-review
+- https://help.salesforce.com/s/articleView?id=000387059&language=en_US&type=1
+
+**Process, ALM, methodology (Trailhead and blogs)**
+- https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management
+- https://trailhead.salesforce.com/content/learn/modules/org-development-model/plan-for-changes-to-your-org2
+- https://trailhead.salesforce.com/content/learn/modules/salesforce-agile-basics/learn-the-basics-of-agile
+- https://trailhead.salesforce.com/content/learn/modules/scrum-and-kanban-at-salesforce/learn-about-scrum
+- https://trailhead.salesforce.com/content/learn/modules/scrum-and-kanban-at-salesforce/learn-about-kanban
+- https://trailhead.salesforce.com/content/learn/modules/unlocked-packages-for-customers/break-up-your-metadata
+- https://developer.salesforce.com/blogs/developer-relations/2014/10/enterprise-architecture-multi-org-strategy
+- https://developer.salesforce.com/blogs/2014/12/salesforce1-enterprise-environment-management
+
+## Known dead / unusable — from this pass
+
+- `platform.overview_limits_general.htm` — 404 ("We looked high and low"). Edition allocations moved to the **`xcloud.`** prefix, one page per edition.
+- `sf.cpq_product_rule_guidelines.htm` — 404. `sales.cpq_product_rules.htm` resolves but serves the CPQ landing page, not product-rule detail.
+- `release-notes.rn_sandbox_clone_diff_versions.htm` — renders only the SPA shell to WebFetch. Use knowledge article `000380490` instead.
+- `architect.salesforce.com/diagrams/reference-architectures/single-org-architecture` — **HTTP 403** to WebFetch (host-level, not page-level).
+- Silent-fallback traps hit this pass (wrong slug produces the guide landing page, no error): `sfdx_setup/sfdx_setup_enable_devhub.htm`, `apexref/apex_interface_system_sandboxpostcopy.htm` (lowercase — the real one is `apex_interface_System_SandboxPostCopy.htm`, **case-sensitive**), `apexcode/apex_json_overview.htm`, `apexcode/apex_callouts_testing.htm`, `api_meta/meta_workflowalert.htm`.

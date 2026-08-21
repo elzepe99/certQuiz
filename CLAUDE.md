@@ -163,11 +163,19 @@ underneath.
 
 ---
 
-## Deck state — as of 2026-08-19
+## Deck state — as of 2026-08-20
 
-1,619 questions across 13 decks. **1,381 (85%) carry a reference with an actual URL,
+1,619 questions across 13 decks. **1,544 (95%) carry a reference with an actual URL,
 and the reference gap is still zero** — every question that renders a References block
 has a link in it.
+
+The jump from 1,381 is the **dld pass on 2026-08-20**: +163, taking that deck from
+0/138 to 138/138 and clearing the repo's last unparsed reference marker with it.
+
+That number was measured while a **separate session was concurrently citing the
+data-cloud-consultant deck in the same working tree** (25/100 when last checked), so it
+was already rising as it was written. Re-measure with the command below rather than
+trusting this line — this file has been caught by exactly this before.
 
 Three passes moved that number, and all three landed in the same merge: the admin pass
 on 2026-08-19 (+118, taking that deck from 36/154 to 154/154), the data-architect pass
@@ -246,10 +254,12 @@ node -e "const fs=require('fs'),p=require('path');const d='public/decks';const A
 ```
 
 The last number is the one this file kept missing. It was **48** before the admin pass
-— 47 in admin, 1 elsewhere — and is **1** now. That survivor is **`46cb24ed` in the
-dld deck**: its marker sits mid-sentence, and its two references are bare
-`help.salesforce.com/...` strings with no scheme, so they would not linkify even if the
-block rendered. Fix it when dld gets its pass.
+— 47 in admin, 1 elsewhere — then **1**, and is **0** now. That last survivor was
+`46cb24ed` in dld: its marker sat mid-sentence, and its two references were bare
+`help.salesforce.com/...` strings with no scheme, so they would not have linkified even
+if the block had rendered. The dld pass replaced the whole explanation, which is the
+only fix that works — see failure pattern 4c. Keep running the check anyway; the next
+scraped import brings the problem straight back.
 
 Reference coverage is a *necessary* signal but **not a sufficient one** — the skill
 requires a citation on every verdict including `confirmed`, so a fully checked deck
@@ -269,7 +279,7 @@ column, not the Cited column.
 | salesforce-data-cloud-consultant | 100 | 0 | Uncited; 4 keys moved via comments |
 | salesforce-sharing-visibility | 136 | 136 | **Fully checked** (2026-08-17) — 2 keys moved, 6 reasoning fixes, 19 silent clarifications. The 4 earlier 2026-08-04 validation stamps are preserved |
 | salesforce-app-builder | 119 | 119 | **Fully checked** (2026-08-11) — 4 keys moved, 27 reasoning fixes, 3 defective option sets repaired. Q1–50 spot-rechecked: 10 sampled, 1 defect (a mechanism stated backwards), so the earlier batches read sound |
-| salesforce-dld | 138 | 0 | **Untouched** |
+| salesforce-dld | 138 | 138 | **Fully checked** (2026-08-20, one item repaired 2026-08-21) — 5 keys moved, 10 reasoning fixes, 103 silent clarifications. Its defect shape is **stale platform facts**: an entire item built on the retired Lightning Testing Service, Professional/Enterprise tab allocations taught at 10/25 when they are 1,210/1,225, the Metadata API uncompressed ceiling at 400 MB when it is 600 MB, and quick-deploy eligibility at 4 days when it is 10. Two keys moved on the **same** operating-model quadrant — see the Replication row in `verified-docs.md`. Also holds the repo's last unparsed reference marker, now fixed. **~30 of its citations are topical rather than decisive** — its ALM and Project domains are methodology and governance, which no vendor page settles |
 | salesforce-data-architect | 135 | 135 | **Fully checked** (2026-08-19) — 3 keys moved, 18 reasoning fixes, 58 silent clarifications. Its defect shape is **the invented absence**: five explanations denied a capability that exists (external objects can't be reported on ×2, the cross-org Connect adapter is read-only, no native archiving feature exists ×2). Also one fabricated limit (skinny tables taught at 100 columns; documented cap is **200**) and three stale products — Data.com Clean (4 questions), Async SOQL (retired Summer '23), granular locking now the default |
 | salesforce-slack-consultant | 37 | 37 | **Fully checked** (2026-08-18) — 1 key moved, 3 reasoning fixes, 12 silent clarifications. First non-Salesforce, non-Databricks vendor. **Read the caveat below: only 15 of its 37 questions are decidable by any Slack page**, so the N/N here means less than it does on other decks |
 
@@ -398,15 +408,12 @@ fact-check outcome, which is why the deck still has 37.
 
 ### What to work on next
 
-Ordered as of 2026-08-19, after the admin, data-architect and slack passes all landed.
-Two decks remain, both uncited and both untouched — the partially-cited middle ground
-is gone. The audit-lead counts come from `node scripts/audit-deck.mjs <deck>` and are
-leads, not verdicts.
+As of 2026-08-20, after the dld pass landed, **one deck remains uncited**. The audit-lead
+counts come from `node scripts/audit-deck.mjs <deck>` and are leads, not verdicts.
 
 | # | Deck | Q | Cited | Audit leads | Why it is here |
 |---|---|---:|---:|---:|---|
-| 1 | dld | 138 | 0 | 1 | Untouched, and now the largest uncited deck. 2 duplicate pairs. Also holds `46cb24ed`, the repo's last unparsed reference marker |
-| 2 | data-cloud-consultant | 100 | 0 | 2 | Untouched. 4 user comments waiting, 1 duplicate pair |
+| 1 | data-cloud-consultant | 100 | 25 | 2 | The last deck without a full pass — and **a pass on it was already in flight in this working tree on 2026-08-20**, from a separate session (`findings-datacloud-b1.json`, 25/100 cited, 6 stamps). Check that file and re-measure before starting: you may be resuming rather than beginning. 4 user comments waiting, 1 duplicate pair. **Read those comments** — 4 keys here have already moved via comments, so the set is known-live signal rather than noise |
 
 Things that are **not** deck passes but are queued:
 
@@ -494,6 +501,59 @@ validates clean.
     the three-state behaviour and the developer.salesforce.com silent-fallback trap, is
     in the Data Architect section of `verified-docs.md`.
 
+### Open items from the dld pass (2026-08-20)
+
+Nothing here blocks the deck — it is at 138/138, the audit is clean, and the richtext
+suite is green with dld contributing zero code blocks.
+
+**~~Repo-owner decision~~ — `051864d9` was repaired on 2026-08-21, and it is the worked
+example for pattern 5 meeting pattern 8:**
+
+1. The pass had flagged it as a defective choose-2 with only one true option, and
+   suspected scrape damage in option A. Both were right, and the fix was recoverable from
+   the web. **The scrape had dropped a negation**: option A read "Specifying the test
+   method *is* supported in DeployOptions, therefore specify only the test classes",
+   a non-sequitur. The original reads "is **not** supported", which makes A true and the
+   item answerable, so the intended key was **A,B**. Option A was edited in place (ids are
+   frozen, so the id and any comments survive an option edit) and the key moved B,C → A,B.
+
+   Two lessons worth keeping. **A dropped negation is a scrape-damage shape to look for** —
+   it inverts a claim while leaving a fluent sentence behind, so nothing reads as corrupt.
+   And **the exam dumps had this one wrong**: they key B,C, the very option Salesforce's
+   *Running a Subset of Tests in a Deployment* contradicts in one sentence — "You can
+   specify only test classes. You can't specify individual test methods." That page is
+   written for this exact task and I had not read it during the pass, having settled the
+   question from the `runTests` field definition instead. **When an item is about a
+   specific task, look for the page written about that task**, not only the reference
+   entry for the field it uses.
+2. **`9845d66b` rests entirely on a retired tool.** Both keyed statements describe the
+   Lightning Testing Service, and Salesforce's guide now says it "is deprecated and no
+   longer supported", pointing to Jest, UTAM, Jasmine, Mocha, Selenium and WebdriverIO.
+   Kept as what the exam tests, with a notice telling the reader not to install it.
+3. **`3f3e8dd7` is weak rather than wrong.** Its second keyed option is the complete-graph
+   multi-org topology, which Salesforce's own org-strategy guidance calls "a spider web of
+   integrations… very brittle point-to-point connections", and its first distractor
+   (consolidate into one org) also delivers a customer 360. The item really tests which
+   *named topologies* can deliver a 360 view, not which approach is advisable.
+
+**Verification debt to be honest about:**
+
+4. **~30 of this deck's citations are topical rather than decisive.** Two of its five
+   domains — Application Lifecycle Management and Project & Release Management — are
+   methodology, governance and role-definition questions that no vendor page settles.
+   Each such question says so in its own prose ("this is governance practice rather than
+   a Salesforce platform fact… the reference is orienting rather than decisive") rather
+   than implying a verification it does not have. **This is the Slack deck's caveat
+   again**: read this deck's 138/138 as weaker evidence than the same number on
+   Environment Management or Deployment, where the documentation genuinely decides.
+   Salesforce's own Trailhead did settle several outright — the Kanban and Scrum options
+   in `bc9a1ad1` and `ade048ca` are verbatim from *Scrum and Kanban at Salesforce*.
+5. **A pass can introduce pattern-1 defects.** The audit went from 1 finding to 3 after
+   the rewrites landed, because two of my explanations opened by eliminating a distractor
+   instead of naming the keyed answer. Fixed in a ninth findings file, and the audit is
+   now at 0. **Re-run `audit-deck.mjs` after applying, not only before** — the rewrite
+   step is itself a source of the defect the audit looks for.
+
 ### Duplicates
 
 Cross-deck repeats are fine and deliberate — the same item legitimately appears
@@ -544,7 +604,6 @@ distinct question — resolving them is a fact-check, not a dedupe:
 | agentforce-specialist | `e6949181` vs `63afa960` — Model Playground vs Testing Center |
 | agentforce-specialist | `0b45cf29` vs `b7ffd87e` |
 | data-cloud-consultant | `b16bbc31` vs `e652607d` — "takes up to 24 hours" vs "available soon" |
-| dld | `2b7730d8` vs `42760192`; `a0fc764b` vs `ece03577` |
 | iam-architect | `cfcdee5c` vs `717f2404` |
 | sharing-visibility | `b3eeee28` vs `c095ab36`; `681f22f4` vs `7d2c8e5f` — partner *manager* vs *individual* partner users |
 
@@ -562,6 +621,18 @@ its blind spot is worth knowing: `6f99fe4e`/`ac4ee893` differed only in the noun
 only in the qualifier ("partner *manager* users" vs "*individual* partner users").
 One decisive word inside two otherwise identical sentences scores as agreement.
 **Read both copies; never remove on the label.**
+
+**The same blind spot runs in the opposite direction, and both dld pairs turned out to
+be false positives** (resolved 2026-08-20, which is why they are no longer in the table
+above). `a0fc764b`/`ece03577` are "which two situations favor a **Waterfall**
+methodology" and "…favor an **Agile** methodology" — deliberately complementary
+questions with disjoint option sets, scoring 0.78 on stem tokens. `2b7730d8`/`42760192`
+open with the same boilerplate sentence but ask about **production deployment** and
+**version control** respectively, scoring 0.77. So a high score means "these stems are
+built from the same template", which is as often a matched pair as a duplicate.
+**Keyed-option-text Jaccard is ~0 for both**, so the second-pass comparison proposed
+under the data-architect open items would not only catch missed duplicates — it would
+clear false positives too. That is now two independent reasons to build it.
 
 **`6f99fe4e`/`ac4ee893` has since been resolved, and it is the worked example of why
 these pairs are a fact-check rather than a dedupe.** The two carried identical stems
@@ -650,12 +721,24 @@ canonical title. So on this vendor a plausible-looking slug is no evidence at al
 and a stale slug is **not** a dead link to be "repaired" — Slack renames articles
 under stable ids. Verify by rendered title, never by slug.
 
-**One more thing that pass established, and it constrains the queued admin work:**
-from a cloud container, `help.salesforce.com` is **not verifiable via `WebFetch`**.
-The real `sf.security_networkaccess` and an invented id both return HTTP 200 with
-the same "Sorry to interrupt / CSS Error" shell, because WebFetch does not execute
-the SPA. Salesforce URL checking needs a real browser; the recipe in 4b still
-applies, but not from a plain fetch tool.
+**One more thing that pass established:** from a cloud container,
+`help.salesforce.com` was **not verifiable via `WebFetch`** — the real
+`sf.security_networkaccess` and an invented id both returned HTTP 200 with the same
+"Sorry to interrupt / CSS Error" shell, because WebFetch did not execute the SPA.
+
+**That is environment-dependent, and the dld pass on 2026-08-20 established the other
+half of it.** Run from the repo owner's local Windows machine, `WebFetch` renders
+`help.salesforce.com` fully and returns **article bodies** for both `type=1` and
+`type=5`, and reports a dead id honestly as "We looked high and low". All 68 URLs in
+that pass were verified without opening a browser once. The exceptions that still need
+one are `release-notes.*` ids (SPA shell only) and **`architect.salesforce.com`, which
+returns HTTP 403 to WebFetch** at the host level.
+
+So the generalisable rule is not "Salesforce needs a browser" but: **how a doc host
+behaves depends on where you are fetching from as well as which host it is. Test it
+from your own environment at the start of a pass** — the difference is the difference
+between 68 browser round-trips and none. Full per-host table in the dld section of
+`references/verified-docs.md`.
 
 ### 4. Dead citation URLs that return HTTP 200
 `help.salesforce.com` is a single-page app and answers **every** article id — real
@@ -725,8 +808,9 @@ leaves the broken text sitting in the body. **Supply a rewritten `explanation` w
 stray marker stripped** — verdict `clarified` — and the applier emits a clean block and
 drops the unreachable URLs with it.
 
-One survivor remains repo-wide: `46cb24ed` in dld. Measure with the command in Deck
-state, which counts this case explicitly.
+**Zero survivors repo-wide as of 2026-08-20** — the last one, `46cb24ed` in dld, went
+with that deck's pass. Measure with the command in Deck state, which counts this case
+explicitly, and expect the next scraped import to reintroduce it.
 
 ### 4d. A live citation whose `#fragment` no longer exists
 
