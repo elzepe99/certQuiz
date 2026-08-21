@@ -2009,3 +2009,168 @@ wherever you are before budgeting browser time.** Specifics confirmed on this pa
 - `release-notes.rn_sandbox_clone_diff_versions.htm` — renders only the SPA shell to WebFetch. Use knowledge article `000380490` instead.
 - `architect.salesforce.com/diagrams/reference-architectures/single-org-architecture` — **HTTP 403** to WebFetch (host-level, not page-level).
 - Silent-fallback traps hit this pass (wrong slug produces the guide landing page, no error): `sfdx_setup/sfdx_setup_enable_devhub.htm`, `apexref/apex_interface_system_sandboxpostcopy.htm` (lowercase — the real one is `apex_interface_System_SandboxPostCopy.htm`, **case-sensitive**), `apexcode/apex_json_overview.htm`, `apexcode/apex_callouts_testing.htm`, `api_meta/meta_workflowalert.htm`.
+
+---
+
+# Verified Data Cloud / Data 360 documentation
+
+Added 2026-08-21 during the Data Cloud Consultant pass (100 questions). **55 URLs,
+all rendered and title-checked.**
+
+## The product was renamed, and the id space is moving with it
+
+Salesforce's own page states it: **"As of October 14, 2025, Data Cloud has been
+rebranded to Data 360."** Article titles now read "Data Streams in Data 360",
+"Segmentation Operators in Data 360", "About Salesforce Data 360". The functionality is
+unchanged, but a deck written against "Data Cloud" is using a retired product name
+throughout.
+
+**Prefix: use `data.`, not `sf.`** The `sf.c360_a_*` space is being retired for this
+product. `sf.c360_a_streaming_insights.htm` is **dead** while
+`data.c360_a_streaming_insights.htm` renders. Some `sf.` ids do still work
+(`sf.c360_a_container_basics.htm`, `sf.c360_a_primary_key.htm`), so this is not a blanket
+swap — verify each. **Guessing ids fails badly here: 1 hit in 8 on one probe, and 4 of 5
+dead on another.** Search for the article title instead; the search index only returns
+ids that exist.
+
+## Vendor failure mode — tested per pattern 4a
+
+`help.salesforce.com` with a `data.` id fails **honestly** on the title:
+`data.c360_a_totally_invented_probe_xyz.htm` returns "We looked high and low but couldn't
+find that page." A real id returns its own article title. So WebFetch works as a
+first-pass existence check.
+
+**But WebFetch cannot read `type=5` bodies here.** It repeatedly returned the SPA's
+navigation tree instead of the article — enough to confirm existence, useless for
+confirming a claim. Every fact in this pass was read in the browser.
+
+## Fix to the four-ids-per-call browser recipe
+
+The recipe recorded earlier in this file polls `contentDocument.title` until it stops
+being the generic `Salesforce Help | Article`. **That gate is wrong** — the shell also
+serves a bare **`Salesforce Help`** title mid-load, which passes the gate and reports a
+live article as unresolved. Treat all three of empty, `Salesforce Help` and
+`Salesforce Help | Article` as not-yet-resolved. This is the same race that produced the
+bogus "third state" corrected on 2026-08-20.
+
+Also: **keep it to three ids per call.** Six ids at 800 ms polling exceeded the 30 s tool
+timeout.
+
+## Settled facts — segmentation
+
+| Fact | Source |
+|---|---|
+| **"Segment and activation don't support streaming insights."** Settles three questions at once | `data.c360_a_insights.htm` |
+| A **container** is created automatically when you filter on a *related attribute*; attributes in one container act on the same data row, attributes in separate containers filter independently. **Containers are not reusable across segments** | `sf.c360_a_container_basics.htm` |
+| Worked example, verbatim: yellow in one container + scarf in another finds "customers who purchased any yellow product and purchased a scarf of any color" — not a yellow scarf | `sf.c360_a_container_basics.htm` |
+| **Nested segments** are the documented way to share criteria: "Reuse filters and maintain consistency in your data by using an existing segment built on profile objects" | `data.c360_a_nested_segments.htm` |
+| The **Segment On DMO must be a Profile type** | `data.c360_a_calculated_insights_in_segments.htm` |
+| Text operators are **case-insensitive**; the date operator is **"Last Number Of Days"** (capital O), and **"Greater Than Last Number Of Days"** is also real — it finds events *before* the window | `data.c360_a_datatype_expression_operators.htm` |
+| Error "Segment is too complex" then "Use a CI instead of many attributes and nested operators"; "Segment references too many DLOs" then use a CI or split the segment; "Too many segments publishing at once" then **change the publish schedule** | `data.c360_a_segmentation_troubleshooting.htm` |
+| Value suggestions: enabled per Text field **from the DMO record home**, up to **500** attributes per org, **up to 24 hours** to appear, retained **30 days**, and an attribute with more than 1,000 values shows the **1,000** most frequent. There is **no 50-value limit** | `data.c360_a_suggested_values_in_segments.htm` |
+| Schedules display in the **logged-in user's** time zone; the **org** time zone still governs date operators like Last n Days | `data.c360_a_time_zones.htm` |
+
+## Settled facts — ingestion, modeling, identity
+
+| Fact | Source |
+|---|---|
+| **The phone data type does not normalize anything**: "Data 360 doesn't validate the format of the phone number... Any valid text value is accepted." E164 appears nowhere on the page. Formula functions are the documented transform route | `data.c360_a_data_types.htm` |
+| Data stream **category can't be changed after saving**; Profile is for "a list of employees or any other population that you want to segment on"; Engagement requires an event date-time field that is not editable afterwards | `data.c360_a_category.htm` |
+| Profile/Other DMOs require the **primary key** mapped; Engagement DMOs require **primary key + event date-time** | `data.c360_a_required_data_mappings.htm` |
+| **Reconciliation rules do not apply to contact points** (email, phone, address). Use **source priority on the activation** to pick a contact point's source. Source Priority sorts **DLOs**, not DMOs | `data.c360_a_reconciliation_rules.htm` |
+| Deleting a ruleset "permanently removes all unified customer data, eliminates dependencies on data model objects, stops all processing... and deletes the history of previous runs". Takes **up to 24 hours**; source data is untouched | `data.c360_a_identity_resolution_deletion.htm` |
+| Full Refresh works on **100 million rows or smaller** | `data.c360_a_full_replace.htm` |
+| B2C Commerce Order Bundle loads **30 days** of history | `data.c360_a_create_commerce_cloud_starter_bundle.htm` |
+
+## Settled facts — activation
+
+| Fact | Source |
+|---|---|
+| **Activation membership is "the grouping of fields from different data model objects (DMOs)"**, and the **Unified Individual DMO** is required when an identity resolution ruleset is in use. There is **no "Data Segmentation Object"** in Data Cloud | `data.c360_a_activation_for_a_segment.htm` |
+| Segment membership is stored in a **Segment Membership DMO** (`Individual_SM__dlm` latest, `Individual_SMH__dlm` history, 30 days) | `data.c360_a_segment_membership_data.htm` |
+| Engagement activation has a **90-day lookback**; **7 days** with rapid publish; profiles can still qualify on an engagement date up to **24 months** old. Limits: **25** values per related attribute, **300** related attributes per activation | `data.c360_a_considerations_for_related_attributes.htm` |
+| Attribute renaming is the **Output Name** field (preferred name) on the activation; must be unique across the activation and alphanumeric only | `data.c360_a_preferred_attribute_name.htm` |
+| Rapid Publish: 1- or 4-hour intervals, max **20** rapid segments, **20** rapid concurrent publishes. Standard segments: publish frequency min 12h / max 24h, max 2 scheduled publishes per day, 24-month event window | `data.c360_a_rapid_segment_publish.htm`, `data.c360_a_limits_and_guidelines.htm` |
+| Limits are negotiable: "some limits can be adjusted to meet your business needs. Work with your account executive" | `data.c360_a_limits_and_guidelines.htm` |
+
+## Permission sets were renamed on 4 Sept 2025
+
+`data.c360_a_userpermissions.htm`. Every permission-set name in a pre-2026 deck is stale:
+
+| Legacy name | Current name |
+|---|---|
+| Data Cloud Admin | **Data Cloud Architect** |
+| Data Cloud Marketing Specialist | **Data Cloud Activation Specialist** |
+| Data Cloud Marketing Manager | **Data Cloud Activation Manager** |
+| Data Cloud for Marketing Data Aware Specialist | **Data Cloud Data Aware Specialist** |
+
+Data Cloud User (view-only) keeps its name. Capabilities map 1:1, so answers keyed on
+capability still stand — but the option *text* sends a learner hunting for a Setup node
+that no longer exists.
+
+## Confirmed URLs — all rendered and title-checked 2026-08-21
+
+All of the form `https://help.salesforce.com/s/articleView?id=<id>&language=en_US&type=5`
+unless noted.
+
+`data.c360_a_data_cloud.htm` (About Salesforce Data 360) ·
+`data.c360_a_insights.htm` (Enhance Data with Insights) ·
+`data.c360_a_calculated_insights_in_segments.htm` · `data.c360_a_segments.htm` ·
+`data.c360_a_nested_segments.htm` · `sf.c360_a_container_basics.htm` (Filtering Using
+Containers and Attributes) · `data.c360_a_datatype_expression_operators.htm` ·
+`data.c360_a_segmentation_troubleshooting.htm` ·
+`data.c360_a_suggested_values_in_segments.htm` · `data.c360_a_time_zones.htm` ·
+`data.c360_a_publish_segment.htm` · `data.c360_a_rapid_segment_publish.htm` ·
+`data.c360_a_limits_and_guidelines.htm` · `data.c360_a_segment_membership_data.htm` ·
+`data.c360_a_activation_for_a_segment.htm` · `data.c360_a_contact_points.htm` ·
+`data.c360_a_considerations_for_related_attributes.htm` ·
+`data.c360_a_preferred_attribute_name.htm` (Set Output Name for Activation Attributes) ·
+`data.c360_a_find_segments_in_cloud_file_storage.htm` ·
+`data.c360_a_create_cloud_file_storage_activation_target.htm` ·
+`data.c360_a_file_name_examples.htm` · `data.c360_a_data_types.htm` ·
+`data.c360_a_category.htm` · `data.c360_a_primary_key.htm` ·
+`data.c360_a_required_data_mappings.htm` ·
+`data.c360_a_map_custom_data_model_objects.htm` ·
+`data.c360_a_considerations_formula_fields.htm` ·
+`data.c360_a_batch_transform_formula.htm` ·
+`data.c360_a_data_ingestion.htm` (Connect Data) · `data.c360_a_data_streams.htm` ·
+`data.c360_a_data_stream_schedule.htm` · `data.c360_a_data_stream_edit_settings.htm` ·
+`data.c360_a_full_replace.htm` · `data.c360_a_salesforce_crm_connector.htm` ·
+`data.c360_a_create_crm_data_stream.htm` ·
+`data.c360_a_crm_store_deleted_data_stream_records.htm` ·
+`data.c360_a_web_mobile_app_connector.htm` ·
+`data.c360_a_streaming_transform_overview.htm` ·
+`data.c360_a_create_marketing_cloud_data_extension.htm` ·
+`data.c360_a_create_commerce_cloud_starter_bundle.htm` · `data.c360_a_data_spaces.htm` ·
+`data.c360_a_data_package_kits.htm` (Data Kits) · `data.c360_a_userpermissions.htm` ·
+`data.c360_a_data_explorer.htm` · `data.c360_a_profile_explorer.htm` ·
+`data.c360_a_identity_resolution.htm` · `data.c360_a_match_rules.htm` ·
+`data.c360_a_match_rules_criteria_fuzzy_normalized.htm` ·
+`data.c360_a_resolution_summary.htm` ·
+`data.c360_a_resolution_troubleshooting_ci_consolidation_rate.htm` ·
+`data.c360_a_identity_resolution_deletion.htm` · `data.c360_a_reconciliation_rules.htm` ·
+`data.c360_a_consent_management.htm` · `data.c360_a_data_deletion_request.htm` ·
+`xcloud.sdp_recipe_stringfunctions.htm` (String Functions for Formulas) ·
+`000389693` (`type=1`, Full Refresh for CRM, SFMC, WebSDK or Ingestion API Data Streams)
+
+## Known dead — from the Data Cloud pass (2026-08-21)
+
+| Dead id | Note |
+|---|---|
+| sf.c360_a_streaming_insights.htm | live at `data.c360_a_streaming_insights.htm` |
+| data.c360_a_data_kits.htm | real id is `data.c360_a_data_package_kits.htm` |
+| data.c360_a_crm_connector.htm | real id is `data.c360_a_salesforce_crm_connector.htm` |
+| data.c360_a_matching_rules.htm, data.c360_a_identity_resolution_match_rules.htm | real id is `data.c360_a_match_rules.htm` |
+| data.c360_a_activation_overview.htm, data.c360_a_source_priority.htm, data.c360_a_web_mobile_connector.htm, data.c360_a_connect_salesforce_crm.htm | constructed guesses, never existed |
+| data.c360_a_bulk_ingestion.htm, data.c360_a_streaming_ingestion.htm, data.c360_a_calculated_insight_refresh.htm, data.c360_a_data_ethics.htm, data.c360_a_marketing_cloud_connector.htm | constructed guesses, never existed |
+| sales.duplicate_rules_about.htm, sales.matching_rules_about.htm, sales.duplicate_prevention_map_of_dupe_management.htm, platform.managing_duplicates_overview.htm, sales.duplicate_rules_map_of_matching_rules.htm | prefix-swap guesses at a live article; 4 of 5 dead — do not guess, search the title |
+| data.c360_a_segment_error_messages.htm, data.c360_a_permission_sets.htm, data.c360_a_segintel_set_up.htm, data.c360_a_segintel_assign_user_permissions.htm, data.c360_a_segment_time_zone.htm, data.c360_a_unified_profile.htm, data.c360_a_edit_calculated_insight.htm, data.c360_a_calculated_insights_aggregatable_metrics.htm | constructed during this pass and dead |
+
+**Live but returns a parent page:** `data.c360_a_calculated_insights.htm` renders under
+the title "Enhance Data with Insights" — the parent article, not a Calculated Insights
+page. Cite `data.c360_a_insights.htm` directly rather than relying on the alias.
+
+**Search-result titles are not evidence.** `000699085` was listed by search as
+"Dependencies on Category when Mapping Data Streams"; the article that actually renders
+at that id is "Data 360: Unmap and Delete the SFMC Subscriber Data Stream". Render the id
+before citing it.

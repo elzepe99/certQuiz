@@ -165,9 +165,14 @@ underneath.
 
 ## Deck state — as of 2026-08-20
 
-1,619 questions across 13 decks. **1,544 (95%) carry a reference with an actual URL,
-and the reference gap is still zero** — every question that renders a References block
-has a link in it.
+1,619 questions across 13 decks. **All 1,619 carry a reference with an actual URL — the
+first time every deck has reached full coverage.** The reference gap is zero and the
+unparsed-marker count is zero.
+
+The last 100 are the **data-cloud-consultant pass on 2026-08-21**, which closed the final
+uncited deck. The 138 before that were the dld pass, which landed as PR #17 from a
+separate session while this one was running — re-measure rather than trusting either
+number.
 
 The jump from 1,381 is the **dld pass on 2026-08-20**: +163, taking that deck from
 0/138 to 138/138 and clearing the repo's last unparsed reference marker with it.
@@ -276,7 +281,7 @@ column, not the Cited column.
 | salesforce-admin | 154 | 154 | **Fully checked** (2026-08-19) — 2 keys moved, 5 flagged, 60 explanations rewritten. 13 keys had already moved in the ADM-201 merge pass. Its real defect was the citation layer: only 36 questions rendered a References block, **47 more carried a marker the parser could not see**, and **24 of the 36 legacy `sf.` ids tested were dead** — see failure patterns 4b and 4c |
 | salesforce-agentforce-specialist | 121 | 121 | **Fully checked** (2026-08-17) — 16 keys moved across 6 batches. Started from 0 cited, with 26 questions rendering a References block of prose only. One duplicate removed (`b7ffd87e`), resolving the pair this file flagged |
 | salesforce-revenue-cloud | 135 | 135 | **Fully checked** (2026-08-15) — 2 keys moved, 88 explanations rewritten. Its defect was **fabricated citations, not wrong answers**: 73 explanations quoted invented "Exact Extracts". 9 questions could not be settled and say so in their own prose. Deduped 137 → 135 on 2026-08-17 |
-| salesforce-data-cloud-consultant | 100 | 0 | Uncited; 4 keys moved via comments |
+| salesforce-data-cloud-consultant | 100 | 100 | **Fully checked** (2026-08-21) — 4 keys moved, 6 flagged reasoning fixes, 11 silent clarifications. Its defect shape is **the invented capability**: a "reusable container block", a "Data Segmentation Object", and a phone field type that supposedly normalises to E164 all name things Data Cloud does not have. Two items are defective (three defensible options each), and one explanation resolved its own ambiguity by deferring to "the source" — an exam dump. **All 100 option sets use pre-rename product and permission-set names** — see the Data 360 note below |
 | salesforce-sharing-visibility | 136 | 136 | **Fully checked** (2026-08-17) — 2 keys moved, 6 reasoning fixes, 19 silent clarifications. The 4 earlier 2026-08-04 validation stamps are preserved |
 | salesforce-app-builder | 119 | 119 | **Fully checked** (2026-08-11) — 4 keys moved, 27 reasoning fixes, 3 defective option sets repaired. Q1–50 spot-rechecked: 10 sampled, 1 defect (a mechanism stated backwards), so the earlier batches read sound |
 | salesforce-dld | 138 | 138 | **Fully checked** (2026-08-20, one item repaired 2026-08-21) — 5 keys moved, 10 reasoning fixes, 103 silent clarifications. Its defect shape is **stale platform facts**: an entire item built on the retired Lightning Testing Service, Professional/Enterprise tab allocations taught at 10/25 when they are 1,210/1,225, the Metadata API uncompressed ceiling at 400 MB when it is 600 MB, and quick-deploy eligibility at 4 days when it is 10. Two keys moved on the **same** operating-model quadrant — see the Replication row in `verified-docs.md`. Also holds the repo's last unparsed reference marker, now fixed. **~30 of its citations are topical rather than decisive** — its ALM and Project domains are methodology and governance, which no vendor page settles |
@@ -408,12 +413,8 @@ fact-check outcome, which is why the deck still has 37.
 
 ### What to work on next
 
-As of 2026-08-20, after the dld pass landed, **one deck remains uncited**. The audit-lead
-counts come from `node scripts/audit-deck.mjs <deck>` and are leads, not verdicts.
-
-| # | Deck | Q | Cited | Audit leads | Why it is here |
-|---|---|---:|---:|---:|---|
-| 1 | data-cloud-consultant | 100 | 25 | 2 | The last deck without a full pass — and **a pass on it was already in flight in this working tree on 2026-08-20**, from a separate session (`findings-datacloud-b1.json`, 25/100 cited, 6 stamps). Check that file and re-measure before starting: you may be resuming rather than beginning. 4 user comments waiting, 1 duplicate pair. **Read those comments** — 4 keys here have already moved via comments, so the set is known-live signal rather than noise |
+As of 2026-08-21, **every deck has had a full documentation pass and every question is
+cited.** There is no next deck. What remains is cross-cutting work, below.
 
 Things that are **not** deck passes but are queued:
 
@@ -553,6 +554,74 @@ example for pattern 5 meeting pattern 8:**
    instead of naming the keyed answer. Fixed in a ninth findings file, and the audit is
    now at 0. **Re-run `audit-deck.mjs` after applying, not only before** — the rewrite
    step is itself a source of the defect the audit looks for.
+
+
+### Open items from the data-cloud-consultant pass (2026-08-21)
+
+Nothing here blocks the deck — it is at 100/100, the audit is back to its two
+pre-existing false positives, and the richtext suite is green.
+
+**The deck-wide staleness, which is a repo-owner decision:**
+
+1. **Salesforce renamed the product.** Its own page says "As of October 14, 2025, Data
+   Cloud has been rebranded to **Data 360**." All 100 stems and options say "Data Cloud",
+   and every current doc title says Data 360. No key is affected. Renaming the deck, its
+   manifest entry and its prose is a call for you, not a fact-check outcome.
+2. **Every permission-set option name is pre-4-Sept-2025.** Data Cloud Admin is now
+   **Data Cloud Architect**, Marketing Specialist is **Activation Specialist**, Marketing
+   Manager is **Activation Manager**, and "for Marketing Data Aware Specialist" is just
+   **Data Cloud Data Aware Specialist**. Capabilities map 1:1 so four questions keep their
+   keys (`860708a5`, `1d6366ff`, `3b0c0a4e`, and `49ee75cb` by implication), and the prose
+   now names the current sets — but the *option text* still sends a learner to a Setup node
+   that no longer exists. Fixing option text means re-minting ids, so it was left alone.
+
+**Two defective items, kept as keyed:**
+
+3. **`704331e8` has three defensible options.** It keys Data Explorer + Query API and its
+   explanation denies that Identity Resolution is a validation surface — but the Resolution
+   Summary reports match and reconciliation statistics after every run, and this deck's own
+   `a82aca1f` keys Identity Resolution as exactly that. The deck contradicts itself.
+4. **`de949f0f` has two true options.** Adding a new dimension (A) and adding a new measure
+   (D) are both possible; only removal is blocked. The old explanation admitted this and
+   resolved it by deferring to what "the source" marked correct — an exam dump, failure
+   pattern 8. Rewritten to teach the add-versus-remove rule instead.
+
+**One item whose keyed mechanism the documentation contradicts:**
+
+5. **`859419eb` keys configuring reconciliation rules on Contact Point Address.** Salesforce
+   says reconciliation rules **don't apply to contact points**, and that Source Priority
+   sorts DLOs rather than DMOs; the documented way to choose a contact point's source is
+   source priority on the *activation*, which this deck keys correctly in `dc2c1055`. Key
+   kept because no option describes the documented mechanism.
+
+**Verification debt to be honest about:**
+
+6. **`062012ec` is not settled.** Its "column added or removed triggers a full refresh" and
+   the 600K-deletion threshold in its distractor are not stated on any Data Cloud page I
+   could render; the closest match was CRM Analytics' `sfdcDigest`, a different product.
+   Confirmed on the deck's own reasoning with topical citations only.
+7. **~6 citations are topical rather than decisive** — the data-ethics item (`3ce5cecc`),
+   the two "which use case fits Data Cloud" items, the Flow-orchestration item
+   (`b985f235`), and the LWC/Profile API item (`0e845e09`) rest on judgment or on product
+   positioning rather than on a page that settles them.
+
+**The duplicate pair is now resolved as redundancy, not error:**
+
+8. **`b16bbc31` / `e652607d` are the same question with the same intended answer.** Both key
+   "value suggestion is still processing"; they differ only in whether the option states the
+   documented "up to 24 hours". `find-duplicates.mjs` scores them 0.94 and labels them
+   `DIFFERS` purely because the letters differ (D vs A). Both are correct, so removal is a
+   dedupe decision — and `b16bbc31` is the copy to keep, since its option carries the number
+   the documentation gives. This is the third independent case arguing for the queued
+   keyed-option-text comparison.
+
+**A tooling fix worth folding in:**
+
+9. **The four-ids-per-call browser recipe in `verified-docs.md` has a race.** It polls until
+   the title stops being `Salesforce Help | Article`, but the shell also serves a bare
+   `Salesforce Help` mid-load, which passes the gate and reports live articles as
+   unresolved. Treat all three of empty, `Salesforce Help` and `Salesforce Help | Article`
+   as unresolved, and keep it to **three** ids per call — six exceeded the 30s tool timeout.
 
 ### Duplicates
 
