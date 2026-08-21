@@ -1,0 +1,88 @@
+{
+  "deck": "public/decks/data_cloud_consultant_questions.json",
+  "reviewed": "2026-08-21",
+  "findings": [
+    { "id": "704331e8", "verdict": "reasoning",
+      "explanation": "Data Explorer lets you inspect the rows of any DLO or DMO, including the Unified Individual, to confirm that source records merged as expected (C), and the Query API returns unified profile data programmatically so field values and linkages can be verified outside the UI (D). Data Actions (B) publish events downstream and are not an inspection surface. Option A is the weak part of this item rather than a clean distractor: Identity Resolution does carry a validation surface of its own — the Resolution Summary reports match and reconciliation statistics after each ruleset run, and this deck keys exactly that as a valid way to validate a unified profile elsewhere. Treat C and D as the answer because they inspect the resulting data directly, but do not take from this item that identity resolution offers nothing to check.",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_data_explorer.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_resolution_summary.htm&language=en_US&type=5"],
+      "note": "Item defect: three of the four options are defensible. The Resolution Summary is a documented way to validate identity resolution output, so option A is not simply wrong, and this deck's own question on the same topic keys Identity Resolution as a validation feature. Key kept as the two that inspect profile data directly." },
+
+    { "id": "0147d0c4", "verdict": "clarified",
+      "explanation": "Attributes placed in the same container act on the same data row of the container's object; attributes placed in separate containers are evaluated independently of each other. Salesforce's own worked example is this question: put yellow in one container and scarf in another, and the query engine looks for customers who purchased any yellow product and purchased a scarf of any color — not a yellow scarf. So two containers joined by AND return individuals who bought at least one red product and, separately, at least one pair of shoes (A). Option B is what you would get by putting Color and PrimaryProductCategory in the same container, C adds an exclusivity the filter never expresses, and D is OR logic.",
+      "references": ["https://help.salesforce.com/s/articleView?id=sf.c360_a_container_basics.htm&language=en_US&type=5"] },
+
+    { "id": "31242001", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_map_custom_data_model_objects.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_required_data_mappings.htm&language=en_US&type=5"] },
+
+    { "id": "9b1101be", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_data_cloud.htm&language=en_US&type=5"] },
+
+    { "id": "3e489c6f", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_data_spaces.htm&language=en_US&type=5"] },
+
+    { "id": "a6d82413", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_data_cloud.htm&language=en_US&type=5"] },
+
+    { "id": "ce553d2c", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_insights.htm&language=en_US&type=5"] },
+
+    { "id": "3b0c0a4e", "verdict": "clarified",
+      "explanation": "Setting up Segment Intelligence is administrative work — connecting sources and configuring the feature — so it needs the permission set that grants all Data Cloud functionality, which this option calls Data Cloud Admin (D). Data Aware Specialist (A) covers data mapping and modeling, Data Cloud User (B) is view-only, and Cloud Marketing Manager (C) is not a permission set name at all. Note the naming: as of 4 Sept 2025 the standard permission sets were renamed and this one is now Data Cloud Architect, described as giving access to all functionality within Data 360 including Data Cloud Setup, data mapping, data streams, identity resolution rulesets and insights.",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_userpermissions.htm&language=en_US&type=5"] },
+
+    { "id": "537887b3", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_identity_resolution.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_insights.htm&language=en_US&type=5"] },
+
+    { "id": "214e0fc6", "verdict": "corrected", "was": "C", "correct": "A",
+      "explanation": "Assigning the phone data type does not standardize anything. Salesforce states it plainly: Data 360 doesn't validate the format of the phone number, the phone data type is modeled on the text data type, and any valid text value is accepted for ingestion into a phone field. Choosing that type only marks the field's intent. The same page points at the actual mechanism — formula functions that work with text values accept phone data type input, and you can convert the text output of those functions back into a phone data type — so a formula field applied at ingestion is what normalizes the varying formats into E164 (A). Fixing the data upstream (B) works but is the opposite of efficient and is often outside your control, and a calculated insight (D) computes metrics after ingestion rather than reshaping the stored field. The E164 requirement itself is real: it is the only format accepted for SMS sending, so the normalization has to happen somewhere.",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_data_types.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_considerations_formula_fields.htm&language=en_US&type=5"],
+      "note": "Answer moved C->A. The keyed claim that assigning the PhoneNumber field type standardizes numbers into E164 is contradicted by the Data Types page, which says Data 360 does not validate phone format and accepts any text. The same page names formula functions as the supported way to transform the value." },
+
+    { "id": "f3b19bee", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_datatype_expression_operators.htm&language=en_US&type=5"] },
+
+    { "id": "a0c8b14c", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_find_segments_in_cloud_file_storage.htm&language=en_US&type=5"] },
+
+    { "id": "73954651", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_required_data_mappings.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_contact_points.htm&language=en_US&type=5"] },
+
+    { "id": "2646b393", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_activation_for_a_segment.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_contact_points.htm&language=en_US&type=5"] },
+
+    { "id": "a8a68101", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_category.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_segments.htm&language=en_US&type=5"] },
+
+    { "id": "17b95a6b", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_considerations_for_related_attributes.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_contact_points.htm&language=en_US&type=5"] },
+
+    { "id": "a40ce191", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_insights.htm&language=en_US&type=5"] },
+
+    { "id": "b2861a64", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_data_cloud.htm&language=en_US&type=5"] },
+
+    { "id": "159e1391", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_data_ingestion.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_create_cloud_file_storage_activation_target.htm&language=en_US&type=5"] },
+
+    { "id": "74955e95", "verdict": "clarified",
+      "explanation": "Profile is the category for data that describes who someone is, and Salesforce's Category page names this case directly: choose Profile if your dataset is a list of individuals with identifiers, a list of businesses or accounts, or a list of employees or any other population that you want to segment on (A). Employee records from an HR system are exactly that. Engagement (D) is for time-series event data and requires an event date-time field to be nominated at setup, Other (C) is for reference data that is neither, and Contact Data (B) is not a Data Cloud data stream category. Worth remembering when you pick: the category can't be changed after the data stream is saved.",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_category.htm&language=en_US&type=5"] },
+
+    { "id": "e362f29c", "verdict": "clarified",
+      "explanation": "Segment and activation schedule fields display the publish schedule start date and time in the logged-in user's time zone, so each team member sees their own local time (D). The org time zone is not irrelevant, though — it still governs other segmentation behaviour, notably the date-based operators such as Last Number Of Days. Two practical consequences: your org sets the publish time zone on the initial segment save, and a later change to the org's time zone is not picked up by existing segments unless you resave them.",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_time_zones.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_datatype_expression_operators.htm&language=en_US&type=5"] },
+
+    { "id": "ab4092db", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_reconciliation_rules.htm&language=en_US&type=5"] },
+
+    { "id": "062012ec", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_data_stream_edit_settings.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_crm_store_deleted_data_stream_records.htm&language=en_US&type=5"] },
+
+    { "id": "485c7063", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_data_streams.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_data_ingestion.htm&language=en_US&type=5"] },
+
+    { "id": "008f7008", "verdict": "confirmed",
+      "references": ["https://help.salesforce.com/s/articleView?id=data.c360_a_full_replace.htm&language=en_US&type=5","https://help.salesforce.com/s/articleView?id=data.c360_a_considerations_formula_fields.htm&language=en_US&type=5"] }
+  ]
+}
