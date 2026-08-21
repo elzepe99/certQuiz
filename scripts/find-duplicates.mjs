@@ -11,6 +11,26 @@
  * for `CRM`), so exact matching finds almost nothing. Stems are compared by
  * Jaccard overlap of their longer tokens.
  *
+ * A pair surfaces two ways. Either the stems overlap at THRESHOLD, or — added
+ * 2026-08-21 — the *keyed answers* match at KEYED_MATCH while the stems still
+ * overlap at STEM_FLOOR. The second path exists because OCR noise can push a
+ * true twin just under the stem gate: `4f119a16` reads "lightninglayout-items
+ * im one column" where its twin reads "lightning-layout-items in one column",
+ * and that one mangled sentence cost it 0.02.
+ *
+ * The keyed-answer comparison is IDF-weighted against the deck's own keyed
+ * text, so matching on "granular locking" counts and matching on "Flow Builder"
+ * does not. That matters: a raw keyed-text gate with no stem floor reports 64
+ * extra pairs on this repo and roughly six are real — every Salesforce deck is
+ * full of distinct questions that legitimately share a short answer. The stem
+ * floor is what makes the second path usable, and it is deliberately far below
+ * THRESHOLD rather than absent.
+ *
+ * Known limit: pairs whose stems were *rewritten* rather than OCR-damaged still
+ * escape. `23b3dd3a`/`b8dcc15e` in data-architect key identical text and score
+ * 0.10 on stems, so no stem floor catches them without admitting the 64. Those
+ * need a human reading the deck; see the Duplicates section of CLAUDE.md.
+ *
  * Each pair is classified by comparing the *text of the keyed options* rather
  * than the letters, because a shuffled copy keys a different letter to the same
  * answer:
@@ -42,6 +62,10 @@ const ONLY = argOf('--deck', null);
 /** Two keyed answers count as the same claim above this overlap. */
 const ANSWER_MATCH = 0.6;
 
+/** Second entry path: keyed answers this alike, with stems at least this alike. */
+const KEYED_MATCH = Number(argOf('--keyed-match', '0.6'));
+const STEM_FLOOR = Number(argOf('--stem-floor', '0.6'));
+
 const norm = (s) => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 const toks = (s) => new Set(norm(s).split(' ').filter((w) => w.length > 3));
 const jaccard = (a, b) => {
@@ -58,6 +82,36 @@ const keyedTexts = (q) =>
     .map((s) => s.trim())
     .map((L) => q[`option${L}`] || '')
     .filter(Boolean);
+
+/**
+ * Inverse document frequency over one deck's keyed answers. A deck where thirty
+ * questions key "Flow Builder" makes those tokens nearly free; "granular" and
+ * "locking", appearing twice, stay expensive.
+ */
+function keyedIdf(keyedTokenSets, deckSize) {
+  const df = new Map();
+  keyedTokenSets.forEach((set) => set.forEach((t) => df.set(t, (df.get(t) || 0) + 1)));
+  const idf = new Map();
+  df.forEach((count, t) => idf.set(t, Math.log(deckSize / count)));
+  return idf;
+}
+
+/** Jaccard over keyed-answer tokens, each token weighted by its rarity. */
+function weightedJaccard(a, b, idf) {
+  const fallback = Math.log(2);
+  let intersection = 0;
+  let union = 0;
+  const seen = new Set();
+  a.forEach((t) => {
+    union += idf.get(t) ?? fallback;
+    seen.add(t);
+    if (b.has(t)) intersection += idf.get(t) ?? fallback;
+  });
+  b.forEach((t) => {
+    if (!seen.has(t)) union += idf.get(t) ?? fallback;
+  });
+  return union ? intersection / union : 0;
+}
 
 /** Do both questions key the same set of claims, ignoring letter and wording? */
 function keysAgree(a, b) {
@@ -91,17 +145,22 @@ for (const file of files) {
   const deck = JSON.parse(readFileSync(join(DECKS, file), 'utf8'));
   if (!Array.isArray(deck)) continue;
   const cache = deck.map((q) => toks(q.question));
+  const keyedCache = deck.map((q) => toks(keyedTexts(q).join(' ')));
+  const idf = keyedIdf(keyedCache, deck.length);
   const rows = [];
 
   for (let i = 0; i < deck.length; i++) {
     for (let j = i + 1; j < deck.length; j++) {
       const sim = jaccard(cache[i], cache[j]);
-      if (sim < THRESHOLD) continue;
+      const keyedSim = weightedJaccard(keyedCache[i], keyedCache[j], idf);
+      const viaStem = sim >= THRESHOLD;
+      const viaKeyed = keyedSim >= KEYED_MATCH && sim >= STEM_FLOOR;
+      if (!viaStem && !viaKeyed) continue;
       const a = deck[i];
       const b = deck[j];
       const agree = keysAgree(a, b);
       const [keep, drop] = weight(a) >= weight(b) ? [a, b] : [b, a];
-      rows.push({ sim, agree, keep, drop });
+      rows.push({ sim, keyedSim, viaStem, agree, keep, drop });
       if (agree) same++;
       else differs++;
     }
@@ -112,13 +171,15 @@ for (const file of files) {
   rows
     .sort((x, y) => y.sim - x.sim)
     .forEach((r) => {
+      const scores =
+        `stem ${r.sim.toFixed(2)} keyed ${r.keyedSim.toFixed(2)}` + (r.viaStem ? '' : ' *');
       if (r.agree) {
         console.log(
-          `  SAME     ${r.sim.toFixed(2)}  keep ${r.keep.id} (${r.keep.correct})` +
+          `  SAME     ${scores}  keep ${r.keep.id} (${r.keep.correct})` +
             `  drop ${r.drop.id} (${r.drop.correct})`,
         );
       } else {
-        console.log(`  DIFFERS  ${r.sim.toFixed(2)}  ${r.keep.id} vs ${r.drop.id}`);
+        console.log(`  DIFFERS  ${scores}  ${r.keep.id} vs ${r.drop.id}`);
         console.log(`             ${r.keep.id}: ${keyedTexts(r.keep).join(' | ').slice(0, 96)}`);
         console.log(`             ${r.drop.id}: ${keyedTexts(r.drop).join(' | ').slice(0, 96)}`);
       }
@@ -126,7 +187,8 @@ for (const file of files) {
 }
 
 console.log(
-  `\n${same + differs} intra-deck pair(s) at Jaccard >= ${THRESHOLD}: ` +
+  `\n${same + differs} intra-deck pair(s): stems at Jaccard >= ${THRESHOLD}, or keyed ` +
+    `answers >= ${KEYED_MATCH} with stems >= ${STEM_FLOOR} (marked *). ` +
     `${same} keying the same answer, ${differs} keying different answers.`,
 );
 if (same) {
