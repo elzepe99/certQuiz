@@ -102,7 +102,7 @@
         "optionD": "Use Process Builder to create a Platform Event, selecting the record type as the Platform Event name on insert of the record.",
         "optionE": "",
         "correct": "A,C",
-        "explanation": "Flow Builder's HTTP Callout action (A) is a declarative Fire-and-Forget invocation from Salesforce to a REST endpoint on record insert — low code and near real-time. Change Data Capture (C) publishes Order changes to a streaming channel that middleware subscribes to with a ReplayId for reliable, near-real-time delivery, again with no Apex needed. Outbound Messaging (B) is SOAP, not REST; record type cannot be selected as a Platform Event name (D) — platform events are separate sObjects you must define.\nReferences:\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#Remote_Process_Invocation___Fire_And_Forget\nhttps://developer.salesforce.com/docs/atlas.en-us.change_data_capture.meta/change_data_capture/cdc_subscribe_delivery.htm",
+        "explanation": "Flow Builder's HTTP Callout action (A) is a declarative Fire-and-Forget invocation from Salesforce to a REST endpoint on record insert — low code and near real-time. Change Data Capture (C) publishes Order changes to a streaming channel that middleware subscribes to with a ReplayId for reliable, near-real-time delivery, again with no Apex needed. Outbound Messaging (B) is SOAP, not REST; record type cannot be selected as a Platform Event name (D) — platform events are separate sObjects you must define.\nReferences:\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#remote-process-invocation--fire-and-forget\nhttps://developer.salesforce.com/docs/atlas.en-us.change_data_capture.meta/change_data_capture/cdc_subscribe_delivery.htm",
         "_cat": "Design Integration Solutions"
     },
     {
@@ -174,7 +174,7 @@
         "optionD": "Outbound Message for Salesforce → Legacy direction, and SOAP API using Partner WSDL for the communication back from the legacy system to Salesforce.",
         "optionE": "",
         "correct": "A",
-        "explanation": "Outbound Message is the declarative SOAP-based Fire-and-Forget pattern in Salesforce, which matches the SOAP-only legacy constraint without writing Apex. For the return trip, Enterprise WSDL gives the strongly typed contract the legacy app needs to deserialize sObjects with compile-time type safety, whereas Partner WSDL is loosely typed and would lose that guarantee.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_partner.htm\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#Remote_Process_Invocation___Fire_And_Forget",
+        "explanation": "Outbound Message is the declarative SOAP-based Fire-and-Forget pattern in Salesforce, which matches the SOAP-only legacy constraint without writing Apex. For the return trip, Enterprise WSDL gives the strongly typed contract the legacy app needs to deserialize sObjects with compile-time type safety, whereas Partner WSDL is loosely typed and would lose that guarantee.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_partner.htm\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#remote-process-invocation--fire-and-forget",
         "_cat": "Design Integration Solutions"
     },
     {
@@ -210,7 +210,7 @@
         "optionD": "Remote Call-In",
         "optionE": "",
         "correct": "A",
-        "explanation": "Workshop registration requires the scheduling system to confirm seat availability before responding, and the attendee needs to see success or 'sold out' immediately — that is the textbook Request-and-Reply use case. Batch Data Sync would only reconcile registrations after the fact and could overbook rooms; Fire and Forget loses the response the attendee needs; Remote Call-In is the wrong direction (external system calling into Salesforce). Surge handling is solved by scaling and queueing in middleware, not by changing the integration pattern.\nReferences:\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#Remote_Process_Invocation___Request_And_Reply",
+        "explanation": "Workshop registration requires the scheduling system to confirm seat availability before responding, and the attendee needs to see success or 'sold out' immediately — that is the textbook Request-and-Reply use case. Batch Data Sync would only reconcile registrations after the fact and could overbook rooms; Fire and Forget loses the response the attendee needs; Remote Call-In is the wrong direction (external system calling into Salesforce). Surge handling is solved by scaling and queueing in middleware, not by changing the integration pattern.\nReferences:\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#remote-process-invocation--request-and-reply",
         "_cat": "Design Integration Solutions"
     },
     {
@@ -311,7 +311,7 @@
         "optionD": "Is the product catalog data identical at all times in both systems?",
         "optionE": "",
         "correct": "B,C",
-        "explanation": "Whether the fulfillment system can call back into Salesforce (B) determines if status updates can be event-driven rather than polled. Whether it can implement Outbound Messaging's contract-first WSDL (C) determines if the simplest declarative Fire-and-Forget option is viable. Address creation (A) is intra-service business logic, and catalog parity (D) is a master-data question, not an integration design question for orders.\nReferences:\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#Remote_Process_Invocation___Fire_And_Forget\nhttps://help.salesforce.com/s/articleView?id=sf.workflow_om_considerations.htm&language=en_US&type=5",
+        "explanation": "Whether the fulfillment system can call back into Salesforce (B) determines if status updates can be event-driven rather than polled. Whether it can implement Outbound Messaging's contract-first WSDL (C) determines if the simplest declarative Fire-and-Forget option is viable. Address creation (A) is intra-service business logic, and catalog parity (D) is a master-data question, not an integration design question for orders.\nReferences:\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#remote-process-invocation--fire-and-forget\nhttps://help.salesforce.com/s/articleView?id=sf.workflow_om_considerations.htm&language=en_US&type=5",
         "_cat": "Translate Needs to Integration Requirements"
     },
     {
@@ -347,7 +347,7 @@
         "optionD": "Use Outbound Messaging to automatically retry failed service calls.",
         "optionE": "",
         "correct": "A",
-        "explanation": "A middleware queue (A) durably holds order messages while the downstream is down and replays them when it returns — Salesforce never sees the outage and never burns governor limits retrying. @future retries (C) would consume Apex async limits and risk losing context after long outages; Outbound Messaging retries (D) stop after 24 hours, well short of 'several days'; Platform Event replay (B) only helps if the downstream subscribes to Salesforce events, which is not the architecture here.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.workflow_om_considerations.htm&language=en_US&type=5\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#Remote_Process_Invocation___Fire_And_Forget",
+        "explanation": "A middleware queue (A) durably holds order messages while the downstream is down and replays them when it returns — Salesforce never sees the outage and never burns governor limits retrying. @future retries (C) would consume Apex async limits and risk losing context after long outages; Outbound Messaging retries (D) stop after 24 hours, well short of 'several days'; Platform Event replay (B) only helps if the downstream subscribes to Salesforce events, which is not the architecture here.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.workflow_om_considerations.htm&language=en_US&type=5\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#remote-process-invocation--fire-and-forget",
         "_cat": "Build Solution"
     },
     {
@@ -359,7 +359,7 @@
         "optionD": "If the verification process is down, use a fire-and-forget mechanism instead of request-and-reply to allow the agent to get the response back when the service is back online.",
         "optionE": "",
         "correct": "B",
-        "explanation": "The agent needs an immediate, accurate error so they can decide to retry or escalate — wrapping the callout in error-handling that converts connection failures and HTTP errors into a user-visible message (B) is what produces that real-time feedback. Returning a mock response (A) would mislead the agent into thinking the check ran; silent middleware retries (C) make the agent wait for failures that have already occurred; fire-and-forget (D) abandons the synchronous UX the agent needs.\nReferences:\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#Remote_Process_Invocation___Request_And_Reply",
+        "explanation": "The agent needs an immediate, accurate error so they can decide to retry or escalate — wrapping the callout in error-handling that converts connection failures and HTTP errors into a user-visible message (B) is what produces that real-time feedback. Returning a mock response (A) would mislead the agent into thinking the check ran; silent middleware retries (C) make the agent wait for failures that have already occurred; fire-and-forget (D) abandons the synchronous UX the agent needs.\nReferences:\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#remote-process-invocation--request-and-reply",
         "_cat": "Build Solution"
     },
     {
@@ -760,7 +760,7 @@
         "optionD": "Build a custom Apex Callout to external Payment gateway service and provide success message to the CSR, the details of calloutsand responses are logged for audit purposes.",
         "optionE": "",
         "correct": "A",
-        "explanation": "This is a synchronous, business-critical payment that must be reliable and fully auditable. Routing the callout through an ESB centralizes error handling, logging, retries, and monitoring for audit purposes, which a bare custom Apex callout (D) does not provide out of the box. Platform Events (B) are asynchronous and cannot return the confirmation the CSR must see before upgrading, and External Services (C) offers no robust audit/error-handling layer.\nReferences:\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#Remote_Process_Invocation___Request_And_Reply",
+        "explanation": "This is a synchronous, business-critical payment that must be reliable and fully auditable. Routing the callout through an ESB centralizes error handling, logging, retries, and monitoring for audit purposes, which a bare custom Apex callout (D) does not provide out of the box. Platform Events (B) are asynchronous and cannot return the confirmation the CSR must see before upgrading, and External Services (C) offers no robust audit/error-handling layer.\nReferences:\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#remote-process-invocation--request-and-reply",
         "_cat": "Design Integration Solutions"
     },
     {
@@ -884,7 +884,7 @@
         "optionD": "Data Virtualization: Salesforce Connect map data external REST data in external objects.",
         "optionE": "",
         "correct": "C",
-        "explanation": "Calling an externally hosted RESTful service in real time from a Lightning flow, where the service is described by an OpenAPI/Swagger definition, is the textbook Request-Reply use case for Enhanced External Services, which imports the schema and generates invocable actions usable in Flow (C). Fire-and-forget platform events (A) don't return a synchronous reply, Remote Call-In (B) is inbound to Salesforce, and Salesforce Connect/external objects (D) is for data virtualization, not invoking a service action.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=platform.external_services.htm&language=en_US&type=5\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#Remote_Process_Invocation___Request_And_Reply",
+        "explanation": "Calling an externally hosted RESTful service in real time from a Lightning flow, where the service is described by an OpenAPI/Swagger definition, is the textbook Request-Reply use case for Enhanced External Services, which imports the schema and generates invocable actions usable in Flow (C). Fire-and-forget platform events (A) don't return a synchronous reply, Remote Call-In (B) is inbound to Salesforce, and Salesforce Connect/external objects (D) is for data virtualization, not invoking a service action.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=platform.external_services.htm&language=en_US&type=5\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#remote-process-invocation--request-and-reply",
         "_cat": "Design Integration Solutions"
     },
     {
@@ -944,7 +944,7 @@
         "optionD": "Use outbound message.",
         "optionE": "",
         "correct": "A",
-        "explanation": "The agent must receive the externally generated bank-account Id back in real time before continuing, which is the synchronous Request-and-Reply pattern (A). Platform Events and Streaming/PushTopic are asynchronous and don't return the generated Id to the waiting agent, and Outbound Messaging is fire-and-forget SOAP without a synchronous reply.\nReferences:\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#Remote_Process_Invocation___Request_And_Reply",
+        "explanation": "The agent must receive the externally generated bank-account Id back in real time before continuing, which is the synchronous Request-and-Reply pattern (A). Platform Events and Streaming/PushTopic are asynchronous and don't return the generated Id to the waiting agent, and Outbound Messaging is fire-and-forget SOAP without a synchronous reply.\nReferences:\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#remote-process-invocation--request-and-reply",
         "_cat": "Design Integration Solutions"
     },
     {
@@ -1059,7 +1059,7 @@
         "optionD": "Fire and Forget",
         "optionE": "",
         "correct": "D",
-        "explanation": "Salesforce captures the order and a remote system subscribes to a Platform Event to create the order downstream—Salesforce publishes and moves on with no expected reply, which is the Fire-and-Forget pattern (D). Request-and-Reply expects a synchronous response, Remote Call-In is inbound to Salesforce, and Batch Data Synchronization is scheduled bulk movement.\nReferences:\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#Remote_Process_Invocation___Fire_And_Forget\nhttps://developer.salesforce.com/docs/atlas.en-us.platform_events.meta/platform_events/platform_events_subscribe.htm",
+        "explanation": "Salesforce captures the order and a remote system subscribes to a Platform Event to create the order downstream—Salesforce publishes and moves on with no expected reply, which is the Fire-and-Forget pattern (D). Request-and-Reply expects a synchronous response, Remote Call-In is inbound to Salesforce, and Batch Data Synchronization is scheduled bulk movement.\nReferences:\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#remote-process-invocation--fire-and-forget\nhttps://developer.salesforce.com/docs/atlas.en-us.platform_events.meta/platform_events/platform_events_subscribe.htm",
         "_cat": "Design Integration Solutions"
     },
     {
@@ -1095,7 +1095,7 @@
         "optionD": "Apex callout to send quote requests from Salesforce to the legacy System.",
         "optionE": "",
         "correct": "D",
-        "explanation": "Customers submitting quote requests from an online portal need the generated quote returned in real time, so a synchronous Apex callout to the legacy system's API fits (D). Outbound Messaging and @future are asynchronous and can't return the quote to the waiting user, and a middleware pull adds latency that breaks the real-time experience.\nReferences:\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#Remote_Process_Invocation___Request_And_Reply",
+        "explanation": "Customers submitting quote requests from an online portal need the generated quote returned in real time, so a synchronous Apex callout to the legacy system's API fits (D). Outbound Messaging and @future are asynchronous and can't return the quote to the waiting user, and a middleware pull adds latency that breaks the real-time experience.\nReferences:\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#remote-process-invocation--request-and-reply",
         "_cat": "Design Integration Solutions"
     },
     {
@@ -1210,7 +1210,7 @@
         "optionD": "Remote Process Invocation-Request and Reply",
         "optionE": "",
         "correct": "C",
-        "explanation": "Engineers trigger an on-demand status request from the dashboard, and the proprietary system queues it for devices that check in every 30 seconds, so the request can't be answered synchronously—use Remote Process Invocation-Fire and Forget to send the request, combined with UI Update Based on Data Changes to refresh the dashboard once the status arrives (C). A Request-and-Reply (D) would block waiting on a response the system can't return immediately.\nReferences:\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#Remote_Process_Invocation___Fire_And_Forget",
+        "explanation": "Engineers trigger an on-demand status request from the dashboard, and the proprietary system queues it for devices that check in every 30 seconds, so the request can't be answered synchronously—use Remote Process Invocation-Fire and Forget to send the request, combined with UI Update Based on Data Changes to refresh the dashboard once the status arrives (C). A Request-and-Reply (D) would block waiting on a response the system can't return immediately.\nReferences:\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#remote-process-invocation--fire-and-forget",
         "_cat": "Design Integration Solutions"
     },
     {
@@ -1246,7 +1246,7 @@
         "optionD": "Use Process Builder to call an Apex proxy class to make a REST callout to the Order Management System.",
         "optionE": "",
         "correct": "D",
-        "explanation": "Of the options offered, Process Builder calling an Apex proxy class is the one that fires automatically when the Opportunity reaches Closed/Won, which is what the scenario describes (D). A trigger cannot call out directly, so option A necessarily defers the work to @future or Queueable, and option B is hourly by definition. Option C does perform a genuinely synchronous callout, but only when a user clicks a button, so it does not respond to a status change.\nTwo caveats matter more than the letter, and both count against reading this item too literally.\nFirst, the stem's requirement that the callout be synchronous cannot actually be satisfied by any automatic option here. Salesforce documents that you 'can't make a callout when there are pending operations in the same transaction', and that DML statements are exactly such an operation. A Process Builder action runs after the record is saved, so an Apex proxy invoked from it has uncommitted work pending and must be annotated @future(callout=true) to call out at all — which makes it asynchronous, the same objection the explanation raises against option A. Treat D as the automation answer, not as a synchronous one.\nSecond, Process Builder reached end of support on 31 December 2025. Existing processes continue to run and can still be edited, so the answer is not wrong, but a design built today would use Flow to invoke the Apex proxy instead.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts_timeouts.htm\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#Remote_Process_Invocation___Request_And_Reply",
+        "explanation": "Of the options offered, Process Builder calling an Apex proxy class is the one that fires automatically when the Opportunity reaches Closed/Won, which is what the scenario describes (D). A trigger cannot call out directly, so option A necessarily defers the work to @future or Queueable, and option B is hourly by definition. Option C does perform a genuinely synchronous callout, but only when a user clicks a button, so it does not respond to a status change.\nTwo caveats matter more than the letter, and both count against reading this item too literally.\nFirst, the stem's requirement that the callout be synchronous cannot actually be satisfied by any automatic option here. Salesforce documents that you 'can't make a callout when there are pending operations in the same transaction', and that DML statements are exactly such an operation. A Process Builder action runs after the record is saved, so an Apex proxy invoked from it has uncommitted work pending and must be annotated @future(callout=true) to call out at all — which makes it asynchronous, the same objection the explanation raises against option A. Treat D as the automation answer, not as a synchronous one.\nSecond, Process Builder reached end of support on 31 December 2025. Existing processes continue to run and can still be edited, so the answer is not wrong, but a design built today would use Flow to invoke the Apex proxy instead.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts_timeouts.htm\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#remote-process-invocation--request-and-reply",
         "_cat": "Design Integration Solutions",
         "corrected": {
             "date": "2026-08-10",
@@ -1507,7 +1507,7 @@
         "optionD": "Utilize an Enterprise Service Bus to the web service calls between Salesforce and the accounting System.",
         "optionE": "",
         "correct": "A,D",
-        "explanation": "To guarantee no transactions are lost while the accounting system is offline for hours, use a mechanism with built-in queuing/retry: Workflow Outbound Messaging retries for up to 24 hours until acknowledged (A), and an Enterprise Service Bus can queue and reliably deliver the calls once the system returns (D). @future callouts and direct ERP queries provide no durable queuing during downtime.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.workflow_om_considerations.htm&language=en_US&type=5\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#Remote_Process_Invocation___Fire_And_Forget",
+        "explanation": "To guarantee no transactions are lost while the accounting system is offline for hours, use a mechanism with built-in queuing/retry: Workflow Outbound Messaging retries for up to 24 hours until acknowledged (A), and an Enterprise Service Bus can queue and reliably deliver the calls once the system returns (D). @future callouts and direct ERP queries provide no durable queuing during downtime.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=sf.workflow_om_considerations.htm&language=en_US&type=5\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#remote-process-invocation--fire-and-forget",
         "_cat": "Design Integration Solutions"
     },
     {
@@ -1685,7 +1685,7 @@
         "optionD": "When responses are received by Mule, create a Platform Event in Salesforce via Remote-Call-In and use the empAPI in the lightning UI to serve 3,000 concurrent users.",
         "optionE": "Use Continuation callouts to make the eligibility check request from Salesforce from Lightning UI at page load.",
         "correct": "A,C,E",
-        "explanation": "With up to 90-second eligibility responses but a 9-second API-gateway timeout and 3,000 concurrent users, no purely synchronous call works. Recommend a 'Check Update' button that passes a requestID returned by the ESB so the agent can poll for the result (A), ESB caching/state management that returns a requestID or the cached response when available (C), and Continuation callouts from the Lightning UI to make the asynchronous request without holding a server thread (E). Plain synchronous Apex callouts (B) would hit the 9-second timeout, and the empApi/Platform Event option (D) doesn't scale cleanly to this request/response correlation.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_continuation_overview.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_continuation_limits.htm\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#Remote_Process_Invocation___Request_And_Reply",
+        "explanation": "With up to 90-second eligibility responses but a 9-second API-gateway timeout and 3,000 concurrent users, no purely synchronous call works. Recommend a 'Check Update' button that passes a requestID returned by the ESB so the agent can poll for the result (A), ESB caching/state management that returns a requestID or the cached response when available (C), and Continuation callouts from the Lightning UI to make the asynchronous request without holding a server thread (E). Plain synchronous Apex callouts (B) would hit the 9-second timeout, and the empApi/Platform Event option (D) doesn't scale cleanly to this request/response correlation.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_continuation_overview.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_continuation_limits.htm\nhttps://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html#remote-process-invocation--request-and-reply",
         "_cat": "Design Integration Solutions"
     },
     {
