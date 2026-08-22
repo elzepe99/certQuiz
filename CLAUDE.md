@@ -184,7 +184,7 @@ underneath.
 
 ## Deck state — as of 2026-08-21
 
-**1,619 questions across 13 decks, all 1,619 cited with a real URL. Coverage is
+**1,616 questions across 13 decks, all 1,616 cited with a real URL. Coverage is
 complete and has stopped moving**: gap zero, unparsed-marker count zero, re-measured
 2026-08-21 with every deck pass merged and nothing in flight. Earlier revisions of this
 section carried a running "re-measure, a concurrent session is citing in this tree"
@@ -226,8 +226,8 @@ Agent Setup > Channels", plus the occasional empty block. It degrades gracefully
 (`linkifySegments` only linkifies real URLs) but it is unverifiable by a learner and it
 inflates any naive coverage count.
 
-**That gap closed on 2026-08-18 and is still zero: 1,619 marker blocks, 1,619 with a
-URL** (re-measured 2026-08-21; the 1,209 this line used to carry was the count at the
+**That gap closed on 2026-08-18 and is still zero: 1,616 marker blocks, 1,616 with a
+URL** (re-measured 2026-08-22, after the dedupe below; the 1,209 this line used to carry was the count at the
 time it was written, three deck passes ago). The last of the gap went with the
 agentforce pass (24 questions, 88 prose lines) and the admin reference repair (3). Keep
 measuring it anyway — the check is cheap, and the next scraped import brings the problem
@@ -273,8 +273,8 @@ column, not the Cited column.
 
 | Deck | Q | Cited | Verification status |
 |---|---:|---:|---|
-| databricks-data-engineer-associate | 148 | 148 | **Fully checked** (2026-08-15) — 8 keys moved, 11 reasoning fixes, in the same pass that imported it. First non-Salesforce deck |
-| salesforce-platform-developer-2 | 147 | 147 | **Fully checked** — 8 rounds, 2 keys moved. Deduped 148 → 147 on 2026-08-17 |
+| databricks-data-engineer-associate | 147 | 147 | **Fully checked** (2026-08-15) — 8 keys moved, 11 reasoning fixes, in the same pass that imported it. First non-Salesforce deck. Deduped 148 → 147 on 2026-08-22 (`e22e750b`, which was unanswerable as printed) |
+| salesforce-platform-developer-2 | 146 | 146 | **Fully checked** — 8 rounds, 2 keys moved. Deduped 148 → 147 on 2026-08-17, then 147 → 146 on 2026-08-22 (`4f119a16`) |
 | salesforce-integration-architect | 133 | 133 | **Fully checked** — 37 stamps, 15 keys moved. Spot-rechecked 2026-08-10: citations sound, content current, 0 wrong answers found. Its **27 in-app comments were already worked through** — they are the largest comment set in the repo and read like open disputes ("It is B", "Might be D"), but the repo owner confirmed on 2026-08-17 that they were addressed. Do not re-triage them as new signal |
 | salesforce-iam-architect | 116 | 116 | **Fully checked** (2026-08-10) — 3 keys moved, 7 reasoning fixes |
 | salesforce-admin | 154 | 154 | **Fully checked** (2026-08-19) — 2 keys moved, 5 flagged, 60 explanations rewritten. 13 keys had already moved in the ADM-201 merge pass. Its real defect was the citation layer: only 36 questions rendered a References block, **47 more carried a marker the parser could not see**, and **24 of the 36 legacy `sf.` ids tested were dead** — see failure patterns 4b and 4c |
@@ -283,7 +283,7 @@ column, not the Cited column.
 | salesforce-data-cloud-consultant | 100 | 100 | **Fully checked** (2026-08-21) — 4 keys moved, 6 flagged reasoning fixes, 11 silent clarifications. Its defect shape is **the invented capability**: a "reusable container block", a "Data Segmentation Object", and a phone field type that supposedly normalises to E164 all name things Data Cloud does not have. Two items are defective (three defensible options each), and one explanation resolved its own ambiguity by deferring to "the source" — an exam dump. **All 100 option sets use pre-rename product and permission-set names** — see the Data 360 note below |
 | salesforce-sharing-visibility | 136 | 136 | **Fully checked** (2026-08-17) — 2 keys moved, 6 reasoning fixes, 19 silent clarifications. The 4 earlier 2026-08-04 validation stamps are preserved |
 | salesforce-app-builder | 119 | 119 | **Fully checked** (2026-08-11) — 4 keys moved, 27 reasoning fixes, 3 defective option sets repaired. Q1–50 spot-rechecked: 10 sampled, 1 defect (a mechanism stated backwards), so the earlier batches read sound |
-| salesforce-dld | 138 | 138 | **Fully checked** (2026-08-20, one item repaired 2026-08-21) — 5 keys moved, 10 reasoning fixes, 103 silent clarifications. Its defect shape is **stale platform facts**: an entire item built on the retired Lightning Testing Service, Professional/Enterprise tab allocations taught at 10/25 when they are 1,210/1,225, the Metadata API uncompressed ceiling at 400 MB when it is 600 MB, and quick-deploy eligibility at 4 days when it is 10. Two keys moved on the **same** operating-model quadrant — see the Replication row in `verified-docs.md`. Also holds the repo's last unparsed reference marker, now fixed. **~30 of its citations are topical rather than decisive** — its ALM and Project domains are methodology and governance, which no vendor page settles |
+| salesforce-dld | 137 | 137 | **Fully checked** (2026-08-20, one item repaired 2026-08-21, deduped 138 → 137 on 2026-08-22 by removing `21da735a`) — 5 keys moved, 10 reasoning fixes, 103 silent clarifications. Its defect shape is **stale platform facts**: an entire item built on the retired Lightning Testing Service, Professional/Enterprise tab allocations taught at 10/25 when they are 1,210/1,225, the Metadata API uncompressed ceiling at 400 MB when it is 600 MB, and quick-deploy eligibility at 4 days when it is 10. Two keys moved on the **same** operating-model quadrant — see the Replication row in `verified-docs.md`. Also holds the repo's last unparsed reference marker, now fixed. **~30 of its citations are topical rather than decisive** — its ALM and Project domains are methodology and governance, which no vendor page settles |
 | salesforce-data-architect | 135 | 135 | **Fully checked** (2026-08-19) — 3 keys moved, 18 reasoning fixes, 58 silent clarifications. Its defect shape is **the invented absence**: five explanations denied a capability that exists (external objects can't be reported on ×2, the cross-org Connect adapter is read-only, no native archiving feature exists ×2). Also one fabricated limit (skinny tables taught at 100 columns; documented cap is **200**) and three stale products — Data.com Clean (4 questions), Async SOQL (retired Summer '23), granular locking now the default |
 | salesforce-slack-consultant | 37 | 37 | **Fully checked** (2026-08-18) — 1 key moved, 3 reasoning fixes, 12 silent clarifications. First non-Salesforce, non-Databricks vendor. **Read the caveat below: only 15 of its 37 questions are decidable by any Slack page**, so the N/N here means less than it does on other decks |
 
@@ -311,7 +311,7 @@ integration), `efc3d13e` B→C (one MFA prompt across mixed login paths comes fr
 session security levels, not the org-wide MFA setting), `9f507c0e` A,B→B,D
 (Embedded Login is not one of the four documented login page types).
 
-Clean across all 13 decks right now (re-measured 2026-08-21, all 1,619 questions): zero
+Clean across all 13 decks right now (re-measured 2026-08-22, all 1,616 questions): zero
 `U+FFFD` replacement characters, zero literal `"Option B"` placeholder strings, zero keys
 pointing at empty options, zero missing ids. The deck count said 14 until the 2026-08-19
 re-measurement — the claude-questions removal above had left it stale.
@@ -422,12 +422,10 @@ Things that are **not** deck passes but are queued, most actionable first:
   comparing option sets rather than by any vendor page. Two explanations were fixed
   along the way (both claimed `isAccessible` is not a real Apex member — it is), and
   `7d2c8e5f` was found defective and kept as keyed. Detail in Duplicates below.
-- **3 true duplicates are ready to remove, awaiting your call** — `e22e750b` (databricks,
-  unanswerable as printed), `f9c8f7b9`/`4f119a16` (dev-2) and `1292cd74`/`21da735a`
-  (dld). All six new pairs were read on 2026-08-22; keepers are named in Duplicates,
-  no id is bound in the diagram registry, and none of the affected decks has comments,
-  so `scripts/remove-questions.mjs` can run whenever you decide. The other three pairs
-  are redundancy or a deliberate variant, and should stay.
+- **~~3 true duplicates are ready to remove~~ — removed 2026-08-22.** `e22e750b`
+  (databricks), `4f119a16` (dev-2) and `21da735a` (dld) are gone; the totals above
+  reflect it. No reference was held only by a dropped copy, so nothing needed merging
+  first. The other three new pairs are redundancy or a deliberate variant and stay.
 - **~~Two tooling fixes~~ — both done 2026-08-21, and the first one only half
   works.** `apply-findings.mjs` now takes `"unstamp": true` on a `clarified` or
   `confirmed` finding; it is a flag rather than the verdict the old note asked for,
@@ -436,9 +434,11 @@ Things that are **not** deck passes but are queued, most actionable first:
   keyed-option-text pass — **read the Duplicates section before trusting it**, because
   the naive version floods and what shipped is narrower than what was asked for. It did
   find 6 unknown pairs, 5 of them true duplicates.
-- **Product renames that are the repo owner's call, not a fact-check outcome** —
-  Data Cloud → Data 360 across 100 stems, and the four renamed Data Cloud permission
-  sets. See the data-cloud-consultant open items.
+- **~~Product renames~~ — decided 2026-08-22: leave every stem and option as
+  scraped.** This covers Data Cloud → Data 360 across 100 stems, the four renamed
+  permission sets, and the retired-product items (the Data.com Clean trio, Async SOQL,
+  the Lightning Testing Service item). The reasoning is recorded under "Old product
+  names" below, because it will be asked again.
 - **~~Re-render the links on every deck cited before 2026-08-18~~ — done 2026-08-20,
   and the premise was wrong.** All 370 citation URLs across app-builder, IAM, Dev II and
   integration were rendered and title-checked: **zero dead links**. The admin deck's rot
@@ -856,6 +856,44 @@ the 2026-08-17 dedupe ran `npm run review-comments salesforce-revenue-cloud` fir
 `f769f864`), none on a removed id. Do the same before the next one.
 
 ---
+
+### Old product names — settled 2026-08-22, do not re-open without new evidence
+
+**Leave every stem and option exactly as scraped, even when the product has been
+renamed or retired.** This covers Data Cloud → Data 360 across all 100
+data-cloud-consultant stems, the four renamed Data Cloud permission sets, the three
+Data.com Clean items, the Async SOQL item, and the Lightning Testing Service item.
+Say the current name in the *explanation*; leave the option text alone.
+
+The question that prompted it was the right one — *can we prove the exam still uses
+the old names?* **No, and the attempt is worth recording so nobody repeats it.**
+Salesforce's item bank is confidential; no public source states the wording of exam
+questions. The nearest evidence is circumstantial and points both ways:
+
+- Salesforce renamed the *certification itself* to **Salesforce Certified Data 360
+  Consultant**, effective 2026-03-27, keeping the exam code `Data-Con-101`. Its
+  official guide asks for "broad knowledge of Data 360 and its capabilities and
+  terminology" — which argues the exam has moved.
+- But the guide publishes no sample items, says nothing about renamed features or a
+  transition period, and much of Salesforce's own documentation and Trailhead
+  material still says Data Cloud — which argues it has not.
+
+So the rename is unprovable either way, and that asymmetry decides it. Renaming
+option text has a **certain** cost and a speculative benefit:
+
+1. **It re-mints ids.** Ids hash `question + optionA..E + correct + _cat`, so editing
+   an option changes the id and orphans any in-app comment on it. Editing an
+   *explanation* never does — which is why the current split (old names in options,
+   current names in prose) is the only version that costs nothing.
+2. **A learner who meets the old name on the exam and only ever saw the new one is
+   worse off than the reverse.** Recognising "Data Cloud Admin" when the screen says
+   "Data Cloud Architect" is a smaller failure than not recognising the name the item
+   actually prints.
+3. It is the same call failure pattern 8 already makes for legacy exam keys: keep
+   what the exam tests, name the modern reality alongside it.
+
+Re-open this only if Salesforce publishes item-level terminology guidance, or if a
+learner reports the new names appearing in a real exam.
 
 ## Recurring failure patterns
 
