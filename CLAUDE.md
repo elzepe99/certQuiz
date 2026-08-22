@@ -51,15 +51,34 @@ scripts/
                       compares options with operators intact; the prose normalizer
                       it uses elsewhere flattens `<=` and `>` (and `=` and `==`) to
                       the same string, which on a code deck reports the two answers
-                      as identical when the operator IS the question
-  find-duplicates.mjs near-duplicate detector — see "Duplicates"
+                      as identical when the operator IS the question.
+                      Its remaining findings on the checked decks are noise, not
+                      debt — sharing-visibility reports 10, the repo high, and a
+                      2026-08-21 spot-check of three (42219114, c9f8748f, ced866bb)
+                      found every explanation naming its key correctly. The
+                      "argues against its own key" check is keyword overlap, and
+                      "answer count does not match choose N" misfires whenever a
+                      single option contains the N things ("which two permissions"
+                      answered by one option naming both). Treat a nonzero count on
+                      an already-checked deck as expected; the number that matters
+                      is whether it MOVED after your own rewrites landed
+  find-duplicates.mjs near-duplicate detector. Two entry paths since 2026-08-21:
+                      stem Jaccard >= 0.72, or IDF-weighted keyed-answer overlap
+                      >= 0.6 with stems still >= 0.6 (those print a `*`). The
+                      stem floor on the second path is load-bearing, not timid —
+                      see "Duplicates"
   remove-questions.mjs  removes questions by id; refuses ids bound in
                         src/diagrams/registry.ts. Until 2026-08-17 its indent
                         detection matched the first indented `"`, which is the
                         *second* nesting level, so every run doubled the file's
-                        indentation — that is why agentforce, integration, iam and
-                        sharing-visibility sit at 4 spaces while every other deck
-                        is at 2. Cosmetic, and left alone rather than reformatted
+                        indentation. As of 2026-08-22 only integration is still at
+                        4 spaces; agentforce, admin, sharing-visibility and iam
+                        were normalized back to 2 as a side effect of
+                        apply-findings.mjs, which rewrites the whole deck with
+                        JSON.stringify(deck, null, 2). Expect any pass over
+                        integration to reformat it too, and to bury a one-line
+                        content change under a whole-file diff — check
+                        `git diff --stat` before believing a pass touched a lot
   add-question-ids.mjs  mints permanent ids; NEW decks only
   review-comments.mjs   exports in-app comments to markdown
   test-richtext.mjs     regression suite for the code-fence heuristic
@@ -163,45 +182,30 @@ underneath.
 
 ---
 
-## Deck state — as of 2026-08-20
+## Deck state — as of 2026-08-21
 
-1,619 questions across 13 decks. **All 1,619 carry a reference with an actual URL — the
-first time every deck has reached full coverage.** The reference gap is zero and the
-unparsed-marker count is zero.
+**1,619 questions across 13 decks, all 1,619 cited with a real URL. Coverage is
+complete and has stopped moving**: gap zero, unparsed-marker count zero, re-measured
+2026-08-21 with every deck pass merged and nothing in flight. Earlier revisions of this
+section carried a running "re-measure, a concurrent session is citing in this tree"
+warning against each pass; that warning has been retired because there is no next deck
+to cite. Run the command below anyway before trusting the number — it is cheap, and the
+next scraped import brings the whole problem back.
 
-The last 100 are the **data-cloud-consultant pass on 2026-08-21**, which closed the final
-uncited deck. The 138 before that were the dld pass, which landed as PR #17 from a
-separate session while this one was running — re-measure rather than trusting either
-number.
+The passes that got there, newest first: data-cloud-consultant 2026-08-21 (100, closing
+the last uncited deck), dld 2026-08-20 (138, PR #17), admin and data-architect
+2026-08-19 (154 and 135), slack-consultant 2026-08-18 (37), sharing-visibility and
+agentforce 2026-08-17 (136 and 121), revenue-cloud and databricks 2026-08-15 (135 and
+148). Per-pass detail is in the deck table below and in the `findings-*.json` files.
 
-The jump from 1,381 is the **dld pass on 2026-08-20**: +163, taking that deck from
-0/138 to 138/138 and clearing the repo's last unparsed reference marker with it.
+Most of the admin number was not new research: 47 of those questions *already had*
+citations the app was silently refusing to render. See failure pattern 4c.
 
-That number was measured while a **separate session was concurrently citing the
-data-cloud-consultant deck in the same working tree** (25/100 when last checked), so it
-was already rising as it was written. Re-measure with the command below rather than
-trusting this line — this file has been caught by exactly this before.
-
-Three passes moved that number, and all three landed in the same merge: the admin pass
-on 2026-08-19 (+118, taking that deck from 36/154 to 154/154), the data-architect pass
-on 2026-08-19 (+135, taking the largest uncited deck from 0/135 to 135/135), and the
-slack-consultant pass on 2026-08-18 (+37, from 0/37 to 37/37). Most of the admin number
-is not new research: 47 of those questions *already had* citations that the app was
-silently refusing to render. See failure pattern 4c. Re-measure with the command below
-rather than copying any of these numbers.
-
-+136 of that is the sharing-visibility pass on 2026-08-17, taking that deck from
-0/136 to 136/136 — the second citations-and-corrections pass over an existing deck,
-after revenue-cloud.
-
-An **agentforce pass ran in the same working tree on the same day** and finished at
-121/121, which is the rest of the jump. Coverage moved 1,020 → 1,033 → 1,091 across
-three measurements in a single session while that pass was running, so re-measure with
-the command below rather than copying any number out of this file.
-
-`git show HEAD:public/decks/claude_questions.json` recovers the removed deck below,
-and restores its ids with it — so Supabase comments left on those questions would
-rebind rather than stay orphaned.
+`git show 2dadd33^:public/decks/claude_questions.json` recovers the removed deck below
+(74 questions), and restores its ids with it — so Supabase comments left on those
+questions would rebind rather than stay orphaned. **This line used to say `HEAD:` and
+had silently stopped working**: `HEAD` was the removal commit only on the day the line
+was written. Pin the commit, not the ref, in any recovery command you leave behind.
 
 **The claude-questions deck was removed on 2026-08-17** at the repo owner's request —
 74 questions of Claude/Anthropic product trivia, uncited and, in their words, "wrong
@@ -214,13 +218,6 @@ a pair its own fact-check had turned from `DIFFERS` into `SAME`. Nothing was los
 all three pairs were identical in options and in key. That pass also repaired eight
 admin reference blocks against rendered documentation (see the admin row).
 
-The jump from 697 is the revenue-cloud pass on 2026-08-15: +137 cited, taking that
-deck from 0/137 to 137/137. No new questions arrived — this is the first pass in the
-repo that only added citations and corrections to an existing deck rather than
-importing one. Before it, the jump from 1,549 / 549 was the Databricks deck arriving
-fully checked the same day: +148 questions, all 148 cited, the first non-Salesforce
-deck in the repo and the first fact-checked in the same pass that imported it.
-
 Measure coverage with a URL test, not by looking for the `References:` marker. The
 app's parser (`src/lib/quiz.ts`) treats **every** non-empty line after the marker as
 a reference and does not require a URL, so a question can render a References section
@@ -229,10 +226,12 @@ Agent Setup > Channels", plus the occasional empty block. It degrades gracefully
 (`linkifySegments` only linkifies real URLs) but it is unverifiable by a learner and it
 inflates any naive coverage count.
 
-**That gap closed on 2026-08-18 and is still zero: 1,209 marker blocks, 1,209 with a
-URL.** The last of it went with the agentforce pass (24 questions, 88 prose lines) and
-the admin reference repair (3). Keep measuring it anyway — the check is cheap, and the
-next scraped import brings the problem straight back.
+**That gap closed on 2026-08-18 and is still zero: 1,619 marker blocks, 1,619 with a
+URL** (re-measured 2026-08-21; the 1,209 this line used to carry was the count at the
+time it was written, three deck passes ago). The last of the gap went with the
+agentforce pass (24 questions, 88 prose lines) and the admin reference repair (3). Keep
+measuring it anyway — the check is cheap, and the next scraped import brings the problem
+straight back.
 
 **A block that renders with a URL in it is still only two of the three things that can
 go wrong.** The third is a block that never renders at all, which no URL test catches
@@ -312,9 +311,9 @@ integration), `efc3d13e` B→C (one MFA prompt across mixed login paths comes fr
 session security levels, not the org-wide MFA setting), `9f507c0e` A,B→B,D
 (Embedded Login is not one of the four documented login page types).
 
-Clean across all 13 decks right now (re-measured 2026-08-19): zero `U+FFFD`
-replacement characters, zero literal `"Option B"` placeholder strings, zero keys
-pointing at empty options, zero missing ids. The count said 14 until this
+Clean across all 13 decks right now (re-measured 2026-08-21, all 1,619 questions): zero
+`U+FFFD` replacement characters, zero literal `"Option B"` placeholder strings, zero keys
+pointing at empty options, zero missing ids. The deck count said 14 until the 2026-08-19
 re-measurement — the claude-questions removal above had left it stale.
 
 **The Databricks deck is the counter-example to the IAM trap above, and worth
@@ -416,11 +415,30 @@ fact-check outcome, which is why the deck still has 37.
 As of 2026-08-21, **every deck has had a full documentation pass and every question is
 cited.** There is no next deck. What remains is cross-cutting work, below.
 
-Things that are **not** deck passes but are queued:
+Things that are **not** deck passes but are queued, most actionable first:
 
-- **The 7 remaining Salesforce near-duplicate pairs** below — each needs the
-  documentation to say which copy is right, except where the option *text* already
-  agrees (check that first; that is what `f62513eb`/`c74b1c3e` turned out to be).
+- **~~4 near-duplicate pairs need a documentation call~~ — resolved 2026-08-21, and
+  none was a duplicate.** All four are distinct questions; three were decided by
+  comparing option sets rather than by any vendor page. Two explanations were fixed
+  along the way (both claimed `isAccessible` is not a real Apex member — it is), and
+  `7d2c8e5f` was found defective and kept as keyed. Detail in Duplicates below.
+- **3 true duplicates are ready to remove, awaiting your call** — `e22e750b` (databricks,
+  unanswerable as printed), `f9c8f7b9`/`4f119a16` (dev-2) and `1292cd74`/`21da735a`
+  (dld). All six new pairs were read on 2026-08-22; keepers are named in Duplicates,
+  no id is bound in the diagram registry, and none of the affected decks has comments,
+  so `scripts/remove-questions.mjs` can run whenever you decide. The other three pairs
+  are redundancy or a deliberate variant, and should stay.
+- **~~Two tooling fixes~~ — both done 2026-08-21, and the first one only half
+  works.** `apply-findings.mjs` now takes `"unstamp": true` on a `clarified` or
+  `confirmed` finding; it is a flag rather than the verdict the old note asked for,
+  because the case it was built for (`bd39a845`) needed a rewritten explanation *and*
+  the notice gone, and a verdict can only do one. `find-duplicates.mjs` now has its
+  keyed-option-text pass — **read the Duplicates section before trusting it**, because
+  the naive version floods and what shipped is narrower than what was asked for. It did
+  find 6 unknown pairs, 5 of them true duplicates.
+- **Product renames that are the repo owner's call, not a fact-check outcome** —
+  Data Cloud → Data 360 across 100 stems, and the four renamed Data Cloud permission
+  sets. See the data-cloud-consultant open items.
 - **~~Re-render the links on every deck cited before 2026-08-18~~ — done 2026-08-20,
   and the premise was wrong.** All 370 citation URLs across app-builder, IAM, Dev II and
   integration were rendered and title-checked: **zero dead links**. The admin deck's rot
@@ -467,18 +485,45 @@ validates clean.
    The 0.72 stem gate catches none of them. A second pass over keyed option text
    would catch the top three outright.
 
-6. **`apply-findings.mjs` cannot clear a stale `corrected` stamp.** When a later pass
-   downgrades a question from `reasoning` to `clarified`, the old notice stays on the
-   question and the applier says nothing. Hit for real on `bd39a845` in this pass and
-   removed by hand. Either let `clarified` clear an existing stamp, or add an explicit
-   `unstamp` verdict.
+   **Built 2026-08-21, and this prediction was wrong.** A keyed-text pass does not
+   catch the top three, because the guard that makes it usable at all — a 0.6 stem
+   floor, without which it reports 64 pairs of which ~6 are real — excludes every row
+   in this table, all of which score under 0.16 on stems. What it catches instead is a
+   different shape entirely: OCR-damaged twins that fell *just* under 0.72. Six of
+   those surfaced, five true duplicates. **These five pairs remain a manual read.**
+   See the Duplicates section for the measurements.
+
+6. **~~`apply-findings.mjs` cannot clear a stale `corrected` stamp~~ — fixed
+   2026-08-21.** Pass `"unstamp": true` on a `clarified` or `confirmed` finding. It is
+   a flag rather than the `unstamp` *verdict* suggested here, because `bd39a845` — the
+   case that motivated it — needed a rewritten explanation *and* the notice cleared,
+   and a verdict can only do one of those. The script refuses the flag on `corrected`
+   and `reasoning`, which write a fresh notice, and refuses it when there is no notice
+   to clear.
 
 **Verification debt to be honest about:**
 
-7. **22 of this deck's citations are help.salesforce.com `type=5` URLs verified by
-   title only.** Their existence is confirmed; their *bodies* are not readable from a
-   cloud container, so failure pattern 11 is unresolved on those specific links. They
-   were only used where the article title itself carries the fact.
+7. **~~22 of this deck's citations are `type=5` URLs verified by title only~~ —
+   partly closed 2026-08-22.** The deck cites 15 distinct help.salesforce.com `type=5`
+   URLs across 24 question-citations. Six were read at *body* level in the browser,
+   covering **16 of the 24**, and all six are live and do carry the fact they are cited
+   for:
+
+   | URL id | Questions | What the body confirms |
+   |---|---:|---|
+   | `platform.users_understanding_license_types` | 5 | "User Licenses"; names Partner Community among the license types |
+   | `xcloud.admin_exportdata` | 4 | "Export Backup Data from Salesforce"; weekly/monthly by edition, 48-hour zip retention |
+   | `platform.platform_connect_about` | 3 | "Salesforce Connect"; external objects accessed in real time via callouts |
+   | `platform.platform_connect_considerations_reports` | 2 | reports **can** include external objects — settles the invented absence |
+   | `xcloud.archive_o_overview` | 1 | "Salesforce has three products for archiving data" — settles the other invented absence outright |
+   | `platform.xorg_adapter_about` | 1 | carries `1dcb0fad`'s quoted sentence verbatim |
+
+   The remaining 9 are singleton citations still verified by title only. Note what
+   nearly went wrong here: a first search of `platform.xorg_adapter_about` for
+   "writable"/"read-only"/"write" found none of them and looked like pattern 11, but
+   the explanation never claims writability — it quotes a sentence that *is* on the
+   page. **Grep for the words the explanation actually uses, not the words the topic
+   suggests.**
 8. **~19 questions are not settleable by any vendor documentation** — governance,
    MDM strategy, and tooling-judgment items. Each says so in its own prose rather than
    pretending to a citation it does not have. Three licensing items (`653108ec`,
@@ -636,9 +681,61 @@ identical. A token-overlap check found **28 near-duplicate pairs**. Measure with
 similarity, never equality:
 
 ```sh
-# intra-deck pairs, Jaccard >= 0.72 on stem tokens longer than 3 chars
+# intra-deck pairs: stems at Jaccard >= 0.72, or keyed answers >= 0.6 with stems >= 0.6
 node scripts/find-duplicates.mjs
 ```
+
+**The keyed-option-text second pass shipped on 2026-08-21, and it is narrower than
+the three passes that asked for it expected.** The proposal was to compare keyed
+option text instead of stem tokens. Measured before building it, a keyed-text gate
+with no stem floor reports **64 extra pairs on this repo and roughly 6 are real** —
+every Salesforce deck is full of distinct questions that legitimately share a short
+answer, so "both key Flow Builder" or "both key Approval Process" is not evidence of
+anything. Two guards make it usable: the comparison is **IDF-weighted against the
+deck's own keyed answers**, so matching on "granular locking" counts and matching on
+"Flow Builder" barely does; and a pair still needs its stems to overlap at 0.6.
+
+What that buys is the **OCR-damaged twin whose stem fell just under the gate** —
+`4f119a16` reads "lightninglayout-items im one column" where its twin reads
+"lightning-layout-items in one column", and that one mangled sentence cost it 0.02.
+Six such pairs surfaced, marked `*` in the output, five of them true duplicates:
+
+All six were read on 2026-08-22. **None has been removed — that is a dedupe
+decision** — but everything needed to execute one is checked: no id is bound in
+`src/diagrams/registry.ts`, and none of the four affected decks (dev-2, databricks,
+dld, sharing-visibility) carries a single in-app comment, so nothing can orphan.
+
+| Pair | Deck | Verdict | Keeper |
+|---|---|---|---|
+| `e22e750b`/`66dcd37c` | databricks | **true duplicate** — and `e22e750b` is unanswerable as printed: its stem never states the task and all four options are OCR garbage | **`66dcd37c`** |
+| `f9c8f7b9`/`4f119a16` | dev-2 | **true duplicate** — identical options, same key, differing only in quote style | **`f9c8f7b9`** |
+| `1292cd74`/`21da735a` | dld | **true duplicate** — see below, this one is the interesting case | either; `1292cd74` has the fuller option text |
+| `fb30207f`/`1698e7ee` | dev-2 | same question, **different distractor sets**; both keyed correctly and both already stamped | redundancy, not error |
+| `42c11595`/`c59ebbbc` | databricks | same webhook-alert fact under two scenario wrappers; identical option texts in different order | redundancy, not error |
+| `ea780ddf`/`36f6a143` | sharing-visibility | **not a duplicate** — a choose-1 and its self-labelled "(Variant)" choose-2, which adds role-hierarchy sharing as a second correct answer | keep both |
+
+**`1292cd74`/`21da735a` is the effect this file predicted and could not detect.** Both
+keys moved in the dld pass on 2026-08-20 — one C→D, the other D→C — onto the same
+Replication-quadrant answer, which is exactly the "a fact-check turns a `DIFFERS` pair
+into a `SAME` pair" case described above. The instruction to re-run the detector after a
+pass was already here; what was missing was a detector that could see it. The stems score
+**0.62**, under the 0.72 gate, so the stem pass never surfaced this pair before or after
+the fact-check. The keyed-answer path found it on its first run.
+
+**`weight()` picked the wrong keeper on both duplicates it ranked — the third and fourth
+recorded misfires.** On `e22e750b`/`66dcd37c` it prefers `e22e750b`, the *unanswerable*
+copy, on the strength of a longer explanation attached to a destroyed stem and option
+set. On `f9c8f7b9`/`4f119a16` it prefers `4f119a16`, whose stem reads "lightninglayout-
+items im one column" and whose explanation only restates the answer, over a clean copy
+that explains the 12-column grid. Both times the longer explanation sat on the worse
+question. **Read both copies; the suggestion is a tiebreak, not a recommendation.**
+
+**What it still does not catch, and cannot without flooding:** pairs whose stems were
+*rewritten* rather than damaged. `23b3dd3a`/`b8dcc15e` key identical text and score
+**0.10** on stems, so no stem floor reaches them while excluding the 64. The
+data-architect table below lists four more of that shape. They need a human reading
+the deck — the tool is not going to find them, and the open item that asked for this
+should be read as partly closed, not closed.
 
 **16 were removed on 2026-08-11** — same question, and the *keyed option text*
 matched even where the letter did not. The keeper was the copy with the longer
@@ -664,17 +761,41 @@ fix was to move the explanation onto the clean copy and drop the corrupted one.
 **Check both option sets before accepting the suggested keeper** — a long
 explanation is easy to transfer, a destroyed option set is not.
 
-**7 Salesforce pairs remain and must not be merged.** They read alike but their keys
-point at genuinely different option text, so one of each pair is either wrong or a
-distinct question — resolving them is a fact-check, not a dedupe:
+**All 4 remaining Salesforce pairs were resolved on 2026-08-21, and none was a
+duplicate.** Every one turned out to be two distinct questions, for one of two
+reasons — and the split is worth knowing before spending documentation time on the
+next such pair:
 
-| Deck | Pair |
-|---|---|
-| agentforce-specialist | `e6949181` vs `63afa960` — Model Playground vs Testing Center |
-| agentforce-specialist | `0b45cf29` vs `b7ffd87e` |
-| data-cloud-consultant | `b16bbc31` vs `e652607d` — "takes up to 24 hours" vs "available soon" |
-| iam-architect | `cfcdee5c` vs `717f2404` |
-| sharing-visibility | `b3eeee28` vs `c095ab36`; `681f22f4` vs `7d2c8e5f` — partner *manager* vs *individual* partner users |
+| Pair | Deck | Why they differ |
+|---|---|---|
+| `e6949181` / `63afa960` | agentforce | **Different option sets.** Only `63afa960` offers Testing Center, the documented answer; `e6949181` omits it and keys Agent Builder as the best available. Both keys right |
+| `717f2404` / `cfcdee5c` | iam | **Complementary questions.** One asks about the User-Agent (implicit) flow, the other the Web Server (authorization code) flow. Both keys verified |
+| `c095ab36` / `b3eeee28` | sharing-visibility | **Different option sets.** Only `c095ab36` offers `with sharing`; `b3eeee28` omits it, leaving runAs the only real safeguard. Both keys right |
+| `681f22f4` / `7d2c8e5f` | sharing-visibility | **Different role in the stem.** Partner *manager* vs partner *user*, which the super-user role table treats differently. Both keep their keys, but `7d2c8e5f` is defective — see below |
+
+**The generalisable lesson: check the option sets before the documentation.** Three
+of these four were decided by which options each copy offers, not by any vendor page —
+the same shape as `f62513eb`/`c74b1c3e`. A pair whose stems match and whose *option
+sets* differ is almost never a duplicate; it is one question that got harder or easier
+in the retelling, and both copies can be correctly keyed at once. Only the IAM pair
+needed the docs at all, and that was to confirm two flows rather than to choose between
+copies.
+
+**`7d2c8e5f` is defective and was kept as keyed.** Super user access reaches records
+"at their role level or below" — for the Partner **User** role that means same-role
+records only, so the stem's "any user, regardless of role, at the same distributor" is
+not delivered by its key or by any other option. Its explanation now says so. Its twin
+`681f22f4` asks about the partner **manager** role, where the same mechanism does reach
+what its stem describes, so that one is simply correct.
+
+Two rows left that table on 2026-08-21, and both corrections are worth knowing.
+`0b45cf29` vs `b7ffd87e` is gone because **`b7ffd87e` was removed in the agentforce
+pass on 2026-08-17** and the row outlived it — check that both ids still exist before
+budgeting work on a pair. And the agentforce row said "Model Playground vs Testing
+Center" when `e6949181` in fact keys **Agent Builder**; anyone resolving it from this
+table would have been checking the wrong option. `b16bbc31` vs `e652607d` also left the
+table, resolved as redundancy rather than error — see data-cloud-consultant open item 8,
+which names `b16bbc31` as the copy to keep.
 
 Four Databricks pairs also remain, all checked and all legitimately distinct:
 `7e554787` vs `17bff8a1` differ in their *stems* (`ON VIOLATION FAIL UPDATE` vs
@@ -853,10 +974,20 @@ the prefix-swap shortcut for good: of eight `platform.`/`sales.`/`xcloud.` guess
 a known-dead `sf.` id, **one** hit. Search for the article *title* instead; the search
 index only returns ids that exist.
 
-Two things also got faster, both recorded in `references/verified-docs.md`: `WebFetch`
-does render help.salesforce.com and *does* report "We looked high and low" honestly,
-so it works as a parallel first pass; and a same-origin iframe driven from
-`javascript_tool` checks four ids in one call.
+One thing got faster, recorded in `references/verified-docs.md`: `WebFetch` does render
+help.salesforce.com and *does* report "We looked high and low" honestly, so it works as
+a parallel first pass. It sometimes returns only the SPA's nav tree instead of the
+article, and it caches for 15 minutes, so a retry gives the same answer — fall back to
+the browser rather than re-fetching.
+
+**The other speed-up was withdrawn on 2026-08-22: the four-ids-per-call iframe recipe
+reports live articles as DEAD.** The framed SPA never bootstraps the article, so every
+id settles on the generic title over an identical 633-character "We looked high and low"
+body — the 404 sentence. Three ids checked that way all came back dead; navigating to
+one of them at top level returned a full 6,734-character article. **It fails toward
+deleting good citations**, which is the direction you cannot afford, and the only tell
+is that the bodies all have the same length. Use one top-level `navigate` per article
+and poll for a real title *and* a body over ~1,500 chars. Two calls per URL, no batching.
 
 ### 4c. A citation that renders nowhere because the marker is mid-sentence
 Distinct from a dead link, and invisible to every check that greps for `References:`.
@@ -974,6 +1105,20 @@ both generations**, which turned a choose-three into five true options.
 
 A fabricated negative is harder to notice than a fabricated number, because it reads
 as the explanation being appropriately strict. Check the denials, not only the claims.
+
+**A second instance, found 2026-08-21 in the same deck, and this one is subtler because
+the denial is half true.** Two questions dismiss their distractors with "the isShareable
+and isAccessible keywords are not valid Apex constructs". `isShareable` is indeed not a
+member of Apex's `Schema.DescribeSObjectResult` — but **`isAccessible()` is**, documented
+as returning "true if the current user can see this object". The distractor still fails,
+for a better reason: it is a describe *method* reporting object-level access, not a
+keyword, and it says nothing about individual record visibility. Both explanations were
+rewritten to say that; neither key moved.
+
+The lesson is about the shape of the fix, not the fact. When an explanation dismisses
+two distractors in one breath, **check them separately** — a sentence that is right
+about one and wrong about the other reads as confidently as one that is right about
+both, and the reader has no way to tell which half to trust.
 
 ### 10. Defective items that no key can fix
 Some questions are broken, not wrong: a "choose 2" whose second correct option is

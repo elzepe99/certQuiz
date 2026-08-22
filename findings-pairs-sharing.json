@@ -1,0 +1,41 @@
+{
+  "deck": "public/decks/sharing_visibility_questions_corrected.json",
+  "reviewed": "2026-08-21",
+  "findings": [
+    {
+      "id": "c095ab36",
+      "verdict": "clarified",
+      "explanation": "Apex managed sharing is created by code running in system context, so the two safeguards are one that re-imposes the running user's visibility and one that proves it. Declaring the class with sharing (C) does the first: Understanding Sharing notes that a trigger started from a class that is not defined with the keyword \"runs in system mode\" and so \"doesn't require the running user to have specific access\". Testing with runAs (B) does the second - inside a runAs block \"the user's sharing rules and object-level and field-level permissions are enforced... regardless of the sharing mode (with sharing or without sharing) of the test class\", so a test can demonstrate what each profile actually sees.\nBe precise about why the other two fail, because they are not equally imaginary. There is no isShareable member on Apex's Schema.DescribeSObjectResult, so option A names nothing at all. isAccessible() is real - the Apex Reference documents it as returning \"true if the current user can see this object\" - but it is a describe method reporting object-level access, not a keyword, and it says nothing about which individual records a user may see. Neither is something you declare on a class to keep record visibility in force.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing_understanding.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_methods_system_sobject_describe.htm"
+      ]
+    },
+    {
+      "id": "b3eeee28",
+      "verdict": "clarified",
+      "explanation": "Apex managed sharing is created by code running in system context, so the safeguard available here is proof by testing: runAs (C) lets a test assume each affected user and assert what that user can actually see. Using the runAs Method states that inside the block \"the user's sharing rules and object-level and field-level permissions are enforced... regardless of the sharing mode (with sharing or without sharing) of the test class\".\nThe other two options are not the Apex constructs they resemble, and they fail for different reasons. isShareable is not a member of Apex's Schema.DescribeSObjectResult at all. isAccessible() does exist and returns \"true if the current user can see this object\", but it is a describe method for object-level access rather than a keyword, and it reports nothing about individual record visibility.\nNote what this option set omits: declaring the class with sharing, which is the construct that actually re-imposes record visibility on the code. With that absent, runAs is the only genuine safeguard on the list.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_methods_system_sobject_describe.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_bulk_sharing_understanding.htm"
+      ]
+    },
+    {
+      "id": "681f22f4",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.networks_partner_super_user_access.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.networks_partner_roles_overview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "7d2c8e5f",
+      "verdict": "clarified",
+      "explanation": "Super user access is the intended mechanism and the only option here that scales, because it is granted per user rather than configured per distributor. But read its scope carefully, because this item overreaches. Grant Portal Super User Access documents that a super user reaches \"records of other partner users who are at their role level or below them in the account role hierarchy\", and each partner account carries a Partner Executive > Partner Manager > Partner User hierarchy. A super user in the Partner User role therefore reaches only other Partner User-role records - not the records owned by the partner managers and executives above them.\nSo the stem's \"any user, regardless of role\" is not what this option delivers, and no other option delivers it either: ownership-based sharing rules (A) would need one rule per distributor across 200 accounts, sharing sets (B) grant portal users access through account and contact relationships rather than lifting a partner role restriction, and a View All permission set (C) would expose every case and container in the org rather than one distributor's. Treat the item as defective in its stem, with D as the best available answer.\nOne detail in D's favour: super user access applies \"only to cases, leads, custom objects, and opportunities\", which does cover both Case and the custom Container object this question asks about.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.networks_partner_super_user_access.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.networks_partner_roles_overview.htm&language=en_US&type=5"
+      ]
+    }
+  ]
+}

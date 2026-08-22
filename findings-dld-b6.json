@@ -1,0 +1,167 @@
+{
+  "deck": "public/decks/salesforce_dld_questions_corrected.json",
+  "reviewed": "2026-08-20",
+  "findings": [
+    {
+      "id": "42760192",
+      "verdict": "confirmed",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/org-development-model/plan-for-changes-to-your-org2",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm"
+      ]
+    },
+    {
+      "id": "9cb20e73",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_code_coverage_intro.htm"
+      ]
+    },
+    {
+      "id": "6156a463",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_load_data.htm"
+      ]
+    },
+    {
+      "id": "9845d66b",
+      "verdict": "reasoning",
+      "explanation": "Both keyed statements describe the Lightning Testing Service, which is what this item is built on: LTS wrapped standard JavaScript frameworks for Aura, exposed a $T helper object for creating and retrieving component instances asynchronously, and ran its suite from a test app in the org whose page reported pass and fail results on screen. Jest belongs to Lightning Web Components rather than Aura, which is why the option pairing Jest with Aura is the odd one out.\nRead this item as history rather than instruction. Salesforce now states plainly: \"We used to recommend Lightning Testing Service (LTS) but it's deprecated and no longer supported.\" The current recommendations for testing Lightning components are Jest, UTAM, Jasmine, Mocha, Selenium and WebdriverIO. A team standing up component testing today should choose from that list and should not install LTS, whatever this item's key says.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/lightning_testing_intro.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/accessibility_write_tests.htm"
+      ],
+      "note": "Answer stands as what the exam tests, but the whole item rests on a retired tool. Salesforce's own guide now says the Lightning Testing Service \"is deprecated and no longer supported\", and points to Jest, UTAM, Jasmine, Mocha, Selenium and WebdriverIO instead. Do not act on this item's advice to install LTS."
+    },
+    {
+      "id": "12f79a7f",
+      "verdict": "clarified",
+      "explanation": "The complaint is the manual re-entry in every sandbox, and that is decided by whether the records are metadata or data. Custom metadata type records are metadata: the type and its records travel together through change sets, packages and the Metadata API, so a new service centre is entered once and arrives in every environment with the next deployment. They are also queryable in SOQL, which is what the web forms need.\nBoth custom settings options fail on the same point - the definition is metadata but the records are data, so someone must populate them again in each org, which is exactly the manual work to be eliminated. A custom object has the same problem and adds a data model for reference data that never changes at run time.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.custommetadatatypes_overview.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_custommetadatatypes.htm"
+      ]
+    },
+    {
+      "id": "feeeb5f2",
+      "verdict": "reasoning",
+      "explanation": "Validation rules are the cleanest of these to cover with an executable test. They fire on every insert and update as part of the standard save order, so a test method can attempt a save with invalid data, catch the DmlException, and assert on the message - the rule's logic is verified directly, with no configuration needed to provoke it.\nThe comparison is a matter of difficulty, not possibility, and that is where the old reasoning went wrong. Workflow rules and processes also execute during the save order in a test, and their field updates can be asserted by requerying the record afterwards. Case assignment rules are the genuine outlier: Apex controls them explicitly through Database.DMLOptions, where setting assignmentRuleHeader.useDefaultRule tells the system to \"use the default (active) assignment rule for the case or lead\" - so a test that simply inserts a Case is not exercising the rule at all unless it sets that option.\nCurrency note: two of the options name automation Salesforce has moved on from. Workflow Rules and Process Builder reached end of support at the end of 2025, with Flow as the replacement, so new automation being written for test coverage today would be Flow rather than either of them.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_class_Database_AssignmentRuleHeader.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_order_of_execution.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_code_coverage_intro.htm"
+      ],
+      "note": "Answer stands. The old explanation claimed the behaviour of workflow rules and processes \"cannot be directly asserted\" in unit tests. They do execute during the save order in a test and their effects can be asserted; the option that genuinely does not run unless Apex asks for it is the assignment rule, via Database.DMLOptions.assignmentRuleHeader."
+    },
+    {
+      "id": "0a6666e2",
+      "verdict": "clarified",
+      "explanation": "Testing for adverse conditions means two things here. Data has to include the values that should fail - nulls, boundary values, oversized inputs, bulk volumes - because a suite built only from valid records proves the happy path and nothing else. And the tests have to run as more than one kind of user: much of what breaks in an enterprise org breaks because of who is running the code, so exercising the logic under different profiles and permission sets is what catches missing object and field access before a user finds it.\nThe two rejected options describe the opposite of Apex testing convention. Tests do not see org data by default - isolation is the default behaviour, which is precisely why a test creates the records it needs - and that includes creating any custom setting values the code under test reads.\nOne detail worth having right when you use System.runAs for this: the documentation now states that a runAs block enforces the user's sharing rules and their object-level and field-level permissions, regardless of the sharing mode of the test class. The older understanding that runAs affects record sharing only is out of date.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_code_coverage_intro.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_load_data.htm"
+      ]
+    },
+    {
+      "id": "91eb375c",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_api_loading_data.htm",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "c4314d7d",
+      "verdict": "clarified",
+      "explanation": "Salesforce publishes the ranking, and it is not close. Its review of AppExchange submissions states that \"object and field level security (CRUD/FLS) enforcement vulnerabilities are the top reason (by a significant margin) for failing the AppExchange security review\" - code that queries or writes without first checking whether the running user may see or change the object and fields involved. In the same published list, cross-site scripting sits at number eight and SOQL injection at number ten, so both are real findings but far less frequent.\nThe reason it dominates is structural: a packaged class runs in orgs whose permission configurations the developer has never seen, so anything that assumes access is a finding by default.\nCurrency note on the remedy: the modern way to satisfy this is to run queries and DML in user mode rather than hand-writing permission checks, with Security.stripInaccessible available to remove fields the running user cannot access from results.",
+      "references": [
+        "https://developer.salesforce.com/blogs/2023/08/the-top-20-vulnerabilities-found-in-the-appexchange-security-review",
+        "https://developer.salesforce.com/docs/atlas.en-us.packagingGuide.meta/packagingGuide/security_review_guidelines.htm"
+      ]
+    },
+    {
+      "id": "6fcd633a",
+      "verdict": "clarified",
+      "explanation": "Coverage is already above the platform's requirement, so it is not what is letting the defects through. Salesforce says as much: unit tests \"must cover at least 75% of your Apex code, and those tests must pass\", but \"code coverage serves as one indication of test effectiveness, but doesn't guarantee test effectiveness. The quality of the tests also matters\". Raising the number to 95% buys more executed lines, not more assertions about behaviour anyone cares about.\nThe two keyed answers attack the real gaps. Deriving test classes from the test scripts makes the automated tests exercise the scenarios the business actually described, including the edge cases a coverage-driven test never reaches. Sharper acceptance criteria shrink the gap the defects are escaping through - much of what is being logged as a defect is a difference of interpretation between what was specified and what was built.\nHaving the analyst who wrote the plan also write the test classes removes the independent second reading, which is the point of having both.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_code_coverage_intro.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm"
+      ]
+    },
+    {
+      "id": "0788a944",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm",
+        "https://developer.salesforce.com/docs/platform/salesforce-code-analyzer/guide/code-analyzer.html"
+      ]
+    },
+    {
+      "id": "1655aa24",
+      "verdict": "clarified",
+      "explanation": "The three keyed advantages are the shape of Salesforce DX itself. Source lives on the developer's machine and in version control rather than only inside an org, which is the shift the whole model rests on. Scratch orgs are available on demand - \"a source-driven and disposable deployment of Salesforce code and metadata\" - so an environment can be created per feature branch or per CI run. And package versions can be installed into any org from Salesforce's own package registry, which is how the same artefact reaches each environment.\nThe two rejected options name things that do not exist in that form. Execute Anonymous runs a block of Apex in an org; it deploys no metadata. And there is no native rollback command in the CLI - reversing a deployment means deploying the previous state and removing new components with a destructiveChanges manifest.\nNaming note: the commands have moved from the sfdx force: form to the current sf ones, so package installation today is sf package install rather than the older syntax.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_unlocked_pkg_intro.htm",
+        "https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_start.html"
+      ]
+    },
+    {
+      "id": "9164ffe1",
+      "verdict": "clarified",
+      "explanation": "Regression is a timing problem: the break is introduced during development and discovered by users after release. Only automated tests running on every commit close that gap, which is why the answer is unit and functional test automation inside continuous integration - the suite runs against each change, and a failure names the commit that caused it.\nRunning test suites by hand from the Developer Console is the same tests without the trigger, so it depends on someone remembering, at the moment it matters, on every release. Freezing development and re-architecting addresses the existing defects while guaranteeing the next release reintroduces the problem, because nothing has changed about how regressions are caught. And Apex Hammer is Salesforce's own process for validating that a platform release does not break customer tests - it runs on Salesforce's side, and no customer can invoke it as a regression suite.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_code_coverage_intro.htm"
+      ]
+    },
+    {
+      "id": "11f1d00f",
+      "verdict": "clarified",
+      "explanation": "The reason is architectural rather than technical: production is shared infrastructure, so a test designed to drive one org to its breaking point degrades service for every other tenant on the same instance. Salesforce states the rule directly - \"because Salesforce is a multitenant platform, performance testing is not permitted in production environments. Use a full copy sandbox\", and \"scale tests are only permitted in sandboxes\".\nThe prohibition comes with a process rather than a flat refusal. Testing in a sandbox needs prior approval, submitted \"at least one week before the testing date\" with a test plan, dates, the sandbox org id and the scenario, and \"unapproved testing is subject to throttling or blocking\".\nThe rejected options invent physical causes - a shortage of CPU, a network block, congestion - where the actual constraint is the obligation Salesforce has to its other customers on that instance.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=000387059&language=en_US&type=1",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "2d70511f",
+      "verdict": "clarified",
+      "explanation": "A CI/CD pipeline can only include techniques that run unattended on every change, and both keyed answers qualify. Static analysis runs at commit time against the source: Salesforce's own Code Analyzer unifies engines such as PMD, RetireJS and ESLint behind one CLI command, is designed to be integrated \"into your build and deployment processes\", and reports violations before the code has executed. Automated browser tests run after the deployment step and exercise the assembled application through the UI, which is the only layer that catches a break between components that each pass their own unit tests.\nThe two rejected techniques both need something the pipeline cannot supply. Business verification testing needs business users making judgments, which happens after a release reaches them. And stress testing is not permitted against production at all, and needs advance approval even in a sandbox, so it cannot sit in a pipeline that runs on every merge.",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/salesforce-code-analyzer/guide/code-analyzer.html",
+        "https://help.salesforce.com/s/articleView?id=000387059&language=en_US&type=1",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm"
+      ]
+    },
+    {
+      "id": "065657fa",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/lightning_testing_intro.htm",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_preview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "34e34718",
+      "verdict": "clarified",
+      "explanation": "The requirement is a response time at a stated concurrency - under 5 seconds with 1,500 concurrent users - which is the definition of a load test: drive the expected volume and measure what the system does at that volume. Unit tests establish correctness at any scale, integration testing establishes that the systems exchange data correctly, and neither produces a page response time.\nStress testing is the near miss. It deliberately exceeds the expected peak to find where the system fails, which answers a different question, and it cannot be run where the users are: \"performance testing is not permitted in production environments. Use a full copy sandbox\", with tests approved in advance and unapproved testing \"subject to throttling or blocking\". Plan the load test in a Full sandbox, sized like production, and submit the request before booking the window.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=000387059&language=en_US&type=1",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "1e990e83",
+      "verdict": "clarified",
+      "explanation": "Fixing in the test sandbox and shipping from there breaks the direction the pipeline depends on. Changes flow one way - development, then test, then production - and a fix that enters halfway leaves the development sandbox without it. The next release from development then overwrites the fix in production, and the defect returns with an authoritative-looking deployment behind it. That is the failure mode the deadline pressure is hiding.\nSo the fix belongs in the development sandbox, migrates into the test environment where the same team that found the issue verifies it, and reaches production through the route every other change takes. Back-porting from test to development afterwards reverses the flow and depends on someone remembering to do it, and deploying from development straight to production skips the verification step that produced the list of issues in the first place.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/org-development-model/plan-for-changes-to-your-org2",
+        "https://developer.salesforce.com/blogs/2014/12/salesforce1-enterprise-environment-management"
+      ]
+    }
+  ]
+}

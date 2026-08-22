@@ -1,0 +1,32 @@
+{
+  "deck": "public/decks/salesforce_dld_questions_corrected.json",
+  "reviewed": "2026-08-20",
+  "findings": [
+    {
+      "id": "8846055b",
+      "verdict": "clarified",
+      "explanation": "The Force.com Migration Tool is the answer because it is the only listed option a machine can run. It is an Ant-based command-line client for the Metadata API, so a build server or scheduler can invoke it with no human present - which is what an unattended, repeatable step that must run before every outbound deployment requires.\nNone of the others can be driven that way. Change sets are point-and-click by design, Workbench is an interactive browser tool, and the IDE is a developer's workstation environment; each needs somebody clicking through it every time the sync is due.\nCurrency note: Salesforce retired the Ant Migration Tool in Spring '24. It continues to function but gains no functionality beyond API v59.0, and the Salesforce CLI is the supported command-line client for the same Metadata API today. The reasoning the question tests is unchanged - scriptable API tooling automates, declarative tooling does not - but a pipeline being built now should use the CLI.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/file_based.htm",
+        "https://developer.salesforce.com/blogs/2024/01/moving-on-from-the-ant-migration-tool-to-sf-cli-v2"
+      ]
+    },
+    {
+      "id": "8771e8d4",
+      "verdict": "clarified",
+      "explanation": "Build the functionality once as a package in a Developer Edition org and install it into both subsidiaries. A package is the mechanism designed for this shape: the standardized functions are versioned centrally, the same version is installed into each org, and later upgrades travel the same path - which is what keeps the two orgs standardized over time rather than only on day one.\nEverything else on offer is confined to one org family. A sandbox deploys only to the production org it belongs to, and a change set needs a deployment connection, which exists \"between all orgs affiliated with a production org\" - so neither can reach two independent production orgs, whatever is built in them. Salesforce-to-Salesforce is a record-sharing feature: it publishes and subscribes to data between orgs and moves no metadata at all.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_unlocked_pkg_intro.htm",
+        "https://help.salesforce.com/s/articleView?id=sf.changesets_about_connection.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "1292cd74",
+      "verdict": "clarified",
+      "explanation": "Keep the business units in separate orgs and deploy a common managed or unlocked package into each one. That package is what carries the standardized processes: they are built once centrally and installed into every unit's org, so the processes stay identical without merging orgs that share no customers.\nSalesforce's org-strategy guidance reaches this directly. The decision rests on the enterprise operating model, whose two axes are business process standardization and business process integration, and the CEO's two statements place this company in the Replication quadrant - standardization high, integration explicitly not required. For that quadrant the guidance is that companies \"can (and probably should) have multiple orgs, however you should consider deploying a managed package from a central org into all of the replicated business units\".\nConsolidating into one org is the recommendation for the Unification and Coordination quadrants, where process integration is high. It is not high here: the business units have different customers and different expertise, so a merge buys the complexity of one org serving many lines of business and none of the shared-data benefit that would repay it.",
+      "references": [
+        "https://developer.salesforce.com/blogs/developer-relations/2014/10/enterprise-architecture-multi-org-strategy"
+      ]
+    }
+  ]
+}

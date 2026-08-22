@@ -1,0 +1,194 @@
+{
+  "deck": "public/decks/salesforce_dld_questions_corrected.json",
+  "reviewed": "2026-08-20",
+  "findings": [
+    {
+      "id": "bdae5231",
+      "verdict": "clarified",
+      "explanation": "A steering committee governs; it does not deliver. Its two roles here are both decisions about policy rather than practice: setting the criteria by which any given project is judged suitable for Agile or for Waterfall, and then approving the departures from that policy when a particular project needs one. Both are exception-and-standard decisions that need authority above any single project.\nDesigning a methodology is specialist work that a delivery or PMO function does, and enforcing that corporate stage gates appear in the process is an assurance activity carried out on each project, not a committee decision.\nNote that this item is governance practice rather than a Salesforce platform fact - no vendor documentation settles who sits on a steering committee. The references below describe the surrounding release governance and are orienting rather than decisive.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management",
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "1371e84d",
+      "verdict": "clarified",
+      "explanation": "The distinction that decides this is who each field is for. On a custom field, description is \"description of the field\" - documentation aimed at whoever maintains the org - while inlineHelpText \"represents the content of field-level help\", which renders next to the input for the end user. An admin trying to work out whether a field is still in use needs the first, and putting maintenance notes in the second shows them to every user filling in the form.\nThe practical advantage is that both descriptions are field metadata: they are retrieved, deployed and version-controlled with the component itself, so the documentation cannot drift away from what it documents. A separate register of objects and fields is accurate only until the next change nobody records, which is the situation the admins are already in.\nRequiring every custom field on every page layout is a different matter entirely and would make the problem worse, not better.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/file_based.htm"
+      ]
+    },
+    {
+      "id": "bc626241",
+      "verdict": "clarified",
+      "explanation": "A minor-change policy is a decision to accept some risk, not to abandon control, so the three practices that matter are the ones that keep the change visible and reversible. Every change still gets tested, because low risk is an estimate rather than a guarantee. Every change is documented and made on a predictable cadence, so the org's current state can be reconstructed later and two admins do not edit the same thing on the same afternoon.\nThe third is the consequence nobody plans for: changes made directly in production do not flow backwards. Downstream sandboxes keep the state they were refreshed with, so the next release from a sandbox can overwrite a production-only change unless it has been reapplied there. Refreshing is what closes that gap, and a Full sandbox can only take that refresh every 29 days.\nThe two rejected options are the extremes - that minor changes need no documentation at all, and that a change policy is impossible without CI/CD. Neither follows.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_refresh.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "f3d07cd1",
+      "verdict": "clarified",
+      "explanation": "Waterfall front-loads analysis, and its advantages are the ones that follow from having done that work before anything is built. Complex processes and their interactions are documented and agreed before coding starts, which is valuable exactly when the cost of discovering a dependency late is high. And because scope is settled early, milestones, timelines and estimates rest on something more solid than a guess, which is what makes the plan defensible to a business merging two operations.\nThe other two statements describe the opposite model. Accommodating change late in the process by folding it into the requirements is Agile's premise - the Agile Manifesto values \"responding to change over following a plan\" - and Waterfall treats late change as rework against a signed baseline. Nor are Waterfall's start-up costs low: the design effort is the front of the project, not the back.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-agile-basics/learn-the-basics-of-agile",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "cf2eecac",
+      "verdict": "clarified",
+      "explanation": "Unused features are a discovery failure rather than a delivery failure - the team is building things correctly and building the wrong things. User-centred design moves the discovery upstream: watch how the work is actually done, prototype with the people who will use it, and test usability before committing the build. What ships then matches a need someone has, which is the only durable route to adoption.\nThe alternatives treat the symptom. A different UI framework changes how a feature is implemented, not whether anyone wanted it. Weekly emails naming the least engaged users apply pressure to individuals for a product problem. Stopping development leaves the same unused features in place and adds a delivery halt to the adoption problem.\nNote that this is a design and adoption judgment rather than a platform fact; the references describe the surrounding lifecycle practice and are orienting rather than decisive.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-agile-basics/learn-the-basics-of-agile"
+      ]
+    },
+    {
+      "id": "387dd40b",
+      "verdict": "clarified",
+      "explanation": "Salesforce frames application lifecycle management as five phases - plan, build, test, deploy, monitor - and says it \"provides structure, guiding your changes from initial requirements through deployment and ongoing monitoring\". The three keyed benefits are what that structure buys: a predictable release cadence instead of ad hoc pushes, protection for functionality that already works because every change is tested before promotion, and fewer defects reaching production because the pipeline gates them at each stage.\nThe two rejected options sit outside the process rather than being produced by it. Training users after each release is change management, which a reliable release cadence makes possible but which ALM does not itself perform. Defining what project success means is a governance decision taken before the lifecycle starts.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm"
+      ]
+    },
+    {
+      "id": "c5a6781c",
+      "verdict": "clarified",
+      "explanation": "The admins cannot tell what is in use, and both keyed answers create the record that would tell them. Requiring project deliverable documentation as a condition of delivery means each project leaves behind a statement of what it built and why, so the next person inherits intent rather than archaeology. A standard for deprecation handles the other half - the fields and classes that outlived their purpose - by defining how something is marked as going, communicated, and eventually removed, instead of being left in place forever because nobody is certain it is dead.\nThe rejected options address adjacent problems. An adoption plan measures usage by people, not by metadata. A governance framework aimed at business strategy operates above this question. And requiring integrations to be declarative constrains how things are built without recording what was built or why.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm"
+      ]
+    },
+    {
+      "id": "17935246",
+      "verdict": "clarified",
+      "explanation": "A centre of excellence needs the authority to decide and the capability to carry decisions out, which is what the two keyed groups supply. Executive sponsors bring the mandate, the funding and the ability to settle disputes between business units that no delivery team can settle. The programme team - architects, leads, project managers - is what turns those decisions into standards, reviews and a working pipeline. Salesforce's own org-strategy guidance describes the function in the same terms: a global centre of excellence should manage the business architecture and common standards across all of an enterprise's Salesforce instances.\nFrontline groups such as inside sales users and call centre agents are the people the CoE exists to serve, and their input belongs in requirements and design reviews. Seating them on the governing body neither gives them what they need nor gives the CoE what it needs.",
+      "references": [
+        "https://developer.salesforce.com/blogs/developer-relations/2014/10/enterprise-architecture-multi-org-strategy",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "bc9a1ad1",
+      "verdict": "clarified",
+      "explanation": "The complaint is about visibility of work status, and two of these frameworks are built on exactly that. Salesforce's own description of Kanban states it directly: \"one of the basic elements of Kanban is to make everything visible, creating consistent transparency of work items\" - work is written onto cards, the workflow is mapped into columns, and the position of every card shows its state at a glance, so \"it's easy for teams to know when delays occur\". Scrum reaches the same place through its ceremonies and values: teams are expected to be transparent about progress and to speak up when assumptions turn out wrong, and the inspect-and-adapt cadence puts that in front of everyone on a fixed rhythm.\nWaterfall publishes a schedule, which is a plan rather than a status - it says what should be happening this week, not what is. And DevOps monitoring reports on how the deployed system is performing, which is a different subject from where the teams' work has got to.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/scrum-and-kanban-at-salesforce/learn-about-kanban",
+        "https://trailhead.salesforce.com/content/learn/modules/scrum-and-kanban-at-salesforce/learn-about-scrum"
+      ]
+    },
+    {
+      "id": "004b8e73",
+      "verdict": "clarified",
+      "explanation": "Agile's two strengths here are the ones the Agile Manifesto states as values. Requirements that arrive later are handled by design rather than treated as a breach of the plan - \"responding to change over following a plan\" - which is what a business growing at scale needs when next quarter's requirement is not yet known. And the work is delivered in many small increments, so stakeholders see and use working functionality early instead of waiting for a single delivery at the end: \"working software over comprehensive documentation\".\nThe two rejected statements describe what the Manifesto was reacting against. Careful documentation at every step and a full understanding of the whole build before work begins are the strengths of the \"document-heavy, design-it-all-up-front process\" the Agile signatories identified as the source of large, expensive, often-aborted projects.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-agile-basics/learn-the-basics-of-agile"
+      ]
+    },
+    {
+      "id": "26ed97a3",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/blogs/developer-relations/2014/10/enterprise-architecture-multi-org-strategy",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "3639bf51",
+      "verdict": "clarified",
+      "explanation": "An architecture review board rules on decisions that are expensive to reverse and that constrain everything built afterwards. Choosing between SAML single sign-on and delegated authentication is one: it fixes how identity is established for every user and integration, and unwinding it later touches every connected system. So is deciding whether a requirement becomes a new custom object or a record type on an existing one - that choice propagates into sharing, reporting, automation and every integration that queries the object, and it is very costly to change once data exists.\nThe other two decisions belong elsewhere. Which testing tool tracks integration requirements is a delivery-tooling choice. Whether the project runs Agile or Waterfall is a methodology decision for the sponsor or steering committee - it shapes how the work is organized, not how the system is built.\nNote that the division of authority between an ARB and other governance bodies is organizational practice rather than a documented Salesforce rule; the references orient rather than decide it.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management",
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "70a0c1d5",
+      "verdict": "clarified",
+      "explanation": "The constraint is stated in the question: the outstanding items are low effort, do not need experienced resources, and the answer must not add cost. Hiring staff or engaging a partner both fail the last test directly. Dropping the items fails the first - they are described as valuable enhancements, so removing them from the backlog resolves the queue by discarding the value.\nA citizen development programme is the option that adds capacity without adding spend: business users build the low-risk, declarative items themselves inside guard-rails that IT sets - naming and design standards, a review step, a defined boundary for what a citizen developer may touch and what must come to the platform team. The governance is what separates it from ungoverned admin sprawl, and it is the part that has to be designed rather than assumed.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management",
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "a0fc764b",
+      "verdict": "clarified",
+      "explanation": "Waterfall pays for itself when the cost of getting the design wrong is higher than the cost of designing it all first. Many systems with dependencies between components is one such case - interfaces, data flows and sequencing have to be agreed across teams before anyone builds, because a late change in one component ripples through the others. Regulatory requirements validated by an outside agency is the other: the phase artefacts and traceable documentation Waterfall produces are the evidence the validation runs on, and an iterative process that leaves that documentation until later has nothing to submit.\nThe two rejected situations are where iterating is cheap and change is expected. A live application taking incremental changes from a small team can ship, learn and adjust continuously, and an in-house project with an open timeline and flexible requirements has no fixed baseline for Waterfall to protect.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-agile-basics/learn-the-basics-of-agile",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "ece03577",
+      "verdict": "clarified",
+      "explanation": "Agile suits work whose right answer emerges from use. Updating a customer-facing process so it can be adjusted quickly is exactly that - the requirement is to keep changing it, and the Agile Manifesto's \"responding to change over following a plan\" describes the operating model that supports it. The second situation is the enabler rather than the motivation: heavy investment in DevOps means automated testing and fast, repeatable deployment, and without that machinery short iterations collapse under their own release overhead. Agile cadence is only sustainable when shipping is cheap.\nThe rejected situations both have a fixed baseline. Well-defined requirements with complex front-to-back interactions reward designing the interfaces up front. And a third party working to a fixed scope, budget and timeline is contracted against a specification, which is the arrangement Waterfall exists to serve.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-agile-basics/learn-the-basics-of-agile",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm"
+      ]
+    },
+    {
+      "id": "20a0373a",
+      "verdict": "clarified",
+      "explanation": "The requirement is that streams with different release dates do not block each other, so the branching model has to let work live apart from the mainline until its own release is ready. GitHub flow does that: each stream develops on its own branch, is reviewed through a pull request, and merges on its own schedule.\nTrunk-based development assumes the opposite and is the reason it is wrong here - it depends on very short-lived branches integrated into a single trunk continuously, which works when everyone releases together and fights the requirement when they do not. Scratch-org-based development describes how environments are provisioned, not how branches are organized, and the fourth option is not a branching model at all.\nOne caveat for real use: teams with genuinely staggered release dates often adopt a model with explicit release branches, which is a closer fit than either option here. This item's option set does not offer one, so the feature-branch model is the best available answer rather than the whole answer.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm",
+        "https://trailhead.salesforce.com/content/learn/modules/org-development-model/plan-for-changes-to-your-org2"
+      ]
+    },
+    {
+      "id": "1fca2746",
+      "verdict": "clarified",
+      "explanation": "The question asks which steps apply to any Salesforce development project, so the answer has to be tool-agnostic. Environment management, validation, and assembling the release qualify: every project needs somewhere to build and test, needs its changes verified before promotion, and needs the changes gathered into something deployable. Salesforce's current framing of the lifecycle is the same shape - plan, build, test, deploy, monitor.\nThe two rejected options are choices made within those steps rather than steps themselves. Continuous integration is a practice a team may or may not adopt, and change sets are one deployment tool among several - a project using the Metadata API or packages performs the same release step without them.\nCurrency note: the classic Salesforce Development Lifecycle Guide that this vocabulary comes from has been retired, and the lifecycle is now described through the five phases above and through DevOps Center.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management",
+        "https://help.salesforce.com/s/articleView?id=sf.deploy_overview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "41c787b2",
+      "verdict": "clarified",
+      "explanation": "Regulation and audit turn every production change into something that has to be justified afterwards, so the two answers are both about evidence. Reviewing every change against security principles has to include hotfixes, because the emergency path is where controls are most often skipped and where an auditor will look first. Explicit stakeholder approval is what produces the record that the change was authorized, by someone entitled to authorize it, before it happened.\nThe rejected options overreach in different directions. Eliminating every manual step is an admirable target but not a requirement - a documented, approved manual step is auditable, and some post-deployment configuration cannot be automated. And verifying functionality in production after deployment is the wrong order: validation belongs in a pre-production environment, and a regulated change that has to be tested in production has been released before it was proven.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "6a25c420",
+      "verdict": "clarified",
+      "explanation": "The developer needs to know why the class exists, which is a requirements question rather than a testing one. A requirements traceability matrix is the artefact that carries that link: each requirement is mapped forward to the design elements and components that implement it and to the tests that verify it, so a class can be traced back to the business need that produced it a year ago.\nThe three rejected artefacts all describe testing rather than intent. Acceptance test scripts say what a tester did, an execution plan says how and when tests were run, and a sign-off document records that someone accepted the result. Any of them may mention the feature by name, but none states why the code was written.\nWorth pairing with the practice that would have avoided the problem: the field and object description attributes are metadata and travel with the component, so intent recorded there stays attached to the thing it describes.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management"
+      ]
+    },
+    {
+      "id": "ade048ca",
+      "verdict": "clarified",
+      "explanation": "Transparency is the principle being described, and it is foundational to Scrum rather than incidental: teams are expected to be honest and clear about timing, progress, plans and obstacles, to speak up when help is needed, and to report back when an assumption turns out to be wrong. That visibility is what makes inspection possible, and inspection is what makes adaptation possible - each sprint's inspect-and-adapt point depends on the previous one having been reported truthfully.\nThe three rejected statements each invert something. Avoiding change to working software contradicts continuous improvement. Refusing to test because testing is someone else's work contradicts the cross-functional team, where the team as a whole is accountable for a done increment. And changing scope daily is not embracing change - the sprint exists precisely so that change is absorbed between sprints rather than during them.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/scrum-and-kanban-at-salesforce/learn-about-scrum",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-agile-basics/learn-the-basics-of-agile"
+      ]
+    },
+    {
+      "id": "227cab5e",
+      "verdict": "clarified",
+      "explanation": "The three keyed tools are the ones the lifecycle cannot run without. A version control repository holds the source and its history, and it is what makes the source rather than an org the record of what is being delivered. A continuous integration tool is what executes the build, the tests and the deployment on every change instead of when someone remembers. An issue tracking tool holds the work itself - the stories and defects that the plan and build phases operate on - which is what connects a deployed change back to the request that caused it.\nThe two rejected options are infrastructure rather than lifecycle tooling. A database management system sits under an application, and middleware moves data between systems at run time; neither participates in planning, building, testing or releasing a change.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm",
+        "https://trailhead.salesforce.com/content/learn/modules/salesforce-application-lifecycle-management-quick-look/learn-about-salesforce-application-lifecycle-management",
+        "https://trailhead.salesforce.com/content/learn/modules/org-development-model/plan-for-changes-to-your-org2"
+      ]
+    }
+  ]
+}
