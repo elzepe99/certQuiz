@@ -417,9 +417,12 @@ Things that are **not** deck passes but are queued, most actionable first:
   comparing option sets rather than by any vendor page. Two explanations were fixed
   along the way (both claimed `isAccessible` is not a real Apex member — it is), and
   `7d2c8e5f` was found defective and kept as keyed. Detail in Duplicates below.
-- **6 newly detected pairs have never been read** — the ones the keyed-answer pass
-  surfaced on 2026-08-21, listed in Duplicates. Five look like true duplicates; each
-  needs both option sets read before any removal.
+- **3 true duplicates are ready to remove, awaiting your call** — `e22e750b` (databricks,
+  unanswerable as printed), `f9c8f7b9`/`4f119a16` (dev-2) and `1292cd74`/`21da735a`
+  (dld). All six new pairs were read on 2026-08-22; keepers are named in Duplicates,
+  no id is bound in the diagram registry, and none of the affected decks has comments,
+  so `scripts/remove-questions.mjs` can run whenever you decide. The other three pairs
+  are redundancy or a deliberate variant, and should stay.
 - **~~Two tooling fixes~~ — both done 2026-08-21, and the first one only half
   works.** `apply-findings.mjs` now takes `"unstamp": true` on a `clarified` or
   `confirmed` finding; it is a flag rather than the verdict the old note asked for,
@@ -675,17 +678,35 @@ What that buys is the **OCR-damaged twin whose stem fell just under the gate** �
 "lightning-layout-items in one column", and that one mangled sentence cost it 0.02.
 Six such pairs surfaced, marked `*` in the output, five of them true duplicates:
 
-| Pair | Deck | What it is |
-|---|---|---|
-| `f9c8f7b9`/`4f119a16` | dev-2 | same LWC layout question, one copy OCR-mangled |
-| `fb30207f`/`1698e7ee` | dev-2 | same `lightning-record-edit-form` question; "Validation rules" vs "Custom validation rules" |
-| `e22e750b`/`66dcd37c` | databricks | same groupBy question; one copy has `sales df` for `sales_df` |
-| `42c11595`/`c59ebbbc` | databricks | same webhook-alert question, different scenario wrapper |
-| `1292cd74`/`21da735a` | dld | same multi-org acquisition question, both keying multi-org strategy |
-| `ea780ddf`/`36f6a143` | sharing-visibility | **not** a duplicate — a choose-1 and its self-labelled "(Variant)" choose-2 |
+All six were read on 2026-08-22. **None has been removed — that is a dedupe
+decision** — but everything needed to execute one is checked: no id is bound in
+`src/diagrams/registry.ts`, and none of the four affected decks (dev-2, databricks,
+dld, sharing-visibility) carries a single in-app comment, so nothing can orphan.
 
-None has been removed; that is a dedupe decision, and each needs both option sets
-read first per the `weight()` warning above.
+| Pair | Deck | Verdict | Keeper |
+|---|---|---|---|
+| `e22e750b`/`66dcd37c` | databricks | **true duplicate** — and `e22e750b` is unanswerable as printed: its stem never states the task and all four options are OCR garbage | **`66dcd37c`** |
+| `f9c8f7b9`/`4f119a16` | dev-2 | **true duplicate** — identical options, same key, differing only in quote style | **`f9c8f7b9`** |
+| `1292cd74`/`21da735a` | dld | **true duplicate** — see below, this one is the interesting case | either; `1292cd74` has the fuller option text |
+| `fb30207f`/`1698e7ee` | dev-2 | same question, **different distractor sets**; both keyed correctly and both already stamped | redundancy, not error |
+| `42c11595`/`c59ebbbc` | databricks | same webhook-alert fact under two scenario wrappers; identical option texts in different order | redundancy, not error |
+| `ea780ddf`/`36f6a143` | sharing-visibility | **not a duplicate** — a choose-1 and its self-labelled "(Variant)" choose-2, which adds role-hierarchy sharing as a second correct answer | keep both |
+
+**`1292cd74`/`21da735a` is the effect this file predicted and could not detect.** Both
+keys moved in the dld pass on 2026-08-20 — one C→D, the other D→C — onto the same
+Replication-quadrant answer, which is exactly the "a fact-check turns a `DIFFERS` pair
+into a `SAME` pair" case described above. The instruction to re-run the detector after a
+pass was already here; what was missing was a detector that could see it. The stems score
+**0.62**, under the 0.72 gate, so the stem pass never surfaced this pair before or after
+the fact-check. The keyed-answer path found it on its first run.
+
+**`weight()` picked the wrong keeper on both duplicates it ranked — the third and fourth
+recorded misfires.** On `e22e750b`/`66dcd37c` it prefers `e22e750b`, the *unanswerable*
+copy, on the strength of a longer explanation attached to a destroyed stem and option
+set. On `f9c8f7b9`/`4f119a16` it prefers `4f119a16`, whose stem reads "lightninglayout-
+items im one column" and whose explanation only restates the answer, over a clean copy
+that explains the 12-column grid. Both times the longer explanation sat on the worse
+question. **Read both copies; the suggestion is a tiebreak, not a recommendation.**
 
 **What it still does not catch, and cannot without flooding:** pairs whose stems were
 *rewritten* rather than damaged. `23b3dd3a`/`b8dcc15e` key identical text and score
