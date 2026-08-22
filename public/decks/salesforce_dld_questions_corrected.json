@@ -1213,25 +1213,6 @@
     "_cat": "Environment Management"
   },
   {
-    "id": "21da735a",
-    "question": "UC has recently acquired companies that have their own Salesforce orgs, merged as new business units. The CEO wants business process standardization among all units, but business process integration is NOT required as units have different customers. Which org strategy should the architect recommend?",
-    "optionA": "Single-org strategy, as costs increase as the number of orgs go up.",
-    "optionB": "Multi-org strategy, as it is uncommon for diversified business units to work in the same space.",
-    "optionC": "Multi-org strategy, as they could deploy a common managed package into all orgs.",
-    "optionD": "Single-org strategy, as it is easier to standardize business processes in one org.",
-    "optionE": "",
-    "correct": "C",
-    "explanation": "Salesforce's org-strategy guidance decides this on the enterprise operating model, whose axes are business process standardization and business process integration. Standardization is the CEO's explicit goal and integration is explicitly not required, which is the Replication quadrant.\nThe recommendation for that quadrant names both halves of this option: companies \"can (and probably should) have multiple orgs, however you should consider deploying a managed package from a central org into all of the replicated business units\". The package is the standardization mechanism - processes are built once centrally and installed into each acquired org, which keeps them identical without merging orgs that share no customers.\nSingle-org is the guidance for the Unification and Coordination quadrants, where process integration is high. It is not high here, so consolidating buys the complexity of one org serving several lines of business and none of the shared-data benefit that would repay it.\nReferences:\nhttps://developer.salesforce.com/blogs/developer-relations/2014/10/enterprise-architecture-multi-org-strategy",
-    "_cat": "Environment Management",
-    "corrected": {
-      "date": "2026-08-20",
-      "via": "validation",
-      "note": "Answer moved D to C. High standardization with no integration requirement is the Replication quadrant, whose documented recommendation is multiple orgs plus a managed package deployed from a central org, not a single org. This is the same scenario as question 4 of this domain, which keyed the single-org option under a different letter and moved for the same reason.",
-      "from": "D",
-      "to": "C"
-    }
-  },
-  {
     "id": "947a218f",
     "question": "Sales and Service products will be created by two teams using 2nd-generation managed packages. The Sales team needs to use a specific function of the Service product, but only the functions exposed by the Service team. No other team will use these functions. What should an architect recommend?",
     "optionA": "Create two 2GP packages with the same namespace; set the methods to be shared with @namespaceAccessible.",

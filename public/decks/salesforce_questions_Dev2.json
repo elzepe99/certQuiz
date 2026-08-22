@@ -940,18 +940,6 @@
     "_cat": "Process Automation and Logic"
   },
   {
-    "id": "4f119a16",
-    "question": "When developing a Lightning web component, which setting displays lightninglayout-items im one column on small devices, such as mobile phones, and in two columns on tablet-size and desktop-size screens?",
-    "optionA": "Set size=\"12\" tablet-device-size=\"6\"",
-    "optionB": "Set size=\"12\" medium-device-size=\"6\"",
-    "optionC": "Set size=\"6\" mobile-device-size=\"12\"",
-    "optionD": "Set size=\"6\" small-device-size=\"12\"",
-    "optionE": "",
-    "correct": "B",
-    "explanation": "To display lightning-layout-items in one column on small devices and in two columns on larger devices, you should set the size attribute to \"12\" for small devices and the medium-device-size attribute to \"6\". This ensures that on small devices each item takes the full width, and on medium or larger devices, items take up half the width.\nReferences:\nhttps://developer.salesforce.com/docs/platform/lightning-component-reference/guide/lightning-layout-item.html",
-    "_cat": "User Interface"
-  },
-  {
     "id": "d5978be6",
     "question": "Refer to the following code snippets:\nA developer is experiencing issues with a Lightning web component. The component must surface information about Opportunities owned by the currently logged-in user.\nimport { LightningElement, api, wire } from 'lwc';\nimport getOpportunities from '@salesforce/apex/OpportunityController.findMyOpportunities';\n\nexport default class MyOpportunities extends LightningElement {\n    @api userId;\n    @wire(getOpportunities, {oppOwner: '$userId'})\n    opportunities;\n}\npublic with sharing class OpportunityController {\n    @AuraEnabled\n    public static List<Opportunity> findMyOpportunities(Id oppOwner) {\n        return [\n            SELECT Id, Name, Amount\n            FROM Opportunity\n            WHERE OwnerId = :oppOwner\n            WITH SECURITY_ENFORCED\n            LIMIT 10\n        ];\n    }\n}\nWhen the component is rendered, the following message is displayed: \"Error retrieving data\".\nWhich modification should be implemented to the Apex class to overcome the issue?",
     "optionA": "Use the Cacheable=true attribute in the Apex method,",
