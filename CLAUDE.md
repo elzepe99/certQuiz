@@ -52,16 +52,24 @@ scripts/
                       it uses elsewhere flattens `<=` and `>` (and `=` and `==`) to
                       the same string, which on a code deck reports the two answers
                       as identical when the operator IS the question.
-                      Its remaining findings on the checked decks are noise, not
-                      debt — sharing-visibility reports 10, the repo high, and a
-                      2026-08-21 spot-check of three (42219114, c9f8748f, ced866bb)
-                      found every explanation naming its key correctly. The
-                      "argues against its own key" check is keyword overlap, and
-                      "answer count does not match choose N" misfires whenever a
-                      single option contains the N things ("which two permissions"
-                      answered by one option naming both). Treat a nonzero count on
-                      an already-checked deck as expected; the number that matters
-                      is whether it MOVED after your own rewrites landed
+                      All 35 of its findings repo-wide were triaged on
+                      2026-08-22 and none is outstanding debt. They come in three
+                      shapes. "Explanation argues against its own key" is keyword
+                      overlap — sharing-visibility reports 10, the repo high, and
+                      three spot-checks (42219114, c9f8748f, ced866bb) all name
+                      their key correctly. "Answer count does not match choose N"
+                      misfires whenever one option contains the N things ("which
+                      two permissions" answered by a single option naming both).
+                      "Duplicate option text" fired twice: f3b19bee in data-cloud
+                      is a FALSE positive — its options B and D differ only in
+                      case ('san jose' vs 'SAN JOSE') and the normalizer
+                      lowercases, on a question that is *about* case-sensitivity,
+                      the same blind spot as the operator flattening above; and
+                      5bd76bd3 in databricks is REAL, two byte-identical options,
+                      already disclosed in that question's own explanation.
+                      Treat a nonzero count on an already-checked deck as expected;
+                      the number that matters is whether it MOVED after your own
+                      rewrites landed
   find-duplicates.mjs near-duplicate detector. Two entry paths since 2026-08-21:
                       stem Jaccard >= 0.72, or IDF-weighted keyed-answer overlap
                       >= 0.6 with stems still >= 0.6 (those print a `*`). The
