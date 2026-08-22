@@ -498,10 +498,27 @@ validates clean.
 
 **Verification debt to be honest about:**
 
-7. **22 of this deck's citations are help.salesforce.com `type=5` URLs verified by
-   title only.** Their existence is confirmed; their *bodies* are not readable from a
-   cloud container, so failure pattern 11 is unresolved on those specific links. They
-   were only used where the article title itself carries the fact.
+7. **~~22 of this deck's citations are `type=5` URLs verified by title only~~ —
+   partly closed 2026-08-22.** The deck cites 15 distinct help.salesforce.com `type=5`
+   URLs across 24 question-citations. Six were read at *body* level in the browser,
+   covering **16 of the 24**, and all six are live and do carry the fact they are cited
+   for:
+
+   | URL id | Questions | What the body confirms |
+   |---|---:|---|
+   | `platform.users_understanding_license_types` | 5 | "User Licenses"; names Partner Community among the license types |
+   | `xcloud.admin_exportdata` | 4 | "Export Backup Data from Salesforce"; weekly/monthly by edition, 48-hour zip retention |
+   | `platform.platform_connect_about` | 3 | "Salesforce Connect"; external objects accessed in real time via callouts |
+   | `platform.platform_connect_considerations_reports` | 2 | reports **can** include external objects — settles the invented absence |
+   | `xcloud.archive_o_overview` | 1 | "Salesforce has three products for archiving data" — settles the other invented absence outright |
+   | `platform.xorg_adapter_about` | 1 | carries `1dcb0fad`'s quoted sentence verbatim |
+
+   The remaining 9 are singleton citations still verified by title only. Note what
+   nearly went wrong here: a first search of `platform.xorg_adapter_about` for
+   "writable"/"read-only"/"write" found none of them and looked like pattern 11, but
+   the explanation never claims writability — it quotes a sentence that *is* on the
+   page. **Grep for the words the explanation actually uses, not the words the topic
+   suggests.**
 8. **~19 questions are not settleable by any vendor documentation** — governance,
    MDM strategy, and tooling-judgment items. Each says so in its own prose rather than
    pretending to a citation it does not have. Three licensing items (`653108ec`,
@@ -952,10 +969,20 @@ the prefix-swap shortcut for good: of eight `platform.`/`sales.`/`xcloud.` guess
 a known-dead `sf.` id, **one** hit. Search for the article *title* instead; the search
 index only returns ids that exist.
 
-Two things also got faster, both recorded in `references/verified-docs.md`: `WebFetch`
-does render help.salesforce.com and *does* report "We looked high and low" honestly,
-so it works as a parallel first pass; and a same-origin iframe driven from
-`javascript_tool` checks four ids in one call.
+One thing got faster, recorded in `references/verified-docs.md`: `WebFetch` does render
+help.salesforce.com and *does* report "We looked high and low" honestly, so it works as
+a parallel first pass. It sometimes returns only the SPA's nav tree instead of the
+article, and it caches for 15 minutes, so a retry gives the same answer — fall back to
+the browser rather than re-fetching.
+
+**The other speed-up was withdrawn on 2026-08-22: the four-ids-per-call iframe recipe
+reports live articles as DEAD.** The framed SPA never bootstraps the article, so every
+id settles on the generic title over an identical 633-character "We looked high and low"
+body — the 404 sentence. Three ids checked that way all came back dead; navigating to
+one of them at top level returned a full 6,734-character article. **It fails toward
+deleting good citations**, which is the direction you cannot afford, and the only tell
+is that the bodies all have the same length. Use one top-level `navigate` per article
+and poll for a real title *and* a body over ~1,500 chars. Two calls per URL, no batching.
 
 ### 4c. A citation that renders nowhere because the marker is mid-sentence
 Distinct from a dead link, and invisible to every check that greps for `References:`.
