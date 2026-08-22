@@ -1196,14 +1196,14 @@
   },
   {
     "id": "67563135",
-    "question": "A developer created a JavaScript library that simplifies the development of repetitive tasks and features and uploaded the library as a static resource called rsutils in Salesforce. Another developer is coding a new Lightning web component (LWC) and wants to leverage the library, Which statement properly loads the static resource within the LWC?",
-    "optionA": "import jsUtilities from '@salesforce/rescurceUr1/jaUtiles';",
-    "optionB": "<lightning-require scripts=\"{|$Resource,jaUtils}\"/>",
-    "optionC": "const jsUtilivy = SA.get{'SResource.isUtils');",
-    "optionD": "impore {jsUtilities} from '@salasforce/resourceUrl/jsUtils';",
+    "question": "A developer created a JavaScript library that simplifies the development of repetitive tasks and features and uploaded the library as a static resource called jsUtils in Salesforce. Another developer is coding a new Lightning web component (LWC) and wants to leverage the library. Which statement properly loads the static resource within the LWC?",
+    "optionA": "import jsUtilities from '@salesforce/resourceUrl/jsUtils';",
+    "optionB": "<lightning-require scripts=\"{!$Resource.jsUtils}\"/>",
+    "optionC": "const jsUtility = $A.get('$Resource.jsUtils');",
+    "optionD": "import { jsUtilities } from '@salesforce/resourceUrl/jsUtils';",
     "optionE": "",
     "correct": "A",
-    "explanation": "To load a static resource within a Lightning web component, you should use an import statement with the\n@salesforce/resourceUrl module. This statement correctly refers to the static resource by its name\nReferences:\nhttps://developer.salesforce.com/docs/platform/lwc/guide/create-resources.html\nhttps://developer.salesforce.com/docs/platform/lwc/guide/js-third-party-library.html",
+    "explanation": "Static resources are loaded into a Lightning web component with a default import from the `@salesforce/resourceUrl` module, naming the resource after the final slash. Salesforce's guide gives the form directly: `import myLib from \"@salesforce/resourceUrl/myLib\";`. The imported value is the resource's URL, which you then hand to `loadScript` or `loadStyle` from `lightning/platformResourceLoader`.\nOption D aims at the right module but imports it as a *named* export, with braces. `@salesforce/resourceUrl/<name>` exposes only a default export, so the braces are exactly what makes it wrong — that one difference is what this item is testing.\nOptions B and C are Aura rather than LWC. A `$Resource` expression in markup and `$A.get('$Resource.jsUtils')` in JavaScript both belong to the Aura framework and mean nothing inside a Lightning web component.\nAll four options and the stem reached this deck with OCR damage from the scrape and have been repaired against the documented syntax; the answer is unchanged.\nReferences:\nhttps://developer.salesforce.com/docs/platform/lwc/guide/create-resources.html\nhttps://developer.salesforce.com/docs/platform/lwc/guide/js-third-party-library.html",
     "_cat": "User Interface"
   },
   {
