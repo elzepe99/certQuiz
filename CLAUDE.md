@@ -71,9 +71,14 @@ scripts/
                         src/diagrams/registry.ts. Until 2026-08-17 its indent
                         detection matched the first indented `"`, which is the
                         *second* nesting level, so every run doubled the file's
-                        indentation — that is why agentforce, integration, iam and
-                        sharing-visibility sit at 4 spaces while every other deck
-                        is at 2. Cosmetic, and left alone rather than reformatted
+                        indentation. As of 2026-08-22 only integration is still at
+                        4 spaces; agentforce, admin, sharing-visibility and iam
+                        were normalized back to 2 as a side effect of
+                        apply-findings.mjs, which rewrites the whole deck with
+                        JSON.stringify(deck, null, 2). Expect any pass over
+                        integration to reformat it too, and to bury a one-line
+                        content change under a whole-file diff — check
+                        `git diff --stat` before believing a pass touched a lot
   add-question-ids.mjs  mints permanent ids; NEW decks only
   review-comments.mjs   exports in-app comments to markdown
   test-richtext.mjs     regression suite for the code-fence heuristic
