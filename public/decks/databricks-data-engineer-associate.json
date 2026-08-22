@@ -49,20 +49,6 @@
     "_src": "v2026-07-28.q73"
   },
   {
-    "id": "e22e750b",
-    "question": "A global retail company sells products across multiple categories (e.g.. Electronics, Clothing) and regions (e. g.. North. South, East. West). The sales team has provided the data engineer with a PySpark dataframe named sales_df as below and the team wants the data engineer to analyze the sales data to help them make strategic decisions.",
-    "optionA": "Category_sale: .es df -agg (sum (\"sales amount\") .-;r*i:rRy (\"category\") .alias (\"total sa.en amount\"))",
-    "optionB": "Category_sales = sales_df.sum(\"3ales_amount\"). g-1- upBy(\"categcryn).alias(\"toLal_sales_amount))",
-    "optionC": "Category_sales = sales_df.groupBy(\"reqion\"). agq(sum(\"sales_amountn).alias(ntotal_sales_amount''))",
-    "optionD": "Category_sales = sales df.groupBy(\"category\").agg(sum(\"sales amount\") .alias (\"total sales amount\"))",
-    "optionE": "",
-    "correct": "D",
-    "explanation": "Spark aggregates in a fixed order: group first, then aggregate. sales_df.groupBy(\"category\").agg(sum(\"sales_amount\").alias(\"total_sales_amount\")) groups the rows by category and then sums each group, which is what the question asks for.\nThe distractors invert or misplace that order. Calling .sum() directly on the DataFrame aggregates across every row before any grouping exists, so a later .groupBy() has nothing to group. Putting .groupBy() inside .agg() is not valid either -- agg takes aggregate expressions, not a grouping step. One option groups by region rather than category, which answers a different question.\nNote that this item's options are visibly damaged by the scrape (stray characters and mangled quotes); read them for structure rather than as runnable code.\nReferences:\nhttps://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby",
-    "_cat": "Databricks Certified Data Engineer Associate",
-    "_url": "https://www.freecram.net/question/GAQM.Databricks-Certified-Data-Engineer-Associate.v2026-07-28.q73/a-global-retail-company-sells-products-across-multiple-categories-e.g.-electronics-clothing-and-regions",
-    "_src": "v2026-07-28.q73"
-  },
-  {
     "id": "714c3513",
     "question": "Calculate the total sales amount for each region and store the results in a new dataframe called region_sales. Given the expected result: Which code will generate the expected result?",
     "optionA": "region sales - sales_df.agg(sum(\"sales_amount\").groupBy(\"region\").alias(\"total sales amount\"))",
