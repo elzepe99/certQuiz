@@ -1224,11 +1224,28 @@ established on this pass and are worth reusing:
   legitimate first-pass check for this vendor, four calls at a time in parallel —
   not the useless status-code check the older notes warn about. It sometimes
   returns only the SPA's nav tree, in which case fall back to the browser.
-- **Four ids per browser call, via a same-origin iframe.** From any
-  help.salesforce.com page, `javascript_tool` can create hidden iframes pointing at
-  `/s/articleView?id=<id>&language=en_US&type=5`, poll `contentDocument.title` until
-  it stops being the generic `Salesforce Help | Article`, and read the body. Keep it
-  to four ids per call — the tool times out at 30s.
+- **~~Four ids per browser call, via a same-origin iframe.~~ Do not use this. It
+  reports live articles as dead** (found 2026-08-22). The recipe was: from any
+  help.salesforce.com page, `javascript_tool` creates hidden iframes pointing at
+  `/s/articleView?id=<id>&language=en_US&type=5`, polls `contentDocument.title`, and
+  reads the body. In practice the framed SPA does not bootstrap the article — every
+  iframe settles on the generic `Salesforce Help | Article` title over an identical
+  **633-character** body containing "We looked high and low but couldn't find that
+  page", whatever id you give it.
+
+  That is the 404 sentence, so a checker greping for it marks every id dead. Three ids
+  were checked this way and all three came back DEAD; navigating to
+  `platform.platform_connect_about` at top level immediately returned "Salesforce
+  Connect" with a 6,734-character body. **The failure direction is the dangerous one** —
+  it deletes good citations rather than admitting bad ones, and it is invisible unless
+  you spot-check a positive.
+
+  The tell is that the bodies are all *the same length*. Three different articles
+  cannot produce byte-identical bodies; if they do, you are reading a shell.
+
+  What works is one article per top-level `navigate`, then a `javascript_tool` poll
+  that waits for a real title AND a body over ~1,500 chars before reading. Two calls
+  per URL, no batching. Slower, and correct.
 
 **Prefix-swapping remains a guess, and this pass confirms it hard.** Of the eight
 `platform.`/`sales.`/`xcloud.` guesses made for a known-dead `sf.` id, **one** hit.
