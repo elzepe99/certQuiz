@@ -100,7 +100,11 @@ when it did not.
       "was": "A", "correct": "C,D",
       "explanation": "Why the new key is right and why the old one failed.",
       "references": ["https://help.salesforce.com/..."],
-      "note": "What the documentation established." }
+      "note": "What the documentation established." },
+
+    { "id": "bd39a845", "verdict": "clarified", "unstamp": true,
+      "explanation": "Rewritten prose; the notice a previous pass left no longer applies.",
+      "references": ["https://help.salesforce.com/..."] }
   ]
 }
 ```
@@ -113,6 +117,15 @@ when it did not.
 | `clarified` | Answer right, explanation improved but nothing it said was false | `explanation`, `references` (a `note` is rejected) | no |
 | `reasoning` | Answer right, explanation *wrong* — or the item itself is defective | `explanation`, `references`, `note` | yes, no arrow |
 | `corrected` | Answer wrong | `was`, `correct`, `explanation`, `references`, `note` | yes, with arrow |
+
+**Clearing a stale notice.** Add `"unstamp": true` to a `clarified` or `confirmed`
+finding to remove a `corrected` record an earlier pass left behind. Use it when a
+later reading downgrades a question — the notice stays on the question otherwise,
+describing a change no reader can still see. It is a flag rather than a verdict
+because the case usually needs both halves at once: a question moving from
+`reasoning` to `clarified` needs a rewritten explanation *and* the old notice gone.
+The script refuses it on `corrected` and `reasoning` (which write a fresh notice),
+and refuses it when there is no notice to clear, so stale findings fail loudly.
 
 The split between `clarified` and `reasoning` is what keeps the notice meaningful.
 Ask whether a learner who believed the old explanation would now hold a false

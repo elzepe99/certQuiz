@@ -1,0 +1,19 @@
+{
+  "deck": "public/decks/salesforce_dld_questions_corrected.json",
+  "reviewed": "2026-08-21",
+  "findings": [
+    {
+      "id": "051864d9",
+      "verdict": "corrected",
+      "was": "B,C",
+      "correct": "A,B",
+      "explanation": "Salesforce has a page written for exactly this task, and it settles the granularity in one sentence: \"You can specify only test classes. You can't specify individual test methods.\" Its example passes an array of class names - {\"TestClass1\", \"TestClass2\", \"TestClass3\"} - to setRunTests. The reference documentation agrees: runTests is \"a list of Apex tests to run during deployment. Specify the class name, one name per instance\", and the Salesforce CLI behaves the same way, with --tests taking test class names.\nSo both keyed statements are true. Method-level selection is not available, which is precisely why you specify the classes that cover the components being deployed; and the mechanism for running that subset is to set the RunSpecifiedTests test level on DeployOptions and pass it to the deploy() call, at which point \"only the tests that you specify in the runTests option are run\".\nThe option claiming DeployOptions supports both classes and individual methods contradicts the documentation directly. RunLocalTests is not a subset in any useful sense either - it runs \"all tests in your org... except the ones that originate from installed managed and unlocked packages\", which on a mature org is most of the suite.\nOne constraint to plan around when you narrow the test set: \"if the code coverage of an Apex component in the deployment is less than 75%, the deployment fails\". Choosing too few classes does not just weaken the safety net, it can block the deployment outright.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy_run_specific_tests.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy.htm",
+        "https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_start.html"
+      ],
+      "note": "Answer moved B,C to A,B, and option A was repaired. The scrape had dropped a negation from option A, turning \"Specifying the test method is not supported in DeployOptions\" into its opposite and leaving a self-contradictory sentence; restoring it makes A true and the item answerable. Salesforce's Running a Subset of Tests in a Deployment states \"You can specify only test classes. You can't specify individual test methods\", so the previously keyed option asserting method-level support is false."
+    }
+  ]
+}

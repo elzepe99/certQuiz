@@ -1,0 +1,164 @@
+{
+  "deck": "public/decks/salesforce_dld_questions_corrected.json",
+  "reviewed": "2026-08-20",
+  "findings": [
+    {
+      "id": "b00849d8",
+      "verdict": "clarified",
+      "explanation": "The failures are random because nobody can see the change that caused them. Permission sets are metadata, so the fix is to stop treating them as untracked admin clicks: retrieve them into the repository, commit them like any other change, and let continuous integration run the test suite against the result. Salesforce makes the same argument for the org development model - \"a source repo can help to mitigate the pain point of keeping environments in sync. By externalizing the changes for each release, the team knows that the source repo reflects what they are delivering\" - and a build that fails on the commit tells the developer which permission change broke which query, at the moment it happened.\nThe alternatives address something else. Profiles have the same invisibility problem as permission sets, so switching between them changes nothing. SOSL is a different search language, not a defence against a field the running user can no longer see. And daily refreshes across every sandbox would destroy in-flight work to fix a visibility problem that source control solves.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/org-development-model/plan-for-changes-to-your-org2",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm"
+      ]
+    },
+    {
+      "id": "4e87b7fd",
+      "verdict": "clarified",
+      "explanation": "The two goals pull in opposite directions, so they get different answers in different places. In the CI sandboxes, run everything: RunLocalTests executes \"all tests in your org... except the ones that originate from installed managed and unlocked packages\", which is what surfaces the old test classes that new functionality has invalidated - the stated goal of improving them. Time there costs nothing a user notices.\nProduction is where the clock matters, so narrow the set: RunSpecifiedTests means \"only the tests that you specify in the runTests option are run\", which trims the deployment window to the tests that cover what is being deployed. Note the granularity - runTests takes class names, one per entry, not individual methods.\nThe remaining options either skip testing in production, which the platform does not allow for a production deployment, or claim sandboxes cannot run tests at all.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm"
+      ]
+    },
+    {
+      "id": "daf3611e",
+      "verdict": "clarified",
+      "explanation": "The symptom names the cause: the teams need more time to understand the code after each sprint, which is a readability and consistency problem rather than a skill problem. Shared, enforced code standards are what make five teams' output legible to each other - naming, structure, error handling and trigger patterns that a reader can predict. The sprint review is the recurring point where the rising defect count becomes visible as a trend and the team can change how it works, rather than absorbing it sprint after sprint.\nA central board approving every change converts a quality problem into a queue, and it removes the incentive for teams to own quality themselves. Using version history to identify who produced a bug is available in any repository, but attribution does not reduce defects and it discourages the honest reporting that does.\nNote that this item is a team-process judgment rather than a platform fact - no Salesforce documentation settles it. The reference below is the closest official guidance on governance and change-management practice, and is orienting rather than decisive.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "058e3da6",
+      "verdict": "clarified",
+      "explanation": "Nothing is rolling back and no data is being lost - reports and dashboards are metadata, and a deployment overwrites the version in the target org with the version in the payload. The executives edit them in production; the pipeline still carries the older definitions that were captured when the branch was cut; the next release reinstates those. The platform is doing exactly what it was told.\nThe fix is to make the source reflect reality: retrieve the report and dashboard metadata from production regularly and merge it into the development branches, so the next release carries forward the executives' work rather than replacing it. That is the discipline the org development model is built on - \"by externalizing the changes for each release, the team knows that the source repo reflects what they are delivering\".\nA data warehouse addresses reporting on data, not the loss of report definitions. Taking edit rights away from the executives removes the symptom by removing the capability. And backing the reports up immediately before each release and reimporting afterwards is the same merge done manually, once per release, with no protection against a second team editing in between.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/org-development-model/plan-for-changes-to-your-org2",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/file_based.htm"
+      ]
+    },
+    {
+      "id": "9fd8746c",
+      "verdict": "clarified",
+      "explanation": "The two keyed answers attack the two ways a migration fails. Scoping the relevant data with its dependencies, and writing the verification scripts in advance, is what turns \"the load finished\" into \"the load is correct\" - parent records before children, external ids mapped, record counts and field-level checks proving integrity rather than assuming it. Rehearsing the whole migration in a Full sandbox with the real legacy extract is what exposes everything a design review cannot: the transformations that fail on genuine values, the records that violate validation rules nobody remembered, and the elapsed time of the load against the cutover window. A Full sandbox is the environment for that because it is \"a replica of your production org, including all data\" and is sized like production.\nPhasing users onto the new system in parallel is a cutover strategy - useful, but it manages the business risk of switching over rather than the risk that the data arrives wrong. And rehearsing with generated test data hides precisely the defects a real extract would reveal.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_api_loading_data.htm"
+      ]
+    },
+    {
+      "id": "6e79fdb4",
+      "verdict": "confirmed",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/org-development-model/plan-for-changes-to-your-org2",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm"
+      ]
+    },
+    {
+      "id": "1f8fa592",
+      "verdict": "clarified",
+      "explanation": "The first reason is a platform rule, not a preference: \"by default, test methods don't support HTTP callouts, so tests that perform callouts fail\", and the documented way through is to \"enable HTTP callout testing by instructing Apex to generate mock responses in tests, using Test.setMock\". Any code path that makes a callout therefore needs a mock before it can be tested at all.\nThe second is the general purpose of mocking: it replaces the dependencies a unit under test would otherwise reach - other classes, external services, unpredictable state - with responses the developer chooses, so the test asserts on the logic being tested rather than on whatever the dependency happened to return that day.\nThe two rejected statements do not describe real mechanisms. Batchable is an interface a class implements, and mocking does not let a test skip the batch execution; the way to exercise batch code in a test is to run it between Test.startTest and Test.stopTest. And shortening a long-running process is a side effect of removing a dependency, not a reason mocks exist.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_restful_http_testing.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_interface_httpcalloutmock.htm"
+      ]
+    },
+    {
+      "id": "19382561",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm",
+        "https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_start.html"
+      ]
+    },
+    {
+      "id": "d1099662",
+      "verdict": "clarified",
+      "explanation": "Apex tests are isolated from org data by default, so the records a test needs have to be created by the test. Salesforce documents the static resource route for bulk data: store the records as \"a comma-delimited file ending with a .csv extension\" whose \"first line of the file must contain the field names\", then instantiate them in one line with Test.loadData, which \"returns a list of sObjects that correspond to each record inserted\". That keeps large fixtures out of the Apex and lets QA contribute rows.\nFor code that calls out, the data has to come from a mock instead, because \"test methods don't support HTTP callouts, so tests that perform callouts fail\" - an HttpCalloutMock implementation supplies the response the test needs, deterministically.\nThe rejected options both make a test depend on something outside the org at run time. A test that reads from middleware or a data-sync service is slow, non-deterministic, and fails when the external system does - which in a deployment means the deployment fails.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_load_data.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_restful_http_testing.htm"
+      ]
+    },
+    {
+      "id": "bf46c00b",
+      "verdict": "clarified",
+      "explanation": "Inconsistency across many teams is a coverage problem, and only an automated check covers everything. Salesforce ships one for this: Code Analyzer \"brings together different code-scanning engines, such as PMD, RetireJS, and ESLint, under a single, unified experience\", runs from the CLI so it can be wired \"into your build and deployment processes\", and supports custom PMD rules for patterns specific to a team's own coding practices. Every commit from every team is then measured against the same rules, whoever wrote it.\nThe alternatives are weaker at exactly this. Two-reviewer pull requests raise the cost of every change and still vary with whichever two people are reading. A release-management centre of excellence governs process rather than syntax. And regression tests prove behaviour, which is a different property - inconsistently named variables pass every test in the suite.",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/salesforce-code-analyzer/guide/code-analyzer.html",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm"
+      ]
+    },
+    {
+      "id": "d6c3d18a",
+      "verdict": "clarified",
+      "explanation": "The question is whether the org holds up under call-centre volume, which is what load testing measures - drive the expected concurrent volume at the Lead object and observe whether throughput and response times stay acceptable while every validation and workflow rule fires on each save. Performance testing is the companion measurement, timing the individual transaction so you can tell a slow rule apart from a saturated system.\nUnit tests answer a different question entirely: whether the rules are correct, not how they behave under concurrency. Stress testing deliberately pushes past the expected peak to find the breaking point.\nBefore any of this is scheduled, note the rules Salesforce places on it: \"because Salesforce is a multitenant platform, performance testing is not permitted in production environments. Use a full copy sandbox\", and tests must be approved in advance - submit the request \"at least one week before the testing date\", since \"unapproved testing is subject to throttling or blocking\".",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=000387059&language=en_US&type=1",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "a44349e1",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_large_data_volumes_bp.meta/salesforce_large_data_volumes_bp/ldv_deployments_best_practices_api_loading_data.htm",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "59848aee",
+      "verdict": "clarified",
+      "explanation": "Salesforce answers this in one sentence: \"You can call Aura accessibility tests in two environments. For JavaScript tests, use $A.test.assertAccessible(). For WebDriver tests, use auraTestingUtil.assertAccessible().\" Both evaluate the rendered DOM against Salesforce's accessibility rules and return an empty string on success or the failing rules on failure, so the same checks run whether the component is exercised from a JavaScript test or driven through a browser.\nThe two rejected options are not environments the framework provides - there is no AuraDriver test type and no ACCTEST harness. Naming the method that belongs to each environment is what the question is really testing, since calling the JavaScript form from a WebDriver test does not work.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/accessibility_write_tests.htm"
+      ]
+    },
+    {
+      "id": "82bf81bd",
+      "verdict": "clarified",
+      "explanation": "Both keyed limits are design-time constraints on the shape of the reference data itself. Relationship queries cannot traverse indefinitely: \"in each specified relationship, no more than five levels can be specified in a child-to-parent relationship\", and there are ceilings on breadth too - no more than 55 child-to-parent relationships and no more than 20 parent-to-child relationships in a single query. A reference model nested more deeply than that cannot be read in one query no matter how the code is written. Circular relationship chains are the other structural trap: a cycle among related reference objects cannot be loaded or traversed in a defined order.\nOne version detail worth carrying: the parent-to-child depth moved. It is up to five levels in API version 58.0 and later, but only two levels in 57.0 and earlier, so a query that works today can fail against an older manifest version.\nApex CPU time and HTTP response size are real limits, but they bind at run time on a particular transaction rather than constraining how the reference data may be modelled.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql_relationships_query_limits.htm"
+      ]
+    },
+    {
+      "id": "c7cb14ef",
+      "verdict": "clarified",
+      "explanation": "The risk is two developers editing the same component in one org, where the second save silently wins - there is no merge step in a sandbox. The primary answer removes the shared surface: give each developer their own environment, so their work is isolated until they commit, and let the repository and continuous integration perform the merge into the shared Developer Pro sandbox. That is the standard org development arrangement, where each team member customizes in their own Developer sandbox and the source repo becomes the record of what is being delivered.\nThe fallback answer accepts a single environment but still adds the repository, which is what gives the team a history to recover from and a place to resolve conflicts, plus explicit coordination over the components more than one person touches.\nSwapping the sandbox type changes the data it holds and nothing about concurrent editing. Managed packages are a distribution format, not a mechanism for merging one team's in-progress work with another's.",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/org-development-model/plan-for-changes-to-your-org2",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm",
+        "https://help.salesforce.com/s/articleView?id=platform.create_test_instance.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "4c9df2a3",
+      "verdict": "clarified",
+      "explanation": "The bottleneck is one person catching problems that should never have reached them, so both answers move work off that person. Written standards plus training change what developers submit - the recurring findings become habits rather than review comments. A static analyser in the pipeline catches the mechanical half automatically: Salesforce's own Code Analyzer unifies engines such as PMD, RetireJS and ESLint, runs from the CLI so it fits \"into your build and deployment processes\", and supports custom rules for a team's own conventions. What reaches the technical lead is then design and logic, which is the part that actually needs their judgment.\nAdding a second senior reviewer doubles the reviewing capacity without reducing the volume of findings, and it removes another experienced developer from delivery. Skipping review entirely trades a delivery delay for defects found later, at higher cost, by users.",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/salesforce-code-analyzer/guide/code-analyzer.html",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm"
+      ]
+    },
+    {
+      "id": "19f08b3e",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ci.htm",
+        "https://developer.salesforce.com/docs/platform/salesforce-code-analyzer/guide/code-analyzer.html"
+      ]
+    },
+    {
+      "id": "21b6ccf3",
+      "verdict": "reasoning",
+      "explanation": "Eight years of changes by rotating vendors produces accretion, and the three keyed findings are its structural signatures. Hand-rolled JSON and string-parsing utilities are redundant because Apex has native support - System.JSON serializes and deserializes Apex objects directly, with createParser and createGenerator for lower-level work - so code predating that survives as dead weight. Multiple triggers on one object is the classic consequence of successive teams each adding their own rather than extending what exists, and the platform gives no guarantee about the order in which they fire. And logic duplicated across Visualforce pages and Apex classes is what happens when each vendor builds beside the previous work instead of refactoring it.\nA caution about the two options this item excludes: they are not impossible, only not the findings you would predict from this history. Unit test failures are common in long-lived orgs, usually because tests depend on org data or hardcoded ids rather than because a release broke them. And Salesforce's versioning commitment applies to code pinned to an API version - it is not a promise that an upgrade can never affect existing behaviour, which is precisely why release preview windows and regression testing in an upgraded sandbox exist.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_class_System_Json.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_order_of_execution.htm",
+        "https://help.salesforce.com/s/articleView?id=platform.data_sandbox_preview.htm&language=en_US&type=5"
+      ],
+      "note": "Answer stands. The old explanation ruled out two options by claiming Salesforce's backward-compatibility guarantee means platform upgrades never break existing unit tests. That is not what versioning promises, and it contradicts two other questions in this deck, which key on refreshing into the release preview window and regression testing an upgraded sandbox precisely because a release can break existing behaviour."
+    }
+  ]
+}

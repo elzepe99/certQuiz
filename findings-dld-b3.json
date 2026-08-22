@@ -1,0 +1,153 @@
+{
+  "deck": "public/decks/salesforce_dld_questions_corrected.json",
+  "reviewed": "2026-08-20",
+  "findings": [
+    {
+      "id": "93601ed1",
+      "verdict": "clarified",
+      "explanation": "Change sets cannot leave the family they belong to. They travel over a deployment connection, and \"a deployment connection alone doesn't enable change sets to be sent between orgs\" - each org must additionally be authorized to send and receive. Those connections exist between a production org and its own sandboxes, not between one region's production org and another's, so a change set cannot carry this app across independent regional instances.\nMetadata API tooling has no such boundary. Both the Ant Migration Tool and the Salesforce Extensions for VS Code authenticate to whichever org you point them at and deploy the same retrieved component set into each one, which is what shipping a single app to every regional production org requires. The Developer Console edits one org in place and deploys nothing.\nCurrency note: Salesforce retired the Ant Migration Tool in Spring '24. It still runs, but receives no new functionality beyond API v59.0, and the Salesforce CLI is now the supported command-line route to the same Metadata API.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.changesets_about_connection.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/file_based.htm",
+        "https://developer.salesforce.com/blogs/2024/01/moving-on-from-the-ant-migration-tool-to-sf-cli-v2"
+      ]
+    },
+    {
+      "id": "8846055b",
+      "verdict": "clarified",
+      "explanation": "The requirement is an unattended, repeatable step that runs before every outbound deployment, so the tool has to be scriptable. The Ant-based migration tool is the only listed option that is: it is a command-line client for the Metadata API that a build server can invoke with no human present. Change sets are point-and-click by design, Workbench is an interactive browser tool, and the IDE is a developer's workstation environment - none of the three can be driven by a scheduler.\nCurrency note: Salesforce retired the Ant Migration Tool in Spring '24. It continues to function but gains no functionality beyond API v59.0, and the Salesforce CLI is the supported command-line client for the same Metadata API today. The reasoning the question tests is unchanged - scriptable API tooling automates, declarative tooling does not - but a pipeline being built now should use the CLI.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/file_based.htm",
+        "https://developer.salesforce.com/blogs/2024/01/moving-on-from-the-ant-migration-tool-to-sf-cli-v2"
+      ]
+    },
+    {
+      "id": "3a0f40db",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.changesets_inbound_deploy.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.changesets_about_connection.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "96a9af62",
+      "verdict": "reasoning",
+      "explanation": "Two levers actually shorten the deployment window. Choosing RunSpecifiedTests runs only the named tests instead of every test in the org, which is usually where the hours go on a large release. And a deployment that has already been validated against the target org can be promoted with quick deploy, which \"takes less time than a standard deploy because it skips running Apex tests. These tests were previously run as part of the validation\".\nThe eligibility window matters when you plan the release: the job ID returned by a validation \"is valid for 10 days from when you started the validation\". Validate early enough to be inside that window on deployment night and the production step becomes a promotion rather than a fresh test run.\nValidating without then using quick deploy simply moves the same work earlier - the real deployment still runs everything again. Splitting the release into groups adds ordering constraints and repeated overhead rather than removing any.",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_quick.html",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy.htm"
+      ],
+      "note": "Answer stands. The old explanation put the quick-deploy eligibility window at 4 days; Salesforce documents the validation job ID as valid for 10 days from when the validation started."
+    },
+    {
+      "id": "8771e8d4",
+      "verdict": "clarified",
+      "explanation": "The two orgs are independent production orgs, so nothing that relies on a deployment connection can reach both: change sets move between a production org and its own sandboxes, and a sandbox deploys only to the org it belongs to. That removes both change-set options outright, whatever is built in them. Salesforce-to-Salesforce is a record-sharing feature - it publishes and subscribes to data between orgs and moves no metadata at all.\nA package is the mechanism designed for this shape: build the standardized functions once in a packaging org, version them, and install the same version into each subsidiary's org. Upgrades then travel the same path, which is what keeps the two orgs standardized over time rather than only on day one.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.changesets_about_connection.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_unlocked_pkg_intro.htm"
+      ]
+    },
+    {
+      "id": "63d84f51",
+      "verdict": "clarified",
+      "explanation": "The split that decides this is metadata versus data. Custom metadata type records are metadata: the type and its records both move through change sets, packages and the Metadata API, so the configuration the Apex classes read arrives in the same deployment that delivers the classes. Custom setting records are ordinary data - the definition deploys, the values do not - which is why they have to be recreated in the target org by hand or by a separate load, in a second step that can be forgotten or done wrong.\nMoving the configuration to a custom metadata type therefore makes the release self-contained and repeatable across every environment. Populating custom settings manually before the classes land keeps the two-step problem and only reorders it, and scripting the whole deployment changes the tool without changing the fact that the setting values are still data.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.custommetadatatypes_overview.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_custommetadatatypes.htm"
+      ]
+    },
+    {
+      "id": "1e158c90",
+      "verdict": "clarified",
+      "explanation": "A change of field type is not a metadata edit that lands instantly - it triggers a per-record data conversion. Salesforce warns that \"the conversion runs in the background\" and that \"in some cases, the conversion can take over 24 hours to complete\", with picklist-to-text and date/time-to-time among the slowest, and deployments also face a ceiling on the total number of field type conversions they can carry. On an org with real data volume that is by far the most likely reason a routine change set suddenly takes hours.\nNew custom objects and fields are created empty, so there is nothing to convert. Profile and permission set changes rewrite access metadata, which is comparatively cheap. And a change set's duration plainly does depend on what is in it, which is what makes the first option self-refuting.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.notes_on_changing_custom_field_types.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "ef47a1bd",
+      "verdict": "clarified",
+      "explanation": "The question is not how to move metadata but how to know where each feature currently sits. Change sets and the CLI both deploy without recording a pipeline-level history, and a spreadsheet is accurate only until the next deployment nobody logs. What the DevOps team is describing - an environment map, per-feature version state, deployment history and diffs between orgs - is the function of a purpose-built release management product layered over the same APIs.\nCurrency note: Salesforce now ships DevOps Center as a native option, and it appears alongside change sets and the Metadata API in Salesforce's own list of ways to deploy changes. It provides source-tracked work items and a pipeline view without a third-party licence, so an org choosing tooling today should evaluate it before the AppExchange products this item points to.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.deploy_overview.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "6d1e8ed6",
+      "verdict": "clarified",
+      "explanation": "Two habits keep a package strategy honest. Install each package version into a scratch org or sandbox before it reaches production - installation exercises dependencies, namespace resolution and version ordering, none of which the build step proves. And check the Metadata Coverage Report, which lists every metadata type against the channels that can carry it, including Metadata API, change sets, unlocked packaging, managed packaging and source tracking; it is how you find out that a component you intended to package cannot be packaged before the split is designed around it.\nThe rejected options invert the model. One monolithic package restores the single tangled unit that packaging exists to break up, and version control is more important under package development, not less - the package version is built from source, so the repository is the record of what a version contains.",
+      "references": [
+        "https://developer.salesforce.com/docs/metadata-coverage",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_unlocked_pkg_intro.htm"
+      ]
+    },
+    {
+      "id": "46826f40",
+      "verdict": "reasoning",
+      "explanation": "Salesforce documents both keyed limits in the same place: \"You can deploy or retrieve up to 10,000 files at once\", and \"the maximum size of the deployed or retrieved .zip file is 39 MB\". Base-64 encoding inflates the payload, so the compressed archive has to stay under roughly that figure before encoding to fit inside the SOAP message limit.\nThat also settles the two distractors. The file cap applies symmetrically to deploy and retrieve, so no option that lets retrieve exceed it is correct, and 400 MB is not the archive limit under any reading.\nOne figure to have right: the companion limit on the uncompressed contents is \"600 MB or 629,145,600 bytes\", not 400 MB. Both constraints apply at once - a package can fail the uncompressed ceiling while its .zip is comfortably under 39 MB.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_app_limits_cheatsheet.meta/salesforce_app_limits_cheatsheet/salesforce_app_limits_platform_metadata.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy.htm"
+      ],
+      "note": "Answer stands. The old explanation taught the uncompressed limit as 400 MB; Salesforce documents it as 600 MB (629,145,600 bytes). The 39 MB .zip figure it gave is correct."
+    },
+    {
+      "id": "edf98922",
+      "verdict": "corrected",
+      "was": "D",
+      "correct": "A",
+      "explanation": "The question sets one criterion - shortest possible time - and an unmanaged package is the mechanism Salesforce documents for exactly this situation: unmanaged packages are used \"for distributing open-source projects to developers, or as a one-time drop of applications that require customization after installation\". Build the package from the app already running in ETO's org, install it in NTO's org, and the components land as ordinary metadata that NTO's admins can then edit.\nA managed package is built for a different job: it is the format \"used by Salesforce partners to distribute and sell applications to customers\", and it requires a globally unique namespace registered for the packaging org before anything can be uploaded. That is setup work this transfer does not need, and it buys the wrong outcome - installed managed components are locked against modification in the subscriber org, so NTO's own team could not adapt the app they just acquired. Creating users in ETO's org leaves the sales team working in the wrong system, and rebuilding the app is the slowest path of all.\nThe trade the unmanaged route accepts is that the publisher \"can't change or upgrade\" an unmanaged package after installation - there is no upgrade channel back to ETO. For a one-time transfer of an app NTO is taking ownership of, that is the intended behaviour rather than a loss.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.packagingGuide.meta/packagingGuide/packaging_developing_unmanaged.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.pkg1_dev.meta/pkg1_dev/sharing_apps.htm"
+      ],
+      "note": "Answer moved D to A. Salesforce documents the unmanaged package as the one-time drop of an application that is customized after installation, which is this scenario and the fastest route. A managed package targets partner distribution, needs a registered namespace first, and locks its components against edits in the installing org - so it is both slower to produce and wrong for an app NTO will now own and modify."
+    },
+    {
+      "id": "27a5139f",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=platform.deploy_best_practices.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/file_based.htm"
+      ]
+    },
+    {
+      "id": "7e0cf4e3",
+      "verdict": "clarified",
+      "explanation": "A deployment takes an org lock on the target, and the lock is over metadata rather than the org as a whole. Salesforce describes the behaviour directly: administrative changes that affect large numbers of records - including metadata deployments - lock the relevant setup area so that simultaneous conflicting changes cannot corrupt data or metadata, and the lock is self-resolving with no manual removal. So an administrator attempting a setup change against production while the deployment runs meets an Org Administration Locked error.\nNothing in that stops ordinary work. Users keep reading and writing records throughout, which is why a production deployment does not require an outage window for the business.\nThe source org is not involved. A change set is validated and deployed against the target, so the sandbox it came from stays fully editable.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=000384452&language=en_US&type=1",
+        "https://help.salesforce.com/s/articleView?id=platform.changesets_inbound_deploy.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "7ae89b27",
+      "verdict": "clarified",
+      "explanation": "The two options that begin by uninstalling are disqualified by what uninstalling costs. Salesforce's own conversion procedure spells out the sequence - export all the data from the package's objects, uninstall it, install the replacement, and import the data back - and across five orgs carrying live integrations and local processes built on those objects, that is a destructive migration, not a tooling change. Doing nothing is not an answer either, since the goal is to bring the code under CI/CD.\nThat leaves splitting the package by layer: leave the data model where it is, so the objects, fields and every integration and local customization bound to them keep their identity, and move the classes, pages and components into an unlocked package that can be built from source on every commit.\nPlan the removal carefully, because taking components out of a released managed package is a controlled operation rather than a simple edit - Salesforce supports removing metadata components from second-generation managed packages through a documented process, and in most cases removal marks the component deprecated rather than hard-deleting it from subscriber orgs.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.pkg1_dev.meta/pkg1_dev/convert_to_managed_package.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.pkg2_dev.meta/pkg2_dev/sfdx_dev_dev2gp_remove_md_components.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_unlocked_pkg_intro.htm"
+      ]
+    },
+    {
+      "id": "023258c0",
+      "verdict": "clarified",
+      "explanation": "The requirement names the Tooling API's defining feature. Salesforce describes it as giving \"fine-grained access to an org's metadata\", where \"Tooling API's SOQL capabilities for many metadata types allow you to retrieve smaller pieces of metadata\" and \"smaller retrieves improve performance, which makes Tooling API a better fit for developing interactive applications\" - which is precisely a Java application querying and amending individual metadata components.\nThe Metadata API works the other way: deploy() and retrieve() \"move metadata (XML files) between a Salesforce org and a local file system\" in bulk, with no SOQL against metadata at all. The User Interface API returns records and the layout information needed to render them, not metadata definitions.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_tooling.meta/api_tooling/intro_api_tooling.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/file_based.htm"
+      ]
+    },
+    {
+      "id": "f629a361",
+      "verdict": "clarified",
+      "explanation": "The obstacle is that CPQ's behaviour is configured in records - product rules, price rules, option and constraint records on managed-package objects - and the Metadata API moves \"metadata (XML files) between a Salesforce org and a local file system\". Records are outside its remit entirely, so no amount of change-set or package work carries a CPQ configuration between orgs.\nThat pushes the answer toward tooling built for relationship-aware reference data: a commercial deployer, or an open-source SFDX data plugin driven from the same pipeline with the configuration held in version control. Either way the configuration becomes a reviewable, replayable artefact rather than a manual rebuild per environment.\nManual CSV loads through Data Loader break on the lookups between these objects, since every parent record acquires a new Id in the target org, and a hand-built Apex framework recreates that same mapping problem as code the team then has to maintain. Note that the specific products named here are practitioner tooling rather than a Salesforce recommendation - what the documentation settles is why the native deployment path cannot do this job.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/file_based.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.salesforce_app_limits_cheatsheet.meta/salesforce_app_limits_cheatsheet/salesforce_app_limits_platform_metadata.htm"
+      ]
+    }
+  ]
+}
