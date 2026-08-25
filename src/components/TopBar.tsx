@@ -1,5 +1,5 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { ChevronDown, Settings } from 'lucide-react';
+import { BookOpen, ChevronDown, Settings } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import type { DeckMeta } from '@/types';
 
@@ -106,6 +106,7 @@ export function TopBar({ currentDeck, decks }: Props) {
               Practice
             </NavTab>
             <NavTab to={`/deck/${currentDeck.id}/review`}>Review</NavTab>
+            {currentDeck.guide ? <GuideTab guide={currentDeck.guide} /> : null}
           </>
         ) : null}
       </nav>
@@ -129,6 +130,30 @@ export function TopBar({ currentDeck, decks }: Props) {
         />
       </div>
     </header>
+  );
+}
+
+/**
+ * Sits alongside the Practice/Review tabs but is deliberately not a NavLink:
+ * a guide is a standalone static page under /guides, outside the router. It
+ * opens in a new tab so an in-progress attempt is never navigated away from.
+ */
+function GuideTab({ guide }: { guide: string }) {
+  return (
+    <a
+      href={`${import.meta.env.BASE_URL}${guide}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      title="Open the study guide in a new tab"
+      className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs uppercase tracking-[0.1em] transition-colors hover:bg-[color:var(--bg-panel-hi)]"
+      style={{
+        color: 'var(--text-secondary)',
+        fontFamily: 'JetBrains Mono, ui-monospace, monospace',
+      }}
+    >
+      <BookOpen size={13} className="shrink-0" />
+      <span className="hidden sm:inline">Guide</span>
+    </a>
   );
 }
 

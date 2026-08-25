@@ -1,0 +1,1778 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Integration Architect Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+</head>
+<body>
+<style>
+:root {
+  --paper:      #F1F4F6;
+  --surface:    #FFFFFF;
+  --surface-2:  #E8ECEF;
+  --ink:        #121A21;
+  --ink-2:      #37444F;
+  --muted:      #5E6C78;
+  --rule:       #D3DBE1;
+  --rule-soft:  #E3E9ED;
+
+  --primary:    #12494F;
+  --primary-2:  #1C6C71;
+  --primary-wash:#E2EEEE;
+
+  --amber:      #8F550A;
+  --amber-wash: #FAEEDC;
+  --amber-rule: #DFB877;
+
+  --crimson:    #962E2E;
+  --crimson-wash:#F9E7E5;
+  --crimson-rule:#DDA39C;
+
+  --good:       #2C6440;
+
+  --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --font-prose:   "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-ui:      "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono:    "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --shadow: 0 1px 2px rgba(18,26,33,.05), 0 8px 24px -12px rgba(18,26,33,.14);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:      #0C1216;
+    --surface:    #131B20;
+    --surface-2:  #1B252B;
+    --ink:        #DCE4E8;
+    --ink-2:      #B4C1C9;
+    --muted:      #8496A1;
+    --rule:       #263238;
+    --rule-soft:  #1C262C;
+
+    --primary:    #66C4BC;
+    --primary-2:  #8AD6CE;
+    --primary-wash:#15292C;
+
+    --amber:      #DFA45C;
+    --amber-wash: #221A0F;
+    --amber-rule: #5A431F;
+
+    --crimson:    #E28C80;
+    --crimson-wash:#231314;
+    --crimson-rule:#5C2E2C;
+
+    --good:       #6FBE8B;
+
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper:      #0C1216;
+  --surface:    #131B20;
+  --surface-2:  #1B252B;
+  --ink:        #DCE4E8;
+  --ink-2:      #B4C1C9;
+  --muted:      #8496A1;
+  --rule:       #263238;
+  --rule-soft:  #1C262C;
+
+  --primary:    #66C4BC;
+  --primary-2:  #8AD6CE;
+  --primary-wash:#15292C;
+
+  --amber:      #DFA45C;
+  --amber-wash: #221A0F;
+  --amber-rule: #5A431F;
+
+  --crimson:    #E28C80;
+  --crimson-wash:#231314;
+  --crimson-rule:#5C2E2C;
+
+  --good:       #6FBE8B;
+
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-prose);
+  font-size: 17px;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- shell ---------- */
+
+.shell {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  column-gap: 56px;
+  row-gap: 0;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 32px 120px;
+  align-items: start;
+}
+
+/* ---------- masthead ---------- */
+
+.masthead {
+  grid-column: 1 / -1;
+  padding: 64px 0 40px;
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: 48px;
+}
+
+.eyebrow {
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin: 0 0 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.eyebrow .sep { color: var(--rule); }
+
+h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.4rem, 6vw, 3.9rem);
+  line-height: 1.02;
+  letter-spacing: -.025em;
+  margin: 0 0 20px;
+  text-wrap: balance;
+  color: var(--ink);
+}
+
+.standfirst {
+  font-size: 1.18rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 62ch;
+  margin: 0 0 32px;
+}
+
+.standfirst strong { color: var(--ink); font-weight: 600; }
+
+/* exam vitals strip */
+.vitals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.vital {
+  background: var(--surface);
+  padding: 14px 16px 15px;
+}
+
+.vital dt {
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 6px;
+}
+
+.vital dd {
+  font-family: var(--font-mono);
+  font-size: 1.16rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.vital dd .sub {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-top: 4px;
+  letter-spacing: 0;
+}
+
+.vital.flag { background: var(--amber-wash); }
+.vital.flag dd { color: var(--amber); }
+
+/* ---------- toc rail ---------- */
+
+.rail {
+  position: sticky;
+  top: 28px;
+  font-family: var(--font-ui);
+  max-height: calc(100vh - 56px);
+  overflow-y: auto;
+}
+
+.rail h2 {
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.rail ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  counter-reset: toc;
+}
+
+.rail a {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 8px;
+  align-items: baseline;
+  padding: 5px 8px 5px 4px;
+  font-size: 13.5px;
+  line-height: 1.35;
+  color: var(--ink-2);
+  text-decoration: none;
+  border-radius: 3px;
+  border-left: 2px solid transparent;
+  transition: background .12s ease, color .12s ease, border-color .12s ease;
+}
+
+.rail a::before {
+  counter-increment: toc;
+  content: counter(toc);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.rail a:hover {
+  background: var(--surface);
+  color: var(--ink);
+  border-left-color: var(--primary);
+}
+
+.rail a:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+.rail a.key { color: var(--crimson); font-weight: 500; }
+.rail a.key::before { color: var(--crimson); }
+
+.rail .note {
+  margin: 16px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+/* ---------- content ---------- */
+
+.content { min-width: 0; }
+
+section { margin: 0 0 64px; scroll-margin-top: 24px; }
+
+h2.sect {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3vw, 1.95rem);
+  line-height: 1.14;
+  letter-spacing: -.018em;
+  margin: 0 0 8px;
+  text-wrap: balance;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: baseline;
+}
+
+h2.sect .num {
+  font-family: var(--font-mono);
+  font-size: .58em;
+  font-weight: 500;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+.sect-rule {
+  height: 2px;
+  background: var(--ink);
+  margin: 0 0 24px;
+}
+
+h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.13rem;
+  letter-spacing: -.008em;
+  margin: 36px 0 12px;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+h4 {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 26px 0 10px;
+}
+
+p { margin: 0 0 16px; max-width: 68ch; }
+
+a { color: var(--primary); text-underline-offset: 2px; text-decoration-thickness: 1px; }
+a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 2px; }
+
+strong { font-weight: 600; color: var(--ink); }
+em { font-style: italic; }
+
+code {
+  font-family: var(--font-mono);
+  font-size: .855em;
+  background: var(--surface-2);
+  padding: .1em .34em;
+  border-radius: 3px;
+  color: var(--ink);
+}
+
+ul, ol.prose { margin: 0 0 18px; padding-left: 20px; max-width: 68ch; }
+ul li, ol.prose li { margin-bottom: 8px; }
+ul li::marker { color: var(--primary); }
+ol.prose li::marker { color: var(--muted); font-family: var(--font-mono); font-size: .85em; }
+
+/* ---------- tables ---------- */
+
+.tw {
+  overflow-x: auto;
+  margin: 0 0 22px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-ui);
+  font-size: 14.2px;
+  line-height: 1.48;
+}
+
+thead th {
+  text-align: left;
+  font-weight: 600;
+  font-size: 10.5px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--surface-2);
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+
+tbody td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--rule-soft);
+  vertical-align: top;
+  color: var(--ink-2);
+}
+
+tbody tr:last-child td { border-bottom: none; }
+
+tbody td:first-child { color: var(--ink); font-weight: 500; }
+
+tbody td strong { color: var(--ink); font-weight: 600; }
+
+td code, th code { background: transparent; padding: 0; font-size: .9em; }
+
+.num-col, .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+
+/* two-col comparison tables read better with an emphasized first col */
+table.kv tbody td:first-child { width: 34%; }
+
+/* ---------- weight bars (domain table) ---------- */
+
+.bar {
+  display: block;
+  height: 7px;
+  border-radius: 1px;
+  background: var(--primary);
+  min-width: 2px;
+}
+.bar.deck { background: var(--muted); opacity: .55; }
+.bar-cell { width: 120px; }
+.bar-cell .lab {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--muted);
+  margin-bottom: 3px;
+  font-variant-numeric: tabular-nums;
+}
+.bar + .lab { margin-top: 6px; }
+
+.verdict {
+  display: inline-block;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  padding: 2.5px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.verdict.gap  { background: var(--crimson-wash); color: var(--crimson); border: 1px solid var(--crimson-rule); }
+.verdict.over { background: var(--surface-2); color: var(--muted); border: 1px solid var(--rule); }
+.verdict.ok   { background: var(--primary-wash); color: var(--primary); border: 1px solid var(--primary); }
+
+/* ---------- callouts ---------- */
+
+.call {
+  border-left: 3px solid var(--primary);
+  background: var(--surface);
+  padding: 16px 20px;
+  margin: 0 0 22px;
+  border-radius: 0 4px 4px 0;
+  max-width: 70ch;
+}
+.call p { margin: 0 0 10px; }
+.call p:last-child { margin-bottom: 0; }
+.call .tag {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: var(--primary);
+}
+
+.call.trap { border-left-color: var(--amber-rule); background: var(--amber-wash); }
+.call.trap .tag { color: var(--amber); }
+.call.trap strong { color: var(--ink); }
+
+.call.alert { border-left-color: var(--crimson-rule); background: var(--crimson-wash); }
+.call.alert .tag { color: var(--crimson); }
+
+/* ---------- misc ---------- */
+
+.lede {
+  font-size: 1.06rem;
+  color: var(--ink-2);
+  max-width: 66ch;
+  margin: 0 0 24px;
+}
+
+.yes { color: var(--good); font-weight: 600; }
+.no  { color: var(--crimson); font-weight: 600; }
+.warn{ color: var(--amber); font-weight: 600; }
+
+.linklist { list-style: none; padding: 0; margin: 0 0 20px; max-width: 72ch; }
+.linklist li { margin-bottom: 9px; padding-left: 14px; position: relative; font-size: 15px; }
+.linklist li::before {
+  content: "";
+  position: absolute; left: 0; top: .62em;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--rule);
+}
+.linklist .why { color: var(--muted); font-size: 14px; }
+
+.prompts { display: flex; flex-direction: column; gap: 12px; margin: 0 0 22px; max-width: 72ch; }
+.prompt {
+  font-family: var(--font-ui);
+  font-size: 14.3px;
+  line-height: 1.5;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 13px 16px;
+  color: var(--ink-2);
+}
+.prompt::before {
+  content: "Prompt";
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+
+.colophon {
+  grid-column: 1 / -1;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 74ch;
+}
+
+.colophon code { font-size: 11.5px; }
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 900px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding: 0 20px 80px;
+  }
+  .rail {
+    position: static;
+    max-height: none;
+    margin-bottom: 44px;
+    padding: 16px 18px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+  }
+  .rail ol { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 0; }
+  .masthead { padding-top: 44px; margin-bottom: 32px; }
+  body { font-size: 16.5px; }
+  section { margin-bottom: 52px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+
+html { scroll-behavior: smooth; }
+</style>
+
+<div class="shell">
+
+  <header class="masthead">
+    <p class="eyebrow">
+      <span>Salesforce Certified Platform Integration Architect</span>
+      <span class="sep">/</span>
+      <span>Plat-Arch-204</span>
+    </p>
+    <h1>Integration Architect Field Guide</h1>
+    <p class="standfirst">
+      Built from the 133 questions in the practice deck, cross-checked against the official exam
+      outline and the documentation those questions cite. Every fact here traces to a rendered
+      Salesforce page. <strong>Read &sect;13 before you sit the exam</strong> &mdash; it is the likeliest
+      place to lose a point you thought you had.
+    </p>
+    <dl class="vitals">
+      <div class="vital"><dt>Questions</dt><dd>60<span class="sub">+5 unscored</span></dd></div>
+      <div class="vital"><dt>Time</dt><dd>105<span class="sub">minutes</span></dd></div>
+      <div class="vital"><dt>Pass mark</dt><dd>67%<span class="sub">41 of 60</span></dd></div>
+      <div class="vital"><dt>Pace</dt><dd>1:45<span class="sub">per question</span></dd></div>
+      <div class="vital flag"><dt>Aligned to</dt><dd>Summer '23<span class="sub">answer as of then</span></dd></div>
+    </dl>
+  </header>
+
+  <nav class="rail" aria-label="Contents">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#exam">The exam, factually</a></li>
+      <li><a href="#weights" class="key">Where the points are</a></li>
+      <li><a href="#patterns">The pattern spine</a></li>
+      <li><a href="#mechanisms">Pattern &rarr; mechanism</a></li>
+      <li><a href="#apis">Picking the API</a></li>
+      <li><a href="#events">Picking the event type</a></li>
+      <li><a href="#numbers">Numbers to memorise</a></li>
+      <li><a href="#security">Security &amp; auth</a></li>
+      <li><a href="#volume">Volume, loads, locking</a></li>
+      <li><a href="#logic">Where the logic lives</a></li>
+      <li><a href="#errors">Errors &amp; monitoring</a></li>
+      <li><a href="#gap" class="key">The under-trained 41%</a></li>
+      <li><a href="#stale" class="key">Exam-right, production-wrong</a></li>
+      <li><a href="#tells">Distractor tells</a></li>
+      <li><a href="#plan">Two-week plan</a></li>
+      <li><a href="#sources">Sources</a></li>
+      <li><a href="#notebooklm">Using NotebookLM</a></li>
+    </ol>
+    <p class="note">Sections in red are the ones the practice deck does not train you for.</p>
+  </nav>
+
+  <main class="content">
+
+    <!-- 1 -->
+    <section id="exam">
+      <h2 class="sect"><span class="num">01</span><span>The exam, factually</span></h2>
+      <div class="sect-rule"></div>
+
+      <div class="call">
+        <span class="tag">The most useful fact on this page</span>
+        <p>The item bank is pinned to the <strong>Summer '23</strong> release. Features Salesforce
+        has since retired, restricted, or renamed are still tested the old way. This is why &sect;13
+        exists, and why <em>"but that changed last year"</em> is never a reason to move your
+        answer.</p>
+      </div>
+
+      <p>Pacing matters more than it looks. This exam's stems are long &mdash; several run to a numbered
+      list of six business requirements. Budget around <strong>90 seconds</strong> on the
+      pattern-recognition questions so you bank time for the scenario monsters.</p>
+
+      <div class="tw">
+        <table class="kv">
+          <tbody>
+            <tr><td>Official name</td><td>Salesforce Certified <strong>Platform</strong> Integration Architect</td></tr>
+            <tr><td>Exam code</td><td><code>Plat-Arch-204</code></td></tr>
+            <tr><td>Content</td><td><strong>60 scored</strong> multiple-choice + up to 5 unscored</td></tr>
+            <tr><td>Time</td><td><strong>105 minutes</strong></td></tr>
+            <tr><td>Passing score</td><td><strong>67%</strong> &rarr; <strong>41 of 60</strong></td></tr>
+            <tr><td>Prerequisite</td><td>None</td></tr>
+            <tr><td>Fee</td><td>US$400 (retake US$200)</td></tr>
+            <tr><td>Release alignment</td><td><strong>Summer '23</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section id="weights">
+      <h2 class="sect"><span class="num">02</span><span>Where the points actually are</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">Official outline weightings against what the practice deck actually
+      contains. The two do not match, and the mismatch is the most actionable thing in this
+      guide.</p>
+
+      <div class="tw">
+        <table>
+          <thead>
+            <tr>
+              <th>Domain</th>
+              <th class="num-col">Exam</th>
+              <th class="num-col">&asymp; Qs</th>
+              <th class="bar-cell">Exam vs deck</th>
+              <th class="num-col">Deck</th>
+              <th>Verdict</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Evaluate the Current System Landscape</td>
+              <td class="num">8%</td><td class="num">~5</td>
+              <td class="bar-cell">
+                <span class="bar" style="width:29%"></span>
+                <span class="bar deck" style="width:11%"></span>
+              </td>
+              <td class="num">4 &middot; 3%</td>
+              <td><span class="verdict gap">under-trained</span></td>
+            </tr>
+            <tr>
+              <td>Evaluate Business Needs</td>
+              <td class="num">11%</td><td class="num">~7</td>
+              <td class="bar-cell">
+                <span class="bar" style="width:39%"></span>
+                <span class="bar deck" style="width:11%"></span>
+              </td>
+              <td class="num">4 &middot; 3%</td>
+              <td><span class="verdict gap">under-trained</span></td>
+            </tr>
+            <tr>
+              <td>Translate Needs to Integration Requirements</td>
+              <td class="num">22%</td><td class="num">~13</td>
+              <td class="bar-cell">
+                <span class="bar" style="width:79%"></span>
+                <span class="bar deck" style="width:16%"></span>
+              </td>
+              <td class="num">6 &middot; 4.5%</td>
+              <td><span class="verdict gap">badly under-trained</span></td>
+            </tr>
+            <tr>
+              <td>Design Integration Solutions</td>
+              <td class="num">28%</td><td class="num">~17</td>
+              <td class="bar-cell">
+                <span class="bar" style="width:100%"></span>
+                <span class="bar deck" style="width:100%"></span>
+              </td>
+              <td class="num">68 &middot; 51%</td>
+              <td><span class="verdict over">over-represented</span></td>
+            </tr>
+            <tr>
+              <td>Build Solution</td>
+              <td class="num">23%</td><td class="num">~14</td>
+              <td class="bar-cell">
+                <span class="bar" style="width:82%"></span>
+                <span class="bar deck" style="width:51%"></span>
+              </td>
+              <td class="num">35 &middot; 26%</td>
+              <td><span class="verdict ok">about right</span></td>
+            </tr>
+            <tr>
+              <td>Maintain Integration</td>
+              <td class="num">8%</td><td class="num">~5</td>
+              <td class="bar-cell">
+                <span class="bar" style="width:29%"></span>
+                <span class="bar deck" style="width:24%"></span>
+              </td>
+              <td class="num">16 &middot; 12%</td>
+              <td><span class="verdict over">over-represented</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p style="font-family:var(--font-ui);font-size:12.5px;color:var(--muted);margin-top:-8px;">
+        Teal bar = share of the exam. Grey bar = share of the deck. Both scaled to the largest domain.
+      </p>
+
+      <div class="call alert">
+        <span class="tag">The gap you need to close</span>
+        <p>The first three domains are <strong>41% of the exam &mdash; roughly 25 of your 60
+        questions &mdash; and only 10.5% of the deck.</strong> Drill the deck to 100% and you will have
+        thoroughly rehearsed the pattern-picking half of the exam and barely touched the
+        requirements-gathering half.</p>
+        <p>Those 25 questions are not about APIs. They are about <em>what an architect does before
+        choosing an API</em>. <a href="#gap">&sect;12</a> covers that ground, because the deck can't.</p>
+      </div>
+
+      <h3>&ldquo;Isn&rsquo;t this just bad tagging?&rdquo; &mdash; tested, and no</h3>
+
+      <p>The deck's domain tags came in with the scrape, so the obvious objection is that the skew
+      is a labelling artifact rather than a real content gap. It was worth checking, and the tags
+      <em>are</em> unreliable per-question: <code>18073510</code> and <code>c7d46b81</code> are the
+      same lead-migration question tagged <strong>Build</strong> and <strong>Design</strong>;
+      <code>ff6c0296</code> and <code>b054672a</code> are the same batch-size question tagged
+      <strong>Maintain</strong> and <strong>Build</strong>.</p>
+
+      <p>But re-classifying all 133 questions independently &mdash; by what each one actually tests,
+      ignoring the tag &mdash; lands on the same distribution:</p>
+
+      <div class="tw">
+        <table>
+          <thead>
+            <tr>
+              <th>Domain</th>
+              <th class="num-col">Exam</th>
+              <th class="num-col">Deck tag</th>
+              <th class="num-col">Independent re-tag</th>
+              <th class="num-col">Steelman</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Evaluate the Current System Landscape</td><td class="num">8%</td><td class="num">3.0%</td><td class="num">3.0%</td><td class="num">3.0%</td></tr>
+            <tr><td>Evaluate Business Needs</td><td class="num">11%</td><td class="num">3.0%</td><td class="num">2.3%</td><td class="num">2.3%</td></tr>
+            <tr><td>Translate Needs to Integration Requirements</td><td class="num">22%</td><td class="num">4.5%</td><td class="num">5.3%</td><td class="num">12.8%</td></tr>
+            <tr><td>Design Integration Solutions</td><td class="num">28%</td><td class="num">51.1%</td><td class="num">50.4%</td><td class="num">42.9%</td></tr>
+            <tr><td>Build Solution</td><td class="num">23%</td><td class="num">26.3%</td><td class="num">28.6%</td><td class="num">28.6%</td></tr>
+            <tr><td>Maintain Integration</td><td class="num">8%</td><td class="num">12.0%</td><td class="num">10.5%</td><td class="num">10.5%</td></tr>
+            <tr>
+              <td><strong>Requirements domains (L+B+T)</strong></td>
+              <td class="num"><strong>41%</strong></td>
+              <td class="num"><strong>10.5%</strong></td>
+              <td class="num"><strong>10.5%</strong></td>
+              <td class="num"><strong>18.0%</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Only <strong>6 of 133</strong> re-tags disagreed with the deck, and every one shuffled
+      between Design / Build / Maintain &mdash; all three already over-weighted. <strong>Nothing
+      moved into the requirements domains.</strong> The mis-tagging is lateral, so it cannot close
+      the gap.</p>
+
+      <p>The <strong>Steelman</strong> column applies the most generous possible reading: the
+      Translate objective says &ldquo;identify performance needs (volumes, response times, latency)
+      <strong>and propose appropriate integration solutions</strong>&rdquo;, which genuinely overlaps
+      Design &mdash; so it moves the 10 Design questions that are pure volume/latency-driven
+      proposals (10M transactions/day, 20M records, the 90s-vs-9s-gateway item) into Translate. Even
+      then the requirements domains reach 18%, not 41%.</p>
+
+      <div class="call">
+        <span class="tag">The fair reframing</span>
+        <p>The gap is more in question <em>form</em> than in knowledge. Someone who has worked 67
+        Design questions has absorbed much of the underlying judgment. What they have not rehearsed
+        is the distinctive <em>shape</em> of a Translate item &mdash; every option a consideration
+        rather than a product, and the right answer &ldquo;evaluate current and future data
+        usage&rdquo; over &ldquo;explore out-of-the-box connectors.&rdquo; The deck has 7 of those.
+        The exam will have about 13.</p>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section id="patterns">
+      <h2 class="sect"><span class="num">03</span><span>The pattern spine</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">Everything on this exam hangs off six patterns from Salesforce's Integration
+      Patterns and Practices guide. Learn this table cold &mdash; roughly a third of the exam is
+      recognising which one a stem describes.</p>
+
+      <div class="tw">
+        <table>
+          <thead>
+            <tr><th>Pattern</th><th>Direction</th><th>Timing</th><th>The one-line test</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Remote Process Invocation &mdash; <strong>Request and Reply</strong></td><td>SF &rarr; remote</td><td>Synchronous</td><td>The user is <strong>waiting for the answer</strong> and can't continue without it</td></tr>
+            <tr><td>Remote Process Invocation &mdash; <strong>Fire and Forget</strong></td><td>SF &rarr; remote</td><td>Asynchronous</td><td>SF publishes and moves on; <strong>no reply expected</strong></td></tr>
+            <tr><td><strong>Batch Data Synchronization</strong></td><td>Either</td><td>Scheduled bulk</td><td>"Nightly", "by next business day", high volume, latency tolerated</td></tr>
+            <tr><td><strong>Remote Call-In</strong></td><td>Remote &rarr; SF</td><td>Either</td><td>The <strong>external system initiates</strong>; SF is the provider</td></tr>
+            <tr><td><strong>UI Update Based on Data Changes</strong></td><td>SF &rarr; SF UI</td><td>Push</td><td>A <strong>screen must refresh</strong> when data changes elsewhere</td></tr>
+            <tr><td><strong>Data Virtualization</strong></td><td>SF &rarr; remote</td><td>On demand</td><td>Data is read/written live and <strong>never persisted</strong> in Salesforce</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Signal words that decide it</h3>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>The stem says&hellip;</th><th>The pattern is&hellip;</th></tr></thead>
+          <tbody>
+            <tr><td>"agent must confirm before&hellip;", "receive the generated ID", "in real time so they can retry"</td><td>Request and Reply</td></tr>
+            <tr><td>"subscribes to the platform event", "notify the downstream system", "no response needed"</td><td>Fire and Forget</td></tr>
+            <tr><td>"nightly", "thousands of changes per day", "must take effect by the next business day"</td><td>Batch Data Synchronization</td></tr>
+            <tr><td>"the external system calls into Salesforce", "callback into Salesforce", "expose to N apps"</td><td>Remote Call-In</td></tr>
+            <tr><td>"dashboard updates without refreshing", "notify all reps when&hellip;"</td><td>UI Update Based on Data Changes</td></tr>
+            <tr><td>"data must only persist in the external system", "20M records and growing", "system of record stays external"</td><td>Data Virtualization</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="call">
+        <span class="tag">Combinations are fair game</span>
+        <p>One deck question pairs <strong>Fire and Forget + UI Update Based on Data Changes</strong>:
+        the engineer fires an on-demand status request the remote system can't answer immediately,
+        and the dashboard refreshes when the answer eventually lands. If a stem has both "trigger a
+        request" and "the screen updates later", expect a two-pattern answer.</p>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section id="mechanisms">
+      <h2 class="sect"><span class="num">04</span><span>Pattern &rarr; mechanism</span></h2>
+      <div class="sect-rule"></div>
+
+      <p>The pattern is the <em>what</em>; this is the <em>how</em>. Questions frequently give you
+      the pattern and ask for the mechanism, or the reverse.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Pattern</th><th>Declarative mechanism</th><th>Programmatic mechanism</th></tr></thead>
+          <tbody>
+            <tr><td>Request and Reply</td><td>Enhanced External Services (Flow), Salesforce Connect writes</td><td>Apex callout; <strong>Continuation</strong> for long or slow ones</td></tr>
+            <tr><td>Fire and Forget</td><td><strong>Outbound Message</strong> (SOAP), Platform Event, Flow HTTP Callout</td><td><code>@future</code> / Queueable callout, Apex-published Platform Event</td></tr>
+            <tr><td>Batch Data Synchronization</td><td>ETL tool on a schedule</td><td>Batch Apex + callout, Bulk API</td></tr>
+            <tr><td>Remote Call-In</td><td>REST API, SOAP API, Bulk API</td><td><strong>Apex REST</strong> / Apex SOAP web service</td></tr>
+            <tr><td>UI Update Based on Data Changes</td><td>PushTopic / CDC + <code>empApi</code> in LWC</td><td>Streaming API (CometD) client</td></tr>
+            <tr><td>Data Virtualization</td><td><strong>Salesforce Connect + OData</strong> external objects</td><td>Apex Connector Framework (custom adapter)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Three mechanism traps worth memorising</h3>
+      <ul>
+        <li><strong>A trigger cannot make a callout directly.</strong> Pending DML in the transaction
+        blocks it, so it must hand off to <code>@future(callout=true)</code> or Queueable &mdash; which
+        makes it asynchronous. This is why a stem demanding "synchronous" <em>and</em> "automatic on
+        record change" usually describes something no option can actually deliver.</li>
+        <li><strong>Outbound Messaging carries one object.</strong> Its WSDL is generated from a
+        single object, so it cannot ship an Opportunity <em>and</em> its line items in one message.
+        That limitation is a recurring answer.</li>
+        <li><strong>Process Builder cannot send an outbound message.</strong> Outbound message
+        actions belong to <strong>flows, workflow rules, approval processes, and entitlement
+        processes</strong>. Process Builder is not on that list.</li>
+      </ul>
+    </section>
+
+    <!-- 5 -->
+    <section id="apis">
+      <h2 class="sect"><span class="num">05</span><span>Picking the API</span></h2>
+      <div class="sect-rule"></div>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>API</th><th>Use it when</th><th>The distractor it beats</th></tr></thead>
+          <tbody>
+            <tr><td><strong>REST API</strong></td><td>General record CRUD, mobile, lightweight clients; supports OAuth</td><td>Not for Chatter, not for metadata</td></tr>
+            <tr><td><strong>SOAP API</strong></td><td>Strongly typed enterprise clients; supports WS-Security</td><td>200-record ceiling per call</td></tr>
+            <tr><td><strong>Bulk API</strong></td><td>100k+ records, async, parallel batches, job monitoring in Setup</td><td>Not for real-time</td></tr>
+            <tr><td><strong>Streaming API</strong> (CometD)</td><td>Subscribing to events &mdash; PushTopic, Platform Events, CDC</td><td>Cannot do CRUD</td></tr>
+            <tr><td><strong>Composite REST</strong></td><td>Up to <strong>25 subrequests in one call</strong>, counting as <strong>one</strong> API call</td><td>Cuts both API usage and orchestration code</td></tr>
+            <tr><td><strong>User Interface API</strong></td><td>A native app that <strong>recreates the Lightning UI</strong> &mdash; returns records <em>plus</em> layouts, picklists, theming</td><td>REST API returns raw data with no layout metadata</td></tr>
+            <tr><td><strong>Connect REST API</strong></td><td>Chatter, feeds, communities, mentions, rich-body parsing</td><td>REST API treats <code>FeedItem</code> as a plain sObject</td></tr>
+            <tr><td><strong>Tooling API</strong></td><td>Code coverage and test results &mdash; <code>ApexCodeCoverage</code>, <code>ApexTestResult</code></td><td>Not record CRUD; not deployment</td></tr>
+            <tr><td><strong>Metadata API</strong></td><td>Deploy / retrieve metadata</td><td>Does <strong>not</strong> expose code-coverage telemetry</td></tr>
+            <tr><td><strong>Analytics REST API</strong></td><td>CRM Analytics dataflows, recipes, data syncs</td><td>Not general reporting</td></tr>
+            <tr><td><strong>Apex REST / Apex SOAP</strong></td><td>Exposing <strong>custom business logic</strong> securely to external callers</td><td>Requires code + tests; not declarative</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Enterprise vs Partner WSDL</h3>
+      <p>Asked repeatedly, and always the same discriminator.</p>
+
+      <div class="tw">
+        <table class="kv">
+          <thead><tr><th></th><th>Enterprise WSDL</th><th>Partner WSDL</th></tr></thead>
+          <tbody>
+            <tr><td>Typing</td><td><strong>Strongly</strong> typed</td><td><strong>Loosely</strong> typed (name/value pairs)</td></tr>
+            <tr><td>Bound to</td><td>One org's specific metadata</td><td>Any org</td></tr>
+            <tr><td>Use when</td><td>One known org, want compile-time type safety</td><td><strong>Multiple orgs</strong>, or field names inspected <strong>at runtime</strong></td></tr>
+            <tr><td>Breaks when</td><td>The org's metadata changes</td><td>Rarely</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 6 -->
+    <section id="events">
+      <h2 class="sect"><span class="num">06</span><span>Picking the event type</span></h2>
+      <div class="sect-rule"></div>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Event type</th><th class="num-col">Retention</th><th>Replay</th><th>Origin</th><th>Respects sharing?</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Platform Event</strong> (high-volume)</td>
+              <td class="num">72 h</td><td>Yes, by ReplayId</td>
+              <td><strong>You publish it</strong> &mdash; Apex, Flow, API</td>
+              <td>Object perms: Create to publish, Read to subscribe</td>
+            </tr>
+            <tr>
+              <td><strong>Change Data Capture</strong></td>
+              <td class="num">72 h</td><td>Yes, by ReplayId</td>
+              <td><strong>Automatic</strong> on record change</td>
+              <td><span class="no">Ignores sharing</span> &mdash; sends all records. Still enforces <strong>FLS</strong></td>
+            </tr>
+            <tr>
+              <td><strong>PushTopic</strong></td>
+              <td class="num">24 h</td><td>Limited</td>
+              <td>SOQL query you define</td>
+              <td><span class="yes">Yes</span>, respects sharing rules</td>
+            </tr>
+            <tr>
+              <td><strong>Generic Event</strong></td>
+              <td class="num">24 h</td><td>Limited</td>
+              <td>Arbitrary payload you post</td>
+              <td>No record context at all</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>The discriminators the exam actually tests</h3>
+      <ul>
+        <li><strong>CDC vs Platform Event is <em>not</em> about retention.</strong> Both are 72 hours.
+        The difference is <strong>origin</strong>: change events are generated automatically from
+        record changes with no code; platform events must be defined and published deliberately. A
+        stem saying "notifications stored for up to three days if replication fails" <em>and</em>
+        "syncs record data changes" is CDC.</li>
+        <li><strong>PushTopic vs CDC is about scope.</strong> PushTopic is defined by a SOQL query, so
+        it watches exactly the records that matter &mdash; good for driving a <strong>UI counter</strong>.
+        CDC emits <em>every</em> change on the object with no criteria &mdash; built for
+        <strong>replicating to an external system</strong>. Two similar-looking deck questions
+        resolve in opposite directions on exactly this.</li>
+        <li><strong>Surviving a multi-day disconnect</strong> &rarr; the two types with 72-hour retention
+        and ReplayId: <strong>CDC and high-volume Platform Events</strong>.</li>
+        <li><strong>ReplayId values.</strong> <code>-1</code> = new events from now on.
+        <code>-2</code> = <strong>all events still in retention</strong> (the backfill-after-outage
+        answer). A specific ReplayId = resume from there.</li>
+        <li><strong>Platform Events are handed off, not guaranteed end-to-end.</strong> Once published,
+        Salesforce considers the event delivered to the bus and does not retry per subscriber.
+        <strong>The subscriber owns retry and error handling.</strong></li>
+        <li><strong>BatchApexErrorEvent</strong> is the standard platform event the platform fires
+        automatically on an unhandled Batch Apex exception (the class must implement
+        <code>Database.RaisesPlatformEvents</code>). It is the answer for "make a scheduled batch job
+        resilient" &mdash; you cannot catch the failure inside the job that just died.</li>
+      </ul>
+    </section>
+
+    <!-- 7 -->
+    <section id="numbers">
+      <h2 class="sect"><span class="num">07</span><span>Numbers to memorise</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">The highest-yield facts on the exam, because they are unambiguous &mdash; and
+      because they are where fabricated distractors live.</p>
+
+      <h4>Callouts and Apex</h4>
+      <div class="tw">
+        <table class="kv">
+          <tbody>
+            <tr><td>Apex callout timeout</td><td><strong>10 s default &mdash; not a ceiling.</strong> <code>setTimeout()</code> raises it to <strong>120 s</strong></td></tr>
+            <tr><td>Cumulative callout time per transaction</td><td><strong>120 s</strong></td></tr>
+            <tr><td>Callouts per Apex transaction</td><td><strong>100</strong></td></tr>
+            <tr><td>Concurrent long-running request limit</td><td>A synchronous request over <strong>5 seconds</strong> counts against it &mdash; <strong>usually the real constraint</strong>, not the timeout</td></tr>
+            <tr><td>Continuation: parallel callouts</td><td><strong>3</strong></td></tr>
+            <tr><td>Continuation: timeout</td><td><strong>120 s</strong></td></tr>
+            <tr><td>Continuation: max HTTP response</td><td><strong>1 MB</strong></td></tr>
+            <tr><td>Callouts and pending DML</td><td>You <strong>cannot</strong> call out with pending DML in the same transaction</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="call trap">
+        <span class="tag">The 10-second trap</span>
+        <p>Several deck explanations had to be repaired because they taught "the Apex callout limit
+        is 10 seconds, so use X". It is the <em>default</em>. When a stem says a service takes 7&ndash;12
+        seconds or 30+ seconds, the reason not to call it synchronously is that it
+        <strong>burns the transaction's callout budget and trips the &gt;5-second concurrent request
+        limit</strong> &mdash; not that the platform refuses.</p>
+      </div>
+
+      <h4>Data loads</h4>
+      <div class="tw">
+        <table class="kv">
+          <tbody>
+            <tr><td>SOAP <code>create()</code> / <code>update()</code> / <code>upsert()</code></td><td><strong>200 records</strong> per call</td></tr>
+            <tr><td>Bulk API batch allocation</td><td><strong>15,000 batches</strong> per rolling 24 hours</td></tr>
+            <tr><td>Bulk API default mode</td><td><strong>Parallel</strong> (the fast path). Serial exists only to dodge lock contention</td></tr>
+            <tr><td>Composite REST</td><td><strong>25 subrequests</strong>, one API call, max 5 of them queries/collections</td></tr>
+            <tr><td>Data Loader ceiling</td><td><strong>150,000,000</strong> records per CSV</td></tr>
+            <tr><td>Data Import Wizard ceiling</td><td><strong>50,000</strong> records</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4>Events and messaging</h4>
+      <div class="tw">
+        <table class="kv">
+          <tbody>
+            <tr><td>High-volume Platform Event / CDC retention</td><td><strong>72 hours</strong></td></tr>
+            <tr><td>PushTopic / generic event retention</td><td><strong>24 hours</strong></td></tr>
+            <tr><td>Outbound Message retry window</td><td><strong>24 hours</strong>, then dropped from the queue</td></tr>
+            <tr><td>Outbound Message per-message timeout</td><td><strong>60 seconds</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4>Storage</h4>
+      <div class="tw">
+        <table class="kv">
+          <tbody>
+            <tr><td>Salesforce Files max upload</td><td><strong>10 GB</strong> &mdash; Files home, libraries, record Files related list</td></tr>
+            <tr><td>Chatter post / comment upload</td><td><strong>2 GB</strong> &mdash; the <em>only</em> place this number applies</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 8 -->
+    <section id="security">
+      <h2 class="sect"><span class="num">08</span><span>Security and authentication</span></h2>
+      <div class="sect-rule"></div>
+
+      <h3>The four things that are constantly confused</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Feature</th><th>Governs</th><th>Direction</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Remote Site Settings</strong></td><td>Apex HTTP callouts</td><td>Outbound</td></tr>
+            <tr><td><strong>CSP Trusted Sites / Trusted URLs</strong></td><td>Browser-side <code>fetch</code> from LWC/Aura</td><td>Outbound, from the browser</td></tr>
+            <tr><td><strong>CORS</strong></td><td>External pages calling <em>into</em> Salesforce from a browser</td><td>Inbound</td></tr>
+            <tr><td><strong>Connected App</strong></td><td>OAuth: which app may connect, with what scopes</td><td>Inbound</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="call trap">
+        <span class="tag">Read the direction twice</span>
+        <p>A failing <strong>LWC</strong> callout is a <strong>CSP Trusted Sites</strong> problem &mdash; the
+        browser blocks it before it ever leaves. Remote Site Settings would not help; that is for
+        Apex. And note: <strong>a callout through a Named Credential does not consult Remote Site
+        Settings at all.</strong></p>
+      </div>
+
+      <h3>Named Credentials &mdash; the default answer for outbound auth</h3>
+      <p>Named Credentials hold the endpoint URL <em>and</em> the authentication protocol as
+      <strong>configuration</strong>, so Apex never touches a secret and the platform attaches the
+      auth header automatically.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Identity Type</th><th>Meaning</th><th>Use when</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Named Principal</strong></td><td>One shared service account for all users</td><td>The external system uses a single system credential</td></tr>
+            <tr><td><strong>Per User</strong></td><td>Each user supplies their own external credentials</td><td>"Each user has their own username/password for the external system"</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Two bonus reasons Named Credentials show up as an answer:</p>
+      <ul>
+        <li><strong>The endpoint lives in configuration, not code.</strong> When an external URL
+        changes without notice, the fix is a field edit, not a deployment &mdash; that is a
+        downtime-minimisation answer.</li>
+        <li>It works for Salesforce-to-Salesforce org integrations, removing hand-rolled OAuth token
+        refresh code.</li>
+      </ul>
+
+      <h3>Where secrets may and may not live</h3>
+      <div class="tw">
+        <table class="kv">
+          <tbody>
+            <tr><td>Named Credentials</td><td><span class="yes">&check;</span> Recommended &mdash; encrypted, never in debug logs</td></tr>
+            <tr><td><strong>Protected Custom Metadata Types</strong> (namespaced managed package)</td><td><span class="yes">&check;</span> Hidden even from admins and subscribers</td></tr>
+            <tr><td>Protected Custom Settings</td><td><span class="warn">~</span> Works, but current guidance prefers protected custom metadata</td></tr>
+            <tr><td>Custom settings (unprotected), static resources, hardcoded Apex</td><td><span class="no">&#10007;</span> Readable by anyone with metadata access</td></tr>
+            <tr><td>Encrypted Custom Fields</td><td><span class="no">&#10007;</span> Intended for PII like SSNs, not credentials</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Integration users</h3>
+      <p><strong>One dedicated integration user per external system.</strong> That is what delivers
+      <em>both</em> least privilege (via profile and permission sets) and per-system audit
+      attribution (<code>LastModifiedBy</code>, login history, field history).</p>
+      <p>A Connected App governs <strong>OAuth scope, not data access</strong> &mdash; three Connected Apps
+      all authenticating as one shared user still grants each system the union of that user's
+      permissions and blurs every record's attribution.</p>
+      <p>Creating a service user with a <strong>System Administrator</strong> profile is a security
+      defect on two counts: the stored credential inherits full admin access if leaked, and every
+      back-end system gets uncontrolled access to all org data. A password reset breaking the
+      integration is a real risk but an <em>availability</em> problem &mdash; watch for that distinction
+      when a stem asks specifically for <em>security</em> issues.</p>
+
+      <h3>Transport and perimeter</h3>
+      <ul>
+        <li><strong>Mutual TLS / two-way SSL</strong> &mdash; both ends present certificates. The answer for
+        securing a link to an external API gateway, and for "all integrations must use mutual
+        authentication".</li>
+        <li>Enforcing it inbound requires the <strong>"Enforce SSL/TLS Mutual Authentication"</strong>
+        user permission (port 8443). Generating a certificate is a prerequisite,
+        <strong>not</strong> the enforcement.</li>
+        <li><strong>Reverse proxy in the DMZ + mutual SSL</strong>, plus <strong>IP allow-listing of
+        Salesforce ranges</strong> on the firewall &mdash; the standard pair when security forbids
+        Salesforce calling a back-end directly.</li>
+        <li><strong>Login IP Ranges on the profile</strong> is what actually denies a login by source
+        IP. A Connected App's "Trusted IP Range for OAuth Web Server Flow" is scoped to that flow by
+        its own name.</li>
+        <li><strong>Shield Platform Encryption</strong> encrypts at rest and preserves platform
+        features (workflow rules, validation rules) on supported fields. <strong>Classic
+        Encryption</strong> is custom text fields only and breaks workflow. <strong>Data Mask</strong>
+        is for sandboxes.</li>
+      </ul>
+
+      <h3>SSO and self-registration &mdash; the pairing trap</h3>
+      <div class="tw">
+        <table class="kv">
+          <thead><tr><th>Protocol</th><th>Provisioning mechanism</th></tr></thead>
+          <tbody>
+            <tr><td><strong>OpenID Connect</strong> / social Auth Provider</td><td><strong>Registration Handler</strong></td></tr>
+            <tr><td><strong>SAML</strong></td><td><strong>Just-in-Time (JIT) provisioning</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Crossing the pairs &mdash; "SAML + Registration Handler", "OIDC + JIT" &mdash; is the standard
+      distractor.</p>
+
+      <h3>OAuth flows</h3>
+      <ul>
+        <li>A <strong>mobile app</strong> reading and writing Salesforce needs the flow that keeps the
+        password out of the app. Given the usual options, that is the <strong>User-Agent
+        flow</strong> (access token + refresh token).</li>
+        <li>Salesforce now recommends the <strong>web server flow with PKCE</strong> instead. If PKCE
+        appears as an option, it wins; if it doesn't, user-agent is the intended answer. See
+        <a href="#stale">&sect;13</a>.</li>
+        <li><strong>Never</strong>: embedding a shared integration user's credentials in app code, or
+        the username-password flow.</li>
+      </ul>
+    </section>
+
+    <!-- 9 -->
+    <section id="volume">
+      <h2 class="sect"><span class="num">09</span><span>Data volume, loads, and locking</span></h2>
+      <div class="sect-rule"></div>
+
+      <div class="tw">
+        <table class="kv">
+          <thead><tr><th></th><th>Bulk API</th><th>SOAP API</th></tr></thead>
+          <tbody>
+            <tr><td>Mode</td><td>Asynchronous, batched</td><td>Synchronous</td></tr>
+            <tr><td>Batch size</td><td>Up to 10,000 (2,000 typical)</td><td><strong>&le; 200 records per call</strong></td></tr>
+            <tr><td>Job monitoring in Setup</td><td><span class="yes">&check;</span> "Bulk Data Load Jobs"</td><td><span class="no">&#10007;</span></td></tr>
+            <tr><td>Lock contention on master-detail parents</td><td><span class="no">High</span> in parallel mode</td><td><span class="yes">Avoids it</span> (small serial transactions)</td></tr>
+            <tr><td>Multiple attachments in one ZIP</td><td><span class="yes">&check;</span> with a <code>request.txt</code> manifest</td><td><span class="no">&#10007;</span></td></tr>
+            <tr><td>Automatic retry of failed records</td><td><span class="yes">&check;</span> serial or parallel</td><td><span class="no">&#10007;</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Parallel vs serial</h3>
+      <ul>
+        <li><strong>Parallel is the default and the throughput answer</strong> for a migration.</li>
+        <li><strong>Serial</strong> exists for exactly one reason: avoiding record-lock contention, at
+        a maximum parallelism of 1.</li>
+        <li><strong>Lock contention is not caused by batch size.</strong> It is caused by
+        <em>detail records sharing a parent</em> landing in <strong>separate parallel batches</strong>
+        &mdash; batch 1 takes the lock on the parent, batch 2 can't. The documented remedies are
+        <strong>sorting or grouping input by parent ID</strong>, or serial mode.</li>
+      </ul>
+
+      <div class="call trap">
+        <span class="tag">The smaller-batch trade-off</span>
+        <p>Reducing batch size to fix "Max CPU time exceeded" has <strong>two</strong> costs. The same
+        volume spread over more batches takes <strong>longer end to end</strong> (per-batch overhead),
+        and with unsorted data a parent's children are <strong>more likely to straddle concurrent
+        batches</strong>, so locking gets <em>worse</em>.</p>
+        <p>Smaller batches do <strong>not</strong> cause "too many concurrent batches" or API-limit
+        errors &mdash; those come from parallel-mode scheduling, not from how many records a batch holds.</p>
+      </div>
+
+      <h3>Making a load faster</h3>
+      <ul>
+        <li>Store the <strong>Salesforce record ID in the source system</strong> so the load can UPDATE
+        by ID instead of paying UPSERT / External-ID matching overhead.</li>
+        <li><strong>Pre-process the data</strong> so workflow rules and triggers aren't needed during
+        the load.</li>
+        <li>Use <strong>Bulk API</strong> for UPDATE/UPSERT at volume.</li>
+        <li>You <strong>cannot</strong> turn off validation rules via a SOAP header, and Salesforce
+        will not disable record locking on request. Both appear as distractors.</li>
+      </ul>
+
+      <h3>Deduplicating on load</h3>
+      <ul>
+        <li><strong>ETL matching on a business key</strong> (e.g. email), or <strong>Data Loader
+        <code>upsert</code> against a custom External ID field</strong> holding that key. External IDs
+        create an index; mark it Unique to prevent duplicates.</li>
+        <li>Matching on <strong>Salesforce ID</strong> fails for records that don't have one yet.</li>
+        <li><strong>Insert-then-native-dedupe</strong> still creates the duplicates first.</li>
+      </ul>
+
+      <h3>Making a SOQL-driven integration faster</h3>
+      <p>Add <strong>selective, indexed criteria</strong> to the filter, and <strong>remove sharing
+      restrictions</strong> that force the optimizer to evaluate sharing per row. Adding
+      non-selective filters, or removing filters entirely, makes it worse.</p>
+    </section>
+
+    <!-- 10 -->
+    <section id="logic">
+      <h2 class="sect"><span class="num">10</span><span>Choosing where the logic lives</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">A large family of questions reduces to one choice: Salesforce, middleware, or
+      the remote system?</p>
+
+      <h3>Middleware (ESB/ETL) is the answer when the stem mentions any of these</h3>
+      <ul>
+        <li><strong>Complex transformation</strong> or protocol translation</li>
+        <li>Routing to <strong>multiple similar-but-different services</strong> &mdash; regional shipping
+        carriers, N accreditation agencies</li>
+        <li><strong>Orchestration</strong> across systems, or a <strong>multi-day</strong> waiting
+        state</li>
+        <li><strong>Queuing / buffering</strong> while a downstream is offline for hours or days</li>
+        <li><strong>Centralised logging, monitoring, alerting, audit</strong> &mdash; especially "regulated
+        industry", "mission-critical", "reliability and monitoring required"</li>
+        <li>Decoupling <strong>point-to-point spaghetti</strong> &mdash; <code>@future</code> callouts fanned
+        out to N systems</li>
+        <li>Keeping external <strong>credentials out of Salesforce entirely</strong></li>
+        <li>Reaching <strong>on-premise</strong> systems from the cloud through a <strong>secure API
+        gateway</strong> in the DMZ</li>
+      </ul>
+
+      <p>Middleware is <em>not</em> the answer when the requirement is simple and the constraint is
+      "least development effort" &mdash; then it is Named Credentials + Composite REST, a Flow HTTP
+      Callout, or Outbound Messaging.</p>
+
+      <div class="call trap">
+        <span class="tag">The 24-hour line</span>
+        <p>Outbound Messaging retries for <strong>up to 24 hours</strong>. If the stem says the
+        downstream is offline for <strong>"several days"</strong> &mdash; anything past 24 hours &mdash; the
+        durable answer is a <strong>middleware queue</strong>, not Outbound Messaging. At or under 24
+        hours (a system down "3&ndash;4 hours for month-end"), Outbound Messaging's built-in queue is a
+        legitimate answer and does appear as one.</p>
+      </div>
+
+      <h3>MuleSoft API-led connectivity</h3>
+      <p>Three layers: <strong>System &rarr; Process &rarr; Experience.</strong></p>
+      <ul>
+        <li><strong>System APIs</strong> &mdash; unlock data in the systems of record.</li>
+        <li><strong>Process APIs</strong> &mdash; business logic, aggregation, orchestration.</li>
+        <li><strong>Experience APIs</strong> &mdash; <strong>tailor format and security per consuming
+        channel</strong> (mobile, web, Salesforce). This is the layer that answers "return data in
+        different formats while enforcing different security protocols".</li>
+      </ul>
+
+      <h3>Surfacing external data in the Salesforce UI</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Requirement</th><th>Answer</th></tr></thead>
+          <tbody>
+            <tr><td>Live external records, never persisted, queryable in reports and global search, related lists</td><td><strong>Salesforce Connect + OData</strong> external objects</td></tr>
+            <tr><td>Embed an <strong>external web app's own UI</strong> inside Salesforce</td><td><strong>Canvas</strong></td></tr>
+            <tr><td>Match the <strong>Salesforce</strong> UI, no persistence, Lightning Experience <em>off</em></td><td><strong>Visualforce page</strong> &mdash; server-side controller callout <em>or</em> client-side JS callout</td></tr>
+            <tr><td>Invoke a REST <strong>action</strong> declaratively from Flow, OpenAPI-described</td><td><strong>Enhanced External Services</strong></td></tr>
+            <tr><td>Large binary files mastered on-premise</td><td><strong>Store the location URL and redirect</strong> &mdash; don't copy the blob</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p><strong>Salesforce Connect considerations that get tested:</strong> it fits when users need
+      global search and reports over external data, the data set is large and shouldn't be copied,
+      and only small amounts are fetched on demand. It does <strong>not</strong> support
+      <strong>master-detail</strong> relationships to external objects, and it is <strong>real-time
+      virtualization, not a scheduled refresh</strong>. Its authorization boundary is the
+      <strong>Identity Type</strong> setting.</p>
+    </section>
+
+    <!-- 11 -->
+    <section id="errors">
+      <h2 class="sect"><span class="num">11</span><span>Error handling, resilience, monitoring</span></h2>
+      <div class="sect-rule"></div>
+
+      <p>The Maintain domain is only 8%, but its content also shows up inside Build and Design
+      questions.</p>
+
+      <h3>Monitoring, by mechanism</h3>
+      <div class="tw">
+        <table class="kv">
+          <thead><tr><th>Integration</th><th>How you monitor it</th></tr></thead>
+          <tbody>
+            <tr><td>Bulk API load</td><td><strong>"Bulk Data Load Jobs"</strong> in Setup (zero code) + <code>getBatchInfo</code> from the client</td></tr>
+            <tr><td>Platform Events</td><td><strong>Hourly publish / delivery allocations</strong> &mdash; exceeding them silently stops downstream triggers</td></tr>
+            <tr><td>Inbound REST</td><td><strong>Workbench</strong> &mdash; execute calls, inspect requests and responses</td></tr>
+            <tr><td>Batch Apex failures</td><td><strong>BatchApexErrorEvent</strong></td></tr>
+            <tr><td>Everything, centrally</td><td>Middleware's logging and alerting layer</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Debug logs are a development tool, <strong>not a production monitoring strategy</strong> &mdash;
+      that is a recurring wrong answer.</p>
+
+      <h3>Testing vocabulary &mdash; it does get asked</h3>
+      <div class="tw">
+        <table class="kv">
+          <thead><tr><th>Symptom</th><th>Testing type</th></tr></thead>
+          <tbody>
+            <tr><td>"New releases break existing functionality"</td><td><strong>Regression testing</strong></td></tr>
+            <tr><td>"Meets requirements but is too slow / not usable"</td><td><strong>Performance testing</strong> + <strong>User Acceptance Testing</strong></td></tr>
+            <tr><td>Component correctness in isolation</td><td>Unit testing</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Idempotency and loops</h3>
+      <ul>
+        <li><strong>A globally unique identifier minted at the entry point</strong> is what lets a
+        downstream system process a request <strong>exactly once</strong>. Whether the remote system
+        can <strong>participate in idempotent design</strong> is a system-constraint question you
+        should ask during design.</li>
+        <li><strong>Automatic retry without idempotency makes things worse</strong> &mdash; it multiplies
+        both duplicate processing and update contention. Get exactly-once and coordination in place
+        first.</li>
+        <li><strong>The write-back loop.</strong> Middleware writes an ID back to the record, which
+        re-fires the workflow rule, which sends another outbound message. Fix it by narrowing
+        <em>the rule's conditions</em> &mdash; exclude the field the integration writes, and exclude the
+        <strong>integration user</strong>. Changing the outbound message itself is wrong: the message
+        defines <em>what</em> is sent, not <em>when</em> it fires.</li>
+      </ul>
+
+      <h3>Apex test structure for callouts</h3>
+      <p><strong>DML outside <code>Test.startTest()</code>/<code>stopTest()</code>; the callout
+      inside.</strong> You cannot call out with pending DML. <code>Test.setMock()</code> must come
+      after <code>Test.startTest()</code>. And <code>Test.startTest()</code> <strong>commits
+      nothing</strong> &mdash; it opens a fresh governor-limit context.</p>
+      <p>For contract testing against a spec (RAML/OpenAPI): implement
+      <code>HttpCalloutMock</code> returning spec-shaped responses, and invoke the client
+      <em>in a test context with the mock registered</em>. The mock is a separate class the
+      production client never references.</p>
+    </section>
+
+    <!-- 12 -->
+    <section id="gap">
+      <h2 class="sect"><span class="num">12</span><span>The under-trained 41%</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">This is the material the deck barely covers and the exam weights at 41%.
+      There are no clever mechanisms here. There is one habit, and the exam tests it over and
+      over.</p>
+
+      <h3>The habit: never solution ahead of analysis</h3>
+      <p>When a stem describes a business situation and asks what the architect should do
+      <strong>first</strong>, or what they should <strong>consider</strong>, the answer is almost
+      always the option that <strong>establishes the requirement</strong> &mdash; not the option that
+      names a technology.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Stem</th><th>Wrong instinct</th><th>Correct answer</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>CRM program with ERP, Marketing, Outlook in the landscape</td>
+              <td>"Explore out-of-the-box connectors"</td>
+              <td><strong>Evaluate current and future data/system usage, then identify integration requirements</strong></td>
+            </tr>
+            <tr>
+              <td>Prevent deactivated HR users from accessing Salesforce</td>
+              <td>"Determine inbound integration requirements"</td>
+              <td><strong>Determine what "prevent access" means, then how fast it must propagate</strong></td>
+            </tr>
+            <tr>
+              <td>A service needs API access</td>
+              <td>"Create a System Administrator user"</td>
+              <td><strong>Create a dedicated least-privilege integration user</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="call">
+        <span class="tag">Note the shape of the second one</span>
+        <p>Jumping to "inbound integration requirements" <strong>presumes an integration is the
+        answer</strong> before the requirement it must satisfy is known. That is the trap, and it is
+        subtle enough to catch people who know the technology cold.</p>
+      </div>
+
+      <h3>What to ask &mdash; the integration requirements checklist</h3>
+      <p>These are the answer options that score in the Translate domain.</p>
+
+      <h4>Functional / structural</h4>
+      <ul>
+        <li>Source and target system, and <strong>directionality</strong></li>
+        <li><strong>Data volume</strong> and <strong>processing volume</strong> &mdash; the single biggest
+        driver of pattern choice</li>
+        <li><strong>Transformation complexity</strong></li>
+        <li>Existing <strong>middleware</strong> that can be leveraged</li>
+        <li><strong>System / interface types</strong> available &mdash; APIs, file systems, email</li>
+        <li><strong>Integration style</strong> &mdash; process-based, data-based, or virtual</li>
+      </ul>
+
+      <h4>Non-functional</h4>
+      <ul>
+        <li><strong>Timing</strong> &mdash; real-time / near-real-time (sync or async), batch, update
+        frequency</li>
+        <li><strong>Latency</strong> acceptable for the message to arrive</li>
+        <li><strong>Volumes and response times</strong></li>
+        <li><strong>Error-handling</strong> mechanisms each interface requires</li>
+        <li><strong>Idempotency</strong> &mdash; can the remote system deduplicate, or must the integration?</li>
+        <li><strong>Contract-first capability</strong> &mdash; can the remote system consume a WSDL?</li>
+        <li><strong>Callback capability</strong> &mdash; can the remote system call into Salesforce?</li>
+      </ul>
+
+      <h4>Security / authorization</h4>
+      <ul>
+        <li>Enterprise security needs for each back-end &mdash; encryption, IP allow-listing, audit</li>
+        <li><strong>Seamless authentication</strong> into back-ends without re-entering credentials
+        (SAML / OAuth)</li>
+        <li><strong>Context-driven authorization</strong> &mdash; scope the call to the record the agent is
+        already on</li>
+        <li>Data classification: <strong>Confidential / Secure / Public</strong></li>
+      </ul>
+
+      <h3>What is <em>not</em> an integration requirement</h3>
+      <p>These appear as distractors and are consistently wrong:</p>
+      <ul>
+        <li>Multi-language and multi-currency requirements</li>
+        <li>Reporting and usability requirements</li>
+        <li>Integration skills, SME availability, program governance</li>
+        <li>License choices and UX design</li>
+        <li>Whether to <strong>migrate</strong> the external system into Salesforce</li>
+      </ul>
+
+      <h3>System of record reasoning</h3>
+      <p><strong>The system of record is the one whose users perform the daily lifecycle work on that
+      entity.</strong></p>
+      <ul>
+        <li>Sales and service associates work in Salesforce &rarr; <strong>Salesforce owns
+        customer/prospect</strong>, while ERP keeps invoices and orders, and Marketing keeps
+        campaigns.</li>
+        <li>If the stem <em>names</em> an MDM as the system of record for customers, Salesforce cannot
+        own it, and the MDM <strong>must be in the integration list</strong>.</li>
+        <li>A system whose capability Salesforce natively replaces gets <strong>retired, not
+        integrated</strong> &mdash; a legacy Case Management System goes away under Service Cloud; a legacy
+        Email Marketing system goes away under Marketing Cloud.</li>
+        <li>A system the business explicitly says it wants to <strong>reuse</strong> (Quoting, Order
+        Management) stays and gets integrated.</li>
+      </ul>
+      <p>The "which systems should be retired / which should be integrated" question is answered by
+      crossing the stated goals against Salesforce's native capabilities. Read the numbered
+      requirements list carefully &mdash; the answer is usually decided by one clause in requirement 5.</p>
+    </section>
+
+    <!-- 13 -->
+    <section id="stale">
+      <h2 class="sect"><span class="num">13</span><span>Exam-right, production-wrong</span></h2>
+      <div class="sect-rule"></div>
+
+      <div class="call alert">
+        <span class="tag">Answer these the exam's way</span>
+        <p>The exam is pinned to <strong>Summer '23</strong>. The items below are keyed to platform
+        behaviour that has since changed. They are listed here so you <em>recognise</em> them and
+        don't talk yourself out of a correct answer.</p>
+      </div>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Topic</th><th>Exam's answer (Summer '23)</th><th>Reality now</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Outbound Messaging provides a session ID</strong></td>
+              <td><span class="yes">&check;</span> Listed as a capability</td>
+              <td><strong>Removed week of 23 Feb 2026.</strong> No checkbox, <code>IncludeSessionId</code> forced FALSE, no <code>&lt;sessionID&gt;</code> in the payload. Callbacks must use OAuth 2.0</td>
+            </tr>
+            <tr>
+              <td><strong>Process Builder</strong> as an automation answer</td>
+              <td><span class="yes">&check;</span> Correct</td>
+              <td><strong>End of support 31 Dec 2025.</strong> Existing processes still run and can be edited &mdash; retirement of <em>support</em>, not removal. Flow is what you'd build today</td>
+            </tr>
+            <tr>
+              <td><strong>Workflow Rules</strong> (incl. outbound messaging)</td>
+              <td><span class="yes">&check;</span> Correct</td>
+              <td>Same end-of-support date, same reasoning</td>
+            </tr>
+            <tr>
+              <td><strong>PushTopic</strong> for a real-time UI counter</td>
+              <td><span class="yes">&check;</span> Correct</td>
+              <td>Labelled <strong>legacy</strong>; Salesforce steers new work to CDC</td>
+            </tr>
+            <tr>
+              <td><strong>User-Agent OAuth flow</strong> for mobile</td>
+              <td><span class="yes">&check;</span> Best of the options offered</td>
+              <td>Salesforce recommends <strong>web server flow with PKCE</strong>; user-agent uses the implicit grant and can leak the token via the redirect URL. Admins can block it</td>
+            </tr>
+            <tr>
+              <td><strong>OAuth username-password flow</strong></td>
+              <td>Appears in stems</td>
+              <td><strong>Being retired</strong> for connected apps. Replacements: client credentials (server-to-server), web server + PKCE (end user)</td>
+            </tr>
+            <tr>
+              <td><strong>Connected Apps</strong></td>
+              <td><span class="yes">&check;</span> Correct</td>
+              <td><strong>Creation restricted as of Spring '26</strong> &mdash; external client apps are the recommendation. Existing apps keep working</td>
+            </tr>
+            <tr>
+              <td><strong>Wave / Einstein Analytics</strong> naming</td>
+              <td>Appears as "Wave"</td>
+              <td>Now <strong>CRM Analytics</strong>. Same product, same answers</td>
+            </tr>
+            <tr>
+              <td><strong>"Apex REST runs in system context"</strong></td>
+              <td>&mdash;</td>
+              <td><span class="no">&#10007; This was never true.</span> Apex REST runs in <strong>user mode by default</strong>; bypassing FLS needs explicit <code>WITH SYSTEM_MODE</code> / system-mode DML plus <code>without sharing</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>That last row is not a staleness issue &mdash; it is a widely repeated falsehood. Know it
+      properly: an Apex REST service <em>can</em> be made to write a field the running user cannot
+      write, but only by deliberate opt-in.</p>
+    </section>
+
+    <!-- 14 -->
+    <section id="tells">
+      <h2 class="sect"><span class="num">14</span><span>Distractor tells</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">Patterns in how this exam writes wrong answers.</p>
+
+      <ol class="prose">
+        <li><strong>A fabricated limit stated confidently.</strong> "The 10-second callout ceiling",
+        "<code>@future</code> is limited to 50 records per method call", "Salesforce Files max is
+        2 GB". If an option turns on a number, check whether that number exists.</li>
+        <li><strong>A default described as a ceiling.</strong> The 10-second timeout again. Also:
+        parallel is the Bulk API <em>default</em>, not a special mode.</li>
+        <li><strong>A fabricated absence.</strong> An option asserting a capability <em>doesn't</em>
+        exist &mdash; it reads as appropriately strict and is often false. Check the denials, not just the
+        claims.</li>
+        <li><strong>Direction reversed.</strong> "Remote Call-In" offered when the stem is
+        Salesforce&rarr;remote. "The mobile device receives an Apex callout" when the device is the one
+        writing data in. CORS offered for an outbound problem.</li>
+        <li><strong>A prerequisite offered as the solution.</strong> "Generate a CA-signed certificate"
+        when the question asks how to <em>enforce</em> mutual auth. Certificates enable it; the user
+        permission enforces it.</li>
+        <li><strong>The right technology for the wrong job.</strong> Tooling API for record CRUD.
+        Metadata API for code coverage. Connect REST API for anything non-Chatter. Salesforce Connect
+        for file blobs.</li>
+        <li><strong>Solutioning ahead of analysis.</strong> Any option naming a product when the
+        question asks what to determine first.</li>
+        <li><strong>An implementation choice dressed as a requirement.</strong> "Maintain the back-end
+        credentials in Salesforce" is a <em>how</em>, offered where the question asks <em>what to
+        consider</em>.</li>
+        <li><strong>"Choose 2/3" where one option contains two things.</strong> Read the option, not
+        the count.</li>
+      </ol>
+
+      <h3>Read the question's own verb</h3>
+      <div class="tw">
+        <table class="kv">
+          <tbody>
+            <tr><td>"&hellip;require the least amount of development effort"</td><td>Declarative &mdash; Named Credentials, Composite, pre-built connectors. Not "write a custom service"</td></tr>
+            <tr><td>"&hellip;what should be considered"</td><td>Constraints and non-functionals, not mechanisms</td></tr>
+            <tr><td>"&hellip;which two <strong>security</strong> issues"</td><td>Confidentiality and access &mdash; <strong>not</strong> availability. A password reset breaking an integration is operational, not a security issue</td></tr>
+            <tr><td>"&hellip;<strong>first</strong>"</td><td>Requirements, or least-privilege setup, before anything else</td></tr>
+            <tr><td>"&hellip;to maximize declarative configuration"</td><td>Salesforce Connect / Flow / Outbound Messaging over Apex</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 15 -->
+    <section id="plan">
+      <h2 class="sect"><span class="num">15</span><span>Two-week revision plan</span></h2>
+      <div class="sect-rule"></div>
+
+      <p>Weighted toward where the points are, not where the deck is.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th class="num-col">Day</th><th>Focus</th></tr></thead>
+          <tbody>
+            <tr><td class="num">1&ndash;2</td><td>&sect;3 patterns + &sect;4 mechanisms, until the signal-word table is automatic. Drill the deck's Design questions</td></tr>
+            <tr><td class="num">3</td><td>&sect;5 API picker + Enterprise/Partner WSDL. Drill Design questions again</td></tr>
+            <tr><td class="num">4</td><td>&sect;6 events. Write out the retention / replay table from memory</td></tr>
+            <tr><td class="num">5</td><td>&sect;7 numbers. Cover the tables and reproduce them</td></tr>
+            <tr><td class="num">6&ndash;7</td><td>&sect;8 security. Drill the deck's Build questions</td></tr>
+            <tr><td class="num">8</td><td>&sect;9 data loads and locking</td></tr>
+            <tr><td class="num">9</td><td>&sect;10 middleware vs Salesforce; &sect;11 error handling and monitoring. Drill Maintain questions</td></tr>
+            <tr><td class="num">10&ndash;11</td><td><strong>&sect;12 &mdash; the under-trained 41%.</strong> Re-read the requirements checklist until you can produce it unprompted. Your highest-yield day</td></tr>
+            <tr><td class="num">12</td><td>&sect;13 stale answers + &sect;14 distractor tells</td></tr>
+            <tr><td class="num">13</td><td>Full deck run, timed at 90 s per question</td></tr>
+            <tr><td class="num">14</td><td>Re-read &sect;12 and &sect;13. Rest</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 16 -->
+    <section id="sources">
+      <h2 class="sect"><span class="num">16</span><span>Sources</span></h2>
+      <div class="sect-rule"></div>
+
+      <p>Every URL below was rendered and title-checked during this repo's fact-check work.</p>
+
+      <h4>Patterns and architecture</h4>
+      <ul class="linklist">
+        <li><a href="https://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html">Integration Patterns and Practices</a> &mdash; <span class="why">all six patterns with a selection matrix. The single most important page for this exam.</span></li>
+        <li><a href="https://trailhead.salesforce.com/content/learn/modules/application-networks-and-api-led-connectivity-in-mulesoft/explore-api-led-connectivity">Understanding API-Led Connectivity</a> &mdash; <span class="why">System / Process / Experience layers.</span></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=005298980&type=1&language=en_US">Official exam guide</a></li>
+      </ul>
+
+      <h4>Callouts and limits</h4>
+      <ul class="linklist">
+        <li><a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts_timeouts.htm">Callout Limits and Limitations</a> &mdash; <span class="why">100 callouts/transaction and the 10 s <em>default</em>, in one place.</span></li>
+        <li><a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_gov_limits.htm">Execution Governors and Limits</a></li>
+        <li><a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_continuation_overview.htm">Make Long-Running Callouts with Continuations</a></li>
+        <li><a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_continuation_limits.htm">Asynchronous Callout Limits</a> &mdash; <span class="why">3 parallel, 120 s, 1 MB.</span></li>
+        <li><a href="https://developer.salesforce.com/blogs/engineering/2015/11/avoiding-the-concurrent-request-limit-via-synchronous-callout-optimization">Avoiding the Concurrent Request Limit</a> &mdash; <span class="why">why &gt;5 s bites first.</span></li>
+      </ul>
+
+      <h4>APIs</h4>
+      <ul class="linklist">
+        <li><a href="https://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_partner.htm">Using the Partner WSDL</a> &mdash; <span class="why">contrasts both WSDLs on one page.</span></li>
+        <li><a href="https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_composite_composite_post.htm">Send Multiple Requests Using Composite</a></li>
+        <li><a href="https://developer.salesforce.com/docs/atlas.en-us.uiapi.meta/uiapi/ui_api_get_started.htm">Get Started with User Interface API</a></li>
+        <li><a href="https://developer.salesforce.com/docs/atlas.en-us.chatterapi.meta/chatterapi/intro_using_chatter_connect.htm">When to Use Connect REST API</a></li>
+        <li><a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_rest_exposing_data.htm">Exposing Data with Apex REST Web Service Methods</a> &mdash; <span class="why">the user-mode-by-default statement.</span></li>
+      </ul>
+
+      <h4>Events and streaming</h4>
+      <ul class="linklist">
+        <li><a href="https://developer.salesforce.com/docs/platform/pub-sub-api/guide/event-message-durability.html">Event Message Durability</a> &mdash; <span class="why">72 hours.</span></li>
+        <li><a href="https://developer.salesforce.com/docs/atlas.en-us.api_streaming.meta/api_streaming/using_streaming_api_durability.htm">Streaming API Message Durability</a> &mdash; <span class="why">"PushTopic events, generic events, and standard-volume events for 24 hours and high-volume events for 72 hours."</span></li>
+        <li><a href="https://developer.salesforce.com/docs/atlas.en-us.change_data_capture.meta/change_data_capture/cdc_subscribe_delivery.htm">Change Event Storage and Delivery</a></li>
+        <li><a href="https://developer.salesforce.com/docs/atlas.en-us.change_data_capture.meta/change_data_capture/cdc_security_considerations.htm">CDC Security Considerations</a> &mdash; <span class="why">ignores sharing, respects FLS.</span></li>
+        <li><a href="https://developer.salesforce.com/docs/atlas.en-us.api_streaming.meta/api_streaming/pushtopic_events_intro.htm">PushTopic Events (Legacy)</a></li>
+        <li><a href="https://developer.salesforce.com/docs/atlas.en-us.platform_events.meta/platform_events/platform_event_limits.htm">Platform Event Allocations</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.workflow_om_considerations.htm&language=en_US&type=5">Considerations for Outbound Messages</a> &mdash; <span class="why">24-hour queue, 60 s timeout.</span></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=platform.workflow_managing_outbound_messages.htm&language=en_US&type=5">Outbound Message Actions</a> &mdash; <span class="why">which tools can send one.</span></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=005232763&language=en_US&type=1">Security Updates to Outbound Messages</a> &mdash; <span class="why">the session-ID removal.</span></li>
+      </ul>
+
+      <h4>Security and identity</h4>
+      <ul class="linklist">
+        <li><a href="https://help.salesforce.com/s/articleView?language=en_US&id=sf.named_credentials_about.htm&type=5">Named Credentials</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?language=en_US&id=sf.platform_connect_identity_type.htm&type=5">Identity Type for External Data Sources</a></li>
+        <li><a href="https://developer.salesforce.com/docs/atlas.en-us.secure_coding_guide.meta/secure_coding_guide/secure_coding_storing_sensitive_data.htm">Storing Sensitive Data (Secure Coding Guide)</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?language=en_US&id=sf.integration_user.htm&type=5">Give Integration Users API Only Access</a> &mdash; <span class="why">one user per integration.</span></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=platform.login_ip_ranges.htm&language=en_US&type=5">Restrict Login IP Addresses in Profiles</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.security_trusted_urls_manage.htm&language=en_US&type=5">Manage Trusted URLs</a> &mdash; <span class="why">CSP vs Remote Site Settings.</span></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.sso_jit_about.htm&language=en_US&type=5">Just-in-Time Provisioning for SAML</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=xcloud.sso_provider_openid_connect.htm&language=en_US&type=5">Configure an Auth Provider Using OpenID Connect</a></li>
+      </ul>
+
+      <h4>External data and data loads</h4>
+      <ul class="linklist">
+        <li><a href="https://help.salesforce.com/s/articleView?id=platform.salesforce_connect.htm&language=en_US&type=5">Access External Data With Salesforce Connect</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=platform.salesforce_connect_odata.htm&language=en_US&type=5">OData Adapters for Salesforce Connect</a></li>
+        <li><a href="https://developer.salesforce.com/docs/atlas.en-us.platform_connect.meta/platform_connect/canvas_framework_intro.htm">Introducing Canvas</a></li>
+        <li><a href="https://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/asynch_api_planning_guidelines.htm">General Guidelines for Data Loads</a> &mdash; <span class="why">parallel default, serial for locking.</span></li>
+        <li><a href="https://developer.salesforce.com/blogs/engineering/2014/08/managing-task-locks-data-loads">Managing Task Locks in Data Loads</a> &mdash; <span class="why">what actually causes contention.</span></li>
+        <li><a href="https://developer.salesforce.com/docs/atlas.en-us.salesforce_app_limits_cheatsheet.meta/salesforce_app_limits_cheatsheet/salesforce_app_limits_platform_bulkapi.htm">Bulk API Limits and Allocations</a></li>
+        <li><a href="https://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_calls_update.htm">update() (SOAP API)</a> &mdash; <span class="why">the 200-record ceiling.</span></li>
+        <li><a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_restful_http_testing.htm">Testing HTTP Callouts (HttpCalloutMock)</a></li>
+      </ul>
+    </section>
+
+    <!-- 17 -->
+    <section id="notebooklm">
+      <h2 class="sect"><span class="num">17</span><span>Using this with NotebookLM</span></h2>
+      <div class="sect-rule"></div>
+
+      <p>Upload the Markdown version of this guide as a source &mdash; headings become NotebookLM's
+      navigation. Worth adding alongside it: the
+      <a href="https://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html">Integration
+      Patterns guide</a> and the
+      <a href="https://help.salesforce.com/s/articleView?id=005298980&type=1&language=en_US">official
+      exam guide</a>, both of which NotebookLM can ingest by URL.</p>
+
+      <h3>Prompts that produce useful study media</h3>
+      <div class="prompts">
+        <div class="prompt">Generate an Audio Overview focused only on sections 3, 4 and 6 &mdash; the integration patterns, their mechanisms, and the event types. Have the hosts quiz each other on which pattern a scenario describes.</div>
+        <div class="prompt">I have two weeks. Using section 12, drill me on requirements-gathering questions: give me a business scenario with a system landscape and ask what an architect should determine first. Don't give me the answer until I try.</div>
+        <div class="prompt">Turn section 7 into flashcards &mdash; one number per card, the limit on the front, the value plus the trap on the back.</div>
+        <div class="prompt">Using section 13, explain each case where the exam's expected answer differs from current Salesforce behaviour, and why the exam still keys the old answer.</div>
+        <div class="prompt">Build a study guide from section 14 &mdash; for each distractor pattern, write three fresh example options that would be wrong for that reason.</div>
+      </div>
+
+      <p>For the Audio Overview specifically, sections 3, 6, 12 and 13 are the ones that reward
+      listening &mdash; they're conceptual and comparative. Sections 7 and 16 are lookup tables and won't
+      survive being read aloud.</p>
+    </section>
+
+  </main>
+
+  <footer class="colophon">
+    Compiled from the 133 questions in <code>integration_architect_questions_corrected.json</code>,
+    the official Salesforce exam guide (read 24 Aug 2026), and the verified documentation set in
+    <code>.claude/skills/factcheck-deck/references/verified-docs.md</code>. Deck-derived facts come
+    from a deck that has had a full documentation pass &mdash; 37 correction stamps, 15 answer keys moved
+    &mdash; so the explanations behind this guide have themselves been checked against vendor
+    documentation.
+  </footer>
+
+</div>
+</body>
+</html>

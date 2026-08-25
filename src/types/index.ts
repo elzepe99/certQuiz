@@ -44,6 +44,14 @@ export type DeckMeta = {
   description: string;
   file: string;
   accentColor?: string;
+  /**
+   * Optional path to a standalone study guide for this deck, relative to the
+   * app's base URL — e.g. `guides/salesforce-integration-architect.html`.
+   * Present only for decks that have one; the Guide link is hidden otherwise.
+   * Guides are plain static pages built by `scripts/build-guide.mjs`, so adding
+   * one is a manifest edit rather than a code change.
+   */
+  guide?: string;
 };
 
 export type DeckManifest = {
