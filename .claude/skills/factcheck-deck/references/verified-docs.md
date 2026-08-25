@@ -206,6 +206,38 @@ it. A believed-correct fact with no rendered source is a liability, not a shortc
   "Change event messages are stored in the event bus for three days."
 - **Change Data Capture (guide intro)** — https://developer.salesforce.com/docs/atlas.en-us.change_data_capture.meta/change_data_capture/cdc_intro.htm
 - **Platform Event Allocations** — https://developer.salesforce.com/docs/atlas.en-us.platform_events.meta/platform_events/platform_event_limits.htm
+  **The CometD subscriber cap — a hard number that settles a recurring option shape.**
+  "Maximum number of concurrent CometD clients (subscribers) across all channels and for
+  all event types": **2,000** (Performance/Unlimited), **1,000** (Enterprise), **20**
+  (Developer, and Professional with the API add-on). Streaming API repeats the same
+  figures. `lightning/empApi` "subscribes to a streaming channel and listens to event
+  messages using a **shared CometD connection for a single user session**"
+  (https://developer.salesforce.com/docs/platform/lightning-component-reference/guide/lightning-emp-api.html),
+  so **one concurrent user is one CometD client**. Any option promising to serve *N
+  thousand* concurrent users over empApi/CometD is refutable by arithmetic whenever
+  N > 2. Verified 2026-08-25; it decided three integration-deck items in one pass
+  (`647f738a`, `0eaa9548`, and the empApi distractor in the eligibility variants).
+  The page also carries a section titled "Default Platform Event Allocations for **Event
+  Publishing and Delivery**" — that exact phrasing is what makes "only Platform Events
+  have Event Delivery and Event Publishing limits" a true statement about the docs, and
+  outbound messaging has no equivalent metering.
+- **Understanding Notifications (outbound messaging)** — https://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_om_outboundmessaging_notifications.htm
+  Settles two distractor shapes at once. Ordering: "Messages are retried independent of
+  their order in the queue. As a result, **messages can be delivered out of order**."
+  Duplicates: "while each message is usually delivered one time, **it can sometimes be
+  delivered more than one time**." Also "**You can't build an audit trail using outbound
+  messaging**", and the queue holds undelivered messages for 24 hours with retry backoff
+  to a maximum of two hours. So "OM preserves sequence" and "Salesforce guarantees
+  exactly-once" are both false; note this is the *opposite* of the intuition that a
+  point-to-point SOAP push is the orderly one.
+- **ApiEvent** — https://developer.salesforce.com/docs/atlas.en-us.platform_events.meta/platform_events/sforce_api_objects_apievent.htm
+  Narrower than options usually claim: "Tracks these user-initiated **read-only** API
+  calls: query(), queryMore(), and count()... Tooling API calls and API calls originating
+  from a Salesforce mobile app aren't captured." It is a big object usable "in a
+  transaction security policy" — security forensics, not performance monitoring. Careful
+  with the denial: the page *does* list REST among API types, so the false part of "track
+  all user-initiated API calls through SOAP, REST, or Bulk" is **"all"**, not the protocol
+  list.
 - **Subscribing to Platform Events** — https://developer.salesforce.com/docs/atlas.en-us.platform_events.meta/platform_events/platform_events_subscribe.htm
 - **Publishing Platform Events** — https://developer.salesforce.com/docs/atlas.en-us.platform_events.meta/platform_events/platform_events_publish.htm
 - **CDC Security Considerations** — https://developer.salesforce.com/docs/atlas.en-us.change_data_capture.meta/change_data_capture/cdc_security_considerations.htm
