@@ -46,7 +46,8 @@
       "shortName": "Integration Architect",
       "description": "Architect-level certification covering integration patterns, APIs, middleware, security, and data exchange strategies.",
       "file": "integration_architect_questions_corrected.json",
-      "accentColor": "#FF6B6B"
+      "accentColor": "#FF6B6B",
+      "guide": "guides/salesforce-integration-architect.html"
     },
     {
       "id": "salesforce-data-architect",
