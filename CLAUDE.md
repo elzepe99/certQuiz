@@ -190,15 +190,19 @@ underneath.
 
 ---
 
-## Deck state — as of 2026-08-21
+## Deck state — as of 2026-08-25
 
-**1,616 questions across 13 decks, all 1,616 cited with a real URL. Coverage is
-complete and has stopped moving**: gap zero, unparsed-marker count zero, re-measured
-2026-08-21 with every deck pass merged and nothing in flight. Earlier revisions of this
-section carried a running "re-measure, a concurrent session is citing in this tree"
-warning against each pass; that warning has been retired because there is no next deck
-to cite. Run the command below anyway before trusting the number — it is cheap, and the
-next scraped import brings the whole problem back.
+**1,623 questions across 13 decks, all 1,623 cited with a real URL.** Gap zero,
+unparsed-marker count zero, re-measured 2026-08-25. Run the command below before
+trusting the number — it is cheap.
+
+**The "coverage has stopped moving, there is no next deck to cite" claim this section
+carried was overtaken on 2026-08-25, in the way it predicted.** No new *deck* arrived;
+instead two files of loose exam questions were dropped on the integration deck, and
+**7 of the 41 were new** (the other 34 were already in the deck). Fresh questions come
+in uncited, so the total moved and the coverage check had to run again. The lesson to
+keep: coverage is only stable between imports, and an import does not have to be a
+whole deck. The next batch of loose questions brings the problem straight back.
 
 The passes that got there, newest first: data-cloud-consultant 2026-08-21 (100, closing
 the last uncited deck), dld 2026-08-20 (138, PR #17), admin and data-architect
@@ -234,8 +238,8 @@ Agent Setup > Channels", plus the occasional empty block. It degrades gracefully
 (`linkifySegments` only linkifies real URLs) but it is unverifiable by a learner and it
 inflates any naive coverage count.
 
-**That gap closed on 2026-08-18 and is still zero: 1,616 marker blocks, 1,616 with a
-URL** (re-measured 2026-08-22, after the dedupe below; the 1,209 this line used to carry was the count at the
+**That gap closed on 2026-08-18 and is still zero: 1,623 marker blocks, 1,623 with a
+URL** (re-measured 2026-08-25, after the integration import below; the 1,209 this line used to carry was the count at the
 time it was written, three deck passes ago). The last of the gap went with the
 agentforce pass (24 questions, 88 prose lines) and the admin reference repair (3). Keep
 measuring it anyway — the check is cheap, and the next scraped import brings the problem
@@ -283,7 +287,7 @@ column, not the Cited column.
 |---|---:|---:|---|
 | databricks-data-engineer-associate | 147 | 147 | **Fully checked** (2026-08-15) — 8 keys moved, 11 reasoning fixes, in the same pass that imported it. First non-Salesforce deck. Deduped 148 → 147 on 2026-08-22 (`e22e750b`, which was unanswerable as printed) |
 | salesforce-platform-developer-2 | 146 | 146 | **Fully checked** — 8 rounds, 2 keys moved. Deduped 148 → 147 on 2026-08-17, then 147 → 146 on 2026-08-22 (`4f119a16`) |
-| salesforce-integration-architect | 133 | 133 | **Fully checked** — 37 stamps, 15 keys moved. Spot-rechecked 2026-08-10: citations sound, content current, 0 wrong answers found. Its **27 in-app comments were already worked through** — they are the largest comment set in the repo and read like open disputes ("It is B", "Might be D"), but the repo owner confirmed on 2026-08-17 that they were addressed. Do not re-triage them as new signal |
+| salesforce-integration-architect | 140 | 140 | **Fully checked** — 37 stamps, 15 keys moved. Spot-rechecked 2026-08-10: citations sound, content current, 0 wrong answers found. Grew 133 → 140 on 2026-08-25 from two files of loose exam questions (see the import note below). Its **27 in-app comments were already worked through** — they are the largest comment set in the repo and read like open disputes ("It is B", "Might be D"), but the repo owner confirmed on 2026-08-17 that they were addressed. Do not re-triage them as new signal |
 | salesforce-iam-architect | 116 | 116 | **Fully checked** (2026-08-10) — 3 keys moved, 7 reasoning fixes |
 | salesforce-admin | 154 | 154 | **Fully checked** (2026-08-19) — 2 keys moved, 5 flagged, 60 explanations rewritten. 13 keys had already moved in the ADM-201 merge pass. Its real defect was the citation layer: only 36 questions rendered a References block, **47 more carried a marker the parser could not see**, and **24 of the 36 legacy `sf.` ids tested were dead** — see failure patterns 4b and 4c |
 | salesforce-agentforce-specialist | 121 | 121 | **Fully checked** (2026-08-17) — 16 keys moved across 6 batches. Started from 0 cited, with 26 questions rendering a References block of prose only. One duplicate removed (`b7ffd87e`), resolving the pair this file flagged |
@@ -319,7 +323,7 @@ integration), `efc3d13e` B→C (one MFA prompt across mixed login paths comes fr
 session security levels, not the org-wide MFA setting), `9f507c0e` A,B→B,D
 (Embedded Login is not one of the four documented login page types).
 
-Clean across all 13 decks right now (re-measured 2026-08-22, all 1,616 questions): zero
+Clean across all 13 decks right now (re-measured 2026-08-25, all 1,623 questions): zero
 `U+FFFD` replacement characters, zero literal `"Option B"` placeholder strings, zero keys
 pointing at empty options, zero missing ids. The deck count said 14 until the 2026-08-19
 re-measurement — the claude-questions removal above had left it stale.
@@ -420,8 +424,38 @@ fact-check outcome, which is why the deck still has 37.
 
 ### What to work on next
 
-As of 2026-08-21, **every deck has had a full documentation pass and every question is
-cited.** There is no next deck. What remains is cross-cutting work, below.
+As of 2026-08-25, **every deck has had a full documentation pass and every question is
+cited.** There is no next deck — but see the import note directly below, because "no
+next deck" turned out not to mean "no new questions". What remains is cross-cutting
+work, below.
+
+### The 2026-08-25 integration import — the shape to expect from loose questions
+
+Two files of exam questions (32 and 9) were dropped on the integration deck. **7 were
+new; 34 were already there.** That ratio is the thing to plan around: dedupe first,
+fact-check second, or you will spend the budget re-researching questions the deck has
+already settled.
+
+Four things worth carrying to the next such import:
+
+- **Match on stems, then read the option sets.** Six incoming items scored under 0.30
+  on stem tokens against their true twin, and several high scorers were choose-1
+  repackagings of a deck choose-2 or choose-3 (the same option set with one answer
+  removed). Those are duplicates, not new questions — adding them creates the intra-deck
+  duplicate this repo treats as a defect.
+- **Both files contained internal duplicates of each other.** The 32-question file held
+  the shipping-services item twice and the phone-classification item twice, in variant
+  wordings. Only one of each was added.
+- **Two incoming items contradicted the deck's key; both were checked and the deck won.**
+  `cb609eba` (the incoming keyed A, the very key a user comment had already overturned
+  A→D on 2026-08-04) and `647f738a` (the incoming keyed the platform-event/empApi
+  option the deck rejects). The second is now settled by a hard number — see the CometD
+  row in `verified-docs.md`. Both explanations were rewritten as `clarified`; neither key
+  moved and neither was stamped.
+- **A source that disagrees with itself is not evidence.** The two files keyed the *same*
+  eligibility question differently — one chose Continuation, one chose the platform-event
+  option. The deck's answer set contains Continuation. Where an exam-dump source
+  self-contradicts, only documentation settles it.
 
 Things that are **not** deck passes but are queued, most actionable first:
 
@@ -626,7 +660,22 @@ pre-existing false positives, and the richtext suite is green.
    **Data Cloud Data Aware Specialist**. Capabilities map 1:1 so four questions keep their
    keys (`860708a5`, `1d6366ff`, `3b0c0a4e`, and `49ee75cb` by implication), and the prose
    now names the current sets — but the *option text* still sends a learner to a Setup node
-   that no longer exists. Fixing option text means re-minting ids, so it was left alone.
+   that no longer exists. It was left alone as a **product-rename** decision (see "Old
+   product names" below), **not** for the reason this line used to give.
+
+   **Correction, 2026-08-25: the old claim that "fixing option text means re-minting ids"
+   is false, and it cost a session.** Ids are minted once and frozen.
+   `add-question-ids.mjs` returns any question that already has an id untouched
+   (`if (typeof q.id === 'string' && q.id.length > 0) ... return q;`), and the app reads
+   the stored id, falling back to a hash only when there is none
+   (`src/lib/storage.ts:56` — `return q.id ?? hashSignature(questionSignature(q))`). The
+   content hash is a *seed*, not a live identity. **Editing a stem, an option, or the key
+   is safe and orphans nothing** — which is what the dld `051864d9` note already said
+   ("ids are frozen, so the id and any comments survive an option edit"). Demonstrated on
+   2026-08-25 by repairing `cb609eba`'s stem and two of its options in the integration
+   deck: the id held and its in-app comment stayed bound, confirmed by a
+   `add-question-ids.mjs --dry` run reporting 0 new. So the cost of a rename pass is
+   review effort, not lost comments.
 
 **Two defective items, kept as keyed:**
 
