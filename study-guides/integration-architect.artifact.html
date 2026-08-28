@@ -584,7 +584,7 @@ html { scroll-behavior: smooth; }
     </p>
     <h1>Integration Architect Field Guide</h1>
     <p class="standfirst">
-      Built from the 133 questions in the practice deck, cross-checked against the official exam
+      Built from the 141 questions in the practice deck, cross-checked against the official exam
       outline and the documentation those questions cite. Every fact here traces to a rendered
       Salesforce page. <strong>Read &sect;13 before you sit the exam</strong> &mdash; it is the likeliest
       place to lose a point you thought you had.
@@ -706,7 +706,7 @@ html { scroll-behavior: smooth; }
                 <span class="bar" style="width:79%"></span>
                 <span class="bar deck" style="width:16%"></span>
               </td>
-              <td class="num">6 &middot; 4.5%</td>
+              <td class="num">7 &middot; 5.0%</td>
               <td><span class="verdict gap">badly under-trained</span></td>
             </tr>
             <tr>
@@ -716,7 +716,7 @@ html { scroll-behavior: smooth; }
                 <span class="bar" style="width:100%"></span>
                 <span class="bar deck" style="width:100%"></span>
               </td>
-              <td class="num">68 &middot; 51%</td>
+              <td class="num">72 &middot; 51.1%</td>
               <td><span class="verdict over">over-represented</span></td>
             </tr>
             <tr>
@@ -726,7 +726,7 @@ html { scroll-behavior: smooth; }
                 <span class="bar" style="width:82%"></span>
                 <span class="bar deck" style="width:51%"></span>
               </td>
-              <td class="num">35 &middot; 26%</td>
+              <td class="num">37 &middot; 26.2%</td>
               <td><span class="verdict ok">about right</span></td>
             </tr>
             <tr>
@@ -736,7 +736,7 @@ html { scroll-behavior: smooth; }
                 <span class="bar" style="width:29%"></span>
                 <span class="bar deck" style="width:24%"></span>
               </td>
-              <td class="num">16 &middot; 12%</td>
+              <td class="num">17 &middot; 12.1%</td>
               <td><span class="verdict over">over-represented</span></td>
             </tr>
           </tbody>
@@ -750,7 +750,7 @@ html { scroll-behavior: smooth; }
       <div class="call alert">
         <span class="tag">The gap you need to close</span>
         <p>The first three domains are <strong>41% of the exam &mdash; roughly 25 of your 60
-        questions &mdash; and only 10.5% of the deck.</strong> Drill the deck to 100% and you will have
+        questions &mdash; and only 10.6% of the deck.</strong> Drill the deck to 100% and you will have
         thoroughly rehearsed the pattern-picking half of the exam and barely touched the
         requirements-gathering half.</p>
         <p>Those 25 questions are not about APIs. They are about <em>what an architect does before
@@ -766,7 +766,7 @@ html { scroll-behavior: smooth; }
       <code>ff6c0296</code> and <code>b054672a</code> are the same batch-size question tagged
       <strong>Maintain</strong> and <strong>Build</strong>.</p>
 
-      <p>But re-classifying all 133 questions independently &mdash; by what each one actually tests,
+      <p>But re-classifying all 133 questions independently (before the 2026-08-25 import, whose 7 new questions all landed in Design and Build) &mdash; by what each one actually tests,
       ignoring the tag &mdash; lands on the same distribution:</p>
 
       <div class="tw">
@@ -812,7 +812,7 @@ html { scroll-behavior: smooth; }
 
       <div class="call">
         <span class="tag">The fair reframing</span>
-        <p>The gap is more in question <em>form</em> than in knowledge. Someone who has worked 67
+        <p>The gap is more in question <em>form</em> than in knowledge. Someone who has worked 72
         Design questions has absorbed much of the underlying judgment. What they have not rehearsed
         is the distinctive <em>shape</em> of a Translate item &mdash; every option a consideration
         rather than a product, and the right answer &ldquo;evaluate current and future data
@@ -1409,8 +1409,8 @@ html { scroll-behavior: smooth; }
       <div class="sect-rule"></div>
 
       <p class="lede">This is the material the deck barely covers and the exam weights at 41%.
-      There are no clever mechanisms here. There is one habit, and the exam tests it over and
-      over.</p>
+      There are no clever mechanisms here. There is one habit, one ranking rule, and two question
+      shapes.</p>
 
       <h3>The habit: never solution ahead of analysis</h3>
       <p>When a stem describes a business situation and asks what the architect should do
@@ -1448,6 +1448,41 @@ html { scroll-behavior: smooth; }
         subtle enough to catch people who know the technology cold.</p>
       </div>
 
+      <h3>The ranking ladder &mdash; choosing between plausible considerations</h3>
+      <p>The habit above tells you what to avoid. It does not help on the hard version of these
+      items, where a choose-3 gives you five options that are <em>all</em> things a sensible
+      architect would think about. <code>a2ae17cb</code>, <code>9fa544c5</code>,
+      <code>21e6ad5a</code> and <code>998dcfd8</code> all have that shape, and eliminating on
+      "is this reasonable?" fails on every one of them &mdash; because they are all reasonable.</p>
+
+      <p>Rank the options instead. Apply in order, and stop at the first rule that separates
+      them:</p>
+
+      <ol class="prose">
+        <li><strong>Altitude.</strong> Does the option stay at the level the verb asked for?
+        "Consider" and "determine" want a <em>question to answer</em>, not a decision already
+        taken. Anything naming a product, a connector, or a middleware vendor drops out here
+        &mdash; even when it is the thing you would eventually build. This kills "explore
+        out-of-the-box connectors" and "propose a middleware system" in
+        <code>2924d322</code>.</li>
+        <li><strong>Measurable.</strong> Between two options at the right altitude, prefer the one
+        whose answer is a number, a direction, or an enumerable list. <em>Data volume and
+        processing volume</em> beats <em>reporting and usability requirements</em> in
+        <code>dc227c12</code> for exactly this reason &mdash; one has an answer, the other has an
+        opinion.</li>
+        <li><strong>Drives the design.</strong> Prefer the consideration that would <em>change the
+        integration pattern</em> if the answer came back differently. Latency, volume,
+        directionality and idempotency all flip the pattern; multi-currency and license choice do
+        not. This is the rule that settles <code>9fa544c5</code>.</li>
+        <li><strong>In scope for the integration architect.</strong> Program governance, SME
+        availability and integration skills are real project risks and belong to someone else's
+        exam. If an option is about <em>staffing or running the project</em> rather than about the
+        interface, drop it.</li>
+      </ol>
+
+      <p>Rules 1 and 4 are pure elimination and remove about half the option set on sight. Rules 2
+      and 3 are what actually pick between the survivors.</p>
+
       <h3>What to ask &mdash; the integration requirements checklist</h3>
       <p>These are the answer options that score in the Translate domain.</p>
 
@@ -1484,6 +1519,29 @@ html { scroll-behavior: smooth; }
         <li>Data classification: <strong>Confidential / Secure / Public</strong></li>
       </ul>
 
+      <h4>Privacy, retention and deletion</h4>
+      <p>A stem that mentions expanding into a new jurisdiction, GDPR-style regulation, or a
+      <em>right to be forgotten</em> is asking about deletion as an integration requirement. The
+      considerations that score:</p>
+      <ul>
+        <li><strong>Can personal data actually be deleted in every system it reached?</strong> An
+        integration that copies a customer record into four systems has created four deletion
+        obligations. The one that cannot comply is usually a legacy or mainframe system, or an
+        analytics store nobody thinks of as a system of record.</li>
+        <li><strong>What breaks when the record goes?</strong> Downstream functionality, aggregate
+        reporting and referential integrity all depend on records that erasure will remove.</li>
+        <li><strong>Which steps must be manual?</strong> Systems due for decommissioning rarely get
+        a deletion API. An honest requirements list includes the manual procedure.</li>
+      </ul>
+
+      <div class="call trap">
+        <span class="tag">The prudent-sounding opposite</span>
+        <p><em>Feasibility to restore deleted records</em> does <strong>not</strong> score. It reads
+        like sound backup practice and is the direct opposite of what a deletion-on-demand
+        requirement asks for. Also out: keeping a 360-degree customer view &mdash; a benefit of the
+        integration, not a requirement of the erasure.</p>
+      </div>
+
       <h3>What is <em>not</em> an integration requirement</h3>
       <p>These appear as distractors and are consistently wrong:</p>
       <ul>
@@ -1493,6 +1551,31 @@ html { scroll-behavior: smooth; }
         <li>License choices and UX design</li>
         <li>Whether to <strong>migrate</strong> the external system into Salesforce</li>
       </ul>
+
+      <h3>The "why bother with middleware" shape</h3>
+      <p>A recurring Translate item puts a sceptical CIO in the stem: <em>if we have to write custom
+      code anyway, why buy middleware?</em> (<code>21e6ad5a</code>). The trap is that the tempting
+      answers &mdash; <strong>bulkification</strong> and <strong>performance</strong> &mdash; are things
+      you can achieve perfectly well in hand-written Apex. They are not arguments for
+      middleware.</p>
+
+      <p>What middleware buys that per-integration custom code does not:</p>
+      <ul>
+        <li><strong>Orchestration</strong> &mdash; sequencing calls across several systems, with state,
+        in one place</li>
+        <li><strong>Error handling</strong> &mdash; one consistent retry / dead-letter policy instead of
+        many bespoke ones</li>
+        <li><strong>Logging and monitoring</strong> &mdash; a single audit trail across every
+        interface</li>
+      </ul>
+
+      <div class="call">
+        <span class="tag">The general form</span>
+        <p><strong>Argue from what centralising gives you, not from what the code can do.</strong>
+        Anything a competent developer could hand-roll per interface is not a reason to buy a
+        platform. See <a href="#logic">&sect;10</a> for when middleware is the answer to a
+        <em>design</em> question.</p>
+      </div>
 
       <h3>System of record reasoning</h3>
       <p><strong>The system of record is the one whose users perform the daily lifecycle work on that
@@ -1509,9 +1592,58 @@ html { scroll-behavior: smooth; }
         <li>A system the business explicitly says it wants to <strong>reuse</strong> (Quoting, Order
         Management) stays and gets integrated.</li>
       </ul>
-      <p>The "which systems should be retired / which should be integrated" question is answered by
-      crossing the stated goals against Salesforce's native capabilities. Read the numbered
-      requirements list carefully &mdash; the answer is usually decided by one clause in requirement 5.</p>
+      <h3>Landscape triage &mdash; the method</h3>
+      <p>"Which systems should be retired / which should be integrated" is ~5 questions of your exam
+      and is fully mechanical. Do not reason about it in prose. Build the table: <strong>one row per
+      system in the landscape, one column &mdash; does Salesforce natively replace it?</strong> Then
+      apply, in order:</p>
+
+      <ol class="prose">
+        <li><strong>The stem's explicit keeps win over everything.</strong> If a numbered
+        requirement says "reuse enterprise capabilities for Quoting and Order Management", those two
+        are integrated no matter how well Salesforce could replace them. This single clause decides
+        <code>73466e15</code>: Salesforce <em>could</em> do quoting, but goal (3) says reuse it, so
+        Quoting and OMS survive and the answer is the other three.</li>
+        <li><strong>A named system of record is never retired.</strong> <code>3262c8d0</code> says
+        MDM is the system of record for customers and ERP for pricing &mdash; so both are in the
+        integration list, and options offering a separate <em>Inventory</em> or <em>Pricing
+        Engine</em> are wrong because the stem already told you those facts live in ERP.</li>
+        <li><strong>Integrate with the data store, not the tool sitting on it.</strong> Both
+        landscape items in the deck turn on this. <code>47d1f854</code> and <code>3262c8d0</code>
+        each include the <strong>Data Warehouse</strong> and exclude the <strong>BI / Analytics
+        tool</strong> it feeds &mdash; you integrate with where the data is, and the dashboard
+        downstream comes along for free. An option naming the BI tool is a reliable wrong
+        answer.</li>
+        <li><strong>Only then, retire what Salesforce natively covers.</strong> Case Management
+        &rarr; Service Cloud. Email Marketing &rarr; Marketing Cloud. Sales Activity &rarr; Sales
+        Cloud.</li>
+      </ol>
+
+      <div class="call trap">
+        <span class="tag">Note the ordering</span>
+        <p>Rules 1&ndash;3 are all <em>read the stem more carefully</em>, and they decide the question
+        before native capability ever comes up. The instinct to start at rule 4 is what makes these
+        items feel ambiguous when they are not.</p>
+      </div>
+
+      <h3>Drills</h3>
+      <p>The deck cannot give you reps here, so generate your own. These are reasoning drills, not
+      questions &mdash; do them out loud.</p>
+      <ol class="prose">
+        <li><strong>Reconstruct the checklist cold.</strong> Write the three requirement groups above
+        from memory, then check. Anything you missed is what you will miss on the exam.</li>
+        <li><strong>Re-rank a Design question.</strong> Take any deck question that names a pattern
+        in its answer and ask: <em>what would I have had to find out to arrive at that pattern?</em>
+        Write the three questions. That is the Translate item hiding behind every Design item, and
+        it is the cheapest way to turn the deck's over-representation into practice you actually
+        need.</li>
+        <li><strong>Run the landscape table.</strong> For <code>73466e15</code>,
+        <code>47d1f854</code> and <code>3262c8d0</code>, build the table and apply the four rules in
+        order. You should reach the key without weighing options against each other.</li>
+        <li><strong>Argue the CIO both ways.</strong> Justify middleware to a sceptic in three
+        bullets, then justify skipping it. Notice which arguments survive rule 1 of the ranking
+        ladder.</li>
+      </ol>
     </section>
 
     <!-- 13 -->
@@ -1616,6 +1748,12 @@ html { scroll-behavior: smooth; }
         consider</em>.</li>
         <li><strong>"Choose 2/3" where one option contains two things.</strong> Read the option, not
         the count.</li>
+        <li><strong>The prudent-sounding opposite.</strong> An option describing good general
+        practice that is the <em>inverse</em> of what this stem asked for &mdash; "feasibility to
+        restore deleted records" against a right-to-erasure requirement, "keep the systems in sync
+        on a schedule" against a real-time need. Backups and syncing are virtues in the abstract,
+        which is what makes them work as distractors. Check the option against the stem's actual
+        goal, not against good practice.</li>
       </ol>
 
       <h3>Read the question's own verb</h3>
@@ -1650,7 +1788,8 @@ html { scroll-behavior: smooth; }
             <tr><td class="num">6&ndash;7</td><td>&sect;8 security. Drill the deck's Build questions</td></tr>
             <tr><td class="num">8</td><td>&sect;9 data loads and locking</td></tr>
             <tr><td class="num">9</td><td>&sect;10 middleware vs Salesforce; &sect;11 error handling and monitoring. Drill Maintain questions</td></tr>
-            <tr><td class="num">10&ndash;11</td><td><strong>&sect;12 &mdash; the under-trained 41%.</strong> Re-read the requirements checklist until you can produce it unprompted. Your highest-yield day</td></tr>
+            <tr><td class="num">10</td><td><strong>&sect;12 &mdash; the under-trained 41%.</strong> Requirements checklist until you can produce it unprompted, then the ranking ladder. Drills 1 and 2. Your highest-yield day</td></tr>
+            <tr><td class="num">11</td><td><strong>&sect;12 continued</strong> &mdash; landscape triage on all three deck items until the four rules are automatic; the middleware and privacy shapes. Drills 3 and 4</td></tr>
             <tr><td class="num">12</td><td>&sect;13 stale answers + &sect;14 distractor tells</td></tr>
             <tr><td class="num">13</td><td>Full deck run, timed at 90 s per question</td></tr>
             <tr><td class="num">14</td><td>Re-read &sect;12 and &sect;13. Rest</td></tr>
@@ -1758,7 +1897,7 @@ html { scroll-behavior: smooth; }
   </main>
 
   <footer class="colophon">
-    Compiled from the 133 questions in <code>integration_architect_questions_corrected.json</code>,
+    Compiled from the 141 questions in <code>integration_architect_questions_corrected.json</code>,
     the official Salesforce exam guide (read 24 Aug 2026), and the verified documentation set in
     <code>.claude/skills/factcheck-deck/references/verified-docs.md</code>. Deck-derived facts come
     from a deck that has had a full documentation pass &mdash; 37 correction stamps, 15 answer keys moved

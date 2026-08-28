@@ -2223,3 +2223,37 @@ page. Cite `data.c360_a_insights.htm` directly rather than relying on the alias.
 "Dependencies on Category when Mapping Data Streams"; the article that actually renders
 at that id is "Data 360: Unmap and Delete the SFMC Subscriber Data Stream". Render the id
 before citing it.
+
+---
+
+# Integration Architect — privacy and data deletion (2026-08-27)
+
+Added while fact-checking one candidate import question (`a9031474`, the GDPR-style
+delete-on-demand requirements item). All three rendered at top level and were read at
+**body** level, not title-only.
+
+| Fact | What the page states | Source |
+|---|---|---|
+| Deletion is per-system, not central | "You must submit data deletion requests in **every connected system and Salesforce cloud**." Deletion is not immediate — "typically occurs within hours" — and requests are "reprocessed after 30, 60, and 90 days to delete any added data and to verify full deletion" | Requesting Data Deletion or Right to Be Forgotten |
+| A deletion procedure exists per cloud | The Data Protection and Privacy guide carries a **separate** deletion article for Sales, Service, Experience, Platform, Marketing, B2C Commerce, Data Cloud, Education, Financial Services, Health, Account Engagement, Analytics, Quip and Heroku. There is no one request that covers them all | Data Deletion: Delete Personal Data (hub) |
+| Erasure needs manual steps | The "actions to consider" column is manual throughout: "You can **manually** delete the data from your sandbox"; "**Manually** remove the customer's records from the flow"; and for flow-driven deletion, "Flows might not identify all the data to delete. After your flow finishes, consider running a report to identify any remaining information and then delete it." Removing data from a published ISV package version requires filing a ticket with Salesforce | Data Deletion for the Salesforce Platform |
+| Erasure has functional blast radius | Refreshing a sandbox to clear data: "check with your development teams first. Otherwise, **work may be lost**." Event Monitoring "logs are treated as a **single entity**, which means you can't remove one single user's data from a log" — pinpoint the date range and remove whole logs instead | Data Deletion for the Salesforce Platform |
+| Restorability is the default to defeat | "Deleted items remain in the Recycle Bin for **15 days**, and during that time **they can be restored**." Bulk API / Bulk API 2.0 hard delete "allows records to bypass the Recycle Bin". Salesforce extends the same posture to backups — after deleting a log, "remove specific users' data from your backups" | Deleting Data (LDV); Data Deletion for the Salesforce Platform |
+
+**Why this one matters for item-writing:** it settles a distractor shape rather than a
+mechanism. "Feasibility to restore deleted records" reads as prudent backup practice and
+is the exact **inverse** of a delete-on-demand requirement — restorability is the
+platform default that compliance has to remove. Two published dumps keyed this item
+differently (one chose the restore option), and only the documentation separates them.
+
+- **Requesting Data Deletion or Right to Be Forgotten** — https://help.salesforce.com/s/articleView?id=sf.c360_a_data_deletion_request.htm&language=en_US&type=5
+- **Data Deletion for the Salesforce Platform** — https://help.salesforce.com/s/articleView?id=sf.data_deletion_platform.htm&language=en_US&type=5
+- **Data Deletion: Delete Personal Data (hub)** — https://help.salesforce.com/s/articleView?id=xcloud.data_deletion.htm&language=en_US&type=5
+- **Deleting Data (LDV)** — already on file above, and re-confirmed for the Recycle Bin quote
+
+**WebFetch behaviour, re-confirmed on this pass.** `sf.data_deletion_platform.htm` and
+the LDV page returned full article bodies to WebFetch from this machine.
+`sf.c360_a_data_deletion_request.htm` returned only the SPA nav tree — the known
+intermittent case. The browser resolved it on one top-level `navigate` plus a ~5s wait,
+polling until the title stopped being `Salesforce Help | Article`. Do not re-fetch a
+nav-tree response; WebFetch caches 15 minutes and will hand back the same thing.
