@@ -1,6 +1,6 @@
 # Salesforce Certified Platform Integration Architect — Study Guide
 
-**Built from the 133 questions in `integration_architect_questions_corrected.json`, cross-checked
+**Built from the 141 questions in `integration_architect_questions_corrected.json`, cross-checked
 against the official exam outline and the documentation those questions cite.**
 
 Every fact below traces to a rendered Salesforce page (see [Sources](#16-sources)) or to this
@@ -41,16 +41,16 @@ Official outline weightings, and what they translate to in raw question count:
 
 | Domain | Weight | ≈ Questions | Deck coverage | Verdict |
 |---|---:|---:|---:|---|
-| Evaluate the Current System Landscape | 8% | ~5 | 4 (3%) | **under-trained** |
-| Evaluate Business Needs | 11% | ~7 | 4 (3%) | **under-trained** |
-| Translate Needs to Integration Requirements | 22% | ~13 | 6 (4.5%) | **badly under-trained** |
-| Design Integration Solutions | 28% | ~17 | 68 (51%) | over-represented |
-| Build Solution | 23% | ~14 | 35 (26%) | about right |
-| Maintain Integration | 8% | ~5 | 16 (12%) | over-represented |
+| Evaluate the Current System Landscape | 8% | ~5 | 4 (2.8%) | **under-trained** |
+| Evaluate Business Needs | 11% | ~7 | 4 (2.8%) | **under-trained** |
+| Translate Needs to Integration Requirements | 22% | ~13 | 7 (5.0%) | **badly under-trained** |
+| Design Integration Solutions | 28% | ~17 | 72 (51.1%) | over-represented |
+| Build Solution | 23% | ~14 | 37 (26.2%) | about right |
+| Maintain Integration | 8% | ~5 | 17 (12.1%) | over-represented |
 
 ### The gap you need to close
 
-The first three domains are **41% of the exam — roughly 25 of your 60 questions — and only 10.5%
+The first three domains are **41% of the exam — roughly 25 of your 60 questions — and only 10.6%
 of the deck.** If you drill the deck to 100% and walk in, you have thoroughly rehearsed the
 pattern-picking half of the exam and barely touched the requirements-gathering half.
 
@@ -67,7 +67,9 @@ unreliable per-question: `18073510` and `c7d46b81` are the same lead-migration q
 **Maintain** and **Build**.
 
 But re-classifying all 133 questions independently — by what each one actually tests, ignoring
-`_cat` — lands on the same distribution:
+`_cat` — lands on the same distribution. (This was measured before the 2026-08-25 import added
+7 questions; all 7 landed in Design and Build, so it moved the gap the wrong way, not the right
+one.)
 
 | Domain | Exam | Deck tag | Independent re-tag | Steelman |
 |---|---:|---:|---:|---:|
@@ -90,7 +92,7 @@ that are pure volume/latency-driven proposals (10M transactions/day, 20M records
 90s-vs-9s-gateway item) into Translate. Even then the requirements domains reach 18%, not 41%.
 
 **The fair reframing:** the gap is more in question *form* than in knowledge. Someone who has
-worked 67 Design questions has absorbed much of the underlying judgment. What they have not
+worked 72 Design questions has absorbed much of the underlying judgment. What they have not
 rehearsed is the distinctive *shape* of a Translate item — every option a consideration rather
 than a product, and the right answer "evaluate current and future data usage" over "explore
 out-of-the-box connectors." The deck has 7 of those. The exam will have about 13.
@@ -522,7 +524,7 @@ mock is a separate class the production client never references.
 ## 12. The under-trained 41% — requirements before solutions
 
 This is the material the deck barely covers and the exam weights at 41%. There are no clever
-mechanisms here. There is one habit, and the exam tests it over and over.
+mechanisms here. There is one habit, one ranking rule, and two question shapes.
 
 ### The habit: never solution ahead of analysis
 
@@ -540,6 +542,34 @@ Worked examples from the deck:
 
 Note the shape of the second one: jumping to "inbound integration requirements" **presumes an
 integration is the answer** before the requirement is known. That is the trap.
+
+### The ranking ladder — how to choose between plausible considerations
+
+The habit above tells you what to avoid. It does not help on the hard version of these items,
+where a choose-3 gives you five options that are *all* things a sensible architect would think
+about. `a2ae17cb`, `9fa544c5`, `21e6ad5a` and `998dcfd8` all have that shape, and eliminating on
+"is this reasonable?" fails on every one of them — because they are all reasonable.
+
+Rank the options instead. Apply in order and stop at the first rule that separates them:
+
+1. **Altitude.** Does the option stay at the level the verb asked for? "Consider" and "determine"
+   want a *question to answer*, not a decision already taken. Anything naming a product, a
+   connector, or a middleware vendor drops out here — even when it is the thing you would
+   eventually build. This kills "explore out-of-the-box connectors" and "propose a middleware
+   system" in `2924d322`.
+2. **Measurable.** Between two options at the right altitude, prefer the one whose answer is a
+   number, a direction, or an enumerable list. *Data volume and processing volume* beats
+   *reporting and usability requirements* in `dc227c12` for exactly this reason — one has an
+   answer, the other has an opinion.
+3. **Drives the design.** Prefer the consideration that would *change the integration pattern* if
+   the answer came back differently. Latency, volume, directionality and idempotency all flip the
+   pattern; multi-currency and license choice do not. This is the rule that settles `9fa544c5`.
+4. **In scope for the integration architect.** Program governance, SME availability and
+   integration skills are real project risks and belong to someone else's exam. If an option is
+   about *staffing or running the project* rather than about the interface, drop it.
+
+Rules 1 and 4 are pure elimination and remove about half the option set on sight. Rules 2 and 3
+are what actually pick between the survivors.
 
 ### What to ask — the integration requirements checklist
 
@@ -568,6 +598,24 @@ These are the answer options that score in the Translate domain:
 - **Context-driven authorization** — scope the call to the record the agent is already on
 - Data classification: **Confidential / Secure / Public**
 
+**Privacy, retention and deletion**
+
+A stem that mentions expanding into a new jurisdiction, GDPR-style regulation, or a *right to be
+forgotten* is asking about deletion as an integration requirement. The considerations that score:
+
+- **Can personal data actually be deleted in every system it reached?** An integration that copies
+  a customer record into four systems has created four deletion obligations. The one that cannot
+  comply is usually a legacy or mainframe system, or an analytics store nobody thinks of as a
+  system of record.
+- **What breaks when the record goes?** Downstream functionality, aggregate reporting and
+  referential integrity all depend on records that erasure will remove.
+- **Which steps must be manual?** Systems due for decommissioning rarely get a deletion API. An
+  honest requirements list includes the manual procedure.
+
+What does **not** score: *restoring* deleted records. It reads like prudent backup practice and is
+the direct opposite of what a deletion-on-demand requirement asks for. Also out: keeping a
+360-degree customer view, which is a benefit of the integration, not a requirement of the erasure.
+
 ### What is *not* an integration requirement
 
 These appear as distractors and are consistently wrong:
@@ -576,6 +624,24 @@ These appear as distractors and are consistently wrong:
 - Integration skills, SME availability, program governance
 - License choices and UX design
 - Whether to **migrate** the external system into Salesforce
+
+### The "why bother with middleware" shape
+
+A recurring Translate item puts a sceptical CIO in the stem: *if we have to write custom code
+anyway, why buy middleware?* (`21e6ad5a`). The trap is that the tempting answers — **bulkification**
+and **performance** — are things you can achieve perfectly well in hand-written Apex. They are not
+arguments for middleware.
+
+What middleware buys that per-integration custom code does not:
+
+- **Orchestration** — sequencing calls across several systems, with state, in one place
+- **Error handling** — one consistent retry/dead-letter policy instead of many bespoke ones
+- **Logging and monitoring** — a single audit trail across every interface
+
+The general form: **argue from what centralising gives you, not from what the code can do.**
+Anything a competent developer could hand-roll per interface is not a reason to buy a platform.
+See [§10](#10-choosing-where-the-logic-lives) for when middleware is the answer to a *design*
+question.
 
 ### System of record reasoning
 
@@ -591,10 +657,51 @@ These appear as distractors and are consistently wrong:
 - A system the business explicitly says it wants to **reuse** (Quoting, Order Management) stays and
   gets integrated.
 
-**The landscape question shape:** "which systems should be retired / which should be integrated"
-is answered by crossing the stated goals against Salesforce's native capabilities. Read the
-numbered requirements list carefully — the answer is usually determined by one clause in
-requirement 5.
+### Landscape triage — the method
+
+"Which systems should be retired / which should be integrated" is ~5 questions of your exam and is
+fully mechanical. Do not reason about it in prose. Build the table:
+
+**One row per system in the landscape. One column: does Salesforce natively replace it?**
+
+Then apply, in order:
+
+1. **The stem's explicit keeps win over everything.** If a numbered requirement says "reuse
+   enterprise capabilities for Quoting and Order Management", those two are integrated no matter
+   how well Salesforce could replace them. This single clause decides `73466e15`: Salesforce
+   *could* do quoting, but goal (3) says reuse it, so Quoting and OMS survive and the answer is
+   the other three.
+2. **A named system of record is never retired.** `3262c8d0` says MDM is the system of record for
+   customers and ERP for pricing — so both are in the integration list, and options offering a
+   separate *Inventory* or *Pricing Engine* are wrong because the stem already told you those
+   facts live in ERP.
+3. **Integrate with the data store, not the tool sitting on it.** Both landscape items in the deck
+   turn on this. `47d1f854` and `3262c8d0` each include the **Data Warehouse** and exclude the
+   **BI/Analytics tool** it feeds — you integrate with where the data is, and the dashboard
+   downstream comes along for free. An option naming the BI tool is a reliable wrong answer.
+4. **Only then, retire what Salesforce natively covers.** Case Management → Service Cloud. Email
+   Marketing → Marketing Cloud. Sales Activity → Sales Cloud.
+
+Note the ordering: rules 1–3 are all *read the stem more carefully*, and they decide the question
+before native capability ever comes up. The instinct to start at rule 4 is what makes these
+items feel ambiguous when they are not.
+
+### Drills
+
+The deck cannot give you reps here, so generate your own. These are reasoning drills, not
+questions — do them out loud.
+
+1. **Reconstruct the checklist cold.** Write the three requirement groups above from memory. Then
+   check. Anything you missed is what you will miss on the exam.
+2. **Re-rank a Design question.** Take any deck question that names a pattern in its answer, and
+   ask: *what would I have had to find out to arrive at that pattern?* Write the three questions.
+   That is the Translate item hiding behind every Design item, and it is the cheapest way to turn
+   the deck's over-representation into practice you actually need.
+3. **Run the landscape table.** For `73466e15`, `47d1f854` and `3262c8d0`, build the table and
+   apply the four rules in order. You should reach the key without weighing options against each
+   other.
+4. **Argue the CIO both ways.** Justify middleware to a sceptic in three bullets, then justify
+   skipping it. Notice which arguments survive rule 1 of the ranking ladder.
 
 ---
 
@@ -645,6 +752,11 @@ Patterns in how this exam writes wrong answers.
 8. **An implementation choice dressed as a requirement.** "Maintain the back-end credentials in
    Salesforce" is a *how*, offered where the question asks *what to consider*.
 9. **"Choose 2/3" where one option contains two things.** Read the option, not the count.
+10. **The prudent-sounding opposite.** An option describing good general practice that is the
+    *inverse* of what this stem asked for — "feasibility to restore deleted records" against a
+    right-to-erasure requirement, "keep the systems in sync on a schedule" against a real-time
+    need. Backups and syncing are virtues in the abstract, which is what makes them work as
+    distractors. Check the option against the stem's actual goal, not against good practice.
 
 ### Read the question's own verb
 
@@ -672,7 +784,8 @@ Weighted toward where the points are, not where the deck is.
 | 6–7 | §8 security. Drill the deck's Build questions |
 | 8 | §9 data loads and locking |
 | 9 | §10 middleware vs Salesforce; §11 error handling and monitoring. Drill Maintain questions |
-| **10–11** | **§12 — the under-trained 41%.** Re-read the requirements checklist until you can produce it unprompted. This is your highest-yield day |
+| **10** | **§12 — the under-trained 41%.** Requirements checklist until you can produce it unprompted, then the ranking ladder. Do drills 1 and 2. Your highest-yield day |
+| **11** | **§12 continued** — landscape triage on all three deck items until the four rules are automatic; the middleware and privacy shapes. Do drills 3 and 4 |
 | 12 | §13 stale answers + §14 distractor tells |
 | 13 | Full deck run, timed at 90 s/question |
 | 14 | Re-read §12 and §13. Rest |
@@ -770,5 +883,5 @@ read aloud.
 
 ---
 
-*Generated from the 133-question integration deck, the official exam guide (read 2026-08-24), and
+*Generated from the 141-question integration deck, the official exam guide (read 2026-08-24), and
 the verified documentation set in `.claude/skills/factcheck-deck/references/verified-docs.md`.*
