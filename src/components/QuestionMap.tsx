@@ -1,14 +1,24 @@
 import { useMemo, useEffect, useRef } from 'react';
-import { useQuiz } from '@/state/quizStore';
+import { useQuiz, useSetInfo } from '@/state/quizStore';
+import { setRange } from '@/lib/sets';
 
 export function QuestionMap() {
   const questions = useQuiz((s) => s.questions);
   const progress = useQuiz((s) => s.progress);
   const status = useQuiz((s) => s.status);
   const goTo = useQuiz((s) => s.goTo);
+  const goToSet = useQuiz((s) => s.goToSet);
+  const { boundaries, count, setIdx, start, end } = useSetInfo();
 
   const flagged = useMemo(() => new Set(progress.flagged), [progress.flagged]);
   const skipped = useMemo(() => new Set(progress.skipped), [progress.skipped]);
+
+  // Cells for the current set only. Numbers stay deck-wide, so Q37 still reads
+  // as Q37 rather than restarting at 1 in every set.
+  const cells = useMemo(
+    () => questions.slice(start, end).map((q, i) => ({ q, i: start + i })),
+    [questions, start, end],
+  );
 
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const curRef = useRef<HTMLButtonElement | null>(null);
@@ -24,35 +34,81 @@ export function QuestionMap() {
   }, [progress.currentIdx]);
 
   return (
-    <div ref={wrapRef} className="max-h-[280px] overflow-y-auto pr-1">
-      <div className="grid grid-cols-8 gap-1.5">
-        {questions.map((q, i) => {
-          const st = status(i);
-          const isCur = i === progress.currentIdx;
-          const isFlag = flagged.has(i);
-          const isSkip = skipped.has(i);
-          return (
-            <button
-              key={i}
-              ref={isCur ? curRef : undefined}
-              onClick={() => goTo(i)}
-              title={`Q${i + 1} · ${st}${isFlag ? ' · flagged' : ''} · ${q._cat}`}
-              className="relative flex aspect-square items-center justify-center rounded-[6px] border font-mono text-[10px] tabular-nums transition-all hover:scale-[1.05]"
-              style={cellStyle(st, isCur, isSkip)}
-            >
-              <span style={{ color: cellTextColor(st, isCur) }}>{i + 1}</span>
-              {isFlag ? (
-                <span
-                  className="absolute right-[2px] top-[2px] h-1 w-1 rounded-full"
-                  style={{ background: 'var(--warning)' }}
-                />
-              ) : null}
-            </button>
-          );
-        })}
-      </div>
+    <div>
+      {count > 1 ? (
+        <div className="mb-2.5 flex flex-wrap gap-1">
+          {Array.from({ length: count }, (_, n) => {
+            const range = setRange(n, boundaries);
+            let answered = 0;
+            for (let i = range.start; i < range.end; i++) {
+              if (progress.submitted[i]) answered++;
+            }
+            const size = range.end - range.start;
+            const done = size > 0 && answered === size;
+            const isCur = n === setIdx;
+            return (
+              <button
+                key={n}
+                onClick={() => goToSet(n)}
+                title={`Set ${n + 1} · Q${range.start + 1}–${range.end} · ${answered}/${size} answered`}
+                className="rounded-[5px] border px-2 py-[3px] font-mono text-[10px] tabular-nums transition-colors"
+                style={
+                  isCur
+                    ? {
+                        background: 'var(--accent-bg)',
+                        borderColor: 'var(--accent-border)',
+                        color: 'var(--accent)',
+                      }
+                    : done
+                      ? {
+                          background: 'var(--success-bg)',
+                          borderColor: 'var(--success-border)',
+                          color: 'var(--success)',
+                        }
+                      : {
+                          background: 'transparent',
+                          borderColor: 'var(--border-default)',
+                          color: 'var(--text-secondary)',
+                        }
+                }
+              >
+                Set {n + 1}
+              </button>
+            );
+          })}
+        </div>
+      ) : null}
 
-      <Legend />
+      <div ref={wrapRef} className="max-h-[280px] overflow-y-auto pr-1">
+        <div className="grid grid-cols-8 gap-1.5">
+          {cells.map(({ q, i }) => {
+            const st = status(i);
+            const isCur = i === progress.currentIdx;
+            const isFlag = flagged.has(i);
+            const isSkip = skipped.has(i);
+            return (
+              <button
+                key={i}
+                ref={isCur ? curRef : undefined}
+                onClick={() => goTo(i)}
+                title={`Q${i + 1} · ${st}${isFlag ? ' · flagged' : ''} · ${q._cat}`}
+                className="relative flex aspect-square items-center justify-center rounded-[6px] border font-mono text-[10px] tabular-nums transition-all hover:scale-[1.05]"
+                style={cellStyle(st, isCur, isSkip)}
+              >
+                <span style={{ color: cellTextColor(st, isCur) }}>{i + 1}</span>
+                {isFlag ? (
+                  <span
+                    className="absolute right-[2px] top-[2px] h-1 w-1 rounded-full"
+                    style={{ background: 'var(--warning)' }}
+                  />
+                ) : null}
+              </button>
+            );
+          })}
+        </div>
+
+        <Legend />
+      </div>
     </div>
   );
 }
