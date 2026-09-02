@@ -1,6 +1,18 @@
 import type { DeckProgress, Question } from '@/types';
+import { DEFAULT_SET_SIZE } from '@/lib/sets';
 
 export const PROGRESS_KEY = (deckId: string) => `quiz:progress:${deckId}`;
+
+/**
+ * A stored `setSize` from an older blob may be missing entirely, or garbage.
+ * Both load branches spread `...parsed`, so without this a bad value would ride
+ * straight through into the boundary math.
+ */
+function coerceSetSize(value: unknown): number {
+  const n = Number(value);
+  if (!Number.isFinite(n) || n < 0) return DEFAULT_SET_SIZE;
+  return Math.floor(n);
+}
 
 function buildQuestionOrder(total: number): number[] {
   return Array.from({ length: total }, (_, i) => i);
@@ -169,6 +181,7 @@ export function emptyProgress(total: number, questionSignatures?: string[]): Dec
     timeOnQ: Array(total).fill(0),
     questionOrder: buildQuestionOrder(total),
     questionSignatures: questionSignatures ?? [],
+    setSize: DEFAULT_SET_SIZE,
   };
 }
 
@@ -209,6 +222,7 @@ export function loadProgress(deckId: string, questions: Question[]): DeckProgres
             ? parsed.questionOrder
             : base.questionOrder,
         questionSignatures: signatures,
+        setSize: coerceSetSize(parsed.setSize),
       };
     }
 
@@ -234,6 +248,7 @@ export function loadProgress(deckId: string, questions: Question[]): DeckProgres
       timeOnQ,
       questionOrder,
       questionSignatures: signatures,
+      setSize: coerceSetSize(parsed.setSize),
     };
   } catch {
     return emptyProgress(total, signatures);

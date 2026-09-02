@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { create } from 'zustand';
 import type { DeckMeta, DeckProgress, Question } from '@/types';
 import {
@@ -8,18 +9,7 @@ import {
   clearProgress,
 } from '@/lib/storage';
 import { isCorrect as isCorrectFn } from '@/lib/quiz';
-
-function applyQuestionOrder(questions: Question[], order: number[]): Question[] {
-  if (order.length !== questions.length) return questions;
-  const seen = new Set<number>();
-  for (const idx of order) {
-    if (!Number.isInteger(idx) || idx < 0 || idx >= questions.length || seen.has(idx)) {
-      return questions;
-    }
-    seen.add(idx);
-  }
-  return order.map((idx) => questions[idx]);
-}
+import { applyQuestionOrder, setInfoFor, setRange, type SetInfo } from '@/lib/sets';
 
 function shuffleOrder(total: number): number[] {
   const out = Array.from({ length: total }, (_, i) => i);
@@ -47,12 +37,16 @@ type State = {
   skip: () => void;
   setNote: (note: string) => void;
   restart: () => void;
+  restartSet: () => void;
   jumpToNextUnseen: () => void;
   pauseSession: () => void;
   resumeSession: () => void;
+  setSetSize: (size: number) => void;
+  goToSet: (setIdx: number) => void;
 
   // selectors
   status: (idx: number) => 'unseen' | 'correct' | 'wrong' | 'skipped';
+  setInfo: () => SetInfo;
 };
 
 export const useQuiz = create<State>((set, get) => ({
@@ -150,10 +144,14 @@ export const useQuiz = create<State>((set, get) => ({
     saveProgress(deck.id, next);
   },
 
+  // Sequential movement stops at the set boundary — that stop is the whole point
+  // of chunking. Deliberate jumps (goTo from the question map or a topic) still
+  // cross freely; the boundary shapes the flow, it doesn't lock the deck.
   next: () => {
-    const { progress, questions } = get();
+    const { progress } = get();
     const idx = progress.currentIdx;
-    if (idx < questions.length - 1) {
+    const { end } = get().setInfo();
+    if (idx < end - 1) {
       get().goTo(idx + 1);
     }
   },
@@ -178,7 +176,7 @@ export const useQuiz = create<State>((set, get) => ({
   },
 
   skip: () => {
-    const { progress, questions, deck } = get();
+    const { progress, deck } = get();
     if (!deck) return;
     const idx = progress.currentIdx;
     if (progress.submitted[idx]) {
@@ -190,7 +188,7 @@ export const useQuiz = create<State>((set, get) => ({
     const next: DeckProgress = { ...progress, skipped: [...set_] };
     set({ progress: next });
     saveProgress(deck.id, next);
-    if (idx < questions.length - 1) get().goTo(idx + 1);
+    if (idx < get().setInfo().end - 1) get().goTo(idx + 1);
   },
 
   setNote: (note) => {
@@ -206,15 +204,85 @@ export const useQuiz = create<State>((set, get) => ({
   },
 
   restart: () => {
-    const { deck, questions } = get();
+    const { deck, questions, progress } = get();
     if (!deck) return;
     clearProgress(deck.id);
     const fresh = emptyProgressForQuestions(questions);
     const nextOrder = shuffleOrder(questions.length);
     const shuffledQuestions = applyQuestionOrder(questions, nextOrder);
-    const nextProgress: DeckProgress = { ...fresh, questionOrder: nextOrder };
+    // The chosen set size is a preference, not progress — it survives a reset.
+    const nextProgress: DeckProgress = {
+      ...fresh,
+      questionOrder: nextOrder,
+      setSize: progress.setSize,
+    };
     set({ questions: shuffledQuestions, progress: nextProgress, questionStartTime: Date.now() });
     saveProgress(deck.id, nextProgress);
+  },
+
+  /**
+   * Clear just the current set, leaving every other set's work alone. Questions
+   * keep their position — reshuffling here would move questions between sets and
+   * silently rewrite what the untouched sets contain.
+   */
+  restartSet: () => {
+    const { deck, progress } = get();
+    if (!deck) return;
+    const { start, end } = get().setInfo();
+
+    const answers = { ...progress.answers };
+    const submitted = { ...progress.submitted };
+    const notes = { ...progress.notes };
+    const timeOnQ = [...progress.timeOnQ];
+    for (let i = start; i < end; i++) {
+      delete answers[i];
+      delete submitted[i];
+      delete notes[i];
+      timeOnQ[i] = 0;
+    }
+    const inSet = (i: number) => i >= start && i < end;
+
+    const next: DeckProgress = {
+      ...progress,
+      answers,
+      submitted,
+      notes,
+      timeOnQ,
+      flagged: progress.flagged.filter((i) => !inSet(i)),
+      skipped: progress.skipped.filter((i) => !inSet(i)),
+      currentIdx: start,
+    };
+    set({ progress: next, questionStartTime: Date.now() });
+    saveProgress(deck.id, next);
+  },
+
+  /**
+   * Change how many questions a set holds. Purely a re-slice: no answer is
+   * touched and the current question stays put, so the active set simply
+   * re-resolves around wherever the learner already was.
+   */
+  setSetSize: (size) => {
+    const { deck, progress } = get();
+    if (!deck) return;
+    const next: DeckProgress = { ...progress, setSize: Math.max(0, Math.floor(size) || 0) };
+    set({ progress: next });
+    saveProgress(deck.id, next);
+  },
+
+  /** Open a set at its first unanswered question, or at its start if it is done. */
+  goToSet: (setIdx) => {
+    const { progress, questions } = get();
+    const boundaries = setInfoFor(questions.length, progress.setSize, progress.currentIdx)
+      .boundaries;
+    const { start, end } = setRange(setIdx, boundaries);
+    if (end <= start) return;
+    for (let i = start; i < end; i++) {
+      if (!progress.submitted[i]) {
+        get().goTo(i);
+        return;
+      }
+    }
+    get().goTo(start);
   },
 
   pauseSession: () => {
@@ -250,12 +318,28 @@ export const useQuiz = create<State>((set, get) => ({
     set({ progress: next, questionStartTime: now });
   },
 
+  /**
+   * Prefer an unseen question inside the current set; only once the set is
+   * finished does this fall through to the rest of the deck. Wrapping straight
+   * past the boundary would undo the chunking on a single click.
+   */
   jumpToNextUnseen: () => {
     const { progress, questions } = get();
     const total = questions.length;
-    const start = progress.currentIdx;
+    const cur = progress.currentIdx;
+    const { start, end } = get().setInfo();
+
+    const setLen = end - start;
+    for (let off = 1; off <= setLen; off++) {
+      const i = start + ((cur - start + off) % setLen);
+      if (!progress.submitted[i]) {
+        get().goTo(i);
+        return;
+      }
+    }
+
     for (let off = 1; off < total; off++) {
-      const i = (start + off) % total;
+      const i = (cur + off) % total;
       if (!progress.submitted[i]) {
         get().goTo(i);
         return;
@@ -274,4 +358,29 @@ export const useQuiz = create<State>((set, get) => ({
     if (progress.skipped.includes(idx)) return 'skipped';
     return 'unseen';
   },
+
+  /**
+   * The one place the set boundary is computed. The action bar, the keyboard
+   * shortcuts and the store's own clamps all read it from here, so their idea of
+   * "last question of the set" cannot drift apart.
+   */
+  setInfo: () => {
+    const { questions, progress } = get();
+    return setInfoFor(questions.length, progress.setSize, progress.currentIdx);
+  },
 }));
+
+/**
+ * Component-side view of the current set.
+ *
+ * Deliberately not `useQuiz((s) => s.setInfo())`: that selector builds a fresh
+ * object on every store read, which React 18's `useSyncExternalStore` treats as
+ * a changed snapshot. Selecting the three primitives and memoizing keeps the
+ * identity stable.
+ */
+export function useSetInfo(): SetInfo {
+  const total = useQuiz((s) => s.questions.length);
+  const setSize = useQuiz((s) => s.progress.setSize);
+  const currentIdx = useQuiz((s) => s.progress.currentIdx);
+  return useMemo(() => setInfoFor(total, setSize, currentIdx), [total, setSize, currentIdx]);
+}

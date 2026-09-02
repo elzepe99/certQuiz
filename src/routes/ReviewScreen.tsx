@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { ChevronDown, ChevronRight, Flag } from 'lucide-react';
 import { TopBar } from '@/components/TopBar';
 import { useDeck, useManifest } from '@/lib/decks';
 import { loadProgress } from '@/lib/storage';
+import { applyQuestionOrder, clampSetIndex, setBoundaries, setRange } from '@/lib/sets';
 import { isCorrect, parseExplanation, getOptions } from '@/lib/quiz';
 import { CorrectionNotice } from '@/components/CorrectionNotice';
 import { RichText } from '@/components/RichText';
@@ -14,8 +15,14 @@ export function ReviewScreen() {
   const manifest = useManifest();
   const deckLoad = useDeck(deckId);
 
+  const [searchParams] = useSearchParams();
+  const setParam = searchParams.get('set');
+
   const [topicFilter, setTopicFilter] = useState<string | null>(null);
   const [flaggedOnly, setFlaggedOnly] = useState(false);
+  // Arriving from a set's results screen starts scoped to that set; arriving
+  // from anywhere else shows the whole deck.
+  const [setOnly, setSetOnly] = useState(setParam !== null);
   const [expanded, setExpanded] = useState<Record<number, boolean>>({});
 
   const decks = manifest.status === 'ready' ? manifest.decks : undefined;
@@ -23,24 +30,39 @@ export function ReviewScreen() {
   const data = useMemo(() => {
     if (deckLoad.status !== 'ready' || !deckId) return null;
     const p = loadProgress(deckId, deckLoad.questions);
+    // Saved progress is indexed by *display* position, so the deck must be put
+    // into display order before the two are read against each other.
+    const questions = applyQuestionOrder(deckLoad.questions, p.questionOrder);
     const flaggedSet = new Set(p.flagged);
+
+    const boundaries = setBoundaries(questions.length, p.setSize);
+    const setCount = Math.max(1, boundaries.length - 1);
+    const setIdx = setParam !== null ? clampSetIndex(Number(setParam), boundaries) : 0;
+    const range = setRange(setIdx, boundaries);
+
     const wrong: Array<{
       i: number;
-      q: (typeof deckLoad.questions)[number];
+      q: (typeof questions)[number];
       selected: string;
       flagged: boolean;
+      inSet: boolean;
     }> = [];
-    for (let i = 0; i < deckLoad.questions.length; i++) {
+    for (let i = 0; i < questions.length; i++) {
       if (!p.submitted[i]) continue;
-      const q = deckLoad.questions[i];
+      const q = questions[i];
       const sel = p.answers[i] ?? '';
       if (!isCorrect(sel, q.correct)) {
-        wrong.push({ i, q, selected: sel, flagged: flaggedSet.has(i) });
+        wrong.push({
+          i,
+          q,
+          selected: sel,
+          flagged: flaggedSet.has(i),
+          inSet: i >= range.start && i < range.end,
+        });
       }
     }
-    const topics = Array.from(new Set(wrong.map((w) => w.q._cat || 'General'))).sort();
-    return { wrong, topics };
-  }, [deckLoad, deckId]);
+    return { wrong, setIdx, setCount, hasSets: setCount > 1 && setParam !== null };
+  }, [deckLoad, deckId, setParam]);
 
   if (deckLoad.status === 'loading' || !data) {
     return (
@@ -70,11 +92,16 @@ export function ReviewScreen() {
     );
   }
 
+  const scoped = data.hasSets && setOnly;
   const filtered = data.wrong.filter((w) => {
+    if (scoped && !w.inSet) return false;
     if (topicFilter && (w.q._cat || 'General') !== topicFilter) return false;
     if (flaggedOnly && !w.flagged) return false;
     return true;
   });
+  const inScope = scoped ? data.wrong.filter((w) => w.inSet) : data.wrong;
+  // Topic chips follow the scope, so a topic never offers to filter to nothing.
+  const topics = Array.from(new Set(inScope.map((w) => w.q._cat || 'General'))).sort();
 
   return (
     <div className="flex h-screen flex-col" style={{ background: 'var(--bg-canvas)' }}>
@@ -99,10 +126,22 @@ export function ReviewScreen() {
           </div>
 
           <p className="mt-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
-            {data.wrong.length} wrong-answered{' '}
-            {data.wrong.length === 1 ? 'question' : 'questions'}
-            {data.wrong.length === 0 ? ' — nothing to review yet.' : '.'}
+            {inScope.length} wrong-answered{' '}
+            {inScope.length === 1 ? 'question' : 'questions'}
+            {scoped ? ` in set ${data.setIdx + 1}` : ''}
+            {inScope.length === 0 ? ' — nothing to review yet.' : '.'}
           </p>
+
+          {data.hasSets ? (
+            <div className="mt-5 flex flex-wrap items-center gap-2">
+              <FilterChip active={setOnly} onClick={() => setSetOnly(true)}>
+                Set {data.setIdx + 1}
+              </FilterChip>
+              <FilterChip active={!setOnly} onClick={() => setSetOnly(false)}>
+                Whole deck
+              </FilterChip>
+            </div>
+          ) : null}
 
           {data.wrong.length > 0 ? (
             <div className="mt-5 flex flex-wrap items-center gap-2">
@@ -112,7 +151,7 @@ export function ReviewScreen() {
               >
                 All topics
               </FilterChip>
-              {data.topics.map((t) => (
+              {topics.map((t) => (
                 <FilterChip
                   key={t}
                   active={topicFilter === t}

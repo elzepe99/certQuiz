@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { RotateCcw, ArrowRight } from 'lucide-react';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { RotateCcw, ArrowRight, Eraser } from 'lucide-react';
 import { TopBar } from '@/components/TopBar';
 import { QuestionMap } from '@/components/QuestionMap';
 import { TopicsList } from '@/components/TopicsList';
@@ -13,8 +13,9 @@ import { SessionTimer } from '@/components/SessionTimer';
 import { PerformanceCard } from '@/components/PerformanceCard';
 import { RightPanel, type RightPaneId } from '@/components/RightPanel';
 import { useDeck, useManifest } from '@/lib/decks';
-import { useQuiz } from '@/state/quizStore';
+import { useQuiz, useSetInfo } from '@/state/quizStore';
 import { isMultiCorrectPrompt } from '@/lib/quiz';
+import { SET_SIZE_OPTIONS } from '@/lib/sets';
 import { useShortcuts } from '@/lib/shortcuts';
 
 export function QuizView() {
@@ -22,14 +23,20 @@ export function QuizView() {
   const navigate = useNavigate();
   const manifest = useManifest();
   const deckLoad = useDeck(deckId);
+  const [searchParams] = useSearchParams();
 
   const loadDeck = useQuiz((s) => s.loadDeck);
   const idx = useQuiz((s) => s.progress.currentIdx);
   const questions = useQuiz((s) => s.questions);
   const restart = useQuiz((s) => s.restart);
+  const restartSet = useQuiz((s) => s.restartSet);
   const jumpToNextUnseen = useQuiz((s) => s.jumpToNextUnseen);
+  const goToSet = useQuiz((s) => s.goToSet);
+  const setSetSize = useQuiz((s) => s.setSetSize);
+  const setSize = useQuiz((s) => s.progress.setSize);
   const submitted = useQuiz((s) => s.progress.submitted);
   const total = questions.length;
+  const { setIdx, count, start, end, size } = useSetInfo();
 
   const [paneTab, setPaneTab] = useState<RightPaneId>('comments');
 
@@ -39,8 +46,24 @@ export function QuizView() {
     }
   }, [deckLoad, loadDeck]);
 
+  // "Start set 3 →" arrives as /deck/:id?set=2. Consume it once the deck is in
+  // the store, then strip it so a refresh doesn't fling the reader back to the
+  // top of the set they have since moved on from.
+  useEffect(() => {
+    if (deckLoad.status !== 'ready' || !deckId) return;
+    const raw = searchParams.get('set');
+    if (raw === null) return;
+    const n = Number(raw);
+    if (Number.isInteger(n) && n >= 0) goToSet(n);
+    // Not `setSearchParams({})`: react-router turns an empty param set into a
+    // bare "?", which resolves relative and drops the reader on the deck picker.
+    navigate(`/deck/${deckId}`, { replace: true });
+  }, [deckLoad.status, deckId, searchParams, navigate, goToSet]);
+
+  // The set number rides in the query string so the results screen still knows
+  // which set was just finished after a reload.
   const handleFinish = () => {
-    if (deckId) navigate(`/deck/${deckId}/complete`);
+    if (deckId) navigate(`/deck/${deckId}/complete?set=${setIdx}`);
   };
 
   useShortcuts({ onFinish: handleFinish });
@@ -51,7 +74,14 @@ export function QuizView() {
     [q],
   );
   const answeredCount = Object.keys(submitted).length;
-  const sessionPct = total > 0 ? Math.round((answeredCount / total) * 100) : 0;
+
+  // Progress is reported for the set being worked, with the deck-wide figure
+  // kept underneath — the set is the sitting, the deck is the campaign.
+  let setAnswered = 0;
+  for (let i = start; i < end; i++) {
+    if (submitted[i]) setAnswered++;
+  }
+  const setPct = size > 0 ? Math.round((setAnswered / size) * 100) : 0;
 
   if (deckLoad.status === 'loading') {
     return (
@@ -136,15 +166,17 @@ export function QuizView() {
               className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.12em]"
               style={{ color: 'var(--text-faint)' }}
             >
-              {total} questions
+              {count > 1 ? `Set ${setIdx + 1} of ${count} · ${size} questions` : `${total} questions`}
             </div>
             <div className="mt-3 flex items-baseline justify-between font-mono text-[10.5px]">
-              <span style={{ color: 'var(--text-secondary)' }}>Session progress</span>
+              <span style={{ color: 'var(--text-secondary)' }}>
+                {count > 1 ? 'Set progress' : 'Session progress'}
+              </span>
               <span
                 className="font-semibold tabular-nums"
                 style={{ color: 'var(--accent)' }}
               >
-                {sessionPct}%
+                {setPct}%
               </span>
             </div>
             <div
@@ -153,9 +185,17 @@ export function QuizView() {
             >
               <div
                 className="h-full rounded-full transition-[width] duration-300"
-                style={{ width: `${sessionPct}%`, background: 'var(--accent)' }}
+                style={{ width: `${setPct}%`, background: 'var(--accent)' }}
               />
             </div>
+            {count > 1 ? (
+              <div
+                className="mt-2 font-mono text-[10px] tabular-nums"
+                style={{ color: 'var(--text-faint)' }}
+              >
+                Deck · {answeredCount} / {total} answered
+              </div>
+            ) : null}
           </div>
 
           {/* Question map */}
@@ -163,7 +203,7 @@ export function QuizView() {
             <h4 className="mb-2.5 flex items-center justify-between font-mono text-[10px] font-medium uppercase tracking-[0.16em]">
               <span style={{ color: 'var(--text-faint)' }}>Questions</span>
               <span style={{ color: 'var(--text-secondary)' }}>
-                {answeredCount} / {total}
+                {count > 1 ? `${setAnswered} / ${size}` : `${answeredCount} / ${total}`}
               </span>
             </h4>
             <QuestionMap />
@@ -185,6 +225,55 @@ export function QuizView() {
             className="mt-5 flex flex-col gap-1 border-t pt-4"
             style={{ borderColor: 'var(--border-subtle)' }}
           >
+            <div
+              className="mb-1 font-mono text-[10px] font-medium uppercase tracking-[0.16em]"
+              style={{ color: 'var(--text-faint)' }}
+            >
+              Questions per set
+            </div>
+            <div className="mb-2 flex gap-1">
+              {SET_SIZE_OPTIONS.map((opt) => {
+                const active = setSize === opt;
+                return (
+                  <button
+                    key={opt}
+                    onClick={() => setSetSize(opt)}
+                    title={
+                      opt === 0
+                        ? 'One set — the whole deck, as it was before'
+                        : `Split into balanced sets of at most ${opt}`
+                    }
+                    className="flex-1 rounded-[6px] border py-1 font-mono text-[11px] tabular-nums transition-colors"
+                    style={
+                      active
+                        ? {
+                            background: 'var(--accent-bg)',
+                            borderColor: 'var(--accent-border)',
+                            color: 'var(--accent)',
+                          }
+                        : {
+                            background: 'transparent',
+                            borderColor: 'var(--border-default)',
+                            color: 'var(--text-secondary)',
+                          }
+                    }
+                  >
+                    {opt === 0 ? 'All' : opt}
+                  </button>
+                );
+              })}
+            </div>
+            {count > 1 ? (
+              <SidebarAction
+                icon={<Eraser size={13} />}
+                label={`Restart set ${setIdx + 1}`}
+                onClick={() => {
+                  if (window.confirm(`Clear your answers for set ${setIdx + 1}?`)) {
+                    restartSet();
+                  }
+                }}
+              />
+            ) : null}
             <SidebarAction
               icon={<RotateCcw size={13} />}
               label="Restart deck"
@@ -217,12 +306,14 @@ export function QuizView() {
               cat={q._cat || 'General'}
               idx={idx}
               total={total}
+              setLabel={count > 1 ? `Set ${setIdx + 1} of ${count}` : undefined}
             />
 
             <div className="mt-5 flex flex-wrap items-center gap-2">
               <Chip accent>{q._cat || 'General'}</Chip>
               {isMulti ? <Chip>Multi-correct</Chip> : null}
               <span className="flex-1" />
+              {count > 1 ? <Chip muted>Set {setIdx + 1}/{count}</Chip> : null}
               <Chip muted>
                 Q · {String(idx + 1).padStart(3, '0')} / {total}
               </Chip>
@@ -270,16 +361,24 @@ function Breadcrumbs({
   cat,
   idx,
   total,
+  setLabel,
 }: {
   deckName: string;
   cat: string;
   idx: number;
   total: number;
+  setLabel?: string;
 }) {
   return (
     <div className="flex items-center gap-2.5 font-mono text-[10.5px] uppercase tracking-[0.14em]">
       <span style={{ color: 'var(--text-secondary)' }}>{deckName}</span>
       <span style={{ color: 'var(--text-faint)' }}>/</span>
+      {setLabel ? (
+        <>
+          <span style={{ color: 'var(--text-secondary)' }}>{setLabel}</span>
+          <span style={{ color: 'var(--text-faint)' }}>/</span>
+        </>
+      ) : null}
       <span style={{ color: 'var(--text-secondary)' }}>{cat}</span>
       <span style={{ color: 'var(--text-faint)' }}>/</span>
       <span style={{ color: 'var(--accent)' }}>

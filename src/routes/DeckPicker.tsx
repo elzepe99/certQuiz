@@ -3,14 +3,22 @@ import { useEffect, useMemo, useState } from 'react';
 import { TopBar } from '@/components/TopBar';
 import { loadDeckQuestions, useManifest } from '@/lib/decks';
 import { loadProgress } from '@/lib/storage';
+import { applyQuestionOrder, setBoundaries, setIndexOf } from '@/lib/sets';
 import { isCorrect } from '@/lib/quiz';
 import type { DeckMeta } from '@/types';
 import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
 
-type SummaryMap = Record<
-  string,
-  { total: number; answered: number; correct: number; accuracy: number } | null
->;
+type DeckSummary = {
+  total: number;
+  answered: number;
+  correct: number;
+  accuracy: number;
+  /** Which set the reader left off in, and how many the deck splits into. */
+  setIdx: number;
+  setCount: number;
+};
+
+type SummaryMap = Record<string, DeckSummary | null>;
 
 const PAGE_SIZE = 9;
 
@@ -55,18 +63,24 @@ export function DeckPicker() {
       for (const deck of visibleDecks) {
         if (cancelled) return;
         try {
-          const qs = await loadDeckQuestions(deck);
-          const p = loadProgress(deck.id, qs);
+          const raw = await loadDeckQuestions(deck);
+          const p = loadProgress(deck.id, raw);
+          // Progress is indexed by display position, so the deck has to be put
+          // into display order before the two are read against each other.
+          const qs = applyQuestionOrder(raw, p.questionOrder);
           const submittedIdxs = Object.keys(p.submitted).map(Number);
           let correct = 0;
           for (const i of submittedIdxs) {
             if (qs[i] && isCorrect(p.answers[i], qs[i].correct)) correct++;
           }
+          const boundaries = setBoundaries(qs.length, p.setSize);
           const summary = {
             total: qs.length,
             answered: submittedIdxs.length,
             correct,
             accuracy: submittedIdxs.length ? correct / submittedIdxs.length : 0,
+            setIdx: setIndexOf(p.currentIdx, boundaries),
+            setCount: Math.max(1, boundaries.length - 1),
           };
           if (!cancelled) setSummaries((prev) => ({ ...prev, [deck.id]: summary }));
         } catch {
@@ -241,7 +255,7 @@ function DeckCard({
   summary,
 }: {
   deck: DeckMeta;
-  summary: { total: number; answered: number; correct: number; accuracy: number } | null;
+  summary: DeckSummary | null;
 }) {
   const accent = deck.accentColor || '#7AB8FF';
   const pct = summary && summary.total > 0 ? Math.round((summary.answered / summary.total) * 100) : 0;
@@ -287,6 +301,12 @@ function DeckCard({
             {summary
               ? `${summary.answered} / ${summary.total} answered`
               : 'No attempts yet'}
+            {summary && summary.setCount > 1 ? (
+              <span style={{ color: 'var(--text-faint)' }}>
+                {' '}
+                · set {summary.setIdx + 1} of {summary.setCount}
+              </span>
+            ) : null}
           </span>
           {accuracyPct !== null ? (
             <span>

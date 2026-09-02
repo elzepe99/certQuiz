@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useQuiz } from '@/state/quizStore';
+import { useQuiz, useSetInfo } from '@/state/quizStore';
 import { isCorrect } from '@/lib/quiz';
 
 export function PerformanceCard() {
@@ -8,30 +8,43 @@ export function PerformanceCard() {
   const answers = useQuiz((s) => s.progress.answers);
   const submitted = useQuiz((s) => s.progress.submitted);
   const flagged = useQuiz((s) => s.progress.flagged);
+  const { count, start: setStart, end: setEnd, size: setSize } = useSetInfo();
 
+  // Scoped to the set being worked — this card answers "how is this sitting
+  // going", and the deck-wide total sits on its own line below.
   const stats = useMemo(() => {
     let correct = 0;
     let wrong = 0;
-    const submittedIdxs = Object.keys(submitted)
-      .map(Number)
-      .sort((a, b) => a - b);
-    for (const i of submittedIdxs) {
+    let answered = 0;
+    let flaggedCount = 0;
+    for (let i = setStart; i < setEnd; i++) {
+      if (flagged.includes(i)) flaggedCount++;
+      if (!submitted[i] || !questions[i]) continue;
+      answered++;
       if (isCorrect(answers[i], questions[i].correct)) correct++;
       else wrong++;
+    }
+    let deckAnswered = 0;
+    for (const key of Object.keys(submitted)) {
+      if (questions[Number(key)]) deckAnswered++;
     }
     return {
       correct,
       wrong,
-      answered: submittedIdxs.length,
-      total: questions.length,
-      accuracy: submittedIdxs.length > 0 ? correct / submittedIdxs.length : 0,
-      flaggedCount: flagged.length,
+      answered,
+      total: setSize,
+      accuracy: answered > 0 ? correct / answered : 0,
+      flaggedCount,
+      deckAnswered,
+      deckTotal: questions.length,
     };
-  }, [questions, answers, submitted, flagged]);
+  }, [questions, answers, submitted, flagged, setStart, setEnd, setSize]);
 
-  // Sparkline: last 24 questions around currentIdx
-  const start = Math.max(0, idx - 11);
-  const end = Math.min(questions.length, start + 24);
+  // Sparkline: a 24-question window around currentIdx, held inside the set so
+  // it never charts questions this sitting is not about.
+  const windowStart = Math.max(setStart, Math.min(idx - 11, Math.max(setStart, setEnd - 24)));
+  const start = windowStart;
+  const end = Math.min(setEnd, start + 24);
   const cells: Array<{ kind: 'good' | 'bad' | 'cur' | 'pending'; height: number }> = [];
   for (let i = start; i < end; i++) {
     if (submitted[i]) {
@@ -56,7 +69,7 @@ export function PerformanceCard() {
         className="font-mono text-[10px] uppercase tracking-[0.16em]"
         style={{ color: 'var(--text-faint)' }}
       >
-        Performance
+        {count > 1 ? 'Performance · this set' : 'Performance'}
       </div>
 
       <dl className="mt-3 flex flex-col">
@@ -72,6 +85,9 @@ export function PerformanceCard() {
         />
         <StatLine label="Wrong" value={String(stats.wrong)} tone="bad" />
         <StatLine label="Flagged" value={String(stats.flaggedCount)} />
+        {count > 1 ? (
+          <StatLine label="Deck" value={`${stats.deckAnswered} / ${stats.deckTotal}`} />
+        ) : null}
       </dl>
 
       <div className="mt-3 flex h-8 items-end gap-[2px]">
