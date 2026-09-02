@@ -13,7 +13,8 @@
     "typecheck": "tsc --noEmit",
     "review-comments": "node scripts/review-comments.mjs",
     "add-ids": "node scripts/add-question-ids.mjs",
-    "test:richtext": "node scripts/test-richtext.mjs"
+    "test:richtext": "node scripts/test-richtext.mjs",
+    "test:sets": "node scripts/test-sets.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",

@@ -70,6 +70,12 @@ export type DeckProgress = {
   timeOnQ: number[]; // seconds accumulated per question
   questionOrder: number[]; // displayed question index -> original deck index
   questionSignatures: string[]; // persisted identity for index remapping after deck edits
+  /**
+   * Max questions per study set; `0` means the whole deck is one set. The
+   * *active* set is deliberately not stored — it is derived from `currentIdx`
+   * (see `src/lib/sets.ts`), so it cannot desync from the position it describes.
+   */
+  setSize: number;
 };
 
 export type ParsedExplanation = {

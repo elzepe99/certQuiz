@@ -1,5 +1,5 @@
 import { Flag, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useQuiz } from '@/state/quizStore';
+import { useQuiz, useSetInfo } from '@/state/quizStore';
 import { isMultiCorrectPrompt, requiredAnswerCount } from '@/lib/quiz';
 
 type Props = {
@@ -20,9 +20,14 @@ export function ActionBar({ onFinish }: Props) {
   const skip = useQuiz((s) => s.skip);
   const toggleFlag = useQuiz((s) => s.toggleFlag);
 
+  const { setIdx, count, start, end } = useSetInfo();
+
   const isAnswered = !!submitted[idx];
   const isFlagged = flagged.includes(idx);
-  const isLast = idx === total - 1;
+  // Last question *of the set* — on a single-set deck this is the deck's end,
+  // so an unchunked deck behaves exactly as it did before.
+  const isLast = idx === end - 1;
+  const isFinalSet = setIdx === count - 1;
 
   const q = questions[idx];
   const sel = answers[idx] ?? '';
@@ -34,7 +39,9 @@ export function ActionBar({ onFinish }: Props) {
   const primaryLabel = !isAnswered
     ? 'Submit answer'
     : isLast
-      ? 'Finish session'
+      ? isFinalSet
+        ? 'Finish session'
+        : 'Finish set'
       : 'Next question';
 
   const primaryDisabled = !isAnswered && !selectionSatisfied;
@@ -92,11 +99,17 @@ export function ActionBar({ onFinish }: Props) {
         style={{ color: 'var(--text-faint)' }}
       >
         {String(idx + 1).padStart(3, '0')} / {total}
+        {count > 1 ? (
+          <span style={{ color: 'var(--text-secondary)' }}>
+            {' '}
+            · Set {setIdx + 1}/{count}
+          </span>
+        ) : null}
       </span>
 
       <button
         onClick={prev}
-        disabled={idx === 0}
+        disabled={idx === start}
         className="flex items-center gap-1 rounded-[8px] border px-3.5 py-2 text-[13px] font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40"
         style={{
           background: 'var(--bg-panel)',

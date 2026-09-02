@@ -32,8 +32,9 @@ export function useShortcuts({ onFinish, onShowShortcuts }: Handlers) {
       if (!q) return;
       const isAnswered = !!state.progress.submitted[idx];
       const hasSel = !!state.progress.answers[idx];
-      const total = state.questions.length;
-      const isLast = idx === total - 1;
+      // Same source as ActionBar's "Finish set" button, so Enter and the button
+      // can never disagree about where the set ends.
+      const isLast = idx === state.setInfo().end - 1;
       const opts = getOptions(q);
       const isMulti = isMultiCorrectPrompt(q.question, q.correct);
 
