@@ -8,14 +8,21 @@
  * - `getVoices()` is empty on first call in Chrome and fills in asynchronously,
  *   announced by a `voiceschanged` event that some builds fire more than once.
  * - An utterance that is only referenced by the call stack can be garbage
- *   collected mid-sentence, cutting the speech off. The live queue is therefore
- *   held in a module-level array until it finishes.
- * - Chrome stops speaking after roughly 15 seconds unless the synthesiser is
- *   nudged. `pause()` immediately followed by `resume()` on a timer is the
- *   long-standing workaround, and these stems are easily long enough to need it.
+ *   collected mid-sentence, cutting the speech off. The one in flight is
+ *   therefore held in a module-level reference until it finishes.
  * - `cancel()` fires `onend` on whatever was speaking. Every callback is
  *   therefore gated on a generation token, so a cancelled run cannot advance
  *   the run that replaced it.
+ * - An utterance can fail, and a whole queue handed to the engine at once can
+ *   be dropped when one of its members does.
+ *
+ * That last one is why chunks are spoken **one at a time**, each starting the
+ * next from its own `onend`, rather than being queued together. Queueing was
+ * the first design and it cut long questions off mid-sentence: a single failed
+ * chunk — routine with the streamed neural voices, which fetch audio per
+ * utterance — took the rest of the reading with it, and the more chunks a
+ * question had, the likelier it was to happen. Speaking them one at a time
+ * means a bad chunk costs one chunk.
  */
 import { useEffect, useState } from 'react';
 
@@ -30,34 +37,26 @@ export type SpeakOptions = {
 
 export type SpeakHandle = { cancel: () => void };
 
-const KEEPALIVE_MS = 9000;
 /** How often to check that the synthesiser is still actually working. */
 const STALL_POLL_MS = 500;
-/** Consecutive idle polls before a run is declared dead. */
-const STALL_STRIKES = 3;
 /**
- * Quiet time allowed at the very start before idle polls count. A cloud voice
- * — which is the good kind, see `voiceQuality` — has to reach a server before
- * it reports itself as speaking or pending, and cutting its reading short would
- * punish exactly the voices worth using.
+ * Silence for this long, with the engine reporting nothing in flight, counts as
+ * a chunk that will never finish.
+ *
+ * Deliberately generous. The good voices are streamed — Edge fetches audio from
+ * a server for every utterance — so a gap of a second or two between chunks is
+ * normal, not a fault. The earlier value of 1.5s tripped on those gaps and cut
+ * long questions off part-way through.
  */
-const STALL_GRACE_MS = 3000;
+const STALL_IDLE_MS = 4000;
 
 let generation = 0;
-/** Holds the in-flight utterances so the browser cannot collect them mid-sentence. */
-const liveQueue: SpeechSynthesisUtterance[] = [];
-let keepAlive: ReturnType<typeof setInterval> | null = null;
+/** Holds the utterance in flight so the browser cannot collect it mid-sentence. */
+const liveUtterance: SpeechSynthesisUtterance[] = [];
 let stallWatch: ReturnType<typeof setInterval> | null = null;
 
 export function speechSupported(): boolean {
   return typeof window !== 'undefined' && 'speechSynthesis' in window;
-}
-
-function stopKeepAlive() {
-  if (keepAlive !== null) {
-    clearInterval(keepAlive);
-    keepAlive = null;
-  }
 }
 
 function stopStallWatch() {
@@ -67,70 +66,11 @@ function stopStallWatch() {
   }
 }
 
-/**
- * Notice a narrator that has died and resolve the run anyway.
- *
- * A dropped `onend` is the failure that matters here: the caller starts the
- * clock when speech finishes, so silence with no callback leaves a question on
- * screen with no timer and no way forward. Polling `speaking`/`pending` catches
- * it in about a second, where a duration-based timeout would take minutes.
- *
- * The strike count is what keeps it from firing in the handover between two
- * queued utterances, and in the moment after `speak()` before the engine picks
- * the first one up — brief windows where both flags can read false. It
- * deliberately does not wait for speech to have started: a synthesiser that
- * drops the queue without ever speaking is the same failure from the caller's
- * side, and needs the same escape.
- */
-function startStallWatch(onStalled: () => void) {
-  stopStallWatch();
-  const openedAt = Date.now();
-  let strikes = 0;
-  stallWatch = setInterval(() => {
-    const s = window.speechSynthesis;
-    // The keep-alive below pauses and resumes to dodge Chrome's cutoff, and on
-    // some engines — iOS especially — the resume does not take. A paused
-    // synthesiser still reports `speaking`, so nothing else here would notice:
-    // the reading would hang with no clock and no way forward.
-    if (s.paused) {
-      s.resume();
-      strikes = 0;
-      return;
-    }
-    if (s.speaking || s.pending) {
-      strikes = 0;
-      return;
-    }
-    if (Date.now() - openedAt < STALL_GRACE_MS) return;
-    strikes++;
-    if (strikes >= STALL_STRIKES) {
-      stopStallWatch();
-      onStalled();
-    }
-  }, STALL_POLL_MS);
-}
-
-function startKeepAlive() {
-  stopKeepAlive();
-  keepAlive = setInterval(() => {
-    const s = window.speechSynthesis;
-    if (!s.speaking) {
-      stopKeepAlive();
-      return;
-    }
-    if (!s.paused) {
-      s.pause();
-      s.resume();
-    }
-  }, KEEPALIVE_MS);
-}
-
 /** Silence the narrator and invalidate any pending callbacks. */
 export function cancelSpeech() {
   if (!speechSupported()) return;
   generation++;
-  liveQueue.length = 0;
-  stopKeepAlive();
+  liveUtterance.length = 0;
   stopStallWatch();
   window.speechSynthesis.cancel();
 }
@@ -140,56 +80,108 @@ export function cancelSpeech() {
  * ends. Returns a handle whose `cancel` is safe to call at any point, including
  * after the run has already finished.
  *
+ * Chunks are spoken one at a time. A chunk that errors is skipped rather than
+ * ending the reading, and a chunk that goes silent without reporting anything
+ * is stepped over by the stall watch — so the worst a broken utterance costs is
+ * itself, not everything after it.
+ *
  * If speech is unsupported or the list is empty, `onDone` still fires — on a
- * later tick, so callers can rely on it never running before they have wired
- * up the rest of their effect.
+ * later tick, so callers can rely on it never running before they have wired up
+ * the rest of their effect.
  */
 export function speak(chunks: Array<{ text: string }>, opts: SpeakOptions = {}): SpeakHandle {
   cancelSpeech();
   const myGeneration = generation;
-  const done = () => {
-    if (generation === myGeneration) opts.onDone?.();
+  const mine = () => generation === myGeneration;
+
+  let settled = false;
+  const finish = () => {
+    if (settled || !mine()) return;
+    settled = true;
+    stopStallWatch();
+    opts.onDone?.();
   };
 
   if (!speechSupported() || chunks.length === 0) {
-    const t = setTimeout(done, 0);
+    const t = setTimeout(finish, 0);
     return { cancel: () => clearTimeout(t) };
   }
 
   const synth = window.speechSynthesis;
   const voice = opts.voiceURI ? findVoice(opts.voiceURI) : null;
+  const rate = clampRate(opts.rate);
 
-  const utterances = chunks.map((chunk, i) => {
-    const u = new SpeechSynthesisUtterance(chunk.text);
+  let index = -1;
+  let lastActivity = Date.now();
+  const markActive = () => {
+    lastActivity = Date.now();
+  };
+
+  const speakAt = (i: number) => {
+    if (!mine()) return;
+    if (i >= chunks.length) {
+      finish();
+      return;
+    }
+    index = i;
+    markActive();
+
+    const u = new SpeechSynthesisUtterance(chunks[i].text);
     if (voice) {
       u.voice = voice;
       u.lang = voice.lang;
     }
-    u.rate = clampRate(opts.rate);
+    u.rate = rate;
     u.onstart = () => {
-      if (generation === myGeneration) opts.onChunkStart?.(i);
+      markActive();
+      if (mine()) opts.onChunkStart?.(i);
     };
-    if (i === chunks.length - 1) {
-      const settle = () => {
-        stopKeepAlive();
-        stopStallWatch();
-        done();
-      };
-      u.onend = settle;
-      // A voice that fails mid-run must not strand the question with a clock
-      // that never starts, so an error resolves the same way an end does.
-      u.onerror = settle;
-    }
-    return u;
-  });
+    u.onend = () => {
+      markActive();
+      if (mine()) speakAt(i + 1);
+    };
+    u.onerror = (event) => {
+      markActive();
+      if (!mine()) return;
+      // `cancel()` reports itself as an error on whatever was speaking. That is
+      // us stopping the run, not a fault, and must not restart it.
+      const reason = (event as SpeechSynthesisErrorEvent).error;
+      if (reason === 'canceled' || reason === 'interrupted') return;
+      // Anything else is one bad chunk. Keep reading.
+      speakAt(i + 1);
+    };
 
-  liveQueue.push(...utterances);
-  for (const u of utterances) synth.speak(u);
-  startKeepAlive();
-  startStallWatch(() => {
-    stopKeepAlive();
-    done();
-  });
+    liveUtterance.length = 0;
+    liveUtterance.push(u);
+    synth.speak(u);
+  };
+
+  // The engine can also go quiet without reporting anything at all — a dropped
+  // stream, a voice that simply stops. Nothing else here would notice, and the
+  // question would sit half-read. Stepping to the next chunk always makes
+  // progress, so this cannot loop.
+  stopStallWatch();
+  stallWatch = setInterval(() => {
+    if (!mine()) {
+      stopStallWatch();
+      return;
+    }
+    const live = window.speechSynthesis;
+    if (live.paused) {
+      live.resume();
+      markActive();
+      return;
+    }
+    if (live.speaking || live.pending) {
+      markActive();
+      return;
+    }
+    if (Date.now() - lastActivity < STALL_IDLE_MS) return;
+    markActive();
+    speakAt(index + 1);
+  }, STALL_POLL_MS);
+
+  speakAt(0);
 
   return { cancel: cancelSpeech };
 }
