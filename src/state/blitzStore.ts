@@ -68,6 +68,12 @@ type State = {
   bestStreak: number;
   /** Index into the current question's speech script, or -1 when silent. */
   speakingChunk: number;
+  /**
+   * Ticks once each time a question opens. The view narrates off this rather
+   * than off `phase`, so that starting the clock cannot tear down — and
+   * silence — a narrator that is still reading. See BlitzStage.
+   */
+  narrationToken: number;
   settings: BlitzSettings;
   /** True once the finished run has been checked against the stored record. */
   newBest: boolean;
@@ -104,6 +110,7 @@ function emptyRunState() {
     streak: 0,
     bestStreak: 0,
     speakingChunk: -1,
+    narrationToken: 0,
     newBest: false,
   };
 }
@@ -174,6 +181,7 @@ export const useBlitz = create<State>((set, get) => ({
       deadline: null,
       selected: [],
       speakingChunk: -1,
+      narrationToken: get().narrationToken + 1,
     });
   },
 

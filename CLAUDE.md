@@ -228,14 +228,47 @@ iPhone, `primeSpeech` is the first thing to look at.
 The Web Speech API is old and fails in ways worth knowing before debugging it.
 `getVoices()` is empty on the first call in Chrome and fills in asynchronously.
 An utterance referenced only by the call stack can be collected mid-sentence, so
-`speech.ts` holds the live queue in a module array. `cancel()` fires `onend` on
-whatever was speaking, so every callback is gated on a generation token. And a
-voice can simply stop without reporting it — there are two escapes, a poll of
-`speaking`/`pending` that catches a dead narrator in about a second — after a
-three-second grace period, because a cloud voice has to reach a server before it
-reports itself as busy — and a duration-based watchdog in `BlitzStage` for one
-that claims to be speaking forever. **Without both, a question sits there with no clock and no way
-forward**, which is the failure this mode cannot afford.
+`speech.ts` holds the one in flight in a module reference. `cancel()` fires
+`onend` — and an `onerror` of `canceled` — on whatever was speaking, so every
+callback is gated on a generation token.
+
+**Chunks are spoken one at a time, each starting the next from its own `onend`.
+Do not go back to handing the engine the whole queue at once.** That was the
+first design and it cut long questions off mid-sentence, which is the bug the
+repo owner reported on 2026-09-05. Three things compounded:
+
+- **Only the last utterance had an `onerror`.** A failure in any earlier chunk
+  went unhandled and took the rest of the queue with it. The streamed neural
+  voices fetch audio per utterance, so a chunk failing is routine — and the
+  longer the question, the more chunks, the likelier it happened. Every
+  utterance now handles its own error and simply moves to the next one, so a
+  bad chunk costs one chunk.
+- **Starting the clock cancelled the voice.** `beginAnswering` changes `phase`,
+  and `phase` was a dependency of the narration effect, so the escape hatch for
+  a *dead* narrator killed a merely *slow* one. The effect is keyed on
+  `narrationToken` now — a counter the store ticks once per question — so
+  reading and the clock are independent. A false alarm costs a clock that
+  starts early over a voice that keeps going, which is the right way round.
+  `feedback`/`done` and the Skip button cancel explicitly, because those are
+  the real reasons to stop talking.
+- **The stall poll was too twitchy**, at 1.5s of silence. A streamed voice
+  pauses that long between chunks routinely. It is 4s now, and on firing it
+  steps to the *next chunk* rather than declaring the reading over — verified
+  by killing the engine mid-sentence with `speechSynthesis.cancel()` from the
+  console, after which the narration resumed in 4.9s and finished the question.
+
+The poll also resumes an engine it finds `paused`, and `BlitzStage` keeps a
+duration watchdog for one stuck speaking forever. **Without those a question
+sits there with no clock and no way forward**, which is the failure this mode
+cannot afford.
+
+**The `pause()`/`resume()` keep-alive was removed.** It existed for Chrome's old
+~15s cutoff, which does not reproduce here — a 24.7s single utterance completed
+with one `start` and no keep-alive running. Against that it fired every 9s,
+mid-utterance at any rate below about 1.0, and pausing a streamed voice
+mid-fetch is a plausible way to lose it. Chunking to 200 characters plus the
+per-chunk stall recovery covers the cutoff far better. Re-introduce it only
+with a reproduction.
 
 Four bugs found during the build and the review that followed, all worth
 recognising again:

@@ -26,6 +26,7 @@ export function BlitzStage({ onQuit }: { onQuit: () => void }) {
   const budgetMs = useBlitz((s) => s.budgetMs);
   const deadline = useBlitz((s) => s.deadline);
   const speakingChunk = useBlitz((s) => s.speakingChunk);
+  const narrationToken = useBlitz((s) => s.narrationToken);
 
   const tickCountdown = useBlitz((s) => s.tickCountdown);
   const beginAnswering = useBlitz((s) => s.beginAnswering);
@@ -60,11 +61,19 @@ export function BlitzStage({ onQuit }: { onQuit: () => void }) {
   }, [phase, countdown, tickCountdown]);
 
   // ---- the narrator ----------------------------------------------------
-  // The clock is started by `onDone`, so a question is never racing its own
-  // reading. Every exit from `reading` — answering early, skipping, unmounting
-  // — runs the cleanup, which silences the voice.
+  // Keyed on `narrationToken`, which ticks once per question — deliberately
+  // *not* on `phase`.
+  //
+  // The clock is still started by `onDone`, so a question never races its own
+  // reading. But `beginAnswering` changes `phase`, and while `phase` was a
+  // dependency here that change tore the effect down and cancelled the speech.
+  // Any early guess that the narrator had died — a slow streamed chunk, say —
+  // therefore killed a narrator that was merely slow, cutting long questions
+  // off mid-sentence. Now starting the clock and reading aloud are independent:
+  // the worst a false alarm costs is a clock that starts a little early, over a
+  // voice that keeps going.
   useEffect(() => {
-    if (phase !== 'reading' || !q) return;
+    if (narrationToken === 0 || !q) return;
     if (!settings.readAloud || !speechSupported()) {
       beginAnswering();
       return;
@@ -90,7 +99,7 @@ export function BlitzStage({ onQuit }: { onQuit: () => void }) {
       handle.cancel();
     };
   }, [
-    phase,
+    narrationToken,
     q,
     script,
     settings.readAloud,
@@ -100,7 +109,18 @@ export function BlitzStage({ onQuit }: { onQuit: () => void }) {
     setSpeakingChunk,
   ]);
 
+  // The reasons the voice *should* stop: the answer is in, or the run is over.
+  useEffect(() => {
+    if (phase === 'feedback' || phase === 'done') cancelSpeech();
+  }, [phase]);
+
   useEffect(() => () => cancelSpeech(), []);
+
+  // Skipping is an explicit "stop talking", unlike the clock simply starting.
+  const skipReading = () => {
+    cancelSpeech();
+    beginAnswering();
+  };
 
   // ---- the clock -------------------------------------------------------
   const [now, setNow] = useState(() => Date.now());
@@ -192,7 +212,7 @@ export function BlitzStage({ onQuit }: { onQuit: () => void }) {
       }
       if (e.key === ' ' || e.key === 'Enter') {
         e.preventDefault();
-        if (phase === 'reading') beginAnswering();
+        if (phase === 'reading') skipReading();
         else if (phase === 'feedback') advance();
         return;
       }
@@ -297,7 +317,7 @@ export function BlitzStage({ onQuit }: { onQuit: () => void }) {
             {phase === 'reading' ? (
               <button
                 type="button"
-                onClick={beginAnswering}
+                onClick={skipReading}
                 className="flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.12em] transition-colors hover:border-[color:var(--border-strong)]"
                 style={{ borderColor: 'var(--border-default)', color: 'var(--text-secondary)' }}
               >
@@ -618,8 +638,11 @@ function Verdict({
  */
 function speechWatchdogMs(script: Array<{ text: string }>, rate: number): number {
   const chars = script.reduce((sum, c) => sum + c.text.length, 0);
-  // Measured at roughly 14 characters a second at rate 1; 12 leaves margin,
-  // and the 1.6x on top means a working narrator is never cut off.
+  // Measured at roughly 14-15 characters a second at rate 1, so 12 is a
+  // deliberate under-estimate of speed and therefore an over-estimate of
+  // duration. The old 150s ceiling was below the real reading time of the
+  // longest questions in these decks, which made this fire during a perfectly
+  // healthy narration.
   const charsPerSecond = 12 * Math.max(0.5, rate);
-  return Math.min(150_000, (chars / charsPerSecond) * 1600 + 6000);
+  return Math.min(360_000, (chars / charsPerSecond) * 1600 + 6000);
 }
