@@ -14,7 +14,8 @@
     "review-comments": "node scripts/review-comments.mjs",
     "add-ids": "node scripts/add-question-ids.mjs",
     "test:richtext": "node scripts/test-richtext.mjs",
-    "test:sets": "node scripts/test-sets.mjs"
+    "test:sets": "node scripts/test-sets.mjs",
+    "test:blitz": "node scripts/test-blitz.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",

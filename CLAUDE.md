@@ -45,6 +45,11 @@ src/                  the app — components, lib/quiz.ts (explanation parsing),
                       lib/richtext.ts (code-block detection)
 src/diagrams/         hand-authored SVG figures, keyed by question id in
                       registry.ts — see "Questions that need a figure" below
+src/components/blitz/ the Kahoot-style game mode — see "Blitz mode" below.
+                      lib/blitz.ts is the pure half (scoring, the speech
+                      script), lib/speech.ts drives the browser voice,
+                      lib/sfx.ts synthesises the sounds, state/blitzStore.ts
+                      runs one game
 public/decks/         13 decks + manifest.json + deck-template.json
 scripts/
   audit-deck.mjs      structural audit — skill Phase 1. Its duplicate-option check
@@ -90,6 +95,10 @@ scripts/
   add-question-ids.mjs  mints permanent ids; NEW decks only
   review-comments.mjs   exports in-app comments to markdown
   test-richtext.mjs     regression suite for the code-fence heuristic
+  test-blitz.mjs        regression suite for Blitz scoring + the spoken script.
+                        Unlike the other two it bundles rather than transforming
+                        a single file, because blitz.ts imports richtext.ts —
+                        esbuild resolves the `@/` alias from tsconfig.json
   lib/corrections.mjs   stampCorrection() — LOAD-BEARING, see below
 .claude/skills/factcheck-deck/
   SKILL.md            the deck workflow
@@ -120,12 +129,154 @@ this file to archaeology.
 ```sh
 npm run typecheck        # tsc --noEmit
 npm run test:richtext    # 28 tests; run after ANY richtext.ts rule change
+npm run test:sets        # 396 tests; the set-chunking arithmetic
+npm run test:blitz       # 35 tests; Blitz scoring and the spoken script
 npm run build            # tsc -b && vite build
 ```
 
 The richtext suite ends with a deck-wide sweep whose block count spikes if a
 detection rule starts over-firing. A rule change that leaves the count flat and
 the tests green is safe; a spike means the heuristic now eats prose.
+
+`test:blitz` ends with a sweep of its own reporting how many questions carry
+code — 73 of 1,624 today. That number is the *listener's* view of the same
+heuristic, since a code block is spoken as "Code shown on screen" rather than
+read out, so it moves for exactly the same reasons the richtext count does.
+
+### Blitz mode
+
+A Kahoot-shaped alternative to the exam view, at `/deck/:deckId/blitz`. The
+question is read aloud by the browser's own voice, a clock drains, big
+colour-and-shape tiles take a single tap, and a podium at the end offers a
+rematch over only what you missed. Built 2026-09-05 because the repo owner
+loses attention on long stems and skips reading them; the read-aloud is the
+point of the mode, not decoration.
+
+**It never writes to `quiz:progress:*`.** Blitz keeps its own two keys —
+`quiz:blitz:settings` and `quiz:blitz:best:<deckId>` — and reads deck progress
+only to borrow the display order and the active set, so "Set 3" means the same
+stretch of deck in both modes. Letting an eight-second guess count as an
+answered question would quietly change what the accuracy figure on the deck
+picker means, which is the number all the deck work in this file exists to keep
+honest. If you are asked to "make blitz count", that is the decision being
+overturned.
+
+Five things are load-bearing and easy to undo by accident:
+
+- **The clock starts when the reading finishes, not when the question appears.**
+  Stems here reach 1,200 characters, about 80 seconds of speech. A timer racing
+  the narrator would punish exactly the questions the voice exists to make
+  bearable. Answering during the reading is allowed and scores full marks.
+- **Option order is never shuffled** — only question order. Explanations name
+  options by letter ("Option D is correct because…"), so reordering them would
+  make the deck's own prose wrong.
+- **Every tile carries a letter, a colour *and* a shape.** Around one man in
+  twelve cannot separate the red tile from the green one, and this mode asks for
+  an answer in a second.
+- **Code is never read aloud.** `speakableText` replaces a block with "Code shown
+  on screen" and `timeBudgetSeconds` adds 10 seconds instead — the same bonus a
+  question with a `src/diagrams/registry.ts` figure gets. Reading a snippet out
+  produces "open brace, public static void".
+- **No utterance exceeds 200 characters.** `splitForSpeech` breaks the stem at
+  sentence ends. Long single utterances stall or truncate in several browsers,
+  and short ones also just sound better.
+
+**Voice quality is a browser choice, not a code choice, and the difference is
+enormous.** Chrome on Windows exposes only the SAPI5 voices from the 2000s —
+Microsoft David, Zira, Mark — which sound like a satnav. Edge streams
+Microsoft's neural voices through the *same* `speechSynthesis` API, named
+"Microsoft Aria Online (Natural) - English (United States)" and so on, with
+nothing to install and no key. If read-aloud is ever described as unbearable,
+the first question is which browser, not which code.
+
+`speech.ts` therefore ranks voices by `voiceQuality()`, which reads the tier off
+the voice's *name* — there is no API for it. Natural/neural first, then Apple's
+"(Enhanced)"/"(Premium)" and Google's, then everything else. **`localService` is
+only the last tiebreak, and moving it up would undo the whole thing**: the first
+version preferred local voices outright, which on Edge sorts four hundred neural
+voices below Microsoft David and hands every new player the worst option on the
+machine. The lobby groups the picker by tier and, when nothing better than
+`standard` exists, says so and points at Edge.
+
+A stored `voiceURI` is per-engine, so the lobby re-picks a default whenever the
+saved one is not in the current list — otherwise opening the app in a second
+browser leaves the setting pointing at nothing.
+
+**On a phone it works, with three things done specifically for it.** The tiles
+come out at 343x93 and answer on a single tap, and the hotkey hints are hidden
+where there is no keyboard. The three that are not obvious:
+
+- **`primeSpeech()` runs inside the Start tap.** Safari on iOS only lets speech
+  begin from a real user action, and Blitz's first utterance fires from an
+  effect about three seconds later, after the 3-2-1. Without a silent
+  zero-volume utterance spoken from the button itself, the narrator would never
+  speak on an iPhone — silently, with the clock starting straight away.
+- **The full-screen views use `100dvh`, not `100vh`.** iOS reports `100vh` as
+  the height with the toolbar *hidden*, so a `h-screen` layout has its last
+  rows under the browser chrome until you scroll. `QuizView` and `DeckPicker`
+  still use plain `h-screen` and have the same flaw, less visibly.
+- **The stall watch resumes a synthesiser it finds paused.** The keep-alive
+  pauses and resumes to dodge Chrome's cutoff, and on iOS the resume does not
+  always take. A paused engine still reports `speaking`, so nothing else would
+  notice — the question would sit there with no clock.
+
+**None of that is verified on real hardware.** It was tested under mobile
+emulation (Android UA, touch events, 375x812), which proves the layout and the
+tapping and nothing about iOS's speech quirks. If read-aloud is silent on an
+iPhone, `primeSpeech` is the first thing to look at.
+
+The Web Speech API is old and fails in ways worth knowing before debugging it.
+`getVoices()` is empty on the first call in Chrome and fills in asynchronously.
+An utterance referenced only by the call stack can be collected mid-sentence, so
+`speech.ts` holds the live queue in a module array. `cancel()` fires `onend` on
+whatever was speaking, so every callback is gated on a generation token. And a
+voice can simply stop without reporting it — there are two escapes, a poll of
+`speaking`/`pending` that catches a dead narrator in about a second — after a
+three-second grace period, because a cloud voice has to reach a server before it
+reports itself as busy — and a duration-based watchdog in `BlitzStage` for one
+that claims to be speaking forever. **Without both, a question sits there with no clock and no way
+forward**, which is the failure this mode cannot afford.
+
+Four bugs found during the build and the review that followed, all worth
+recognising again:
+
+- **A verdict screen that skipped itself.** The hold was a countdown in state;
+  the effect that reset it and the effect that read it ran in the same commit,
+  so the check still saw the previous question's zero and advanced instantly.
+  It is a *deadline* now. Any "held for N seconds" UI in React wants a
+  timestamp, not a counter.
+- **Arriving with `?source=` wiped the saved settings.** The effect that read the
+  query parameter ran on the first render, before the deck had loaded and before
+  `init` had pulled settings out of localStorage — so `updateSettings` wrote the
+  *defaults* back. It is gated on `deckLoad.status === 'ready'` now, which also
+  guarantees it runs after `init`. Anything that patches persisted state from a
+  URL has this shape.
+
+- **A sound could have swallowed an answer.** `commit` played its verdict sound
+  *before* writing state, and `sfx.tone()` had no try/catch. A Web Audio failure
+  would have thrown past the `set`, leaving the phase on `answering` with an
+  expired clock — so the timeUp effect re-committed and re-threw every 100ms
+  forever. Sound now fires after the state is written, and `tone()` swallows its
+  own errors. **Never put a best-effort side effect ahead of the state change it
+  decorates.**
+- **A guard that stranded the podium.** `init` is called from an effect keyed on
+  a `useMemo` identity, so it was made idempotent to stop a discarded memo
+  wiping a live run. The first version skipped re-init for any phase but
+  `lobby` — which meant finishing a run, leaving, and coming back showed the old
+  podium again. Only `countdown`/`reading`/`answering`/`feedback` are protected;
+  `done` must fall through.
+
+The deck-picker card is worth a note too. It has two destinations, so it cannot
+be wrapped in a single `<Link>` — nesting links is invalid and the inner one
+stops working. The first fix stretched an invisible `<Link>` across the card,
+which works but **paints above its static siblings, so the deck name and
+description could no longer be selected**. It is now a click surface with the
+real link on the title, and the click handler bails when
+`window.getSelection()` is non-empty, so ending a drag-select does not navigate.
+
+Not built, and asked about at the time: survival mode (three lives) and an
+audio-only mode that hides the stem until you answer. Both were deliberately
+deferred, not overlooked.
 
 ### Questions that need a figure
 
