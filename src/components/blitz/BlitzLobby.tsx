@@ -104,7 +104,7 @@ export function BlitzLobby({ deck, total, setIdx, setCount, setStart, setEnd }: 
     // On iOS neither would ever be heard otherwise: the first question's speech
     // fires from an effect three seconds after this tap.
     unlockAudio();
-    if (settings.readAloud) primeSpeech();
+    if (settings.readAloud !== 'off') primeSpeech();
     startRun(buildRunOrder({ source: settings.source, total, setStart, setEnd }));
   };
 
@@ -179,20 +179,37 @@ export function BlitzLobby({ deck, total, setIdx, setCount, setStart, setEnd }: 
 
       <Section title="Read aloud">
         <div className="flex flex-wrap items-center gap-2">
-          <Pill active={settings.readAloud} onClick={() => updateSettings({ readAloud: true })}>
-            <Volume2 size={13} /> On
+          <Pill
+            active={settings.readAloud === 'question'}
+            onClick={() => updateSettings({ readAloud: 'question' })}
+          >
+            <Volume2 size={13} /> Question only
           </Pill>
-          <Pill active={!settings.readAloud} onClick={() => updateSettings({ readAloud: false })}>
+          <Pill
+            active={settings.readAloud === 'all'}
+            onClick={() => updateSettings({ readAloud: 'all' })}
+          >
+            <Volume2 size={13} /> Question + options
+          </Pill>
+          <Pill
+            active={settings.readAloud === 'off'}
+            onClick={() => updateSettings({ readAloud: 'off' })}
+          >
             <VolumeX size={13} /> Off
           </Pill>
         </div>
+        <Note>
+          The stem is the long part, and the options are short and already on screen — so reading
+          only the question is often the quicker way to play, not a lesser one. Whichever you pick,
+          the clock waits until the reading finishes.
+        </Note>
 
         {!supported ? (
           <Note>
             This browser has no speech synthesis, so the run will be silent. Chrome, Edge and Safari
             all have it.
           </Note>
-        ) : settings.readAloud ? (
+        ) : settings.readAloud !== 'off' ? (
           <div className="mt-3 flex flex-wrap items-end gap-3">
             <label className="flex min-w-[240px] flex-1 flex-col gap-1.5">
               <span className="label-uppercase">Voice</span>
@@ -256,7 +273,7 @@ export function BlitzLobby({ deck, total, setIdx, setCount, setStart, setEnd }: 
           </div>
         ) : null}
 
-        {supported && settings.readAloud && voices.length > 0 && !hasNaturalVoice(voices) ? (
+        {supported && settings.readAloud !== 'off' && voices.length > 0 && !hasNaturalVoice(voices) ? (
           <Note>
             Only the old system voices are available in this browser, which is why the narrator
             sounds like a satnav. Opening this same page in Microsoft Edge adds Microsoft's neural
