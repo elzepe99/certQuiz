@@ -26,6 +26,10 @@
   --warning: #fbbf24;
   --warning-bg: rgba(251, 191, 36, 0.1);
   --warning-border: rgba(251, 191, 36, 0.45);
+
+  /* Overridden at startup from the reader's saved choice — see lib/prefs.ts.
+     Declared here so question text has a face even if that never runs. */
+  --font-question: "Instrument Serif", ui-serif, Georgia, serif;
 }
 
 * {

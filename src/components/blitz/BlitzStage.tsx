@@ -343,8 +343,8 @@ export function BlitzStage({ onQuit }: { onQuit: () => void }) {
 
           <h1
             key={`blitz-q-${pos}`}
-            className="mt-4 animate-fade-in font-serif text-[24px] leading-[1.32] tracking-[-0.01em] sm:text-[29px]"
-            style={{ color: 'var(--text-primary)' }}
+            className="mt-4 animate-fade-in text-[24px] leading-[1.32] tracking-[-0.01em] sm:text-[29px]"
+            style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-question)' }}
           >
             <RichText text={q.question} size="md" />
           </h1>

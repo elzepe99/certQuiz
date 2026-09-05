@@ -284,6 +284,19 @@ export function sortVoices(voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice
   );
 }
 
+/**
+ * Only the English voices, because every question in every deck is English.
+ *
+ * A machine can list a couple of hundred voices across forty languages, and a
+ * Spanish voice reading a Salesforce stem is unusable — so offering them is
+ * offering a way to break the mode. The whole list comes back if there is no
+ * English voice at all, since a bad voice beats an empty picker.
+ */
+export function englishVoices(voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice[] {
+  const english = voices.filter((v) => v.lang.toLowerCase().startsWith('en'));
+  return english.length > 0 ? english : voices;
+}
+
 /** True when at least one voice on this machine is worth listening to. */
 export function hasNaturalVoice(voices: SpeechSynthesisVoice[]): boolean {
   return voices.some((v) => voiceQuality(v) === 'natural');

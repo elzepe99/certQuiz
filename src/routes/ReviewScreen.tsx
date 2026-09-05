@@ -208,8 +208,8 @@ export function ReviewScreen() {
                         {flagged ? ' · flagged' : ''}
                       </span>
                       <span
-                        className="mt-1 block font-serif text-[18px] leading-snug"
-                        style={{ color: 'var(--text-primary)' }}
+                        className="mt-1 block text-[18px] leading-snug"
+                        style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-question)' }}
                       >
                         <RichText text={q.question} size="sm" />
                       </span>

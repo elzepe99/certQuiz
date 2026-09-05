@@ -326,8 +326,10 @@ export function QuizView() {
 
             <h1
               key={`q-${idx}`}
-              className="mt-3 max-w-[68ch] animate-fade-in font-serif text-[28px] leading-[1.3] tracking-[-0.012em] sm:text-[30px]"
-              style={{ color: 'var(--text-primary)' }}
+              className="mt-3 max-w-[68ch] animate-fade-in text-[28px] leading-[1.3] tracking-[-0.012em] sm:text-[30px]"
+              // The face is the reader's choice — see lib/prefs.ts and the gear
+              // in the top bar. Serif is the default, as it always was.
+              style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-question)' }}
             >
               <RichText text={q.question} size="md" />
             </h1>
