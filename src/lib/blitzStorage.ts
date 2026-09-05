@@ -11,6 +11,7 @@ import {
   DEFAULT_FEEDBACK_SECONDS,
   DEFAULT_SECONDS,
   type BlitzSource,
+  type ReadAloudMode,
 } from '@/lib/blitz';
 
 export const BLITZ_SETTINGS_KEY = 'quiz:blitz:settings';
@@ -18,7 +19,8 @@ export const BLITZ_BEST_KEY = (deckId: string) => `quiz:blitz:best:${deckId}`;
 
 export type BlitzSettings = {
   seconds: number;
-  readAloud: boolean;
+  /** 'question' reads the stem only, 'all' adds every option, 'off' is silent. */
+  readAloud: ReadAloudMode;
   voiceURI: string | null;
   rate: number;
   sound: boolean;
@@ -29,7 +31,7 @@ export type BlitzSettings = {
 
 export const DEFAULT_SETTINGS: BlitzSettings = {
   seconds: DEFAULT_SECONDS,
-  readAloud: true,
+  readAloud: 'all',
   voiceURI: null,
   rate: 1.05,
   sound: true,
@@ -47,6 +49,17 @@ export type BlitzBest = {
   at: string;
 };
 
+/**
+ * Read-aloud was a boolean before the three-way choice existed, so a stored
+ * `true`/`false` still has to mean something: `true` was "read the stem and
+ * every option", `false` was silence.
+ */
+function coerceReadAloud(value: unknown): ReadAloudMode {
+  if (value === 'question' || value === 'all' || value === 'off') return value;
+  if (value === false) return 'off';
+  return 'all';
+}
+
 function num(value: unknown, fallback: number): number {
   const n = Number(value);
   return Number.isFinite(n) ? n : fallback;
@@ -60,7 +73,7 @@ export function loadSettings(): BlitzSettings {
     const parsed = JSON.parse(raw) as Partial<BlitzSettings>;
     return {
       seconds: Math.max(5, Math.floor(num(parsed.seconds, DEFAULT_SETTINGS.seconds))),
-      readAloud: parsed.readAloud !== false,
+      readAloud: coerceReadAloud(parsed.readAloud),
       voiceURI: typeof parsed.voiceURI === 'string' ? parsed.voiceURI : null,
       rate: Math.min(2, Math.max(0.5, num(parsed.rate, DEFAULT_SETTINGS.rate))),
       sound: parsed.sound !== false,

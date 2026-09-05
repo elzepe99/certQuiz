@@ -37,7 +37,10 @@ export function BlitzStage({ onQuit }: { onQuit: () => void }) {
 
   const q = questions[order[pos]];
   const options = useMemo(() => (q ? getOptions(q) : []), [q]);
-  const script = useMemo(() => (q ? speechScript(q) : []), [q]);
+  const script = useMemo(
+    () => (q ? speechScript(q, settings.readAloud === 'all') : []),
+    [q, settings.readAloud],
+  );
   // Which option the narrator is on, or -1. Derived from the script rather than
   // assumed to be `chunk - 1`: a question with an empty stem produces no stem
   // chunk, and the highlight would then sit one tile off for the whole run.
@@ -74,7 +77,7 @@ export function BlitzStage({ onQuit }: { onQuit: () => void }) {
   // voice that keeps going.
   useEffect(() => {
     if (narrationToken === 0 || !q) return;
-    if (!settings.readAloud || !speechSupported()) {
+    if (settings.readAloud === 'off' || !speechSupported()) {
       beginAnswering();
       return;
     }
