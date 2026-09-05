@@ -1,7 +1,8 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { BookOpen, ChevronDown, Settings } from 'lucide-react';
+import { BookOpen, ChevronDown } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import type { DeckMeta } from '@/types';
+import { SettingsMenu } from '@/components/SettingsMenu';
 
 type Props = {
   currentDeck?: DeckMeta;
@@ -111,18 +112,13 @@ export function TopBar({ currentDeck, decks }: Props) {
         ) : null}
       </nav>
 
-      {/* Decorative only — no handler behind either control, so it is the first
-          thing to drop when the bar runs out of room on a phone. */}
-      <div className="hidden shrink-0 items-center gap-2 sm:flex">
-        <button
-          aria-label="Settings"
-          className="rounded-md p-1.5 transition-colors hover:bg-[color:var(--bg-panel-hi)]"
-          style={{ color: 'var(--text-secondary)' }}
-        >
-          <Settings size={16} />
-        </button>
+      {/* The gear is real now, so it stays on a phone. The avatar beside it is
+          still decorative and is the first thing to drop when the bar runs out
+          of room. */}
+      <div className="flex shrink-0 items-center gap-2">
+        <SettingsMenu />
         <div
-          className="h-7 w-7 rounded-full"
+          className="hidden h-7 w-7 rounded-full sm:block"
           style={{
             background: 'linear-gradient(135deg, #6fb3ff 0%, #4a7fbf 100%)',
             border: '1px solid var(--border-default)',
