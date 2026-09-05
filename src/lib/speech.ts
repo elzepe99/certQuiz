@@ -136,13 +136,18 @@ export function speak(chunks: Array<{ text: string }>, opts: SpeakOptions = {}):
       markActive();
       if (mine()) opts.onChunkStart?.(i);
     };
+    // Both handlers check `i === index`: an utterance the stall watch has
+    // already stepped past must not move the pointer a second time. Without
+    // that, a chunk that was merely slow rather than dead would fire `onend`
+    // after we had moved on, re-queueing the next chunk — and each duplicate
+    // would advance again, so the rest of the question came out twice.
     u.onend = () => {
       markActive();
-      if (mine()) speakAt(i + 1);
+      if (mine() && i === index) speakAt(i + 1);
     };
     u.onerror = (event) => {
       markActive();
-      if (!mine()) return;
+      if (!mine() || i !== index) return;
       // `cancel()` reports itself as an error on whatever was speaking. That is
       // us stopping the run, not a fault, and must not restart it.
       const reason = (event as SpeechSynthesisErrorEvent).error;
@@ -178,6 +183,12 @@ export function speak(chunks: Array<{ text: string }>, opts: SpeakOptions = {}):
     }
     if (Date.now() - lastActivity < STALL_IDLE_MS) return;
     markActive();
+    // Take the stuck chunk off the engine before queuing the next one.
+    // `speak()` appends rather than replaces, so without this the stalled
+    // utterance would still be sitting there and could play — and finish —
+    // behind the chunk we just moved on to. Its `canceled` error is ignored by
+    // the handler above.
+    live.cancel();
     speakAt(index + 1);
   }, STALL_POLL_MS);
 
