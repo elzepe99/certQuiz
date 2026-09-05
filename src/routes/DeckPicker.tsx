@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useMemo, useState } from 'react';
 import { TopBar } from '@/components/TopBar';
 import { loadDeckQuestions, useManifest } from '@/lib/decks';
@@ -6,7 +6,7 @@ import { loadProgress } from '@/lib/storage';
 import { applyQuestionOrder, setBoundaries, setIndexOf } from '@/lib/sets';
 import { isCorrect } from '@/lib/quiz';
 import type { DeckMeta } from '@/types';
-import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Search, Zap } from 'lucide-react';
 
 type DeckSummary = {
   total: number;
@@ -257,14 +257,36 @@ function DeckCard({
   deck: DeckMeta;
   summary: DeckSummary | null;
 }) {
+  const navigate = useNavigate();
   const accent = deck.accentColor || '#7AB8FF';
   const pct = summary && summary.total > 0 ? Math.round((summary.answered / summary.total) * 100) : 0;
   const accuracyPct = summary && summary.answered > 0 ? Math.round(summary.accuracy * 100) : null;
 
+  /**
+   * The card holds two destinations — study, and Blitz — so it cannot simply be
+   * wrapped in a <Link>: nesting one link inside another is invalid markup and
+   * the inner one stops working.
+   *
+   * The previous attempt stretched an invisible <Link> across the card. That
+   * works, but a positioned element paints above its static siblings, so the
+   * overlay swallowed every drag and the deck name and description could no
+   * longer be selected or copied. Instead the title carries the real link — so
+   * keyboard and screen-reader users get a proper target, and the URL shows on
+   * hover — and the surrounding card is a click surface on top of it.
+   */
+  const openDeck = (e: React.MouseEvent<HTMLDivElement>) => {
+    // A click that ends a text selection is a selection, not a navigation.
+    const selection = window.getSelection();
+    if (selection && !selection.isCollapsed) return;
+    // Real links inside the card handle themselves.
+    if ((e.target as HTMLElement).closest('a')) return;
+    navigate(`/deck/${deck.id}`);
+  };
+
   return (
-    <Link
-      to={`/deck/${deck.id}`}
-      className="group block rounded-lg border p-5 transition-all hover:-translate-y-0.5"
+    <div
+      onClick={openDeck}
+      className="group cursor-pointer rounded-lg border p-5 transition-all hover:-translate-y-0.5"
       style={{
         background: 'var(--bg-panel)',
         borderColor: 'var(--border-default)',
@@ -276,7 +298,9 @@ function DeckCard({
             className="font-serif text-[22px] leading-snug"
             style={{ color: 'var(--text-primary)' }}
           >
-            {deck.name}
+            <Link to={`/deck/${deck.id}`} className="outline-none hover:underline">
+              {deck.name}
+            </Link>
           </h2>
           <p
             className="mt-2 text-sm leading-relaxed"
@@ -323,8 +347,24 @@ function DeckCard({
             style={{ width: `${pct}%`, background: accent }}
           />
         </div>
+        <div className="mt-1 flex justify-end">
+          <Link
+            to={`/deck/${deck.id}/blitz`}
+            // The pill reads as 75x25, well under the 44px minimum for a
+            // finger, and it sits inside a card that is itself one big tap
+            // target — so a near miss opens the study view instead. The
+            // pseudo-element widens what a thumb can hit without changing the
+            // layout; a tap on it still resolves to this <a>, which is what
+            // keeps the card's own handler out of the way.
+            className="relative flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] transition-colors after:absolute after:-inset-3 after:content-[''] hover:border-[color:var(--accent-border)] hover:text-[color:var(--accent)]"
+            style={{ borderColor: 'var(--border-default)', color: 'var(--text-muted)' }}
+          >
+            <Zap size={11} />
+            Blitz
+          </Link>
+        </div>
       </div>
-    </Link>
+    </div>
   );
 }
 
