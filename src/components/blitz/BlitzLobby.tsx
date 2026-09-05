@@ -15,8 +15,9 @@ import { loadBest } from '@/lib/blitzStorage';
 import {
   cancelSpeech,
   defaultVoiceURI,
-  primeSpeech,
+  englishVoices,
   hasNaturalVoice,
+  primeSpeech,
   speechSupported,
   speakSample,
   useVoices,
@@ -49,7 +50,9 @@ export function BlitzLobby({ deck, total, setIdx, setCount, setStart, setEnd }: 
   const settings = useBlitz((s) => s.settings);
   const updateSettings = useBlitz((s) => s.updateSettings);
   const startRun = useBlitz((s) => s.startRun);
-  const voices = useVoices();
+  const allVoices = useVoices();
+  // Every deck is in English, so the picker is too — see `englishVoices`.
+  const voices = useMemo(() => englishVoices(allVoices), [allVoices]);
   const supported = speechSupported();
   const best = useMemo(() => loadBest(deck.id), [deck.id]);
 

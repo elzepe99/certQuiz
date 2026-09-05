@@ -189,6 +189,12 @@ Microsoft's neural voices through the *same* `speechSynthesis` API, named
 nothing to install and no key. If read-aloud is ever described as unbearable,
 the first question is which browser, not which code.
 
+**The picker only offers English voices.** Every question in every deck is
+English, and a machine can list a couple of hundred voices across forty
+languages — a Spanish voice reading a Salesforce stem is a way to break the
+mode, not a feature. `englishVoices()` falls back to the whole list when there
+is no English voice at all, since a bad voice beats an empty picker.
+
 `speech.ts` therefore ranks voices by `voiceQuality()`, which reads the tier off
 the voice's *name* — there is no API for it. Natural/neural first, then Apple's
 "(Enhanced)"/"(Premium)" and Google's, then everything else. **`localService` is
@@ -228,14 +234,60 @@ iPhone, `primeSpeech` is the first thing to look at.
 The Web Speech API is old and fails in ways worth knowing before debugging it.
 `getVoices()` is empty on the first call in Chrome and fills in asynchronously.
 An utterance referenced only by the call stack can be collected mid-sentence, so
-`speech.ts` holds the live queue in a module array. `cancel()` fires `onend` on
-whatever was speaking, so every callback is gated on a generation token. And a
-voice can simply stop without reporting it — there are two escapes, a poll of
-`speaking`/`pending` that catches a dead narrator in about a second — after a
-three-second grace period, because a cloud voice has to reach a server before it
-reports itself as busy — and a duration-based watchdog in `BlitzStage` for one
-that claims to be speaking forever. **Without both, a question sits there with no clock and no way
-forward**, which is the failure this mode cannot afford.
+`speech.ts` holds the one in flight in a module reference. `cancel()` fires
+`onend` — and an `onerror` of `canceled` — on whatever was speaking, so every
+callback is gated on a generation token.
+
+**Chunks are spoken one at a time, each starting the next from its own `onend`.
+Do not go back to handing the engine the whole queue at once.** That was the
+first design and it cut long questions off mid-sentence, which is the bug the
+repo owner reported on 2026-09-05. Three things compounded:
+
+- **Only the last utterance had an `onerror`.** A failure in any earlier chunk
+  went unhandled and took the rest of the queue with it. The streamed neural
+  voices fetch audio per utterance, so a chunk failing is routine — and the
+  longer the question, the more chunks, the likelier it happened. Every
+  utterance now handles its own error and simply moves to the next one, so a
+  bad chunk costs one chunk.
+- **Starting the clock cancelled the voice.** `beginAnswering` changes `phase`,
+  and `phase` was a dependency of the narration effect, so the escape hatch for
+  a *dead* narrator killed a merely *slow* one. The effect is keyed on
+  `narrationToken` now — a counter the store ticks once per question — so
+  reading and the clock are independent. A false alarm costs a clock that
+  starts early over a voice that keeps going, which is the right way round.
+  `feedback`/`done` and the Skip button cancel explicitly, because those are
+  the real reasons to stop talking.
+- **The stall poll was too twitchy**, at 1.5s of silence. A streamed voice
+  pauses that long between chunks routinely. It is 4s now, and on firing it
+  steps to the *next chunk* rather than declaring the reading over — verified
+  by killing the engine mid-sentence with `speechSynthesis.cancel()` from the
+  console, after which the narration resumed in 4.9s and finished the question.
+
+**When the poll steps past a chunk it cancels first, and a stepped-past
+utterance cannot move the pointer.** Both guards close a duplication hazard the
+first version of the recovery had: `speak()` appends to the engine's queue
+rather than replacing it, and a stale utterance still fires `onend` — verified
+directly, speaking A then queueing B without cancelling logs `A start, A end, B
+start, B end`. So a chunk that was merely slow rather than dead would advance
+the pointer a second time when it finally finished, re-queueing the next chunk,
+and each duplicate would advance again — the rest of the question spoken twice.
+The trigger is a chunk the engine reports as neither `speaking` nor `pending`
+while still intending to play it, which is exactly the streamed-voice fetch the
+4s threshold exists to tolerate, so the hazard lived in the same case as the
+cure.
+
+The poll also resumes an engine it finds `paused`, and `BlitzStage` keeps a
+duration watchdog for one stuck speaking forever. **Without those a question
+sits there with no clock and no way forward**, which is the failure this mode
+cannot afford.
+
+**The `pause()`/`resume()` keep-alive was removed.** It existed for Chrome's old
+~15s cutoff, which does not reproduce here — a 24.7s single utterance completed
+with one `start` and no keep-alive running. Against that it fired every 9s,
+mid-utterance at any rate below about 1.0, and pausing a streamed voice
+mid-fetch is a plausible way to lose it. Chunking to 200 characters plus the
+per-chunk stall recovery covers the cutoff far better. Re-introduce it only
+with a reproduction.
 
 Four bugs found during the build and the review that followed, all worth
 recognising again:
@@ -277,6 +329,30 @@ real link on the title, and the click handler bails when
 Not built, and asked about at the time: survival mode (three lives) and an
 audio-only mode that hides the stem until you answer. Both were deliberately
 deferred, not overlooked.
+
+### Reading preferences — the gear in the top bar
+
+`lib/prefs.ts` plus `components/SettingsMenu.tsx`. Today it holds one setting,
+the **question font**: Serif (the original Instrument Serif), Sans, System, or
+Mono. Added 2026-09-05 at the repo owner's request.
+
+Two things about how it is wired, both deliberate:
+
+- **The choice is published as a CSS custom property (`--font-question`) on the
+  root element, not threaded through React.** Question text appears in three
+  unrelated places — `QuizView`, `BlitzStage` and `ReviewScreen` — and none of
+  them needs to re-render when the setting changes; the variable repaints them.
+  Adding a fourth place is a one-line style change, not a prop.
+- **It is applied in `main.tsx` before the first render**, so a reader who has
+  chosen a font never sees a frame of the default one.
+
+Every stack offered is already loaded or needs no loading (`system-ui`). **Do
+not add a face that has to be fetched** — that would put a font download in
+front of the question a reader is waiting to read.
+
+The setting covers the question *stem* only. Options stay in the body sans,
+which is already the most legible thing on the screen; pushing the default
+serif onto them would make them worse, not better.
 
 ### Questions that need a figure
 
