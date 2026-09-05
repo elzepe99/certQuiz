@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { RotateCcw, ArrowRight, Eraser } from 'lucide-react';
+import { RotateCcw, ArrowRight, Eraser, Zap } from 'lucide-react';
 import { TopBar } from '@/components/TopBar';
 import { QuestionMap } from '@/components/QuestionMap';
 import { TopicsList } from '@/components/TopicsList';
@@ -287,6 +287,11 @@ export function QuizView() {
               icon={<ArrowRight size={13} />}
               label="Jump to next unseen"
               onClick={jumpToNextUnseen}
+            />
+            <SidebarAction
+              icon={<Zap size={13} />}
+              label={count > 1 ? `Blitz set ${setIdx + 1}` : 'Blitz this deck'}
+              onClick={() => navigate(`/deck/${deckLoad.deck.id}/blitz?source=set`)}
             />
           </section>
         </aside>
