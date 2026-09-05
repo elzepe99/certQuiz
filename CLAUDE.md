@@ -263,6 +263,19 @@ repo owner reported on 2026-09-05. Three things compounded:
   by killing the engine mid-sentence with `speechSynthesis.cancel()` from the
   console, after which the narration resumed in 4.9s and finished the question.
 
+**When the poll steps past a chunk it cancels first, and a stepped-past
+utterance cannot move the pointer.** Both guards close a duplication hazard the
+first version of the recovery had: `speak()` appends to the engine's queue
+rather than replacing it, and a stale utterance still fires `onend` — verified
+directly, speaking A then queueing B without cancelling logs `A start, A end, B
+start, B end`. So a chunk that was merely slow rather than dead would advance
+the pointer a second time when it finally finished, re-queueing the next chunk,
+and each duplicate would advance again — the rest of the question spoken twice.
+The trigger is a chunk the engine reports as neither `speaking` nor `pending`
+while still intending to play it, which is exactly the streamed-voice fetch the
+4s threshold exists to tolerate, so the hazard lived in the same case as the
+cure.
+
 The poll also resumes an engine it finds `paused`, and `BlitzStage` keeps a
 duration watchdog for one stuck speaking forever. **Without those a question
 sits there with no clock and no way forward**, which is the failure this mode

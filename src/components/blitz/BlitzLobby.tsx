@@ -16,8 +16,8 @@ import {
   cancelSpeech,
   defaultVoiceURI,
   englishVoices,
-  primeSpeech,
   hasNaturalVoice,
+  primeSpeech,
   speechSupported,
   speakSample,
   useVoices,
@@ -50,7 +50,6 @@ export function BlitzLobby({ deck, total, setIdx, setCount, setStart, setEnd }: 
   const settings = useBlitz((s) => s.settings);
   const updateSettings = useBlitz((s) => s.updateSettings);
   const startRun = useBlitz((s) => s.startRun);
-  // Every deck is in English, so the picker is too — see `englishVoices`.
   const allVoices = useVoices();
   // Every deck is in English, so the picker is too — see `englishVoices`.
   const voices = useMemo(() => englishVoices(allVoices), [allVoices]);

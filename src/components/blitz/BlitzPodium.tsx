@@ -198,7 +198,10 @@ function ReviewRow({
           className="border-t px-3.5 py-3.5"
           style={{ borderColor: 'var(--border-subtle)' }}
         >
-          <div className="text-[14px] leading-snug" style={{ color: 'var(--text-primary)' }}>
+          <div
+            className="text-[14px] leading-snug"
+            style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-question)' }}
+          >
             <RichText text={question.question} size="sm" />
           </div>
           <ul className="mt-3 flex flex-col gap-1">
