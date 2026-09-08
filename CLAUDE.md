@@ -50,7 +50,7 @@ src/components/blitz/ the Kahoot-style game mode — see "Blitz mode" below.
                       script), lib/speech.ts drives the browser voice,
                       lib/sfx.ts synthesises the sounds, state/blitzStore.ts
                       runs one game
-public/decks/         13 decks + manifest.json + deck-template.json
+public/decks/         14 decks + manifest.json + deck-template.json
 scripts/
   audit-deck.mjs      structural audit — skill Phase 1. Its duplicate-option check
                       compares options with operators intact; the prose normalizer
@@ -139,7 +139,7 @@ detection rule starts over-firing. A rule change that leaves the count flat and
 the tests green is safe; a spike means the heuristic now eats prose.
 
 `test:blitz` ends with a sweep of its own reporting how many questions carry
-code — 73 of 1,624 today. That number is the *listener's* view of the same
+code — 73 of 1,652 today. That number is the *listener's* view of the same
 heuristic, since a code block is spoken as "Code shown on screen" rather than
 read out, so it moves for exactly the same reasons the richtext count does.
 
@@ -419,9 +419,21 @@ underneath.
 
 ## Deck state — as of 2026-08-25
 
-**1,623 questions across 13 decks, all 1,623 cited with a real URL.** Gap zero,
-unparsed-marker count zero, re-measured 2026-08-25. Run the command below before
+**1,652 questions across 14 decks, all 1,652 cited with a real URL.** Gap zero,
+unparsed-marker count zero, re-measured 2026-09-08. Run the command below before
 trusting the number — it is cheap.
+
+Two corrections folded into that figure. The 1,623 this line carried was **one short**
+of the truth even on the day it was written: the integration deck holds 141 questions,
+not the 140 its row still claims, so the real baseline was 1,624. **The table's Q
+column therefore sums to 1,651 while the measured total is 1,652** — the row is the
+stale half, not the total, and it is corrected alongside that deck's readability pass.
+Measure with the command below rather than adding the column up. And the deck count is
+14 again, not because a deck came back but because
+**claude-architect-foundations arrived on 2026-09-08** — 28 questions, imported and
+fact-checked in the same pass. That is the second time in three weeks a "there is no
+next deck" claim was overtaken, after the 2026-08-25 loose-question import; treat the
+total as a measurement with a short shelf life, never as a settled fact.
 
 **The "coverage has stopped moving, there is no next deck to cite" claim this section
 carried was overtaken on 2026-08-25, in the way it predicted.** No new *deck* arrived;
@@ -465,8 +477,8 @@ Agent Setup > Channels", plus the occasional empty block. It degrades gracefully
 (`linkifySegments` only linkifies real URLs) but it is unverifiable by a learner and it
 inflates any naive coverage count.
 
-**That gap closed on 2026-08-18 and is still zero: 1,623 marker blocks, 1,623 with a
-URL** (re-measured 2026-08-25, after the integration import below; the 1,209 this line used to carry was the count at the
+**That gap closed on 2026-08-18 and is still zero: 1,652 marker blocks, 1,652 with a
+URL** (re-measured 2026-09-08, after the claude-architect-foundations import; the 1,209 this line used to carry was the count at the
 time it was written, three deck passes ago). The last of the gap went with the
 agentforce pass (24 questions, 88 prose lines) and the admin reference repair (3). Keep
 measuring it anyway — the check is cheap, and the next scraped import brings the problem
@@ -517,6 +529,7 @@ column, not the Cited column.
 | salesforce-integration-architect | 140 | 140 | **Fully checked** — 37 stamps, 15 keys moved. Spot-rechecked 2026-08-10: citations sound, content current, 0 wrong answers found. Grew 133 → 140 on 2026-08-25 from two files of loose exam questions (see the import note below). Its **27 in-app comments were already worked through** — they are the largest comment set in the repo and read like open disputes ("It is B", "Might be D"), but the repo owner confirmed on 2026-08-17 that they were addressed. Do not re-triage them as new signal |
 | salesforce-iam-architect | 116 | 116 | **Fully checked** (2026-08-10) — 3 keys moved, 7 reasoning fixes |
 | salesforce-admin | 154 | 154 | **Fully checked** (2026-08-19) — 2 keys moved, 5 flagged, 60 explanations rewritten. 13 keys had already moved in the ADM-201 merge pass. Its real defect was the citation layer: only 36 questions rendered a References block, **47 more carried a marker the parser could not see**, and **24 of the 36 legacy `sf.` ids tested were dead** — see failure patterns 4b and 4c |
+| claude-architect-foundations | 28 | 28 | **Fully checked** (2026-09-08, in the same pass that imported it) — 1 key moved, 1 flagged reasoning fix, 12 silent clarifications. First Anthropic deck, and the **easiest doc estate in the repo to verify**: `platform.claude.com` returns a real HTTP 404 for an invented id, so URL checking needs no browser. Read the three caveats below before trusting the row |
 | salesforce-agentforce-specialist | 121 | 121 | **Fully checked** (2026-08-17) — 16 keys moved across 6 batches. Started from 0 cited, with 26 questions rendering a References block of prose only. One duplicate removed (`b7ffd87e`), resolving the pair this file flagged |
 | salesforce-revenue-cloud | 135 | 135 | **Fully checked** (2026-08-15) — 2 keys moved, 88 explanations rewritten. Its defect was **fabricated citations, not wrong answers**: 73 explanations quoted invented "Exact Extracts". 9 questions could not be settled and say so in their own prose. Deduped 137 → 135 on 2026-08-17 |
 | salesforce-data-cloud-consultant | 100 | 100 | **Fully checked** (2026-08-21) — 4 keys moved, 6 flagged reasoning fixes, 11 silent clarifications. Its defect shape is **the invented capability**: a "reusable container block", a "Data Segmentation Object", and a phone field type that supposedly normalises to E164 all name things Data Cloud does not have. Two items are defective (three defensible options each), and one explanation resolved its own ambiguity by deferring to "the source" — an exam dump. **All 100 option sets use pre-rename product and permission-set names** — see the Data 360 note below |
@@ -550,10 +563,11 @@ integration), `efc3d13e` B→C (one MFA prompt across mixed login paths comes fr
 session security levels, not the org-wide MFA setting), `9f507c0e` A,B→B,D
 (Embedded Login is not one of the four documented login page types).
 
-Clean across all 13 decks right now (re-measured 2026-08-25, all 1,623 questions): zero
+Clean across all 14 decks right now (re-measured 2026-09-08, all 1,652 questions): zero
 `U+FFFD` replacement characters, zero literal `"Option B"` placeholder strings, zero keys
-pointing at empty options, zero missing ids. The deck count said 14 until the 2026-08-19
-re-measurement — the claude-questions removal above had left it stale.
+pointing at empty options, zero missing ids. The deck count is 14 again as of
+2026-09-08, for a different reason than the last time it read 14: that one was the
+claude-questions removal leaving the figure stale, this one is a real fourteenth deck.
 
 **The Databricks deck is the counter-example to the IAM trap above, and worth
 reading as one.** It also reaches N/N coverage, but its pass moved 8 keys and
@@ -649,12 +663,53 @@ The fact-check confirmed both copies of every pair are correct, so these are
 redundancy rather than error — removing them is the repo owner's call, not a
 fact-check outcome, which is why the deck still has 37.
 
+**Claude Architect Foundations (2026-09-08) is a sixth shape, and the one where the
+correction rate is most likely to mislead.** It moved **1 key in 28** — about 3.6%,
+which by the "a pass that corrects nothing is a red flag" heuristic should read as a
+lazy pass. Three things argue it is not. A second wrong key was caught *at import*
+rather than during the pass (`76ecf70b` printed `Answer: A` while supplying option
+B's explanation verbatim), so it is really 2 in 29. **14 of 28 explanations were
+rewritten**, which is the rewrite-count signal Revenue Cloud established. And the
+subject matter is current, well-documented material rather than a scrape of
+five-year-old trivia. The key that did move is worth knowing as a pattern:
+`16885805` keyed JSON Schema type constraints as what most helps Claude supply
+correct parameter values, where *Define tools* says detailed descriptions are "by far
+the most important factor in tool performance" and *Handle tool calls* prescribes
+more-detailed descriptions as the fix for that exact symptom.
+
+Three caveats on that row:
+
+1. **Four of its 28 questions are agent-design judgment no vendor page settles**
+   (`e9f005d6`, `5eb4dfc6`, `9de1fc0a`, `a517cd7f`). Each says so in its own prose and
+   its citation is marked orienting rather than decisive. This is the Slack caveat
+   again, at a smaller scale — read 28/28 as weaker evidence than the same number on
+   the tool-design and MCP items, where the documentation genuinely decides.
+2. **`92663975` is flagged, and the flag is about a real tension in Anthropic's own
+   guidance.** *Define tools* says to consolidate related operations behind an
+   `action` parameter because that reduces selection ambiguity; *Writing effective
+   tools for AI agents* says each tool should have "a clear, distinct purpose".
+   Splitting buys parameter accuracy, consolidating buys selection accuracy, and an
+   item is only wrong if it claims one move delivers both. This deck keys one question
+   each way (`92663975` splits, `36351fa3` consolidates) and both are correct.
+3. **`check-urls.mjs` reports every page on `code.claude.com` and
+   `modelcontextprotocol.io` as DEAD.** It is a false positive on both hosts — see the
+   2026-09-08 section of `references/verified-docs.md`. Do not drop a citation on its
+   say-so; verify in the browser.
+
 ### What to work on next
 
-As of 2026-08-25, **every deck has had a full documentation pass and every question is
-cited.** There is no next deck — but see the import note directly below, because "no
-next deck" turned out not to mean "no new questions". What remains is cross-cutting
-work, below.
+As of 2026-09-08, **every deck has had a full documentation pass and every question is
+cited.** There is no *uncited* deck — but do not read that as "no work left", because
+the claim has now been overtaken twice in three weeks. First on 2026-08-25, when two
+files of loose questions grew integration by 7; then on 2026-09-08, when
+claude-architect-foundations arrived as a whole new deck. A pass ages the moment
+someone pastes questions into the chat.
+
+**The one cross-cutting job with a clear runway is the readability pass.** Only
+integration-architect has had it; the other 13 decks still have stems the Blitz
+narrator reads as one long breath, and explanations that never say why the distractors
+fail. It is packaged as the `deck-readability` skill, so it is repeatable rather than
+re-derived. Everything else that remains is listed below.
 
 ### The 2026-08-25 integration import — the shape to expect from loose questions
 
