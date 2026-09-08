@@ -227,6 +227,33 @@ check(
   `Option C. ${CODE_SPOKEN_PLACEHOLDER}`,
 );
 
+// The 'question only' read-aloud mode. The stem still has to be complete —
+// dropping the options must not drop anything else with them.
+check(
+  'question-only reads the stem and nothing else',
+  speechScript(sample, false).map((c) => c.kind),
+  ['stem'],
+);
+check(
+  'question-only still says the whole stem',
+  speechScript(sample, false).map((c) => c.text).join(' '),
+  sample.question,
+);
+{
+  const longStem = { ...sample, question: 'A sentence about integration patterns. '.repeat(20) };
+  const full = speechScript(longStem, true);
+  const stemOnly = speechScript(longStem, false);
+  ok(
+    'a long stem is still split when the options are dropped',
+    stemOnly.length > 1 && stemOnly.every((c) => c.kind === 'stem'),
+  );
+  check(
+    'the stem chunks are identical in both modes',
+    stemOnly.map((c) => c.text),
+    full.filter((c) => c.kind === 'stem').map((c) => c.text),
+  );
+}
+
 // -------------------------------------------------------------- run order ---
 console.log('Run order');
 

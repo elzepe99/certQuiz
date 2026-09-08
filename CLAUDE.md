@@ -195,6 +195,15 @@ overturned.
 
 Five things are load-bearing and easy to undo by accident:
 
+- **Read-aloud is three-way, not a toggle**: question only, question and every
+  option, or off (`ReadAloudMode` in `lib/blitz.ts`; `speechScript` takes an
+  `includeOptions` flag). The stem is the long part and the part that gets
+  skipped; the options are short and already on screen, so reading only the
+  question is frequently the quicker way to play rather than a lesser one — a
+  144-character stem reads in 7 seconds where a 341-character one plus five
+  options took 28. It was a boolean first, so `coerceReadAloud` in
+  `blitzStorage.ts` still migrates a stored `true` to `all` and `false` to
+  `off`. **Do not drop that migration** while anyone has old settings saved.
 - **The clock starts when the reading finishes, not when the question appears.**
   Stems here reach 1,200 characters, about 80 seconds of speech. A timer racing
   the narrator would punish exactly the questions the voice exists to make

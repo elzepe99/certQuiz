@@ -150,6 +150,9 @@ export type SpeechChunk =
   | { kind: 'stem'; text: string }
   | { kind: 'option'; optionIdx: number; letter: string; text: string };
 
+/** How much of a question the narrator reads. */
+export type ReadAloudMode = 'question' | 'all' | 'off';
+
 /**
  * The question as a sequence of utterances rather than one blob.
  *
@@ -158,12 +161,18 @@ export type SpeechChunk =
  * and the listener gets a natural pause between options instead of one
  * unbroken sentence. An option that needs more than one utterance keeps the
  * same `optionIdx` across all of them, so the highlight stays put.
+ *
+ * `includeOptions` is what separates the two spoken modes. The stem is the part
+ * that is long and skipped; the options are short, already on screen, and often
+ * faster to scan than to sit through — so reading only the stem is a reasonable
+ * way to play, not a degraded one.
  */
-export function speechScript(q: Question): SpeechChunk[] {
+export function speechScript(q: Question, includeOptions = true): SpeechChunk[] {
   const chunks: SpeechChunk[] = [];
   for (const text of splitForSpeech(speakableText(q.question))) {
     chunks.push({ kind: 'stem', text });
   }
+  if (!includeOptions) return chunks;
   getOptions(q).forEach((opt, i) => {
     const spoken = speakableText(opt.text) || 'See screen.';
     // "Option A" rather than a bare "A", which several voices read as "uh".
