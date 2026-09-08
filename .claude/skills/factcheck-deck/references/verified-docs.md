@@ -2257,3 +2257,108 @@ the LDV page returned full article bodies to WebFetch from this machine.
 intermittent case. The browser resolved it on one top-level `navigate` plus a ~5s wait,
 polling until the title stopped being `Salesforce Help | Article`. Do not re-fetch a
 nav-tree response; WebFetch caches 15 minutes and will hand back the same thing.
+
+---
+
+## 2026-09-08 — Anthropic / MCP (claude-architect-foundations pass)
+
+First non-Salesforce, non-Databricks, non-Slack vendor. All 16 URLs below were
+rendered in the browser, title-checked, and grepped for the sentence they are cited
+for. **This is the easiest doc estate in the repo to verify** — read the host
+behaviour note before budgeting a pass on it.
+
+### Host behaviour — three hosts, all honest, one checker blind spot
+
+| Host | Invented id returns | Verifiable by |
+|---|---|---|
+| `platform.claude.com` | real **HTTP 404**, title "Not Found - Claude Platform Docs" | WebFetch or browser |
+| `code.claude.com` | client-rendered not-found shell | **browser only** |
+| `modelcontextprotocol.io` | title "Page Not Found", body ~269 chars | **browser only** |
+| `www.anthropic.com/engineering/*` | n/a (checked ALIVE) | WebFetch or browser |
+
+- **`docs.claude.com` is a redirect now.** Every `docs.claude.com/en/docs/...` URL
+  302s to `platform.claude.com/docs/en/...`. Cite the destination — the redirect
+  works today but the canonical host has moved.
+- **Claude Code docs are NOT on `platform.claude.com`.** They live at
+  `code.claude.com/docs/en/...`; `platform.claude.com/docs/en/claude-code/...`
+  returns a genuine Not Found. The Agent SDK pages resolve on both hosts.
+- **`check-urls.mjs` reports all of `code.claude.com` and `modelcontextprotocol.io`
+  as `DEAD — soft 404 — not-found text in a 200 response`. This is a FALSE POSITIVE
+  and it fires on every page on those two hosts.** Both serve a client-rendered
+  shell whose no-JS HTML contains not-found text; the article arrives only after JS
+  runs. All six URLs flagged on this pass rendered with real titles, bodies of
+  21k–201k characters, and the exact cited sentence present. **Do not drop a
+  citation on these two hosts on the checker's say-so** — that is the direction that
+  loses good references. Verify in the browser instead. `platform.claude.com` and
+  `anthropic.com` triage correctly and can be trusted.
+- WebFetch returns these pages in **full**, which is generous but expensive — the
+  tool-use overview alone is ~15k tokens, and it ignores a length limit given in the
+  prompt. For a multi-page pass, prefer `navigate` plus a `javascript_tool` grep of
+  `document.body.innerText`; it costs a fraction of the context.
+
+### Facts confirmed
+
+| Fact | What the page states | Source |
+|---|---|---|
+| Tool **descriptions** outrank schemas | "Provide extremely detailed descriptions. **This is by far the most important factor in tool performance**", and what a description must cover includes "what each parameter means and how it affects the tool's behavior". Also "Prioritize descriptions, but consider using `input_examples` for complex tools" | Define tools |
+| The documented fix for a **missing required parameter** | An invalid call "usually means that there wasn't enough information for Claude to use the tool correctly… your best bet during development is to try the request again with **more-detailed `description` values**". Schema-level enforcement is `strict: true` (strict tool use), not ordinary type constraints | Handle tool calls; Define tools |
+| Consolidate related operations | "Rather than creating a separate tool for every action (`create_pr`, `review_pr`, `merge_pr`), group them into a single tool with an `action` parameter. Fewer, more capable tools reduce selection ambiguity" | Define tools |
+| Tool-count threshold — **a hard number** | "Claude's ability to pick the right tool degrades once you exceed **30–50 available tools**." That is what the tool search tool and `defer_loading` are for; below it, deferring hides overlap rather than removing it | Tool search tool |
+| Error results must be instructive | Return the error in `content` with `is_error: true`, and "write instructive error messages. Instead of generic errors like `failed`, include what went wrong and what Claude should try next (for example, `Rate limit exceeded. Retry after 60 seconds.`)" | Handle tool calls |
+| MCP's **two** error mechanisms | **Protocol errors** (JSON-RPC) are "issues with the request structure itself that models are less likely to be able to fix": unknown tool, **malformed requests that fail the CallToolRequest schema**, server errors. **Tool execution errors** (`isError: true`) "contain actionable feedback that language models can use to self-correct": **API failures**, input validation errors, business logic errors | MCP spec 2026-07-28, Tools |
+| MCP clients should show inputs | "Clients SHOULD: Prompt for user confirmation on sensitive operations; **Show tool inputs to the user before calling the server**, to avoid malicious or accidental data exfiltration" | MCP spec 2026-07-28, Tools |
+| `--bare` skips discovery | "Minimal mode: skip auto-discovery of hooks, skills, custom commands, subagents, plugins, MCP servers, auto memory, and CLAUDE.md so scripted calls start faster." `--append-system-prompt-file` loads text "and append to the default prompt"; `--system-prompt-file` **replaces** it | Claude Code CLI reference |
+| Project skills location | Table: Personal `~/.claude/skills/<name>/SKILL.md` (all projects); **Project `.claude/skills/<name>/SKILL.md` (this project only)**. "The directory name becomes the command you type." Cloud sessions load "project skills committed to the cloned repository's `.claude/skills/`" | Claude Code skills |
+| `PreToolUse` can block | Event table: "**PreToolUse** — Before a tool call executes. **Can block it**", with a worked example returning `permissionDecision: "deny"` | Claude Code hooks reference |
+| Connect an MCP server when you paste | "Connect a server when you find yourself **copying data into chat from another tool, like an issue tracker** or a monitoring dashboard. Once connected, Claude can read and act on that system directly instead of working from what you paste" | Claude Code MCP |
+| Subagents: isolation and parallelism | "Multiple subagents can run concurrently, so independent subtasks finish in the time of the slowest one rather than the sum of all of them." A subagent's "context window starts fresh, with no parent conversation"; the parent receives only its final message. Claude invokes them through the **Agent** tool | Subagents in the SDK |
+| Long-horizon context techniques | "Compaction, structured note-taking, and multi-agent architectures." Compaction is lossy — "overly aggressive compaction can result in the loss of subtle but critical context whose importance only becomes apparent later" — and "context rot" names recall degrading as tokens grow | Effective context engineering |
+| Temperature | "Temperature is a parameter that controls the randomness of a model's predictions during text generation… **Lower temperatures result in more conservative and deterministic outputs**" | Glossary |
+| Role goes in the system prompt | "Give Claude a role. Setting a role in the system prompt focuses Claude's behavior and tone for your use case" | Prompting best practices |
+| Examples steer output | "Examples are one of the most reliable ways to steer Claude's output format, tone, and structure… improve accuracy and consistency." Make them **diverse**: "cover edge cases". Include 3–5 | Prompting best practices |
+| Structure by delimiting content | "XML tags help Claude parse complex prompts unambiguously, especially when your prompt mixes instructions, context, examples, and variable inputs. Wrapping each type of content in its own tag… reduces misinterpretation" | Prompting best practices |
+| JSON output wants a schema | "Create a JSON schema that describes the structure you want Claude to follow"; structured outputs "guarantee schema-compliant responses through constrained decoding" | Structured outputs |
+| Chained calls can fold into one tool | "Tools can consolidate functionality… tools can enrich tool responses with related metadata or **handle frequently chained, multi-step tasks in a single tool call**." Also "too many tools or **overlapping tools** can distract agents from pursuing efficient strategies" | Writing effective tools for AI agents |
+
+### The one contradiction worth knowing before writing tool-design items
+
+Anthropic's guidance pulls in two directions on tool count, and a deck question can
+sit on either side without being wrong:
+
+- **Define tools** says consolidate related operations behind an `action` parameter,
+  because fewer tools reduce *selection* ambiguity.
+- **Writing effective tools for AI agents** says "make sure each tool you build has a
+  clear, distinct purpose."
+
+Splitting one tool into three buys **parameter** accuracy (each `required` array
+becomes meaningful) at some cost to **selection** accuracy. Consolidating buys the
+reverse. An item is only wrong if its explanation claims one move delivers both.
+This deck contains one question keyed each way, which is fine — but `92663975` needed
+a reasoning fix for exactly that overclaim.
+
+### URLs (all rendered 2026-09-08)
+
+- **Tool use overview** — https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview
+- **Define tools** — https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools
+- **Handle tool calls** — https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls
+- **Tool search tool** — https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool
+- **Structured outputs** — https://platform.claude.com/docs/en/build-with-claude/structured-outputs
+- **Prompting best practices** — https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices
+- **Increase output consistency** — https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/increase-consistency
+- **Glossary** (temperature) — https://platform.claude.com/docs/en/about-claude/glossary
+- **Claude Code CLI reference** — https://code.claude.com/docs/en/cli-reference
+- **Claude Code skills** — https://code.claude.com/docs/en/skills
+- **Claude Code hooks reference** — https://code.claude.com/docs/en/hooks
+- **Claude Code MCP** — https://code.claude.com/docs/en/mcp
+- **Subagents in the SDK** — https://code.claude.com/docs/en/agent-sdk/subagents
+- **MCP spec, Tools** — https://modelcontextprotocol.io/specification/2026-07-28/server/tools
+- **Writing effective tools for AI agents** — https://www.anthropic.com/engineering/writing-tools-for-agents
+- **Effective context engineering** — https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents
+- **Building effective agents** — https://www.anthropic.com/engineering/building-effective-agents
+
+**Pin the MCP spec version.** `modelcontextprotocol.io/specification/versioning`
+reports the latest as **2026-07-28**, with `2025-11-25` the previous one. The
+`2025-06-18` page still renders and its error-handling section says the same thing in
+older words ("Invalid arguments" rather than "malformed requests that fail the
+CallToolRequest schema"), so an old citation there is stale rather than wrong — but
+cite the current version, and re-check this line before the next pass.
