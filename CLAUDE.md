@@ -27,6 +27,8 @@ a bug.
 | "clean up / fact-check / verify this deck", "are these answers right?", "check these against the docs", "add sources / references / citations", "I found a wrong answer in deck X" | **`factcheck-deck`** | The primary workflow of this repo. Read it in full before touching deck content — it encodes failures that already happened here. |
 | "I just scraped / imported a new deck" | **`factcheck-deck`** | Freshly scraped answer keys are the most likely to be wrong. Run `add-question-ids.mjs` first to mint ids, then fact-check. |
 | "audit / structurally check a deck" (no doc lookups) | `node scripts/audit-deck.mjs <deck>` | Phase 1 of the skill, standalone. Cheap. Leads, not verdicts. Takes a **path**, not a bare filename. |
+| "the questions read badly / the bot reads them wrong", "fix the punctuation", "format these stems" — **without** changing what a question says | `node scripts/reformat-stems.mjs <edits.json>` | Punctuation, spacing and capitalisation only, guarded so a formatting pass cannot alter the words. See the repo map below. Explanations and keys still go through `apply-findings.mjs`. |
+| "explain why the wrong answers are wrong" | `apply-findings.mjs` with `clarified` verdicts | Not a fact-check: no key moves, so no correction notice. Integration-architect is the worked example — see the deck table. |
 | "what did users comment on?" | `npm run review-comments` | Needs Supabase keys configured. |
 | "build me a chart / dashboard of deck progress" | `dataviz` | |
 | "make this a shareable page / artifact" | `artifact-design` | |
@@ -74,7 +76,18 @@ scripts/
                       already disclosed in that question's own explanation.
                       Treat a nonzero count on an already-checked deck as expected;
                       the number that matters is whether it MOVED after your own
-                      rewrites landed
+                      rewrites landed.
+                      **A per-option "why the wrong answers are wrong" section
+                      inflates the contradiction check**, because naming each
+                      distractor puts its words in the explanation. On
+                      integration the count went 3 → 4 as those sections landed.
+                      The cure is not to drop the section but to open with the
+                      KEYED option's own vocabulary rather than the mechanism's
+                      generic name — "A Case Trigger on after insert and after
+                      update that publishes the Platform Event" instead of
+                      "Platform Events are the canonical mechanism". Doing that
+                      took integration to **1**, clearing two findings that
+                      pre-dated the pass
   find-duplicates.mjs near-duplicate detector. Two entry paths since 2026-08-21:
                       stem Jaccard >= 0.72, or IDF-weighted keyed-answer overlap
                       >= 0.6 with stems still >= 0.6 (those print a `*`). The
@@ -93,6 +106,25 @@ scripts/
                         content change under a whole-file diff — check
                         `git diff --stat` before believing a pass touched a lot
   add-question-ids.mjs  mints permanent ids; NEW decks only
+  reformat-stems.mjs    punctuation/spacing/capitalisation ONLY, on `question`
+                        and `optionA`–`optionE`. Takes an edits JSON; refuses
+                        `correct` and `explanation`, which belong to
+                        apply-findings.mjs. **The guard is the whole point:**
+                        every edit must satisfy
+                        `normalize(before) === normalize(after)` — letters and
+                        digits in order, ignoring case, whitespace and
+                        punctuation — so adding a full stop or splitting
+                        `Salesforcewith` passes while adding, dropping,
+                        reordering or typo-fixing a word fails. One violation
+                        aborts the WHOLE run, including the valid edits beside
+                        it. Preserves the deck's existing indentation and line
+                        endings, so the diff shows only the lines you changed
+                        (integration is 4-space CRLF; every other deck is
+                        2-space LF). Use it on scraped stems whose sentences
+                        have run together — that is not cosmetic, because
+                        `splitForSpeech` breaks the Blitz narration at SENTENCE
+                        ENDS, so a stem with none is handed to the synthesiser
+                        as one 350-character run
   review-comments.mjs   exports in-app comments to markdown
   test-richtext.mjs     regression suite for the code-fence heuristic
   test-blitz.mjs        regression suite for Blitz scoring + the spoken script.
@@ -514,7 +546,7 @@ column, not the Cited column.
 |---|---:|---:|---|
 | databricks-data-engineer-associate | 147 | 147 | **Fully checked** (2026-08-15) — 8 keys moved, 11 reasoning fixes, in the same pass that imported it. First non-Salesforce deck. Deduped 148 → 147 on 2026-08-22 (`e22e750b`, which was unanswerable as printed) |
 | salesforce-platform-developer-2 | 146 | 146 | **Fully checked** — 8 rounds, 2 keys moved. Deduped 148 → 147 on 2026-08-17, then 147 → 146 on 2026-08-22 (`4f119a16`) |
-| salesforce-integration-architect | 140 | 140 | **Fully checked** — 37 stamps, 15 keys moved. Spot-rechecked 2026-08-10: citations sound, content current, 0 wrong answers found. Grew 133 → 140 on 2026-08-25 from two files of loose exam questions (see the import note below). Its **27 in-app comments were already worked through** — they are the largest comment set in the repo and read like open disputes ("It is B", "Might be D"), but the repo owner confirmed on 2026-08-17 that they were addressed. Do not re-triage them as new signal |
+| salesforce-integration-architect | 141 | 141 | **Fully checked** — 37 stamps, 15 keys moved. Spot-rechecked 2026-08-10: citations sound, content current, 0 wrong answers found. Grew 133 → 141 on 2026-08-25 from two files of loose exam questions (see the import note below). **Readability pass 2026-09-08 — the only deck with one, and the model to copy:** 37 stems reformatted via `reformat-stems.mjs` (27 had no terminal punctuation, 5 held fused words like `Salesforcewith`) and **all 141 explanations now carry a trailing "Why the other options are wrong:" section with one line per non-keyed option** — 350 discard lines, applied as `clarified` verdicts so no key moved and no correction notice fired. Its **27 in-app comments were already worked through** — they are the largest comment set in the repo and read like open disputes ("It is B", "Might be D"), but the repo owner confirmed on 2026-08-17 that they were addressed. Do not re-triage them as new signal |
 | salesforce-iam-architect | 116 | 116 | **Fully checked** (2026-08-10) — 3 keys moved, 7 reasoning fixes |
 | salesforce-admin | 154 | 154 | **Fully checked** (2026-08-19) — 2 keys moved, 5 flagged, 60 explanations rewritten. 13 keys had already moved in the ADM-201 merge pass. Its real defect was the citation layer: only 36 questions rendered a References block, **47 more carried a marker the parser could not see**, and **24 of the 36 legacy `sf.` ids tested were dead** — see failure patterns 4b and 4c |
 | salesforce-agentforce-specialist | 121 | 121 | **Fully checked** (2026-08-17) — 16 keys moved across 6 batches. Started from 0 cited, with 26 questions rendering a References block of prose only. One duplicate removed (`b7ffd87e`), resolving the pair this file flagged |
