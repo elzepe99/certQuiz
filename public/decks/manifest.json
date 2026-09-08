@@ -104,6 +104,14 @@
       "description": "Foundational certification covering configuration and setup, object management and the Lightning App Builder, sales and service applications, data and analytics, and process automation.",
       "file": "salesforce_admin_questions.json",
       "accentColor": "#F062C0"
+    },
+    {
+      "id": "claude-architect-foundations",
+      "name": "Claude Certified Architect - Foundations",
+      "shortName": "Claude Architect",
+      "description": "Anthropic foundations certification covering prompt engineering, context management, tool and MCP server design, Claude Agent SDK multi-agent orchestration, and Claude Code workflows.",
+      "file": "claude_architect_foundations.json",
+      "accentColor": "#D97757"
     }
   ]
 }
