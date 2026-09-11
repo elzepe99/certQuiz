@@ -161,8 +161,8 @@ this file to archaeology.
 ```sh
 npm run typecheck        # tsc --noEmit
 npm run test:richtext    # 28 tests; run after ANY richtext.ts rule change
-npm run test:sets        # 396 tests; the set-chunking arithmetic
-npm run test:blitz       # 35 tests; Blitz scoring and the spoken script
+npm run test:sets        # 423 tests; the set-chunking arithmetic
+npm run test:blitz       # 39 tests; Blitz scoring and the spoken script
 npm run build            # tsc -b && vite build
 ```
 
@@ -171,7 +171,7 @@ detection rule starts over-firing. A rule change that leaves the count flat and
 the tests green is safe; a spike means the heuristic now eats prose.
 
 `test:blitz` ends with a sweep of its own reporting how many questions carry
-code — 73 of 1,652 today. That number is the *listener's* view of the same
+code — 73 of 1,657 today. That number is the *listener's* view of the same
 heuristic, since a code block is spoken as "Code shown on screen" rather than
 read out, so it moves for exactly the same reasons the richtext count does.
 
@@ -460,8 +460,9 @@ underneath.
 
 ## Deck state — as of 2026-08-25
 
-**1,652 questions across 14 decks, all 1,652 cited with a real URL.** Gap zero,
-unparsed-marker count zero, re-measured 2026-09-08. Run the command below before
+**1,657 questions across 14 decks, all 1,657 cited with a real URL.** Gap zero,
+unparsed-marker count zero, re-measured 2026-09-11 after five questions were added to
+integration (see its row). Run the command below before
 trusting the number — it is cheap.
 
 Two corrections folded into that figure. The 1,623 this line carried was **one short**
@@ -518,8 +519,8 @@ Agent Setup > Channels", plus the occasional empty block. It degrades gracefully
 (`linkifySegments` only linkifies real URLs) but it is unverifiable by a learner and it
 inflates any naive coverage count.
 
-**That gap closed on 2026-08-18 and is still zero: 1,652 marker blocks, 1,652 with a
-URL** (re-measured 2026-09-08, after the claude-architect-foundations import; the 1,209 this line used to carry was the count at the
+**That gap closed on 2026-08-18 and is still zero: 1,657 marker blocks, 1,657 with a
+URL** (re-measured 2026-09-11, after five questions joined integration; the 1,209 this line used to carry was the count at the
 time it was written, three deck passes ago). The last of the gap went with the
 agentforce pass (24 questions, 88 prose lines) and the admin reference repair (3). Keep
 measuring it anyway — the check is cheap, and the next scraped import brings the problem
@@ -567,8 +568,8 @@ column, not the Cited column.
 |---|---:|---:|---|
 | databricks-data-engineer-associate | 147 | 147 | **Fully checked** (2026-08-15) — 8 keys moved, 11 reasoning fixes, in the same pass that imported it. First non-Salesforce deck. Deduped 148 → 147 on 2026-08-22 (`e22e750b`, which was unanswerable as printed) |
 | salesforce-platform-developer-2 | 146 | 146 | **Fully checked** — 8 rounds, 2 keys moved. Deduped 148 → 147 on 2026-08-17, then 147 → 146 on 2026-08-22 (`4f119a16`) |
-| salesforce-integration-architect | 141 | 141 | **Fully checked** — 37 stamps, 15 keys moved. Spot-rechecked 2026-08-10: citations sound, content current, 0 wrong answers found. Grew 133 → 141 on 2026-08-25 from two files of loose exam questions (see the import note below). **Readability pass 2026-09-08 — the only deck with one, and the model to copy:** 37 stems reformatted via `reformat-stems.mjs` (27 had no terminal punctuation, 5 held fused words like `Salesforcewith`) and **all 141 explanations now carry a trailing "Why the other options are wrong:" section with one line per non-keyed option** — 350 discard lines, applied as `clarified` verdicts so no key moved and no correction notice fired. Its **27 in-app comments were already worked through** — they are the largest comment set in the repo and read like open disputes ("It is B", "Might be D"), but the repo owner confirmed on 2026-08-17 that they were addressed. Do not re-triage them as new signal |
-| salesforce-iam-architect | 116 | 116 | **Fully checked** (2026-08-10) — 3 keys moved, 7 reasoning fixes |
+| salesforce-integration-architect | 146 | 146 | **Fully checked** — 37 stamps, 15 keys moved. Spot-rechecked 2026-08-10: citations sound, content current, 0 wrong answers found. Grew 133 → 141 on 2026-08-25 from two files of loose exam questions (see the import note below), then **141 → 146 on 2026-09-11** with five questions recovered from the orphaned `feat/integration-8-new-questions` branch (`5db48275`, `43cb606c`, `831af2e0`, `7b684ea4`, `c78d313d`) — fact-checked on 2026-08-24 with every citation read at body level, and the branch's other three were duplicates of items main already held (same option sets at stem 0.72–0.91). Their explanations were laid out in the readability format before landing, so the section count below is 146 of 146. **Readability pass 2026-09-08 — the only deck with one, and the model to copy:** 37 stems reformatted via `reformat-stems.mjs` (27 had no terminal punctuation, 5 held fused words like `Salesforcewith`) and **all explanations now carry a trailing "Why the other options are wrong:" section with one line per non-keyed option** — 350 discard lines, applied as `clarified` verdicts so no key moved and no correction notice fired. Its **27 in-app comments were already worked through** — they are the largest comment set in the repo and read like open disputes ("It is B", "Might be D"), but the repo owner confirmed on 2026-08-17 that they were addressed. Do not re-triage them as new signal |
+| salesforce-iam-architect | 116 | 116 | **Fully checked** (2026-08-10) — 3 keys moved, 7 reasoning fixes. **Readability pass 2026-09-09, the second deck to get one:** 38 stems reformatted (34 had no terminal punctuation, all of them a trailing "Choose N answers"; 4 hand-written comma insertions) and all 116 explanations now carry a "Why the other options are wrong:" section — **313 discard lines**, applied as `clarified` so no key moved and no notice fired. Its audit **stayed at 0** through the pass, against integration's 3 → 4 → 1, because every rewritten explanation opens in the keyed option's own vocabulary. **Zero fused words** — this scrape did not eat spaces, unlike Dev II's. Read the readability note below before assuming the >200-char metric moves on every deck |
 | salesforce-admin | 154 | 154 | **Fully checked** (2026-08-19) — 2 keys moved, 5 flagged, 60 explanations rewritten. 13 keys had already moved in the ADM-201 merge pass. Its real defect was the citation layer: only 36 questions rendered a References block, **47 more carried a marker the parser could not see**, and **24 of the 36 legacy `sf.` ids tested were dead** — see failure patterns 4b and 4c |
 | claude-architect-foundations | 28 | 28 | **Fully checked** (2026-09-08, in the same pass that imported it) — 1 key moved, 1 flagged reasoning fix, 12 silent clarifications. First Anthropic deck, and the **easiest doc estate in the repo to verify**: `platform.claude.com` returns a real HTTP 404 for an invented id, so URL checking needs no browser. Read the three caveats below before trusting the row |
 | salesforce-agentforce-specialist | 121 | 121 | **Fully checked** (2026-08-17) — 16 keys moved across 6 batches. Started from 0 cited, with 26 questions rendering a References block of prose only. One duplicate removed (`b7ffd87e`), resolving the pair this file flagged |
@@ -604,7 +605,7 @@ integration), `efc3d13e` B→C (one MFA prompt across mixed login paths comes fr
 session security levels, not the org-wide MFA setting), `9f507c0e` A,B→B,D
 (Embedded Login is not one of the four documented login page types).
 
-Clean across all 14 decks right now (re-measured 2026-09-08, all 1,652 questions): zero
+Clean across all 14 decks right now (re-measured 2026-09-11, all 1,657 questions): zero
 `U+FFFD` replacement characters, zero literal `"Option B"` placeholder strings, zero keys
 pointing at empty options, zero missing ids. The deck count is 14 again as of
 2026-09-08, for a different reason than the last time it read 14: that one was the
@@ -746,11 +747,29 @@ files of loose questions grew integration by 7; then on 2026-09-08, when
 claude-architect-foundations arrived as a whole new deck. A pass ages the moment
 someone pastes questions into the chat.
 
-**The one cross-cutting job with a clear runway is the readability pass.** Only
-integration-architect has had it; the other 13 decks still have stems the Blitz
-narrator reads as one long breath, and explanations that never say why the distractors
-fail. It is packaged as the `deck-readability` skill, so it is repeatable rather than
-re-derived. Everything else that remains is listed below.
+**The one cross-cutting job with a clear runway is the readability pass.**
+integration-architect and iam-architect have had it; the other 12 decks still have
+stems the Blitz narrator reads as one long breath, and explanations that never say why
+the distractors fail. It is packaged as the `deck-readability` skill, so it is
+repeatable rather than re-derived. Everything else that remains is listed below.
+
+**Rank the remaining 12 by the narration metric, not by deck size** — measured
+2026-09-09, counting stems that contain a single sentence over 200 characters, which is
+what `splitForSpeech` has to hand the synthesiser in one breath:
+**Dev II 42 of 146 (29%, one run of 937 chars)**, databricks 23 of 147, data-architect
+20 of 135, revenue-cloud 15, agentforce 12, sharing-visibility 10, then app-builder,
+admin and dld at 4 each. Dev II is the worst deck in the repo for a listener by a wide
+margin and is the one to do next.
+
+**But that metric does not move on every deck, and IAM is the worked example of why.**
+Its 34 unpunctuated stems all ended in a trailing "Choose N answers" after a question
+mark — already a sentence boundary — so appending the full stops left the >200-char
+count at 20 and the total sentence count at 388, both unchanged. Its long sentences are
+long, not broken. What *did* move is the survey's other number, stems with **no comma
+past 120 characters**, which went **9 → 5**: that is the one `hardWrap`'s fallback
+actually reads, since it only breaks on a comma once a chunk has passed 60% of the
+200-character cap. On a deck whose punctuation is already correct, report that number
+rather than the headline one, and expect the real gain to be the explanations.
 
 ### The 2026-08-25 integration import — the shape to expect from loose questions
 
