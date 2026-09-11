@@ -567,7 +567,7 @@ column, not the Cited column.
 | Deck | Q | Cited | Verification status |
 |---|---:|---:|---|
 | databricks-data-engineer-associate | 147 | 147 | **Fully checked** (2026-08-15) — 8 keys moved, 11 reasoning fixes, in the same pass that imported it. First non-Salesforce deck. Deduped 148 → 147 on 2026-08-22 (`e22e750b`, which was unanswerable as printed) |
-| salesforce-platform-developer-2 | 146 | 146 | **Fully checked** — 8 rounds, 2 keys moved. Deduped 148 → 147 on 2026-08-17, then 147 → 146 on 2026-08-22 (`4f119a16`) |
+| salesforce-platform-developer-2 | 146 | 146 | **Fully checked** — 8 rounds, 2 keys moved. Deduped 148 → 147 on 2026-08-17, then 147 → 146 on 2026-08-22 (`4f119a16`). **Readability pass 2026-09-11, the third deck to get one:** 29 stems reformatted and all 146 explanations carry a "Why the other options are wrong:" section — **421 discard lines**, applied as `clarified`. Audit went **2 → 0** through the pass (both pre-existing findings cleared by keyed-vocabulary openers). **One key moved as a side effect, `474e9918` D → A**: the scrape had welded `AccountTriggerHelperfuture(callout=true) {` together and the earlier pass keyed the CalloutException on the reading that the annotation was malformed; restoring the lost `{`, `@` and line break (punctuation only, guard-verified) shows a correctly annotated future method called once per record, which on a bulk update throws Too many future calls — the only option that is a LimitException, which is what the stem asks for. Applied through `apply-findings.mjs` as `corrected`, not through the readability path. **Five OCR typos left in stems** because fixing them changes letters: `notinyxternalSystem` ×2, `getSemeData`, `ERF Number_c`, `asccuntRisteryManager`, `http objectHttp`. This is a code deck, so the survey's "no space after punctuation" (36) and "over-long sentence" (33) counts are almost all code — `System.assert(`, `acct.Id`, unfenced snippets — and stay put; only the 5 prose joins and 22 terminal stops were real |
 | salesforce-integration-architect | 146 | 146 | **Fully checked** — 37 stamps, 15 keys moved. Spot-rechecked 2026-08-10: citations sound, content current, 0 wrong answers found. Grew 133 → 141 on 2026-08-25 from two files of loose exam questions (see the import note below), then **141 → 146 on 2026-09-11** with five questions recovered from the orphaned `feat/integration-8-new-questions` branch (`5db48275`, `43cb606c`, `831af2e0`, `7b684ea4`, `c78d313d`) — fact-checked on 2026-08-24 with every citation read at body level, and the branch's other three were duplicates of items main already held (same option sets at stem 0.72–0.91). Their explanations were laid out in the readability format before landing, so the section count below is 146 of 146. **Readability pass 2026-09-08 — the only deck with one, and the model to copy:** 37 stems reformatted via `reformat-stems.mjs` (27 had no terminal punctuation, 5 held fused words like `Salesforcewith`) and **all explanations now carry a trailing "Why the other options are wrong:" section with one line per non-keyed option** — 350 discard lines, applied as `clarified` verdicts so no key moved and no correction notice fired. Its **27 in-app comments were already worked through** — they are the largest comment set in the repo and read like open disputes ("It is B", "Might be D"), but the repo owner confirmed on 2026-08-17 that they were addressed. Do not re-triage them as new signal |
 | salesforce-iam-architect | 116 | 116 | **Fully checked** (2026-08-10) — 3 keys moved, 7 reasoning fixes. **Readability pass 2026-09-09, the second deck to get one:** 38 stems reformatted (34 had no terminal punctuation, all of them a trailing "Choose N answers"; 4 hand-written comma insertions) and all 116 explanations now carry a "Why the other options are wrong:" section — **313 discard lines**, applied as `clarified` so no key moved and no notice fired. Its audit **stayed at 0** through the pass, against integration's 3 → 4 → 1, because every rewritten explanation opens in the keyed option's own vocabulary. **Zero fused words** — this scrape did not eat spaces, unlike Dev II's. Read the readability note below before assuming the >200-char metric moves on every deck |
 | salesforce-admin | 154 | 154 | **Fully checked** (2026-08-19) — 2 keys moved, 5 flagged, 60 explanations rewritten. 13 keys had already moved in the ADM-201 merge pass. Its real defect was the citation layer: only 36 questions rendered a References block, **47 more carried a marker the parser could not see**, and **24 of the 36 legacy `sf.` ids tested were dead** — see failure patterns 4b and 4c |
@@ -748,18 +748,20 @@ claude-architect-foundations arrived as a whole new deck. A pass ages the moment
 someone pastes questions into the chat.
 
 **The one cross-cutting job with a clear runway is the readability pass.**
-integration-architect and iam-architect have had it; the other 12 decks still have
-stems the Blitz narrator reads as one long breath, and explanations that never say why
-the distractors fail. It is packaged as the `deck-readability` skill, so it is
+integration-architect, iam-architect and platform-developer-2 have had it; the other 11
+decks still have stems the Blitz narrator reads as one long breath, and explanations
+that never say why the distractors fail. It is packaged as the `deck-readability` skill, so it is
 repeatable rather than re-derived. Everything else that remains is listed below.
 
-**Rank the remaining 12 by the narration metric, not by deck size** — measured
+**Rank the remaining 11 by the narration metric, not by deck size** — measured
 2026-09-09, counting stems that contain a single sentence over 200 characters, which is
 what `splitForSpeech` has to hand the synthesiser in one breath:
-**Dev II 42 of 146 (29%, one run of 937 chars)**, databricks 23 of 147, data-architect
-20 of 135, revenue-cloud 15, agentforce 12, sharing-visibility 10, then app-builder,
-admin and dld at 4 each. Dev II is the worst deck in the repo for a listener by a wide
-margin and is the one to do next.
+~~Dev II 42 of 146~~ (done 2026-09-11 — and its 33 over-long stems turned out to be
+unfenced code, which is never narrated, so that headline number was mostly noise on a
+code deck), **databricks 23 of 147**, data-architect 20 of 135, revenue-cloud 15,
+agentforce 12, sharing-visibility 10, then app-builder, admin and dld at 4 each.
+Databricks is next — and it is a code deck too, so expect the same shape: read every
+"no space after punctuation" hit before touching it, because most will be code.
 
 **But that metric does not move on every deck, and IAM is the worked example of why.**
 Its 34 unpunctuated stems all ended in a trailing "Choose N answers" after a question
