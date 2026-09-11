@@ -85,6 +85,20 @@ Consequences worth stating to the user up front:
   the report; do not smuggle them through.
 - Adding punctuation, inserting spaces, splitting a fused word and changing
   capitalisation all pass.
+- **A list of steps or numbered requirements goes one per line.** A stem that
+  reads "Requirements: 1) …rows. 2) …row. Which option…" is a newline change,
+  so it passes the guard, and the app renders stems with `whitespace-pre-line`,
+  so each step shows on its own line. The narrator gains nothing from the
+  newline itself — `splitForSpeech` only breaks on `.`, `!` and `?` — so make
+  sure every step ends in a full stop while you are there. **Items that end in
+  a semicolon must become full stops before the break goes in**: consecutive
+  `;`-terminated lines read as a code block to `richtext.ts`, and Blitz then
+  says "Code shown on screen" instead of reading the question — integration
+  `73466e15` and `9c3563f9` did exactly that until the semicolons went. Leave an
+  enumeration alone when the items are noun phrases inside one sentence
+  ("between (1) Salesforce and…, (2) Salesforce and…"); the break would
+  fracture the sentence. Asked for by the repo owner on 2026-09-11; Dev II had
+  one such stem (`95587f24`), integration 17.
 
 Generate the mechanical edits by rule (append a full stop to any stem lacking
 terminal punctuation) and hand-write only the judgment calls. That keeps the
