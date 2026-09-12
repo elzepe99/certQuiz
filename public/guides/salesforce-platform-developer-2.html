@@ -1668,14 +1668,14 @@ html { scroll-behavior: smooth; }
             <tr><td><strong>Force.com IDE / Ant Migration Tool</strong> (<code>e4d0d916</code>)</td><td>Distractors</td><td>Force.com IDE retired; Ant is legacy; <code>sfdx</code> became <strong><code>sf</code></strong></td></tr>
             <tr><td><strong>Connected Apps</strong> for OAuth</td><td><span class="yes">Fine</span></td><td>Creation restricted from Spring '26 &mdash; External Client Apps are the recommendation; existing apps keep working</td></tr>
             <tr><td><strong>Async SOQL</strong> for big objects</td><td>May appear</td><td>Retired Summer '23 &mdash; Batch Apex or Bulk API instead</td></tr>
+            <tr><td><strong><code>runAs</code> "only enforces record sharing"</strong></td><td>Was the documented behaviour</td><td>Now enforces object- and field-level permissions too</td></tr>
             <tr><td><strong><code>Test.startTest()</code> "commits" DML</strong></td><td><span class="no">Never true</span> &mdash; the deck repaired several explanations that said so</td><td>Nothing in a test commits; <code>startTest</code> opens a fresh limit context, which is the boundary the callout rule uses</td></tr>
             <tr><td><strong><code>@future</code> "limited to 50 records per call"</strong></td><td><span class="no">Invented</span></td><td>The 50 is <strong>methods per transaction</strong>; a future method takes a collection of any size</td></tr>
             <tr><td><strong>"10-second callout ceiling"</strong></td><td><span class="no">Invented</span></td><td>10 s is the <strong>default</strong>; <code>setTimeout()</code> to 120 s; the real synchronous constraint is the 5-second concurrent-request limit</td></tr>
-            <tr><td><strong><code>runAs</code> "only enforces record sharing"</strong></td><td>Was the documented behaviour</td><td>Now enforces object- and field-level permissions too</td></tr>
           </tbody>
         </table>
       </div>
-      <p>The last four are not staleness &mdash; they are widely repeated falsehoods that the deck's
+      <p>The last three are not staleness &mdash; they are widely repeated falsehoods that the deck's
       fact-check found in its own explanations and that appear as distractors on the exam.</p>
     </section>
 
