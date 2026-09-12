@@ -2602,3 +2602,40 @@ title-checked.
   `sf.networks_embedded_login.htm` and `sf.external_identity_embedded_login.htm` are both DEAD; the live family is `sf.external_identity_login_*`.
 - **Enable Person Accounts** — https://help.salesforce.com/s/articleView?id=sf.account_person_enable.htm&language=en_US&type=5
 - Re-rendered and still live: `sf.identity_licenses.htm`, `xcloud.identityconnect_about.htm`, `sf.security_overview_sessions.htm`, `xcloud.users_login_history.htm`.
+
+## 2026-09-12 — Platform Administrator study guide
+
+Not a deck pass: rendered while writing `study-guides/salesforce-admin.md`, for the ten exam
+objectives the admin deck never asks about. All rendered top-level in the browser and
+title-checked.
+
+### Settled facts
+
+| Fact | Value | Source |
+|---|---|---|
+| Platform Administrator exam | 60 scored + up to 5 unscored, **105 min**, **68%** English / 65% Japanese, **Summer '25**, no prerequisite, US$200 / retake US$100; eight domains **15 / 15 / 10 / 10 / 10 / 17 / 15 / 8** (Config / Object Manager / Sales / Service / Productivity / Data & Analytics / Automation / **Agentforce**). The outline's Automation domain lists flows, approval processes and assignment rules — **Workflow Rules and Process Builder are not on it** | Platform Administrator Exam Guide |
+| Exam-guide article id | `005298966` (between PD I `…965` and PD II `…967`); `005298968` is DLD Architect, `005298970` OmniStudio Consultant | — |
+| Duplicate rules | **5 active duplicate rules per object**; **3 matching rules per duplicate rule**; 5 active matching rules per object when several duplicate rules are used; a rule runs on edit only when an edited field is in the matching rule; a user lacking access to a matched field makes the rule miss; global picklist values unsupported; up to 100 duplicates per matching rule land in a duplicate record set | Things to Know About Duplicate Rules |
+| Dynamic dashboards | **5 (Enterprise) / 10 (Unlimited, Performance) / 3 (Developer)** per org; cannot live in a private folder, be scheduled, or be subscribed to; deleted ones in the Recycle Bin still count | Dynamic Dashboards |
+| Report & dashboard allocations | Custom report types **50 / 300 / 2,000 / 400** (Professional / Enterprise / Unlimited & Performance / Developer); **5 dashboard filters**, 50 values each; **20 field filters** per report; **5 formulas** per report; reports show **2,000 rows**; joined-report printable view 20,000; mobile 25 columns; 10-minute timeout; custom report type **4 object relationships**, 60 object references, 1,000 fields; **5 bucket fields × 20 buckets × 20 values**; **3 cross filters × 5 sub-filters**; dashboards **25 widgets** (20 charts and tables, 3 images) | Reports and Dashboards Limits and Allocations |
+| Default Workflow User | "required for scheduled paths in record-triggered flows and time-dependent actions in workflow rules. If the user who triggered the automation is no longer active, the specified default workflow user is associated with the actions… The default workflow user always runs schedule-triggered flows." Separate from the **Automated Process User email**, which sends flow and approval emails | Process Automation Settings |
+| Data Export | "weekly or monthly basis depending on your edition" — weekly on Enterprise, Performance, Unlimited; monthly on all others; needs the Weekly Data Export permission | Export Backup Data from Salesforce |
+
+### URLs (all rendered 2026-09-12)
+
+- **Salesforce Certified Platform Administrator Exam Guide** — https://help.salesforce.com/s/articleView?id=005298966&type=1&language=en_US
+- **Things to Know About Duplicate Rules** — https://help.salesforce.com/s/articleView?id=sf.duplicate_rules_overview.htm&language=en_US&type=5
+  `sf.duplicate_rules_considerations.htm` is DEAD.
+- **Dynamic Dashboards** — https://help.salesforce.com/s/articleView?id=analytics.dashboards_dynamic_overview.htm&language=en_US&type=5
+  `sf.dashboards_dynamic_considerations.htm` is DEAD.
+- **Reports and Dashboards Limits and Allocations** — https://help.salesforce.com/s/articleView?id=analytics.rd_reports_dashboards_limits.htm&language=en_US&type=5
+- **Process Automation Settings** — https://help.salesforce.com/s/articleView?id=platform.automation_about_settings.htm&language=en_US&type=5
+  `sf.process_automation_settings.htm` and `platform.flow_settings.htm` are DEAD.
+- **Flow Types** — https://help.salesforce.com/s/articleView?id=platform.flow_concepts_type.htm&language=en_US&type=5
+- **Limits and Considerations for Classic Approval Processes** — https://help.salesforce.com/s/articleView?id=platform.approvals_considerations.htm&language=en_US&type=5
+- **Sharing Rules** — https://help.salesforce.com/s/articleView?id=sf.security_about_sharing_rules.htm&language=en_US&type=5
+- **Design and Implement Agents** — https://help.salesforce.com/s/articleView?id=ai.copilot_intro.htm&language=en_US&type=5
+  `ai.agent_activate.htm` and `ai.copilot_build.htm` are DEAD; the live activation page is the deck-cited `ai.copilot_setup_activate_deactivate.htm`.
+- **Einstein Trust Layer** — https://help.salesforce.com/s/articleView?id=ai.generative_ai_trust_layer.htm&language=en_US&type=5
+  `ai.prompt_builder.htm` and `sf.prompt_builder.htm` are DEAD; cite `sf.prompt_builder_ground_merge_fields.htm` (deck-verified).
+- Also DEAD today: `sf.admin_supportinfo.htm`, `sf.admin_orginfo.htm` (use `xcloud.company_information_fields.htm`), `analytics.reports_filter_personalized.htm`.

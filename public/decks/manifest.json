@@ -105,7 +105,8 @@
       "shortName": "Administrator",
       "description": "Foundational certification covering configuration and setup, object management and the Lightning App Builder, sales and service applications, data and analytics, and process automation.",
       "file": "salesforce_admin_questions.json",
-      "accentColor": "#F062C0"
+      "accentColor": "#F062C0",
+      "guide": "guides/salesforce-admin.html"
     },
     {
       "id": "claude-architect-foundations",

@@ -1,0 +1,1339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Platform Administrator Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+</head>
+<body>
+<style>
+:root {
+  --paper:      #F1F4F6;
+  --surface:    #FFFFFF;
+  --surface-2:  #E8ECEF;
+  --ink:        #121A21;
+  --ink-2:      #37444F;
+  --muted:      #5E6C78;
+  --rule:       #D3DBE1;
+  --rule-soft:  #E3E9ED;
+
+  --primary:    #12494F;
+  --primary-2:  #1C6C71;
+  --primary-wash:#E2EEEE;
+
+  --amber:      #8F550A;
+  --amber-wash: #FAEEDC;
+  --amber-rule: #DFB877;
+
+  --crimson:    #962E2E;
+  --crimson-wash:#F9E7E5;
+  --crimson-rule:#DDA39C;
+
+  --good:       #2C6440;
+
+  --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --font-prose:   "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-ui:      "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono:    "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --shadow: 0 1px 2px rgba(18,26,33,.05), 0 8px 24px -12px rgba(18,26,33,.14);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:      #0C1216;
+    --surface:    #131B20;
+    --surface-2:  #1B252B;
+    --ink:        #DCE4E8;
+    --ink-2:      #B4C1C9;
+    --muted:      #8496A1;
+    --rule:       #263238;
+    --rule-soft:  #1C262C;
+
+    --primary:    #66C4BC;
+    --primary-2:  #8AD6CE;
+    --primary-wash:#15292C;
+
+    --amber:      #DFA45C;
+    --amber-wash: #221A0F;
+    --amber-rule: #5A431F;
+
+    --crimson:    #E28C80;
+    --crimson-wash:#231314;
+    --crimson-rule:#5C2E2C;
+
+    --good:       #6FBE8B;
+
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper:      #0C1216;
+  --surface:    #131B20;
+  --surface-2:  #1B252B;
+  --ink:        #DCE4E8;
+  --ink-2:      #B4C1C9;
+  --muted:      #8496A1;
+  --rule:       #263238;
+  --rule-soft:  #1C262C;
+
+  --primary:    #66C4BC;
+  --primary-2:  #8AD6CE;
+  --primary-wash:#15292C;
+
+  --amber:      #DFA45C;
+  --amber-wash: #221A0F;
+  --amber-rule: #5A431F;
+
+  --crimson:    #E28C80;
+  --crimson-wash:#231314;
+  --crimson-rule:#5C2E2C;
+
+  --good:       #6FBE8B;
+
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-prose);
+  font-size: 17px;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- shell ---------- */
+
+.shell {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  column-gap: 56px;
+  row-gap: 0;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 32px 120px;
+  align-items: start;
+}
+
+/* ---------- masthead ---------- */
+
+.masthead {
+  grid-column: 1 / -1;
+  padding: 64px 0 40px;
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: 48px;
+}
+
+.eyebrow {
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin: 0 0 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.eyebrow .sep { color: var(--rule); }
+
+h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.4rem, 6vw, 3.9rem);
+  line-height: 1.02;
+  letter-spacing: -.025em;
+  margin: 0 0 20px;
+  text-wrap: balance;
+  color: var(--ink);
+}
+
+.standfirst {
+  font-size: 1.18rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 62ch;
+  margin: 0 0 32px;
+}
+
+.standfirst strong { color: var(--ink); font-weight: 600; }
+
+/* exam vitals strip */
+.vitals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.vital {
+  background: var(--surface);
+  padding: 14px 16px 15px;
+}
+
+.vital dt {
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 6px;
+}
+
+.vital dd {
+  font-family: var(--font-mono);
+  font-size: 1.16rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.vital dd .sub {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-top: 4px;
+  letter-spacing: 0;
+}
+
+.vital.flag { background: var(--amber-wash); }
+.vital.flag dd { color: var(--amber); }
+
+/* ---------- toc rail ---------- */
+
+.rail {
+  position: sticky;
+  top: 28px;
+  font-family: var(--font-ui);
+  max-height: calc(100vh - 56px);
+  overflow-y: auto;
+}
+
+.rail h2 {
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.rail ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  counter-reset: toc;
+}
+
+.rail a {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 8px;
+  align-items: baseline;
+  padding: 5px 8px 5px 4px;
+  font-size: 13.5px;
+  line-height: 1.35;
+  color: var(--ink-2);
+  text-decoration: none;
+  border-radius: 3px;
+  border-left: 2px solid transparent;
+  transition: background .12s ease, color .12s ease, border-color .12s ease;
+}
+
+.rail a::before {
+  counter-increment: toc;
+  content: counter(toc);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.rail a:hover {
+  background: var(--surface);
+  color: var(--ink);
+  border-left-color: var(--primary);
+}
+
+.rail a:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+.rail a.key { color: var(--crimson); font-weight: 500; }
+.rail a.key::before { color: var(--crimson); }
+
+.rail .note {
+  margin: 16px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+/* ---------- content ---------- */
+
+.content { min-width: 0; }
+
+section { margin: 0 0 64px; scroll-margin-top: 24px; }
+
+h2.sect {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3vw, 1.95rem);
+  line-height: 1.14;
+  letter-spacing: -.018em;
+  margin: 0 0 8px;
+  text-wrap: balance;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: baseline;
+}
+
+h2.sect .num {
+  font-family: var(--font-mono);
+  font-size: .58em;
+  font-weight: 500;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+.sect-rule {
+  height: 2px;
+  background: var(--ink);
+  margin: 0 0 24px;
+}
+
+h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.13rem;
+  letter-spacing: -.008em;
+  margin: 36px 0 12px;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+h4 {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 26px 0 10px;
+}
+
+p { margin: 0 0 16px; max-width: 68ch; }
+
+a { color: var(--primary); text-underline-offset: 2px; text-decoration-thickness: 1px; }
+a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 2px; }
+
+strong { font-weight: 600; color: var(--ink); }
+em { font-style: italic; }
+
+code {
+  font-family: var(--font-mono);
+  font-size: .855em;
+  background: var(--surface-2);
+  padding: .1em .34em;
+  border-radius: 3px;
+  color: var(--ink);
+}
+
+ul, ol.prose { margin: 0 0 18px; padding-left: 20px; max-width: 68ch; }
+ul li, ol.prose li { margin-bottom: 8px; }
+ul li::marker { color: var(--primary); }
+ol.prose li::marker { color: var(--muted); font-family: var(--font-mono); font-size: .85em; }
+
+/* ---------- tables ---------- */
+
+.tw {
+  overflow-x: auto;
+  margin: 0 0 22px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-ui);
+  font-size: 14.2px;
+  line-height: 1.48;
+}
+
+thead th {
+  text-align: left;
+  font-weight: 600;
+  font-size: 10.5px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--surface-2);
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+
+tbody td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--rule-soft);
+  vertical-align: top;
+  color: var(--ink-2);
+}
+
+tbody tr:last-child td { border-bottom: none; }
+
+tbody td:first-child { color: var(--ink); font-weight: 500; }
+
+tbody td strong { color: var(--ink); font-weight: 600; }
+
+td code, th code { background: transparent; padding: 0; font-size: .9em; }
+
+.num-col, .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+
+/* two-col comparison tables read better with an emphasized first col */
+table.kv tbody td:first-child { width: 34%; }
+
+/* ---------- weight bars (domain table) ---------- */
+
+.bar {
+  display: block;
+  height: 7px;
+  border-radius: 1px;
+  background: var(--primary);
+  min-width: 2px;
+}
+.bar.deck { background: var(--muted); opacity: .55; }
+.bar-cell { width: 120px; }
+.bar-cell .lab {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--muted);
+  margin-bottom: 3px;
+  font-variant-numeric: tabular-nums;
+}
+.bar + .lab { margin-top: 6px; }
+
+.verdict {
+  display: inline-block;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  padding: 2.5px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.verdict.gap  { background: var(--crimson-wash); color: var(--crimson); border: 1px solid var(--crimson-rule); }
+.verdict.over { background: var(--surface-2); color: var(--muted); border: 1px solid var(--rule); }
+.verdict.ok   { background: var(--primary-wash); color: var(--primary); border: 1px solid var(--primary); }
+
+/* ---------- callouts ---------- */
+
+.call {
+  border-left: 3px solid var(--primary);
+  background: var(--surface);
+  padding: 16px 20px;
+  margin: 0 0 22px;
+  border-radius: 0 4px 4px 0;
+  max-width: 70ch;
+}
+.call p { margin: 0 0 10px; }
+.call p:last-child { margin-bottom: 0; }
+.call .tag {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: var(--primary);
+}
+
+.call.trap { border-left-color: var(--amber-rule); background: var(--amber-wash); }
+.call.trap .tag { color: var(--amber); }
+.call.trap strong { color: var(--ink); }
+
+.call.alert { border-left-color: var(--crimson-rule); background: var(--crimson-wash); }
+.call.alert .tag { color: var(--crimson); }
+
+/* ---------- misc ---------- */
+
+.lede {
+  font-size: 1.06rem;
+  color: var(--ink-2);
+  max-width: 66ch;
+  margin: 0 0 24px;
+}
+
+.yes { color: var(--good); font-weight: 600; }
+.no  { color: var(--crimson); font-weight: 600; }
+.warn{ color: var(--amber); font-weight: 600; }
+
+.linklist { list-style: none; padding: 0; margin: 0 0 20px; max-width: 72ch; }
+.linklist li { margin-bottom: 9px; padding-left: 14px; position: relative; font-size: 15px; }
+.linklist li::before {
+  content: "";
+  position: absolute; left: 0; top: .62em;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--rule);
+}
+.linklist .why { color: var(--muted); font-size: 14px; }
+
+.prompts { display: flex; flex-direction: column; gap: 12px; margin: 0 0 22px; max-width: 72ch; }
+.prompt {
+  font-family: var(--font-ui);
+  font-size: 14.3px;
+  line-height: 1.5;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 13px 16px;
+  color: var(--ink-2);
+}
+.prompt::before {
+  content: "Prompt";
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+
+.colophon {
+  grid-column: 1 / -1;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 74ch;
+}
+
+.colophon code { font-size: 11.5px; }
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 900px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding: 0 20px 80px;
+  }
+  .rail {
+    position: static;
+    max-height: none;
+    margin-bottom: 44px;
+    padding: 16px 18px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+  }
+  .rail ol { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 0; }
+  .masthead { padding-top: 44px; margin-bottom: 32px; }
+  body { font-size: 16.5px; }
+  section { margin-bottom: 52px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+
+html { scroll-behavior: smooth; }
+</style>
+
+<div class="shell">
+
+  <header class="masthead">
+    <p class="eyebrow">
+      <span>Salesforce Certified Platform Administrator</span>
+      <span class="sep">/</span>
+      <span>Summer '25 item bank</span>
+    </p>
+    <h1>Platform Administrator Field Guide</h1>
+    <p class="standfirst">
+      Built from the 154 questions in the practice deck, cross-checked against the official exam
+      outline and the documentation those questions cite. This guide runs the opposite way from the
+      others: the exam is <strong>newer</strong> than much of the deck, so <strong>read &sect;12 before you sit
+      it</strong> &mdash; that is where the deck still keys features the exam has moved past.
+    </p>
+    <dl class="vitals">
+      <div class="vital"><dt>Questions</dt><dd>60<span class="sub">+5 unscored</span></dd></div>
+      <div class="vital"><dt>Time</dt><dd>105<span class="sub">minutes</span></dd></div>
+      <div class="vital"><dt>Pass mark</dt><dd>68%<span class="sub">41 of 60</span></dd></div>
+      <div class="vital"><dt>Prerequisite</dt><dd>None<span class="sub">US$200</span></dd></div>
+      <div class="vital flag"><dt>Aligned to</dt><dd>Summer '25<span class="sub">newer than the deck</span></dd></div>
+    </dl>
+  </header>
+
+  <nav class="rail" aria-label="Contents">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#exam">The exam, factually</a></li>
+      <li><a href="#weights" class="key">Where the points are</a></li>
+      <li><a href="#config">Configuration and Setup</a></li>
+      <li><a href="#objects">Object Manager &amp; App Builder</a></li>
+      <li><a href="#sales">Sales and Marketing</a></li>
+      <li><a href="#service">Service and Support</a></li>
+      <li><a href="#productivity" class="key">The under-trained 10%</a></li>
+      <li><a href="#data" class="key">The under-trained 17%</a></li>
+      <li><a href="#automation">Automation</a></li>
+      <li><a href="#agentforce" class="key">The under-trained 8%</a></li>
+      <li><a href="#numbers">Numbers to memorise</a></li>
+      <li><a href="#stale" class="key">Deck older than the exam</a></li>
+      <li><a href="#tells">Distractor tells</a></li>
+      <li><a href="#plan">Two-week plan</a></li>
+      <li><a href="#sources">Sources</a></li>
+      <li><a href="#notebooklm">Using NotebookLM</a></li>
+    </ol>
+    <p class="note">Sections in red are the ones the practice deck does not train you for.</p>
+  </nav>
+
+  <main class="content">
+
+    <!-- 1 -->
+    <section id="exam">
+      <h2 class="sect"><span class="num">01</span><span>The exam, factually</span></h2>
+      <div class="sect-rule"></div>
+
+      <div class="call alert">
+        <span class="tag">The alignment row cuts the other way on this exam</span>
+        <p><strong>Summer '25</strong> means the item bank post-dates the end of support for Workflow Rules
+        and Process Builder, the rename of Critical Updates to Release Updates, the rename of 2FA to
+        MFA, and the arrival of Agentforce as its own <strong>8% domain</strong>. The outline's Automation
+        domain lists flows, approval processes and assignment rules &mdash; Workflow Rules and Process
+        Builder are not on it. When a deck item keys Process Builder, the same stem on the real exam
+        keys <strong>Flow</strong>.</p>
+      </div>
+
+      <p>Pacing: 105 minutes for 60 questions is tight next to the architect exams, but the stems are
+      short &mdash; a company name, one sentence of situation, one sentence of requirement, and four
+      features that all exist. The skill is matching the requirement's <strong>verb</strong> &mdash;
+      restrict, route, notify, escalate, prevent, prompt, report &mdash; to the one feature built for it.</p>
+
+      <div class="tw">
+        <table class="kv">
+          <tbody>
+            <tr><td>Official name</td><td>Salesforce Certified <strong>Platform</strong> Administrator</td></tr>
+            <tr><td>Content</td><td><strong>60 scored</strong> multiple-choice / multiple-select + up to 5 unscored</td></tr>
+            <tr><td>Time</td><td><strong>105 minutes</strong></td></tr>
+            <tr><td>Passing score</td><td><strong>68%</strong> (English) &rarr; <strong>41 of 60</strong>; 65% for the Japanese version</td></tr>
+            <tr><td>Prerequisite</td><td>None</td></tr>
+            <tr><td>Fee</td><td>US$200 (retake US$100)</td></tr>
+            <tr><td>Release alignment</td><td><strong>Summer '25</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section id="weights">
+      <h2 class="sect"><span class="num">02</span><span>Where the points actually are</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">Official outline weightings against the deck. The deck came tagged with the
+      <em>previous</em> outline's seven categories &mdash; no Agentforce bucket, even though seven
+      Agentforce items sit inside "Service and Support" &mdash; so the deck column is an independent
+      re-classification of all 154 questions (<code>study-guides/reclassify-admin.mjs</code>).</p>
+
+      <div class="tw">
+        <table>
+          <thead>
+            <tr><th>Domain</th><th class="num-col">Exam</th><th class="num-col">&asymp; Qs</th><th class="bar-cell">Exam vs deck</th><th class="num-col">Deck</th><th>Verdict</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Configuration and Setup</td><td class="num">15%</td><td class="num">~9</td><td class="bar-cell"><span class="bar" style="width:70%"></span><span class="bar deck" style="width:100%"></span></td><td class="num">33 &middot; 21.4%</td><td><span class="verdict over">over-represented</span></td></tr>
+            <tr><td>Object Manager and Lightning App Builder</td><td class="num">15%</td><td class="num">~9</td><td class="bar-cell"><span class="bar" style="width:70%"></span><span class="bar deck" style="width:82%"></span></td><td class="num">27 &middot; 17.5%</td><td><span class="verdict ok">about right</span></td></tr>
+            <tr><td>Sales and Marketing Applications</td><td class="num">10%</td><td class="num">~6</td><td class="bar-cell"><span class="bar" style="width:47%"></span><span class="bar deck" style="width:55%"></span></td><td class="num">18 &middot; 11.7%</td><td><span class="verdict ok">about right</span></td></tr>
+            <tr><td>Service and Support Applications</td><td class="num">10%</td><td class="num">~6</td><td class="bar-cell"><span class="bar" style="width:47%"></span><span class="bar deck" style="width:45%"></span></td><td class="num">15 &middot; 9.7%</td><td><span class="verdict ok">about right</span></td></tr>
+            <tr><td>Productivity and Collaboration</td><td class="num">10%</td><td class="num">~6</td><td class="bar-cell"><span class="bar" style="width:47%"></span><span class="bar deck" style="width:24%"></span></td><td class="num">8 &middot; 5.2%</td><td><span class="verdict gap">under-trained</span></td></tr>
+            <tr><td>Data and Analytics Management</td><td class="num">17%</td><td class="num">~10</td><td class="bar-cell"><span class="bar" style="width:79%"></span><span class="bar deck" style="width:51%"></span></td><td class="num">17 &middot; 11.0%</td><td><span class="verdict gap">under-trained</span></td></tr>
+            <tr><td>Automation</td><td class="num">15%</td><td class="num">~9</td><td class="bar-cell"><span class="bar" style="width:70%"></span><span class="bar deck" style="width:88%"></span></td><td class="num">29 &middot; 18.8%</td><td><span class="verdict over">over-represented</span></td></tr>
+            <tr><td>Agentforce</td><td class="num">8%</td><td class="num">~5</td><td class="bar-cell"><span class="bar" style="width:37%"></span><span class="bar deck" style="width:21%"></span></td><td class="num">7 &middot; 4.5%</td><td><span class="verdict gap">under-trained</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-family:var(--font-ui);font-size:12.5px;color:var(--muted);margin-top:-8px;">
+        Teal bar = share of the exam. Grey bar = share of the deck. Both scaled to the largest value.
+      </p>
+
+      <div class="call alert">
+        <span class="tag">The gap you need to close</span>
+        <p><strong>Data and Analytics is the exam's largest domain and the deck's weakest.</strong> Seventeen
+        percent of the exam &mdash; about ten questions &mdash; against 11% of the deck, and the deck's 17
+        items are almost all dashboards and folders. Import, export and backup; <strong>duplicate and
+        matching rules</strong>; <strong>report types, joined reports and cross filters</strong> have no item at
+        all. Productivity and Collaboration and Agentforce are each about half-covered.</p>
+      </div>
+
+      <h3>Ten objectives with no deck item at all</h3>
+      <ol class="prose">
+        <li><strong>Duplicate rules and matching rules</strong> &mdash; named under Data and Analytics.</li>
+        <li><strong>Data Export</strong>, backup and archival.</li>
+        <li><strong>Report types</strong> &mdash; with / without related records, renaming fields &mdash; plus <strong>joined reports</strong> and <strong>cross filters</strong>.</li>
+        <li>Dashboard options beyond running user and filters: <strong>subscriptions, scheduled refresh, org limits, View Dashboard As</strong>.</li>
+        <li><strong>Territory management</strong>, forecasting mechanics, Einstein for Sales beyond Opportunity Scoring.</li>
+        <li>The <strong>default workflow (automation) user</strong>.</li>
+        <li><strong>Schema Builder</strong> and the implications of <strong>deleting fields</strong>.</li>
+        <li>Agentforce <strong>security, agent-permission troubleshooting, installing prompts, conversation-preview testing</strong>.</li>
+        <li><strong>Campaign</strong> mechanics &mdash; member statuses, hierarchies.</li>
+        <li>Salesforce <strong>mobile app branding</strong> and the app menu.</li>
+      </ol>
+      <p><a href="#productivity">&sect;7</a>, <a href="#data">&sect;8</a> and <a href="#agentforce">&sect;10</a>
+      cover those from the documentation. The deck is strongest on sharing and security controls
+      (20+ items), relationships and field behaviour (12), the case toolkit (10) and Flow selection
+      (12) &mdash; know why each of those is keyed the way it is and the Configuration, Object Manager and
+      Automation domains are covered.</p>
+    </section>
+
+    <!-- 3 -->
+    <section id="config">
+      <h2 class="sect"><span class="num">03</span><span>Configuration and Setup</span></h2>
+      <div class="sect-rule"></div>
+
+      <h3>Company settings</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Setting</th><th>Where</th><th>What the exam asks</th></tr></thead>
+          <tbody>
+            <tr><td>Org ID, edition, <strong>licences</strong></td><td><strong>Company Information</strong> &rarr; User Licenses, Permission Set Licenses, Feature Licenses</td><td>"What have we bought and how many are free?" (<code>0eb39a7c</code>)</td></tr>
+            <tr><td><strong>Default language, locale, time zone, currency</strong></td><td>Company Information</td><td>Global team setup (<code>14bbd3a3</code>); users override locale, language and time zone on their own record</td></tr>
+            <tr><td><strong>Fiscal year</strong></td><td>Company Settings</td><td><strong>Standard</strong> = 12 Gregorian months starting in <em>any</em> month (<code>cbd180d3</code>); <strong>Custom</strong> = 4-4-5, 13-period, week-based &mdash; irreversible</td></tr>
+            <tr><td><strong>Multiple currencies</strong></td><td>Manage Currencies</td><td>Irreversible; corporate currency + conversion rates; Advanced Currency Management adds dated rates for opportunities only</td></tr>
+            <tr><td><strong>Business hours</strong> and holidays</td><td>Business Hours</td><td>One set per time zone (<code>1ae04c79</code>); used by escalation rules, entitlements and milestones</td></tr>
+            <tr><td>Currencies, fiscal year, business hours together</td><td><strong>Company Settings</strong> (<code>ce311cff</code>)</td><td>&mdash;</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Declarative user interface</h3>
+      <ul>
+        <li><strong>App Manager</strong> builds Lightning apps: navigation items, <strong>console navigation</strong> for multi-record work (<code>2085c46e</code>), utility bar, branding, assigned profiles; the app menu order is set there too.</li>
+        <li><strong>Rename Tabs and Labels</strong> changes what a standard object or field is <em>called</em> everywhere &mdash; Account Type &rarr; Tier &mdash; without creating a field (<code>177095a2</code>).</li>
+        <li><strong>List views</strong>: visibility <em>me / all users / groups</em>; the <strong>Kanban</strong> view drags records between stages (<code>53e999c6</code>).</li>
+        <li><strong>Global actions</strong> live on the global publisher layout; <strong>object-specific quick actions</strong> in the page layout's <strong>Salesforce Mobile and Lightning Experience Actions</strong> section (<code>0cadd1e2</code>, <code>6c8c7013</code>).</li>
+        <li><strong>Lightning App Builder</strong> builds record, app and home pages (<code>fbfd7a7a</code>); <strong>component visibility filters</strong> show or hide by field value, profile, permission or device (<code>b8b50c29</code>, <code>9938615c</code>); activation is <strong>org default, app default, or app + record type + profile</strong> (<code>1c029e7f</code>); Dynamic Forms put fields on the page as components.</li>
+      </ul>
+
+      <h3>Users, licences, and what you cannot do to them</h3>
+      <ul>
+        <li><strong>Username</strong>: unique across <strong>every</strong> Salesforce org, email-format but need not be a real mailbox (<code>eb7e2558</code>); up to 80 characters.</li>
+        <li><strong>Licences</strong>: Salesforce, Salesforce Platform, Identity, Chatter Free / External, Experience Cloud; <strong>feature licences</strong> are checkboxes on the user &mdash; the <strong>Marketing User</strong> checkbox allows campaign management (<code>c2a95184</code>); permission set licences gate add-ons.</li>
+        <li><strong>Users are never deleted.</strong> Deactivate them; <strong>freeze</strong> first to block login immediately while keeping the licence assigned (<code>c6364b77</code>).</li>
+        <li><strong>What blocks deactivation</strong> (<code>98a15ab1</code>, <code>ab489b08</code>): named in an active case <strong>assignment or escalation rule</strong>, the value of a <strong>custom hierarchy field</strong>, the sole recipient of a <strong>workflow email alert</strong>, or the default workflow / lead / case owner.</li>
+        <li><strong>What deactivation does</strong>: keeps ownership and history, but <strong>permanently deletes the user's manual shares</strong> &mdash; a rehired rep does not get them back (<code>154ff957</code>).</li>
+        <li><strong>Locked out</strong>: <strong>Unlock</strong> on the user record, or reset the password &mdash; resetting a locked-out user's password unlocks the account (<code>cea6caee</code>, <code>be16cc1a</code>); the user may then have to <strong>activate their device</strong>. SSO users cannot use the forgot-password link.</li>
+        <li><strong>Log in as another user</strong> <em>reproduces</em> a user's error (<code>bd1a9ddf</code>); <strong>Login History</strong> (6 months, 20,000 rows) <em>diagnoses</em> a failed login by status code (<code>6caa5c2f</code>).</li>
+      </ul>
+
+      <h3>Organization security controls</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Control</th><th>Where</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Login hours</strong> and <strong>login IP ranges</strong></td><td>Profile</td><td>Login outside them is <strong>denied</strong> (<code>75a6edb8</code>); org-wide ranges too; <strong>Enforce login IP ranges on every request</strong> extends them to API calls (<code>242c27b9</code>)</td></tr>
+            <tr><td><strong>Trusted IP ranges</strong></td><td>Network Access</td><td>Skip identity verification from inside; do not block</td></tr>
+            <tr><td><strong>Password policies</strong></td><td>Password Policies / profile</td><td>Expiration, history, length, <strong>complexity</strong>, <strong>maximum invalid attempts</strong>, lockout (<code>c39b0409</code>)</td></tr>
+            <tr><td><strong>Multi-factor authentication</strong></td><td>Identity Verification / permissions</td><td>Authenticator app, security key or built-in authenticator (<code>e713e780</code>); <strong>email and SMS codes are not MFA</strong>; the API-login permission makes Data Loader require a code and enrols an authenticator (<code>76248f85</code>)</td></tr>
+            <tr><td><strong>Session settings</strong></td><td>Session Settings</td><td>Timeout (default 2 h), lock to IP, force logout, login-page caching</td></tr>
+            <tr><td><strong>Setup Audit Trail</strong></td><td>View Setup Audit Trail</td><td>Who changed what in Setup; <strong>180 days</strong> (<code>59a0fdfe</code>)</td></tr>
+            <tr><td><strong>Health Check</strong></td><td>Health Check</td><td>Grades settings against a baseline; <strong>Fix Risks</strong> applies it (<code>51f47a9e</code>)</td></tr>
+            <tr><td><strong>Release Updates</strong></td><td>Release Updates</td><td>Test in a <strong>sandbox</strong> before the enforcement date (<code>532479a7</code>, which still says "critical update")</td></tr>
+            <tr><td><strong>My Domain</strong></td><td>My Domain</td><td>Every org has one; <strong>redirect with a warning</strong> for a bookmark grace period (<code>b0427160</code>); the login URL changes for everyone (<code>67375ad1</code>)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>The sharing model &mdash; who can see which record</h3>
+      <ol class="prose">
+        <li><strong>Organization-wide defaults</strong> set the floor per object: Private, Public Read Only, Public Read/Write, Public Read/Write/Transfer (leads, cases), Controlled by Parent. Private is what makes "each user sees only their own" true, including on reports (<code>bb27462f</code>).</li>
+        <li><strong>Role hierarchy</strong> opens records upward &mdash; unless <strong>Grant Access Using Hierarchies</strong> is unchecked, which is possible <strong>only for custom objects</strong> and keeps a manager out of feedback about themselves (<code>a8d31e32</code>).</li>
+        <li><strong>Sharing rules</strong> open records sideways: <strong>owner-based</strong> (<code>c4eb0512</code>) or <strong>criteria-based</strong>; Read Only or Read/Write; to public groups, roles, roles and subordinates, territories. Up to 300 per object, 50 criteria-based. The answer for cross-branch reporting (<code>a72edbf1</code>) and collaborative deals under Private (<code>9f08b9dc</code>).</li>
+        <li><strong>Teams</strong> &mdash; account, opportunity and case teams; <strong>default account teams</strong> are added automatically (<code>dcc3ab15</code>).</li>
+        <li><strong>Manual sharing</strong> &mdash; one record, by the owner or anyone above; via <strong>Sharing</strong> / the <strong>Sharing Hierarchy</strong> view; lost on owner change and deactivation.</li>
+        <li><strong>Public groups</strong> bundle users, roles and other groups for rules, folders and list views.</li>
+        <li><strong>Report and dashboard folders</strong> have their own View / Edit / Manage sharing, which does not cascade (<code>91817bb4</code>).</li>
+        <li><strong>Restriction rules</strong> and scoping rules narrow what a user sees below what sharing grants.</li>
+      </ol>
+
+      <h3>Profiles vs permission sets</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th></th><th>Profile</th><th>Permission set / group</th></tr></thead>
+          <tbody>
+            <tr><td>Per user</td><td>Exactly <strong>one</strong></td><td>Any number, additive</td></tr>
+            <tr><td>Holds</td><td>Object CRUD, FLS, tabs, apps, record type and page layout <strong>defaults</strong>, <strong>login hours / IP ranges</strong>, session settings, system permissions</td><td>Everything except login hours/IP, defaults and password policies</td></tr>
+            <tr><td>Standard ones</td><td>Cannot change their object or system permissions (<code>b7e12d88</code> &mdash; the Marketing User profile needs a <em>custom</em> profile or a permission set to edit Opportunities)</td><td>&mdash;</td></tr>
+            <tr><td>Use it for</td><td>The baseline a role gets; anything that must be a login restriction</td><td>The <strong>exception</strong>: a few marketing users need edit on Campaigns (<code>3615e19f</code>)</td></tr>
+            <tr><td>Grouping</td><td>&mdash;</td><td><strong>Permission set groups</strong> bundle sets; a <strong>muting permission set</strong> removes permissions from the group &mdash; the only way to trim a packaged group (<code>4d52ce6a</code>)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Salesforce's recommendation is the <strong>Minimum Access &ndash; Salesforce</strong> profile plus
+      permission sets. View All / Modify All on an object, and View All Data / Modify All Data, bypass
+      sharing.</p>
+    </section>
+
+    <!-- 4 -->
+    <section id="objects">
+      <h2 class="sect"><span class="num">04</span><span>Object Manager and Lightning App Builder</span></h2>
+      <div class="sect-rule"></div>
+
+      <p><strong>The standard architecture</strong>: Account &larr; Contact (Contacts to Multiple Accounts adds
+      many-to-many); Account &larr; Opportunity &larr; Opportunity Product &larr; Product / Price Book; Lead
+      &rarr; Account + Contact + Opportunity on conversion; Case; Campaign &larr; Campaign Member; Task and
+      Event relate to a person (<strong>WhoId</strong>) and a record (<strong>WhatId</strong>); Contract, Order,
+      Asset, Quote. Ticket and Request are not Salesforce objects (<code>3bdb4138</code>).</p>
+
+      <h3>Relationships</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Type</th><th>Traits</th><th>Pick it when</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Lookup</strong></td><td>Optional; child survives parent deletion; independent ownership and sharing</td><td>"Shipments should remain when the account is deleted" (<code>532d0949</code>); "designs must not be deletable" (<code>b77f33bd</code>)</td></tr>
+            <tr><td><strong>Master-detail</strong></td><td>Required; <strong>cascade delete</strong>; detail inherits the master's <strong>owner and sharing</strong> (<code>225ec7dd</code>); enables <strong>roll-up summaries</strong>; detail must be custom; up to two per object</td><td>"Prevent orphaned records" (<code>3bc13244</code>); anything needing a roll-up</td></tr>
+            <tr><td><strong>Junction object</strong></td><td>A custom object with <strong>two master-detail</strong> relationships &mdash; the first is primary (<code>2dda7a31</code>)</td><td>Many-to-many (<code>28e4d309</code>)</td></tr>
+            <tr><td><strong>Self / hierarchical</strong></td><td>Object to itself; hierarchical only on User</td><td>Reports-to, manager</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>Roll-up summaries</strong> (COUNT, SUM, MIN, MAX) need master-detail &mdash; with one standard
+      exception: <strong>Account rolls up Opportunity</strong> natively (<code>4faeff3d</code>). <strong>Schema
+      Builder</strong> shows objects and relationships as a diagram and can create objects and fields from it.</p>
+
+      <h3>Fields</h3>
+      <ul>
+        <li><strong>Universally required</strong> blocks every path (<code>b26213ef</code>); <strong>required on the page layout</strong> blocks only that layout; a <strong>validation rule</strong> blocks conditionally (<code>0424bfcc</code>).</li>
+        <li><strong>Default value formulas</strong> pre-fill and stay editable (<code>84fac1dc</code>); a formula field is read-only and recalculates.</li>
+        <li><strong>Picklists</strong>: record types restrict values (<code>9881d4a4</code>, <code>9149fd05</code>); <strong>global value sets</strong> keep values consistent across objects (<code>be02a4c2</code>); <strong>dependent picklists</strong> narrow by a controlling field.</li>
+        <li><strong>Changing a field type</strong> can lose data: text &rarr; picklist deletes list views filtered on it and can affect assignment and escalation rules (<code>061bd870</code>); <strong>auto-number &rarr; text keeps the values</strong> (<code>57a9f154</code>).</li>
+        <li><strong>Deleting a field</strong>: <strong>Deleted Fields for 15 days</strong>, restorable with its data (<code>c9181352</code>); a field referenced in a formula, roll-up, Apex or Visualforce cannot be deleted until the reference is removed; deleting a controlling field removes the dependency; deleting a relationship field deletes its lookup filters.</li>
+        <li><strong>Field history tracking</strong>: up to 20 fields per object, 18 months.</li>
+      </ul>
+
+      <h3>Page layouts, record types, Lightning pages</h3>
+      <ul>
+        <li><strong>Page layout</strong>: fields, related lists and their columns (<code>f467f78f</code>), buttons, quick actions; assigned per <strong>profile &times; record type</strong>. Standard related lists show four columns; the <strong>Enhanced List</strong> type in App Builder shows more (<code>4d0aaac5</code>).</li>
+        <li><strong>Compact layout</strong>: the highlights panel and mobile cards.</li>
+        <li><strong>Record types</strong> carry a <strong>business process</strong> (sales process = opportunity stages, support process = case statuses), picklist values and a page layout; a new business model gets a new sales process on a new record type (<code>72a0b976</code>); a record type also tags who entered what (<code>2ffa1825</code>).</li>
+        <li><strong>Lightning record page</strong>: <strong>Related Record</strong> (edit a parent's fields in place) and <strong>Rich Text</strong> with a visibility filter (<code>1d05b596</code>); a <strong>Flow</strong> component puts a screen flow on the record (<code>ee4f3d4e</code>).</li>
+      </ul>
+    </section>
+
+    <!-- 5 -->
+    <section id="sales">
+      <h2 class="sect"><span class="num">05</span><span>Sales and Marketing Applications</span></h2>
+      <div class="sect-rule"></div>
+
+      <h3>Leads</h3>
+      <ul>
+        <li><strong>Conversion</strong> creates an Account, Contact and (optionally) Opportunity; standard fields map automatically, <strong>custom fields need a mapping</strong> in Lead Settings and a matching target field (<code>036bd684</code>, <code>0d87e06c</code>). Converting from the <strong>campaign member</strong> page keeps the campaign history (<code>b3aeaf96</code>).</li>
+        <li><strong>Lead assignment rules</strong> route on create to a user or queue; one active rule, ordered entries, first match wins (<code>4063708c</code>). Web-to-Lead (500 per day) and the API can invoke it.</li>
+        <li>Lead auto-response rules, queues, Path, duplicate rules (&sect;8).</li>
+      </ul>
+
+      <h3>Opportunities and the sales process</h3>
+      <ul>
+        <li><strong>Stage</strong> drives <strong>probability</strong>, <strong>forecast category</strong> and type; Probability is editable if placed on the layout (<code>ee07bdba</code>).</li>
+        <li><strong>Path</strong> shows the stage, <strong>key fields</strong> and guidance (<code>d9be4b44</code>, <code>c09761e4</code>); it guides but does not enforce &mdash; a <strong>validation rule</strong> with <code>PRIORVALUE</code> / <code>ISCHANGED</code> stops a backwards move (<code>045926e2</code>, <code>3bf6aa88</code>).</li>
+        <li><strong>Kanban</strong> for drag-and-drop updates (<code>53e999c6</code>); <strong>Deal Change Highlights</strong> flag amount and close-date movement for seven days (<code>7a1ab0a9</code>); <strong>Big Deal Alerts</strong> email when an opportunity crosses an amount <strong>and</strong> probability threshold (<code>3b28d8c6</code>).</li>
+        <li><strong>Opportunity teams</strong> and <strong>splits</strong> &mdash; revenue splits total 100%, overlay splits credit helpers (<code>0aa33a5b</code>); <strong>account teams</strong> with a default team (<code>dcc3ab15</code>).</li>
+        <li><strong>Forecasting</strong> projects revenue by period from stages and forecast categories &mdash; Pipeline, Best Case, Commit, Closed, Omitted &mdash; with quotas and adjustments (<code>1fa46a19</code>).</li>
+        <li><strong>Territory management</strong>: a territory model with territory types, assignment rules on account fields, opportunity territory assignment; one active model at a time.</li>
+        <li><strong>Einstein for Sales</strong>: <strong>Opportunity Scoring</strong> (1&ndash;99 with key factors, <code>24d30683</code>), <strong>Lead Scoring</strong>, Einstein Activity Capture, Einstein Forecasting.</li>
+      </ul>
+
+      <h3>Campaigns</h3>
+      <p>Creating and managing campaigns needs the <strong>Marketing User</strong> checkbox (<code>c2a95184</code>).
+      <strong>Campaign members</strong> are leads or contacts with a <strong>member status</strong> per campaign
+      (Sent / Responded by default, customisable); add them from reports, list views or manually;
+      <strong>campaign hierarchies</strong> go five levels deep; campaign influence attributes opportunities.</p>
+    </section>
+
+    <!-- 6 -->
+    <section id="service">
+      <h2 class="sect"><span class="num">06</span><span>Service and Support Applications</span></h2>
+      <div class="sect-rule"></div>
+
+      <h3>The case toolkit &mdash; one tool per verb</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>The requirement says&hellip;</th><th>Tool</th><th>Deck</th></tr></thead>
+          <tbody>
+            <tr><td>Customers create their own cases</td><td><strong>Web-to-Case</strong> (5,000/day) and <strong>Email-to-Case</strong></td><td><code>87b1a995</code></td></tr>
+            <tr><td>Route on create, whatever the channel</td><td><strong>Case assignment rules</strong> &mdash; one active rule, ordered entries, to users or <strong>queues</strong></td><td><code>e8d13165</code>, <code>3561a6c6</code></td></tr>
+            <tr><td>Acknowledge immediately</td><td><strong>Auto-response rules</strong></td><td><code>3561a6c6</code></td></tr>
+            <tr><td>Something has been open too long</td><td><strong>Escalation rules</strong> &mdash; age from creation or last modification, respecting business hours; actions are <strong>reassign</strong> and <strong>notify</strong> only (<code>ebcb1c79</code>)</td><td><code>0408c3f8</code>, <code>3d646528</code>, <code>4bf824b6</code>, <code>34290bc6</code></td></tr>
+            <tr><td>The business moves agents around itself</td><td><strong>Omni-Channel</strong> &mdash; queues, presence, capacity</td><td><code>8b250773</code></td></tr>
+            <tr><td>Tiered service levels</td><td><strong>Entitlements</strong> (milestones, service contracts), assigned by a flow</td><td><code>0a88ffb9</code></td></tr>
+            <tr><td>Agents repeat the same clicks</td><td><strong>Macros</strong> with quick actions</td><td><code>8b0dd43b</code></td></tr>
+            <tr><td>Find answers and similar cases</td><td><strong>Knowledge</strong> &mdash; articles, data categories, suggested articles</td><td><code>08eab7c6</code></td></tr>
+            <tr><td>Who owns automated cases; email the contact on close</td><td><strong>Support Settings</strong> &mdash; default case owner, automated case user (<code>39ebd532</code>); case close template + <strong>Notify Contact</strong> on the close layout (<code>8d3dc667</code>)</td><td>&mdash;</td></tr>
+            <tr><td>Send Email action missing from the feed</td><td><strong>Enable Email-to-Case</strong></td><td><code>c191e454</code></td></tr>
+            <tr><td>Different case flows per team</td><td><strong>Support processes</strong> on record types</td><td>&mdash;</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>Einstein for Service</strong> adds case classification, reply and article recommendations, and
+      Agentforce Service Agent (&sect;10). Case teams, case hierarchies, the Service Console and Case Path
+      round out the toolkit.</p>
+    </section>
+
+    <!-- 7 -->
+    <section id="productivity">
+      <h2 class="sect"><span class="num">07</span><span>The under-trained 10%: Productivity and Collaboration</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">Four objectives, about six exam questions, <strong>eight deck items</strong>.</p>
+
+      <h3>Activities</h3>
+      <ul>
+        <li><strong>Tasks</strong> and <strong>events</strong>; a custom object needs <strong>Allow Activities</strong> before anything can be related to it (<code>50404cc9</code>); <strong>recurring tasks</strong> are switched on in Activity Settings and need the recurrence field on the layout (<code>4dc33121</code>); shared activities relate one activity to several contacts; the activity timeline, reminders, public calendars.</li>
+        <li><strong>Einstein Activity Capture</strong> syncs email and events from Gmail / Outlook.</li>
+      </ul>
+
+      <h3>Chatter</h3>
+      <ul>
+        <li><strong>Feed tracking</strong> per object decides which field changes post; dashboards need it to be posted to Chatter (<code>8a82b5df</code>).</li>
+        <li><strong>Groups</strong>: <strong>public</strong> (anyone can see and join), <strong>private</strong> (visible, content hidden), <strong>unlisted</strong> (invisible to non-members &mdash; the "sensitive records" answer, <code>3a88eed3</code>); <strong>broadcast</strong> groups; groups with customers admit external people with a Chatter External licence.</li>
+      </ul>
+
+      <h3>The Salesforce mobile app</h3>
+      <ul>
+        <li>The <strong>mobile navigation menu</strong> is built from tab-like items &mdash; objects, Lightning app pages, Chatter, Dashboards &mdash; filtered by the user's tab settings (<code>a5ce7184</code>); <strong>Mobile Home</strong> is the customisable landing page (<code>98f643f0</code>).</li>
+        <li><strong>Lightning App Builder</strong> pages for phones: <strong>app pages</strong> appear as navigation items and <strong>record pages</strong> get a phone form factor (<code>fbfd7a7a</code>); compact layouts drive highlights; quick actions come from the layout's mobile-and-Lightning section (<code>6c8c7013</code>).</li>
+        <li><strong>Branding</strong>: logo, colours and loading page under Salesforce Mobile App &rarr; Branding; <strong>Mobile Publisher</strong> ships a branded app.</li>
+      </ul>
+
+      <h3>AppExchange</h3>
+      <ul>
+        <li><strong>Managed packages</strong> are upgradeable, namespaced and locked; <strong>unmanaged</strong> packages are editable templates with no upgrade path. Publishers are Salesforce partners who pass security review; <strong>Salesforce Labs</strong> apps are free.</li>
+        <li>Install for admins only / all users / specific profiles; in a <strong>sandbox</strong>, change <code>login</code> to <code>test</code> in the install URL, and the package disappears on refresh unless production has it (<code>45a096bd</code>).</li>
+        <li>Beyond apps: <strong>consultants and developers</strong>, industry <strong>solution templates</strong>, flow solutions (<code>dbe75d48</code>); pre-built <strong>CRM Dashboards</strong> (<code>981a6656</code>). <strong>AgentExchange</strong> publishes agent templates, topics, actions and prompt templates (&sect;10).</li>
+      </ul>
+    </section>
+
+    <!-- 8 -->
+    <section id="data">
+      <h2 class="sect"><span class="num">08</span><span>The under-trained 17%: Data and Analytics</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">Five objectives, about ten exam questions, <strong>17 deck items</strong> &mdash; and the
+      largest domain on the exam.</p>
+
+      <h3>Moving data</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Need</th><th>Tool</th><th>Facts</th></tr></thead>
+          <tbody>
+            <tr><td>Import a few thousand accounts + contacts, leads, campaign members, custom objects</td><td><strong>Data Import Wizard</strong></td><td>Up to <strong>50,000</strong> records; matches on name, email, ID or external ID; can skip triggering automation; accounts and contacts in one pass (<code>78b894fb</code>)</td></tr>
+            <tr><td>Anything larger, or opportunities, cases, any object; delete; export</td><td><strong>Data Loader</strong></td><td>Insert, update, <strong>upsert</strong>, delete, hard delete, export, export all; command line; millions of rows</td></tr>
+            <tr><td>Undo a bad import</td><td><strong>Data Loader</strong> delete, or <strong>Mass Delete Records</strong> for small sets (250 at a time) (<code>dea1e510</code>)</td><td>Deleted records sit in the <strong>Recycle Bin for 15 days</strong></td></tr>
+            <tr><td>Change owners in bulk</td><td><strong>Mass Transfer Records</strong></td><td>Accounts, leads, custom objects</td></tr>
+            <tr><td>Back up</td><td><strong>Data Export Service</strong></td><td><strong>Weekly</strong> on Enterprise, Performance and Unlimited; <strong>monthly</strong> elsewhere; CSV zips available 48 hours; <strong>Backup &amp; Recover</strong> as the managed product</td></tr>
+            <tr><td>Keep old data without keeping it live</td><td>Archive products / big objects; Field Audit Trail</td><td>&mdash;</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Data validation tools</h3>
+      <ul>
+        <li><strong>Validation rules</strong>: an <strong>error condition formula</strong> that is TRUE when the record is invalid, plus an <strong>error message and location</strong> (<code>82b23e87</code>); conditional requirements are theirs (<code>0424bfcc</code>); they run on every save path.</li>
+        <li><strong>Duplicate rules</strong> decide what happens when a <strong>matching rule</strong> finds a match: <strong>Allow</strong> (with alert and/or report) or <strong>Block</strong>, on create and on edit. Up to <strong>5 active duplicate rules per object</strong>, <strong>3 matching rules per duplicate rule</strong>, 5 active matching rules per object. Standard matching rules for Account, Contact, Lead and Person Account; custom ones use exact or fuzzy matching. Rules run on edit only when an edited field is in the matching rule; a user without access to a matched field makes the rule miss; <strong>duplicate jobs</strong> find existing duplicates.</li>
+        <li><strong>Required fields</strong>, lookup filters and picklists constrain input; <strong>data quality</strong> is assessed with reports filtering on blank key fields (<code>75de9c35</code>).</li>
+      </ul>
+
+      <h3>Reports</h3>
+      <ul>
+        <li><strong>Report types</strong> decide the objects and fields available. A <strong>custom report type</strong> names a primary object and up to <strong>four</strong> related objects, each joined <strong>"with"</strong> (records must have the child) or <strong>"with or without"</strong>; fields via lookup from up to 60 objects, 1,000 fields per type; labels can be <strong>renamed</strong>; <strong>hide report types</strong> to limit what users build (<code>da7f0e3d</code>). Allocation: 50 / 300 / 2,000 / 400 per edition.</li>
+        <li><strong>Formats</strong>: tabular, summary, matrix, <strong>joined</strong> (up to five blocks from report types sharing a common object).</li>
+        <li><strong>Filters</strong>: up to <strong>20 field filters</strong> with filter logic; <strong>cross filters</strong> ("accounts with / without cases", 3 per report, 5 sub-filters each); the relative-value filter that personalises a user field to the viewer (<code>57f8b23a</code>).</li>
+        <li><strong>Formulas</strong>: one row-level formula, up to <strong>5 summary formulas</strong>; <strong>bucket columns</strong> categorise without a field (5 per report, 20 buckets each &mdash; <code>2b6f1886</code>).</li>
+        <li>Chart settings, conditional formatting, subtotals, <strong>hide details</strong>, export. Reports show <strong>2,000 rows</strong> on screen. A missing field is the report type, field-level security, or the join.</li>
+        <li><strong>Folders</strong>: View / Edit / Manage, no cascade (<code>91817bb4</code>); a private folder takes a dashboard offline (<code>73169c29</code>).</li>
+        <li><strong>The sharing model applies to reports</strong>: a report shows the <em>viewer</em> what the viewer can see (<code>bb27462f</code>); folder access decides who can open it; FLS decides which fields appear.</li>
+      </ul>
+
+      <h3>Dashboards</h3>
+      <ul>
+        <li><strong>Widgets</strong>: charts, tables, metrics, gauges, <strong>text</strong> (<code>75278521</code>) and images &mdash; up to 25 per dashboard, 20 of them charts and tables; each chart or table has one <strong>source report</strong>.</li>
+        <li><strong>Dashboard filters</strong>: up to 5, 50 values each &mdash; one dashboard per team (<code>6e12dd2e</code>).</li>
+        <li><strong>Running user</strong>: <strong>run as specified user</strong> shows one person's view to all &mdash; enterprise-wide totals for restricted reps (<code>307b7189</code>) and the cause of reps seeing too much (<code>fdfedecb</code>); <strong>run as logged-in user</strong> is a <strong>dynamic dashboard</strong>, limited to <strong>5 / 10 / 3</strong> per org (Enterprise / Unlimited &amp; Performance / Developer), not in private folders, cannot be scheduled or subscribed to. Managers with View My Team's Dashboards can <strong>View Dashboard As</strong> a subordinate.</li>
+        <li><strong>Subscriptions</strong> email a refreshed dashboard on a schedule; scheduled refreshes are capped per edition; feed tracking lets components be posted to Chatter (<code>8a82b5df</code>).</li>
+      </ul>
+    </section>
+
+    <!-- 9 -->
+    <section id="automation">
+      <h2 class="sect"><span class="num">09</span><span>Automation</span></h2>
+      <div class="sect-rule"></div>
+
+      <h3>Picking the tool</h3>
+      <div class="tw">
+        <table class="kv">
+          <tbody>
+            <tr><td>Route a lead or case when it is created</td><td><strong>Assignment rules</strong></td></tr>
+            <tr><td>Reply to a new case or lead automatically</td><td><strong>Auto-response rules</strong></td></tr>
+            <tr><td>Act when a case has been open too long</td><td><strong>Escalation rules</strong></td></tr>
+            <tr><td>Sign-off by specific people, in order, with rejection handling</td><td><strong>Approval process</strong></td></tr>
+            <tr><td>Anything else &mdash; records, email, actions, screens, schedules, reacting to a change</td><td><strong>Flow</strong></td></tr>
+            <tr><td>Block a bad save</td><td><strong>Validation rule</strong> (not automation)</td></tr>
+            <tr><td>Conversational, natural-language help</td><td><strong>Agentforce</strong> (&sect;10)</td></tr>
+            <tr><td>Workflow Rules / Process Builder</td><td><strong>Not on the Summer '25 outline</strong> &mdash; see &sect;12</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="call">
+        <span class="tag">Two org settings the outline names</span>
+        <p>The <strong>Default Workflow User</strong> in Process Automation Settings is <em>required</em> for scheduled
+        paths in record-triggered flows and always runs schedule-triggered flows; if the triggering user is
+        inactive, the actions run as this user. The <strong>Automated Process User email</strong> is the sender
+        for flow and approval emails.</p>
+      </div>
+
+      <h3>Flow &mdash; types and when</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Type</th><th>Runs when</th><th>Use it for</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Screen flow</strong></td><td>A user launches it</td><td>Guided data entry, wizards, forms, choosing which records to update (<code>8dfcba92</code>, <code>8aea4354</code>, <code>4419a83a</code>, <code>5ca89056</code>)</td></tr>
+            <tr><td><strong>Record-triggered, before save</strong></td><td>As the record is saved</td><td>Fast field updates on the triggering record; toolbox is <strong>Assignment, Decision, Get Records, Loop</strong> only (<code>9dfd991f</code>)</td></tr>
+            <tr><td><strong>Record-triggered, after save</strong></td><td>After the record is written</td><td>Related records, emails, actions, outbound messages (<code>86a0ffaa</code>), renewals (<code>fd10e166</code>), a date stamp on a status change (<code>00548807</code>), <strong>scheduled paths</strong></td></tr>
+            <tr><td><strong>Schedule-triggered</strong></td><td>At a time, over a set of records</td><td>Clean-ups and sweeps (<code>48ce1490</code>, <code>7bbd2652</code>, <code>952b907a</code>); up to 250,000 records per 24 h or 200 &times; licences</td></tr>
+            <tr><td><strong>Autolaunched</strong></td><td>Called by another flow, Apex, a button</td><td>Reusable logic; no screens</td></tr>
+            <tr><td><strong>Platform event-triggered</strong>; <strong>orchestration</strong></td><td>An event arrives; multi-step, multi-user work</td><td>Integration reactions; sequenced stages with assigned work items</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>Building blocks</strong>: <code>$Record</code> is the triggering record, <code>$Record__Prior</code> its
+      pre-save values (<code>f2231f7b</code>); variables are Text, Number, Currency, Boolean, Date, Date/Time,
+      Picklist, Record &mdash; no ID type, so an Id goes in <strong>Text</strong> (<code>b38545fa</code>);
+      <strong>Available for input / output</strong> control what a caller or the debug screen can set
+      (<code>24bc315d</code>); <strong>fault connectors</strong> catch errors and show a helpful screen
+      (<code>e0ca62a8</code>); one <strong>active version</strong> at a time; conditional <strong>component
+      visibility</strong> on screens (<code>32afb676</code>).</p>
+      <p><strong>Order of execution</strong> (<code>1be375ea</code>): before-save flows &rarr; before triggers &rarr;
+      validation rules &rarr; duplicate rules &rarr; save &rarr; after triggers &rarr; <strong>assignment rules &rarr;
+      auto-response rules &rarr; workflow rules &rarr; escalation rules</strong> &rarr; after-save flows &rarr; entitlement
+      rules &rarr; roll-ups &rarr; commit &rarr; email and scheduled work.</p>
+
+      <h3>Approval processes</h3>
+      <ul>
+        <li><strong>Entry criteria</strong> decide which records enter (<code>9d407d53</code>); <strong>steps</strong> each have criteria and approvers &mdash; a user, a queue, a <strong>related user field such as Manager</strong> (which must be populated, <code>9b03a10e</code>), or an approval hierarchy; unanimous or first-response; <strong>delegated approvers</strong>; the record is <strong>locked</strong> while pending.</li>
+        <li><strong>Actions</strong> at initial submission, each step, final approval, final rejection and recall: <strong>field update, email alert, task, outbound message</strong> (<code>2915050c</code>, <code>f7935d50</code>).</li>
+        <li>A failed advance usually means the <strong>next approver is inactive or missing</strong> (<code>3037b817</code>). Thirty criteria sets are thirty steps, not thirty flows (<code>26d0b0b1</code>); manager-then-finance is sequential steps (<code>f8bb917c</code>); automatic submission comes from a <strong>flow</strong> or from <strong>Flow Approval Processes</strong> (<code>8058ccdf</code>).</li>
+        <li><strong>Email approval response</strong> lets approvers reply APPROVE / REJECT. One approval process is active on a record at a time.</li>
+      </ul>
+    </section>
+
+    <!-- 10 -->
+    <section id="agentforce">
+      <h2 class="sect"><span class="num">10</span><span>The under-trained 8%: Agentforce</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">Two objectives, about five exam questions, <strong>seven deck items</strong> &mdash; all on
+      writing instructions and prompts, none on security, permissions or testing.</p>
+
+      <h3>What an agent is made of</h3>
+      <ul>
+        <li>An <strong>agent</strong> has a role, <strong>topics</strong> and <strong>actions</strong>. A topic is a job the agent can do, with a <strong>classification description</strong>, a <strong>scope</strong> and <strong>instructions</strong>. An action is something it can execute &mdash; a <strong>flow</strong>, <strong>Apex</strong>, a <strong>prompt template</strong>, or an API &mdash; with its own instructions and per-input / per-output descriptions. <strong>Agentforce (Default)</strong> serves employees; <strong>Agentforce Service Agent</strong> serves customers over chat and messaging.</li>
+        <li><strong>Instructions are the configuration.</strong> Good action instructions state what the action does, its goal, and <em>when</em> to use it (<code>0049d522</code>, <code>d6f431f5</code>); good input instructions state the <strong>format, source and requirement</strong> (<code>1f67bbf5</code>); prompts use plain, concise language rather than nested conditions or jargon (<code>0cbd5323</code>).</li>
+        <li><strong>Prompt Builder</strong> templates pull record data in through <strong>merge fields</strong> (<code>644fe387</code>) and can ground on related lists, flows and Apex; the <strong>Einstein Trust Layer</strong> masks sensitive data, keeps zero retention with the model provider, scores toxicity and logs the exchange.</li>
+      </ul>
+
+      <h3>Maintaining, testing, installing</h3>
+      <ul>
+        <li>Edit topics, actions and instructions in <strong>Agent Builder</strong>; an agent must be <strong>deactivated to edit</strong>, and <strong>deactivation interrupts live conversations</strong> &mdash; users get a system error until it is reactivated (<code>7856a477</code>).</li>
+        <li><strong>Light testing</strong> is the <strong>conversation preview</strong> panel in Agent Builder: type as a user, watch which topic and action are selected. Batch testing is the <strong>Testing Center</strong>.</li>
+        <li><strong>Install</strong> prompts, topics, actions and agent templates from <strong>AgentExchange</strong> as packages, then adapt the instructions.</li>
+      </ul>
+
+      <div class="call trap">
+        <span class="tag">Security and permissions &mdash; the objective the deck skips</span>
+        <p>The agent acts <strong>as a user</strong>: the agent user's profile, permission sets and sharing decide
+        which records it can read and change. "The agent cannot find the record" or "cannot run the
+        action" is a <strong>permissions</strong> problem before it is an instruction problem &mdash; check the agent
+        user's object and field access, the flow's run mode, and that the action is assigned to the
+        topic. Builders need the Agentforce and Prompt Builder permission sets; users need the user
+        permission sets; <strong>Einstein Generative AI</strong> must be enabled in Setup.</p>
+        <p><strong>When AI is appropriate</strong>: repeatable, well-bounded, high-volume conversational work with
+        clear guardrails and a path to a human &mdash; escalation to a rep (<code>a63b1272</code>) should carry the
+        conversation context. Not: irreversible or high-risk actions without a human in the loop.</p>
+      </div>
+    </section>
+
+    <!-- 11 -->
+    <section id="numbers">
+      <h2 class="sect"><span class="num">11</span><span>Numbers to memorise</span></h2>
+      <div class="sect-rule"></div>
+      <div class="tw">
+        <table class="kv">
+          <tbody>
+            <tr><td>Exam</td><td>60 scored + up to 5 unscored; <strong>105 min</strong>; <strong>68%</strong> (EN) = 41 of 60; <strong>Summer '25</strong>; no prerequisite</td></tr>
+            <tr><td>Domain weights</td><td>Config 15 &middot; Object Manager 15 &middot; Sales 10 &middot; Service 10 &middot; Productivity 10 &middot; <strong>Data &amp; Analytics 17</strong> &middot; Automation 15 &middot; Agentforce 8</td></tr>
+            <tr><td>Data Import Wizard</td><td><strong>50,000</strong> records</td></tr>
+            <tr><td>Mass Delete Records</td><td>250 at a time</td></tr>
+            <tr><td>Web-to-Lead / Web-to-Case</td><td><strong>500</strong> / <strong>5,000</strong> per day</td></tr>
+            <tr><td>Recycle Bin; deleted custom fields</td><td><strong>15 days</strong> each</td></tr>
+            <tr><td>Field history</td><td>20 fields per object; 18 months</td></tr>
+            <tr><td>Data Export</td><td><strong>weekly</strong> (Enterprise, Performance, Unlimited), <strong>monthly</strong> (others); files available 48 hours</td></tr>
+            <tr><td>Setup Audit Trail / Login History</td><td><strong>180 days</strong> / <strong>6 months</strong>, 20,000 rows</td></tr>
+            <tr><td>Session timeout default</td><td>2 hours</td></tr>
+            <tr><td>Username</td><td>Unique across all orgs; up to 80 characters</td></tr>
+            <tr><td>Master-detail per object</td><td><strong>2</strong></td></tr>
+            <tr><td>Sharing rules per object</td><td>300, up to 50 criteria-based</td></tr>
+            <tr><td>Duplicate rules</td><td><strong>5 active per object</strong>; <strong>3 matching rules per duplicate rule</strong>; 5 active matching rules per object</td></tr>
+            <tr><td>Custom report types</td><td>50 / <strong>300</strong> / 2,000 / 400 (Professional / Enterprise / Unlimited &amp; Performance / Developer); <strong>4</strong> related objects; 60 object references; 1,000 fields</td></tr>
+            <tr><td>Report</td><td><strong>2,000 rows</strong>; <strong>20 field filters</strong>; <strong>5</strong> summary formulas; 1 row-level formula; 3 cross filters &times; 5 sub-filters; 5 bucket columns &times; 20 buckets; joined reports 5 blocks; timeout 10 min; mobile 25 columns</td></tr>
+            <tr><td>Dashboard</td><td><strong>25 widgets</strong> (20 charts/tables); <strong>5 filters</strong> &times; 50 values; <strong>dynamic dashboards 5 / 10 / 3</strong> per org</td></tr>
+            <tr><td>Campaign hierarchy</td><td>5 levels</td></tr>
+            <tr><td>Schedule-triggered flow</td><td>250,000 records per 24 h or 200 &times; licences</td></tr>
+            <tr><td>Escalation actions</td><td>2 kinds &mdash; reassign, notify (up to 5 extra recipients)</td></tr>
+            <tr><td>Deal Change Highlights</td><td>7 days</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 12 -->
+    <section id="stale">
+      <h2 class="sect"><span class="num">12</span><span>Where the deck is older than the exam</span></h2>
+      <div class="sect-rule"></div>
+
+      <div class="call alert">
+        <span class="tag">Answer the Summer '25 way</span>
+        <p>Several deck items were written against earlier outlines and key features that are retired,
+        renamed, or absent from the current objectives. On the real exam, choose the modern feature. In
+        the deck these items stay keyed as scraped, and their explanations say so.</p>
+      </div>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Deck item</th><th>Keyed as</th><th>Summer '25 answer</th></tr></thead>
+          <tbody>
+            <tr><td>Closed Won &rarr; follow-up task now and in 60 days (<code>c1c37914</code>)</td><td>Process Builder + Workflow Rule</td><td>A <strong>record-triggered flow</strong> with a <strong>scheduled path</strong>. Workflow Rules and Process Builder reached end of support on <strong>31 Dec 2025</strong> and are not on the outline</td></tr>
+            <tr><td>Welcome tasks and email on Closed Won (<code>0eeaeebf</code>)</td><td>Process Builder</td><td>Record-triggered flow</td></tr>
+            <tr><td>Update a parent when a child field changes (<code>4c6f4b49</code>)</td><td>Process Builder</td><td>Record-triggered flow</td></tr>
+            <tr><td>"Which workflow action sends data to an external system" (<code>ff68f441</code>)</td><td>Outbound Message as a workflow action</td><td>Still an <strong>outbound message</strong> &mdash; fired from a <strong>flow</strong> (<code>86a0ffaa</code>)</td></tr>
+            <tr><td>Approvals with sign-off steps (<code>26d0b0b1</code>, <code>f8bb917c</code>, <code>2915050c</code>)</td><td>Classic approval process</td><td>Still correct &mdash; the outline says "approval process"; <strong>Flow Approval Processes</strong> exist and <code>8058ccdf</code> keys them for <em>automatic</em> submission</td></tr>
+            <tr><td>"Critical update" (<code>532479a7</code>)</td><td>Activate in a sandbox first</td><td>Same practice, under the name <strong>Release Updates</strong></td></tr>
+            <tr><td>"Two-factor authentication for User Interface / API Logins" (<code>76248f85</code>)</td><td>2FA permission names</td><td><strong>Multi-Factor Authentication</strong> permissions; MFA is required and auto-enabled for direct logins</td></tr>
+            <tr><td>"Stage Setup Flow" (<code>0e3ab3e8</code>)</td><td>Leads and Opportunities</td><td>No longer documented under that name; lead status and opportunity stage setup live with Path</td></tr>
+            <tr><td>"Einstein Analytics" as a dashboard option (<code>981a6656</code>)</td><td>Distractor</td><td>The product is <strong>CRM Analytics</strong></td></tr>
+            <tr><td>The seven Agentforce items</td><td>Instructions, prompts, deactivation</td><td>Current &mdash; but the outline also tests <strong>permissions, security and testing</strong>, which the deck does not (&sect;10)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Two items are flagged in their own explanations as unsettled rather than stale:
+      <code>a63b1272</code> (the "agent history component" is not a documented name) and
+      <code>be02a4c2</code> (record-type-specific values are a record type setting, not a picklist type).</p>
+    </section>
+
+    <!-- 13 -->
+    <section id="tells">
+      <h2 class="sect"><span class="num">13</span><span>Distractor tells</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">Patterns in how this exam writes wrong answers, from the deck's 154 and its fact-check.</p>
+      <ol class="prose">
+        <li><strong>The right tool for the neighbouring verb.</strong> Assignment rule for a <em>time</em> problem, escalation for a <em>creation</em> problem, auto-response for a <em>close</em> problem, validation rule for a <em>notification</em>. Match the verb first.</li>
+        <li><strong>Profile where a permission set belongs</strong>, and vice versa. Editing a standard profile's object permissions (impossible); a new profile for three users (<code>3615e19f</code>); a permission set for login hours (impossible).</li>
+        <li><strong>The sharing tool one level off.</strong> Manual sharing for a whole team (<code>c4eb0512</code>); OWD Public Read/Write when the aim is <em>restriction</em>; role hierarchy when the access is lateral; Apex sharing on an admin exam.</li>
+        <li><strong>The relationship that does the opposite.</strong> Master-detail when children must survive (<code>532d0949</code>, <code>b77f33bd</code>); lookup when orphans must be impossible (<code>3bc13244</code>).</li>
+        <li><strong>Required in the wrong place.</strong> Layout-required for "every record however created" (<code>b26213ef</code>); field-required for a conditional rule (<code>0424bfcc</code>).</li>
+        <li><strong>The running-user confusion.</strong> A specified running user shows <em>their</em> data to everyone &mdash; the cure for restricted reps needing totals (<code>307b7189</code>) and the cause of reps seeing too much (<code>fdfedecb</code>).</li>
+        <li><strong>Retired automation offered as current.</strong> Workflow Rules and Process Builder on a Summer '25 exam are distractors &mdash; Flow is the answer (&sect;12).</li>
+        <li><strong>Delete instead of deactivate; deactivate instead of freeze.</strong> Users are never deleted; freezing is the temporary block (<code>c6364b77</code>).</li>
+        <li><strong>Login IP vs trusted IP.</strong> Profile ranges <em>deny</em>; trusted ranges <em>skip verification</em>.</li>
+        <li><strong>A product name that does not exist.</strong> "Private Chatter Channel", "Ticket", "Request", "Custom variable", "Search Layout Editor" for related-list columns.</li>
+        <li><strong>Custom code on an admin exam.</strong> Apex, Lightning web components and Visualforce are almost always wrong when a declarative feature is offered.</li>
+        <li><strong>The count trick.</strong> "Which two" where one option contains both, or where a plausible third is the one the docs contradict (<code>ebcb1c79</code> &mdash; escalation rules do not change priority or reopen).</li>
+      </ol>
+
+      <h3>Read the question's own verb</h3>
+      <ul>
+        <li><strong>"prevent" / "ensure &hellip; cannot"</strong> &rarr; validation rule, OWD, uncheck Grant Access Using Hierarchies, universally required field.</li>
+        <li><strong>"route" / "assign"</strong> &rarr; assignment rules, queues, Omni-Channel.</li>
+        <li><strong>"after N hours" / "still open"</strong> &rarr; escalation rules.</li>
+        <li><strong>"notify" / "alert"</strong> &rarr; escalation email, Big Deal Alert, flow email, Chatter.</li>
+        <li><strong>"guided" / "step by step" / "form"</strong> &rarr; screen flow.</li>
+        <li><strong>"on a schedule" / "clean up existing records"</strong> &rarr; schedule-triggered flow.</li>
+        <li><strong>"sign off" / "approve"</strong> &rarr; approval process.</li>
+        <li><strong>"different values / layout / process for different users"</strong> &rarr; record types.</li>
+        <li><strong>"see only their own"</strong> &rarr; OWD Private; on a report, the viewer-relative filter.</li>
+        <li><strong>"quickly" / "without building"</strong> &rarr; AppExchange, Salesforce Labs, a standard feature.</li>
+        <li><strong>"what should the admin check first"</strong> &rarr; Login History, Setup Audit Trail, the next approver, the running user.</li>
+      </ul>
+    </section>
+
+    <!-- 14 -->
+    <section id="plan">
+      <h2 class="sect"><span class="num">14</span><span>Two-week revision plan</span></h2>
+      <div class="sect-rule"></div>
+      <div class="tw">
+        <table>
+          <thead><tr><th class="num-col">Day</th><th>Focus</th></tr></thead>
+          <tbody>
+            <tr><td class="num">1</td><td>&sect;3 company settings, users and what blocks deactivation; the security controls table. Drill Configuration items</td></tr>
+            <tr><td class="num">2</td><td>&sect;3 sharing model steps 1&ndash;8 and profiles vs permission sets until both tables are automatic</td></tr>
+            <tr><td class="num">3</td><td>&sect;4 relationships, field behaviour, record types and Lightning pages. Drill Object Manager items</td></tr>
+            <tr><td class="num">4</td><td>&sect;5 leads, opportunities, campaigns; &sect;6 the case toolkit table cover-and-reproduce</td></tr>
+            <tr><td class="num"><strong>5</strong></td><td><strong>&sect;8 moving data and validation tools</strong> &mdash; the import/export table and the duplicate-rule limits from memory</td></tr>
+            <tr><td class="num"><strong>6</strong></td><td><strong>&sect;8 reports and dashboards</strong> &mdash; report types, joined reports, cross filters, running user, dynamic dashboard limits. The exam's biggest domain</td></tr>
+            <tr><td class="num">7</td><td>&sect;9 tool-selection table, Flow types, order of execution. Drill Automation items &mdash; and re-answer every Process Builder item the Summer '25 way</td></tr>
+            <tr><td class="num">8</td><td>&sect;9 approval processes; the Default Workflow User</td></tr>
+            <tr><td class="num"><strong>9</strong></td><td><strong>&sect;7 Productivity</strong> &mdash; Chatter group types, mobile navigation and branding, managed vs unmanaged packages</td></tr>
+            <tr><td class="num"><strong>10</strong></td><td><strong>&sect;10 Agentforce</strong> &mdash; agent anatomy, instruction rules, deactivation behaviour, permissions and testing</td></tr>
+            <tr><td class="num">11</td><td>&sect;11 numbers (cover and reproduce); &sect;12 the deck-older-than-exam list</td></tr>
+            <tr><td class="num">12</td><td>&sect;13 tells; re-drill every item you missed</td></tr>
+            <tr><td class="num">13</td><td>Full deck run, timed at 105 seconds a question</td></tr>
+            <tr><td class="num">14</td><td>Re-read &sect;8, &sect;10 and &sect;12. Rest</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 15 -->
+    <section id="sources">
+      <h2 class="sect"><span class="num">15</span><span>Sources</span></h2>
+      <div class="sect-rule"></div>
+      <p>Every URL below was rendered and title-checked during this repo's fact-check work or while writing this guide.</p>
+
+      <h4>The exam</h4>
+      <ul class="linklist">
+        <li><a href="https://help.salesforce.com/s/articleView?id=005298966&type=1&language=en_US">Salesforce Certified Platform Administrator Exam Guide</a> &mdash; <span class="why">outline, weights, Summer '25 alignment.</span></li>
+      </ul>
+
+      <h4>Configuration and setup</h4>
+      <ul class="linklist">
+        <li><a href="https://help.salesforce.com/s/articleView?id=xcloud.company_information_fields.htm&language=en_US&type=5">Company Information Fields</a>, <a href="https://help.salesforce.com/s/articleView?id=sf.setting_the_fiscal_year.htm&language=en_US&type=5">Set the Fiscal Year</a>, <a href="https://help.salesforce.com/s/articleView?id=sf.customize_supporthours.htm&language=en_US&type=5">Set Business Hours</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=platform.users_deactivate_considerations.htm&language=en_US&type=5">Considerations for Deactivating Users</a>, <a href="https://help.salesforce.com/s/articleView?id=platform.users_unlock.htm&language=en_US&type=5">Unlock Users</a>, <a href="https://help.salesforce.com/s/articleView?id=sf.resetting_and_expiring_passwords.htm&language=en_US&type=5">Reset Passwords for Your Users</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.users_profiles_epui_login_ip_ranges.htm&language=en_US&type=5">Restrict Login IP Addresses in Profiles</a>, <a href="https://help.salesforce.com/s/articleView?id=sf.admin_password.htm&language=en_US&type=5">Set Password Policies</a>, <a href="https://help.salesforce.com/s/articleView?id=sf.security_overview_2fa.htm&language=en_US&type=5">Multi-Factor Authentication</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.admin_monitorsetup.htm&language=en_US&type=5">Setup Audit Trail</a>, <a href="https://help.salesforce.com/s/articleView?id=xcloud.users_login_history.htm&language=en_US&type=5">Monitor Login History</a>, <a href="https://help.salesforce.com/s/articleView?id=sf.security_health_check.htm&language=en_US&type=5">Security Health Check</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.security_sharing_owd_about.htm&language=en_US&type=5">Organization-Wide Sharing Defaults</a>, <a href="https://help.salesforce.com/s/articleView?id=sf.security_about_sharing_rules.htm&language=en_US&type=5">Sharing Rules</a>, <a href="https://help.salesforce.com/s/articleView?id=sf.security_sharing_rules_owner.htm&language=en_US&type=5">Owner-Based Sharing Rules</a>, <a href="https://help.salesforce.com/s/articleView?id=sf.security_controlling_access_using_hierarchies.htm&language=en_US&type=5">Control Access Using Hierarchies</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.perm_set_groups.htm&language=en_US&type=5">Permission Set Groups</a> &mdash; <span class="why">muting.</span></li>
+      </ul>
+
+      <h4>Object Manager</h4>
+      <ul class="linklist">
+        <li><a href="https://help.salesforce.com/s/articleView?id=platform.overview_of_custom_object_relationships.htm&language=en_US&type=5">Object Relationships Overview</a>, <a href="https://help.salesforce.com/s/articleView?id=platform.relationships_considerations.htm&language=en_US&type=5">Considerations for Relationships</a>, <a href="https://help.salesforce.com/s/articleView?id=platform.fields_about_roll_up_summary_fields.htm&language=en_US&type=5">Roll-Up Summary Fields</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=platform.notes_on_changing_custom_field_types.htm&language=en_US&type=5">Considerations for Converting the Field Type of a Custom Field</a> and <a href="https://help.salesforce.com/s/articleView?id=sf.fields_managing_deleted_fields.htm&language=en_US&type=5">Manage Deleted Custom Fields</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=platform.customize_recordtype.htm&language=en_US&type=5">Record Types</a>, <a href="https://help.salesforce.com/s/articleView?id=platform.lightning_page_types.htm&language=en_US&type=5">Lightning Page Types</a>, <a href="https://help.salesforce.com/s/articleView?id=platform.lightning_app_builder_customize_lex_pages_activate.htm&language=en_US&type=5">Activate Lightning Record Pages</a></li>
+      </ul>
+
+      <h4>Sales and service</h4>
+      <ul class="linklist">
+        <li><a href="https://help.salesforce.com/s/articleView?id=sales.customize_mapleads.htm&language=en_US&type=5">Map Custom Lead Fields for Lead Conversion</a>, <a href="https://help.salesforce.com/s/articleView?id=sales.creating_assignment_rules.htm&language=en_US&type=5">Set Up Assignment Rules</a>, <a href="https://help.salesforce.com/s/articleView?id=sf.activating_big_deal_alerts.htm&language=en_US&type=5">Set Up Big Deal Alerts</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=sales.faq_campaigns_who_has_access.htm&language=en_US&type=5">Who Has Access to Campaigns?</a> and <a href="https://help.salesforce.com/s/articleView?id=sales.campaigns_members_landing_page.htm&language=en_US&type=5">Campaign Members</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=service.rules_escalation_actions.htm&language=en_US&type=5">Escalation Actions</a>, <a href="https://help.salesforce.com/s/articleView?id=service.customize_supportrules.htm&language=en_US&type=5">Support Settings</a>, <a href="https://help.salesforce.com/s/articleView?id=service.case_interaction_send_email_quick_action_considerations.htm&language=en_US&type=5">Send Email Action Considerations for Cases</a></li>
+      </ul>
+
+      <h4>Productivity and collaboration</h4>
+      <ul class="linklist">
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.tasks_enable_recurring_tasks_lex.htm&language=en_US&type=5">Enable Recurring Tasks</a>, <a href="https://help.salesforce.com/s/articleView?id=sf.collab_unlisted_groups_overview.htm&language=en_US&type=5">Unlisted Groups</a>, <a href="https://help.salesforce.com/s/articleView?id=xcloud.salesforce_app_customize_nav_menu.htm&language=en_US&type=5">Customize the Mobile Navigation Menu</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.distribution_installing_packages.htm&language=en_US&type=5">Install a Package</a> and <a href="https://help.salesforce.com/s/articleView?id=sf.dashboards_install_sample_appexchange.htm&language=en_US&type=5">Install Sample Dashboards from AppExchange</a></li>
+      </ul>
+
+      <h4>Data and analytics</h4>
+      <ul class="linklist">
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.faq_data_import_wizard_what_kind_objects.htm&language=en_US&type=5">What Kind of Objects Can I Import?</a>, <a href="https://help.salesforce.com/s/articleView?id=sf.admin_massdelete.htm&language=en_US&type=5">Delete Multiple Records and Reports</a>, <a href="https://help.salesforce.com/s/articleView?id=xcloud.admin_exportdata.htm&language=en_US&type=5">Export Backup Data from Salesforce</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.duplicate_rules_overview.htm&language=en_US&type=5">Things to Know About Duplicate Rules</a> &mdash; <span class="why">5 rules per object, 3 matching rules per rule.</span></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=analytics.rd_reports_dashboards_limits.htm&language=en_US&type=5">Reports and Dashboards Limits and Allocations</a> &mdash; <span class="why">the allocations table and every report and dashboard limit in &sect;11.</span></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=analytics.dashboards_dynamic_overview.htm&language=en_US&type=5">Dynamic Dashboards</a> &mdash; <span class="why">5 / 10 / 3 and the four considerations</span> &mdash; and <a href="https://help.salesforce.com/s/articleView?id=analytics.dashboards_view_as_overview.htm&language=en_US&type=5">View Dashboards As</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.reports_bucketing_overview.htm&language=en_US&type=5">Bucket Your Report Data</a>, <a href="https://help.salesforce.com/s/articleView?id=sf.reports_hide_report_types.htm&language=en_US&type=5">Hide Report Types</a>, <a href="https://help.salesforce.com/s/articleView?id=analytics.analytics_sharing_permissions.htm&language=en_US&type=5">Report and Dashboard Folder Sharing Permissions</a></li>
+      </ul>
+
+      <h4>Automation</h4>
+      <ul class="linklist">
+        <li><a href="https://help.salesforce.com/s/articleView?id=platform.automation_about_settings.htm&language=en_US&type=5">Process Automation Settings</a> &mdash; <span class="why">the Default Workflow User and the Automated Process User email.</span></li>
+        <li><a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_order_of_execution.htm">Triggers and Order of Execution</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=platform.flow_concepts_type.htm&language=en_US&type=5">Flow Types</a>, <a href="https://help.salesforce.com/s/articleView?id=platform.flow_concepts_trigger_record.htm&language=en_US&type=5">Record-Triggered Flows</a>, <a href="https://help.salesforce.com/s/articleView?id=platform.flow_ref_resources_global_variables.htm&language=en_US&type=5">Flow Global Variables</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=platform.approvals_considerations.htm&language=en_US&type=5">Limits and Considerations for Classic Approval Processes</a>, <a href="https://help.salesforce.com/s/articleView?id=platform.approvals_troubleshoot.htm&language=en_US&type=5">Troubleshoot Approval Processes</a>, <a href="https://help.salesforce.com/s/articleView?id=platform.automate_automated_approvals.htm&language=en_US&type=5">Automate Approvals</a></li>
+      </ul>
+
+      <h4>Agentforce</h4>
+      <ul class="linklist">
+        <li><a href="https://help.salesforce.com/s/articleView?id=ai.copilot_intro.htm&language=en_US&type=5">Design and Implement Agents</a>, <a href="https://help.salesforce.com/s/articleView?id=ai.copilot_setup_activate_deactivate.htm&language=en_US&type=5">Activate or Deactivate Your Agent</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=ai.copilot_actions_instructions.htm&language=en_US&type=5">Write Instructions for Actions</a>, <a href="https://help.salesforce.com/s/articleView?id=ai.copilot_topics_instructions.htm&language=en_US&type=5">Write Instructions for Topics</a>, <a href="https://help.salesforce.com/s/articleView?id=ai.service_agent_escalation.htm&language=en_US&type=5">Escalate from an Agent</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.prompt_builder_ground_merge_fields.htm&language=en_US&type=5">Ground Prompts with Merge Fields</a> and <a href="https://help.salesforce.com/s/articleView?id=ai.generative_ai_trust_layer.htm&language=en_US&type=5">Einstein Trust Layer</a></li>
+      </ul>
+    </section>
+
+    <!-- 16 -->
+    <section id="notebooklm">
+      <h2 class="sect"><span class="num">16</span><span>Using this with NotebookLM</span></h2>
+      <div class="sect-rule"></div>
+
+      <p>Upload the Markdown version of this guide as a source &mdash; headings become NotebookLM's
+      navigation. Worth adding alongside it: the
+      <a href="https://help.salesforce.com/s/articleView?id=005298966&type=1&language=en_US">official exam guide</a>
+      and <a href="https://help.salesforce.com/s/articleView?id=analytics.rd_reports_dashboards_limits.htm&language=en_US&type=5">Reports
+      and Dashboards Limits and Allocations</a> &mdash; the one page behind the exam's largest domain.</p>
+
+      <h3>Prompts that produce useful study media</h3>
+      <div class="prompts">
+        <div class="prompt">Generate an Audio Overview of sections 6 and 9. Have the hosts take turns describing a support or sales requirement and arguing over which single feature &mdash; assignment rule, escalation rule, approval process, flow, validation rule &mdash; is built for it.</div>
+        <div class="prompt">Using section 8, drill me on reports and dashboards: give me a reporting requirement and ask which report type, format, filter or dashboard setting delivers it. Don't give me the answer until I try.</div>
+        <div class="prompt">Turn section 11 into flashcards &mdash; one number per card.</div>
+        <div class="prompt">Using section 12, quiz me on each deck item that keys Process Builder or Workflow Rules, and make me give the Flow answer instead.</div>
+        <div class="prompt">Using section 3, give me five user-access scenarios and ask whether the fix is a profile, a permission set, a sharing rule, the role hierarchy, or an OWD change.</div>
+      </div>
+
+      <p>For the Audio Overview, sections 3, 6, 9 and 13 reward listening &mdash; they are decision tables
+      argued out loud. Sections 11 and 15 are lookups and will not survive being read aloud.</p>
+    </section>
+
+  </main>
+
+  <footer class="colophon">
+    Compiled from the 154 questions in <code>salesforce_admin_questions.json</code>, the official Platform
+    Administrator exam guide, and the documentation those questions cite. The deck's own tags were not
+    used for the domain table &mdash; <code>study-guides/reclassify-admin.mjs</code> holds the per-question
+    calls against the eight current domains. Every URL in &sect;15 was rendered and title-checked; the exam
+    guide, duplicate rules, dynamic dashboards, report and dashboard limits, Process Automation
+    Settings, Data Export, Flow Types, approval considerations, sharing rules, Agentforce and Trust
+    Layer pages were re-read for this guide on 2026-09-12.
+  </footer>
+
+</div>
+</body>
+</html>
