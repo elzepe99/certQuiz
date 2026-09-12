@@ -581,6 +581,156 @@ id 404s, try `sf.` before assuming the article is gone.
 - **Account Hierarchy: Set Up** — https://help.salesforce.com/s/articleView?id=sales.account_hierarchy_setup_lex.htm&language=en_US&type=5
 - **Considerations for Using Account Hierarchy** — https://help.salesforce.com/s/articleView?id=sales.account_parent_lex.htm&language=en_US&type=5
 
+### Platform App Builder import pass (2026-09-11)
+
+Two freecram dumps (v2026-09-05, 108 items; v2026-06-30, 143 items) merged into the
+app-builder deck: 105 new questions, every one opened against the pages below. All
+were rendered in the browser pane at top level and their bodies read, except the
+entries marked TITLE-ONLY.
+
+**Three things about the tooling learned on this pass, all reusable:**
+
+- **`help.salesforce.com` renders its article links inside shadow roots**, so
+  `document.querySelectorAll('a')` returns four anchors on a page with two hundred.
+  A recursive walk that descends into every `el.shadowRoot` recovers the whole
+  navigation tree with real article ids — the fastest way to find the id of a
+  sibling article ("Custom Object Security" turned out to be `platform.dev_security`,
+  which no search surfaced). `document.body.innerText` does pierce the shadow DOM,
+  so body greps work as before.
+- **`developer.salesforce.com` doc pages do not render a body in the browser pane
+  at all** (innerText ~80 chars, and `navigate` can take the full 300 s to time out),
+  and WebFetch returns 403 on the same host. The title *does* render, so an atlas or
+  `docs/platform` page can be title-verified but not body-verified from here. Cite
+  a help.salesforce.com page instead wherever one carries the fact.
+- WebFetch on `help.salesforce.com` returned only the nav tree for the first article
+  tried (the known failure mode) — the pass went straight to the browser after that.
+
+**Objects, relationships, fields**
+- **Considerations for Object Relationships** — https://help.salesforce.com/s/articleView?id=platform.relationships_considerations.htm&language=en_US&type=5
+  The densest page of the pass: lookup→master-detail needs "the lookup field in all
+  the records" populated; master-detail→lookup needs no roll-ups on the master;
+  junction sharing "is determined by a user's sharing access to both associated
+  master records"; converting a relationship "can cause existing custom reports to
+  become unusable" and reverting "restores" them.
+- **Custom Object Security** — https://help.salesforce.com/s/articleView?id=platform.dev_security.htm&language=en_US&type=5
+  Already listed under sharing; note the id, it is not `customobject_security`.
+- **Object Relationships Overview** — https://help.salesforce.com/s/articleView?id=platform.overview_of_custom_object_relationships.htm&language=en_US&type=5
+  "Each custom object can have up to two master-detail relationships and up to 40
+  total relationships"; lookups "don't support sharing or roll-up summary fields";
+  Hierarchical is "available for only the user object".
+- **What Is a Cross-Object Formula?** — https://help.salesforce.com/s/articleView?id=platform.customize_cross_object.htm&language=en_US&type=5
+  Parent direction only — "can reference merge fields from a master ('parent')
+  object … also works with lookup relationships", up to 10 relationships away. The
+  citation for "formulas cannot reference child records".
+- **Tips for Building Cross-Object Formulas** — https://help.salesforce.com/s/articleView?id=platform.fields_creating_cross_object_notes.htm&language=en_US&type=5
+- **PRIORVALUE** — https://help.salesforce.com/s/articleView?id=platform.customize_functions_priorvalue.htm&language=en_US&type=5
+- **About Advanced Currency Management** — https://help.salesforce.com/s/articleView?id=sales.administration_about_advanced_currency_management.htm&language=en_US&type=5
+  The `sf.` id redirects here. "You can't create roll-up summary fields that
+  calculate currency on the opportunity object rolling up to the account object."
+- **Custom Field Types** — https://help.salesforce.com/s/articleView?id=platform.custom_field_types.htm&language=en_US&type=5
+- **Manage Inactive Picklist Values** — https://help.salesforce.com/s/articleView?id=platform.fields_manage_inactive_picklist_values.htm&language=en_US&type=5
+  "Establish a Picklist Upper Bound Limit … on existing picklists"; 4,000 default on
+  new unrestricted picklists. Moved a key the dump had on global value sets.
+- **Improve Performance with Limits on Inactive Picklist Values** (Spring '21 RN) — https://help.salesforce.com/s/articleView?id=release-notes.rn_forcecom_fields_inactive_picklists.htm&language=en_US&release=230&type=5
+  "Global picklist value sets have a combined active and inactive limit of 1,000."
+- **Dependent Picklist Considerations** — https://help.salesforce.com/s/articleView?id=platform.fields_dependent_field_considerations.htm&language=en_US&type=5
+  Four one-liners that settle every dependent-picklist item, plus "The Data Import
+  Wizard doesn't consider field dependencies" — the opposite of what a dump keyed.
+- **Auto Add Fields to Custom Report Types** (Spring '21 RN) — https://help.salesforce.com/s/articleView?id=release-notes.rn_rd_reports_auto_add_custom_fields.htm&language=en_US&release=232&type=5
+- **Design Your Own Data Model With Schema Builder** — https://help.salesforce.com/s/articleView?id=platform.schema_builder.htm&language=en_US&type=5
+  Adds "custom objects, lookup relationships, master-detail relationships, all
+  custom fields except Geolocation". Says nothing about custom settings.
+- **Create a Custom Report Type in the Enhanced Custom Report Type Builder** — https://help.salesforce.com/s/articleView?id=xcloud.reports_enhanced_defining_report_types.htm&language=en_US&type=5
+  "After you save the report type, you can't change the primary object"; the
+  with-or-without wording is "'A' records may or may not have related 'B' records".
+- **Understand Campaign Hierarchy** — https://help.salesforce.com/s/articleView?id=sales.campaigns_hierarchy.htm&language=en_US&type=5
+  Parent statistics aggregate "regardless of the current user's sharing settings".
+- **Customize Duplicate Rules** — https://help.salesforce.com/s/articleView?id=sales.duplicate_rules_create.htm&language=en_US&type=5
+- **What Is Imported for Leads?** — https://help.salesforce.com/s/articleView?id=xcloud.for_leads.htm&language=en_US&type=5
+  Import wizard matching types: Salesforce ID, name, email, external ID.
+
+**Sharing and access**
+- **Who Has Access to Account Records?** — https://help.salesforce.com/s/articleView?id=platform.faq_record_access.htm&language=en_US&type=5
+  The page that moved `9ba9345d`: "in Lightning Experience, click Sharing Hierarchy
+  from the Action Menu … Click View next to the user's name. In Salesforce Classic,
+  click Sharing … then click Expand List … Click Why?" Both routes on one page.
+- **See Record Access Reasons in Lightning Experience** (Spring '21 RN) — https://help.salesforce.com/s/articleView?id=release-notes.rn_forcecom_sharing_view_record_access_lex.htm&language=en_US&release=232&type=5
+  "Sharing Hierarchy is now available on the action menu, not just in the Share window."
+- **Manual Sharing** — https://help.salesforce.com/s/articleView?id=platform.granting_access_to_records.htm&language=en_US&type=5
+  Who can create manual shares. The LEX how-to page (already listed) now marks
+  "Roles and Subordinates" as **deprecated** in favour of "Roles and Internal
+  Subordinates" — the exam still uses the old name.
+
+**Lightning App Builder and UI**
+- **Dynamic Highlights Panel** — https://help.salesforce.com/s/articleView?id=platform.dynamic_highlights_panel.htm&language=en_US&type=5
+  "Displays up to 12 key record fields" — so a stem saying "12 key fields" is not OCR.
+- **Compact Layouts** — https://help.salesforce.com/s/articleView?id=platform.compact_layout_overview.htm&language=en_US&type=5
+  Mobile highlights area "shows up to ten fields"; LEX highlights panel "up to the
+  first seven fields".
+- **Add a Utility Bar to Lightning Apps** — https://help.salesforce.com/s/articleView?id=platform.apps_lightning_utilities.htm&language=en_US&type=5
+  Edited from App Manager → Edit → Utility Items.
+- **Object-Specific Actions** — https://help.salesforce.com/s/articleView?id=platform.actions_overview_object_specific.htm&language=en_US&type=5
+- **Search Layout Guidelines** — https://help.salesforce.com/s/articleView?id=ai.search_layout_guidelines.htm&language=en_US&type=5
+  Redirects into the `ai.` namespace. Lists what a search layout determines,
+  including results columns and filter fields.
+- **Considerations for Inline Editing in a List View in Lightning Experience** — https://help.salesforce.com/s/articleView?id=xcloud.basics_customviews_lv_lex_considerations.htm&language=en_US&type=5
+  Multiple record types block inline edit unless the UI setting is on; Recently
+  Viewed is editable only when "predefined to contain only one record type".
+- **Converted Leads Displayed in Leads Report** — https://help.salesforce.com/s/articleView?id=000004948&language=en_US&type=1
+  "Standard Lead Reports … display both active and converted Leads by default."
+- **Enable Offline Access and Offline Edit for the Salesforce Mobile App** — https://help.salesforce.com/s/articleView?id=xcloud.salesforce_app_enable_offline_access.htm&language=en_US&type=5
+- **Chatter Streams** — https://help.salesforce.com/s/articleView?id=experience.collab_chatter_streams_overview.htm&language=en_US&type=5
+- **Set an Out of Office Message in Chatter** — https://help.salesforce.com/s/articleView?id=experience.collab_profile_out_of_office.htm&language=en_US&type=5
+- **Actions in Lightning Experience** (already listed) settled one more thing: "The
+  Activity tab contains Create a Record quick actions that point to the Event and
+  Task objects", so a *custom* New Task action lands in the Activities component,
+  not the highlights panel. Moved a dump key.
+
+**Automation and approvals**
+- **Scheduled Paths** — https://help.salesforce.com/s/articleView?id=platform.flow_concepts_trigger_scheduled_path.htm&language=en_US&type=5
+- **Getting Started with Record-Triggered Flows** — https://help.salesforce.com/s/articleView?id=platform.automate_flow_build_get_started_record_triggered_flows.htm&language=en_US&type=5
+  "Run when someone creates, updates, or deletes a record."
+- **Delete Records Element** — https://help.salesforce.com/s/articleView?id=platform.flow_ref_elements_data_delete.htm&language=en_US&type=5
+- **Provided Flow Core Actions** — https://help.salesforce.com/s/articleView?id=platform.flow_ref_elements_actions_list.htm&language=en_US&type=5
+  Lists Submit for Approval, Post to Chatter, Send Email, Activate Session-Based
+  Permission Set. Outbound message is *not* on this list — see the next entry.
+- **Send an Outbound Message from Your Record-Triggered Flow** (Winter '22 RN) — https://help.salesforce.com/s/articleView?id=release-notes.rn_automate_flow_builder_outbound_message.htm&language=en_US&release=234&type=5
+  "Outbound messages are available as a core action in Flow Builder" for after-save
+  record-triggered flows. Any item that keys "flow + outbound message" as *wrong* is
+  now stale; one such item was kept as keyed and flagged.
+- **Start a Flow from a Quick Action** — https://help.salesforce.com/s/articleView?id=platform.flow_actions.htm&language=en_US&type=5
+- **Specify Who Can Edit Locked Records in a Classic Approval Process** — https://help.salesforce.com/s/articleView?id=platform.approvals_create_recordeditability.htm&language=en_US&type=5
+  "When a record is submitted for approval, it's locked" — the citation against
+  "add a validation rule to stop edits during approval".
+- **Choose an Automated Approver Throughout a Classic Approval Process** — https://help.salesforce.com/s/articleView?id=platform.approvals_create_automatedfield.htm&language=en_US&type=5
+- **Classic Approval Process Considerations for the Salesforce Mobile App** — https://help.salesforce.com/s/articleView?id=platform.approvals_considerations_mobile_app.htm&language=en_US&type=5
+  Respond via the Approvals navigation item or the Approval History related list;
+  not from Chatter; queues get no mobile notifications.
+- **Identify Assigned Approvers for an Approval Step** (already listed) — approver
+  types are submitter, hierarchy field, queue, specific users/related users. **No
+  public groups and no roles.** Moved a dump key that had a public group.
+- **Best Practices for Designing Processes** — https://help.salesforce.com/s/articleView?id=platform.process_considerations_design_bestpractices.htm&language=en_US&type=5
+- **Process Builder Advanced Option Considerations** — https://help.salesforce.com/s/articleView?id=platform.process_advanced_considerations.htm&language=en_US&type=5
+- **Field Update Actions** — https://help.salesforce.com/s/articleView?id=platform.workflow_managing_field_updates.htm&language=en_US&type=5
+  The `sf.workflow_defining_field_updates` id redirects here. Neither this nor the
+  Considerations page still lists the classic "three things field updates ignore";
+  only field-level security and validation rules are stated today.
+
+**Sandboxes and deployment**
+- **Change Sets Best Practices** — https://help.salesforce.com/s/articleView?id=platform.changesets_best_practices.htm&language=en_US&type=5
+  "After you upload a change set, you can't change its contents … clone"; Validate
+  an inbound change set; production runs all local Apex tests.
+- **Change Sets Implementation Tips** — https://help.salesforce.com/s/articleView?id=platform.changesets_implementation_notes.htm&language=en_US&type=5
+- **Components Available in Change Sets** — https://help.salesforce.com/s/articleView?id=platform.changesets_about_components.htm&language=en_US&type=5
+  "Deployed custom tabs are hidden by default for all users … Professional Edition
+  orgs are an exception."
+- **Email Deliverability** (sandbox) — https://help.salesforce.com/s/articleView?id=platform.data_sandbox_email_deliverability.htm&language=en_US&type=5
+- **Salesforce Sandbox Preview Instructions** — https://help.salesforce.com/s/articleView?id=000391927&language=en_US&type=1
+  Preview timing and the package upload/install chart. Says nothing about change
+  sets crossing release versions — that item is cited as orienting only.
+- **Register a Namespace for a First-Generation Managed Package** — https://developer.salesforce.com/docs/platform/pkg1-dev/guide/register-namespace-prefix.html — TITLE-ONLY
+- **Guide to Updating Your Salesforce Package Effectively** (Trailhead) — https://trailhead.salesforce.com/content/learn/modules/appexchange_app_updates/appexchange_app_updates_decide — TITLE-ONLY. Trailhead unit bodies rendered ~4 KB of chrome and no lesson text in the pane, so the patch/minor/major item rests on a search snippet.
+
 ### Sharing, visibility, and record access
 
 One home for every record-access URL, gathered from the Platform App Builder pass
@@ -768,6 +918,25 @@ Use instead, both rendered and confirmed:
 - `https://developer.salesforce.com/docs/atlas.en-us.connect_api.meta/connect_api/intro.htm`
   — the Connect REST API guide is under the `chatterapi` book, not `connect_api`. This URL
   renders the bare "Salesforce Developers" shell. Use `…chatterapi/intro_using_chatter_connect.htm`.
+
+### From the Platform App Builder import pass (2026-09-11)
+
+- `platform.customobject_security.htm` — the article is `platform.dev_security.htm`.
+- `platform.register_namespace_prefix.htm` — no help-site twin; the topic lives only in
+  the packaging developer guide.
+- `platform.emailadmin_deliverability_settings.htm` — the sandbox-specific page
+  `platform.data_sandbox_email_deliverability.htm` is the live one.
+- `platform.admin_fls.htm` — use `platform.users_profiles_field_perms.htm` (Field
+  Permissions), already listed.
+- `platform.workflow_field_update.htm` — live id is
+  `platform.workflow_managing_field_updates.htm`.
+- `platform.flow_concepts_screen.htm` — no such id; cite Start a Flow from a Quick
+  Action or Provided Flow Core Actions for screen-flow items.
+- `release-notes.rn_forcecom_lab_list_view_component.htm&release=210` — a guess at the
+  Winter '18 "Filter List renamed List View" note; dead. The rename is asserted in
+  the deck from memory and a third-party summary, not from a rendered page.
+- `release-notes.rn_forcecom_lab_updated_visibility_rules_labels.htm&release=222` —
+  returned by search, dead when opened.
 
 ### From the Platform App Builder pass (2026-08-11)
 

@@ -460,9 +460,11 @@ underneath.
 
 ## Deck state — as of 2026-08-25
 
-**1,657 questions across 14 decks, all 1,657 cited with a real URL.** Gap zero,
-unparsed-marker count zero, re-measured 2026-09-11 after five questions were added to
-integration (see its row). Run the command below before
+**1,760 questions across 14 decks, all 1,760 cited with a real URL.** Gap zero,
+unparsed-marker count zero, re-measured 2026-09-12 after two freecram dumps added 105
+questions to app-builder on 2026-09-11 (see its row and the import note below) and a
+second duplicate sweep removed 2 the next day — the same 2026-09-11 also put five into
+integration, taking the count from 1,652 to 1,657 first. Run the command below before
 trusting the number — it is cheap.
 
 Two corrections folded into that figure. The 1,623 this line carried was **one short**
@@ -576,7 +578,7 @@ column, not the Cited column.
 | salesforce-revenue-cloud | 135 | 135 | **Fully checked** (2026-08-15) — 2 keys moved, 88 explanations rewritten. Its defect was **fabricated citations, not wrong answers**: 73 explanations quoted invented "Exact Extracts". 9 questions could not be settled and say so in their own prose. Deduped 137 → 135 on 2026-08-17 |
 | salesforce-data-cloud-consultant | 100 | 100 | **Fully checked** (2026-08-21) — 4 keys moved, 6 flagged reasoning fixes, 11 silent clarifications. Its defect shape is **the invented capability**: a "reusable container block", a "Data Segmentation Object", and a phone field type that supposedly normalises to E164 all name things Data Cloud does not have. Two items are defective (three defensible options each), and one explanation resolved its own ambiguity by deferring to "the source" — an exam dump. **All 100 option sets use pre-rename product and permission-set names** — see the Data 360 note below |
 | salesforce-sharing-visibility | 136 | 136 | **Fully checked** (2026-08-17) — 2 keys moved, 6 reasoning fixes, 19 silent clarifications. The 4 earlier 2026-08-04 validation stamps are preserved |
-| salesforce-app-builder | 119 | 119 | **Fully checked** (2026-08-11) — 4 keys moved, 27 reasoning fixes, 3 defective option sets repaired. Q1–50 spot-rechecked: 10 sampled, 1 defect (a mechanism stated backwards), so the earlier batches read sound |
+| salesforce-app-builder | 222 | 222 | **Fully checked** (2026-08-11) — 4 keys moved, 27 reasoning fixes, 3 defective option sets repaired. Q1–50 spot-rechecked: 10 sampled, 1 defect (a mechanism stated backwards), so the earlier batches read sound. **Grew 119 → 224 on 2026-09-11** from two freecram dumps, fact-checked in the same pass: 16 keys moved (15 against the dump, 1 against the deck — `9ba9345d` B → C, Sharing → Sharing Hierarchy), 5 flagged, 85 silent. The 105 new explanations are already in the readability format; the original 119 are not. **Deduped 224 → 222 on 2026-09-12** (`ef3bdddb`, a noun-swapped twin of `108817b2` the 2026-08-11 pass had missed, and `f862c9c1`, a same-discriminator sandbox item from the import). See "The 2026-09-11 app-builder import" below |
 | salesforce-dld | 137 | 137 | **Fully checked** (2026-08-20, one item repaired 2026-08-21, deduped 138 → 137 on 2026-08-22 by removing `21da735a`) — 5 keys moved, 10 reasoning fixes, 103 silent clarifications. Its defect shape is **stale platform facts**: an entire item built on the retired Lightning Testing Service, Professional/Enterprise tab allocations taught at 10/25 when they are 1,210/1,225, the Metadata API uncompressed ceiling at 400 MB when it is 600 MB, and quick-deploy eligibility at 4 days when it is 10. Two keys moved on the **same** operating-model quadrant — see the Replication row in `verified-docs.md`. Also holds the repo's last unparsed reference marker, now fixed. **~30 of its citations are topical rather than decisive** — its ALM and Project domains are methodology and governance, which no vendor page settles |
 | salesforce-data-architect | 135 | 135 | **Fully checked** (2026-08-19) — 3 keys moved, 18 reasoning fixes, 58 silent clarifications. Its defect shape is **the invented absence**: five explanations denied a capability that exists (external objects can't be reported on ×2, the cross-org Connect adapter is read-only, no native archiving feature exists ×2). Also one fabricated limit (skinny tables taught at 100 columns; documented cap is **200**) and three stale products — Data.com Clean (4 questions), Async SOQL (retired Summer '23), granular locking now the default |
 | salesforce-slack-consultant | 37 | 37 | **Fully checked** (2026-08-18) — 1 key moved, 3 reasoning fixes, 12 silent clarifications. First non-Salesforce, non-Databricks vendor. **Read the caveat below: only 15 of its 37 questions are decidable by any Slack page**, so the N/N here means less than it does on other decks |
@@ -760,6 +762,9 @@ what `splitForSpeech` has to hand the synthesiser in one breath:
 unfenced code, which is never narrated, so that headline number was mostly noise on a
 code deck), **databricks 23 of 147**, data-architect 20 of 135, revenue-cloud 15,
 agentforce 12, sharing-visibility 10, then app-builder, admin and dld at 4 each.
+(App-builder was measured at 119 questions; its 105 imports of 2026-09-11 arrived with
+full stops and discard sections already in place, so only the original 119 need the
+pass — re-measure before ranking it.)
 Databricks is next — and it is a code deck too, so expect the same shape: read every
 "no space after punctuation" hit before touching it, because most will be code.
 
@@ -772,6 +777,108 @@ past 120 characters**, which went **9 → 5**: that is the one `hardWrap`'s fall
 actually reads, since it only breaks on a comma once a chunk has passed 60% of the
 200-character cap. On a deck whose punctuation is already correct, report that number
 rather than the headline one, and expect the real gain to be the explanations.
+
+### The 2026-09-11 app-builder import — two whole dumps, and the ratio flipped
+
+Two freecram dumps were scraped and merged into salesforce-app-builder on 2026-09-11:
+`Salesforce.Platform-App-Builder.v2026-09-05.q108` and `…v2026-06-30.q143`, 251 rows
+in all, both scraped clean (0 errors, 0 empty stems, one option-image warning on a
+formula item that was dropped anyway). **105 were new; the deck went 119 → 224.** That
+is the opposite ratio to the 2026-08-25 integration import (7 new of 41) — the
+app-builder deck had been built from a much smaller dump than the ones now published,
+so do not assume the next drop will be mostly twins. Measure it.
+
+Where the other 146 went: 42 + 61 were twins of deck items, 34 were the same new item
+arriving in both dumps, 4 were internal duplicates within one dump, 4 were damaged
+beyond repair (three-quarters of the options OCR garbage), and 1 restated an existing
+item's mechanism under a new scenario and was left out as redundancy. Twin detection was done
+with a scratch comparison — best deck match by stem Jaccard *and* by option-set
+Jaccard, plus keyed-option text — and then **every gray-zone pair read side by side**.
+Two things from that read worth keeping:
+
+- **Every dump-versus-deck key disagreement on a twin was the dump being wrong** — 24 of
+  them, and every one an answer the 2026-08-11 pass had already moved (validation rule
+  instead of Apex trigger on the account-delete item, two-step approval instead of
+  approval-plus-flow, Checkbox instead of Date as a roll-up type, and so on). A dump
+  disagreeing with a checked deck is a lead to re-read the deck item, not a reason to
+  move it. One lead did pan out — see `9ba9345d` below.
+- **`keyed=1` with different letters is a shuffle, not a disagreement.** Freecram
+  reorders options between dump versions; compare keyed option *text*, never letters.
+
+**The pass moved 16 keys and flagged 5, on 105 questions — a 15% correction rate.**
+Fifteen of the moves were against the dump's key on a new item, one against the deck.
+The shapes, for the next import:
+
+- **Invented settings** (pattern 2's cousin): "form factor checkboxes" in the App
+  Builder, "automatic submission" on an approval process, a public group as an
+  approval-step approver — none exists. The dump keyed all three.
+- **Documentation says the opposite of the key**: the Data Import Wizard *ignores*
+  picklist dependencies (dump keyed "only allows matching values"); Partial Copy
+  refreshes every 5 days so cannot follow a 3-day sprint (dump keyed Partial Copy);
+  a custom New Task action surfaces in the **Activities** component, not the
+  highlights panel (dump keyed highlights); converting Date↔Date/Time is listed under
+  "can cause data loss" and no page mentions a 12:00 timestamp (dump keyed the
+  timestamp).
+- **The documented mechanism where the dump keyed a workaround**: Picklist Settings'
+  upper bound on inactive values (dump keyed global value sets); a junction object with
+  two master-detail relationships (dump keyed one master-detail on each object).
+- **`9ba9345d` B → C, the one deck key that moved.** The dump keyed Sharing Hierarchy
+  where the deck keyed Sharing, and Who Has Access to Account Records? settles it by
+  UI: "in Lightning Experience, click Sharing Hierarchy from the Action Menu … In
+  Salesforce Classic, click Sharing … then Expand List." The deck's explanation had
+  also claimed Sharing Hierarchy shows role access only and cannot be added to the
+  layout, both contradicted. **This is a judgment call the repo owner may reverse**:
+  both answers are documented, one per UI, and the exam is Lightning-era.
+
+**Five items are flagged rather than moved, and the flags are worth knowing:**
+
+- `392c6b99` (web service notified on Closed Won): the exam key is workflow+outbound
+  message and process+Apex, but since Winter '22 "outbound messages are available as a
+  core action in Flow Builder", so the flow option is also true. Three true options.
+- `d07b1682` (mobile approval delivery): the documentation names the Approvals navigation
+  item as a route, which the option set offers and the key omits.
+- `12fa9e7e` (what field updates ignore): field-level security and validation rules are
+  documented; the third keyed item, decimal places and character limits, is on no
+  current page and neither is its rival option.
+- `15524fc6` (Schema Builder capabilities): "showing selected objects" is documented;
+  "editing custom settings" is the exam's answer with no page behind it.
+- `f9e7f3dd` (daily backup): Data Export Service is the credited tool but runs weekly or
+  monthly; the stem's "daily" overstates it.
+
+**Three items are keyed on judgment, said so in their prose, and are the ones to
+re-read if a learner disputes them:** `3075c7b3` (unmanaged package over building a
+survey in Flow — keyed on the stem's "little time" + "fully customize"), `6be00595`
+(master-detail over lookup for "sales reps should have visibility of all
+installations" — lookups "don't support sharing"), and `aa47c883` (View and Edit
+Converted Leads over a custom report type — standard lead reports already include
+converted leads). Two more are cited as orienting only: `d683ac97` (patch/minor/major)
+and `99abaa00` (deploying from a preview sandbox).
+
+**All 105 new explanations are in the readability format** — keyed answer first, then
+a "Why the other options are wrong:" line per non-keyed option — so the readability
+pass still owed on this deck covers the original 119 only. The audit went 2 → 2 (both
+pre-existing), `find-duplicates.mjs` reports 0 pairs, richtext stayed at 73 code
+questions, blitz and typecheck green.
+
+**A second, wider duplicate sweep on 2026-09-12 found what the detector cannot.** The
+repo owner suspected more duplicates, so every pair in the 224 was scored at low
+thresholds — stem Jaccard ≥ 0.35 with company names stop-listed, option-set Jaccard
+≥ 0.45, IDF-weighted keyed text ≥ 0.5 — and all 64 pairs that surfaced were read.
+Two were removed: **`ef3bdddb`**, a noun-swapped twin of `108817b2` (Component/Product
+for Asset Inventory/Asset, identical option set and key text, stem 0.42 — the rewritten-
+stem blind spot, and both copies pre-dated the import), and **`f862c9c1`**, a Partial
+Copy sandbox item from the import whose only difference from `41de0feb` was the number
+of gigabytes. The other 62 are the documented flood — distinct scenarios sharing a
+short answer ("Flow", "Approval process", "Component visibility filter") — and stay.
+No comments on the deck, no registry bindings, so nothing orphaned.
+
+**Scrape damage was repaired at import, before ids were minted**, which is free: OCR
+joins, `Issue_c` → `Issue__c`, a truncated "Public Rea", a "Developer File sandbox"
+that was Developer Pro, one stem with no question sentence (given one), two garbled
+option sets that a dump-2 copy supplied clean. Four items whose options were
+unrecoverable were dropped rather than re-authored. The raw scrapes are
+`freecram-scraper/app-builder-v2026-09-05.json` and `…v2026-06-30.json`, left
+uncommitted like the earlier checkpoints.
 
 ### The 2026-08-25 integration import — the shape to expect from loose questions
 
