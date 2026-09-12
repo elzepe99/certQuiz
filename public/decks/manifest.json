@@ -71,7 +71,8 @@
       "shortName": "Developer II",
       "description": "Advanced developer certification covering Apex, process automation and logic, user interface development, testing, debugging, and deployment.",
       "file": "salesforce_questions_Dev2.json",
-      "accentColor": "#FF2D55"
+      "accentColor": "#FF2D55",
+      "guide": "guides/salesforce-platform-developer-2.html"
     },
     {
       "id": "salesforce-data-cloud-consultant",
