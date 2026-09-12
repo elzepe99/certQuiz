@@ -2572,3 +2572,33 @@ Dev II deck never asks about. All rendered top-level in the browser and title-ch
 
 - `https://developer.salesforce.com/docs/atlas.en-us.platform_events.meta/platform_events/platform_events_publish_behavior.htm` — generic "Platform Events Developer Guide" title. Publish-after-commit vs publish-immediately is documented on the Platform Event Allocations page (the 150-call cap) and the governor-limits table instead.
 - `https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql_select_convertcurrency.htm` — real HTTP 404. The live page is `…/sforce_api_calls_soql_querying_currency_fields.htm` (title "convertCurrency()"), but it redirects to the new `docs/platform/salesforce-soql-sosl/guide/…` format whose body **did not render in the in-app browser at all** (55 characters of nav, three tries), and WebFetch gets 403 on both forms. Not cited in the guide for that reason; the ACM Help article carries the developer-facing facts instead.
+
+## 2026-09-12 — IAM Architect study guide
+
+Not a deck pass: rendered while writing `study-guides/salesforce-iam-architect.md`, for the
+eight exam objectives the IAM deck never asks about. All rendered top-level in the browser and
+title-checked.
+
+### Settled facts
+
+| Fact | Value | Source |
+|---|---|---|
+| IAM Architect exam | 60 scored + up to 5 unscored, **120 min**, **65%**, **Summer '23**, no prerequisite, US$400 / retake US$200; domains **17 / 21 / 17 / 15 / 12 / 18** (Concepts / Accepting third-party identity / Salesforce as IdP / Access management / Salesforce Identity / Community). Third-party study sites still print the older 26/19/15/8 split — trust the article | Platform IAM Architect Exam Guide |
+| Exam-guide article ids | Not alphabetical: `005298975` IAM Architect, `005298977` Sharing & Visibility Architect, `005298978` Revenue Management Consultant, `005298979` Platform Foundations, `005298981` Strategy Designer, `005298982` Agentforce Sales Foundations, `005298974` UX Designer, `005298976` Agentforce Sales Consultant. Help search ignores its `keyword` parameter from the browser, so probe ids | — |
+| Embedded Login | "In **Summer '24**, Salesforce made Embedded Login **disabled by default**. We recommend that you use the web server flow, the user-agent flow, or another redirect-based OAuth 2.0 flow instead." It "relies on third-party cookies… works only on Google Chrome and only as long as third-party cookies are allowed there by default." Mechanism: admin adds the site domain to CORS and creates an Embedded Login connected app; the page carries meta tags, `onlogin`/`onlogout` functions and the callback URL; the callback receives the access token | Embedded Login Considerations; How to Implement Embedded Login |
+| Client credentials flow | Exchanges consumer key + secret for a token "on behalf of the integration user you assigned"; "**doesn't support refresh tokens**"; "a more secure alternative to the OAuth 2.0 username-password flow" | OAuth 2.0 Client Credentials Flow |
+| Person Accounts | Enabled **from Setup** by the admin ("From Setup, enter Person Accounts… Turn on Person Accounts"); irreversible. The IAM deck's `4549ec9c` keys "Contact Salesforce Support", which is the Summer '23-era answer | Enable Person Accounts |
+| Salesforce Identity licences | **100 complimentary Identity Only** licences per Professional+ org; Identity Only users limited to **10 custom objects** (contractual); External Identity: **10 custom objects**, recommended **≤ 10 million unique logins/month**, **5 in Developer Edition**, included free with paid community licences, **upgradeable to a Community licence**; email verification free, SMS needs the credits add-on | Salesforce Identity Licenses |
+| Session timeout | Default **two hours** of inactivity; two security levels, Standard and High Assurance | Session Security |
+| Login History | "up to **20,000** records of user logins for the past **6 months**"; download for more | Monitor Login History |
+| Identity Connect | Runs as a service on Windows or Linux; Developer Edition includes **10** permission set licences; 2.1 / 3.0.x no longer downloadable as of Summer '23, 7.1.6 current | Identity Connect |
+
+### URLs (all rendered 2026-09-12)
+
+- **Salesforce Certified Platform Identity and Access Management Architect Exam Guide** — https://help.salesforce.com/s/articleView?id=005298975&type=1&language=en_US
+- **OAuth 2.0 Client Credentials Flow for Server-to-Server Integration** — https://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_client_credentials_flow.htm&language=en_US&type=5
+- **How to Implement Embedded Login** — https://help.salesforce.com/s/articleView?id=sf.external_identity_login_how_it_works.htm&language=en_US&type=5
+- **Embedded Login Considerations** — https://help.salesforce.com/s/articleView?id=sf.external_identity_login_considerations.htm&language=en_US&type=5
+  `sf.networks_embedded_login.htm` and `sf.external_identity_embedded_login.htm` are both DEAD; the live family is `sf.external_identity_login_*`.
+- **Enable Person Accounts** — https://help.salesforce.com/s/articleView?id=sf.account_person_enable.htm&language=en_US&type=5
+- Re-rendered and still live: `sf.identity_licenses.htm`, `xcloud.identityconnect_about.htm`, `sf.security_overview_sessions.htm`, `xcloud.users_login_history.htm`.

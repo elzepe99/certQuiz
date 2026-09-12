@@ -30,6 +30,11 @@ const GUIDES = [
     out: 'public/guides/salesforce-platform-developer-2.html',
     lang: 'en',
   },
+  {
+    source: 'study-guides/iam-architect.artifact.html',
+    out: 'public/guides/salesforce-iam-architect.html',
+    lang: 'en',
+  },
 ];
 
 /** Pull the <title> out of the fragment so the standalone page keeps it. */
