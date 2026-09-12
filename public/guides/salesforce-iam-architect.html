@@ -728,7 +728,7 @@ html { scroll-behavior: smooth; }
               <td class="num">18%</td><td class="num">~11</td>
               <td class="bar-cell"><span class="bar" style="width:60%"></span><span class="bar deck" style="width:51%"></span></td>
               <td class="num">18 &middot; 15.5%</td>
-              <td><span class="verdict ok">slightly under</span></td>
+              <td><span class="verdict ok">slightly under-trained</span></td>
             </tr>
           </tbody>
         </table>
@@ -911,7 +911,7 @@ html { scroll-behavior: smooth; }
       (<code>363a20ab</code>).</p>
       <div class="call">
         <span class="tag">The registration handler is mandatory</span>
-        <p>An Apex class implementing <code>Auth.RegistrationHandler</code> (or, more recently, a flow) with two
+        <p>An Apex class implementing <code>Auth.RegistrationHandler</code> with two
         methods. <strong><code>createUser(portalId, data)</code></strong> &mdash; first login: find a matching user or
         create one; for a site, create the Contact and the User with the right profile; the place to
         call an external system when a customer first arrives (<code>1084f821</code>).
@@ -1039,7 +1039,7 @@ html { scroll-behavior: smooth; }
           <thead><tr><th>Setting</th><th>Effect</th></tr></thead>
           <tbody>
             <tr><td>Consumer key / secret, <strong>callback URL</strong></td><td>Client identity; where the code or token returns &mdash; must match exactly (a changed URI scheme is the first <em>distractor</em> in <code>4ab56a8c</code>, not the cause)</td></tr>
-            <tr><td><strong>Selected OAuth scopes</strong></td><td>Ceiling on what tokens may request; "integrate an app with the API" = connected app + scopes (<code>17eafc8b</code>)</td></tr>
+            <tr><td><strong>Selected OAuth scopes</strong></td><td>Ceiling on what tokens may request; "how should an external app integrate with the API?" &mdash; a connected app plus scopes (<code>17eafc8b</code>)</td></tr>
             <tr><td><strong>Require PKCE</strong>; <strong>Enable Client Credentials Flow</strong> + run-as user; <strong>Enable Device Flow</strong></td><td>Flow-specific switches</td></tr>
             <tr><td><strong>Permitted Users</strong>: <em>All users may self-authorize</em> / <strong>Admin approved users are pre-authorized</strong></td><td>Pre-authorized = only profiles and permission sets granted the app may use it, no approval screen (<code>8e61f426</code>); the restriction for "only the sales team" (<code>387fb895</code>); the cause of <strong>"Failed: Not approved for access"</strong> (<code>b7fca343</code>)</td></tr>
             <tr><td><strong>IP Relaxation</strong>: Enforce / Relax with second factor / Relax</td><td><em>Relaxes</em> the profile's login IP ranges for this app; the <strong>Trusted IP Range for OAuth Web Server Flow</strong> field is scoped to that flow and does <strong>not</strong> restrict a username-password integration &mdash; the profile's <strong>Login IP Ranges</strong> do (<code>f5a4335a</code>)</td></tr>
@@ -1443,7 +1443,7 @@ html { scroll-behavior: smooth; }
       <a href="https://help.salesforce.com/s/articleView?id=005298975&type=1&language=en_US">official exam guide</a>,
       <a href="https://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_scopes.htm&language=en_US&type=5">OAuth Tokens and Scopes</a> and
       <a href="https://help.salesforce.com/s/articleView?id=sf.identity_licenses.htm&language=en_US&type=5">Salesforce Identity Licenses</a>
-      &mdash; the two pages the exam leans on hardest that the deck does not.</p>
+      &mdash; two pages the exam draws on that the deck never cites.</p>
 
       <h3>Prompts that produce useful study media</h3>
       <div class="prompts">
@@ -1455,7 +1455,8 @@ html { scroll-behavior: smooth; }
       </div>
 
       <p>For the Audio Overview, sections 3, 5, 6 and 13 reward listening &mdash; they are role-play and
-      comparisons. Section 7's tables, 12 and 16 are lookups and will not survive being read aloud.</p>
+      comparisons. The tables in section 7, and sections 12 and 16, are lookups and will not survive
+      being read aloud.</p>
     </section>
 
   </main>

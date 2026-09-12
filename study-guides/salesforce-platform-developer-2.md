@@ -108,7 +108,8 @@ answered by the save order. Learn it as a sequence, not as trivia.
 5. **Duplicate rules.**
 6. **Save** the record to the database — *not yet committed*.
 7. **After triggers.**
-8. **Assignment rules.** 9. **Auto-response rules.**
+8. **Assignment rules.**
+9. **Auto-response rules.**
 10. **Workflow rules.** If a field update fires: the record is updated again, system validation
     runs again, and **before and after triggers fire one more time (and only one more time)**.
     Custom validation rules, flows, duplicate rules, processes and escalation rules **are not
@@ -564,7 +565,7 @@ An Apex method a component uses must be `public` or `global`, **`static`**, and 
 to be used with `@wire` it must be **`@AuraEnabled(cacheable=true)`** (`e2ba60ab`, `d5978be6`,
 `e9c0d546`). Any inner class it returns needs `@AuraEnabled` on **each property** or the object
 arrives empty (`15dc7a90`, `6686c9b7`). Parameters arrive by **name**, typed to what JavaScript
-sends — an `Object` parameter breaks the call (`c8de9a78`). Import path is
+sends — an `Object` parameter breaks the call (`c8de9a78`). The import path is
 `@salesforce/apex/Class.method` (`00016277`).
 
 | Pattern | Code | Notes |
@@ -1021,12 +1022,12 @@ reality so you can recognise it when a distractor is built from it.
 | **Force.com IDE / Ant Migration Tool** (`e4d0d916`) | Distractors | Force.com IDE retired; Ant is legacy; `sfdx` CLI became **`sf`** |
 | **Connected Apps** for OAuth | ✅ | Creation restricted from Spring '26 — External Client Apps are the recommendation; existing apps keep working |
 | **Async SOQL** for big objects | May appear | Retired Summer '23 — Batch Apex or Bulk API instead |
+| **`runAs` "only enforces record sharing"** | Was the documented behaviour | Now enforces object- and field-level permissions too |
 | **`Test.startTest()` "commits" DML** | ❌ **Never true** — the deck repaired several explanations that said so | Nothing in a test commits; `startTest` opens a fresh limit context, which is the boundary the callout rule uses |
 | **`@future` "limited to 50 records per call"** | ❌ Invented | The 50 is **methods per transaction**; a future method takes a collection of any size |
 | **"10-second callout ceiling"** | ❌ Invented | 10 s is the **default**; `setTimeout()` to 120 s; the real synchronous constraint is the 5-second concurrent-request limit |
-| **`runAs` "only enforces record sharing"** | Was the documented behaviour | Now enforces object- and field-level permissions too |
 
-The last four are not staleness — they are widely repeated falsehoods that the deck's fact-check
+The last three are not staleness — they are widely repeated falsehoods that the deck's fact-check
 found in its own explanations and that appear as distractors on the exam.
 
 ---

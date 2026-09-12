@@ -52,7 +52,7 @@ questions (`study-guides/reclassify-iam.mjs` holds the per-question calls).
 | Salesforce as an Identity Provider | 17% | ~10 | 35 (30.2%) | over-represented |
 | Access Management Best Practices | 15% | ~9 | 18 (15.5%) | about right |
 | Salesforce Identity | 12% | ~7 | 9 (7.8%) | **under-trained** |
-| Community (Partner and Customer) | 18% | ~11 | 18 (15.5%) | slightly under |
+| Community (Partner and Customer) | 18% | ~11 | 18 (15.5%) | slightly under-trained |
 
 ### The gap you need to close
 
@@ -207,11 +207,11 @@ LinkedIn, Twitter, Microsoft, Apple, Amazon, GitHub, Janrain, **Salesforce** (an
 
 Setup: create the provider (consumer key/secret from the external side, endpoints for a custom
 one), then enable it on the site's **Login & Registration** page so the button appears
-(`c89c6e3d`, `43c8e969`). Two things on the provider itself are settings you can set: a **custom
-registration handler** and a **custom error URL** (`363a20ab`).
+(`c89c6e3d`, `43c8e969`). Two provider settings the exam names: a **custom registration
+handler** and a **custom error URL** (`363a20ab`).
 
 **The registration handler is mandatory** for SSO through an auth provider. It is an Apex class
-implementing `Auth.RegistrationHandler` (or, more recently, a flow) with two methods:
+implementing `Auth.RegistrationHandler` with two methods:
 
 - **`createUser(portalId, Auth.UserData data)`** — first login: find a matching user or create one
   (for a site, create the Contact and the User with the right profile). The place to call an
@@ -342,7 +342,7 @@ The deck's biggest domain (35 items). The exam's is 17%. Know it, then move on.
 | Setting | Effect | Deck item |
 |---|---|---|
 | Consumer key / secret, **callback URL** | Client identity; where the code or token is returned — must match the request exactly | `4ab56a8c` (a changed URI scheme is the first *distractor*, not the cause) |
-| **Selected OAuth scopes** | Ceiling on what tokens may request | `83`-style "how do I integrate with the API": connected app + scopes (`17eafc8b`) |
+| **Selected OAuth scopes** | Ceiling on what tokens may request | "How should an external app integrate with the API?" — a connected app plus scopes (`17eafc8b`) |
 | **Require PKCE**; **Enable Client Credentials Flow** + run-as user; **Enable Device Flow** | Flow-specific switches | |
 | **Permitted Users**: *All users may self-authorize* / **Admin approved users are pre-authorized** | Pre-authorized = only profiles and permission sets granted the app may use it — no approval screen (`8e61f426`), the restriction for "only the sales team" (`387fb895`), and the cause of **"Failed: Not approved for access"** (`b7fca343`) | |
 | **IP Relaxation**: Enforce / Relax with second factor / Relax | *Relaxes* the profile's login IP ranges for this app; the **Trusted IP Range for OAuth Web Server Flow** field is scoped to that flow and does **not** restrict a username-password integration — the profile's **Login IP Ranges** do (`f5a4335a`) | |
@@ -659,9 +659,8 @@ passes.
     (External Identity, `5a50aa0b`); a full Salesforce licence for a custom-app-only workforce
     (Platform, `76d8034d`); member-based when the logins-per-user ratio screams login-based
     (`2f0c70a9`).
-12. **A true statement that is not what was asked.** "Identity Connect can be deployed as a
-    managed package" (false), "…starts disabling users FIFO" (invented) — check invented
-    behaviours of real products against §9.
+12. **An invented behaviour of a real product.** "Identity Connect can be deployed as a managed
+    package", "…starts disabling users FIFO" — check the product facts against §9.
 
 ### Read the question's own verb
 
@@ -752,7 +751,7 @@ navigation.
 
 Worth adding as additional sources:
 - The [official exam guide](https://help.salesforce.com/s/articleView?id=005298975&type=1&language=en_US) URL.
-- [OAuth Tokens and Scopes](https://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_scopes.htm&language=en_US&type=5) and [Salesforce Identity Licenses](https://help.salesforce.com/s/articleView?id=sf.identity_licenses.htm&language=en_US&type=5) — the two pages the exam leans on hardest that the deck does not.
+- [OAuth Tokens and Scopes](https://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_scopes.htm&language=en_US&type=5) and [Salesforce Identity Licenses](https://help.salesforce.com/s/articleView?id=sf.identity_licenses.htm&language=en_US&type=5) — two pages the exam draws on that the deck never cites.
 
 **Prompts that produce useful study media:**
 
@@ -768,4 +767,5 @@ Worth adding as additional sources:
   tool that shows it."*
 
 For the Audio Overview, sections 3, 5, 6 and 13 reward listening — they are role-play and
-comparisons. Sections 7's tables, 12 and 16 are lookups and will not survive being read aloud.
+comparisons. The tables in section 7, and sections 12 and 16, are lookups and will not survive
+being read aloud.
