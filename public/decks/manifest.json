@@ -38,7 +38,8 @@
       "shortName": "IAM Architect",
       "description": "Architect-level certification covering SSO, OAuth, SAML, My Domain, and identity management on the Salesforce platform.",
       "file": "salesforce_iam_architect_questions_corrected.json",
-      "accentColor": "#BF5AF2"
+      "accentColor": "#BF5AF2",
+      "guide": "guides/salesforce-iam-architect.html"
     },
     {
       "id": "salesforce-integration-architect",

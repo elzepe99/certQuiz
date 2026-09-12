@@ -1,0 +1,1466 @@
+<title>Identity Architect Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+:root {
+  --paper:      #F1F4F6;
+  --surface:    #FFFFFF;
+  --surface-2:  #E8ECEF;
+  --ink:        #121A21;
+  --ink-2:      #37444F;
+  --muted:      #5E6C78;
+  --rule:       #D3DBE1;
+  --rule-soft:  #E3E9ED;
+
+  --primary:    #12494F;
+  --primary-2:  #1C6C71;
+  --primary-wash:#E2EEEE;
+
+  --amber:      #8F550A;
+  --amber-wash: #FAEEDC;
+  --amber-rule: #DFB877;
+
+  --crimson:    #962E2E;
+  --crimson-wash:#F9E7E5;
+  --crimson-rule:#DDA39C;
+
+  --good:       #2C6440;
+
+  --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --font-prose:   "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-ui:      "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono:    "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --shadow: 0 1px 2px rgba(18,26,33,.05), 0 8px 24px -12px rgba(18,26,33,.14);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:      #0C1216;
+    --surface:    #131B20;
+    --surface-2:  #1B252B;
+    --ink:        #DCE4E8;
+    --ink-2:      #B4C1C9;
+    --muted:      #8496A1;
+    --rule:       #263238;
+    --rule-soft:  #1C262C;
+
+    --primary:    #66C4BC;
+    --primary-2:  #8AD6CE;
+    --primary-wash:#15292C;
+
+    --amber:      #DFA45C;
+    --amber-wash: #221A0F;
+    --amber-rule: #5A431F;
+
+    --crimson:    #E28C80;
+    --crimson-wash:#231314;
+    --crimson-rule:#5C2E2C;
+
+    --good:       #6FBE8B;
+
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper:      #0C1216;
+  --surface:    #131B20;
+  --surface-2:  #1B252B;
+  --ink:        #DCE4E8;
+  --ink-2:      #B4C1C9;
+  --muted:      #8496A1;
+  --rule:       #263238;
+  --rule-soft:  #1C262C;
+
+  --primary:    #66C4BC;
+  --primary-2:  #8AD6CE;
+  --primary-wash:#15292C;
+
+  --amber:      #DFA45C;
+  --amber-wash: #221A0F;
+  --amber-rule: #5A431F;
+
+  --crimson:    #E28C80;
+  --crimson-wash:#231314;
+  --crimson-rule:#5C2E2C;
+
+  --good:       #6FBE8B;
+
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-prose);
+  font-size: 17px;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- shell ---------- */
+
+.shell {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  column-gap: 56px;
+  row-gap: 0;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 32px 120px;
+  align-items: start;
+}
+
+/* ---------- masthead ---------- */
+
+.masthead {
+  grid-column: 1 / -1;
+  padding: 64px 0 40px;
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: 48px;
+}
+
+.eyebrow {
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin: 0 0 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.eyebrow .sep { color: var(--rule); }
+
+h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.4rem, 6vw, 3.9rem);
+  line-height: 1.02;
+  letter-spacing: -.025em;
+  margin: 0 0 20px;
+  text-wrap: balance;
+  color: var(--ink);
+}
+
+.standfirst {
+  font-size: 1.18rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 62ch;
+  margin: 0 0 32px;
+}
+
+.standfirst strong { color: var(--ink); font-weight: 600; }
+
+/* exam vitals strip */
+.vitals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.vital {
+  background: var(--surface);
+  padding: 14px 16px 15px;
+}
+
+.vital dt {
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 6px;
+}
+
+.vital dd {
+  font-family: var(--font-mono);
+  font-size: 1.16rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.vital dd .sub {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-top: 4px;
+  letter-spacing: 0;
+}
+
+.vital.flag { background: var(--amber-wash); }
+.vital.flag dd { color: var(--amber); }
+
+/* ---------- toc rail ---------- */
+
+.rail {
+  position: sticky;
+  top: 28px;
+  font-family: var(--font-ui);
+  max-height: calc(100vh - 56px);
+  overflow-y: auto;
+}
+
+.rail h2 {
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.rail ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  counter-reset: toc;
+}
+
+.rail a {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 8px;
+  align-items: baseline;
+  padding: 5px 8px 5px 4px;
+  font-size: 13.5px;
+  line-height: 1.35;
+  color: var(--ink-2);
+  text-decoration: none;
+  border-radius: 3px;
+  border-left: 2px solid transparent;
+  transition: background .12s ease, color .12s ease, border-color .12s ease;
+}
+
+.rail a::before {
+  counter-increment: toc;
+  content: counter(toc);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.rail a:hover {
+  background: var(--surface);
+  color: var(--ink);
+  border-left-color: var(--primary);
+}
+
+.rail a:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+.rail a.key { color: var(--crimson); font-weight: 500; }
+.rail a.key::before { color: var(--crimson); }
+
+.rail .note {
+  margin: 16px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+/* ---------- content ---------- */
+
+.content { min-width: 0; }
+
+section { margin: 0 0 64px; scroll-margin-top: 24px; }
+
+h2.sect {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3vw, 1.95rem);
+  line-height: 1.14;
+  letter-spacing: -.018em;
+  margin: 0 0 8px;
+  text-wrap: balance;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: baseline;
+}
+
+h2.sect .num {
+  font-family: var(--font-mono);
+  font-size: .58em;
+  font-weight: 500;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+.sect-rule {
+  height: 2px;
+  background: var(--ink);
+  margin: 0 0 24px;
+}
+
+h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.13rem;
+  letter-spacing: -.008em;
+  margin: 36px 0 12px;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+h4 {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 26px 0 10px;
+}
+
+p { margin: 0 0 16px; max-width: 68ch; }
+
+a { color: var(--primary); text-underline-offset: 2px; text-decoration-thickness: 1px; }
+a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 2px; }
+
+strong { font-weight: 600; color: var(--ink); }
+em { font-style: italic; }
+
+code {
+  font-family: var(--font-mono);
+  font-size: .855em;
+  background: var(--surface-2);
+  padding: .1em .34em;
+  border-radius: 3px;
+  color: var(--ink);
+}
+
+ul, ol.prose { margin: 0 0 18px; padding-left: 20px; max-width: 68ch; }
+ul li, ol.prose li { margin-bottom: 8px; }
+ul li::marker { color: var(--primary); }
+ol.prose li::marker { color: var(--muted); font-family: var(--font-mono); font-size: .85em; }
+
+/* ---------- tables ---------- */
+
+.tw {
+  overflow-x: auto;
+  margin: 0 0 22px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-ui);
+  font-size: 14.2px;
+  line-height: 1.48;
+}
+
+thead th {
+  text-align: left;
+  font-weight: 600;
+  font-size: 10.5px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--surface-2);
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+
+tbody td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--rule-soft);
+  vertical-align: top;
+  color: var(--ink-2);
+}
+
+tbody tr:last-child td { border-bottom: none; }
+
+tbody td:first-child { color: var(--ink); font-weight: 500; }
+
+tbody td strong { color: var(--ink); font-weight: 600; }
+
+td code, th code { background: transparent; padding: 0; font-size: .9em; }
+
+.num-col, .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+
+/* two-col comparison tables read better with an emphasized first col */
+table.kv tbody td:first-child { width: 34%; }
+
+/* ---------- weight bars (domain table) ---------- */
+
+.bar {
+  display: block;
+  height: 7px;
+  border-radius: 1px;
+  background: var(--primary);
+  min-width: 2px;
+}
+.bar.deck { background: var(--muted); opacity: .55; }
+.bar-cell { width: 120px; }
+.bar-cell .lab {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--muted);
+  margin-bottom: 3px;
+  font-variant-numeric: tabular-nums;
+}
+.bar + .lab { margin-top: 6px; }
+
+.verdict {
+  display: inline-block;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  padding: 2.5px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.verdict.gap  { background: var(--crimson-wash); color: var(--crimson); border: 1px solid var(--crimson-rule); }
+.verdict.over { background: var(--surface-2); color: var(--muted); border: 1px solid var(--rule); }
+.verdict.ok   { background: var(--primary-wash); color: var(--primary); border: 1px solid var(--primary); }
+
+/* ---------- callouts ---------- */
+
+.call {
+  border-left: 3px solid var(--primary);
+  background: var(--surface);
+  padding: 16px 20px;
+  margin: 0 0 22px;
+  border-radius: 0 4px 4px 0;
+  max-width: 70ch;
+}
+.call p { margin: 0 0 10px; }
+.call p:last-child { margin-bottom: 0; }
+.call .tag {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: var(--primary);
+}
+
+.call.trap { border-left-color: var(--amber-rule); background: var(--amber-wash); }
+.call.trap .tag { color: var(--amber); }
+.call.trap strong { color: var(--ink); }
+
+.call.alert { border-left-color: var(--crimson-rule); background: var(--crimson-wash); }
+.call.alert .tag { color: var(--crimson); }
+
+/* ---------- misc ---------- */
+
+.lede {
+  font-size: 1.06rem;
+  color: var(--ink-2);
+  max-width: 66ch;
+  margin: 0 0 24px;
+}
+
+.yes { color: var(--good); font-weight: 600; }
+.no  { color: var(--crimson); font-weight: 600; }
+.warn{ color: var(--amber); font-weight: 600; }
+
+.linklist { list-style: none; padding: 0; margin: 0 0 20px; max-width: 72ch; }
+.linklist li { margin-bottom: 9px; padding-left: 14px; position: relative; font-size: 15px; }
+.linklist li::before {
+  content: "";
+  position: absolute; left: 0; top: .62em;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--rule);
+}
+.linklist .why { color: var(--muted); font-size: 14px; }
+
+.prompts { display: flex; flex-direction: column; gap: 12px; margin: 0 0 22px; max-width: 72ch; }
+.prompt {
+  font-family: var(--font-ui);
+  font-size: 14.3px;
+  line-height: 1.5;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 13px 16px;
+  color: var(--ink-2);
+}
+.prompt::before {
+  content: "Prompt";
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+
+.colophon {
+  grid-column: 1 / -1;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 74ch;
+}
+
+.colophon code { font-size: 11.5px; }
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 900px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding: 0 20px 80px;
+  }
+  .rail {
+    position: static;
+    max-height: none;
+    margin-bottom: 44px;
+    padding: 16px 18px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+  }
+  .rail ol { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 0; }
+  .masthead { padding-top: 44px; margin-bottom: 32px; }
+  body { font-size: 16.5px; }
+  section { margin-bottom: 52px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+
+html { scroll-behavior: smooth; }
+</style>
+
+<div class="shell">
+
+  <header class="masthead">
+    <p class="eyebrow">
+      <span>Salesforce Certified Platform Identity and Access Management Architect</span>
+      <span class="sep">/</span>
+      <span>Summer '23 item bank</span>
+    </p>
+    <h1>Identity Architect Field Guide</h1>
+    <p class="standfirst">
+      Built from the 116 questions in the practice deck, cross-checked against the official exam
+      outline and the documentation those questions cite. Every fact here traces to a rendered
+      Salesforce page. <strong>Read &sect;13 before you sit the exam</strong> &mdash; identity is the part
+      of the platform Salesforce has changed most since the item bank was frozen.
+    </p>
+    <dl class="vitals">
+      <div class="vital"><dt>Questions</dt><dd>60<span class="sub">+5 unscored</span></dd></div>
+      <div class="vital"><dt>Time</dt><dd>120<span class="sub">minutes</span></dd></div>
+      <div class="vital"><dt>Pass mark</dt><dd>65%<span class="sub">39 of 60</span></dd></div>
+      <div class="vital"><dt>Prerequisite</dt><dd>None<span class="sub">US$400</span></dd></div>
+      <div class="vital flag"><dt>Aligned to</dt><dd>Summer '23<span class="sub">answer as of then</span></dd></div>
+    </dl>
+  </header>
+
+  <nav class="rail" aria-label="Contents">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#exam">The exam, factually</a></li>
+      <li><a href="#weights" class="key">Where the points are</a></li>
+      <li><a href="#vocab" class="key">Roles, building blocks, trust</a></li>
+      <li><a href="#sp">Salesforce as a Service Provider</a></li>
+      <li><a href="#accept">Auth Providers &amp; delegated auth</a></li>
+      <li><a href="#provision">Provisioning &amp; deprovisioning</a></li>
+      <li><a href="#idp">Salesforce as an Identity Provider</a></li>
+      <li><a href="#access">MFA, sessions, login flows, audit</a></li>
+      <li><a href="#products" class="key">The under-trained 12%</a></li>
+      <li><a href="#community">Experience Cloud identity</a></li>
+      <li><a href="#troubleshoot" class="key">Troubleshooting SSO</a></li>
+      <li><a href="#numbers">Numbers to memorise</a></li>
+      <li><a href="#stale" class="key">Exam-right, production-wrong</a></li>
+      <li><a href="#tells">Distractor tells</a></li>
+      <li><a href="#plan">Two-week plan</a></li>
+      <li><a href="#sources">Sources</a></li>
+      <li><a href="#notebooklm">Using NotebookLM</a></li>
+    </ol>
+    <p class="note">Sections in red are the ones the practice deck does not train you for.</p>
+  </nav>
+
+  <main class="content">
+
+    <!-- 1 -->
+    <section id="exam">
+      <h2 class="sect"><span class="num">01</span><span>The exam, factually</span></h2>
+      <div class="sect-rule"></div>
+
+      <div class="call">
+        <span class="tag">The most useful fact on this page</span>
+        <p>The item bank is pinned to <strong>Summer '23</strong>. My Domain is still something an org
+        "decides not to set up". The User-Agent flow is still the mobile answer. Person Accounts are
+        still enabled by "contacting Salesforce Support". Embedded Login is still a recommended way to
+        put Salesforce login on an external site. All four are wrong today and right on the exam
+        &mdash; &sect;13 lists every case. Answer as of Summer '23.</p>
+      </div>
+
+      <p>The questions are scenario-shaped: a company, a set of systems, a requirement, and four
+      solutions that all name real features. The skill being tested is usually <strong>which role each
+      system plays</strong> (who is the IdP, who is the SP, who holds the resource) and <strong>which
+      mechanism fires at which moment</strong> (at login, on first login, on a status change, on every
+      API call). Decide those two things before reading the options.</p>
+
+      <div class="tw">
+        <table class="kv">
+          <tbody>
+            <tr><td>Official name</td><td>Salesforce Certified <strong>Platform</strong> Identity and Access Management Architect</td></tr>
+            <tr><td>Content</td><td><strong>60 scored</strong> multiple-choice / multiple-select + up to 5 unscored</td></tr>
+            <tr><td>Time</td><td><strong>120 minutes</strong></td></tr>
+            <tr><td>Passing score</td><td><strong>65%</strong> &rarr; <strong>39 of 60</strong></td></tr>
+            <tr><td>Prerequisite</td><td>None</td></tr>
+            <tr><td>Fee</td><td>US$400 (retake US$200)</td></tr>
+            <tr><td>Release alignment</td><td><strong>Summer '23</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section id="weights">
+      <h2 class="sect"><span class="num">02</span><span>Where the points actually are</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">Official outline weightings against the deck. The deck came tagged with six
+      categories of its own that do not map onto the outline's six domains, so the deck column is an
+      independent re-classification of all 116 questions (<code>study-guides/reclassify-iam.mjs</code>).</p>
+
+      <div class="tw">
+        <table>
+          <thead>
+            <tr>
+              <th>Domain</th>
+              <th class="num-col">Exam</th>
+              <th class="num-col">&asymp; Qs</th>
+              <th class="bar-cell">Exam vs deck</th>
+              <th class="num-col">Deck</th>
+              <th>Verdict</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Identity Management Concepts</td>
+              <td class="num">17%</td><td class="num">~10</td>
+              <td class="bar-cell"><span class="bar" style="width:56%"></span><span class="bar deck" style="width:34%"></span></td>
+              <td class="num">12 &middot; 10.3%</td>
+              <td><span class="verdict gap">under-trained</span></td>
+            </tr>
+            <tr>
+              <td>Accepting Third-Party Identity in Salesforce</td>
+              <td class="num">21%</td><td class="num">~13</td>
+              <td class="bar-cell"><span class="bar" style="width:70%"></span><span class="bar deck" style="width:69%"></span></td>
+              <td class="num">24 &middot; 20.7%</td>
+              <td><span class="verdict ok">about right</span></td>
+            </tr>
+            <tr>
+              <td>Salesforce as an Identity Provider</td>
+              <td class="num">17%</td><td class="num">~10</td>
+              <td class="bar-cell"><span class="bar" style="width:56%"></span><span class="bar deck" style="width:100%"></span></td>
+              <td class="num">35 &middot; 30.2%</td>
+              <td><span class="verdict over">over-represented</span></td>
+            </tr>
+            <tr>
+              <td>Access Management Best Practices</td>
+              <td class="num">15%</td><td class="num">~9</td>
+              <td class="bar-cell"><span class="bar" style="width:50%"></span><span class="bar deck" style="width:51%"></span></td>
+              <td class="num">18 &middot; 15.5%</td>
+              <td><span class="verdict ok">about right</span></td>
+            </tr>
+            <tr>
+              <td>Salesforce Identity</td>
+              <td class="num">12%</td><td class="num">~7</td>
+              <td class="bar-cell"><span class="bar" style="width:40%"></span><span class="bar deck" style="width:26%"></span></td>
+              <td class="num">9 &middot; 7.8%</td>
+              <td><span class="verdict gap">under-trained</span></td>
+            </tr>
+            <tr>
+              <td>Community (Partner and Customer)</td>
+              <td class="num">18%</td><td class="num">~11</td>
+              <td class="bar-cell"><span class="bar" style="width:60%"></span><span class="bar deck" style="width:51%"></span></td>
+              <td class="num">18 &middot; 15.5%</td>
+              <td><span class="verdict ok">slightly under</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p style="font-family:var(--font-ui);font-size:12.5px;color:var(--muted);margin-top:-8px;">
+        Teal bar = share of the exam. Grey bar = share of the deck. Both scaled to the largest value.
+      </p>
+
+      <div class="call alert">
+        <span class="tag">The gap you need to close</span>
+        <p>This deck is better balanced than the others in this repo &mdash; no domain is off by more
+        than a factor of two. The skew is that <strong>nearly a third of the deck is OAuth flows and
+        scopes</strong>, which is a sixth of the exam. Drill it to 100% and you will be excellent at
+        "which OAuth flow" and comparatively thin on the conceptual domain &mdash; trust, certificates,
+        a broken SSO &mdash; and on Salesforce's own identity products and licences.</p>
+      </div>
+
+      <h3>Eight objectives with no deck item at all</h3>
+      <ol class="prose">
+        <li><strong>Embedded Login</strong> &mdash; a named Community objective; it appears in the deck only as a wrong option.</li>
+        <li>Salesforce as an <strong>OpenID Connect provider</strong> &mdash; <code>openid</code> scope, <code>id_token</code>, UserInfo and identity-URL endpoints, discovery.</li>
+        <li>The <strong>client credentials flow</strong> and <strong>PKCE</strong> on the web server flow.</li>
+        <li><strong>Which MFA methods count as MFA</strong> &mdash; and that email and SMS codes do not.</li>
+        <li><strong>SSO troubleshooting tools</strong> &mdash; the SAML Assertion Validator, Login History error codes, the Identity Provider Event Log.</li>
+        <li><strong>Event Monitoring</strong> as an audit approach beyond Login History and Login Forensics.</li>
+        <li><strong>External Identity licence limits</strong> and the complimentary Identity Only licences.</li>
+        <li>The <strong>SAML SSO settings page as a whole</strong> rather than one field per question.</li>
+      </ol>
+      <p><a href="#vocab">&sect;3</a>, <a href="#products">&sect;9</a>, <a href="#community">&sect;10</a> and
+      <a href="#troubleshoot">&sect;11</a> cover those from the documentation.</p>
+    </section>
+
+    <!-- 3 -->
+    <section id="vocab">
+      <h2 class="sect"><span class="num">03</span><span>The vocabulary: roles, building blocks, trust</span></h2>
+      <div class="sect-rule"></div>
+
+      <h3>Who is who &mdash; decide this first on every scenario</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Role</th><th>Definition</th><th>The tell in a stem</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Identity Provider (IdP)</strong></td><td>Authenticates the user and <em>asserts</em> the identity to someone else</td><td>"logs in with", "credentials are validated by", "corporate directory"</td></tr>
+            <tr><td><strong>Service Provider (SP)</strong></td><td>The application the user is trying to reach; <em>consumes</em> the assertion</td><td>"wants to access", "the resource", "the community"</td></tr>
+            <tr><td><strong>OAuth Resource Server</strong></td><td>Holds the protected data an access token unlocks</td><td>"calls the Salesforce API on the user's behalf"</td></tr>
+            <tr><td><strong>OAuth Client</strong></td><td>The application holding the token and making the calls</td><td>"the mobile app", "the web application"</td></tr>
+            <tr><td><strong>Authorization Server</strong></td><td>Issues tokens after the user consents</td><td>Salesforce, when it is the IdP</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>One system holds different roles in different chains. In <code>c69d99c7</code> Salesforce is a
+      <strong>SAML SP</strong> (Okta signs users in) <em>and</em> an <strong>OAuth resource server</strong> (a
+      forecasting app calls its API). In <code>d182829d</code> PingFederate is the corporate IdP <em>and</em>
+      one Salesforce org is an IdP to downstream systems. In <code>9c41e964</code> Salesforce is
+      <strong>outside the SSO altogether</strong> &mdash; only an API call reaches it. Adding social login to a
+      community (<code>59e63d81</code>, <code>d8945628</code>) does not change what Salesforce is protecting;
+      it changes who vouches for the user, so Salesforce stays the <strong>SP</strong>.</p>
+
+      <h3>The three building blocks</h3>
+      <ul>
+        <li><strong>Authentication</strong> &mdash; proving who you are: password, SAML assertion, OIDC <code>id_token</code>, a certificate, a second factor.</li>
+        <li><strong>Authorization</strong> &mdash; what you may do once in: profiles and permission sets <em>inside</em> Salesforce; OAuth <strong>scopes</strong> for what a token may touch; connected-app policies for who may use an app.</li>
+        <li><strong>Accountability</strong> &mdash; proving afterwards what happened: Login History, Setup Audit Trail, Login Forensics, Event Monitoring, the Identity Provider Event Log.</li>
+      </ul>
+      <p>An option that answers the wrong block is wrong however true it is: scopes do not
+      authenticate; MFA does not authorize; a login IP range is an authentication-time control, not an
+      audit one.</p>
+
+      <h3>How trust is established between two systems</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Mechanism</th><th>Trust rests on</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><strong>SAML</strong></td><td>The IdP's <strong>signing certificate</strong>, registered on the SP; the SP's <strong>Entity ID</strong> and ACS URL registered on the IdP</td><td>Request signing (SP &rarr; IdP) and assertion encryption are optional extras</td></tr>
+            <tr><td><strong>OAuth / OIDC</strong></td><td>The <strong>consumer key and secret</strong> of a connected app; a <strong>certificate</strong> for the JWT and SAML bearer flows</td><td>A secret is only trustworthy on a server &mdash; never in a browser or a distributed binary (<code>5b30e615</code>)</td></tr>
+            <tr><td><strong>Delegated Authentication</strong></td><td>Salesforce calling <em>your</em> SOAP endpoint over <strong>TLS with a certificate from a CA Salesforce trusts</strong> &mdash; it is sending the plaintext password (<code>81c2687b</code>)</td><td>&mdash;</td></tr>
+            <tr><td><strong>Two-way (mutual) TLS</strong></td><td>Each side presents a certificate the other validates</td><td>Both CA-signed is normal; both self-signed works if each side installs the other's; <strong>one self-signed, one CA-signed is the combination that does not</strong> (<code>215bb6ba</code>)</td></tr>
+            <tr><td><strong>Signed request (Canvas)</strong></td><td>An HMAC over the request using the connected app's consumer secret</td><td>The no-second-login way to embed an external app you control (<code>714b577a</code>)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>Self-signed vs CA-signed</strong> (<code>2dfae498</code>): a self-signed certificate costs the
+      <em>trusting</em> party more, because that specific certificate has to be added to their truststore
+      and re-added on every rotation; a CA-signed one is trusted once at the root. Salesforce's own
+      certificates live under <strong>Certificate and Key Management</strong>; the roots it accepts for
+      inbound mutual TLS are published at <code>/cacerts.jsp</code>, and mutual authentication needs the
+      <strong>Enforce SSL/TLS Mutual Authentication</strong> permission plus port <strong>8443</strong>.</p>
+
+      <h3>The protocols in one table</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th></th><th>SAML 2.0</th><th>OAuth 2.0</th><th>OpenID Connect</th></tr></thead>
+          <tbody>
+            <tr><td>Purpose</td><td><strong>Browser SSO</strong> into a web app</td><td><strong>Delegated authorization</strong> &mdash; let an app act on a user's (or its own) behalf</td><td><strong>Authentication</strong> layered on OAuth &mdash; who the user is, as an <code>id_token</code></td></tr>
+            <tr><td>Artifact</td><td>Signed XML <strong>assertion</strong></td><td><strong>Access token</strong> (+ refresh token)</td><td><strong><code>id_token</code></strong> (a JWT) + the OAuth tokens</td></tr>
+            <tr><td>Salesforce as consumer</td><td>SSO Settings &mdash; Salesforce as <strong>SP</strong> (&sect;4)</td><td>Auth Provider with a custom OAuth 2.0 config (&sect;5)</td><td><strong>Auth Provider</strong> &mdash; OpenID Connect type (&sect;5)</td></tr>
+            <tr><td>Salesforce as issuer</td><td>Identity Provider setup + connected app SAML settings (&sect;7)</td><td>Connected app OAuth settings &mdash; every flow in &sect;7</td><td>Connected app with the <strong><code>openid</code></strong> scope (&sect;7)</td></tr>
+            <tr><td>Typical exam pairing</td><td>Enterprise IdP (Okta, ADFS, Ping) &rarr; employees</td><td>Mobile / web / server apps &rarr; the API</td><td>Social login, AWS/Azure-hosted identity, mobile apps needing user identity</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section id="sp">
+      <h2 class="sect"><span class="num">04</span><span>Salesforce as a Service Provider &mdash; SAML inbound</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">The 21% domain. Everything here lives on <strong>Setup &rarr; Single Sign-On Settings</strong>
+      plus <strong>My Domain</strong>.</p>
+
+      <h3>The SSO settings page, field by field</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Field</th><th>What it does</th><th>The question it answers</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Issuer</strong></td><td>The IdP's Entity ID as it appears in the assertion</td><td>Mismatch &rarr; "Issuer" failure in the validator</td></tr>
+            <tr><td><strong>Entity ID</strong></td><td><em>Salesforce's</em> identifier to the IdP</td><td>How the IdP tells this org from another SP (<code>a496a22b</code>); <strong>a second org needs a different Entity ID</strong> (<code>337c210b</code>)</td></tr>
+            <tr><td><strong>Identity Provider Certificate</strong></td><td>Validates the assertion signature</td><td>Expired or rotated certificate = every login fails</td></tr>
+            <tr><td><strong>Request Signing Certificate</strong></td><td>Salesforce signs its <code>AuthnRequest</code></td><td>Integrity of SP-initiated requests (<code>e683c669</code>) &mdash; self-signed is fine, the IdP is given it explicitly</td></tr>
+            <tr><td><strong>Assertion Decryption Certificate</strong></td><td>For IdPs that encrypt assertions</td><td>&mdash;</td></tr>
+            <tr><td><strong>SAML Identity Type</strong></td><td>Match the user by <strong>Username</strong>, <strong>Federation ID</strong>, or <strong>User ID</strong></td><td>The three valid identifiers (<code>cadf3745</code>)</td></tr>
+            <tr><td><strong>SAML Identity Location</strong></td><td>Subject <code>NameIdentifier</code> or an <strong>Attribute</strong></td><td>Wrong location &rarr; user not found</td></tr>
+            <tr><td><strong>SP-Initiated Request Binding</strong></td><td>HTTP POST or HTTP Redirect</td><td>Must match what the IdP accepts</td></tr>
+            <tr><td><strong>IdP Login URL / Logout URL / Custom Error URL</strong></td><td>Where the <code>AuthnRequest</code> goes; where to send the user after logout or a failure</td><td>&mdash;</td></tr>
+            <tr><td><strong>User Provisioning Enabled</strong> &rarr; Standard or Custom SAML JIT</td><td>Create/update users from the assertion at login</td><td>&sect;6</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Several SSO configurations can coexist; My Domain's <strong>Authentication Services</strong> list
+      chooses which appear on the login page.</p>
+
+      <h3>My Domain and the two initiation patterns</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th></th><th>SP-initiated</th><th>IdP-initiated</th></tr></thead>
+          <tbody>
+            <tr><td>Starts at</td><td>A Salesforce URL &mdash; login page, deep link, mobile app</td><td>The IdP's portal or app tile</td></tr>
+            <tr><td>Needs My Domain?</td><td><strong>Yes.</strong> Salesforce must know which IdP to redirect to, and only a unique hostname tells it (<code>0c8ef9d4</code>, <code>4b2727c1</code>)</td><td>No &mdash; the IdP posts the assertion to the ACS URL, and the assertion identifies the audience</td></tr>
+            <tr><td>Deep linking</td><td><strong>Yes</strong>, via <strong>RelayState</strong> &mdash; Salesforce sets it, the IdP echoes it back untouched, Salesforce lands the user on the resource (<code>ebadac3e</code>, <code>5e7db9c7</code>, <code>7d8397bd</code>)</td><td>The IdP can set a start URL of its own</td></tr>
+            <tr><td>Mobile app SSO, record deep links (<code>334e7d60</code>)</td><td>Depend on My Domain</td><td>&mdash;</td></tr>
+            <tr><td>Pick it when</td><td>Users start from Salesforce links</td><td>Users live in a corporate portal and follow links out (<code>29405f7c</code>)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="call trap">
+        <span class="tag">Two symptoms with one-line answers</span>
+        <p><strong>Automatic redirect to the IdP</strong> (<code>d204351d</code>): remove <strong>Login Page</strong>
+        from the My Domain <strong>Authentication Services</strong> list and leave the SAML provider as the
+        only service. <strong>Users landing on the home tab instead of the record they clicked</strong>
+        (<code>6849d97f</code>): the IdP is dropping or rewriting RelayState &mdash; check that first, not the
+        Federation IDs.</p>
+      </div>
+
+      <h3>Federating several orgs</h3>
+      <ul>
+        <li>Same IdP, several Salesforce orgs: each org is its own SP with its <strong>own Entity ID</strong> (<code>337c210b</code>).</li>
+        <li>Users move between orgs from one hub: make the <strong>main org the IdP</strong> and the regional orgs SPs (<code>bd3a96b8</code>); the App Launcher supplies the tiles.</li>
+        <li>Partners with one home org per country who need other countries' communities: a partner login in the home org and <strong>SAML federation</strong> to the others &mdash; configuration, not code (<code>b9b88960</code>).</li>
+      </ul>
+    </section>
+
+    <!-- 5 -->
+    <section id="accept">
+      <h2 class="sect"><span class="num">05</span><span>Accepting other identities: Auth Providers and Delegated Authentication</span></h2>
+      <div class="sect-rule"></div>
+
+      <h3>Authentication Providers (OpenID Connect, social, custom OAuth)</h3>
+      <p>An <strong>Auth Provider</strong> lets users log in to Salesforce or a site with credentials held
+      elsewhere, over <strong>OpenID Connect or a custom OAuth 2.0 configuration</strong>. Predefined types:
+      Facebook, Google, LinkedIn, Twitter, Microsoft, Apple, Amazon, GitHub, Janrain,
+      <strong>Salesforce</strong> (another org), <strong>OpenID Connect</strong> (any compliant provider &mdash; the
+      answer for an AWS- or Azure-hosted identity, <code>691dfc4d</code>), and <strong>Custom</strong> (Apex
+      <code>Auth.AuthProviderPluginClass</code>). <strong>It has no LDAP capability</strong> &mdash; LDAP is what
+      Delegated Authentication and Identity Connect are for.</p>
+      <p>Setup: create the provider, then enable it on the site's <strong>Login &amp; Registration</strong> page
+      so the button appears (<code>c89c6e3d</code>, <code>43c8e969</code>). Two provider settings the exam
+      names: a <strong>custom registration handler</strong> and a <strong>custom error URL</strong>
+      (<code>363a20ab</code>).</p>
+      <div class="call">
+        <span class="tag">The registration handler is mandatory</span>
+        <p>An Apex class implementing <code>Auth.RegistrationHandler</code> (or, more recently, a flow) with two
+        methods. <strong><code>createUser(portalId, data)</code></strong> &mdash; first login: find a matching user or
+        create one; for a site, create the Contact and the User with the right profile; the place to
+        call an external system when a customer first arrives (<code>1084f821</code>).
+        <strong><code>updateUser(userId, portalId, data)</code></strong> &mdash; every later login: keep the record
+        in step with the provider's profile (<code>ce735840</code>). The handler is what
+        <em>associates</em> the Facebook identity with a Salesforce user (<code>b6778f32</code>).</p>
+      </div>
+
+      <h3>Delegated Authentication</h3>
+      <p>Salesforce keeps the username but <strong>forwards every login attempt to your SOAP web
+      service</strong> and trusts its answer.</p>
+      <ul>
+        <li>The WSDL Salesforce publishes defines one method with exactly three inputs &mdash; <strong>username, password, sourceIp</strong> &mdash; returning a <strong>Boolean</strong> (<code>7cad7778</code>).</li>
+        <li><strong>SOAP only.</strong> No REST variant; the language behind the endpoint does not matter (<code>cee7f38e</code> &mdash; .NET yes, REST no).</li>
+        <li><strong>TLS with a certificate from a CA Salesforce trusts</strong> (<code>81c2687b</code>); allow Salesforce's egress IP ranges through the firewall.</li>
+        <li>Enabled by Support at org level, then per profile with <strong>Is Single Sign-On Enabled</strong>. Users <strong>change their password at the external directory</strong> (<code>7d27f534</code>).</li>
+        <li>It authenticates; it does <strong>not</strong> provision.</li>
+      </ul>
+
+      <h3>Choosing between the three</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>The stem says&hellip;</th><th>Use</th></tr></thead>
+          <tbody>
+            <tr><td>A SAML-capable corporate IdP, employees, single corporate password (<code>e9b93b97</code>)</td><td><strong>SAML SSO</strong> &mdash; Salesforce as SP</td></tr>
+            <tr><td>Social login, an OIDC provider, a credential store on AWS/Azure, another Salesforce org</td><td><strong>Auth Provider</strong> + registration handler</td></tr>
+            <tr><td>"validate the password against LDAP", no IdP in the landscape</td><td><strong>Delegated Authentication</strong></td></tr>
+            <tr><td>Active Directory <em>plus</em> provisioning <em>plus</em> desktop SSO</td><td><strong>Identity Connect</strong> (&sect;9)</td></tr>
+            <tr><td>"Terminated employee could still log in for 24 hours" (<code>c18bee92</code>)</td><td>Federate to an IdP that authenticates against the directory <strong>and disable Login Form authentication</strong> &mdash; the local password is the window; JIT cannot deactivate anyone</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 6 -->
+    <section id="provision">
+      <h2 class="sect"><span class="num">06</span><span>Provisioning and deprovisioning</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">"Recommend the appropriate method for provisioning users" appears in two domains.
+      The methods, from least to most automated.</p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Method</th><th>Direction</th><th>Fires when</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>Manual / Data Loader / <strong>SOAP or REST API</strong></td><td>Into Salesforce</td><td>Whenever the caller says</td><td>The answer when an external system of record must push on approval (<code>2af83e4d</code>)</td></tr>
+            <tr><td><strong>SAML Just-in-Time</strong> &mdash; standard</td><td>Into Salesforce</td><td><strong>At login</strong>, from assertion attributes</td><td>Creates on first login, updates after; <strong>cannot deprovision</strong> &mdash; a disabled user never logs in, so it never fires (<code>7fbbab5d</code>, <code>c18bee92</code>)</td></tr>
+            <tr><td><strong>Custom SAML JIT</strong> &mdash; Apex <code>Auth.SamlJitHandler</code></td><td>Into Salesforce</td><td>At login</td><td>Read <strong>custom</strong> SAML attributes (AD groups) and assign permission sets (<code>119806fb</code>); pass a profile Id centrally to many orgs (<code>0b12745c</code>)</td></tr>
+            <tr><td><strong>Auth Provider registration handler</strong></td><td>Into Salesforce</td><td>At login</td><td>The social / OIDC counterpart of JIT (&sect;5)</td></tr>
+            <tr><td><strong>SCIM 2.0</strong> &mdash; <code>/services/scim/v2</code></td><td>Into Salesforce</td><td><strong>When the identity store changes</strong> &mdash; no login needed</td><td>The standard for "a status change triggers provisioning <em>and deprovisioning</em>" (<code>1d59298d</code>); Okta, Entra ID and Identity Connect speak it</td></tr>
+            <tr><td><strong>Identity Connect</strong></td><td>AD &rarr; Salesforce</td><td>On AD change, near real time</td><td>Deactivates the user and revokes the session when AD disables the account (<code>8a87ff0b</code>)</td></tr>
+            <tr><td><strong>User Provisioning for Connected Apps</strong></td><td>Salesforce &rarr; external app</td><td>On Salesforce user create / freeze / disable / reactivate</td><td>Declarative, flow-based; each push is a <strong><code>UserProvisioningRequest</code></strong>, so an <strong>approval process on that object</strong> gates account creation (<code>4e82a592</code>, <code>0757243f</code>, <code>0901e6fc</code>)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="call trap">
+        <span class="tag">The asymmetry the exam tests</span>
+        <p>Provisioning-at-login mechanisms (JIT, registration handlers) are fine for creating and
+        updating, and useless for removing. Deprovisioning needs something that runs <em>without</em> a
+        login &mdash; SCIM, an API call, Identity Connect, or User Provisioning outbound.</p>
+      </div>
+      <p><strong>Assigning profiles, roles and permission sets during SSO</strong>: standard JIT sets the
+      profile from <code>User.ProfileId</code>; a <strong>custom JIT handler</strong> or registration handler
+      assigns permission sets from group attributes; a <strong>login flow</strong> can run Apex after
+      authentication and adjust assignments &mdash; but it runs on <strong>UI logins only</strong>, so it is
+      the wrong tool for API users or for a decision that must be made when a status changes.
+      Keeping assignments <em>current</em> means the IdP re-sends attributes on every login
+      (<code>updateUser</code>, JIT update) or the directory pushes them (SCIM, Identity Connect).</p>
+    </section>
+
+    <!-- 7 -->
+    <section id="idp">
+      <h2 class="sect"><span class="num">07</span><span>Salesforce as an Identity Provider &mdash; OAuth, OpenID Connect, SAML out</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">The deck's biggest domain (35 items). The exam's is 17%. Know it, then move on.</p>
+
+      <h3>The OAuth flows &mdash; the table the exam is built from</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Flow</th><th>Grant</th><th>Who</th><th>Refresh token?</th><th>The tell</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Web Server</strong></td><td>authorization code</td><td>Server-side web apps that can keep a <strong>client secret</strong> (<code>eeb5dece</code>, <code>5b30e615</code>); the <strong>recommended</strong> flow for mobile too, with <strong>PKCE</strong></td><td>Yes (with <code>refresh_token</code> scope)</td><td>"server-side code needs to interact with APIs"; concepts: client secret, scopes, access token, authorization code (<code>cfcdee5c</code>)</td></tr>
+            <tr><td><strong>User-Agent</strong></td><td>implicit</td><td>Browser/mobile apps with no secret; token in the URL fragment</td><td>Only with <code>refresh_token</code> scope <strong>and</strong> a custom-scheme or the <code>&hellip;/oauth2/success</code> callback (<code>717f2404</code>, <code>69ba67ca</code>)</td><td>"mobile app&hellip; no re-login" <strong>on the exam</strong>; see &sect;13</td></tr>
+            <tr><td><strong>JWT Bearer</strong></td><td>JWT signed with a certificate</td><td><strong>Server-to-server</strong>, unattended (<code>22e3dd32</code>)</td><td>No</td><td>Needs prior authorization: admin pre-approves the app or the user approved once</td></tr>
+            <tr><td><strong>SAML Bearer Assertion</strong></td><td>signed SAML assertion &rarr; token endpoint</td><td>Server-to-server where a SAML assertion exists; <strong>connected app with a certificate, administrators authorize the app</strong> (<code>5c79dca8</code>, <code>29476674</code>)</td><td>No</td><td>"previously authorized apps"</td></tr>
+            <tr><td><strong>SAML Assertion</strong></td><td>the org's <em>web SSO</em> assertion &rarr; token endpoint</td><td>Inbound API clients that already SSO into Salesforce via the org's SAML config (<code>f2d065ed</code>)</td><td>No</td><td>Uses the SSO Settings, not a connected app certificate &mdash; the distinction <code>29476674</code> turns on</td></tr>
+            <tr><td><strong>Device</strong></td><td>device code + user code</td><td>Devices with limited input &mdash; a fitness band the customer authorises from a phone (<code>156efedb</code>)</td><td>Yes</td><td><strong>Verification URL</strong> and user code belong to <em>this</em> flow only</td></tr>
+            <tr><td><strong>Asset Token</strong></td><td>JWT actor token &rarr; asset token</td><td><strong>Connected devices</strong> that each need a revocable identity and an <strong>Asset</strong> record (<code>fc878c46</code>, <code>69fa254e</code>, <code>ee7f18ad</code>)</td><td>&mdash;</td><td>"IoT", "device registers", "case associated with the customer's asset"</td></tr>
+            <tr><td><strong>Client Credentials</strong></td><td>consumer key + secret</td><td>Server-to-server with <strong>no user</strong>; runs as a designated integration user; the replacement for username-password</td><td><strong>No</strong></td><td>New for the exam era; not in the deck</td></tr>
+            <tr><td><strong>Username-Password</strong></td><td>password</td><td>Legacy; <strong>being retired</strong></td><td>No</td><td>Appears in stems as what the customer <em>has</em> (<code>f5a4335a</code>)</td></tr>
+            <tr><td><strong>Refresh Token</strong></td><td>refresh token</td><td>Any app renewing an access token silently</td><td>&mdash;</td><td>Logout = <strong>revoke the refresh token</strong> (<code>1fb58f49</code>)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Scopes &mdash; what a token may touch (<code>d605bce8</code>)</h3>
+      <div class="tw">
+        <table class="kv">
+          <tbody>
+            <tr><td><code>api</code></td><td>REST/SOAP/Bulk API, including custom objects and Apex REST &mdash; the <strong>narrowest scope that does an API job</strong> (<code>9d91e5a2</code>, <code>3fc81d5f</code>)</td></tr>
+            <tr><td><code>refresh_token</code> / <code>offline_access</code></td><td>Issue a refresh token &mdash; every "don't make users log in again" item (<code>40262389</code>)</td></tr>
+            <tr><td><code>web</code></td><td>Use the token for a <strong>UI session</strong> via <code>frontdoor.jsp</code> &mdash; "redirected to Salesforce and dropped on the page" (<code>fcbec1e9</code>)</td></tr>
+            <tr><td><code>full</code></td><td>Everything except refresh &mdash; the wrong answer when "most secure" is in the stem</td></tr>
+            <tr><td><code>openid</code>, <code>profile</code>, <code>email</code>, <code>address</code>, <code>phone</code>, <code>id</code></td><td>An <strong><code>id_token</code></strong>, UserInfo access, OIDC claims, the identity URL</td></tr>
+            <tr><td><code>custom_permissions</code>, <code>chatter_api</code>, <code>visualforce</code>, <code>lightning</code>, <code>wave_api</code>, <code>content</code>&hellip;</td><td>Narrower surfaces</td></tr>
+            <tr><td><strong>Custom scopes</strong></td><td>Permissions <strong>your</strong> resource server defines and checks &mdash; fine-grained access to an external protected resource (<code>b491280a</code>)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Tokens, expiry, revocation, introspection</h3>
+      <ul>
+        <li><strong>Access token</strong> lifetime follows the <strong>session timeout</strong> (org Session Settings or the connected app's Session Policy); renew it with the refresh token.</li>
+        <li><strong>Refresh token policy</strong> has four options: <strong>valid until revoked</strong> (default), <strong>immediately expire</strong>, <strong>expire after n</strong> (a fixed clock &mdash; the cohort that authorised six months ago all re-authenticating at once, <code>4ab56a8c</code>; users re-prompted daily, <code>15899789</code>), and <strong>expire if not used for n</strong> (inactivity &mdash; "re-verify devices idle for a week", <code>7168b6c2</code>).</li>
+        <li><strong>Revocation</strong>: <code>POST /services/oauth2/revoke</code>. Passing the <strong>refresh token</strong> revokes it <em>and</em> its access tokens &mdash; that is "logout" in an auto-refreshing app (<code>1fb58f49</code>).</li>
+        <li><strong>Introspection</strong>: <code>POST /services/oauth2/introspect</code> reports whether a token is active (<code>545c4607</code>).</li>
+        <li><strong>Identity URL</strong> <code>https://login.salesforce.com/id/&lt;orgId&gt;/&lt;userId&gt;</code> and <strong>UserInfo</strong> <code>/services/oauth2/userinfo</code>; discovery at <code>/.well-known/openid-configuration</code>; authorize at <code>/services/oauth2/authorize</code>, token exchange at <code>/services/oauth2/token</code>.</li>
+        <li>An <strong>authorization code</strong> in the web server flow is single-use and expires in <strong>15 minutes</strong>.</li>
+      </ul>
+
+      <h3>The connected app &mdash; every setting the exam names</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Setting</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td>Consumer key / secret, <strong>callback URL</strong></td><td>Client identity; where the code or token returns &mdash; must match exactly (a changed URI scheme is the first <em>distractor</em> in <code>4ab56a8c</code>, not the cause)</td></tr>
+            <tr><td><strong>Selected OAuth scopes</strong></td><td>Ceiling on what tokens may request; "integrate an app with the API" = connected app + scopes (<code>17eafc8b</code>)</td></tr>
+            <tr><td><strong>Require PKCE</strong>; <strong>Enable Client Credentials Flow</strong> + run-as user; <strong>Enable Device Flow</strong></td><td>Flow-specific switches</td></tr>
+            <tr><td><strong>Permitted Users</strong>: <em>All users may self-authorize</em> / <strong>Admin approved users are pre-authorized</strong></td><td>Pre-authorized = only profiles and permission sets granted the app may use it, no approval screen (<code>8e61f426</code>); the restriction for "only the sales team" (<code>387fb895</code>); the cause of <strong>"Failed: Not approved for access"</strong> (<code>b7fca343</code>)</td></tr>
+            <tr><td><strong>IP Relaxation</strong>: Enforce / Relax with second factor / Relax</td><td><em>Relaxes</em> the profile's login IP ranges for this app; the <strong>Trusted IP Range for OAuth Web Server Flow</strong> field is scoped to that flow and does <strong>not</strong> restrict a username-password integration &mdash; the profile's <strong>Login IP Ranges</strong> do (<code>f5a4335a</code>)</td></tr>
+            <tr><td><strong>Refresh Token Policy</strong></td><td>Above (<code>4ab56a8c</code>, <code>15899789</code>, <code>7168b6c2</code>)</td></tr>
+            <tr><td><strong>Session Policy</strong>: timeout; <strong>High Assurance session required</strong></td><td>The app opens only in a High Assurance session (<code>8eb5fd50</code>)</td></tr>
+            <tr><td><strong>Start URL</strong>; <strong>Visible in App Launcher</strong></td><td>"Specifying a Start URL makes the application available in the app menu and in App Launcher" &mdash; both missing = no tile for anyone (<code>718a5942</code>, <code>bd00c8e7</code>)</td></tr>
+            <tr><td><strong>SAML settings</strong> (Entity ID, ACS URL, subject type, name ID format, IdP certificate, <strong>SAML Initiation Method</strong>)</td><td>Makes Salesforce the SAML IdP for this app (<code>bd39ceda</code>, <code>8e61f426</code>)</td></tr>
+            <tr><td><strong>Canvas</strong>: access method (Signed Request / OAuth), <strong>Locations</strong></td><td>Chatter Feed, Chatter Tab, Console, Layouts &amp; Mobile Cards, Lightning Component, Mobile Nav, Open CTI, Publisher, Visualforce Page (<code>f351e88a</code>)</td></tr>
+            <tr><td><strong>Custom attributes</strong>; <strong>Connected App Handler</strong> (Apex <code>Auth.ConnectedAppPlugin</code>)</td><td>Extra claims; per-login allow/deny logic &mdash; "access only while the user owns an open Classified case" (<code>8e6a6eab</code>)</td></tr>
+            <tr><td><strong>User Provisioning</strong>; <strong>Mobile App settings</strong></td><td>&sect;6; privately distributed native apps (<code>1e135665</code>)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Salesforce as a SAML / OIDC identity provider, and the App Launcher</h3>
+      <ol class="prose">
+        <li><strong>Setup &rarr; Identity Provider &rarr; Enable</strong> with a certificate (the current article lists only the certificate as a prerequisite &mdash; the "needs My Domain" step in <code>bd00c8e7</code> predates universal My Domain; see &sect;13). Download the IdP metadata for the other side.</li>
+        <li><strong>One connected app per external application</strong> with SAML settings (or OAuth + <code>openid</code> for an OIDC relying party).</li>
+        <li>A <strong>Start URL</strong> puts it in the <strong>App Launcher</strong>; visibility per profile / permission set decides who sees the tile (<code>bd00c8e7</code>, <code>1dc68b52</code>). A redirect being acceptable is what makes connected app + App Launcher sufficient (<code>bd39ceda</code>); when the external app must appear <em>inside</em> Salesforce with no redirect, it is <strong>Canvas</strong> with a signed request (<code>714b577a</code>).</li>
+        <li>Employees who need only this take the <strong>Identity Only</strong> licence (&sect;9).</li>
+      </ol>
+    </section>
+
+    <!-- 8 -->
+    <section id="access">
+      <h2 class="sect"><span class="num">08</span><span>Access management: MFA, sessions, login flows, audit</span></h2>
+      <div class="sect-rule"></div>
+
+      <h3>Multi-factor authentication</h3>
+      <ul>
+        <li><strong>What counts as MFA</strong>: Salesforce Authenticator (push), third-party TOTP apps, security keys (WebAuthn/U2F), built-in authenticators (Touch ID, Windows Hello). <strong>Email and SMS codes are not MFA methods</strong> &mdash; they are <em>identity verification</em> for device activation and passwordless login.</li>
+        <li><strong>What it defends</strong>: a password that has been exposed &mdash; captured on public Wi-Fi, reused from a breached site, phished (<code>9f08f844</code>, <code>c9f1c673</code>). Not an unattended logged-in laptop.</li>
+        <li><strong>How it is required</strong>: the permission <strong>Multi-Factor Authentication for User Interface Logins</strong>, its API twin, or the org-level requirement for direct UI logins. Salesforce's MFA applies to <strong>direct logins</strong>; for <strong>SSO</strong> logins the IdP is responsible &mdash; which is why "one prompt across both paths" is not solved by the org setting.</li>
+        <li><strong>Conditional MFA</strong> &mdash; only off the corporate network, or against an existing custom 2FA system: a <strong>custom login flow</strong> with Apex (<code>f568388f</code>, <code>69c81641</code>).</li>
+      </ul>
+
+      <h3>Session security levels &mdash; the mechanism behind most MFA questions</h3>
+      <p>Every login method yields a session at a level: <strong>Standard</strong> or <strong>High Assurance</strong>.
+      <strong>Session Settings &rarr; Session Security Levels</strong> assigns methods to levels (MFA and
+      passwordless are High Assurance by default; <strong>SAML/SSO can be moved to High Assurance</strong>).
+      Then:</p>
+      <ul>
+        <li><strong>Profile &rarr; Session Security Level Required at Login = High Assurance</strong> forces MFA on a direct login, while an SSO login whose provider is on the High Assurance list passes with the IdP's own MFA &mdash; <strong>exactly one prompt on each path</strong> (<code>efc3d13e</code>).</li>
+        <li><strong>Session-level policies</strong> can require High Assurance for specific actions: reports and dashboards <strong>export</strong>, connected app access, Setup operations. "Export only when logged in with AD credentials" = SAML sessions High Assurance + raise the level required for export (<code>5a7927de</code>). "Internal-only mobile app" = connected app requires High Assurance + an authenticator app (<code>8eb5fd50</code>).</li>
+      </ul>
+
+      <h3>Network controls &mdash; three things that are constantly confused</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Control</th><th>Where</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Login IP Ranges</strong></td><td><strong>Profile</strong></td><td>Logins from outside are <strong>denied</strong> &mdash; UI and API alike; the only thing that pins a username-password integration to one host (<code>f5a4335a</code>)</td></tr>
+            <tr><td><strong>Trusted IP Ranges</strong></td><td><strong>Network Access</strong> (org)</td><td>Logins from inside skip <strong>identity verification</strong> &mdash; the fix for "users keep being asked to verify" (<code>46545053</code>); outside is still allowed after verification</td></tr>
+            <tr><td><strong>IP Relaxation</strong></td><td><strong>Connected app</strong></td><td>Loosens the profile ranges for that app's OAuth logins; a <em>relaxation</em>, never a restriction</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Session Settings also hold the session <strong>timeout</strong> (default <strong>2 hours</strong> of
+      inactivity), <strong>lock sessions to the IP address</strong> from which they originated, lock to
+      domain, force logout on timeout, and the login-page caching / user-switching toggles.</p>
+
+      <h3>Login flows</h3>
+      <p>A <strong>login flow</strong> (screen flow or Visualforce, assigned per <strong>profile</strong>) runs
+      <strong>after credentials are accepted and before the session is handed over</strong>. It can prompt for
+      a second factor, call Apex to check the source IP or an external service (<code>f568388f</code>,
+      <code>69c81641</code>), collect or verify data and hold the user until they comply
+      (<code>340019b3</code>), and finish by logging the user out or sending them on. It runs for
+      <strong>UI logins only</strong> &mdash; never for API logins &mdash; and it is not a provisioning tool.</p>
+
+      <h3>Audit and monitoring &mdash; "which tool" questions</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Need</th><th>Tool</th></tr></thead>
+          <tbody>
+            <tr><td>Who logged in, when, from where, with what result; the first thing to pull on a suspected compromise (<code>504cf5e3</code>)</td><td><strong>Login History</strong> &mdash; up to 20,000 rows on screen for the <strong>past 6 months</strong>, download for more</td></tr>
+            <tr><td>Averages, outliers, non-business-hours logins across 15,000 users (<code>2a790f16</code>)</td><td><strong>Login Forensics</strong> (Event Monitoring / Shield) &mdash; analytics over login events, not a list</td></tr>
+            <tr><td>What changed in Setup, and who changed it</td><td><strong>Setup Audit Trail</strong> &mdash; 180 days</td></tr>
+            <tr><td>API and UI events at scale, exportable, alertable; last-login analysis when real-time is not needed</td><td><strong>Event Monitoring</strong> log files; <strong>Real-Time Event Monitoring</strong> and Transaction Security policies for blocking in the moment</td></tr>
+            <tr><td>Salesforce-as-IdP assertions issued and their outcomes</td><td><strong>Identity Provider Event Log</strong></td></tr>
+            <tr><td>Which apps a user has authorised and which tokens are live</td><td>The user's <strong>OAuth Connected Apps</strong> list; <strong>Connected Apps OAuth Usage</strong> for the org</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 9 -->
+    <section id="products">
+      <h2 class="sect"><span class="num">09</span><span>The under-trained 12%: Salesforce Identity products and licences</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">Three objectives, about seven exam questions, <strong>nine deck items</strong> &mdash; and the
+      licence facts below are the ones no deck item states.</p>
+
+      <h3>Identity Connect</h3>
+      <ul>
+        <li>Bridges <strong>Microsoft Active Directory</strong> and Salesforce &mdash; and <strong>only AD</strong>; a custom user database or a non-AD LDAP is "not compatible" (<code>f68f7018</code>).</li>
+        <li>Installed <strong>on your own server</strong> (Windows or Linux) as a service, not as a managed package (<code>8a87ff0b</code>); uses an integration user record in Salesforce.</li>
+        <li>Does three things at once (<code>3c32a06f</code>, <code>0cb04857</code>): <strong>synchronises</strong> AD users into Salesforce, <strong>maps AD groups to profiles, permission sets and roles</strong>, and acts as a <strong>SAML IdP</strong> for SSO with desktop/Kerberos SSO. On an AD disable it <strong>deactivates the user and revokes the session</strong> in near real time.</li>
+        <li>Licensed separately (Developer Edition includes 10). Versions before 7.1 can no longer be downloaded as of Summer '23.</li>
+        <li>The answer whenever the stem has <strong>AD + provisioning + SSO</strong>; the wrong answer whenever the directory is anything else.</li>
+      </ul>
+
+      <h3>Customer 360 Identity (Salesforce Customer Identity)</h3>
+      <p>The consumer-facing bundle that comes with the <strong>External Identity</strong> licence: one login
+      per customer across all your digital properties, <strong>multi-brand</strong> support with correlated
+      activity (<code>85a253b5</code>, <code>cab60f07</code>), social sign-on, passwordless/login discovery,
+      dynamic branding, self-registration, and Salesforce acting as IdP for external apps a customer
+      reaches from the App Launcher (<code>5a50aa0b</code>). It is the identity layer of a Customer 360
+      project; it does not populate Data Cloud or track anonymous pre-signup activity on its own.</p>
+
+      <h3>Licences &mdash; the table to memorise</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Licence</th><th>For</th><th>Limits and facts</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Identity Only</strong></td><td><strong>Employees</strong> who need identity services only &mdash; SSO into a custom benefits or time-tracking app, App Launcher, connected apps (<code>15e77a5d</code>, <code>aaa8689c</code>). No CRM objects</td><td><strong>100 complimentary</strong> per Professional+ org; <strong>10 custom objects</strong> per user (contractual); Professional Edition: SAML only with the org as SP</td></tr>
+            <tr><td><strong>External Identity</strong></td><td><strong>External</strong> people &mdash; customers, patients, partners, dealers &mdash; who need to log in and use identity services (<code>5a50aa0b</code>, <code>b7a788a9</code>)</td><td>Sold in blocks of active users; several standard objects + <strong>10 custom objects</strong>; <strong>&le; 10 million unique logins/month</strong> recommended; <strong>5 in Developer Edition</strong>; free with paid community licences; <strong>upgradeable to a Community licence</strong>; <strong>contactless users</strong> are External Identity only (<code>e178d75d</code>)</td></tr>
+            <tr><td><strong>Salesforce Platform</strong></td><td>Employees using <strong>custom apps</strong> (Apex, Visualforce, custom objects) plus accounts/contacts, not full CRM (<code>76d8034d</code>)</td><td>Supports SAML SSO</td></tr>
+            <tr><td><strong>Customer Community</strong> / <strong>Plus</strong></td><td>High-volume external users on a site / external users who need roles, sharing rules, reports</td><td>Member- or <strong>login-based</strong></td></tr>
+            <tr><td><strong>Partner Community</strong></td><td>Partners who work leads, opportunities, campaigns</td><td>Member- or <strong>login-based</strong> &mdash; 2.5M users at ~5 logins each a month is the login-based case (<code>2f0c70a9</code>)</td></tr>
+            <tr><td><strong>Identity Verification Credits</strong> add-on</td><td>Passwordless / verification by <strong>SMS</strong></td><td><strong>Email verification is free</strong>; the add-on "typically includes <strong>25,000 SMS messages per month, 300,000 credits per year</strong>"; estimate from the number of <strong>SMS</strong> challenges (<code>26865975</code>)</td></tr>
+            <tr><td><strong>Identity Connect</strong></td><td>The AD bridge</td><td>Per-user permission set licence</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>Login-based</strong> licences buy a monthly pool of logins rather than named seats; choose
+      them when many users log in rarely.</p>
+    </section>
+
+    <!-- 10 -->
+    <section id="community">
+      <h2 class="sect"><span class="num">10</span><span>Community: Experience Cloud identity</span></h2>
+      <div class="sect-rule"></div>
+
+      <h3>The user model</h3>
+      <ul>
+        <li>An external user is a <strong>User</strong> created from a <strong>Contact</strong>, which belongs to an <strong>Account</strong>. A <strong>partner</strong> user needs the account <strong>enabled as a partner</strong>. Adding customers as contacts, enabling them as members, then turning on <strong>Welcome emails</strong> so each sets their own password is the admin-driven path when self-registration is off (<code>09873c13</code>).</li>
+        <li><strong>Person Accounts</strong> for <strong>B2C</strong> self-registration &mdash; one record merging account and contact. Enable Person Accounts, allow the person and business account record types under the site's public access settings, and leave the default Account on Login &amp; Registration empty (<code>4549ec9c</code>).</li>
+        <li><strong>Contactless users</strong> &mdash; External Identity users with <strong>no contact record</strong>; the trade-off is the narrower functionality of that licence (<code>e178d75d</code>).</li>
+        <li><strong>Sharing sets</strong> grant customer-licence users access to records related to their own account or contact; roles and sharing rules exist for Plus and Partner licences.</li>
+      </ul>
+
+      <h3>Login experience</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Feature</th><th>What it is</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Login page types</strong> &mdash; exactly four: <strong>Default</strong>, <strong>Login Discovery</strong>, <strong>Experience Builder</strong>, <strong>Visualforce</strong></td><td>Login Discovery = <strong>passwordless</strong> (email or phone, one-time code, an Apex <code>Auth.LoginDiscoveryHandler</code> decides the user); Experience Builder = drag-and-drop branded page. "Embedded Login" and "Lightning Experience" are not page types (<code>9f507c0e</code>)</td></tr>
+            <tr><td><strong>Self-registration</strong></td><td>Standard page, or a <strong>custom Visualforce page + <code>CommunitiesSelfRegController</code></strong> to capture custom fields and assign profile/account from them (<code>cb1525b3</code>); a different experience per registrant is <strong>audience/visibility on User and Contact fields</strong>, not more controllers (<code>2350f422</code>)</td></tr>
+            <tr><td><strong>Dynamic branding</strong> &mdash; the <strong>Experience ID (<code>expid</code>)</strong></td><td><code>site-url/services/oauth2/authorize/expid_value</code>, <code>&hellip;/idp/endpoint/HttpPost/expid_value</code>, or <code>expid={value}</code> on login, self-registration and forgot-password URLs; branding resolves per brand at run time. One site serves 150 sub-brands (<code>cab60f07</code>, <code>41b2e0a5</code>, <code>cd584102</code>). Requires a <strong>Lightning template</strong> &mdash; not Salesforce Tabs + Visualforce</td></tr>
+            <tr><td><strong>Login flows on a site</strong></td><td>Assigned to the site's profiles; the annual "accept the rules and update your details" gate (<code>340019b3</code>)</td></tr>
+            <tr><td><strong>External IdPs on a site</strong></td><td><strong>Auth Providers</strong> enabled on Login &amp; Registration for social/OIDC (<code>c89c6e3d</code>); the org's <strong>SAML</strong> configurations selectable per site; <strong>JIT</strong> or the registration handler creates the contact + user on first login (<code>d193c7d6</code>, <code>f92fcf74</code>)</td></tr>
+            <tr><td><strong>Registration through the IdP</strong></td><td>When duplicates must be impossible, register at the IdP and create the Salesforce partner user by API from that one event (<code>cf2e4959</code>)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Embedded Login &mdash; the objective the deck never asks</h3>
+      <p><strong>What it is</strong>: a way to put a Salesforce/Experience Cloud <strong>login form on your own
+      external web page</strong> with a few HTML meta tags and JavaScript. The admin configures the site's
+      auth providers and login page, adds the website's domain to the <strong>CORS allowlist</strong>, and
+      creates an <strong>Embedded Login connected app</strong>; the web developer adds the meta tags, an
+      <code>onlogin</code> (and optional <code>onlogout</code>) function, and the connected app's
+      <strong>callback URL</strong>. Behind the scenes it is an OAuth flow: Salesforce authenticates the user,
+      checks the connected app's permissions, and sends the access token and custom attributes to the
+      callback, which caches the user's information and decides what to show. Self-registration and
+      forgot-password links open the site's pages and do not return automatically; MFA, login flows and
+      Login Discovery need <code>salesforce-mask-redirects</code> set to false.</p>
+      <div class="call trap">
+        <span class="tag">When to use it &mdash; the Summer '23 answer</span>
+        <p>You own an external website, want visitors to log in with their Experience Cloud identity
+        <strong>without leaving the page</strong>, and want the page to know who they are afterwards.
+        <strong>Not</strong> for native mobile apps (Mobile SDK / OAuth), server-side apps that need tokens (a
+        connected app OAuth flow directly), or anything where a redirect to the site's login page is
+        acceptable. Read &sect;13 before answering this on the exam.</p>
+      </div>
+    </section>
+
+    <!-- 11 -->
+    <section id="troubleshoot">
+      <h2 class="sect"><span class="num">11</span><span>Troubleshooting single sign-on</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">"Given a scenario, troubleshoot common points of failure" is a named objective, and
+      the deck covers only the RelayState case.</p>
+
+      <h3>Tools</h3>
+      <ul>
+        <li><strong>SAML Assertion Validator</strong> (Setup &rarr; Single Sign-On Settings) &mdash; shows the <strong>last failed assertion</strong> and which check it failed: signature, issuer, audience/Entity ID, timestamps, identity type/location, user lookup. Paste an assertion to test one.</li>
+        <li><strong>Login History</strong> &mdash; SSO failures appear with a status naming the failure; filter by login type.</li>
+        <li><strong>Identity Provider Event Log</strong> &mdash; when Salesforce is the IdP: every assertion issued, success or failure, per connected app.</li>
+        <li><strong>Debug logs</strong> on the JIT handler, registration handler or login flow Apex when the failure is in your code.</li>
+      </ul>
+
+      <h3>Common failures and their fixes</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Symptom</th><th>Cause</th><th>Fix</th></tr></thead>
+          <tbody>
+            <tr><td>Everything fails at once after months of working</td><td>IdP signing certificate rotated or expired</td><td>Upload the new certificate in SSO Settings</td></tr>
+            <tr><td>SP-initiated fails, IdP-initiated works</td><td>No My Domain / wrong Authentication Services</td><td>Deploy My Domain, list the provider (<code>0c8ef9d4</code>)</td></tr>
+            <tr><td>"Issuer" / "audience" errors</td><td>Issuer or Entity ID mismatch; second org reusing the first's Entity ID</td><td>Align the values (<code>337c210b</code>)</td></tr>
+            <tr><td>Assertion valid, <strong>user not found</strong></td><td>Identity type or location wrong; Federation ID blank; no JIT</td><td>Set the identity type to what the IdP sends; populate Federation ID; enable JIT</td></tr>
+            <tr><td>Timestamp / "assertion expired"</td><td>Clock skew between IdP and Salesforce</td><td>Fix the IdP's clock</td></tr>
+            <tr><td>Login succeeds, lands on <strong>home tab</strong> instead of the record</td><td>IdP not preserving <strong>RelayState</strong></td><td>Fix the IdP (<code>6849d97f</code>)</td></tr>
+            <tr><td>SSO users <strong>still asked for MFA twice</strong></td><td>Org MFA setting instead of session levels</td><td>&sect;8 (<code>efc3d13e</code>)</td></tr>
+            <tr><td>OAuth: <code>redirect_uri_mismatch</code></td><td>Callback URL differs from the request</td><td>Match exactly, including scheme</td></tr>
+            <tr><td>OAuth: <strong>"Failed: Not approved for access"</strong></td><td>Admin-approved app, user not granted</td><td>Assign the app via profile / permission set (<code>b7fca343</code>)</td></tr>
+            <tr><td>OAuth: <code>invalid_grant</code> &mdash; IP restricted / authentication failure</td><td>Login IP ranges, expired authorization code, app blocked</td><td>Check the profile's ranges and the app's IP relaxation (<code>f5a4335a</code>)</td></tr>
+            <tr><td>Users re-authenticate after a fixed period / after inactivity</td><td>Refresh token policy</td><td>&sect;7 (<code>15899789</code>, <code>7168b6c2</code>)</td></tr>
+            <tr><td>App Launcher tile missing for everyone</td><td>Not visible in App Launcher, or no Start URL</td><td><code>718a5942</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 12 -->
+    <section id="numbers">
+      <h2 class="sect"><span class="num">12</span><span>Numbers to memorise</span></h2>
+      <div class="sect-rule"></div>
+      <div class="tw">
+        <table class="kv">
+          <tbody>
+            <tr><td>Exam</td><td>60 scored + up to 5 unscored; <strong>120 min</strong>; <strong>65%</strong> = 39 of 60; <strong>Summer '23</strong>; no prerequisite</td></tr>
+            <tr><td>Domain weights</td><td>Concepts 17 &middot; Accepting third-party identity 21 &middot; Salesforce as IdP 17 &middot; Access management 15 &middot; Salesforce Identity 12 &middot; Community 18</td></tr>
+            <tr><td>Delegated Authentication web service</td><td><strong>3 inputs</strong> (username, password, sourceIp) &rarr; <strong>Boolean</strong>; SOAP only</td></tr>
+            <tr><td>SAML identity types</td><td><strong>3</strong>: Username, Federation ID, User ID</td></tr>
+            <tr><td>Login page types</td><td><strong>4</strong>: Default, Login Discovery, Experience Builder, Visualforce</td></tr>
+            <tr><td>Refresh token policy options</td><td><strong>4</strong>: until revoked, immediately, after n, if unused for n</td></tr>
+            <tr><td>Connected app Permitted Users</td><td><strong>2</strong>: self-authorize, admin pre-authorized</td></tr>
+            <tr><td>Session security levels</td><td><strong>2</strong>: Standard, High Assurance</td></tr>
+            <tr><td>Session timeout default</td><td><strong>2 hours</strong> of inactivity</td></tr>
+            <tr><td>Authorization code lifetime</td><td><strong>15 minutes</strong></td></tr>
+            <tr><td>Login History</td><td>up to <strong>20,000</strong> rows shown, <strong>6 months</strong> retained</td></tr>
+            <tr><td>Setup Audit Trail</td><td><strong>180 days</strong></td></tr>
+            <tr><td>Identity Only licences</td><td><strong>100</strong> complimentary per Professional+ org; <strong>10</strong> custom objects per user</td></tr>
+            <tr><td>External Identity</td><td><strong>10</strong> custom objects; <strong>&le; 10 million</strong> unique logins/month; <strong>5</strong> in Developer Edition</td></tr>
+            <tr><td>Identity Verification Credits</td><td><strong>25,000 SMS/month, 300,000 credits/year</strong> per add-on; email verification free</td></tr>
+            <tr><td>Identity Connect</td><td>Developer Edition includes <strong>10</strong> licences; AD only; on-premise service</td></tr>
+            <tr><td>Mutual TLS inbound</td><td>Port <strong>8443</strong>; "Enforce SSL/TLS Mutual Authentication" permission</td></tr>
+            <tr><td>Canvas locations</td><td>9 &mdash; Chatter Feed, Chatter Tab, Console, Layouts &amp; Mobile Cards, Lightning Component, Mobile Nav, Open CTI, Publisher, Visualforce Page</td></tr>
+            <tr><td>User-Agent refresh token</td><td>Only with <code>refresh_token</code> scope <strong>and</strong> a custom-scheme or <code>/oauth2/success</code> callback</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 13 -->
+    <section id="stale">
+      <h2 class="sect"><span class="num">13</span><span>Exam-right, production-wrong</span></h2>
+      <div class="sect-rule"></div>
+
+      <div class="call alert">
+        <span class="tag">Answer these the exam's way</span>
+        <p>The exam is pinned to <strong>Summer '23</strong>. Identity is where Salesforce has moved fastest
+        since, so this list is long. Know the reality so you recognise a distractor built from it
+        &mdash; and then answer as of Summer '23.</p>
+      </div>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Topic</th><th>Exam's answer (Summer '23)</th><th>Reality now</th></tr></thead>
+          <tbody>
+            <tr><td><strong>"UC decides not to set up My Domain"</strong> (<code>0c8ef9d4</code>); My Domain as a <em>prerequisite</em> for Salesforce as IdP (<code>bd00c8e7</code>)</td><td>A real choice with real consequences</td><td><strong>Every org has My Domain</strong> &mdash; required since Winter '22, enhanced domains enforced from Winter '24. The consequences still describe <em>why</em> it matters; the choice no longer exists</td></tr>
+            <tr><td><strong>User-Agent flow</strong> for a mobile app (<code>69ba67ca</code>, <code>717f2404</code>)</td><td><span class="yes">Keyed</span></td><td>Salesforce recommends the <strong>web server flow with PKCE</strong> for mobile; the implicit grant leaks tokens via the redirect URL and <strong>admins can block it</strong></td></tr>
+            <tr><td><strong>Username-Password flow</strong> (<code>f5a4335a</code>)</td><td>What the customer uses</td><td><strong>Being retired for connected apps</strong>; replacements are <strong>client credentials</strong> and web server + PKCE</td></tr>
+            <tr><td><strong>Connected Apps</strong></td><td><span class="yes">The object every OAuth answer names</span></td><td><strong>Creation restricted from Spring '26</strong>; External Client Apps are the recommendation. Existing apps keep working; the settings in &sect;7 keep their names</td></tr>
+            <tr><td><strong>Embedded Login</strong> as a way to log in from an external site</td><td>A valid design</td><td><strong>Disabled by default since Summer '24</strong>; Salesforce recommends a redirect-based OAuth flow instead. It relies on <strong>third-party cookies</strong> and works only on Chrome while those are allowed</td></tr>
+            <tr><td><strong>"Contact Salesforce Support to enable Person Accounts"</strong> (<code>4549ec9c</code>)</td><td><span class="yes">Keyed</span></td><td>Admins <strong>enable Person Accounts from Setup</strong> themselves (irreversible; preview in a sandbox)</td></tr>
+            <tr><td><strong>Two-Factor Authentication (2FA)</strong> wording</td><td>The stems say 2FA</td><td>Renamed <strong>Multi-Factor Authentication</strong>; MFA has been <strong>contractually required for all direct UI logins since February 2022</strong> and is auto-enabled/enforced</td></tr>
+            <tr><td><strong>"Communities"</strong>, "Salesforce Tabs + Visualforce"</td><td>Item vocabulary</td><td><strong>Experience Cloud sites</strong>; the licence names survive</td></tr>
+            <tr><td><strong>Customer 360 Identity</strong></td><td>The product name in <code>85a253b5</code></td><td>Marketed as <strong>Salesforce Customer Identity</strong>, delivered by the External Identity licence</td></tr>
+            <tr><td><strong>Identity Connect</strong> as the AD answer</td><td><span class="yes">Still the answer</span></td><td>Versions 2.1 / 3.0 no longer downloadable; 7.1.6 is current</td></tr>
+            <tr><td><strong>Login Forensics</strong> as a plain feature</td><td><span class="yes">Fine</span></td><td>Part of <strong>Event Monitoring</strong> (Shield) &mdash; an add-on</td></tr>
+            <tr><td><strong>Client credentials flow</strong></td><td>Absent from the deck; present on the exam</td><td>GA and the documented replacement for username-password</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 14 -->
+    <section id="tells">
+      <h2 class="sect"><span class="num">14</span><span>Distractor tells</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">Patterns in how this exam writes wrong answers, from the deck's 116 and its two fact-check passes.</p>
+      <ol class="prose">
+        <li><strong>The roles reversed.</strong> "Facebook is the SP and Salesforce the IdP"; "regional orgs as IdPs"; "Salesforce as an authentication provider <em>to</em> the existing IdP". Fix the roles before reading further (&sect;3).</li>
+        <li><strong>The neighbouring flow.</strong> SAML <em>Assertion</em> vs SAML <em>Bearer</em> (<code>29476674</code>); JWT bearer for a device; the <strong>Verification URL</strong> listed under the web server flow (<code>cfcdee5c</code>); "Mobile Agent flow" (does not exist).</li>
+        <li><strong>A login-time tool for a no-login problem.</strong> JIT or a login flow for <strong>deprovisioning</strong> (<code>7fbbab5d</code>, <code>c18bee92</code>); a login flow to validate status for API users.</li>
+        <li><strong>A product for the wrong directory.</strong> Identity Connect against a custom database (<code>f68f7018</code>); an Auth Provider "delegating to LDAP"; Delegated Authentication over <strong>REST</strong> (<code>cee7f38e</code>).</li>
+        <li><strong>The wrong token.</strong> Revoking the <em>access</em> token as logout (<code>1fb58f49</code>); "access token TTL" when the symptom is a fixed-period re-prompt (<code>4ab56a8c</code>); clearing the Client ID.</li>
+        <li><strong>The wrong scope.</strong> <code>full</code> when the stem says least privilege; <code>web</code> for an API integration; <code>api</code> for a UI redirect (<code>fcbec1e9</code>).</li>
+        <li><strong>The wrong IP control.</strong> Trusted IP Ranges to <em>block</em>; Login IP Ranges to <em>stop verification prompts</em>; the connected app's IP field to restrict a username-password login (<code>f5a4335a</code>, <code>46545053</code>).</li>
+        <li><strong>The org-wide switch for a per-path problem.</strong> "Enable MFA for the organization" when two login paths need one prompt each (<code>efc3d13e</code>).</li>
+        <li><strong>Custom code where a product exists.</strong> Apex triggers on <code>UserLogin</code>, nightly callouts to Facebook, Heroku sign-on apps &mdash; when User Provisioning, <code>updateUser()</code>, SCIM or Identity Connect is the documented feature (<code>0757243f</code>, <code>ce735840</code>).</li>
+        <li><strong>The adjacent product.</strong> Salesforce Connect to "synchronise LDAP passwords"; Canvas for an App Launcher tile; a separate org per brand when <code>expid</code> exists (<code>cab60f07</code>).</li>
+        <li><strong>A licence one tier too rich.</strong> Community licences for customers who only need to log in (<code>5a50aa0b</code>); a full Salesforce licence for a custom-app-only workforce (<code>76d8034d</code>); member-based when the logins-per-user ratio screams login-based (<code>2f0c70a9</code>).</li>
+        <li><strong>An invented behaviour of a real product.</strong> "Identity Connect can be deployed as a managed package", "&hellip;disables users FIFO" &mdash; check against &sect;9.</li>
+      </ol>
+
+      <h3>Read the question's own verb</h3>
+      <ul>
+        <li><strong>"with limited custom development" / "declarative"</strong> &rarr; SAML federation, User Provisioning, Auth Provider + handler, session levels, login flows &mdash; not Apex triggers.</li>
+        <li><strong>"first time the user&hellip;"</strong> &rarr; <code>createUser()</code> / JIT. <strong>"changes are reflected&hellip;"</strong> &rarr; <code>updateUser()</code>.</li>
+        <li><strong>"as soon as they are approved / status changes"</strong> &rarr; SCIM, API push, Identity Connect &mdash; a mechanism that runs without a login.</li>
+        <li><strong>"only once" / "single login"</strong> &rarr; federation to one IdP; register at the IdP.</li>
+        <li><strong>"restrict" a mobile app to a group</strong> &rarr; connected app <strong>Permitted Users</strong> + profile / permission set.</li>
+        <li><strong>"what should be investigated first"</strong> &rarr; the single most specific symptom: RelayState for landing on home, refresh token policy for periodic re-prompts, Login History for a suspected compromise.</li>
+        <li><strong>"at a minimum, which licence"</strong> &rarr; the cheapest that delivers the stated need: Identity Only, External Identity, Platform.</li>
+      </ul>
+    </section>
+
+    <!-- 15 -->
+    <section id="plan">
+      <h2 class="sect"><span class="num">15</span><span>Two-week revision plan</span></h2>
+      <div class="sect-rule"></div>
+      <div class="tw">
+        <table>
+          <thead><tr><th class="num-col">Day</th><th>Focus</th></tr></thead>
+          <tbody>
+            <tr><td class="num">1</td><td>&sect;3 roles and building blocks until you can label every system in a stem without reading the options; the protocol table</td></tr>
+            <tr><td class="num">2</td><td>&sect;4 SAML settings field by field; SP- vs IdP-initiated; RelayState. Drill the deck's SSO items</td></tr>
+            <tr><td class="num">3</td><td>&sect;5 Auth Providers vs Delegated Authentication; write <code>createUser</code> / <code>updateUser</code> responsibilities from memory</td></tr>
+            <tr><td class="num"><strong>4</strong></td><td><strong>&sect;6 provisioning table</strong> &mdash; the login-time vs status-change asymmetry; SCIM; User Provisioning outbound</td></tr>
+            <tr><td class="num">5</td><td>&sect;7 OAuth flows table, cover-and-reproduce; scopes; the four refresh token policies</td></tr>
+            <tr><td class="num">6</td><td>&sect;7 connected app settings; Salesforce as IdP; App Launcher; Canvas. Drill the OAuth items &mdash; don't let them crowd out days 4 and 8</td></tr>
+            <tr><td class="num">7</td><td>&sect;8 MFA methods, session security levels, the three IP controls, login flows, audit tools</td></tr>
+            <tr><td class="num"><strong>8</strong></td><td><strong>&sect;9 Salesforce Identity</strong> &mdash; Identity Connect facts, the licence table from memory, the credit arithmetic</td></tr>
+            <tr><td class="num">9</td><td>&sect;10 Experience Cloud user model, login page types, <code>expid</code>, <strong>Embedded Login</strong></td></tr>
+            <tr><td class="num">10</td><td>&sect;11 troubleshooting table; open the SAML Assertion Validator and the Identity Provider Event Log in a dev org</td></tr>
+            <tr><td class="num">11</td><td>&sect;12 numbers; &sect;13 stale answers &mdash; this exam has more of them than any other</td></tr>
+            <tr><td class="num">12</td><td>&sect;14 tells; re-drill every item you missed</td></tr>
+            <tr><td class="num">13</td><td>Full deck run, timed at 2 minutes a question</td></tr>
+            <tr><td class="num">14</td><td>Re-read &sect;3, &sect;9 and &sect;13. Rest</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 16 -->
+    <section id="sources">
+      <h2 class="sect"><span class="num">16</span><span>Sources</span></h2>
+      <div class="sect-rule"></div>
+      <p>Every URL below was rendered and title-checked during this repo's fact-check work or while writing this guide.</p>
+
+      <h4>The exam</h4>
+      <ul class="linklist">
+        <li><a href="https://help.salesforce.com/s/articleView?id=005298975&type=1&language=en_US">Salesforce Certified Platform Identity and Access Management Architect Exam Guide</a> &mdash; <span class="why">outline, weights, Summer '23 alignment.</span></li>
+      </ul>
+
+      <h4>SAML, My Domain, delegated authentication, auth providers</h4>
+      <ul class="linklist">
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.sso_saml.htm&language=en_US&type=5">Configure SSO with Salesforce as a SAML Service Provider</a> and <a href="https://help.salesforce.com/s/articleView?id=sf.sso_saml_setting_up.htm&language=en_US&type=5">SAML SSO with Salesforce as the Service Provider</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.domain_name_overview.htm&language=en_US&type=5">My Domain</a> &mdash; <span class="why">why SP-initiated SSO needs it.</span></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.sso_delauthentication.htm&language=en_US&type=5">Delegated Authentication</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.sso_authentication_providers.htm&language=en_US&type=5">Authentication Provider SSO</a> &mdash; <span class="why">"OpenID Connect or a custom OAuth 2.0 configuration"; no LDAP.</span></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=xcloud.sso_provider_openid_connect.htm&language=en_US&type=5">Configure an Auth Provider Using OpenID Connect</a> and <a href="https://help.salesforce.com/s/articleView?id=sf.sso_jit_about.htm&language=en_US&type=5">Just-in-Time Provisioning for SAML</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.identity_scim_overview.htm&language=en_US&type=5">Manage Salesforce User Identities with SCIM</a></li>
+      </ul>
+
+      <h4>OAuth and connected apps</h4>
+      <ul class="linklist">
+        <li>OAuth flows: <a href="https://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_web_server_flow.htm&language=en_US&type=5">Web Server</a>, <a href="https://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_refresh_token_flow.htm&language=en_US&type=5">Refresh Token</a>, <a href="https://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_jwt_flow.htm&language=en_US&type=5">JWT Bearer</a>, <a href="https://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_SAML_bearer_flow.htm&language=en_US&type=5">SAML Bearer Assertion</a>, <a href="https://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_device_flow.htm&language=en_US&type=5">Device</a>, <a href="https://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_asset_token_flow.htm&language=en_US&type=5">Asset Token</a>, <a href="https://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_client_credentials_flow.htm&language=en_US&type=5">Client Credentials</a> &mdash; <span class="why">"doesn't support refresh tokens", the alternative to username-password.</span></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_scopes.htm&language=en_US&type=5">OAuth Tokens and Scopes</a>, <a href="https://help.salesforce.com/s/articleView?id=sf.remoteaccess_revoke_token.htm&language=en_US&type=5">Revoke OAuth Tokens</a>, <a href="https://help.salesforce.com/s/articleView?id=sf.remoteaccess_oidc_token_introspection_endpoint.htm&language=en_US&type=5">OpenID Connect Token Introspection Endpoint</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.connected_app_about.htm&language=en_US&type=5">Connected App Use Cases</a>, <a href="https://help.salesforce.com/s/articleView?id=xcloud.connected_app_edit_ip_ranges.htm&language=en_US&type=5">Configure Trusted IP Ranges for a Connected App</a>, <a href="https://help.salesforce.com/s/articleView?id=sf.connected_app_user_provisioning.htm&language=en_US&type=5">User Provisioning for Connected Apps</a>, <a href="https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_class_Auth_ConnectedAppPlugin.htm">ConnectedAppPlugin Class</a></li>
+      </ul>
+
+      <h4>Access management</h4>
+      <ul class="linklist">
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.security_require_two_factor_authentication.htm&language=en_US&type=5">Multi-Factor Authentication for Salesforce Orgs</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.security_overview_sessions.htm&language=en_US&type=5">Session Security</a> &mdash; <span class="why">default 2-hour timeout, Standard vs High Assurance.</span></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.security_login_flow.htm&language=en_US&type=5">Custom Login Flows</a> and <a href="https://help.salesforce.com/s/articleView?id=sf.users_profiles_epui_login_ip_ranges.htm&language=en_US&type=5">Restrict Login IP Addresses in Profiles</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=xcloud.users_login_history.htm&language=en_US&type=5">Monitor Login History</a> &mdash; <span class="why">20,000 rows, 6 months.</span></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.identity_monitor_access.htm&language=en_US&type=5">Monitor Access to Your Salesforce Orgs and Experience Cloud Sites</a> and <a href="https://help.salesforce.com/s/articleView?id=sf.admin_monitorsetup.htm&language=en_US&type=5">Setup Audit Trail</a></li>
+      </ul>
+
+      <h4>Salesforce Identity products and licences</h4>
+      <ul class="linklist">
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.identity_licenses.htm&language=en_US&type=5">Salesforce Identity Licenses</a> &mdash; <span class="why">the 100 complimentary Identity Only licences, the 10-custom-object and 10-million-login limits, the External Identity upgrade path.</span></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=005239145&language=en_US&type=1">Identity Verification Credits Add-On License Considerations</a> &mdash; <span class="why">25,000 SMS/month.</span></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=xcloud.identityconnect_about.htm&language=en_US&type=5">Identity Connect</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=platform.users_understanding_license_types.htm&language=en_US&type=5">User Licenses</a> and <a href="https://help.salesforce.com/s/articleView?id=sf.users_license_types_communities.htm&language=en_US&type=5">Experience Cloud User Licenses</a></li>
+      </ul>
+
+      <h4>Experience Cloud identity</h4>
+      <ul class="linklist">
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.external_identity_self_registration_configure.htm&language=en_US&type=5">Configure Self-Registration</a>, <a href="https://help.salesforce.com/s/articleView?id=xcloud.external_identity_self_registration_person_accounts.htm&language=en_US&type=5">Self-Registration with Person Accounts</a>, <a href="https://help.salesforce.com/s/articleView?id=sf.account_person_enable.htm&language=en_US&type=5">Enable Person Accounts</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.external_identity_branding_use_cases.htm&language=en_US&type=5">Dynamic Branding Use Cases</a>, <a href="https://help.salesforce.com/s/articleView?id=sf.external_identity_login_pages_configure.htm&language=en_US&type=5">Configure Login Pages</a>, <a href="https://help.salesforce.com/s/articleView?id=sf.external_identity_manage_create_contactless_users.htm&language=en_US&type=5">Create Contactless Users</a>, <a href="https://help.salesforce.com/s/articleView?id=platform.networks_create_external_users.htm&language=en_US&type=5">Create External Users</a></li>
+        <li><a href="https://help.salesforce.com/s/articleView?id=sf.external_identity_login_how_it_works.htm&language=en_US&type=5">How to Implement Embedded Login</a> and <a href="https://help.salesforce.com/s/articleView?id=sf.external_identity_login_considerations.htm&language=en_US&type=5">Embedded Login Considerations</a> &mdash; <span class="why">"In Summer '24, Salesforce made Embedded Login disabled by default."</span></li>
+      </ul>
+    </section>
+
+    <!-- 17 -->
+    <section id="notebooklm">
+      <h2 class="sect"><span class="num">17</span><span>Using this with NotebookLM</span></h2>
+      <div class="sect-rule"></div>
+
+      <p>Upload the Markdown version of this guide as a source &mdash; headings become NotebookLM's
+      navigation. Worth adding alongside it: the
+      <a href="https://help.salesforce.com/s/articleView?id=005298975&type=1&language=en_US">official exam guide</a>,
+      <a href="https://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_scopes.htm&language=en_US&type=5">OAuth Tokens and Scopes</a> and
+      <a href="https://help.salesforce.com/s/articleView?id=sf.identity_licenses.htm&language=en_US&type=5">Salesforce Identity Licenses</a>
+      &mdash; the two pages the exam leans on hardest that the deck does not.</p>
+
+      <h3>Prompts that produce useful study media</h3>
+      <div class="prompts">
+        <div class="prompt">Generate an Audio Overview of sections 3 and 7. Have the hosts describe a company with a mobile app, a corporate IdP and a partner portal, and argue over which system is the IdP, the SP and the resource server in each interaction &mdash; then which OAuth flow each app should use.</div>
+        <div class="prompt">Using section 6, drill me: give me a provisioning requirement and ask whether it fires at login or on a status change, and which mechanism fits. Don't give me the answer until I try.</div>
+        <div class="prompt">Turn section 12 into flashcards &mdash; one fact per card.</div>
+        <div class="prompt">Using section 13, explain each case where the exam's expected answer differs from current Salesforce behaviour, and why the exam still keys the old answer.</div>
+        <div class="prompt">Using section 11, give me five broken-SSO symptoms and ask me to name the cause and the tool that shows it.</div>
+      </div>
+
+      <p>For the Audio Overview, sections 3, 5, 6 and 13 reward listening &mdash; they are role-play and
+      comparisons. Section 7's tables, 12 and 16 are lookups and will not survive being read aloud.</p>
+    </section>
+
+  </main>
+
+  <footer class="colophon">
+    Compiled from the 116 questions in <code>salesforce_iam_architect_questions_corrected.json</code>,
+    the official Identity and Access Management Architect exam guide, and the documentation those
+    questions cite. The deck's own tags were not used for the domain table &mdash;
+    <code>study-guides/reclassify-iam.mjs</code> holds the per-question calls against the six real
+    domains. Every URL in &sect;16 was rendered and title-checked; the exam guide, Identity Licenses,
+    Identity Connect, Embedded Login, client credentials, session security, Person Accounts and Login
+    History pages were re-read for this guide on 2026-09-12.
+  </footer>
+
+</div>
