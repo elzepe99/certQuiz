@@ -2531,3 +2531,44 @@ reports the latest as **2026-07-28**, with `2025-11-25` the previous one. The
 older words ("Invalid arguments" rather than "malformed requests that fail the
 CallToolRequest schema"), so an old citation there is stale rather than wrong — but
 cite the current version, and re-check this line before the next pass.
+
+## 2026-09-12 — Platform Developer II study guide
+
+Not a deck pass: these were rendered while writing
+`study-guides/salesforce-platform-developer-2.md`, for the eleven exam objectives the
+Dev II deck never asks about. All rendered top-level in the browser and title-checked;
+`check-urls.mjs` cannot see any of them (SPA hosts).
+
+### Settled facts
+
+| Fact | Value | Source |
+|---|---|---|
+| Platform Cache capacity | **Enterprise 10 MB, Unlimited/Performance 30 MB, all others 0**; min partition 1 MB; item max **100 KB**; key max **50 chars**; session TTL 5 min–**8 h**; org TTL 5 min–**48 h**, default **24 h** | Platform Cache Limits |
+| Custom settings in tests | "treated as data for the purposes of Apex test isolation. Apex tests must use SeeAllData=true to see existing custom settings data… As a best practice, create the required custom settings data in your test setup." Protection applies **only** inside a managed package; otherwise "readable for all profiles, including the guest user" — do not store secrets | Custom Settings (Apex Developer Guide) |
+| Stub API | `System.StubProvider` + `System.Test.createStub()`; stubs are "anonymous subclasses of Apex classes" generated at runtime, so no test class needs packaging | Build a Mocking Framework with the Stub API |
+| Transaction Finalizers | Queueable job and Finalizer run in **separate** Apex and database transactions; a failed Queueable "can be successively re-enqueued **five times** by a transaction finalizer"; a finalizer "doesn't count as an extra execution against your daily Async Apex limit"; synchronous limits apply to it except heap, enqueueJob and future-call caps | Transaction Finalizers |
+| Scratch org lifetime | `--duration-days` **1–30**, default **7** | Create Scratch Orgs |
+| Advanced Currency Management scope | Dated rates apply to opportunities, opportunity products, schedules, splits, campaign opportunity fields and their reports — **not** forecasting, other objects' currency fields, formula fields returning Currency, or cross-object formulas (static rate). With ACM on, **no currency roll-ups from Opportunity to Account**, and `<apex:inputField>` / `<apex:outputField>` **cannot bind** to ACM-enabled currency fields | About Advanced Currency Management |
+| Dev II exam | 60 scored + up to 5 unscored, **120 min**, **70%**, **Winter '24**, PD I prerequisite, US$200 / retake US$100; domains 15 / 27 / 20 / 20 / 18 | Platform Developer II Exam Guide |
+| Governor-limit footnote worth knowing | "In a single Apex transaction, custom metadata records can have **unlimited** SOQL queries" | Execution Governors and Limits |
+
+### URLs (all rendered 2026-09-12)
+
+- **Salesforce Certified Platform Developer II Exam Guide** — https://help.salesforce.com/s/articleView?id=005298967&type=1&language=en_US
+  `type=1`; needs the browser — WebFetch got the "Sorry to interrupt / CSS Error" shell from this machine today, so the dld-pass note that WebFetch renders Help locally is not reliable for every article.
+- **About Advanced Currency Management** — https://help.salesforce.com/s/articleView?id=sf.administration_about_advanced_currency_management.htm&language=en_US&type=5
+  Still `sf.`; `platform.admin_currency.htm` is DEAD ("We looked high and low").
+- **Platform Cache** — https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_cache_namespace_overview.htm
+- **Platform Cache Limits** — https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_platform_cache_limits.htm
+  Note the id: `apex_cache_limits.htm` is DEAD and falls back to the generic "Apex Reference Guide" title. Siblings that exist: `apex_platform_cache_limitations.htm`, `apex_platform_cache_session_examples.htm`, `apex_platform_cache_org_examples.htm`.
+- **Custom Settings** — https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_customsettings.htm
+- **Build a Mocking Framework with the Stub API** — https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_stub_api.htm
+- **Transaction Finalizers** — https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_transaction_finalizers.htm
+- **Create Scratch Orgs** — https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs_create.htm
+- **Scratch Orgs** — https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs.htm
+- **Lightning Message Service (LWC guide)** — https://developer.salesforce.com/docs/platform/lwc/guide/use-message-channel.html — server-rendered, `check-urls.mjs` reports ALIVE.
+
+### Known dead — from this pass
+
+- `https://developer.salesforce.com/docs/atlas.en-us.platform_events.meta/platform_events/platform_events_publish_behavior.htm` — generic "Platform Events Developer Guide" title. Publish-after-commit vs publish-immediately is documented on the Platform Event Allocations page (the 150-call cap) and the governor-limits table instead.
+- `https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql_select_convertcurrency.htm` — real HTTP 404. The live page is `…/sforce_api_calls_soql_querying_currency_fields.htm` (title "convertCurrency()"), but it redirects to the new `docs/platform/salesforce-soql-sosl/guide/…` format whose body **did not render in the in-app browser at all** (55 characters of nav, three tries), and WebFetch gets 403 on both forms. Not cited in the guide for that reason; the ACM Help article carries the developer-facing facts instead.

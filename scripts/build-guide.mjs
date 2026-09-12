@@ -25,6 +25,11 @@ const GUIDES = [
     out: 'public/guides/salesforce-integration-architect.html',
     lang: 'en',
   },
+  {
+    source: 'study-guides/platform-developer-2.artifact.html',
+    out: 'public/guides/salesforce-platform-developer-2.html',
+    lang: 'en',
+  },
 ];
 
 /** Pull the <title> out of the fragment so the standalone page keeps it. */
