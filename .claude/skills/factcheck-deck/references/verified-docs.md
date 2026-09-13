@@ -2639,3 +2639,32 @@ title-checked.
 - **Einstein Trust Layer** — https://help.salesforce.com/s/articleView?id=ai.generative_ai_trust_layer.htm&language=en_US&type=5
   `ai.prompt_builder.htm` and `sf.prompt_builder.htm` are DEAD; cite `sf.prompt_builder_ground_merge_fields.htm` (deck-verified).
 - Also DEAD today: `sf.admin_supportinfo.htm`, `sf.admin_orginfo.htm` (use `xcloud.company_information_fields.htm`), `analytics.reports_filter_personalized.htm`.
+
+## 2026-09-12 — Platform App Builder study guide
+
+Not a deck pass: rendered while writing `study-guides/salesforce-app-builder.md`, for the seven
+exam objectives the app-builder deck never asks about. All rendered top-level in the browser
+and title-checked.
+
+### Settled facts
+
+| Fact | Value | Source |
+|---|---|---|
+| Platform App Builder exam | 60 scored + up to 5 unscored, **105 min**, **73%** (44 of 60), **Summer '26**, no prerequisite, US$200 / retake US$100; five domains **18 / 20 / 32 / 17 / 13** (Fundamentals / Data Modeling & Management / Business Logic & Process Automation / User Interface / App Deployment). Fundamentals names **AgentExchange** beside AppExchange; Business Logic names **Flow Approval Processes** and **Agentforce** — Workflow Rules and Process Builder are not on the outline | Platform App Builder Exam Guide |
+| Exam-guide article id | `005298964` (one below PD I `…965`); `005298972` is Data Architect | — |
+| Flow Approval Processes | "multi-step processes that interact with multiple users and systems"; built from **stages** of **approval steps** (assign an **approval work item** to a user, group or queue) and **background steps**; Decision elements branch; the **Orchestration Work Guide** component must be on the record page before activation; approvers act in the Work Guide or **reply to the email with keywords** | Automate Your Approvals with Flow Approval Processes |
+| Flow error emails | Sent to the **user who last modified the flow** by default; Process Automation Settings → *Send Process or Flow Error Email to* switches recipients to the **Apex Exception Email** list; the email links to the failed interview in Flow Builder | Select Flow and Process Error Email Recipients; Troubleshooting Flow Run Time Errors |
+| Automation app Monitor tab | Lists **failed and paused** flow interviews with error details; open one to debug the run or resume it; needs the **Enable the Automation Lightning App** setting | Monitoring and Managing Paused and Failed Flow Interviews |
+| Prompt template types | Standard types include Sales Email, Field Generation, Record Summary and Flex; a prompt template is callable from a flow as an action and from an agent as an action | Prompt Template Types |
+| App-builder deck numbers (deck-verified, not re-rendered) | Sandboxes: Developer 200 MB / 1-day refresh, Developer Pro 1 GB / 1 day, Partial Copy 5 GB / 5 days with a template, Full 29 days; **25 roll-up summary fields per object** (raisable to 40); **25 external ID fields per object**, auto-number included; **2 master-detail relationships per object**; Data Import Wizard 50,000 records | deck citations |
+
+### URLs (all rendered 2026-09-12)
+
+- **Salesforce Certified Platform App Builder Exam Guide** — https://help.salesforce.com/s/articleView?id=005298964&type=1&language=en_US
+- **Automate Your Approvals with Flow Approval Processes** — https://help.salesforce.com/s/articleView?id=platform.automate_automated_approvals.htm&language=en_US&type=5
+- **Select Flow and Process Error Email Recipients** — https://help.salesforce.com/s/articleView?id=sf.flow_troubleshoot_error_email.htm&language=en_US&type=5
+- **Monitoring and Managing Paused and Failed Flow Interviews** — https://help.salesforce.com/s/articleView?id=platform.automate_ala_monitor.htm&language=en_US&type=5
+- **Troubleshooting Flow Run Time Errors** — https://help.salesforce.com/s/articleView?id=sf.flow_troubleshoot_email.htm&language=en_US&type=5
+  `platform.flow_troubleshoot.htm` is DEAD.
+- **Prompt Template Types** — https://help.salesforce.com/s/articleView?id=ai.prompt_builder_standard_template_types.htm&language=en_US&type=5
+- **Who Has Access to Account Records?** — `platform.faq_record_access.htm` (already listed under the 2026-09-11 import) is the page for the Sharing Hierarchy action.
