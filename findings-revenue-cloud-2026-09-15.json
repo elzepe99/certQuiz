@@ -1,0 +1,1149 @@
+{
+  "deck": "public/decks/salesforce-revenue-cloud.json",
+  "reviewed": "2026-09-15",
+  "findings": [
+    {
+      "id": "d672ec2a",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.industries_reference.meta/industries_reference/context_service_overview.htm"
+      ]
+    },
+    {
+      "id": "ef770e8b",
+      "verdict": "reasoning",
+      "explanation": "Products List (POST) is the Product Catalog Management business API for retrieving the products in a catalog during the browse phase. The Revenue Management Developer Guide documents it under Product Discovery Business APIs at /connect/cpq/products: the request body takes catalogId, categoryId and productClassificationId as optional filters and priceBookId as a required property, and it can run qualification and pricing procedures against a context definition so the browse results already reflect eligibility and list prices. It returns a paginated list of products with their details.\nWhy the other options are wrong:\nA) There is no Products List (GET) resource in the guide; the product-list endpoint is POST because its filters, context and procedure flags travel in a JSON body.\nC) Product Related Records List (POST) returns records related to one product, such as ramp segments or usage grants; it does not list the products in a catalog.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/connect_resources_products_list.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/product_discovery_business_apis.htm"
+      ],
+      "note": "Answer B stands. The old explanation labelled the distractors \"Option A (Products List GET)\" and \"Option B (Product Related Records List POST)\" — but B is the key, and the related-records API is option C. A learner reading it would have taken the keyed letter to be the wrong API. Letters corrected; the unverifiable prose reference line was removed in the same pass."
+    },
+    {
+      "id": "4b7a292c",
+      "verdict": "confirmed",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/product-catalog-management-with-revenue-cloud/get-started-with-product-catalog-management"
+      ]
+    },
+    {
+      "id": "4b342cdb",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_manage_assets_in_revenue_lifecycle_management.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_field_and_pricing_amendments.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "43661ef6",
+      "verdict": "confirmed",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/revenue-cloud-design/set-up-your-product-offerings"
+      ]
+    },
+    {
+      "id": "bcf374b6",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/connect_resources_place_sales_transaction.htm"
+      ]
+    },
+    {
+      "id": "0fc81879",
+      "verdict": "clarified",
+      "explanation": "Build a Contract lookup on Asset, then on asset update have automation read the asset's latest-dated Asset Contract Relationship and copy its ContractId into the lookup. AssetContractRelationship is the standard junction that records every contract an asset has been governed by, and Salesforce creates those records automatically: \"If an order is linked to a contract with a Revenue Management application usage assignment, the system automatically creates asset contract relationships\" when the Create or Update Asset from Order action runs, with start and end dates defaulting to the asset's lifecycle dates. Because a new relationship is written each time the asset is amended or renewed under another contract, the latest-dated record is always the current contract, so the lookup stays correct across the asset's whole life.\nWhy the other options are wrong:\nB) A context-definition mapping from Order to Asset only fires when the asset is created or updated from that order. It stamps the contract in force at that moment and never revisits it, so after a later amendment or renewal under a new contract the lookup would be stale.\nA) Traversing all of the account's contracts and picking the latest active one guesses at the relationship rather than reading it; an account can hold several active contracts, and nothing ties the asset to the one that governs it except the Asset Contract Relationship records.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/sforce_api_objects_assetcontractrelationship.htm",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_create_asset_contract_relationship.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "1ba9f913",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_considerations_syncing_quotes_and_opportunities_in_revenue_cloud.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "fc7a413b",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/cml_what_is_constraint_modeling_language.htm"
+      ]
+    },
+    {
+      "id": "c41101a6",
+      "verdict": "reasoning",
+      "explanation": "As-Is Renewals, which is what lot-based renewals are called in Revenue Settings, is the feature built for this. Enabling Revenue Settings describes it as offering \"greater pricing transparency and flexibility during renewals by locking in the original price for a portion of their assets\" and says it \"correctly handles complex renewals with varying quantities and prices\" — the situation in the stem, where several upsells during the term were bought at different quantities and prices. Use Lot-Based Renewals to Preserve Original Prices explains the mechanism: \"if a sales rep sells an asset across multiple transactions, a lot-based renewal includes both the initial sale and subsequent amendments\", each lot renewed at its original purchase price, with any uplift applied per lot.\nThe feature has a prerequisite on the asset that is easy to miss: \"Before you generate a renewal with As-Is Renewals enabled, set the asset's Pricing Source field to Last Transaction Price. If you leave Pricing Source blank or set it to another value, the renewal will be priced at the current list price instead.\" So the full recipe is the setting plus that field value.\nWhy the other options are wrong:\nA) The Assetize Order flow creates and updates assets from orders; renewal pricing is not decided there, and customizing it would be a build where a shipped setting exists.\nB) Pricing Source is a real Asset field, but its documented values are Last Transaction and Price Book or List Price — not Last Negotiated Price, which is a value of the separate Pricing Type for Renewal field. Even set correctly, Pricing Source alone does nothing until As-Is Renewals is turned on, and a single \"last negotiated\" price could not reproduce several lots bought at different prices.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_enable_lot_based_renewals.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_turn_on_quote_and_order_capture.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/sforce_api_objects_asset.htm"
+      ],
+      "note": "Answer C stands. The old explanation said \"Pricing Source on Asset = Last Negotiated Price is not the documented control for this; renewal pricing behaviour is selected through the renewal transaction type, not by a field on the asset.\" That denial is wrong: the lot-based renewal article requires the asset's Pricing Source to be Last Transaction Price before an as-is renewal, and the Asset object documents PricingSource (LastTransaction / PriceBookListPrice) alongside RenewalPricingType (LastNegotiatedPrice / ListPrice). Option B fails on the value it names and on not being the enabling setting, not because the field is imaginary."
+    },
+    {
+      "id": "32f0b06f",
+      "verdict": "confirmed",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/product-catalog-management-with-revenue-cloud/create-a-product-bundle"
+      ]
+    },
+    {
+      "id": "21608eee",
+      "verdict": "confirmed",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/product-catalog-management-with-revenue-cloud/get-started-with-product-catalog-management"
+      ]
+    },
+    {
+      "id": "747e0c6b",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.qocal_quote_to_contract_flow.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "37ee4c5f",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.dro_decomposition_scope.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "5b126341",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/sforce_api_objects_assetstateperiodattribute.htm"
+      ]
+    },
+    {
+      "id": "2cdbec2b",
+      "verdict": "confirmed",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/asset-lifecycle-management-with-revenue-cloud/manage-customer-asset-amendments"
+      ]
+    },
+    {
+      "id": "92f06ccd",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_view_and_edit_orders.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "6a9ce9dd",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.billing.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "fddbd719",
+      "verdict": "reasoning",
+      "explanation": "Read this item as the exam wrote it: the rep has told the customer that a cancellation dated June 29 cannot be processed on July 5, so the earliest date available is the day the cancellation is performed — July 5. Cancelling as of June 20, 2025 would unwind a term that has been active and billed, which is not a cancellation, and June 20, 2026 is the term simply expiring.\nKnow that current Revenue Management no longer behaves this way. Backdate Asset Transactions, available with the Revenue Cloud Growth or Advanced license and the standard runtime_revenue_arcflows__arcFlow, lets you \"apply an amendment, renewal, or cancellation to an asset with a past effective date\": in the Managed Asset viewer you select Cancel and \"enter a date in the past and on or after the asset's start date\", then create and activate the order, and the asset state periods update as of that date, with billing prorated and credit memos issued for periods already invoiced. Its own example is a cancellation entered on November 12 with an effective date of November 1. In such an org the customer's June 29 request could be honoured, and the earliest possible cancellation date would be the asset's start date. The stem's premise — that June 29 is unavailable — describes the pre-backdating behaviour, and option A is the answer that premise leads to.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_backdate_asset_transactions.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_cancel_assets.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_manage_assets_in_revenue_lifecycle_management.htm&language=en_US&type=5"
+      ],
+      "note": "Answer A kept as the exam's intended answer, but the item is stale. The 2026-08-15 note said the backdating prohibition was undocumented; it is now contradicted outright. Backdate Asset Transactions (Growth or Advanced license, standard arcFlow) documents cancelling with an effective date \"in the past and on or after the asset's start date\", with a worked example entered on November 12 effective November 1. The old explanation's claim that backdating is \"not supported once the service has been active and billed\" is false on a current org. Read the item as testing the legacy rule its stem asserts."
+    },
+    {
+      "id": "ab527e42",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.pricing_subscription_pricing_proration.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "2f16d956",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.pricing_discount_spread_service.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "c3716756",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.product_catalog_local_cardinality_and_group_cardinality.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "f63e3f43",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/sforce_api_objects_assetstateperiod.htm",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_field_and_pricing_amendments.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "394bdad2",
+      "verdict": "confirmed",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/revenue-cloud-design/configure-pricing-for-products"
+      ]
+    },
+    {
+      "id": "464876c9",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.pricing_use_context_definitions.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "03439ed7",
+      "verdict": "confirmed",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/product-catalog-management-with-revenue-cloud/get-started-with-product-catalog-management"
+      ]
+    },
+    {
+      "id": "ba4a4163",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.blng_advance_and_arrears.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "244c6aa0",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.product_configurator_use_the_cml_editor.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "d815a350",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.dro_decomposition_scope.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "f6c30064",
+      "verdict": "confirmed",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/price-management-with-revenue-cloud/implement-attribute-based-pricing",
+        "https://help.salesforce.com/s/articleView?id=ind.pricing_define_price_impacting_attributes.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "89816cb1",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sales.cpq_quotes_without_opportunities.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_renew_assets.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "826bd7e2",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?language=en_US&id=sf.blng_invoice_sched.htm&type=5"
+      ]
+    },
+    {
+      "id": "e2f73f23",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.pricing_create_bundle_based_adjustments.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "74259f96",
+      "verdict": "clarified",
+      "explanation": "Amend the asset, keep the quantity, and reprice. Salesforce documents this as a Price Amendment: \"Price Amendments help you adjust pricing without changing the quantity, attributes, or bundle configuration of an existing asset. You can update the Sales Price on a quote line or the Unit Price on an order line\", after Sales Price Amendments is turned on in Revenue Settings. The rep selects the asset, clicks Amend, sets an effective date and the new price, and an amendment quote is created \"with a delta quantity of zero\"; going through quote to order and activating it assetizes the change, where \"the creation of an offsetting asset action source record cancels the original price and applies the new price\" and the asset state period picks up the new MRR from the effective date. The subscription never lapses, which is what makes it non-disruptive.\nWhy the other options are wrong:\nA) Negating the quantity and re-adding the product cancels and re-sells the asset, breaking its lifecycle history and risking a gap in service.\nC) Changing the asset's end date and re-adding the product likewise duplicates the subscription instead of repricing the one the customer already has.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_field_and_pricing_amendments.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_set_up_price_amendments.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_manage_assets_in_revenue_lifecycle_management.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "234fe505",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.billing_credit_memos.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "86417498",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.dro_in_flight_order_changes.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "c74d7076",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_renew_assets.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_create_orders_from_a_quote.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "2a61d2aa",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?language=en_US&id=ind.revenue_cloud_permission_sets_table.htm&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.product_catalog_product_catalog_management_permission_set_licenses.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "94a4585c",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?language=en_US&id=ind.qocal_set_up_product_discovery.htm&type=5"
+      ]
+    },
+    {
+      "id": "894e7d14",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?language=en_US&id=ind.revenue_cloud_permission_sets_table.htm&type=5"
+      ]
+    },
+    {
+      "id": "995de54c",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.um_define_a_product_usage_grant.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "231e4a3f",
+      "verdict": "clarified",
+      "explanation": "Use product classifications for the attributes and put the selling model on the product. In Product Catalog Management a classification is the template that carries attributes: assign attributes to a product classification once and every product created from it inherits them, so reuse across offerings and business units comes for free. Selling models are assigned per product — one-time, term-defined or evergreen — so a single product record can be sold under whichever model a line of business needs, and configurable bundles are assembled from those shared products rather than authored per variation. That satisfies all four requirements: multiple selling models, bundling without duplicate records, reusable attributes, and low maintenance.\nWhy the other options are wrong:\nA) One record per business unit and selling model combination multiplies the catalog and the maintenance with it.\nC) Static bundles cannot be customised at purchase, and hard-coding attributes per selling model throws away the reuse the requirements ask for.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.product_catalog_products.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.product_catalog_product_classifications.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.product_catalog_product_selling_model.htm&language=en_US&type=5",
+        "https://trailhead.salesforce.com/content/learn/modules/revenue-cloud-design/set-up-your-product-offerings"
+      ]
+    },
+    {
+      "id": "e3a70193",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.pricing_subscription_pricing_proration.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "435f2087",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_flow_templates_automate_renewal_opportunity_creation_and_asset_renewal.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "355a06ae",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.setup_revenue_cloud.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "b45b5d01",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.pricing_price_adjustment_matrix.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.product_catalog_create_dt_for_product.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "db199ded",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.sf_contracts_create_a_contract_extraction_template_for_extraction.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "015f552d",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/cml_cml_best_practices.htm"
+      ]
+    },
+    {
+      "id": "b1cfb9c8",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.revenue_intelligence_set_up_revenue_management_intelligence.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "09695b88",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/connect_responses_product_related_component_output.htm"
+      ]
+    },
+    {
+      "id": "6243552e",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?language=en_US&id=ind.revenue_cloud_permission_sets_table.htm&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_flow_templates_automate_renewal_opportunity_creation_and_asset_renewal.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "df252b03",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.setup_revenue_cloud.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "9bac03e6",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=004576666&language=en_US&type=1",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_automate_creation_and_update_of_assets.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "9462b116",
+      "verdict": "clarified",
+      "explanation": "Integrate the custom application through the TaxEngineAdapter interface. Revenue Management Billing supports a partner or custom tax engine: you implement the CommerceTax.TaxEngineAdapter Apex interface, which accepts the tax information the engine calculates and evaluates it into tax details, then register a tax engine provider and tax engine that point at that class. With the custom application behind the adapter, Billing calculates tax through it at invoice time for the existing products, generates and posts the invoices, and new products can run on the standard engine — one invoicing process, two tax sources.\nWhy the other options are wrong:\nA) Names the right interface but the wrong system: the company decided to keep its own application, not to adopt a partner AppExchange engine.\nB) Import External Tax Lines into Billing is a documented process, but it is a manual cycle — create draft invoices with tax turned off, export invoice lines, have the external system calculate, import a CSV of Invoice Line Tax records, then post. It brings in tax amounts an external system has already calculated; it is not an integration that keeps invoicing automated.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/apex_interface_commercetax_TaxEngineAdapter.htm",
+        "https://help.salesforce.com/s/articleView?id=ind.billing_partner_or_custom_tax_engine.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.billing_tax_lines_import.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "a6b4c0e0",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.setup_revenue_cloud.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "6d2955d5",
+      "verdict": "clarified",
+      "explanation": "Salesforce's own persona model splits the catalog exactly this way. Product Catalog Management Personas describes the Catalog Admin as the persona who \"Creates and manages attributes, attribute categories, product classifications, product classification attributes, product catalogs, and product categories\", and the Product Designer as the one who \"Creates and manages products, product groups, product attributes, product components, product relationships, and Qualification Rules\" and assigns products to categories. Reusable attributes and classifications — the governance layer — belong to the Catalog Admin, while product structures and bundles belong to the Product Designer, which is what keeps updates consistent across business units without one role becoming a bottleneck.\nWhy the other options are wrong:\nA) Product managers owning every catalog activity end to end concentrates governance and execution in one role, which is the bottleneck the stem asks to avoid.\nC) Splits the work against the persona model — sales operations does not own classifications, and bundle design is a product-designer task rather than a platform-admin one.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.product_catalog_product_catalog_management_personas.htm&language=en_US&type=5",
+        "https://trailhead.salesforce.com/content/learn/modules/revenue-cloud-design/set-up-your-product-offerings",
+        "https://help.salesforce.com/s/articleView?id=ind.product_catalog_products.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "17453798",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/sforce_api_objects_assetstateperiodattribute.htm"
+      ]
+    },
+    {
+      "id": "05d04dbc",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.product_catalog_qualification_rules.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "eac1d453",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/cml_constraints.htm"
+      ]
+    },
+    {
+      "id": "25acadca",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.pricing_use_context_definitions.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "287332c0",
+      "verdict": "corrected",
+      "was": "B",
+      "correct": "A",
+      "explanation": "Billing takes the address from the transaction itself when the transaction carries one, so the New York address on the order is used. Salesforce documents the precedence in Create Billing Profiles, as a four-row table for \"which values to use\" when processing a transaction: if the transaction record has the required values, the values of the transaction are used; if it does not but is associated with a billing profile, the associated billing account's values are used; if it is not associated with a billing profile, the account's default billing profile is used; and only if none of those exist do the org defaults apply. The order here has a billing address of its own, so the first row applies and the billing account and the default billing profile are never consulted.\nWhy the other options are wrong:\nB) Chicago — the billing account attached to the order is the second row of the precedence table. It supplies values only when the transaction record itself lacks them, and this order has a billing address.\nC) San Francisco — the account's default billing profile is the third row, the fallback used when the transaction has no address and no billing profile is associated with it.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.billing_billing_profiles_create.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.billing.htm&language=en_US&type=5"
+      ],
+      "note": "Key moved B to A. The 2026-08-15 pass kept B and flagged that no article stated the precedence among the three addresses. Create Billing Profiles now does, in a table headed \"Billing follows the behavior mentioned in this table to determine which values to use\": the transaction record's own values win whenever present, then the associated billing profile, then the account's default billing profile, then org defaults. The order in this scenario has its own billing address, so New York is used."
+    },
+    {
+      "id": "3764c8f5",
+      "verdict": "clarified",
+      "explanation": "Obligations turn contractual commitments into owned, trackable work. Obligation Management says to \"Assign each obligation to an owner, monitor compliance status, and receive automated notifications when deadlines approach\", and the obligation manager \"can easily create and associate Salesforce tasks for upcoming obligations within contracts, to track and meet obligations within defined time frames\", assigning those tasks to an obligation assignee. That is the reason to create them.\nWhy the other options are wrong:\nB) The documented obligation statuses are Compliant, Non-Compliant and At Risk (plus any custom statuses an obligation manager adds); Fulfilled is not one of them, and a status value on its own does not ensure compliance — the ownership and task structure does.\nC) Obligations do not carry price discounts; contract pricing lives on contract item price records.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.sf_contracts_obligation_management.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.sf_contracts_Salesforce_Contracts_Overview.htm&language=en_US"
+      ]
+    },
+    {
+      "id": "3655d2ba",
+      "verdict": "clarified",
+      "explanation": "Model the user manual as a technical product and let decomposition rules add it. In Dynamic Revenue Orchestrator, technical products exist for fulfillment rather than for sale: a commercial product decomposes into the technical products that must be delivered or provisioned, according to decomposition rules defined on the commercial product. A decomposition rule from the unassembled furniture to a User Manual technical product means the manual appears in every fulfillment plan for that furniture without ever being a quote line, so the customer never sees it and the warehouse always ships it. Decomposition scope then controls whether one manual is produced per line, per bundle or per order.\nWhy the other options are wrong:\nA) Adding the manual as a quote line and hiding it keeps a commercial line the customer is not buying on every quote, and it still has to be hidden in the line table and the proposal.\nB) An Included/Excluded attribute describes the furniture but does not create anything for fulfillment to act on; attributes carry values, they do not orchestrate separate items.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.dro_technical_product_in_dro.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.dro_define_how_a_product_decomposes.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=sf.dro_decomposition_scope.htm&language=en_US&type=5",
+        "https://trailhead.salesforce.com/content/learn/modules/complex-order-decomposition-and-orchestration-with-revenue-cloud/define-an-order-decomposition"
+      ]
+    },
+    {
+      "id": "6f6cf302",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?language=en_US&id=ind.revenue_cloud_permission_sets_table.htm&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_automate_creation_and_update_of_assets.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_turn_on_quote_and_order_capture.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "ef6c3e48",
+      "verdict": "clarified",
+      "explanation": "Dynamic Revenue Orchestrator is the capability for breaking complex orders down and fulfilling each part its own way. DRO decomposes commercial orders into technical products through decomposition rules, generates a fulfillment plan whose steps are defined per product — hardware, cloud software and services each get the orchestration they need — and manages dependencies between steps, task assignment, jeopardy and fallout, and in-flight changes, so a mixed Enterprise Connectivity Suite no longer has to be treated uniformly.\nWhy the other options are wrong:\nB) Product Configurator governs how a bundle is configured at quote time; it does nothing after the order exists.\nC) Experience Cloud provides customer and partner portals; it has no order decomposition or fulfillment orchestration.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.dro_dynamic_revenue_orchestrator.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.dro_in_flight_order_changes.htm&language=en_US&type=5",
+        "https://trailhead.salesforce.com/content/learn/modules/complex-order-decomposition-and-orchestration-with-revenue-cloud/define-an-order-decomposition"
+      ]
+    },
+    {
+      "id": "39a152e8",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_manage_assets_in_revenue_lifecycle_management.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.rev_asset_migration_flow_from_orders.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_automate_creation_and_update_of_assets.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "a98e5518",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?language=en_US&id=ind.qocal_set_up_product_discovery.htm&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.product_catalog_set_default_catalog.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "a49cf7c1",
+      "verdict": "clarified",
+      "unstamp": true,
+      "explanation": "A two-day wait between hardware delivery and software provisioning is a future-dated step, and the option to configure one on a fulfillment task appears only once the feature is switched on. Salesforce documents the switch in Turn On Future Dated Steps: \"Turn on Future Dated Steps feature to configure steps to execute at a future date and time. From Setup, in the Quick Find box, enter Dynamic Revenue Orchestrator Settings and select it. Turn on Future Dated Steps.\" The setting gates the feature, which is why the Fulfillment Designer sees a task with no delay option rather than an error.\nWhy the other options are wrong:\nB) Modify All Data is an org-wide data permission and cannot add a configuration option to a DRO task; a missing feature toggle is not a permissions symptom.\nC) Task linking to step source is a separate DRO setting that associates a task with what generated it; it does not introduce scheduling.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.dro_turn_on_future_dated_steps.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.dro_configure_steps_for_future_execution.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "3d12dbca",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/sforce_api_objects_assetstateperiod.htm",
+        "https://help.salesforce.com/s/articleView?id=ind.understanding_ramp_deals.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_considerations_ramp_deals.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "bc9001d5",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.product_catalog_products.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "b0621262",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_manage_assets_in_revenue_lifecycle_management.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_renew_expired_assets.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "ca1076cd",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.pricing_operations_console.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "6d3a68c2",
+      "verdict": "clarified",
+      "unstamp": true,
+      "explanation": "Creating asset actions and asset state periods and editing lifecycle asset fields are Customer Asset Lifecycle Management operations, and that is the permission Salesforce names. The developer guide's Special Access Rules for the asset lifecycle objects read: \"To use Customer Asset Lifecycle Management APIs, you must have the Access Customer Asset Lifecycle Management APIs permission and Read access to the Asset, Asset Action, Asset Action Source, and Asset State Period objects.\" For a data migration specifically, Assign User Permission to Manage Asset Data adds the Access Lifecycle-Managed Assets user permission in a custom permission set plus create, read, edit and delete on Asset, Asset Action and Asset State Period, after which users \"can manage Asset Action, Asset State Period, and Asset State Period Attribute records, as well as Customer Asset Lifecycle Management fields\" through the composite and sObject APIs.\nWhy the other options are wrong:\nB) \"Lifecycle-managed asset\" names a kind of record — an asset with HasLifecycleManagement set — not a permission.\nC) InitiateAmendment, InitiateCancellation and InitiateRenewal are the API permission sets for running amendment, cancellation and renewal transactions; they govern those actions, not the direct creation of lifecycle records during a migration.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.rev_asset_migration_permission.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/sforce_api_objects_assetactionsource.htm",
+        "https://help.salesforce.com/s/articleView?language=en_US&id=ind.revenue_cloud_permission_sets_table.htm&type=5"
+      ]
+    },
+    {
+      "id": "d38922f8",
+      "verdict": "corrected",
+      "was": "C",
+      "correct": "B",
+      "explanation": "The permission set is named Place Supplemental Orders. Salesforce's article on modifying activated orders before fulfillment lists it under User Permissions Needed: \"To place supplemental orders: Place Supplemental Orders permission set AND Sales Operations Rep permission group.\" That is the documented grant for exactly the scenario in the stem — order managers changing an order after activation but before fulfillment — and the whole capability is documented as supplemental orders: on an activated order the manager clicks Change, Salesforce copies the order into a Draft supplemental order, the manager reconfigures products or quantities, and activating the supplemental order sets the original to Superseded. The API behind it is Place Supplemental Transaction, which creates a supplemental order or change orders after submission as long as the original has not been assetized, billed, or passed the Point of No Return in Dynamic Revenue Orchestrator.\nWhy the other options are wrong:\nA) Place Superseded Order — Superseded is the status the original order takes after the supplemental order is activated, not a permission set.\nC) Place Change Order — change orders are what the supplemental transaction produces, but no permission set of this name exists in the Revenue Management permission documentation; the documented name is Place Supplemental Orders.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_inflight_supplemental_order_amendments.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/connect_resources_place_supplemental_transaction.htm",
+        "https://help.salesforce.com/s/articleView?id=ind.dro_in_flight_order_changes.htm&language=en_US&type=5"
+      ],
+      "note": "Key moved C to B. The 2026-08-15 pass could not find any of the three option names in the permission set table and left C in place. The name is documented on \"Modify Activated Orders Before Fulfillment in Revenue Management\", whose User Permissions Needed block reads \"Place Supplemental Orders permission set AND Sales Operations Rep permission group\". No Place Change Order or Place Superseded Order permission set is documented."
+    },
+    {
+      "id": "0ff325db",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/data-models/guide/usage-management.html"
+      ]
+    },
+    {
+      "id": "122cab6a",
+      "verdict": "clarified",
+      "unstamp": true,
+      "explanation": "Filtering is a documented capability of the line editor. Manage Product Visibility with Filters describes predefined filters — All Lines, Errored Lines, Ramped Lines, Unconfigured Lines — and advanced filters with up to five conditions on Quote Line Item or Order Product fields, combined with AND/OR logic and scoped to all groups or selected groups, so a rep can narrow a large transaction to the lines that matter. That is what makes the transactions Revenue Management is built to carry workable: Place Sales Transaction accepts up to 1,000 quote line items or order products.\nWhy the other options are wrong:\nA) Drag to sort is not offered; line ordering follows the bundle and group structure, and sorting applies to the filtered results rather than to a manual arrangement.\nC) Edits are committed by saving. Auto-refresh of prices exists as a separate setting, but there is no auto-save of changes.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_filter_line_items_with_standard_and_advanced_filters.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.transaction_management_essentials.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/connect_resources_place_sales_transaction.htm"
+      ]
+    },
+    {
+      "id": "ea8501f7",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.context_service_context_definitions.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "747d4014",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/cml_constraints.htm"
+      ]
+    },
+    {
+      "id": "69e0bfd0",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.product_catalog_products.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "2a788a0c",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.dro_decomposition_scope.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "ab6a9e3d",
+      "verdict": "clarified",
+      "explanation": "A legal entity is the object that represents each regional business unit for billing and tax. Salesforce defines it in those terms: \"A legal entity defines how your organization is structured. In Revenue Management, you can create multiple legal entities, which define the billing and tax information for an order product. If you have customers and business segments in different tax locations, use multiple legal entities to govern the use of tax treatments, billing treatments, finance periods, and finance books.\" The legal entity is populated onto billing schedule groups and every billing transaction, drives legal-entity-based billing and tax treatment selection, and owns its own accounting periods.\nWhy the other options are wrong:\nC) A billing profile carries a customer's invoicing preferences — bill day, billing address and contact, payment terms, email template — so it describes the party being billed, not the regional entity doing the billing.\nB) A billing schedule group is structural: it groups the billing schedules generated for an order product.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.billing_legal_entities_manage.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.billing_legal_entity_default.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.billing_billing_profiles_create.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "5ebe00f0",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_manage_assets_in_revenue_lifecycle_management.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.rev_asset_migration_flow_from_orders.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "f92918e7",
+      "verdict": "clarified",
+      "explanation": "An install base that must amend and renew cleanly in Revenue Management has to arrive as lifecycle-managed assets with the records the lifecycle depends on, so discovery covers Asset, Asset Action, Asset State Period and Asset Action Source. Asset is what the customer owns; Asset Action records each change to it — new sale, upsell, downsell, renewal, cancellation; Asset State Period holds the span over which quantity, amount and MRR stay constant, and \"an asset has as many asset state periods as there are changes to it (asset actions)\"; Asset Action Source ties each action back to the order product or external transaction that caused it, carrying the price fields renewals read. Salesforce's migration guidance is built on exactly these objects, and it warns that amend, renew and cancel work only with assets that carry the required relationships — which is why the recommended migration method is to create, backdate and activate historical orders so the system generates the records itself.\nWhy the other options are wrong:\nB) Subscription and Subscribed Asset are Salesforce CPQ and Subscription Management objects; Revenue Management's asset model does not use them.\nC) Quote, Quote Line, Order and Order Product are the transactional objects that create assets, not the objects that represent the installed base to be migrated.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/sforce_api_objects_assetstateperiod.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/sforce_api_objects_assetactionsource.htm",
+        "https://help.salesforce.com/s/articleView?id=ind.rev_asset_migration_flow_from_orders.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_manage_assets_in_revenue_lifecycle_management.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "cd2224b8",
+      "verdict": "confirmed",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/price-management-with-revenue-cloud/implement-attribute-based-pricing"
+      ]
+    },
+    {
+      "id": "6f59e427",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.sf_contracts_Salesforce_Contracts_Overview.htm&language=en_US",
+        "https://help.salesforce.com/s/articleView?id=ind.sf_contracts_set_up_microsoft_365_and_azure_integration_using_guided_setup.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "32b73310",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/connect_resources_products_list.htm"
+      ]
+    },
+    {
+      "id": "a152b80a",
+      "verdict": "corrected",
+      "was": "A",
+      "correct": "B",
+      "explanation": "Smart Approvals only works when the step it is enabled on can be evaluated on its own conditions. Salesforce describes the feature as comparing a resubmission against the previous submission — \"When a record is resubmitted for approval, Smart Approvals compares the new conditions against the previous submission. If the values remain within the defined range, it skips re-approval\" — and it lists the configurations that make a flow ineligible. The one that concerns stages and steps is this: \"A flow is considered ineligible if you add a decision node before a stage when you add the condition When the stage starts, the step starts in an approval step. To resolve this issue, update the approval step's entry conditions to directly include the criteria from the preceding decision node.\" In other words, when the condition that gates the stage is not also the condition on the step, the step cannot be evaluated and the feature silently does nothing, which is what the sales manager is seeing. The fix is to make the step's entry condition the same as the stage's.\nWhy the other options are wrong:\nA) Matching stage and step conditions is the documented remedy, not the cause — it is the state the limitation tells you to move to.\nC) The number of conditions is not a documented constraint; a step can carry up to 30 start conditions. What matters is that the step's own conditions carry the criteria, use supported Number or Text data types, avoid the NOT operator, and do not rely on an evaluation flow.\nTwo other prerequisites are worth knowing because they also present as \"Smart Approvals does not work\": the previous submission must have ended Rejected or Recalled, and the resubmission must run the same flow definition version as the original.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.approvals_smart_approval_limitations.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.approvals_smart_approvals.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.approvals_turn_on_smart_approvals.htm&language=en_US&type=5"
+      ],
+      "note": "Key moved A to B. The 2026-08-15 pass kept A on the reasoning that identical stage and step conditions make the feature \"skip a redundant approval\" — a mechanism Salesforce does not document. Smart Approvals is documented as skipping previously approved steps on a resubmission, and its only stage-versus-step rule is a limitation: a step conditioned on \"When the stage starts\" behind a decision node before the stage is ineligible, and the remedy is to put the decision node's criteria on the step. Mismatched conditions are the cause; matching them is the fix. The documentation does not use the option's exact wording, so the owner may want to re-read this one."
+    },
+    {
+      "id": "11baead8",
+      "verdict": "clarified",
+      "unstamp": true,
+      "explanation": "Two things have to move together and then be refreshed. A decision table reads from an object, so deploying the table without its custom object leaves it pointing at something the target org does not have — which is why the sequence deploys both into the staging sandbox and then maps the table in the default pricing recipe. After that the table has to be made current, which Sync Pricing Data documents as the closing step: the sync \"refreshes all decision tables that are mapped to a pricing recipe and have their usage type set to Pricing\", and \"After refreshing or cloning a sandbox, you must manually re-run Sync Pricing Data and refresh each decision table individually. Pricing data doesn't automatically carry over from the source org.\" Salesforce also notes that custom fields used in decision tables must be deployed to the destination org before the decision tables.\nWhy the other options are wrong:\nA) Omits the custom object entirely, so the deployed table has no backing object in the sandbox.\nB) Gets the deployment right but treats importing data and syncing pricing as one fixed order; the documented finishing action is to refresh the decision table or sync pricing so the table picks up its data.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.pricing_sync_pricing_data.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.product_catalog_create_dt_for_product.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.pricing_pricing_procedures.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "87836da2",
+      "verdict": "corrected",
+      "was": "C",
+      "correct": "B",
+      "explanation": "Renewal from Account > Managed Assets runs through one screen flow, and Salesforce names it. Set Up Asset Lifecycle Flows says to open Revenue Settings, find Set Up Flow for Managing Assets, and \"Enter the name of the Amend, Renew, and Cancel Salesforce Flow for the system to use when users select the Amend, Renew, or Cancel buttons in the Managed Assets Viewer\"; Enabling Revenue Settings gives its default API name as runtime_revenue_arcflows__arcFlow and says \"To use a custom flow, enter the API name of the flow that you created.\" The Set Renewal Term screen with its Override Renewal Term option is a screen in that flow. Removing the option therefore means cloning the Amend, Renew, and Cancel flow, editing the renewal-term screen component, and registering the custom flow's API name in Revenue Settings.\nWhy the other options are wrong:\nA) The Lightning web components behind these screens are not a supported customization point; the documented extension mechanism is the flow whose API name Revenue Settings holds, the same pattern used for the quote-to-contract and quote-to-order flows.\nC) No separately registered \"Renew Assets\" flow is documented. The amend, renew and cancel actions share the single flow named above, and that is the flow Revenue Settings points at.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_set_up_flow_for_managing_assets.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_turn_on_quote_and_order_capture.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_renew_expired_assets.htm&language=en_US&type=5"
+      ],
+      "note": "Key moved C to B. The 2026-08-15 pass could not confirm the flow name and kept C. Set Up Asset Lifecycle Flows documents a single \"Amend, Renew, and Cancel Salesforce Flow\" registered under Set Up Flow for Managing Assets (default runtime_revenue_arcflows__arcFlow), and no standalone Renew Assets flow appears anywhere in the Revenue Management documentation; the deck's own items on this flow (1092afe5, c60cb035) already treat it as the amend, renew, and cancel flow. The predefined flow could still contain a subflow of that name inside the managed package, which the documentation does not show, so this is a judgment call the owner may reverse."
+    },
+    {
+      "id": "db7c75c3",
+      "verdict": "clarified",
+      "unstamp": true,
+      "explanation": "Sections are the structural unit of a document template. Create Section in Document Template says the designer \"can define sections within the document to structure and organize the content more effectively\": in the Microsoft 365 editor, from the Salesforce Contracts for Word add-in, Insert New | Section, name and describe it, and save. The article then states the payoff in the stem's own words — \"Contract designers can quickly navigate to specific sections and include the appropriate clauses, tables, and contract text within each section.\"\nWhy the other options are wrong:\nB) Child templates would fragment the agreement into separate documents rather than organize one long one.\nA) \"Create a structure\" is not a template feature; structure is the result of adding sections.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.sf_contracts_create_section_in_document_template.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.sf_contracts_section_management.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "f769f864",
+      "verdict": "corrected",
+      "was": "B",
+      "correct": "A",
+      "explanation": "The product-level default lives on the product selling model. The Summer '25 release note \"Simplify Transaction Management with Auto-Renewals for Term Based Products\" gives the procedure in one line: \"Open a term based product selling model, click Edit, and then select Automatically Renew Asset by Default.\" Products configured that way default to auto-renewal when an order is assetized, and the Automatically Renew Expiring Assets flow template then creates and activates renewal orders for assets that are expiring and marked for automatic renewal. The Asset Renewal Automation Templates article lists the fields to expose: \"Show the Automatically Renew Asset by Default field on Product Selling Model pages\" and \"Show the Automatically Renew field on Quote Line Item, Order Item, and Asset pages.\"\nWhy the other options are wrong:\nB) An Automatically Renew field does exist on the Asset, but it marks one customer's asset and is the per-deal override that \"sales reps can then override\" on individual orders. The requirement is to mark the product itself as automatically renewable, which is the selling-model default.\nC) Product2 carries no auto-renew field. Renewal behaviour is a property of how the product is sold — its term-defined selling model — not of the product record.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=release-notes.rn_product_catalog_auto_renewals_termed_products.htm&language=en_US&release=256&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_flow_templates_automate_renewal_opportunity_creation_and_asset_renewal.htm&language=en_US&type=5"
+      ],
+      "note": "Key moved B to A. A 2026-08-04 comment moved this C to B on the (correct) ground that Product2 has no Auto Renew field, but the product-level setting is documented on the Product Selling Model: the Summer '25 release note reads \"Open a term based product selling model, click Edit, and then select Automatically Renew Asset by Default\", and the flow-template article lists that field on Product Selling Model pages with a separate per-asset Automatically Renew field on Quote Line Item, Order Item, and Asset. The Asset field is the per-deal override, not the product default."
+    },
+    {
+      "id": "6f99fe4e",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.sf_contracts_create_a_contract_extraction_template_for_extraction.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "da605d37",
+      "verdict": "clarified",
+      "explanation": "Turn on data translation in Product Catalog Management and supply the translated values; the Product List and Product Details APIs then return them for the user's language. Translate Product Catalog Data explains that PCM otherwise shows product and catalog data only in the org's base language, and that data translation \"lets admins add translated values for products, categories, and attributes. At runtime, users see product names, descriptions, and filters in their configured language.\" Product2 Name, Description, Help Text and picklist values are translatable, translations are added in bulk through STF or XLIFF files or manually on the Translations tab, and they appear only after Use Indexed Data for Product Listing and Search is on and a full reindex has run.\nWhy the other options are wrong:\nA) Translation Workbench is where metadata labels are translated; product data translation is a PCM feature with its own setup, and the Metadata API is not involved in serving catalog data.\nB) Standard Product2 APIs return the base-language record; the localized experience is delivered by the Product Discovery APIs after data translation is enabled.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.product_catalog_data_translation.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.product_catalog_set_up_data_translation_in_product_catalog_management.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/connect_resources_products_list.htm",
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/connect_resources_product_details.htm"
+      ]
+    },
+    {
+      "id": "df19fa7d",
+      "verdict": "clarified",
+      "explanation": "Browse Catalog only offers products the quote can price. The Products List (POST) resource behind it takes priceBookId as a required property — prices come from the standard price book if none is given — and with Price Book Filtering turned on in Product Discovery Settings it \"retrieves only the products that are associated with the selected price book\". A product without an active price book entry in the price book selected on the quote therefore either does not appear or cannot be priced and added.\nWhy the other options are wrong:\nB) View All on Product2 is object-level visibility. Product Discovery users see products through the Product Catalog Management Viewer permission set; a missing View All would not explain some products being absent while others show.\nC) If the Product Discovery component were missing or hidden, the user could not browse at all, rather than browse and find specific products missing.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/connect_resources_products_list.htm",
+        "https://help.salesforce.com/s/articleView?id=ind.product_catalog_turn_on_price_book_filtering.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?language=en_US&id=ind.qocal_set_up_product_discovery.htm&type=5"
+      ]
+    },
+    {
+      "id": "d232fef5",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/connect_resources_place_sales_transaction.htm"
+      ]
+    },
+    {
+      "id": "a5f8cfae",
+      "verdict": "confirmed",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/advanced-price-management-with-revenue-cloud/configure-contract-based-pricing"
+      ]
+    },
+    {
+      "id": "1ab5f73e",
+      "verdict": "confirmed",
+      "references": [
+        "https://trailhead.salesforce.com/content/learn/modules/billing-management-with-revenue-cloud/create-billing-policies-and-treatments",
+        "https://help.salesforce.com/s/articleView?id=ind.billing_treatment_resolution.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "38db2a91",
+      "verdict": "reasoning",
+      "explanation": "OmniStudio Document Generation is the engine Salesforce documents for large, format-controlled transaction documents. Generate Documents for Large Transactions covers \"high-volume transactions, such as large telecom invoices, manufacturing quotes, and insurance schedules\", using Context Service token mapping and Data Processing Engine transforms, and its limits table puts standard processing at up to 1,000 transaction lines and large processing at up to 15,000. Because the output is a designer-built template, the line items come out in whatever layout the required format demands rather than in a fixed grid.\nWhy the other options are wrong:\nB) A custom report lists the line items but gives no control over document layout, so it cannot satisfy a format specification.\nA) Document Builder is a real quote-document feature in Revenue Management — turned on in Revenue Settings, it builds \"professional, customized, and dynamic quote documents\" from drag-in components such as Grid — and it is the simpler tool for an ordinary quote PDF. The exam keys OmniStudio Document Generation for this scenario, and the volume-and-format wording is what points there; on a current org, though, both tools can produce a quote document, so this item has two defensible options.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.rev_large_tran_generate_documents_for_large_transactions.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.rev_large_tran_document_generation_limits.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_document_builder_for_quotes.htm&language=en_US&type=5"
+      ],
+      "note": "Answer C stands as the exam's key, but flagged as an item with two defensible options. The old explanation dismissed Document Builder as \"contract document authoring\"; Document Builder for Quotes is documented in Revenue Management (\"build professional, customized, and dynamic quote documents\", enabled in Revenue Settings). OmniStudio Document Generation is documented as the large-transaction engine (up to 15,000 lines with large processing), which is the reading that keeps C."
+    },
+    {
+      "id": "0010599f",
+      "verdict": "clarified",
+      "explanation": "Equal monthly installments over twelve months are a term-defined selling model with a monthly pricing term — Term Monthly. A product selling model has a selling model type (one-time, term-defined or evergreen) and, for term-defined and evergreen models, a pricing term and unit that set how the price is expressed and billed; assigning a Term Monthly model to the smartphone makes it a 12-month subscription priced per month, alongside or instead of the one-time model it has today.\nWhy the other options are wrong:\nA) Term Annual prices the term per year, so the customer would be charged once a year rather than in twelve equal monthly payments.\nC) Evergreen Monthly bills monthly but has no fixed term — it renews indefinitely until cancelled, which does not match a 12-month installment plan.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.product_catalog_product_selling_model.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.product_catalog_products.htm&language=en_US&type=5",
+        "https://trailhead.salesforce.com/content/learn/modules/revenue-cloud-design/set-up-your-product-offerings"
+      ]
+    },
+    {
+      "id": "f12dffa3",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_turn_on_quote_and_order_capture.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_set_up_flow_for_managing_assets.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "e7f19278",
+      "verdict": "clarified",
+      "explanation": "Asset Action Source records carry the prices of each prior transaction. The developer guide describes the object as \"an optional way to record what transactions caused changes to lifecycle-managed assets. Use it to trace financial and other information about asset actions\", and its fields include ListPrice, UnitPrice, NetUnitPrice, Quantity, StartDate, EndDate and the reference to the order product. A lot-based renewal honours each lot at its original purchase price, so the breakdown on the renewal quote line details traces back to those records — one per prior sale or amendment.\nWhy the other options are wrong:\nA) An asset state period holds quantity, amount and MRR for a span of time; it does not record which transaction set the price or that transaction's net unit price.\nC) An asset action records that a change happened and its category (new sale, upsell, renewal), with the quantity, amount and MRR change; the transaction-level price detail lives on its source records.",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/sforce_api_objects_assetactionsource.htm",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_enable_lot_based_renewals.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "41493562",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.setup_revenue_cloud.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "1742b9ef",
+      "verdict": "clarified",
+      "unstamp": true,
+      "explanation": "The mechanism is named exactly as the option has it. Define Field and Attribute Mapping explains that DRO \"uses this mapping to copy or transform commercial order data to the data that fulfillment systems or processes require\": from the product's Decomposition tab you select a decomposition rule, click More, then Field & Attribute Mapping, then Create Mapping, and pair a source attribute or tag with a target attribute or tag, choosing As Is, List Mapping or Expression Set Based Mapping. When the commercial laptop decomposes, its technical components are enriched with the mapped RAM and SSD values.\nWhy the other options are wrong:\nC) Decomposition (execution) rules decide which technical products a commercial product produces and under what conditions; they do not carry attribute values across. The mapping is defined on the rule, but it is a separate configuration.\nA) Quote line mapping is not a construct used at decomposition time.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.dro_define_field_and_attribute_mapping.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.dro_define_how_a_product_decomposes.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "841f964e",
+      "verdict": "clarified",
+      "explanation": "Usage Management creates the entitlement records when the order is assetized. Consumption Management Records lists them: a Usage Entitlement Account \"is a customer instance of the purchased product. Usage Management creates this record after an order is assetized\" and holds the billing-cycle details; a Usage Entitlement Bucket \"represents a wallet that records the credits and debits of a usage resource\"; and a Transaction Usage Entitlement stores how grants are tracked, including the rollover and refresh policies and the drawdown order. Those are the components that support usage tracking, entitlement enforcement and billing readiness.\nWhy the other options are wrong:\nA) An asset is created by assetization, but Entitlement Policy is not a Usage Management record, and the wallet is the entitlement bucket rather than a standalone object.\nB) Product consumption summaries, rate adjustments and billing schedules arise later, as usage is ingested, aggregated and rated — not at activation.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.um_key_objects_in_consumption_management.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/platform/data-models/guide/usage-management.html",
+        "https://trailhead.salesforce.com/content/learn/modules/usage-management-foundations/get-to-know-usage-management"
+      ]
+    },
+    {
+      "id": "abd04873",
+      "verdict": "clarified",
+      "explanation": "The new child product needs its own type in the CML, then an association back to the catalog. Sync Constraint Models with Product Definitions lists what the Sync button does carry across from PCM — cardinality changes, deleted components, attribute and attribute-value changes — and what it does not, and \"Newly added components or attributes\" are explicitly on the does-not-sync list. So the designer opens the constraint model in the CML Editor, selects New Type for the child product (choosing the bundle as its parent type), and then creates the association: \"Associations are required in constraint models. Create an association to connect a type with a product record\", either by importing the relationship from the reference library and product or by adding a type association to the product in the catalog.\nWhy the other options are wrong:\nB) The bundle already has an active constraint model in use; creating a second model is not how an existing one is extended.\nA) The Visual Builder edits constraints and rules with point-and-click tools; types and their associations are created in the CML Editor.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.product_configurator_sync_cml_and_pcm.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.product_configurator_use_the_cml_editor.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.product_configurator_constraint_model_variables_relationships_associations.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/cml_types.htm"
+      ]
+    },
+    {
+      "id": "0b7cd50b",
+      "verdict": "clarified",
+      "unstamp": true,
+      "explanation": "The dashboards are named exactly as the option has them. Use Subscription and Revenue Lifecycle Analytics Dashboards describes an Overview dashboard for \"monthly recurring revenue (MRR), active subscriptions, booking revenue, and sales rep performance trends\" and a Renewals and Churn dashboard that tracks \"key subscription renewal metrics, customer/account behaviors, and product performance over time\" — the metrics sales leadership asked for. The figures come from the asset lifecycle records themselves: an asset state period holds the quantity, amount and MRR for its span, and asset actions record each change.\nWhy the other options are wrong:\nA) Order Management Analytics reports on order volume, order details and fulfillment, not on recurring revenue or renewals.\nC) Pricing Analytics covers price waterfalls, price-volume mix and margin, not the state of the subscription base.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.revenue_intelligence_subscription_and_revenue_lifecycle_analytics_dashboards.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.revenue_management_intelligence_for_revenue_cloud.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/sforce_api_objects_assetstateperiod.htm"
+      ]
+    },
+    {
+      "id": "1b631e67",
+      "verdict": "clarified",
+      "explanation": "Start in the Managed Assets component and override the renewal term. Renew Expired Assets documents the path for assets past their end date: from the account's Assets tab select the asset, select Renew, and \"To select a new renewal term start date, on the Set Renewal Term prompt, select Override Renewal Term and a date\", then Submit. The renewal start falls on or after the lifecycle end date, and if there is a gap the system adds a zero-quantity asset state period to cover it.\nWhy the other options are wrong:\nB) Editing the lifecycle end date on the asset state period and asset action records by hand falsifies the asset's history; the lifecycle records are system-maintained.\nC) Adding expired assets to a new quote by hand creates a new sale rather than a renewal, so no renewal asset action is recorded and the asset's continuity is lost.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_renew_expired_assets.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_renew_assets.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "1092afe5",
+      "verdict": "clarified",
+      "explanation": "Activating a copied flow changes nothing until Revenue Settings points at it. Set Up Asset Lifecycle Flows describes the wiring: from Setup open Revenue Settings, find Set Up Flow for Managing Assets, and \"Enter the name of the Amend, Renew, and Cancel Salesforce Flow for the system to use when users select the Amend, Renew, or Cancel buttons in the Managed Assets Viewer.\" Until the new flow's API name replaces the default runtime_revenue_arcflows__arcFlow there, the buttons keep launching the original.\nWhy the other options are wrong:\nA) The Managed Asset Viewer component has no flow selector; it launches whichever flow Revenue Settings names.\nC) Product Discovery Settings holds the custom flow for browsing and adding products, not the asset lifecycle flow.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_set_up_flow_for_managing_assets.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_turn_on_quote_and_order_capture.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "66577d14",
+      "verdict": "clarified",
+      "explanation": "Columns in the Transaction Line Editor are chosen on the component itself. Select Fields for the Line Editor says to \"Select line-level fields, group fields, and related record fields in the Display Columns to manage which fields appear in the line editor\" — so in the Lightning App Builder, on the Quote record page, the consultant edits the Transaction Line Editor component and adds Estimated Delivery Date to Display Columns. One caveat from the same article: \"If you add custom fields to the Transaction Line Editor or Sales Transaction Line Editor columns, add those fields to the context definition used for sales transactions. Otherwise, changes made to those fields in the editor aren't saved.\"\nWhy the other options are wrong:\nB) Instant Pricing makes prices recalculate as a line is edited; it has nothing to do with which fields the editor shows.\nC) The Quote Line Item page layout governs the record page, not the line editor's columns.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_select_fields_for_the_line_editor.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_customize_transaction_line_editor.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "cc6acf9f",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=sf.product_catalog_local_cardinality_and_group_cardinality.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "99592626",
+      "verdict": "corrected",
+      "was": "C",
+      "correct": "A",
+      "explanation": "Both changes are field updates on the Billing Schedule Group, made directly on the record. Salesforce documents Update Billing Schedule Groups as \"Update billing schedule group fields at any time. You can update the billing day of month, next billing date override, billing and shipping addresses, tax treatment, and the payment term\", with the procedure being to open the record, update the fields, and save — a Billing Admin or Billing Operations User can do it. Bill Day of Month is \"the day of the month on which a recurring billing process is scheduled to occur\", so setting it to 20 moves the recurring date; when the billing type is Advance the next billing and charge dates realign after the first invoice, producing one partial-period invoice. Next Billing Date Override \"overrides the next billing dates of all the billing schedules\" and \"is used only once for generating invoices. It's removed after the invoices are generated\", which is exactly a one-time move to April 22 for this month only. It must be later than today and fall between the effective next billing date and the group's end date.\nWhy the other options are wrong:\nB) An amendment that cancels the asset and creates a new one is a commercial change to what the customer owns, not a billing-date change, and it would generate cancellation and new billing schedules rather than reschedule the existing ones.\nC) Period Boundary Day is a field on the order product that defines how billing periods are segmented, and it is set through the order, not through a change order raised to move an invoice date. The documented control for the invoice day is Bill Day of Month on the billing schedule group, edited in place.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.billing_schedule_group_update.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.billing_schedule_group_update_billing_day_of_month.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.billing_schedule_group_update_next_billing_date_override.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.billing_understand_period_boundaries_and_billing_day_of_month.htm&language=en_US&type=5"
+      ],
+      "note": "Key moved C to A. Update Billing Schedule Groups documents Bill Day of Month and Next Billing Date Override as fields updated directly on the Billing Schedule Group record, which is option A. Period Boundary Day (option C) is an order-product field that defines period segmentation; no article routes a billing-date change through a change order."
+    },
+    {
+      "id": "e02f90f5",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?language=en_US&id=ind.qocal_set_up_product_discovery.htm&type=5"
+      ]
+    },
+    {
+      "id": "910c3b97",
+      "verdict": "clarified",
+      "explanation": "The browse flow is registered in Product Discovery Settings. Configure Product Discovery Settings includes the step \"To use a custom flow to browse and add products from quote and order pages, in Select a Custom Flow for Browsing and Adding Products in Revenue Management, select the custom flow\", so an updated and activated flow takes effect only once it is selected there.\nWhy the other options are wrong:\nA) Salesforce Pricing Setup holds the default pricing procedure and data sync; it does not reference the browse flow.\nC) Revenue Settings registers the asset lifecycle, quote-to-contract and quote-to-order flows, not the catalog browsing flow.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?language=en_US&id=ind.qocal_set_up_product_discovery.htm&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.product_catalog_considerations_custom_flow_for_browsing_and_adding_products.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "0821ddcd",
+      "verdict": "clarified",
+      "explanation": "Sales Transaction Type is the documented way to run a different pricing procedure for a different kind of buyer, and volume-based pricing supplies the bulk discount. Pricing Customization for Different Transaction Types opens with the scenario itself — \"Link custom fields to different pricing procedures to show unique prices based on the transaction type. For example, B2B customers receive volume discounts while B2C customers see standard pricing.\" You create a Sales Transaction Type record that names the pricing procedure, add a custom field to the quote or order for reps to flag the transaction, and a record-triggered flow stamps the Sales Transaction Type ID onto the transaction so pricing runs the matching procedure; only the business procedure includes the Volume Discount element.\nWhy the other options are wrong:\nA) and C) \"Quote Transaction Type\" and \"Order Transaction Type\" are not constructs in Revenue Management. The Sales Transaction Type object is what links a transaction — quote or order — to a pricing procedure.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_customize_pricing_for_different_types_of_transactions.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.pricing_add_volume_discount_element.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "43e0f10a",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/sforce_api_objects_assetstateperiod.htm",
+        "https://help.salesforce.com/s/articleView?id=ind.understanding_ramp_deals.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "42d9581e",
+      "verdict": "clarified",
+      "explanation": "Product Discovery and the pricing procedure it calls must share a context definition. Configure Product Discovery Settings carries the rule as an Important note: \"The qualification procedure and pricing procedure for Product Discovery must use the context definition selected on the Product Discovery Settings page.\" A weekend deployment that changed the pricing procedure's context definition without updating Product Discovery Settings leaves Browse Catalog unable to hydrate products and the configurator failing on existing lines — the two symptoms reported.\nWhy the other options are wrong:\nA) Revenue Settings registers flows and feature toggles; it does not select the context definition used by Product Discovery.\nC) Salesforce Pricing Setup selects the default pricing procedure, not a context definition that Product Discovery must match.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?language=en_US&id=ind.qocal_set_up_product_discovery.htm&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.pricing_use_context_definitions.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "b47e1bc8",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.product_catalog_qualification_rules.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "c60cb035",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_renew_assets.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_cancel_assets.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "9de3e0b9",
+      "verdict": "clarified",
+      "explanation": "Set the derived price record's pricing scope to Transactional. Implement Derived Pricing defines the two dimensions: the Pricing Source says where the price originates (Product, or Header for the whole cart), and the Pricing Scope says how it is calculated — \"Transactional: The price is derived from one or more specific products within a transaction\"; \"Non-transactional: The price is derived from the total cost of all products in the transaction cart\"; or Both. A warranty priced at 10% of the equipment product only when both are in the same quote or order is the Transactional scope on the warranty's derived price record.\nWhy the other options are wrong:\nA) The Derived Price element already works for the other products, so the pricing procedure is not what is wrong; the fault is in this product's derived price configuration.\nC) No \"Is Derived\" checkbox exists on a price book entry; derived pricing is configured through derived price records and discovery procedures.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.pricing_derived_price.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.pricing_pricing_element.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "c9a0acc7",
+      "verdict": "clarified",
+      "unstamp": true,
+      "explanation": "Last in, first out. Salesforce states the rule in Cancel Assets with the Managed Asset Viewer: \"If a cancellation quote line item contains a negative delta quantity, the system calculates the total price based on prior asset sale prices. For assets consisting of multiple prior sales transactions, the system computes the total price based on a Last In First Out strategy.\" So when part of a product bought several times at different prices is cancelled, the credit is valued against the most recent purchase first.\nWhy the other options are wrong:\nA) FIFO would value the cancelled units at the earliest purchase price; the documented strategy is the reverse.\nB) No averaging takes place; each cancelled unit is valued at an actual prior sale price, starting from the latest.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_cancel_assets.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_manage_assets_in_revenue_lifecycle_management.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "36c657a7",
+      "verdict": "clarified",
+      "explanation": "The ramp is recreated on the renewal quote. Salesforce documents renewal quotes of ramped assets as carrying an \"auto-generated ramp schedule on Amendment and Renewal Quotes\", with the segments recreated as ramped lines that the rep can clone or extend but whose auto-generated dates cannot be changed, and Considerations for Ramp Deals adds that \"During the renewal of a ramped asset, the price uplift from the final segment becomes the renewal uplift.\" A ramped asset is a single consolidated asset whose asset state periods represent the segments, and the renewal re-expresses those segments as ramped quote lines.\nWhy the other options are wrong:\nA) The segment lines are ramped, not flattened into unrelated lines.\nC) The renewal does not collapse the ramp into one un-ramped line; the ramp structure is preserved.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_ramp_deal_for_groups_manage.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_considerations_ramp_deals.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_renew_assets.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "cdfa1139",
+      "verdict": "clarified",
+      "explanation": "Automatic asset contract relationships depend on the contract carrying the Revenue Management application usage assignment. Create Asset Contract Relationships states the condition: \"If an order is linked to a contract with a Revenue Management application usage assignment, the system automatically creates asset contract relationships. This automation occurs when the Create or Update Asset from Order API or Order Product API runs.\" A contract created outside Revenue Management, without that assignment, is not recognised, so activation links nothing.\nWhy the other options are wrong:\nA) There is no Automatically create Asset Contract Relationship toggle in Revenue Settings; the behaviour is driven by the application usage assignment.\nB) Manual creation exists for linking assets to contracts after the fact, but it is not required when the contract is a Revenue Management contract — the system creates the records on assetization.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_create_asset_contract_relationship.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_create_contract_revenue_cloud.htm&language=en_US&type=5",
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/sforce_api_objects_assetcontractrelationship.htm"
+      ]
+    },
+    {
+      "id": "832c6c98",
+      "verdict": "corrected",
+      "was": "A",
+      "correct": "C",
+      "explanation": "Clauses are added to a document template inside Microsoft 365 Word, through the Salesforce Contracts for Word add-in, and that add-in is gated by the Microsoft 365 Word permission sets. The Salesforce Contracts persona table describes them directly: Microsoft 365 Word Designer \"Allows admin users to configure and modify Microsoft 365 Word integration settings\" and Microsoft 365 Word User \"Allows users to insert Salesforce data such as clauses into documents and templates.\" The task articles agree — Create a Document Template by Using Clauses opens the template in the Microsoft 365 editor and inserts clauses from the add-in's Insert New menu, and Create Section in Document Template lists \"Microsoft 365 Word Designer\" as the permission needed. DocGen Designer covers document generation and Clause Designer User covers authoring the clauses in the library; neither puts the Word add-in in the designer's hands.\nWhy the other options are wrong:\nA) OmniStudio Admin is in the Salesforce Contracts permission-set combination table for CLM personas, but it exists to configure OmniScripts, DataRaptors and Integration Procedures for document generation with Data Mappers, and Salesforce notes that Context Service support has removed the hard dependency on OmniStudio for document generation. It does not unlock the Word editor where clauses are placed in the template.\nB) Obligation Assignee is an Obligation Management persona for monitoring contractual commitments and has nothing to do with template design.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.sf_contracts_permission_set_licenses_for_salesforce_contracts_.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.sf_contracts_create_a_new_document_template_with_clauses.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.sf_contracts_create_section_in_document_template.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.sf_contracts_permission_sets_combination_for_salesforce_contracts.htm&language=en_US&type=5"
+      ],
+      "note": "Key moved A to C. Building a template with clauses happens in the Microsoft 365 Word editor via the Salesforce Contracts for Word add-in, and the Salesforce Contracts persona table documents the Microsoft 365 Word Designer/User permission sets as what \"Allows users to insert Salesforce data such as clauses into documents and templates\"; Create Section in Document Template names Microsoft 365 Word Designer as the required permission. OmniStudio Admin appears in the CLM permission-set combination table for document generation, so the owner may want to re-read this one, but the task-specific pages point at the Word permission."
+    },
+    {
+      "id": "df8f0748",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.context_service_add_context_mapping.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "c59aa725",
+      "verdict": "clarified",
+      "explanation": "The predefined templates are for the qualification objects. Create a Decision Table That Uses a Standard Evaluation Object says: \"If you use Product Qualification, Product Disqualification, Product Category Qualification, or Product Category Disqualification objects to store the evaluation criteria, use predefined templates to easily create decision tables\", and the application usage type chosen for the table is Product Qualification or Product Category Qualification.\nWhy the other options are wrong:\nA) and B) Price books, schedules, relationships and attributes are not evaluation objects for qualification decision tables; a custom evaluation object can be used, but that is a different, non-template path.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.product_catalog_create_dt_for_product.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.product_catalog_qualification_rules.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "4c19bd08",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?language=en_US&id=ind.revenue_cloud_permission_sets_table.htm&type=5"
+      ]
+    },
+    {
+      "id": "bac3a61d",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/platform/data-models/guide/usage-management.html"
+      ]
+    },
+    {
+      "id": "6f5c6ce5",
+      "verdict": "confirmed",
+      "references": [
+        "https://developer.salesforce.com/docs/atlas.en-us.revenue_lifecycle_management_dev_guide.meta/revenue_lifecycle_management_dev_guide/sforce_api_objects_assetstateperiod.htm",
+        "https://help.salesforce.com/s/articleView?id=ind.understanding_ramp_deals.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.product_catalog_product_ramp_segments.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "9bb4967d",
+      "verdict": "clarified",
+      "explanation": "The columns of the Managed Asset Viewer are configured on the component. Add the Managed Asset Viewer Page Layouts describes it: in the Lightning App Builder, with the Managed Asset Viewer on the page, \"Configure the columns in the Managed Assets related list. To change columns, click Select under Display Columns, select columns from the Available list, and move them to the Selected list. The Managed Asset Viewer shows your selected columns.\" Adding the Annual Contract Value formula field there makes it visible while reps select assets to amend or renew.\nWhy the other options are wrong:\nB) The Assets related list on the page layout only sets the defaults — \"The Assets related list fields determine the default fields in the Managed Assets related list\" — and the component's own Display Columns override them, so it is not the direct control.\nC) The amend, renew and cancel flow runs after assets are selected; it does not define the viewer's columns.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_set_up_asset_lifecycle_viewer.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_renew_assets.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "2a7b5f37",
+      "verdict": "clarified",
+      "explanation": "There is nothing to manage until assets exist, and in Revenue Management assets come from activated orders through the Create or Update Asset from Order action. Automate Asset Creation from Orders describes the standard setup: a record-triggered flow on Order, firing when Status becomes Activated, checks for the Revenue Lifecycle Management application usage assignment and invokes Create or Update Asset from Order. The products themselves must be assetizable for the action to produce assets. Once the assets exist, the user views and manages them in the Managed Asset Viewer with the asset lifecycle permission sets.\nWhy the other options are wrong:\nB) Customize Application is a setup permission for administrators; it is not what lets a user see assets on accounts.\nC) Salesforce CPQ Plus is a different product's license; Revenue Management asset access comes from its own permission sets.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_automate_creation_and_update_of_assets.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_asset_lifecycle.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?language=en_US&id=ind.revenue_cloud_permission_sets_table.htm&type=5"
+      ]
+    },
+    {
+      "id": "2fd9af4b",
+      "verdict": "confirmed",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.setup_revenue_cloud.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "e242341d",
+      "verdict": "clarified",
+      "explanation": "The Managed Asset Viewer is a Lightning App Builder component. Add the Managed Asset Viewer Page Layouts gives the steps in the option's own words: ensure the Assets related list is on the page layout, then \"Go to Lightning Record Pages, select your page layout, and click Edit to open the Lightning App Builder. Drag the Related Lists component and the Managed Asset Viewer component on the layout. Select the checkbox to show the side panel when a user clicks a record link.\" Users then expand bundles and edit asset data in the viewer or its side panel.\nWhy the other options are wrong:\nB) A permission set grants access but places nothing on the page, and components are added in the Lightning App Builder, not on the page layout.\nC) Enabling the Assets related list shows the standard related list, not the Managed Asset Viewer; the component must be added.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.qocal_set_up_asset_lifecycle_viewer.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "a1290dae",
+      "verdict": "clarified",
+      "unstamp": true,
+      "explanation": "Attribute categories render in the sequence the administrator sets, and uncategorized attributes sit in their own section. Reorder Attribute Categories and Attributes says so directly: \"Attribute categories and their attributes appear to reps in the order that you set. Reorder them to match your business process rather than relying on the default alphabetical order.\" From the product or classification's Attributes tab, Reorder Attribute Categories lets you drag categories into sequence, and the attributes without a category \"appear in the Uncategorized section\" and are ordered individually because they carry no category sequence.\nWhy the other options are wrong:\nC) Alphabetical is only the default before an administrator sets a sequence; once set, the sequence governs.\nA) The order is deterministic and administrator-controlled, never random between launches.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.product_catalog_reorder_attribute_categories.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?language=en_US&id=ind.product_configurator_configure_bundled_products.htm&type=5"
+      ]
+    },
+    {
+      "id": "2ec8b053",
+      "verdict": "clarified",
+      "unstamp": true,
+      "explanation": "Suspend Billing is a quick action on the Account (and on a Billing Schedule Group). Manage Suspend and Resume Billing documents it: open the Account record, click Suspend Billing from the quick actions menu, specify the suspension date and a resumption date, and click Suspend; \"no invoices are generated for the account or billing schedule group between the suspension date and the day before the resumption date.\" The action is available to the Billing Admin, Billing Operations User or Billing Customer Service User permission sets, and it is reversible — Resume Billing updates the resumption date or cancels the suspension. Suspending defers the charges rather than waiving them, so once the account is current, billing resumes and the deferred period can be invoiced or credited.\nWhy the other options are wrong:\nA) Deleting the invoice scheduler's jobs stops invoicing for every account the scheduler covers, not just this one, and removes the schedule the org depends on.\nB) Deleting pending invoices discards billing records rather than preventing new ones; the next invoice run would generate them again.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.billing_suspend_and_resume.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.billing_understand_billing_suspensions_and_target_date.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.billing.htm&language=en_US&type=5"
+      ]
+    },
+    {
+      "id": "a4b16e2c",
+      "verdict": "reasoning",
+      "explanation": "A product ramp segment carries one of three documented segment types: Free Trial, Yearly, or Custom. Create a Product Ramp Segment spells out each — \"To try the product at no additional cost for a specified duration, under Segment Type select Free Trial, enter a trial duration, and select the duration type\"; \"To create a segment for a specific number of years, select Yearly\"; \"To create a segment for a custom duration, select Custom\" — and adds that \"To associate a trial segment at no additional cost with a product, first associate a yearly or custom segment with that product.\" The free first month is therefore a Free Trial segment, and the price rising once a year across a 36-month minimum term is three Yearly segments, each with its own price. Together they show the customer up front how the cost changes over the contract.\nWhy the other options are wrong:\nA) Monthly is not a segment type. The three documented types are Free Trial, Yearly and Custom, so there is no way to build this option.\nC) Custom exists for durations that are not whole years. Annual increases over a three-year term are exactly regular, so Yearly expresses them directly; Custom would add configuration without adding anything the requirement needs.",
+      "references": [
+        "https://help.salesforce.com/s/articleView?id=ind.product_catalog_product_ramp_segments.htm&language=en_US&type=5",
+        "https://help.salesforce.com/s/articleView?id=ind.understanding_ramp_deals.htm&language=en_US&type=5"
+      ],
+      "note": "Answer B stands. The old explanation reasoned that Monthly segments \"would express the same 36 months as thirty-six segments\" — which treats Monthly as a valid segment type. Create a Product Ramp Segment documents exactly three types (Free Trial, Yearly, Custom), so option A is impossible rather than merely inefficient, and a trial segment requires a yearly or custom segment on the product first."
+    }
+  ]
+}

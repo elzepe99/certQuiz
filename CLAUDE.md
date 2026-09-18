@@ -575,7 +575,7 @@ column, not the Cited column.
 | salesforce-admin | 154 | 154 | **Fully checked** (2026-08-19) — 2 keys moved, 5 flagged, 60 explanations rewritten. 13 keys had already moved in the ADM-201 merge pass. Its real defect was the citation layer: only 36 questions rendered a References block, **47 more carried a marker the parser could not see**, and **24 of the 36 legacy `sf.` ids tested were dead** — see failure patterns 4b and 4c |
 | claude-architect-foundations | 28 | 28 | **Fully checked** (2026-09-08, in the same pass that imported it) — 1 key moved, 1 flagged reasoning fix, 12 silent clarifications. First Anthropic deck, and the **easiest doc estate in the repo to verify**: `platform.claude.com` returns a real HTTP 404 for an invented id, so URL checking needs no browser. Read the three caveats below before trusting the row |
 | salesforce-agentforce-specialist | 121 | 121 | **Fully checked** (2026-08-17) — 16 keys moved across 6 batches. Started from 0 cited, with 26 questions rendering a References block of prose only. One duplicate removed (`b7ffd87e`), resolving the pair this file flagged |
-| salesforce-revenue-cloud | 135 | 135 | **Fully checked** (2026-08-15) — 2 keys moved, 88 explanations rewritten. Its defect was **fabricated citations, not wrong answers**: 73 explanations quoted invented "Exact Extracts". 9 questions could not be settled and say so in their own prose. Deduped 137 → 135 on 2026-08-17 |
+| salesforce-revenue-cloud | 135 | 135 | **Fully checked twice** — 2026-08-15 (2 keys moved, 88 explanations rewritten; its defect was **fabricated citations, not wrong answers**: 73 explanations quoted invented "Exact Extracts") and again **2026-09-15 (7 keys moved, 5 flagged, 39 silent clarifications, 10 stale notices cleared, all 93 existing URLs re-rendered live)**. The second pass settled 10 of the first pass's 12 "could not settle" items by reading the doc set's own table of contents — see "The 2026-09-15 revenue-cloud re-check" below. **Two of the seven moves are judgment calls the owner may reverse** (`87836da2` flow name, `832c6c98` Contracts permission set). Deduped 137 → 135 on 2026-08-17 |
 | salesforce-data-cloud-consultant | 100 | 100 | **Fully checked** (2026-08-21) — 4 keys moved, 6 flagged reasoning fixes, 11 silent clarifications. Its defect shape is **the invented capability**: a "reusable container block", a "Data Segmentation Object", and a phone field type that supposedly normalises to E164 all name things Data Cloud does not have. Two items are defective (three defensible options each), and one explanation resolved its own ambiguity by deferring to "the source" — an exam dump. **All 100 option sets use pre-rename product and permission-set names** — see the Data 360 note below |
 | salesforce-sharing-visibility | 136 | 136 | **Fully checked** (2026-08-17) — 2 keys moved, 6 reasoning fixes, 19 silent clarifications. The 4 earlier 2026-08-04 validation stamps are preserved |
 | salesforce-app-builder | 222 | 222 | **Fully checked** (2026-08-11) — 4 keys moved, 27 reasoning fixes, 3 defective option sets repaired. Q1–50 spot-rechecked: 10 sampled, 1 defect (a mechanism stated backwards), so the earlier batches read sound. **Grew 119 → 224 on 2026-09-11** from two freecram dumps, fact-checked in the same pass: 16 keys moved (15 against the dump, 1 against the deck — `9ba9345d` B → C, Sharing → Sharing Hierarchy), 5 flagged, 85 silent. The 105 new explanations are already in the readability format; the original 119 are not. **Deduped 224 → 222 on 2026-09-12** (`ef3bdddb`, a noun-swapped twin of `108817b2` the 2026-08-11 pass had missed, and `f862c9c1`, a same-discriminator sandbox item from the import). See "The 2026-09-11 app-builder import" below |
@@ -941,6 +941,80 @@ Things that are **not** deck passes but are queued, most actionable first:
   Check that parameter before budgeting a re-render on any other deck. The pass did fix
   **15 stale anchor fragments** in integration and corrected two doc-surface claims —
   see failure pattern 4d and the 2026-08-20 section of `references/verified-docs.md`.
+
+### The 2026-09-15 revenue-cloud re-check — a second full pass on a "fully checked" deck
+
+The repo owner asked for the revenue-cloud deck to be fact-checked again, as thoroughly
+as possible, four weeks after its first full pass. **It moved 7 keys in 135**, on a deck
+whose first pass had moved 2 and whose row above said "fully checked". That is the IAM
+lesson again in a new shape: the first pass was not lazy — it stripped 73 fabricated
+extracts — but it left **12 items stamped "could not settle"**, and a could-not-settle
+stamp is a key nobody has checked against a page. Ten of those twelve were settled this
+time, and four of the ten moved.
+
+**What made the difference was not more searching but a better map.** The
+help.salesforce.com SPA renders its whole left-hand table of contents on every article
+page, and walking the shadow DOM for `a[href*=articleView]` from one `ind.` article
+returns the entire Agentforce Revenue Management doc set (~1,300 titled ids) in one
+call — see the 2026-09-15 section of `references/verified-docs.md` for the recipe. Every
+"I could not find an article that names X" in the August notes turned out to be an
+article that existed under a title web search never surfaced (*Turn On Future Dated
+Steps*, *Manage Suspend and Resume Billing*, *Use Lot-Based Renewals*, *Backdate Asset
+Transactions*). **On this vendor, pull the TOC before searching the web.**
+
+The seven moves, for the next reader:
+
+- **`d38922f8` C → B** — the permission set for changing an activated order is **Place
+  Supplemental Orders**, named in the User Permissions block of *Modify Activated Orders
+  Before Fulfillment*. The August pass called this its strongest wrong-key candidate and
+  left it for lack of a source.
+- **`287332c0` B → A** — *Create Billing Profiles* now carries a four-row precedence table:
+  the transaction's own values win, then the associated billing profile, then the
+  account's default profile, then org defaults. An order with its own billing address
+  bills to that address, not to the attached billing account.
+- **`99592626` C → A** — Bill Day of Month and Next Billing Date Override are fields
+  edited directly on the Billing Schedule Group; Period Boundary Day is an order-product
+  field and no page routes a billing-date change through a change order.
+- **`f769f864` B → A** — the product-level auto-renew default is *Automatically Renew
+  Asset by Default* on the term-based **Product Selling Model** (Summer '25 release
+  note). A 2026-08-04 comment had moved this C → B on the true premise that Product2
+  has no such field; the Asset field it landed on is the per-deal override.
+- **`a152b80a` A → B** — Smart Approvals' only documented stage-versus-step rule is a
+  limitation: a step conditioned on "When the stage starts" behind a decision node is
+  ineligible, and the fix is to copy the decision's criteria onto the step. Mismatched
+  conditions are the cause, matching them the cure — the August reading had it backwards
+  on a mechanism it invented.
+- **`832c6c98` A → C** — clauses go into a Salesforce Contracts template inside the
+  Microsoft 365 Word editor, gated by the **Microsoft 365 Word Designer/User** permission
+  sets ("insert Salesforce data such as clauses into documents and templates").
+  OmniStudio Admin is in the CLM permission-combination table for document generation,
+  so **the owner may want to re-read this one**.
+- **`87836da2` C → B** — the documentation registers a single "Amend, Renew, and Cancel
+  Salesforce Flow" (`runtime_revenue_arcflows__arcFlow`) and names no separate Renew
+  Assets flow. The managed package could still hold a subflow of that name, which no
+  page shows, so **this is a judgment call the owner may reverse**.
+
+Four items kept their key but had explanations that taught something false, and are
+stamped `reasoning`: `c41101a6` (denied that the Asset's Pricing Source field is part of
+lot-based renewal — it is a documented prerequisite), `fddbd719` (said backdating a
+cancellation is unsupported — *Backdate Asset Transactions* now documents it, so the
+item is stale and keeps the exam's legacy answer with a note), `38db2a91` (dismissed
+Document Builder as contract-only — *Document Builder for Quotes* exists, leaving two
+defensible options), `a4b16e2c` (treated Monthly as a ramp segment type — the three
+types are Free Trial, Yearly, Custom). A fifth, `ef770e8b`, had labelled its
+distractor with the key's own letter.
+
+Two of the August "could not settle" items stay unsettled and say so in their prose:
+the CML "global constant" wording in `fc7a413b` and the safe-harbor item `355a06ae`
+still rest on no page that states them.
+
+**The stamp count went 31 → 26**: 10 notices cleared because the fact they hedged on is
+now cited, 12 new ones written (7 moves + 5 reasoning), and the 2026-08-04 comment stamp
+on `f769f864` folded into today's note rather than left contradicting the new key. Nine
+prose "reference" lines that had survived since the scrape ("Salesforce Subscription
+Management Implementation Guide - …") were dropped with `replace-refs.mjs`, so every
+line under every References marker is now a rendered URL. The audit stayed at its two
+known false positives, `find-duplicates.mjs` reports 0 pairs, richtext and blitz green.
 
 ### Open items from the data-architect pass (2026-08-19)
 
