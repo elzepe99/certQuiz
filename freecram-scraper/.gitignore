@@ -9,5 +9,8 @@ __pycache__/
 # Raw scrape dumps. The deck in public/decks/ is the product; these are the
 # intermediate JSON the scraper emitted before dedupe and fact-checking, and
 # the Aug 2026 cleanup established that raw dumps do not live in the tree.
-# Keep them locally while a pass is in flight, then let them go.
-databricks-v*.json
+# Keep them locally while a pass is in flight, then let them go. The pattern
+# covers every vendor's <deck>-v<date>.json dump and the run log beside it,
+# not only the Databricks ones the first version of this file named.
+*-v*.json
+*.log
