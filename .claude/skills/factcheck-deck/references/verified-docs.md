@@ -1266,6 +1266,181 @@ listings; two were constructed during the pass.
 web search. Search returning a title is not evidence the URL resolves — for these,
 the article had moved to the `ind.` namespace and the old id 404s. Always render.
 
+## Revenue Cloud — second full pass, 2026-09-15 (135 questions, 7 keys moved)
+
+Every URL below was opened at top level in the browser pane and its article title
+read; the 93 citations the deck already carried were re-rendered the same way and
+**all 93 are live** — several old ids now 301 to renamed pages (`sf.order_edit` →
+`sales.order_edit`, `sf.blng_*` → `sales.blng_*`, `ind.pricing_use_context_definitions`
+→ `ind.pricing_create_context_definitions`, `ind.pricing_price_adjustment_matrix` →
+`ind.pricing_add_the_price_adjustment_matrix_element`, `ind.pricing_attribute_based_price`
+→ `ind.pricing_add_attribute_based_price_element`, `ind.qocal_setup_tax_engine` →
+`ind.billing_tax_engine_and_engine_providers_create`). A redirect is not rot; leave them.
+
+### The doc-host finding that made this pass cheap
+
+**The help.salesforce.com left-hand table of contents is readable from any article
+page**, by walking the shadow DOM for `a[href*=articleView]` after the SPA settles. One
+call from any `ind.` article returns the **entire Agentforce Revenue Management doc set
+(~1,300 titled ids)**, and the same trick on `ind.sf_contracts_*` returns the Salesforce
+Contracts set (~420). Every "could not find an article that names X" in the 2026-08-15
+notes was resolved by grepping that list for the feature name — *Turn On Future Dated
+Steps*, *Smart Approvals*, *Manage Suspend and Resume Billing*, *Use Lot-Based Renewals*,
+*Renew Expired Assets*, *Backdate Asset Transactions*, *Understand Billing Treatment
+Resolution*, *Select Fields for the Line Editor* all existed. **Pull the TOC before
+searching the web** on this vendor; web search returned stale `sf.` ids for the same
+titles.
+
+From this machine `WebFetch` reports a dead help.salesforce.com id honestly ("We looked
+high and low") but returns only the nav tree on a live one, so it is a 404 detector,
+not a reader. Body-level reading needs the browser: `navigate`, then poll until
+`document.title` is not `Salesforce Help…` and `innerText` contains `You are here:`.
+Eight navigate+read pairs per `browser_batch` call is a comfortable rate.
+
+### Settled facts
+
+| Fact | Value | Source |
+|---|---|---|
+| Permission set for changing an activated, unfulfilled order | **Place Supplemental Orders** (plus Sales Operations Rep). On the order click **Change**; a Draft supplemental order is created; activating it sets the original to **Superseded** | Modify Activated Orders Before Fulfillment |
+| Billing address precedence | Transaction record's own values → associated billing profile (billing account) → account's default billing profile → org defaults | Create Billing Profiles |
+| Changing a customer's billing day / one-off next invoice date | **Bill Day of Month** and **Next Billing Date Override** are fields updated directly on the Billing Schedule Group. The override is used once, must be after today and within the group's dates, and is removed after invoicing | Update Billing Schedule Groups |
+| Period Boundary / Period Boundary Day / Start Month | Fields on the **order product** that segment billing periods (Align to Calendar, Anniversary, Day of Period, Last Day of Period); not the invoice day | About Period Boundaries and Billing Day of Month |
+| Auto-renewal | Product default is **Automatically Renew Asset by Default** on a term-based **Product Selling Model** (Summer '25); per-deal **Automatically Renew** field on Quote Line Item, Order Item, Asset; the **Automatically Renew Expiring Assets** flow template creates and activates the renewal orders | Summer '25 release note; Asset Renewal Automation Templates |
+| Smart Approvals | Compares a **resubmission** against the previous submission and skips steps still within range. Ineligible when: a decision node sits before a stage and the step uses "When the stage starts"; an evaluation flow is used; NOT operator in custom logic; Apex/Record data types; work item reassigned; flow version changed; prior status not Rejected/Recalled. Fix for the stage case: put the decision node's criteria on the step | Smart Approval Limitations |
+| Lot-based / As-Is renewals | Turn on **As-Is Renewals** in Revenue Settings ("correctly handles complex renewals with varying quantities and prices") **and** set the asset's **Pricing Source = Last Transaction Price**; each lot renews at its original price with per-lot uplift | Use Lot-Based Renewals; Enabling Revenue Settings |
+| Asset pricing fields | `PricingSource`: LastTransaction / PriceBookListPrice (v60+). `RenewalPricingType` (UI: Pricing Type for Renewal): LastNegotiatedPrice / ListPrice. No AutoRenew field on Asset or Product2 in the dev guide | Asset object |
+| Cancellation credit valuation | "For assets consisting of multiple prior sales transactions, the system computes the total price based on a **Last In First Out** strategy" | Cancel Assets with the Managed Asset Viewer |
+| Backdated transactions | Amend, renew, cancel (standard and ramped), transfer and swap can carry a **past effective date on or after the asset's start date** — Growth or Advanced license, standard `runtime_revenue_arcflows__arcFlow`. Billing prorates and issues credit memos | Backdate Asset Transactions |
+| Expired asset renewal | Renew → Set Renewal Term prompt → **Override Renewal Term** + date; a gap creates a zero-quantity asset state period | Renew Expired Assets |
+| Asset lifecycle flow | One flow, registered in Revenue Settings › Set Up Flow for Managing Assets as "the Amend, Renew, and Cancel Salesforce Flow"; default API name `runtime_revenue_arcflows__arcFlow`; times out at 10 s; ARC quotes capped below 1,000 lines from the UI | Set Up Asset Lifecycle Flows |
+| Other default flow API names | Quote→contract `rev_contracts__CreateCntrFromQuote`; quote→order `revenue_adv_q2o__CreateOrdersFromQuote`; assetization is the **Assetize Order** flow (Save As New Flow to customise) | Enabling Revenue Settings |
+| Future dated steps | Setup › **Dynamic Revenue Orchestrator Settings** › Turn on Future Dated Steps | Turn On Future Dated Steps |
+| Suspend billing | **Suspend Billing** quick action on Account or Billing Schedule Group, suspension + resumption dates; Billing Admin / Billing Operations User / Billing Customer Service User; defers, does not waive; Resume Billing edits or cancels | Manage Suspend and Resume Billing |
+| Billing treatment resolution | Order product's own treatment governs; if blank, the product's billing policy assigns default / manual / legal-entity-matched treatment | Understand Billing Treatment Resolution |
+| Legal entity | "define the billing and tax information for an order product… use multiple legal entities to govern the use of tax treatments, billing treatments, finance periods, and finance books"; autopopulated order item → order → org default | Legal Entities; Legal Entity Automatic Population |
+| Line editor | Columns chosen in the component's **Display Columns**; custom columns must also be in the sales transaction context definition or edits don't save. Filters: predefined (All / Errored / Ramped / Unconfigured) plus up to 5 advanced conditions with AND/OR | Select Fields for the Line Editor; Manage Product Visibility with Filters |
+| Managed Asset Viewer | Lightning App Builder component; "Select the checkbox to show the side panel"; columns via **Display Columns › Select**; Assets related list on the page layout supplies the defaults; shows Revenue Management contracts only with a RevenueLifecycleManagement app usage assignment | Add the Managed Asset Viewer Page Layouts |
+| Asset migration permission | Custom permission set with the **Access Lifecycle-Managed Assets** user permission plus CRUD on Asset, Asset Action, Asset State Period; dev guide: "Access Customer Asset Lifecycle Management APIs permission". Recommended method: create, backdate and activate historical orders, then the Create or Update Asset from Order flow action | Assign User Permission to Manage Asset Data; Method 1: Generate Assets from Historical Orders |
+| Asset contract relationships | Auto-created when the order's contract carries a Revenue Management application usage assignment, on Create or Update Asset from Order / Order Product API | Create Asset Contract Relationships |
+| Product Discovery settings | Context definition (ProductDiscoveryContext or extension) — "The qualification procedure and pricing procedure for Product Discovery must use the context definition selected on the Product Discovery Settings page"; custom browse flow; default catalog; Price Book Filtering; indexed search; Guided Product Selection | Configure Product Discovery Settings |
+| Product ramp segment types | **Free Trial, Yearly, Custom** — no Monthly. A trial segment needs a yearly or custom segment on the product first; one segment per type per product | Create a Product Ramp Segment |
+| Ramped assets | Assetization creates **one consolidated asset** with an asset state period per segment; renewal quotes carry an **auto-generated ramp schedule**; the final segment's uplift becomes the renewal uplift; lot-based renewal, transfer and rollback are not available on ramped assets | Understanding Ramp Deals; Manage a Ramp Deal; Considerations for Ramp Deals |
+| Derived pricing | Pricing Source: Product / Header. Pricing Scope: **Transactional** (specific products within a transaction) / Non-transactional (whole cart) / Both | Implement Derived Pricing |
+| Sales Transaction Type | Record naming a pricing procedure; a custom checkbox plus record-triggered flow stamps it on the quote or order — "B2B customers receive volume discounts while B2C customers see standard pricing" | Pricing Customization for Different Transaction Types |
+| Sync Pricing Data | Salesforce Pricing Setup › Sync; refreshes decision tables mapped to a recipe with usage type Pricing; **must be re-run after a sandbox refresh or clone**, and each table refreshed individually | Sync Pricing Data |
+| Constraint model sync | Sync carries cardinality, deleted components, attribute/value changes from PCM; **newly added components or attributes do not sync** — add a type in the CML Editor and create the association | Sync Constraint Models with Product Definitions |
+| Usage entitlement records | **Usage Entitlement Account** (created after assetization), **Usage Entitlement Bucket** ("represents a wallet"), Usage Entitlement Entry, Transaction Usage Entitlement | Consumption Management Records |
+| Field & Attribute Mapping (DRO) | Decomposition tab › rule › More › **Field & Attribute Mapping** › Create Mapping; As Is / List / Expression Set based | Define Field and Attribute Mapping |
+| Qualification decision tables | Templates for Product Qualification, Product Disqualification, Product Category Qualification, Product Category Disqualification; application usage type Product Qualification or Product Category Qualification | Create a Decision Table That Uses a Standard Evaluation Object |
+| Price-impacting attributes | Product › Related › Overridden Inherited Attributes › attribute › **Is Price Impacting** (Configure moves an inherited attribute into the overridden list) | Set Price Impacting Attributes for Products |
+| Document generation for quotes | **Document Builder for Quotes** (Revenue Settings toggle) is documented; OmniStudio Document Generation handles large transactions — standard up to 1,000 lines, large processing 50,001–100,000 records / up to 15,000 lines | Document Builder for Quotes; Document Generation Limits |
+| External tax lines | A documented manual path: draft invoices with Is Taxable false → export lines → external system calculates → import Invoice Line Tax CSV (TaxProcessingStatus Posted) → post | Import External Tax Lines into Billing |
+| Salesforce Contracts template clauses | Inserted in the Microsoft 365 Word editor via the Salesforce Contracts for Word add-in; **Microsoft 365 Word Designer / User** permission sets "allow users to insert Salesforce data such as clauses into documents and templates"; creating a section requires Microsoft 365 Word Designer. Obligation statuses: Compliant, Non-Compliant, At Risk | Personas and PSLs for Salesforce Contracts; Create Section in Document Template; Obligation Management |
+| PCM personas | Catalog Admin owns attributes, categories, classifications, catalogs; Product Designer owns products, groups, components, relationships, qualification rules | Product Catalog Management Personas |
+| Attribute category order | The sequence set via Reorder Attribute Categories, default alphabetical; uncategorized attributes in an Uncategorized section | Reorder Attribute Categories and Attributes |
+
+### Confirmed URLs — Agentforce Revenue Management (Help, `ind.`)
+
+All of the form `https://help.salesforce.com/s/articleView?id=<id>&language=en_US&type=5`:
+
+- ind.qocal_inflight_supplemental_order_amendments.htm — Modify Activated Orders Before Fulfillment in Revenue Management
+- ind.qocal_enable_lot_based_renewals.htm — Use Lot-Based Renewals to Preserve Original Prices
+- ind.qocal_renew_expired_assets.htm — Renew Expired Assets
+- ind.qocal_backdate_asset_transactions.htm — Backdate Asset Transactions
+- ind.qocal_cancel_assets.htm — Cancel Assets with the Managed Asset Viewer
+- ind.qocal_field_and_pricing_amendments.htm — Manage Assets with Field and Price Amendments
+- ind.qocal_set_up_price_amendments.htm — Set Up Price Amendments
+- ind.qocal_set_up_flow_for_managing_assets.htm — Set Up Asset Lifecycle Flows
+- ind.qocal_set_up_asset_lifecycle_viewer.htm — Add the Managed Asset Viewer Page Layouts
+- ind.qocal_automate_creation_and_update_of_assets.htm — Automate Asset Creation from Orders
+- ind.qocal_turn_on_quote_and_order_capture.htm — Enabling Revenue Settings
+- ind.qocal_create_orders_from_a_quote.htm — Create an Order from a Quote
+- ind.qocal_create_contract_revenue_cloud.htm — Create a Contract and Application Usage Assignment
+- ind.qocal_select_fields_for_the_line_editor.htm — Select Fields for the Line Editor
+- ind.qocal_customize_transaction_line_editor.htm — Add and Customize the Transaction Line Editor or Sales Transaction Line Editor
+- ind.qocal_filter_line_items_with_standard_and_advanced_filters.htm — Manage Product Visibility with Filters
+- ind.qocal_customize_pricing_for_different_types_of_transactions.htm — Pricing Customization for Different Transaction Types
+- ind.qocal_document_builder_for_quotes.htm — Document Builder for Quotes
+- ind.qocal_set_up_document_builder_quotes.htm — Set Up Document Builder for Quotes
+- ind.qocal_early_renewal_of_ramped_assets.htm — Early Renewal of Ramped Assets
+- ind.qocal_considerations_ramp_deals.htm — Considerations for Ramp Deals
+- ind.qocal_ramp_deal_for_groups_manage.htm — Manage a Ramp Deal
+- ind.qocal_ramp_deals_asset_considerations.htm — Ramp Deal Structure for Groups
+- ind.qocal_configure_ramp_segments.htm — Configure Ramp Segments in Ramp Deals for Lines
+- ind.understanding_ramp_deals.htm — Understanding Ramp Deals
+- ind.product_catalog_product_ramp_segments.htm — Create a Product Ramp Segment
+- ind.rev_asset_migration_permission.htm — Assign User Permission to Manage Asset Data
+- ind.rev_asset_migration_flow_from_orders.htm — Method 1: Generate Assets from Historical Orders
+- ind.rev_asset_migration_assets_from_orders.htm — Create Assets for Orders
+- ind.rev_large_tran_generate_documents_for_large_transactions.htm — Generate Documents for Large Transactions
+- ind.rev_large_tran_document_generation_limits.htm — Document Generation Limits
+- ind.rev_large_tran_when_to_use_large_document_processing.htm — When to Use Large Document Processing
+- ind.dro_turn_on_future_dated_steps.htm — Turn On Future Dated Steps
+- ind.dro_configure_steps_for_future_execution.htm — Configure Steps for Future Execution
+- ind.dro_define_field_and_attribute_mapping.htm — Define Field and Attribute Mapping
+- ind.dro_technical_product_in_dro.htm — Build Your Technical Product Catalog for Dynamic Revenue Orchestrator
+- ind.dro_dynamic_revenue_orchestrator.htm — Order Orchestration in Revenue Management
+- ind.approvals_smart_approvals.htm — Smart Approvals
+- ind.approvals_turn_on_smart_approvals.htm — Turn On Smart Approvals
+- ind.approvals_smart_approval_limitations.htm — Smart Approval Limitations
+- ind.billing_suspend_and_resume.htm — Manage Suspend and Resume Billing
+- ind.billing_understand_billing_suspensions_and_target_date.htm — Understand Billing Suspensions and Target Date
+- ind.billing_treatment_resolution.htm — Understand Billing Treatment Resolution
+- ind.billing_schedule_group_update.htm — Update Billing Schedule Groups
+- ind.billing_schedule_group_update_billing_day_of_month.htm — Bill Day of Month
+- ind.billing_schedule_group_update_next_billing_date_override.htm — Next Billing Date Override
+- ind.billing_understand_period_boundaries_and_billing_day_of_month.htm — About Period Boundaries and Billing Day of Month
+- ind.billing_billing_profiles_create.htm — Create Billing Profiles
+- ind.billing_view_billing_sched_group.htm — Generated Billing Schedule Details
+- ind.billing_legal_entities_manage.htm — Legal Entities
+- ind.billing_legal_entity_default.htm — Legal Entity Automatic Population, Usage, and Considerations
+- ind.billing_partner_or_custom_tax_engine.htm — Partner or Custom Tax Engine
+- ind.billing_tax_lines_import.htm — Import External Tax Lines into Billing
+- ind.pricing_define_price_impacting_attributes.htm — Set Price Impacting Attributes for Products
+- ind.pricing_derived_price.htm — Implement Derived Pricing
+- ind.pricing_sync_pricing_data.htm — Sync Pricing Data in Revenue Management
+- ind.pricing_add_volume_discount_element.htm — Volume and Tier Based Discounts
+- ind.product_catalog_create_dt_for_product.htm — Create a Decision Table That Uses a Standard Evaluation Object
+- ind.product_catalog_data_translation.htm — Translate Product Catalog Data
+- ind.product_catalog_set_up_data_translation_in_product_catalog_management.htm — Set Up Data Translation in Product Catalog Management
+- ind.product_catalog_reorder_attribute_categories.htm — Reorder Attribute Categories and Attributes
+- ind.product_catalog_product_catalog_management_personas.htm — Product Catalog Management Personas for Revenue Management
+- ind.product_catalog_product_catalog_management_permission_set_licenses.htm — Product Catalog Management Editions and Permission Sets
+- ind.product_catalog_product_classifications.htm — Create Product Templates Using Product Classifications
+- ind.product_catalog_product_selling_model.htm — Manage Product Selling Model in Revenue Management
+- ind.product_catalog_set_default_catalog.htm — Set a Default Product Catalog
+- ind.product_catalog_turn_on_price_book_filtering.htm — Turn On Price Book Filtering
+- ind.product_catalog_considerations_custom_flow_for_browsing_and_adding_products.htm — Customize the Product Browsing Experience
+- ind.product_configurator_sync_cml_and_pcm.htm — Sync Constraint Models with Product Definitions
+- ind.product_configurator_constraint_model_variables_relationships_associations.htm — Variables, Relationships, and Associations in Constraint Models
+- ind.um_key_objects_in_consumption_management.htm — Consumption Management Records
+- ind.revenue_intelligence_subscription_and_revenue_lifecycle_analytics_dashboards.htm — Use Subscription and Revenue Lifecycle Analytics Dashboards
+- ind.qocal_renew_assets.htm — Renew Assets with the Managed Asset Viewer (body read; carries the "Create Quotes Without a Related Opportunity" note)
+- https://help.salesforce.com/s/articleView?id=release-notes.rn_product_catalog_auto_renewals_termed_products.htm&language=en_US&release=256&type=5 — Simplify Transaction Management with Auto-Renewals for Term Based Products (Summer '25; the `release=256` parameter is what pins it)
+
+### Confirmed URLs — Salesforce Contracts (Help, `ind.sf_contracts_*`)
+
+- ind.sf_contracts_permission_set_licenses_for_salesforce_contracts_.htm — Personas and Permission Set Licenses for Salesforce Contracts (note the trailing underscore in the id)
+- ind.sf_contracts_permission_sets_combination_for_salesforce_contracts.htm — Permission Sets Combination for Salesforce Contracts
+- ind.sf_contracts_create_a_new_document_template_with_clauses.htm — Create a Document Template by Using Clauses
+- ind.sf_contracts_create_template_using_microsoft_365_word.htm — Create Templates by Using Microsoft 365 Word in Document Template Designer
+- ind.sf_contracts_create_section_in_document_template.htm — Create Section in Document Template
+- ind.sf_contracts_section_management.htm — Section Management in Salesforce Contracts
+- ind.sf_contracts_obligation_management.htm — Obligation Management
+- ind.sf_contracts_set_up_microsoft_365_and_azure_integration_using_guided_setup.htm — Set Up Microsoft 365 and Azure Integration Using Guided Setup
+- https://help.salesforce.com/s/articleView?id=004576665&language=en_US&type=1 — Amend, Renew & Cancel Assets in Revenue Cloud for migrated and manually created Assets (KB; body via WebFetch)
+
+### Dev guide (all live, re-rendered)
+
+- sforce_api_objects_asset.htm — PricingSource and RenewalPricingType picklists, HasLifecycleManagement
+- sforce_api_objects_assetactionsource.htm — NetUnitPrice, ListPrice, UnitPrice, Quantity, dates; "Access Customer Asset Lifecycle Management APIs permission"
+- sforce_api_objects_productsellingmodel.htm — lags the Help: lists no auto-renew field even though the Summer '25 note puts one on the selling model
+
+### Known dead / not citable from this pass
+
+None new. `thecloudupdate.co` returns HTTP 403 to WebFetch (third-party anyway). No public page names a subflow inside `runtime_revenue_arcflows__arcFlow`, so the "Renew Assets flow" wording in 87836da2 remains unverifiable either way.
+
+
 ## Agentforce Specialist — verified 2026-08-17 (full deck pass, 121 questions)
 
 89 URLs, every one loaded in the browser pane and checked for the term it is cited
