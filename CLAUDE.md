@@ -580,7 +580,7 @@ column, not the Cited column.
 | salesforce-sharing-visibility | 136 | 136 | **Fully checked** (2026-08-17) — 2 keys moved, 6 reasoning fixes, 19 silent clarifications. The 4 earlier 2026-08-04 validation stamps are preserved |
 | salesforce-app-builder | 222 | 222 | **Fully checked** (2026-08-11) — 4 keys moved, 27 reasoning fixes, 3 defective option sets repaired. Q1–50 spot-rechecked: 10 sampled, 1 defect (a mechanism stated backwards), so the earlier batches read sound. **Grew 119 → 224 on 2026-09-11** from two freecram dumps, fact-checked in the same pass: 16 keys moved (15 against the dump, 1 against the deck — `9ba9345d` B → C, Sharing → Sharing Hierarchy), 5 flagged, 85 silent. The 105 new explanations are already in the readability format; the original 119 are not. **Deduped 224 → 222 on 2026-09-12** (`ef3bdddb`, a noun-swapped twin of `108817b2` the 2026-08-11 pass had missed, and `f862c9c1`, a same-discriminator sandbox item from the import). See "The 2026-09-11 app-builder import" below |
 | salesforce-dld | 137 | 137 | **Fully checked** (2026-08-20, one item repaired 2026-08-21, deduped 138 → 137 on 2026-08-22 by removing `21da735a`) — 5 keys moved, 10 reasoning fixes, 103 silent clarifications. Its defect shape is **stale platform facts**: an entire item built on the retired Lightning Testing Service, Professional/Enterprise tab allocations taught at 10/25 when they are 1,210/1,225, the Metadata API uncompressed ceiling at 400 MB when it is 600 MB, and quick-deploy eligibility at 4 days when it is 10. Two keys moved on the **same** operating-model quadrant — see the Replication row in `verified-docs.md`. Also holds the repo's last unparsed reference marker, now fixed. **~30 of its citations are topical rather than decisive** — its ALM and Project domains are methodology and governance, which no vendor page settles |
-| salesforce-data-architect | 135 | 135 | **Fully checked** (2026-08-19) — 3 keys moved, 18 reasoning fixes, 58 silent clarifications. Its defect shape is **the invented absence**: five explanations denied a capability that exists (external objects can't be reported on ×2, the cross-org Connect adapter is read-only, no native archiving feature exists ×2). Also one fabricated limit (skinny tables taught at 100 columns; documented cap is **200**) and three stale products — Data.com Clean (4 questions), Async SOQL (retired Summer '23), granular locking now the default |
+| salesforce-data-architect | 135 | 135 | **Fully checked** (2026-08-19) — 3 keys moved, 18 reasoning fixes, 58 silent clarifications. Its defect shape is **the invented absence**: five explanations denied a capability that exists (external objects can't be reported on ×2, the cross-org Connect adapter is read-only, no native archiving feature exists ×2). Also one fabricated limit (skinny tables taught at 100 columns; documented cap is **200**) and three stale products — Data.com Clean (4 questions), Async SOQL (retired Summer '23), granular locking now the default. **Readability pass 2026-09-21, the fifth deck to get one:** 28 stems reformatted and all 135 explanations carry a "Why the other options are wrong:" section — **356 discard lines**, applied as `clarified`, stamps 21 → 21. Unlike the two code decks before it, the survey meant what it said here: 26 stems had no terminal punctuation (all a trailing "Choose N answers", 9 of them with a colon), 5 sentences had run together, three enumerations (`4bce9573`, `a666ee8e`, `7363aa33`) and one numbered list (`e1bb3531`) went one item per line, two `cloud -based`/`enterprise -wide` hyphens were closed, and `""key""` doubled quotes were halved. Over-long-without-late-comma went **7 → 1**. Left as scraped because fixing them changes letters: `Universals Containers'` (`23b3dd3a`), the trailing stray "Option" on `64fb7668`, "manual and a automated" (`b8dcc15e`), and `e1bb3531`'s "migrate … two month … prior to be split". Audit went **3 → 1 → 0**: the three pre-existing contradiction findings cleared as their openers were rewritten in the keyed option's vocabulary, and the one the pass introduced (`e3a36fd1`, a "backup"/"off platform" overlap with option A) cleared the same way |
 | salesforce-slack-consultant | 37 | 37 | **Fully checked** (2026-08-18) — 1 key moved, 3 reasoning fixes, 12 silent clarifications. First non-Salesforce, non-Databricks vendor. **Read the caveat below: only 15 of its 37 questions are decidable by any Slack page**, so the N/N here means less than it does on other decks |
 
 **Every citation in app-builder, IAM, Dev II and integration was re-rendered on
@@ -750,27 +750,28 @@ claude-architect-foundations arrived as a whole new deck. A pass ages the moment
 someone pastes questions into the chat.
 
 **The one cross-cutting job with a clear runway is the readability pass.**
-integration-architect, iam-architect, platform-developer-2 and databricks have had it; the
-other 10 decks still have stems the Blitz narrator reads as one long breath, and explanations
+integration-architect, iam-architect, platform-developer-2, databricks and data-architect
+have had it; the other 9 decks still have stems the Blitz narrator reads as one long breath, and explanations
 that never say why the distractors fail. It is packaged as the `deck-readability` skill, so it is
 repeatable rather than re-derived. Everything else that remains is listed below.
 
-**Rank the remaining 10 by the narration metric, not by deck size** — measured
+**Rank the remaining 9 by the narration metric, not by deck size** — measured
 2026-09-09, counting stems that contain a single sentence over 200 characters, which is
 what `splitForSpeech` has to hand the synthesiser in one breath:
 ~~Dev II 42 of 146~~ (done 2026-09-11 — and its 33 over-long stems turned out to be
 unfenced code, which is never narrated, so that headline number was mostly noise on a
 code deck), ~~databricks 23 of 147~~ (done 2026-09-21 — the same code-deck shape again:
 its over-long hits were fenced snippets and its no-space hits were `java.lang.` and
-`jdbc:`, so seven stems moved on a 147-question deck), **data-architect 20 of 135**,
-revenue-cloud 15,
+`jdbc:`, so seven stems moved on a 147-question deck), ~~data-architect 20 of 135~~ (done
+2026-09-21 — a prose deck, and the survey was honest: 28 stems moved, the no-late-comma
+count went 7 → 1), **revenue-cloud 15**,
 agentforce 12, sharing-visibility 10, then app-builder, admin and dld at 4 each.
 (App-builder was measured at 119 questions; its 105 imports of 2026-09-11 arrived with
 full stops and discard sections already in place, so only the original 119 need the
 pass — re-measure before ranking it.)
-Data-architect is next, and it is a prose deck, so expect the survey to mean what it
-says there. On a code deck, read every "no space after punctuation" hit before touching
-it, because most will be code — that held on Dev II and again on databricks.
+Revenue-cloud is next. On a code deck, read every "no space after punctuation" hit before
+touching it, because most will be code — that held on Dev II and again on databricks; on a
+prose deck (data-architect) the survey's counts were all real.
 
 **But that metric does not move on every deck, and IAM is the worked example of why.**
 Its 34 unpunctuated stems all ended in a trailing "Choose N answers" after a question
