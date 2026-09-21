@@ -575,7 +575,7 @@ column, not the Cited column.
 | salesforce-admin | 154 | 154 | **Fully checked** (2026-08-19) — 2 keys moved, 5 flagged, 60 explanations rewritten. 13 keys had already moved in the ADM-201 merge pass. Its real defect was the citation layer: only 36 questions rendered a References block, **47 more carried a marker the parser could not see**, and **24 of the 36 legacy `sf.` ids tested were dead** — see failure patterns 4b and 4c |
 | claude-architect-foundations | 28 | 28 | **Fully checked** (2026-09-08, in the same pass that imported it) — 1 key moved, 1 flagged reasoning fix, 12 silent clarifications. First Anthropic deck, and the **easiest doc estate in the repo to verify**: `platform.claude.com` returns a real HTTP 404 for an invented id, so URL checking needs no browser. Read the three caveats below before trusting the row |
 | salesforce-agentforce-specialist | 121 | 121 | **Fully checked** (2026-08-17) — 16 keys moved across 6 batches. Started from 0 cited, with 26 questions rendering a References block of prose only. One duplicate removed (`b7ffd87e`), resolving the pair this file flagged |
-| salesforce-revenue-cloud | 135 | 135 | **Fully checked twice** — 2026-08-15 (2 keys moved, 88 explanations rewritten; its defect was **fabricated citations, not wrong answers**: 73 explanations quoted invented "Exact Extracts") and again **2026-09-15 (7 keys moved, 5 flagged, 39 silent clarifications, 10 stale notices cleared, all 93 existing URLs re-rendered live)**. The second pass settled 10 of the first pass's 12 "could not settle" items by reading the doc set's own table of contents — see "The 2026-09-15 revenue-cloud re-check" below. **Two of the seven moves are judgment calls the owner may reverse** (`87836da2` flow name, `832c6c98` Contracts permission set). Deduped 137 → 135 on 2026-08-17 |
+| salesforce-revenue-cloud | 135 | 135 | **Fully checked twice** — 2026-08-15 (2 keys moved, 88 explanations rewritten; its defect was **fabricated citations, not wrong answers**: 73 explanations quoted invented "Exact Extracts") and again **2026-09-15 (7 keys moved, 5 flagged, 39 silent clarifications, 10 stale notices cleared, all 93 existing URLs re-rendered live)**. The second pass settled 10 of the first pass's 12 "could not settle" items by reading the doc set's own table of contents — see "The 2026-09-15 revenue-cloud re-check" below. **Two of the seven moves are judgment calls the owner may reverse** (`87836da2` flow name, `832c6c98` Contracts permission set). Deduped 137 → 135 on 2026-08-17. **Readability pass 2026-09-21, the sixth deck to get one:** 3 stems reformatted and all 135 explanations carry a "Why the other options are wrong:" section — **270 discard lines** (this is a three-option deck), applied as `clarified`, stamps 26 → 26. The 2026-09-15 re-check had already cleaned the stems, so the survey was nearly empty: `Chicago.When` in `287332c0`, three bullet lines with no terminal stops in `ab527e42` (one 200-character run for the narrator), and a comma in `1742b9ef`. About 20 explanations already carried a discard section in the older `A) …` format from the re-check; all were rewritten to the `Option A (…) — …` shape so the counter sees them. Audit **2 → 1**: the pre-existing contradiction finding on `464876c9` cleared with a keyed-vocabulary opener; the survivor is the known choose-N misfire on `09695b88` |
 | salesforce-data-cloud-consultant | 100 | 100 | **Fully checked** (2026-08-21) — 4 keys moved, 6 flagged reasoning fixes, 11 silent clarifications. Its defect shape is **the invented capability**: a "reusable container block", a "Data Segmentation Object", and a phone field type that supposedly normalises to E164 all name things Data Cloud does not have. Two items are defective (three defensible options each), and one explanation resolved its own ambiguity by deferring to "the source" — an exam dump. **All 100 option sets use pre-rename product and permission-set names** — see the Data 360 note below |
 | salesforce-sharing-visibility | 136 | 136 | **Fully checked** (2026-08-17) — 2 keys moved, 6 reasoning fixes, 19 silent clarifications. The 4 earlier 2026-08-04 validation stamps are preserved |
 | salesforce-app-builder | 222 | 222 | **Fully checked** (2026-08-11) — 4 keys moved, 27 reasoning fixes, 3 defective option sets repaired. Q1–50 spot-rechecked: 10 sampled, 1 defect (a mechanism stated backwards), so the earlier batches read sound. **Grew 119 → 224 on 2026-09-11** from two freecram dumps, fact-checked in the same pass: 16 keys moved (15 against the dump, 1 against the deck — `9ba9345d` B → C, Sharing → Sharing Hierarchy), 5 flagged, 85 silent. The 105 new explanations are already in the readability format; the original 119 are not. **Deduped 224 → 222 on 2026-09-12** (`ef3bdddb`, a noun-swapped twin of `108817b2` the 2026-08-11 pass had missed, and `f862c9c1`, a same-discriminator sandbox item from the import). See "The 2026-09-11 app-builder import" below |
@@ -750,12 +750,12 @@ claude-architect-foundations arrived as a whole new deck. A pass ages the moment
 someone pastes questions into the chat.
 
 **The one cross-cutting job with a clear runway is the readability pass.**
-integration-architect, iam-architect, platform-developer-2, databricks and data-architect
-have had it; the other 9 decks still have stems the Blitz narrator reads as one long breath, and explanations
+integration-architect, iam-architect, platform-developer-2, databricks, data-architect and
+revenue-cloud have had it; the other 8 decks still have stems the Blitz narrator reads as one long breath, and explanations
 that never say why the distractors fail. It is packaged as the `deck-readability` skill, so it is
 repeatable rather than re-derived. Everything else that remains is listed below.
 
-**Rank the remaining 9 by the narration metric, not by deck size** — measured
+**Rank the remaining 8 by the narration metric, not by deck size** — measured
 2026-09-09, counting stems that contain a single sentence over 200 characters, which is
 what `splitForSpeech` has to hand the synthesiser in one breath:
 ~~Dev II 42 of 146~~ (done 2026-09-11 — and its 33 over-long stems turned out to be
@@ -764,12 +764,12 @@ code deck), ~~databricks 23 of 147~~ (done 2026-09-21 — the same code-deck sha
 its over-long hits were fenced snippets and its no-space hits were `java.lang.` and
 `jdbc:`, so seven stems moved on a 147-question deck), ~~data-architect 20 of 135~~ (done
 2026-09-21 — a prose deck, and the survey was honest: 28 stems moved, the no-late-comma
-count went 7 → 1), **revenue-cloud 15**,
-agentforce 12, sharing-visibility 10, then app-builder, admin and dld at 4 each.
+count went 7 → 1), ~~revenue-cloud 15~~ (done 2026-09-21 — 3 stems; the
+2026-09-15 re-check had already punctuated it), **agentforce 12**, sharing-visibility 10, then app-builder, admin and dld at 4 each.
 (App-builder was measured at 119 questions; its 105 imports of 2026-09-11 arrived with
 full stops and discard sections already in place, so only the original 119 need the
 pass — re-measure before ranking it.)
-Revenue-cloud is next. On a code deck, read every "no space after punctuation" hit before
+Agentforce is next. On a code deck, read every "no space after punctuation" hit before
 touching it, because most will be code — that held on Dev II and again on databricks; on a
 prose deck (data-architect) the survey's counts were all real.
 
