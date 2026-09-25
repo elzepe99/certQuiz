@@ -45,6 +45,11 @@ const GUIDES = [
     out: 'public/guides/salesforce-app-builder.html',
     lang: 'en',
   },
+  {
+    source: 'study-guides/databricks-data-engineer-associate.artifact.html',
+    out: 'public/guides/databricks-data-engineer-associate.html',
+    lang: 'en',
+  },
 ];
 
 /** Pull the <title> out of the fragment so the standalone page keeps it. */

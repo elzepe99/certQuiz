@@ -1,0 +1,1611 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Databricks Data Engineer Associate Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+</head>
+<body>
+<style>
+:root {
+  --paper:      #F1F4F6;
+  --surface:    #FFFFFF;
+  --surface-2:  #E8ECEF;
+  --ink:        #121A21;
+  --ink-2:      #37444F;
+  --muted:      #5E6C78;
+  --rule:       #D3DBE1;
+  --rule-soft:  #E3E9ED;
+
+  --primary:    #12494F;
+  --primary-2:  #1C6C71;
+  --primary-wash:#E2EEEE;
+
+  --amber:      #8F550A;
+  --amber-wash: #FAEEDC;
+  --amber-rule: #DFB877;
+
+  --crimson:    #962E2E;
+  --crimson-wash:#F9E7E5;
+  --crimson-rule:#DDA39C;
+
+  --good:       #2C6440;
+
+  --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --font-prose:   "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-ui:      "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono:    "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --shadow: 0 1px 2px rgba(18,26,33,.05), 0 8px 24px -12px rgba(18,26,33,.14);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:      #0C1216;
+    --surface:    #131B20;
+    --surface-2:  #1B252B;
+    --ink:        #DCE4E8;
+    --ink-2:      #B4C1C9;
+    --muted:      #8496A1;
+    --rule:       #263238;
+    --rule-soft:  #1C262C;
+
+    --primary:    #66C4BC;
+    --primary-2:  #8AD6CE;
+    --primary-wash:#15292C;
+
+    --amber:      #DFA45C;
+    --amber-wash: #221A0F;
+    --amber-rule: #5A431F;
+
+    --crimson:    #E28C80;
+    --crimson-wash:#231314;
+    --crimson-rule:#5C2E2C;
+
+    --good:       #6FBE8B;
+
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper:      #0C1216;
+  --surface:    #131B20;
+  --surface-2:  #1B252B;
+  --ink:        #DCE4E8;
+  --ink-2:      #B4C1C9;
+  --muted:      #8496A1;
+  --rule:       #263238;
+  --rule-soft:  #1C262C;
+
+  --primary:    #66C4BC;
+  --primary-2:  #8AD6CE;
+  --primary-wash:#15292C;
+
+  --amber:      #DFA45C;
+  --amber-wash: #221A0F;
+  --amber-rule: #5A431F;
+
+  --crimson:    #E28C80;
+  --crimson-wash:#231314;
+  --crimson-rule:#5C2E2C;
+
+  --good:       #6FBE8B;
+
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-prose);
+  font-size: 17px;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- shell ---------- */
+
+.shell {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  column-gap: 56px;
+  row-gap: 0;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 32px 120px;
+  align-items: start;
+}
+
+/* ---------- masthead ---------- */
+
+.masthead {
+  grid-column: 1 / -1;
+  padding: 64px 0 40px;
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: 48px;
+}
+
+.eyebrow {
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin: 0 0 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.eyebrow .sep { color: var(--rule); }
+
+h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.4rem, 6vw, 3.9rem);
+  line-height: 1.02;
+  letter-spacing: -.025em;
+  margin: 0 0 20px;
+  text-wrap: balance;
+  color: var(--ink);
+}
+
+.standfirst {
+  font-size: 1.18rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 62ch;
+  margin: 0 0 32px;
+}
+
+.standfirst strong { color: var(--ink); font-weight: 600; }
+
+/* exam vitals strip */
+.vitals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.vital {
+  background: var(--surface);
+  padding: 14px 16px 15px;
+}
+
+.vital dt {
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 6px;
+}
+
+.vital dd {
+  font-family: var(--font-mono);
+  font-size: 1.16rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.vital dd .sub {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-top: 4px;
+  letter-spacing: 0;
+}
+
+.vital.flag { background: var(--amber-wash); }
+.vital.flag dd { color: var(--amber); }
+
+/* ---------- toc rail ---------- */
+
+.rail {
+  position: sticky;
+  top: 28px;
+  font-family: var(--font-ui);
+  max-height: calc(100vh - 56px);
+  overflow-y: auto;
+}
+
+.rail h2 {
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.rail ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  counter-reset: toc;
+}
+
+.rail a {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 8px;
+  align-items: baseline;
+  padding: 5px 8px 5px 4px;
+  font-size: 13.5px;
+  line-height: 1.35;
+  color: var(--ink-2);
+  text-decoration: none;
+  border-radius: 3px;
+  border-left: 2px solid transparent;
+  transition: background .12s ease, color .12s ease, border-color .12s ease;
+}
+
+.rail a::before {
+  counter-increment: toc;
+  content: counter(toc);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.rail a:hover {
+  background: var(--surface);
+  color: var(--ink);
+  border-left-color: var(--primary);
+}
+
+.rail a:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+.rail a.key { color: var(--crimson); font-weight: 500; }
+.rail a.key::before { color: var(--crimson); }
+
+.rail .note {
+  margin: 16px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+/* ---------- content ---------- */
+
+.content { min-width: 0; }
+
+section { margin: 0 0 64px; scroll-margin-top: 24px; }
+
+h2.sect {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3vw, 1.95rem);
+  line-height: 1.14;
+  letter-spacing: -.018em;
+  margin: 0 0 8px;
+  text-wrap: balance;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: baseline;
+}
+
+h2.sect .num {
+  font-family: var(--font-mono);
+  font-size: .58em;
+  font-weight: 500;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+.sect-rule {
+  height: 2px;
+  background: var(--ink);
+  margin: 0 0 24px;
+}
+
+h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.13rem;
+  letter-spacing: -.008em;
+  margin: 36px 0 12px;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+h4 {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 26px 0 10px;
+}
+
+p { margin: 0 0 16px; max-width: 68ch; }
+
+a { color: var(--primary); text-underline-offset: 2px; text-decoration-thickness: 1px; }
+a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 2px; }
+
+strong { font-weight: 600; color: var(--ink); }
+em { font-style: italic; }
+
+code {
+  font-family: var(--font-mono);
+  font-size: .855em;
+  background: var(--surface-2);
+  padding: .1em .34em;
+  border-radius: 3px;
+  color: var(--ink);
+}
+
+ul, ol.prose { margin: 0 0 18px; padding-left: 20px; max-width: 68ch; }
+ul li, ol.prose li { margin-bottom: 8px; }
+ul li::marker { color: var(--primary); }
+ol.prose li::marker { color: var(--muted); font-family: var(--font-mono); font-size: .85em; }
+
+/* ---------- tables ---------- */
+
+.tw {
+  overflow-x: auto;
+  margin: 0 0 22px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-ui);
+  font-size: 14.2px;
+  line-height: 1.48;
+}
+
+thead th {
+  text-align: left;
+  font-weight: 600;
+  font-size: 10.5px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--surface-2);
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+
+tbody td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--rule-soft);
+  vertical-align: top;
+  color: var(--ink-2);
+}
+
+tbody tr:last-child td { border-bottom: none; }
+
+tbody td:first-child { color: var(--ink); font-weight: 500; }
+
+tbody td strong { color: var(--ink); font-weight: 600; }
+
+td code, th code { background: transparent; padding: 0; font-size: .9em; }
+
+.num-col, .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+
+/* two-col comparison tables read better with an emphasized first col */
+table.kv tbody td:first-child { width: 34%; }
+
+/* ---------- weight bars (domain table) ---------- */
+
+.bar {
+  display: block;
+  height: 7px;
+  border-radius: 1px;
+  background: var(--primary);
+  min-width: 2px;
+}
+.bar.deck { background: var(--muted); opacity: .55; }
+.bar-cell { width: 120px; }
+.bar-cell .lab {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--muted);
+  margin-bottom: 3px;
+  font-variant-numeric: tabular-nums;
+}
+.bar + .lab { margin-top: 6px; }
+
+.verdict {
+  display: inline-block;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  padding: 2.5px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.verdict.gap  { background: var(--crimson-wash); color: var(--crimson); border: 1px solid var(--crimson-rule); }
+.verdict.over { background: var(--surface-2); color: var(--muted); border: 1px solid var(--rule); }
+.verdict.ok   { background: var(--primary-wash); color: var(--primary); border: 1px solid var(--primary); }
+
+/* ---------- callouts ---------- */
+
+.call {
+  border-left: 3px solid var(--primary);
+  background: var(--surface);
+  padding: 16px 20px;
+  margin: 0 0 22px;
+  border-radius: 0 4px 4px 0;
+  max-width: 70ch;
+}
+.call p { margin: 0 0 10px; }
+.call p:last-child { margin-bottom: 0; }
+.call .tag {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: var(--primary);
+}
+
+.call.trap { border-left-color: var(--amber-rule); background: var(--amber-wash); }
+.call.trap .tag { color: var(--amber); }
+.call.trap strong { color: var(--ink); }
+
+.call.alert { border-left-color: var(--crimson-rule); background: var(--crimson-wash); }
+.call.alert .tag { color: var(--crimson); }
+
+/* ---------- misc ---------- */
+
+.lede {
+  font-size: 1.06rem;
+  color: var(--ink-2);
+  max-width: 66ch;
+  margin: 0 0 24px;
+}
+
+.yes { color: var(--good); font-weight: 600; }
+.no  { color: var(--crimson); font-weight: 600; }
+.warn{ color: var(--amber); font-weight: 600; }
+
+.linklist { list-style: none; padding: 0; margin: 0 0 20px; max-width: 72ch; }
+.linklist li { margin-bottom: 9px; padding-left: 14px; position: relative; font-size: 15px; }
+.linklist li::before {
+  content: "";
+  position: absolute; left: 0; top: .62em;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--rule);
+}
+.linklist .why { color: var(--muted); font-size: 14px; }
+
+.prompts { display: flex; flex-direction: column; gap: 12px; margin: 0 0 22px; max-width: 72ch; }
+.prompt {
+  font-family: var(--font-ui);
+  font-size: 14.3px;
+  line-height: 1.5;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 13px 16px;
+  color: var(--ink-2);
+}
+.prompt::before {
+  content: "Prompt";
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+
+.colophon {
+  grid-column: 1 / -1;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 74ch;
+}
+
+.colophon code { font-size: 11.5px; }
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 900px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding: 0 20px 80px;
+  }
+  .rail {
+    position: static;
+    max-height: none;
+    margin-bottom: 44px;
+    padding: 16px 18px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+  }
+  .rail ol { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 0; }
+  .masthead { padding-top: 44px; margin-bottom: 32px; }
+  body { font-size: 16.5px; }
+  section { margin-bottom: 52px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+
+html { scroll-behavior: smooth; }
+</style>
+
+<div class="shell">
+
+  <header class="masthead">
+    <p class="eyebrow">
+      <span>Databricks Certified Data Engineer Associate</span>
+      <span class="sep">/</span>
+      <span>4 May 2026 exam version</span>
+    </p>
+    <h1>Data Engineer Associate Field Guide</h1>
+    <p class="standfirst">
+      Built from the 147 questions in the practice deck, cross-checked against the official exam
+      guide of 4 May 2026 and the documentation those questions cite. This is the first
+      non-Salesforce guide in this repo, and the gap it has to close is the widest of any deck so
+      far: <strong>the exam was restructured into seven domains, and four of the products the deck
+      names by their old names have been renamed under it.</strong> &sect;12 carries the whole list.
+    </p>
+    <dl class="vitals">
+      <div class="vital"><dt>Questions</dt><dd>45<span class="sub">scored</span></dd></div>
+      <div class="vital"><dt>Time</dt><dd>90<span class="sub">minutes</span></dd></div>
+      <div class="vital"><dt>Pass mark</dt><dd>&mdash;<span class="sub">not published</span></dd></div>
+      <div class="vital"><dt>Validity</dt><dd>2 yrs<span class="sub">US$200</span></dd></div>
+      <div class="vital flag"><dt>Exam version</dt><dd>May '26<span class="sub">newer than the deck</span></dd></div>
+    </dl>
+  </header>
+
+  <nav class="rail" aria-label="Contents">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#exam">The exam, factually</a></li>
+      <li><a href="#weights" class="key">Where the points are</a></li>
+      <li><a href="#platform">Intelligence Platform</a></li>
+      <li><a href="#ingestion" class="key">Ingestion and Loading</a></li>
+      <li><a href="#transform">Transformation and Modeling</a></li>
+      <li><a href="#jobs" class="key">Lakeflow Jobs</a></li>
+      <li><a href="#cicd" class="key">Implementing CI/CD</a></li>
+      <li><a href="#ops">Troubleshooting and Optimization</a></li>
+      <li><a href="#governance" class="key">Governance and Security</a></li>
+      <li><a href="#numbers">Numbers to memorise</a></li>
+      <li><a href="#tells">Distractor tells</a></li>
+      <li><a href="#stale" class="key">Deck older than the exam</a></li>
+      <li><a href="#plan">Two-week plan</a></li>
+      <li><a href="#sources">Sources</a></li>
+      <li><a href="#notebooklm">Using NotebookLM</a></li>
+    </ol>
+    <p class="note">Sections in red carry the objectives the practice deck does not train you for.</p>
+  </nav>
+
+  <main class="content">
+
+    <!-- 1 -->
+    <section id="exam">
+      <h2 class="sect"><span class="num">01</span><span>The exam, factually</span></h2>
+      <div class="sect-rule"></div>
+
+      <div class="call alert">
+        <span class="tag">Two structural facts that matter more than any topic</span>
+        <p><strong>The exam is 45 questions</strong>, so one domain percentage point is roughly half a
+        question &mdash; a 6% domain is about three questions and a 22% domain is about ten. And
+        <strong>the exam version is newer than the deck</strong>, which was scraped before the May 2026
+        restructure. Everything in &sect;12 follows from that second fact.</p>
+      </div>
+
+      <p><strong>Code in this exam is SQL wherever SQL can express it, and Python otherwise.</strong> That
+      is stated on the certification page, and it tells you where to spend effort: the PySpark you need
+      is the DataFrame API (<code>groupBy</code>, <code>agg</code>, <code>select</code>,
+      <code>dropDuplicates</code>, <code>readStream</code>, <code>writeStream</code>), not the whole of
+      Spark.</p>
+
+      <div class="tw">
+        <table class="kv">
+          <tbody>
+            <tr><td>Official name</td><td>Databricks Certified Data Engineer Associate</td></tr>
+            <tr><td>Content</td><td><strong>45 scored</strong> multiple-choice questions, plus unscored items</td></tr>
+            <tr><td>Time</td><td><strong>90 minutes</strong> (2 minutes per question)</td></tr>
+            <tr><td>Passing score</td><td>Not published &mdash; Databricks states no fixed percentage for this exam</td></tr>
+            <tr><td>Prerequisite</td><td>None; six months of hands-on Databricks experience recommended</td></tr>
+            <tr><td>Fee</td><td>US$200</td></tr>
+            <tr><td>Validity</td><td><strong>2 years</strong>, then recertification on the current live exam</td></tr>
+            <tr><td>Exam version</td><td><strong>4 May 2026</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section id="weights">
+      <h2 class="sect"><span class="num">02</span><span>Where the points actually are</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">Official outline weightings against the deck. <strong>Unlike every other deck in
+      this repo there was nothing to re-classify from</strong> &mdash; all 147 questions carry the single
+      tag "Databricks Certified Data Engineer Associate", so the deck has no domain structure at all. The
+      deck column is an independent re-classification of all 147 against the seven current sections
+      (<code>study-guides/reclassify-databricks.mjs</code>).</p>
+
+      <div class="tw">
+        <table>
+          <thead>
+            <tr><th>Domain</th><th class="num-col">Exam</th><th class="num-col">&asymp; Qs</th><th class="bar-cell">Exam vs deck</th><th class="num-col">Deck</th><th>Verdict</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Databricks Intelligence Platform</td><td class="num">6%</td><td class="num">~3</td><td class="bar-cell"><span class="bar" style="width:27%"></span><span class="bar deck" style="width:60%"></span></td><td class="num">24 &middot; 16.3%</td><td><span class="verdict gap">badly over</span></td></tr>
+            <tr><td>Data Ingestion and Loading</td><td class="num">21%</td><td class="num">~9</td><td class="bar-cell"><span class="bar" style="width:95%"></span><span class="bar deck" style="width:57%"></span></td><td class="num">23 &middot; 15.6%</td><td><span class="verdict gap">under</span></td></tr>
+            <tr><td>Data Transformation and Modeling</td><td class="num">22%</td><td class="num">~10</td><td class="bar-cell"><span class="bar" style="width:100%"></span><span class="bar deck" style="width:100%"></span></td><td class="num">40 &middot; 27.2%</td><td><span class="verdict over">over</span></td></tr>
+            <tr><td>Working with Lakeflow Jobs</td><td class="num">16%</td><td class="num">~7</td><td class="bar-cell"><span class="bar" style="width:73%"></span><span class="bar deck" style="width:32%"></span></td><td class="num">13 &middot; 8.8%</td><td><span class="verdict gap">badly under</span></td></tr>
+            <tr><td>Implementing CI/CD</td><td class="num">10%</td><td class="num">~5</td><td class="bar-cell"><span class="bar" style="width:45%"></span><span class="bar deck" style="width:25%"></span></td><td class="num">10 &middot; 6.8%</td><td><span class="verdict gap">under</span></td></tr>
+            <tr><td>Troubleshooting, Monitoring, Optimization</td><td class="num">10%</td><td class="num">~5</td><td class="bar-cell"><span class="bar" style="width:45%"></span><span class="bar deck" style="width:40%"></span></td><td class="num">16 &middot; 10.9%</td><td><span class="verdict ok">about right</span></td></tr>
+            <tr><td>Governance and Security</td><td class="num">15%</td><td class="num">~7</td><td class="bar-cell"><span class="bar" style="width:68%"></span><span class="bar deck" style="width:53%"></span></td><td class="num">21 &middot; 14.3%</td><td><span class="verdict ok">about right</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-family:var(--font-ui);font-size:12.5px;color:var(--muted);margin-top:-8px;">
+        Teal bar = share of the exam. Grey bar = share of the deck. Both scaled to the largest value.
+      </p>
+
+      <div class="call alert">
+        <span class="tag">The gap you need to close</span>
+        <p><strong>The deck spends a sixth of itself on a domain worth 6%.</strong> Twenty-four questions
+        ask what a lakehouse is, what the control plane holds, what a DataFrame is, and which cluster to
+        pick &mdash; material worth about three questions on the real exam. Meanwhile <strong>Lakeflow Jobs
+        is 16% of the exam and 8.8% of the deck</strong>, and it is the domain where the deck's coverage is
+        not just thin but one-sided: the deck knows task dependencies and repair runs, and knows nothing
+        about triggers beyond cron or about control flow at all.</p>
+      </div>
+
+      <h3>Thirteen named objectives with no deck item</h3>
+      <ol class="prose">
+        <li><strong><code>COPY INTO</code></strong> for incremental loads from cloud object storage &mdash; a named Section 2 objective, zero deck items.</li>
+        <li><strong>Lakeflow Connect</strong>, standard against managed connectors, and choosing between them and Auto Loader &mdash; named four separate times in Section 2.</li>
+        <li><strong>Column masks and row filters</strong> in Unity Catalog &mdash; a named Section 7 objective.</li>
+        <li><strong>Unity Catalog ABAC</strong> governance policies and governed tags &mdash; a named Section 7 objective.</li>
+        <li><strong><code>DENY</code></strong>, and <strong>service principals</strong> as grantees &mdash; Section 7 names GRANT, REVOKE <em>and</em> DENY against users, groups and service principals; the deck has GRANT to groups only.</li>
+        <li><strong>Predictive optimization</strong> &mdash; named in Section 6 beside liquid clustering, which the deck does cover once (<code>cebba9ec</code>).</li>
+        <li><strong>File-arrival and table-update triggers</strong>, and choosing time-based against data-driven &mdash; a named Section 4 objective; the deck knows cron only.</li>
+        <li><strong>Job control flow</strong> &mdash; retries, If/else condition tasks, For each loops, the Run if setting &mdash; a named Section 4 objective.</li>
+        <li><strong>Materialized views</strong> as a Gold-layer object beside views, streaming tables and tables &mdash; named in Section 3; the deck mentions the term only as a gloss on "live table".</li>
+        <li><strong>Bundle variables, targets and deployment modes</strong> for promoting one codebase across dev/test/prod &mdash; a named Section 5 objective.</li>
+        <li><strong>The named tuning parameters</strong> &mdash; <code>spark.sql.shuffle.partitions</code>, <code>spark.default.parallelism</code>, <code>spark.executor/driver.memory</code>, <code>spark.sql.autoBroadcastJoinThreshold</code>.</li>
+        <li><strong>Join breadth</strong> &mdash; inner, left, cross, multiple keys, union all. The deck has one <code>UNION</code> item (<code>7d8befb9</code>) and one broadcast-join item (<code>37d2584a</code>).</li>
+        <li><strong><code>approx_count_distinct</code>, <code>mean</code>, <code>summary</code>, and exploding arrays</strong> &mdash; named in Section 3.</li>
+      </ol>
+      <p>&sect;4 through &sect;9 teach all thirteen from the documentation.</p>
+
+      <h3>What the deck's 147 do rehearse well</h3>
+      <p>Pipeline expectations and their two violation actions (8 items), Auto Loader and Structured
+      Streaming mechanics (14), medallion-layer design (11), Unity Catalog grants and ownership (12),
+      Delta Sharing (5), the Delta maintenance commands (6), and Spark performance diagnosis (6). Someone
+      who can explain <em>why</em> each of those is keyed has the middle of the exam. They will still be
+      short on jobs, ingestion breadth and the governance features added since the scrape.</p>
+    </section>
+
+    <!-- 3 -->
+    <section id="platform">
+      <h2 class="sect"><span class="num">03</span><span>Databricks Intelligence Platform (6%)</span></h2>
+      <div class="sect-rule"></div>
+      <p class="lede">The smallest domain at 6%, and the one the deck over-trains by a factor of five.
+      Learn the compute table and the architecture split, and move on.</p>
+
+      <h3>Architecture &mdash; what sits where</h3>
+      <div class="tw">
+        <table class="kv">
+          <thead><tr><th>Plane</th><th>Holds</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Control plane</strong> (Databricks account)</td><td>Compute orchestration, Unity Catalog, the workspace UI, notebooks, job configuration, query history (<code>1eb89e9b</code>)</td></tr>
+            <tr><td><strong>Customer cloud account</strong></td><td><strong>Data</strong> &mdash; the S3/ADLS/GCS buckets your tables' files live in (<code>47a349af</code>). Classic compute also runs here</td></tr>
+            <tr><td><strong>Serverless compute plane</strong></td><td>Databricks' own account. Serverless SQL warehouses, jobs and pipelines run here, not in your VPC</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><code>47a349af</code> keys <strong>Data</strong>, and that is right for classic compute <em>and</em>
+      for serverless: your files never leave your account either way. What moves with serverless is the
+      compute, not the storage.</p>
+
+      <h3>Choosing compute &mdash; the whole domain in one table</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Requirement in the stem</th><th>Answer</th><th>Deck</th></tr></thead>
+          <tbody>
+            <tr><td>Interactive work, small data, no distribution needed</td><td><strong>Single-node cluster</strong></td><td><code>09230e35</code></td></tr>
+            <tr><td>Scheduled production ETL, terminates when done, cheapest per run</td><td><strong>Job cluster</strong></td><td><code>495c576a</code>, <code>1d94fee4</code></td></tr>
+            <tr><td>Small, interruptible, cost is the whole point</td><td>Job cluster with <strong>spot instances</strong></td><td><code>2decff00</code></td></tr>
+            <tr><td>Cluster start time is the bottleneck on a repeated job</td><td><strong>Cluster pools</strong> &mdash; pre-warmed idle instances</td><td><code>27d6e2a9</code>, <code>e5b58f83</code></td></tr>
+            <tr><td>Ad-hoc SQL, fluctuating query volume, no infrastructure to manage</td><td><strong>Serverless SQL warehouse</strong> &mdash; starts in seconds</td><td><code>7fc931cb</code>, <code>25c59e18</code>, <code>047d9dcc</code>, <code>630dc828</code></td></tr>
+            <tr><td>Minimal runtime errors and high availability, no cluster management</td><td><strong>Serverless compute</strong></td><td><code>f649f00e</code></td></tr>
+            <tr><td>Migrating jobs off classic to cut cost &mdash; which one first</td><td>A frequent, efficient, <strong>Python</strong> pipeline on a current runtime</td><td><code>58e8c0c0</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>Serverless is the default answer to a cost-or-startup stem on this exam</strong>, and it is
+      the one place the deck and the outline agree completely: four deck items key it, and the exam guide's
+      sample question 2 keys Delta Lake plus Unity Catalog for the same shape of requirement.</p>
+
+      <h3>Delta Lake and Unity Catalog as components</h3>
+      <p><strong>Delta Lake</strong> is the storage layer: ACID transactions, schema enforcement, time
+      travel (<code>a495c049</code>, <code>2a715f47</code>). A Delta table is a directory of Parquet data
+      files plus a transaction log holding history, metadata and statistics (<code>d19c13d0</code>) &mdash;
+      the log, not a metastore row, is what makes the table a table.</p>
+      <p><strong>A lakehouse</strong> is what you get when that layer sits under both BI and AI workloads:
+      one copy of the data, one set of permissions, one source of truth for the analytics team and the
+      engineering team (<code>b75b484a</code>, <code>ac547586</code>).</p>
+
+      <div class="call trap">
+        <span class="tag">Workspace mechanics the outline no longer names</span>
+        <p>Three deck items test notebook behaviour that maps to no current sub-objective &mdash; one
+        language per cell (<code>5acae1e0</code>), <code>%sql</code> to switch a single cell
+        (<code>a65602bf</code>), and the 30&nbsp;MB job-cluster notebook output ceiling
+        (<code>ae5406b2</code>). They are cheap to hold and cost nothing to keep, but do not budget study
+        time for them.</p>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section id="ingestion">
+      <h2 class="sect"><span class="num">04</span><span>Data Ingestion and Loading (21%)</span></h2>
+      <div class="sect-rule"></div>
+      <p class="lede">The largest domain after transformation, and the deck is nine points short of it.
+      Two of the missing pieces &mdash; <code>COPY INTO</code> and Lakeflow Connect &mdash; are named
+      objectives with <strong>zero</strong> deck items, so they are the highest-yield reading in this guide.</p>
+
+      <h3>The four ways to land data, and how to choose</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Tool</th><th>Use when</th><th>Deck</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Auto Loader</strong> (<code>cloudFiles</code>)</td><td>New files arrive continuously in cloud object storage; you want incremental processing with schema inference and evolution and exactly-once semantics</td><td><code>357e5f5f</code>, <code>85fa27f8</code>, <code>c46dbf87</code>, <code>8163487e</code></td></tr>
+            <tr><td><strong><code>COPY INTO</code></strong></td><td>A SQL-first team, a bounded set of files, idempotent re-runs</td><td><span class="no">none</span></td></tr>
+            <tr><td><strong>Lakeflow Connect</strong></td><td>Ingesting from an enterprise source &mdash; a database or a SaaS application &mdash; rather than from files</td><td><span class="no">none</span></td></tr>
+            <tr><td><strong>Federation</strong></td><td>You want to <em>query</em> the source without copying it at all</td><td><code>883f4c22</code>, <code>145c9e5f</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="call">
+        <span class="tag"><code>COPY INTO</code> &mdash; the objective the deck never asks</span>
+        <p><code>COPY INTO</code> loads files from a location into a Delta table with SQL, from CSV, JSON,
+        XML, Avro, ORC, Parquet, text and binary, out of S3, ADLS, ABFS, GCS or a Unity Catalog volume. The
+        property to remember is that it is <strong>retriable and idempotent</strong>: "files in the source
+        location that have already been loaded are skipped on subsequent runs." Re-running it after a
+        partial failure does not double-load.</p>
+        <p>Two things follow. It needs no streaming checkpoint of your own, because that per-file
+        bookkeeping is the table's. And Databricks' own guidance now says that "for a more scalable and
+        robust file ingestion experience, Databricks recommends that SQL users use streaming tables"
+        &mdash; so a stem that says "scalable" or "continuously arriving" keys a streaming table or Auto
+        Loader even where <code>COPY INTO</code> would work.</p>
+      </div>
+
+      <div class="call">
+        <span class="tag">Lakeflow Connect &mdash; the objective named four times</span>
+        <p><strong>Managed connectors</strong> are built and maintained by Databricks for named sources:
+        MySQL, PostgreSQL, SQL Server; Salesforce, HubSpot, Jira, Workday; Google Drive, SharePoint;
+        RabbitMQ. They "produce ingestion pipelines that are governed by Unity Catalog and powered by
+        serverless compute and Lakeflow pipelines" &mdash; you configure the source and the destination and
+        Databricks runs the pipeline.</p>
+        <p><strong>Standard connectors</strong> cover a broader set of sources and "trade some automation
+        for broader source support and customization" &mdash; you own more of the pipeline.</p>
+        <p><strong>The selection tell:</strong> a <strong>named SaaS or database source</strong> with no
+        mention of files &rarr; Lakeflow Connect, managed if the source is on the list. <strong>Files
+        landing in a bucket</strong> &rarr; Auto Loader. <strong>A team that writes only SQL and re-runs a
+        load</strong> &rarr; <code>COPY INTO</code>.</p>
+      </div>
+
+      <h3>Auto Loader, in the detail the exam asks for</h3>
+      <ul>
+        <li>It is built on <strong>Spark Structured Streaming</strong> (<code>8163487e</code>), so it is a streaming workload even when you run it once (<code>c46dbf87</code>).</li>
+        <li><strong>Schema inference on JSON gives you strings.</strong> <code>607579bf</code> is the deck's best item here: with no schema hints, every column comes back as a string, because JSON is a text format and Auto Loader will not guess a type it cannot prove.</li>
+        <li><strong>Schema evolution is a mode, not a switch.</strong> <code>cbad36b2</code> keys <code>failOnNewColumns</code> &mdash; the mode that stops the stream when an unexpected column appears, which is what you want when a downstream contract must be renegotiated before the data moves. The alternatives add the column, rescue it into <code>_rescued_data</code>, or ignore it.</li>
+        <li>The read is <code>spark.readStream.format("cloudFiles")</code> with <code>cloudFiles.format</code> naming the file type (<code>85fa27f8</code>). Turning a batch read into a stream is exactly the <code>spark.read</code> &rarr; <code>spark.readStream</code> swap (<code>e994ba67</code>).</li>
+      </ul>
+
+      <h3>Structured Streaming &mdash; state, triggers and checkpoints</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Concept</th><th>What it does</th><th>Deck</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Checkpoint</strong></td><td>Records stream progress so a restart resumes rather than reprocesses; with write-ahead logs it is what delivers exactly-once</td><td><code>1af41ff9</code>, <code>b44046a7</code></td></tr>
+            <tr><td><strong>Watermark</strong></td><td>Bounds how long state is kept for aggregations, so late data past the threshold is dropped instead of growing state forever</td><td><code>cd5c6fb5</code></td></tr>
+            <tr><td><code>trigger(processingTime="5 seconds")</code></td><td>Micro-batch every five seconds</td><td><code>e2b2b183</code></td></tr>
+            <tr><td><code>trigger(availableNow=True)</code></td><td>Process everything available, then stop &mdash; the incremental-batch trigger</td><td><code>db601c4b</code></td></tr>
+            <tr><td><code>.outputMode("append")</code></td><td>Add new rows only, never rewrite</td><td><code>61f47f5f</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong><code>availableNow</code> is the one to recognise on sight.</strong> A stem that wants
+      incremental processing on a schedule rather than a continuously running stream keys it: you get the
+      streaming engine's bookkeeping with a job's cost profile.</p>
+
+      <h3>Reading from tables and external systems</h3>
+      <ul>
+        <li><strong>Kafka</strong>: <code>spark.readStream.format("kafka")</code> with <code>kafka.bootstrap.servers</code> and <code>subscribe</code>, wrapped in a pipeline table (<code>5bd76bd3</code>).</li>
+        <li><strong>JDBC</strong>: <code>CREATE TABLE ... USING org.apache.spark.sql.jdbc</code> with <code>url</code>, <code>dbtable</code> and credentials (<code>ab519345</code>).</li>
+        <li><strong>Files as a table</strong>: <code>CREATE TABLE ... USING CSV OPTIONS (header, delimiter) LOCATION ...</code> (<code>e37b5308</code>). Prefer Parquet over CSV for a <code>CREATE TABLE AS SELECT</code> because <strong>Parquet carries its own schema</strong> and CSV does not (<code>5b22314e</code>).</li>
+        <li><strong><code>STREAM(LIVE.table)</code></strong> in a pipeline means the upstream is being read incrementally (<code>0cc3a156</code>); <code>CREATE STREAMING LIVE TABLE</code> is for append-only incremental sources, plain <code>CREATE LIVE TABLE</code> recomputes (<code>8b96c6a7</code>).</li>
+      </ul>
+    </section>
+
+    <!-- 5 -->
+    <section id="transform">
+      <h2 class="sect"><span class="num">05</span><span>Data Transformation and Modeling (22%)</span></h2>
+      <div class="sect-rule"></div>
+      <p class="lede">The biggest domain and the deck's biggest block, but the coverage is uneven: the deck
+      is strong on medallion design and DDL and almost silent on joins, aggregates and tuning.</p>
+
+      <h3>The DataFrame operations the outline names</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Operation</th><th>Spark</th><th>SQL</th><th>Deck</th></tr></thead>
+          <tbody>
+            <tr><td>Group and aggregate</td><td><code>df.groupBy("region").agg(sum("amt").alias("total"))</code></td><td><code>GROUP BY</code></td><td><code>714c3513</code>, <code>66dcd37c</code>, <code>d3fe1ff3</code></td></tr>
+            <tr><td>Project columns</td><td><code>df.select(...)</code></td><td><code>SELECT</code></td><td><code>b2eac0e1</code></td></tr>
+            <tr><td>Deduplicate</td><td><code>df.dropDuplicates(["a","b"])</code></td><td>&mdash;</td><td><code>927c138b</code></td></tr>
+            <tr><td>Union</td><td><code>df.union(other)</code></td><td><code>UNION</code> / <code>UNION ALL</code></td><td><code>7d8befb9</code></td></tr>
+            <tr><td>Broadcast a small side of a join</td><td><code>broadcast(df)</code></td><td><code>/*+ BROADCAST(t) */</code></td><td><code>37d2584a</code></td></tr>
+            <tr><td>Explode an array into rows</td><td><code>explode(col)</code></td><td><code>explode()</code></td><td><span class="no">none</span></td></tr>
+            <tr><td>Higher-order filter on an array</td><td>&mdash;</td><td><code>FILTER(arr, i -&gt; i.x &gt; 5)</code></td><td><code>90a659a5</code></td></tr>
+            <tr><td>Long to wide</td><td>&mdash;</td><td><code>PIVOT</code></td><td><code>9f03e206</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong><code>UNION</code> removes duplicates and <code>UNION ALL</code> keeps them.</strong>
+      <code>7d8befb9</code> keys <code>UNION</code> for combining two months of transactions; if the stem
+      says "every row including repeats", it is <code>UNION ALL</code>. The deck never asks this, and
+      Section 3 names both.</p>
+
+      <div class="call trap">
+        <span class="tag">Joins are a gap</span>
+        <p>The deck has broadcast joins and nothing else. What Section 3 names: inner, left, cross,
+        multiple keys, union and union all. The rules worth holding: an <strong>inner</strong> join drops
+        unmatched rows on both sides; a <strong>left</strong> join keeps every left row and nulls the right;
+        a <strong>cross</strong> join is the Cartesian product and is almost never the intended answer
+        unless the stem says "every combination"; a <strong>broadcast</strong> join is the optimisation when
+        one side is small enough to ship to every executor (<code>37d2584a</code>), which is the same thing
+        <code>spark.sql.autoBroadcastJoinThreshold</code> does automatically below its size limit.</p>
+        <p><strong>Aggregate breadth is a gap too.</strong> The deck has <code>count_if</code> twice.
+        Section 3 also names <code>approx_count_distinct</code> &mdash; an approximate distinct count that
+        trades exactness for speed on high-cardinality columns &mdash; plus <code>mean</code> and
+        <code>summary</code>, the profiling call that returns count, mean, stddev, min and max per column in
+        one pass.</p>
+      </div>
+
+      <h3>Counting nulls &mdash; the item worth reading twice</h3>
+      <p><code>d4cff52c</code> is the deck's sharpest SQL item and the reason to know the semantics rather
+      than the syntax:</p>
+      <ul>
+        <li><code>count_if(col &gt; 1)</code> counts rows where the predicate is <strong>true</strong>; a NULL <code>col</code> makes the predicate NULL, which is not true, so the row is not counted.</li>
+        <li><code>count(*)</code> counts <strong>rows</strong>, nulls included.</li>
+        <li><code>count(col1)</code> counts <strong>non-null values</strong> of that column.</li>
+      </ul>
+      <p>So the same table gives three different numbers from three counts, and the question is only hard if
+      you think <code>count(col)</code> and <code>count(*)</code> are the same thing. <code>b830bd4a</code>
+      is the same fact from the other side: the number of nulls is
+      <code>count_if(member_id IS NULL)</code>.</p>
+
+      <h3>DDL, DML and the objects you can create</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>You need</th><th>Object</th><th>Deck</th></tr></thead>
+          <tbody>
+            <tr><td>Persisted, shared across sessions, physical storage</td><td><strong>Table</strong></td><td><code>4521d38c</code></td></tr>
+            <tr><td>Scoped to one session, no storage</td><td><strong>Temp view</strong> &mdash; <code>CREATE TEMP VIEW</code></td><td><code>6f2f2961</code>, <code>19f13e4f</code></td></tr>
+            <tr><td>A saved query recomputed on read</td><td><strong>View</strong></td><td>&mdash;</td></tr>
+            <tr><td>A saved query with <strong>materialized results</strong>, refreshed incrementally</td><td><strong>Materialized view</strong></td><td><span class="no">none</span></td></tr>
+            <tr><td>Append-only incremental ingest target</td><td><strong>Streaming table</strong></td><td><code>8b96c6a7</code>, <code>9cd76b59</code></td></tr>
+            <tr><td>Create empty with a fixed schema, replacing whatever is there</td><td><code>CREATE OR REPLACE TABLE t (col TYPE, ...)</code></td><td><code>e15b1b0a</code>, <code>e93d65ad</code></td></tr>
+            <tr><td>Append a row</td><td><code>INSERT INTO t VALUES (...)</code></td><td><code>3c490978</code></td></tr>
+            <tr><td>Delete matching rows without rewriting the table</td><td><code>DELETE FROM t WHERE ...</code></td><td><code>576c09d6</code>, <code>18a58c20</code></td></tr>
+            <tr><td>Insert-or-update against a key, no duplicates</td><td><code>MERGE INTO</code></td><td><code>7770a34e</code></td></tr>
+            <tr><td>Reusable scalar logic in SQL</td><td><code>CREATE FUNCTION f(...) RETURNS ... RETURN CASE ...</code></td><td><code>ef32d90b</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="call">
+        <span class="tag">Materialized views &mdash; the named Gold object the deck skips</span>
+        <p>Section 3 asks you to distinguish "materialized views, views, streaming tables, and tables" for
+        BI teams. The line: a <strong>view</strong> stores a query and pays the compute on every read; a
+        <strong>materialized view</strong> stores the <em>result</em> and refreshes it, so BI readers pay
+        nothing; a <strong>streaming table</strong> is the append-only ingest target upstream of both. For a
+        dashboard over a large, slowly changing aggregate, the answer is a materialized view.</p>
+      </div>
+      <p><code>CREATE OR REPLACE TABLE</code> against <code>CREATE TABLE IF NOT EXISTS</code> is a real
+      distinction (<code>e15b1b0a</code>): the stem's "regardless of whether a table already exists" forces
+      the first.</p>
+
+      <h3>The medallion architecture</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Layer</th><th>Holds</th><th>Deck</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Bronze</strong></td><td>Raw, append-only, original schemas preserved, in Delta format; the only additions are provenance columns &mdash; load date/time, process id, source file</td><td><code>9356edb4</code>, <code>eda36319</code>, <code>f936e928</code>, <code>6c62630d</code></td></tr>
+            <tr><td><strong>Silver</strong></td><td>Cleaned, conformed, deduplicated, joined &mdash; the master customer record, the <code>customer_transactions</code> join</td><td><code>e1fce6fb</code>, <code>044f84a7</code>, <code>4139a66f</code></td></tr>
+            <tr><td><strong>Gold</strong></td><td>Aggregated, report-ready, business-level; the source for dashboards and BI</td><td><code>260f002c</code>, <code>4139a66f</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="call trap">
+        <span class="tag">The Bronze rule the exam keeps testing</span>
+        <p><strong>Do not transform on the way in.</strong> <code>9356edb4</code> and <code>f936e928</code>
+        both key "land it raw, append-only, minimal validation" over any option that cleans, filters or
+        conforms in Bronze. The reason is reprocessing &mdash; if Bronze holds exactly what arrived, every
+        downstream mistake is fixable without going back to the source. Adding an ingest timestamp and a
+        process id is not a transformation; it is provenance, and <code>eda36319</code> keys it.</p>
+      </div>
+
+      <h3>Data quality &mdash; expectations and their two actions</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Clause</th><th>Effect</th><th>Deck</th></tr></thead>
+          <tbody>
+            <tr><td><code>EXPECT (...)</code> with no action</td><td>Records are <strong>kept</strong> and the violation is counted in the event log</td><td>&mdash;</td></tr>
+            <tr><td><code>ON VIOLATION DROP ROW</code></td><td>Violating records are dropped from the target and recorded as invalid in the event log</td><td><code>17bff8a1</code>, <code>e86e463b</code></td></tr>
+            <tr><td><code>ON VIOLATION FAIL UPDATE</code></td><td>The <strong>update fails</strong> &mdash; the pipeline stops</td><td><code>7e554787</code>, <code>e86e463b</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><code>e86e463b</code> is the item that makes you choose between the two on a stated requirement,
+      and the tell is whether the stem wants the run to <em>continue</em> with clean data (DROP ROW) or to
+      <em>stop</em> so a human looks at it (FAIL UPDATE). <code>9cd76b59</code> shows the whole shape on a
+      streaming table, and <code>253200f6</code> and <code>9582ab27</code> key expectations as the mechanism
+      when a stem says "automatically monitor and enforce quality". <strong>Quality statistics are per table
+      on the pipeline page</strong> (<code>721d10bc</code>).</p>
+
+      <div class="call">
+        <span class="tag">Tuning parameters &mdash; the objective the deck never names</span>
+        <p>Section 3 asks you to "understand the basic tuning parameters &hellip; and re-measure the
+        performance." None of the four appears anywhere in the deck.</p>
+        <ul>
+          <li><code>spark.sql.shuffle.partitions</code> &mdash; how many partitions a shuffle produces. Too high on small data makes thousands of tiny tasks; too low makes each task too big to fit in memory.</li>
+          <li><code>spark.default.parallelism</code> &mdash; the default partition count for RDD operations with no shuffle setting of their own.</li>
+          <li><code>spark.executor.memory</code> / <code>spark.driver.memory</code> &mdash; heap per executor and per driver; the knob for an <code>OutOfMemoryError</code> that is not caused by skew.</li>
+          <li><code>spark.sql.autoBroadcastJoinThreshold</code> &mdash; the size below which Spark broadcasts the small side of a join automatically. Raising it turns more joins into broadcast joins; <code>-1</code> disables the behaviour.</li>
+        </ul>
+        <p>"Re-measure" is part of the objective: the exam expects you to change one and check the Spark UI,
+        not to know a magic number.</p>
+      </div>
+    </section>
+
+    <!-- 6 -->
+    <section id="jobs">
+      <h2 class="sect"><span class="num">06</span><span>Working with Lakeflow Jobs (16%)</span></h2>
+      <div class="sect-rule"></div>
+
+      <div class="call alert">
+        <span class="tag">The worst-covered domain in the deck relative to its weight</span>
+        <p>Sixteen per cent is about seven questions; the deck offers thirteen, and they cluster on two of
+        the four sub-objectives. A reader who trusts the deck here will meet unfamiliar vocabulary in the
+        exam &mdash; triggers other than cron, and control flow of any kind.</p>
+      </div>
+
+      <h3>What the deck does cover</h3>
+      <ul>
+        <li><strong>Tasks and dependencies.</strong> A job is a DAG of tasks; <em>Depends on</em> makes one wait for another (<code>5db322a2</code>, <code>d205b9c7</code>). A new upstream step is a new task the original depends on, not a second job.</li>
+        <li><strong>Repair.</strong> A failed run is re-run with <strong>Repair run</strong>, which re-executes only the failed and downstream tasks rather than the whole DAG &mdash; the answer when a stem says the workflow is expensive (<code>9318411d</code>, <code>b8d8ba3d</code>, <code>1b743a58</code>).</li>
+        <li><strong>Scheduling.</strong> Cron syntax carries a complex schedule between jobs (<code>e0215c73</code>); a scheduled job's cluster runs only long enough to do the work (<code>3781f6d5</code>); a Databricks SQL query can be scheduled to refresh from its own page (<code>87500e54</code>).</li>
+        <li><strong>Parameters.</strong> <code>dbutils.widgets</code> passes values such as file paths and processing dates into a notebook task (<code>b199b398</code>).</li>
+        <li><strong>Pipelines as jobs.</strong> A pipeline needs at least one notebook library (<code>93896ff1</code>) and may mix SQL and Python source notebooks in one pipeline (<code>ecd9e75b</code>).</li>
+      </ul>
+
+      <h3>Triggers &mdash; the objective the deck skips</h3>
+      <p>The deck knows one trigger: a schedule. The outline names six types and asks you to "choose between
+      time-based and data-driven triggers based on data availability."</p>
+      <div class="tw">
+        <table class="kv">
+          <thead><tr><th>Trigger</th><th>Fires when</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Scheduled</strong></td><td>A time-based schedule (cron) is due</td></tr>
+            <tr><td><strong>Table update</strong></td><td>Source tables are updated &mdash; the data-driven answer when an upstream table, not a clock, should start the job</td></tr>
+            <tr><td><strong>File arrival</strong></td><td>New files arrive in a monitored Unity Catalog external location or volume</td></tr>
+            <tr><td><strong>Model update</strong></td><td>A Unity Catalog model is created, a version is ready, or an alias is set (Beta)</td></tr>
+            <tr><td><strong>Continuous</strong></td><td>A new run starts whenever the last run finishes or fails</td></tr>
+            <tr><td><strong>None</strong></td><td>Manual: Run now, or an external orchestrator</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>File arrival, in the detail the exam can ask for.</strong> It monitors a Unity Catalog
+      external location or a volume, recursively including subdirectories, and makes "a best effort to check
+      for new files every minute." The <strong>Wait after last change</strong> advanced setting delays the
+      run until arrivals stop, and each new file resets the timer &mdash; the setting for sources that drop
+      files in batches. Without file events enabled there is a ceiling of <strong>50 jobs per
+      workspace</strong> using the trigger and <strong>10,000 files</strong> in the monitored location; with
+      file events enabled there is no file limit.</p>
+      <div class="call trap">
+        <span class="tag">The selection rule</span>
+        <p>A stem naming a clock ("every morning at 6", "nightly") is <strong>scheduled</strong>; a stem
+        naming an <em>event</em> ("as soon as the vendor drops the file", "when the upstream table
+        refreshes") is <strong>file arrival</strong> or <strong>table update</strong>. The deck's
+        <code>85fa27f8</code> teaches the Auto Loader answer to "as soon as the file arrives" &mdash; which
+        is correct for the read, but the <em>job</em> question has its own answer now.</p>
+      </div>
+
+      <h3>Control flow &mdash; the other objective the deck skips</h3>
+      <p>Section 4 names "retries and conditional tasks such as branching and looping."</p>
+      <ul>
+        <li><strong>Retries</strong> are per task: a retry policy with a maximum count and an interval.</li>
+        <li><strong>The If/else condition task</strong> runs part of the DAG "based on the results of a boolean expression" &mdash; for example, run the transform only if the ingest task actually added rows.</li>
+        <li><strong>The For each task</strong> runs another task in a loop over a list of inputs.</li>
+        <li><strong>Run if</strong> governs each dependency edge and has six settings: <strong>All succeeded</strong> (the default), <strong>At least one succeeded</strong>, <strong>None failed</strong>, <strong>All done</strong>, <strong>At least one failed</strong>, <strong>All failed</strong>. "All done" is the one for a cleanup or notification task that must run whatever happened upstream.</li>
+        <li>A task whose Run if condition is not met is marked <strong>Excluded</strong> and skipped, and <strong>exclusion cascades</strong>: if all of a task's dependencies are excluded, it is excluded too.</li>
+      </ul>
+      <p><code>c86a38ee</code> &mdash; the item where an analyst wants only the last query in a daily SQL
+      program to run on Sundays &mdash; keys wrapping the queries in PySpark and using Python's control
+      flow. That was the only answer once. Today it is an <strong>If/else condition task</strong> on a
+      day-of-week expression, and &sect;12 lists it as such.</p>
+    </section>
+
+    <!-- 7 -->
+    <section id="cicd">
+      <h2 class="sect"><span class="num">07</span><span>Implementing CI/CD (10%)</span></h2>
+      <div class="sect-rule"></div>
+      <p class="lede">Ten per cent, about five questions, and the deck's ten items cover the concepts but not
+      the promotion mechanics that Section 5 actually names.</p>
+
+      <h3>Git folders</h3>
+      <p>A Git folder (<strong>formerly Databricks Repos</strong> &mdash; &sect;12) clones a remote
+      repository into the workspace and tracks changes against it.</p>
+      <div class="tw">
+        <table class="kv">
+          <thead><tr><th>Operation</th><th>Where</th></tr></thead>
+          <tbody>
+            <tr><td>Create a branch, switch branches</td><td>In Databricks, from the Git dialog (<code>ef8652ae</code>)</td></tr>
+            <tr><td>Commit and push</td><td>In Databricks &mdash; <strong>Commit &amp; Push</strong></td></tr>
+            <tr><td>Pull remote changes made by a colleague</td><td>In Databricks &mdash; <strong>Pull</strong> (<code>f163d861</code>)</td></tr>
+            <tr><td>Merge a branch, rebase, reset, resolve conflicts</td><td>In Databricks, from the Git dialog's kebab menu</td></tr>
+            <tr><td><strong>Create a pull request, and merge that pull request</strong></td><td><strong>In your Git provider's interface</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="call alert">
+        <span class="tag">The one place the deck is contradicted by today's documentation</span>
+        <p><code>94a481b8</code> keys <strong>Merge</strong> as the operation that must be performed outside
+        Databricks Repos. The Git folders page now documents <em>Merge branches</em>, <em>Resolve merge
+        conflicts</em>, <em>Rebase a branch</em> and <em>Reset a branch</em> as in-product operations, and
+        says the thing you go to the provider for is to "create a pull request and merge it into the default
+        branch." The boundary moved from the merge to the <strong>pull request</strong>. See &sect;12.</p>
+      </div>
+      <p>The advantage of a Git folder over notebook revision history is <strong>branches</strong>
+      (<code>ef8652ae</code>): revision history is linear and per notebook, a repository is branched and
+      covers the project.</p>
+
+      <h3>Bundles</h3>
+      <p>A bundle &mdash; <strong>Declarative Automation Bundles</strong>, formerly Databricks Asset Bundles
+      &mdash; is a YAML description of a project's jobs, pipelines and other resources, deployed by the
+      Databricks CLI (<code>bc754c65</code>, <code>4362d421</code>). Exactly one
+      <strong><code>databricks.yml</code> at the repository root</strong> is the main configuration file,
+      and it may reference others (<code>3b2b15a2</code>). Bundles are the answer for version-controlled,
+      repeatable deployment to production (<code>d5ed9d2a</code>, <code>c6af1c01</code>).</p>
+
+      <div class="call">
+        <span class="tag">Targets and deployment modes &mdash; the objective the deck skips</span>
+        <p>The point of a bundle is one codebase promoted across environments, and the mechanism is
+        <strong>targets</strong>. <code>databricks bundle deploy -t &lt;target&gt;</code> selects one.</p>
+      </div>
+      <div class="tw">
+        <table>
+          <thead><tr><th><code>mode: development</code></th><th><code>mode: production</code></th></tr></thead>
+          <tbody>
+            <tr><td>Prefixes resources with <code>[dev ${workspace.current_user.short_name}]</code> and tags them <code>dev</code></td><td>Requires pipelines to be marked non-development</td></tr>
+            <tr><td><strong>Pauses all schedules and triggers</strong> on deployed resources</td><td>Can validate that the current Git branch matches the target's branch</td></tr>
+            <tr><td>Marks pipelines as development</td><td>Recommends a <strong>service principal</strong> as <code>run_as</code> and validates permissions</td></tr>
+            <tr><td>Allows concurrent runs; disables the deployment lock; allows <code>--cluster-id</code> override</td><td><strong>Does not allow overriding existing cluster definitions</strong>; validates that artifact and state paths are not user-specific</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>Variables and substitutions</strong> are how one definition differs per target &mdash; a
+      warehouse id, a catalog name, a schedule &mdash; without a second copy of the YAML. The CLI verbs to
+      recognise: <code>databricks bundle validate</code> (check the configuration),
+      <code>databricks bundle deploy</code> (push it), <code>databricks bundle run</code> (run a resource in
+      it).</p>
+
+      <h3>Databricks Connect</h3>
+      <p>Databricks Connect runs your code locally against a remote Databricks cluster or serverless
+      compute, so an engineer develops and tests in their own IDE while the work executes on the platform
+      (<code>4156034b</code>). Its prerequisites are worth holding: <strong>Unity Catalog enabled</strong> on
+      the workspace and a <strong>Databricks Connect version that supports serverless</strong>
+      (<code>cf9b73c2</code>).</p>
+    </section>
+
+    <!-- 8 -->
+    <section id="ops">
+      <h2 class="sect"><span class="num">08</span><span>Troubleshooting, Monitoring and Optimization (10%)</span></h2>
+      <div class="sect-rule"></div>
+      <p class="lede">The one domain where the deck's share matches the exam's. It is still missing
+      predictive optimization, and its Spark-UI items are softer than the exam's own sample question.</p>
+
+      <h3>Diagnosing a slow job in the Spark UI</h3>
+      <p>The documented path is: <strong>Jobs timeline &rarr; longest stage &rarr; look for skew or spill
+      &rarr; is it I/O bound &rarr; other causes.</strong> Two rules from the stage page are worth
+      memorising because they are numeric:</p>
+      <ul>
+        <li><strong>Skew</strong>: "If the Max duration is 50% more than the 75th percentile, you may be suffering from skew." On a healthy stage the 75th percentile and the Max are the same.</li>
+        <li><strong>Spill</strong>: spill statistics appear at the top of the stage details page. <strong>If there are no spill stats, there is no spill.</strong></li>
+      </ul>
+      <div class="call trap">
+        <span class="tag">The exam guide's own sample question</span>
+        <p>Sample question 1 is exactly this shape &mdash; most tasks under 30 seconds, one over 10 minutes,
+        median shuffle read 400&nbsp;MB against a max over 5&nbsp;GB &mdash; and its answer is
+        <strong>confirm adaptive query execution with skew join handling is active</strong> so the oversized
+        partition is split at runtime. Salting before the join is the manual version of the same fix, and
+        "increase cluster size" is the distractor: one oversized partition still runs on one task however
+        many executors you add.</p>
+      </div>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Symptom</th><th>Cause</th><th>Fix</th><th>Deck</th></tr></thead>
+          <tbody>
+            <tr><td>One task runs far longer than the rest; Max shuffle read dwarfs the median</td><td><strong>Data skew</strong></td><td>AQE skew join handling; salt the key; repartition</td><td><code>334c542a</code></td></tr>
+            <tr><td>Cluster is not fully utilised, tasks unevenly spread</td><td>Poor partitioning</td><td><strong>Repartition</strong> the dataset across nodes</td><td><code>42c02958</code></td></tr>
+            <tr><td><code>java.lang.OutOfMemoryError: Java heap space</code></td><td>Too much data per executor</td><td>Narrow the filters to collect less; upsize workers and adjust shuffle partitions</td><td><code>b0ef3381</code></td></tr>
+            <tr><td>High CPU time against task time</td><td>CPU-bound</td><td>Re-examine executor and worker sizing</td><td><code>d4bf69a2</code></td></tr>
+            <tr><td>A repeated scan of an unchanging table</td><td>Re-reading from storage</td><td><code>CACHE TABLE</code></td><td><code>80bcd63f</code></td></tr>
+            <tr><td>Queries filter on a column that is not the partition column</td><td>Poor data layout</td><td><code>OPTIMIZE ... ZORDER BY</code>, or liquid clustering</td><td><code>b92b838e</code>, <code>cebba9ec</code></td></tr>
+            <tr><td>Streaming ingest creating many small files</td><td>Small-file problem</td><td><code>autoCompact</code> (with <code>optimizeWrite</code>)</td><td><code>b88bac23</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Delta maintenance</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Command</th><th>Does</th><th>Deck</th></tr></thead>
+          <tbody>
+            <tr><td><code>OPTIMIZE</code></td><td>Compacts small files into larger ones</td><td><code>b92b838e</code></td></tr>
+            <tr><td><code>ZORDER BY</code></td><td>Colocates related data in the same files for filtered columns</td><td><code>b92b838e</code></td></tr>
+            <tr><td><strong>Liquid clustering</strong></td><td>Replaces both partitioning and Z-ordering; clustering keys can be changed without rewriting the table</td><td><code>cebba9ec</code></td></tr>
+            <tr><td><code>VACUUM</code></td><td>Deletes data files no longer referenced by the log, past the retention window</td><td><code>4f099cf4</code>, <code>be6c2bbb</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong><code>VACUUM</code> is what breaks time travel</strong>, and <code>be6c2bbb</code> is the
+      deck's best cautionary item: an engineer cannot restore to a three-day-old version because
+      <code>VACUUM</code> removed the files that version pointed at. The default deleted-file retention is
+      <strong>7 days</strong> (<code>delta.deletedFileRetentionDuration</code>), and <code>VACUUM FULL</code>
+      enforces a 7-day minimum regardless of configuration.</p>
+      <p><strong>Liquid clustering over partitioning</strong> is the modern answer
+      (<code>cebba9ec</code>): a table partitioned by <code>purchase_date</code> and also filtered heavily on
+      <code>customer_id</code> is a clustering problem, not a second-partition problem, because partitioning
+      on a high-cardinality column creates the small-file problem you were trying to solve.</p>
+
+      <div class="call">
+        <span class="tag">Predictive optimization &mdash; the objective the deck skips</span>
+        <p>Predictive optimization runs <code>OPTIMIZE</code>, <code>VACUUM</code> and <code>ANALYZE</code>
+        automatically on <strong>Unity Catalog managed tables</strong>, on serverless compute, without a
+        maintenance job. It is <strong>enabled by default for accounts created on or after 11 November
+        2024</strong>, and it does <strong>not</strong> run on external tables.</p>
+        <p>That is the sentence that makes the managed-versus-external choice (&sect;9) an operational
+        decision and not just a governance one &mdash; and it means a modern stem asking "how do you keep
+        this table optimised" keys predictive optimization, not a scheduled <code>OPTIMIZE</code> job.</p>
+      </div>
+
+      <h3>Monitoring</h3>
+      <ul>
+        <li><strong>Job run history and the Runs tab</strong> show which task in a run is slow and let you open its notebook output (<code>9803cecf</code>); the run-history view is where you compare a run against its historical baseline.</li>
+        <li><strong>Databricks SQL alerts</strong> watch a query's result and fire on a condition; the destination can be a <strong>webhook</strong> (<code>42c11595</code>, <code>c59ebbbc</code>) &mdash; the answer whenever a stem wants a notification somewhere other than email.</li>
+        <li><strong>Pipeline data-quality statistics</strong> are per table on the pipeline page (<code>721d10bc</code>).</li>
+        <li><strong>Debuggers</strong>: the Python notebook interactive debugger steps through a cell line by line (<code>b8479190</code>); the variable explorer shows values at a glance (<code>5c71f0db</code>).</li>
+      </ul>
+    </section>
+
+    <!-- 9 -->
+    <section id="governance">
+      <h2 class="sect"><span class="num">09</span><span>Governance and Security (15%)</span></h2>
+      <div class="sect-rule"></div>
+      <p class="lede">Fifteen per cent, about seven questions. The deck's 21 items cover grants, ownership
+      and sharing well, and miss both of the <em>newer</em> Section 7 objectives entirely.</p>
+
+      <h3>Managed against external tables</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th></th><th>Managed</th><th>External</th></tr></thead>
+          <tbody>
+            <tr><td>Who owns the files</td><td>Unity Catalog, in the metastore's managed storage</td><td>You, at a <code>LOCATION</code> you name</td></tr>
+            <tr><td><code>DROP TABLE</code></td><td>Removes metadata <strong>and the data files</strong> (<code>01a4251c</code>)</td><td>Removes <strong>metadata only</strong> (<code>a3d17a56</code>)</td></tr>
+            <tr><td>Created by</td><td><code>CREATE TABLE t (...)</code> with no <code>LOCATION</code> (<code>6a772acc</code>)</td><td><code>CREATE TABLE t ... LOCATION 'abfss://...'</code> (<code>393dfae5</code>)</td></tr>
+            <tr><td>Predictive optimization, automatic layout management</td><td><span class="yes">Yes</span></td><td><span class="no">No</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><code>a3d17a56</code> is the item that makes the distinction operational: dropping the managed
+      staging tables removes their data, and dropping the external tables that point at shared cloud storage
+      removes only the registrations &mdash; which is exactly what you want when another team still reads
+      those files.</p>
+
+      <h3>Privileges</h3>
+      <p>Unity Catalog is a three-level namespace, <code>catalog.schema.table</code>, and privileges are
+      inherited downward.</p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Grant</th><th>Gives</th><th>Deck</th></tr></thead>
+          <tbody>
+            <tr><td><code>GRANT USAGE ON DATABASE customers TO team</code></td><td>The ability to <em>see</em> the schema and what is in it &mdash; the prerequisite for anything else</td><td><code>39a9ae72</code></td></tr>
+            <tr><td><code>GRANT ALL PRIVILEGES ON TABLE sales TO team</code></td><td>Full control of that table</td><td><code>d96fcc04</code></td></tr>
+            <tr><td><code>GRANT ALL PRIVILEGES ON DATABASE customers TO team</code></td><td>Full control of everything in the schema</td><td><code>5da4fd9e</code></td></tr>
+            <tr><td><code>GRANT CREATE TABLE ON SCHEMA q</code> <strong>plus</strong> <code>GRANT USE SCHEMA ON SCHEMA q</code></td><td>Create tables &mdash; and both halves are needed</td><td><code>d7737ad3</code></td></tr>
+            <tr><td><code>GRANT SELECT ON VIEW v TO u</code></td><td>Read the view <strong>without</strong> any privilege on its underlying tables</td><td><code>da42fde3</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong><code>da42fde3</code> is the one to understand rather than memorise.</strong> A view's
+      reader needs <code>SELECT</code> on the view only; the view executes with its owner's privileges on the
+      tables underneath. That is the whole mechanism behind using views as a security boundary.</p>
+      <div class="call trap">
+        <span class="tag">The gap: DENY, and service principals</span>
+        <p>Section 7 names "GRANT, REVOKE, and DENY privileges to principals (users, groups, and service
+        principals)". The deck has GRANT and one REVOKE (<code>32080a59</code>), always to a group.
+        <strong><code>DENY</code></strong> explicitly refuses a privilege that would otherwise be inherited
+        from a higher level &mdash; the tool for carving one schema out of a catalog-wide grant. A
+        <strong>service principal</strong> is a non-human identity for automation, and it is the recommended
+        <code>run_as</code> for a production bundle deployment (&sect;7).</p>
+      </div>
+
+      <h3>Who can do what</h3>
+      <div class="tw">
+        <table class="kv">
+          <thead><tr><th>Role</th><th>Can</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Metastore admin</strong></td><td>Transfer ownership of any securable and manage privileges across all metastore objects &mdash; the answer when a departing owner's catalogs, storage credentials and external locations must be reassigned (<code>0964845e</code>)</td></tr>
+            <tr><td><strong>Object owner</strong> (catalog, schema, table)</td><td>Grant and revoke on that object and everything under it (<code>32080a59</code>)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Finding an owner is a UI task: <strong>the Owner field on the table's page in Catalog
+      Explorer</strong> (<code>b3e97d70</code>), which is also where you check your own permissions
+      (<code>0327f145</code>, <code>c41ece0b</code> &mdash; the same question under the old name,
+      <em>Data Explorer</em>, and the new one).</p>
+
+      <h3>Column masks, row filters and ABAC &mdash; the two objectives the deck skips</h3>
+      <p><strong>Row filters and column masks</strong> are per-table controls implemented as
+      <strong>SQL UDFs</strong>:</p>
+      <ul>
+        <li>A <strong>row filter</strong> is bound to a table with <code>ALTER TABLE ... SET ROW FILTER</code>, and its UDF returns <code>FALSE</code> for rows the caller must not see.</li>
+        <li>A <strong>column mask</strong> is bound to one column with <code>ALTER TABLE ... ALTER COLUMN ... SET MASK</code>, and its UDF returns either the original value or a masked one; the return type must match the column's.</li>
+        <li>The table <strong>owner or a principal with <code>MANAGE</code></strong> applies them.</li>
+        <li>They need <strong>DBR 12.2 LTS or above</strong>, and they <strong>cannot be applied to views</strong>. <code>MERGE</code> is not supported against a table whose policy contains nesting, aggregations, windows, limits or non-deterministic functions, and cloning is not supported.</li>
+      </ul>
+      <p><strong>ABAC</strong> is the same two capabilities driven by attributes instead of per-table
+      bindings. A <strong>governance policy</strong> is attached at a level of the hierarchy &mdash; catalog,
+      schema or table, and metastore in Beta &mdash; and targets <strong>governed tags</strong>: any object
+      carrying a matching tag is covered, automatically, without touching the table. It delivers row
+      filtering, column masking and dynamic <code>GRANT</code> policies, with <code>DENY</code> policies in
+      Beta.</p>
+      <div class="call">
+        <span class="tag">Choosing between them</span>
+        <p>A <strong>row filter or column mask</strong> when one table needs one rule; an <strong>ABAC
+        policy</strong> when "every table tagged <code>pii</code> must mask its email column" is the
+        requirement.</p>
+      </div>
+
+      <h3>Sharing</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Recipient</th><th>Mechanism</th><th>Deck</th></tr></thead>
+          <tbody>
+            <tr><td>Another Databricks workspace with Unity Catalog, on any cloud</td><td><strong>Databricks-to-Databricks sharing</strong> &mdash; exchange the <strong>sharing identifier</strong> of the recipient's metastore; no data is copied and no replication is configured</td><td><code>9df48f77</code>, <code>855493c1</code>, <code>0caebf63</code></td></tr>
+            <tr><td>A partner <strong>not</strong> on Databricks</td><td><strong>Open sharing protocol</strong></td><td><code>0774a092</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><code>9df48f77</code> is the one that catches people: AWS workspace to Azure workspace still needs
+      no special configuration, because Delta Sharing is cloud-agnostic.</p>
+      <p><strong>Lineage</strong> shows every dependency of a table, including where it is used downstream
+      (<code>3b73f7fd</code>) &mdash; the answer to "what uses this?" rather than "who can read this?".
+      <strong>Lakehouse Federation</strong> queries MySQL, Redshift, BigQuery, Synapse and on-premises
+      PostgreSQL in place, without ingesting (<code>145c9e5f</code>, <code>883f4c22</code>) &mdash; the
+      answer whenever a stem says "avoid data duplication" and "up-to-date".</p>
+    </section>
+
+    <!-- 10 -->
+    <section id="numbers">
+      <h2 class="sect"><span class="num">10</span><span>Numbers to memorise</span></h2>
+      <div class="sect-rule"></div>
+      <div class="tw">
+        <table class="kv">
+          <tbody>
+            <tr><td>Exam</td><td><strong>45 scored</strong> questions, <strong>90 minutes</strong>, US$200, valid <strong>2 years</strong>, version <strong>4 May 2026</strong></td></tr>
+            <tr><td>Domain weights</td><td>Platform 6 &middot; <strong>Ingestion 21</strong> &middot; <strong>Transformation 22</strong> &middot; <strong>Jobs 16</strong> &middot; CI/CD 10 &middot; Ops 10 &middot; <strong>Governance 15</strong></td></tr>
+            <tr><td>Skew rule of thumb</td><td>Max stage-task duration <strong>&gt; 50%</strong> above the 75th percentile</td></tr>
+            <tr><td><code>VACUUM</code> default retention</td><td><strong>7 days</strong> (<code>delta.deletedFileRetentionDuration</code>); <code>VACUUM FULL</code> enforces 7 days minimum</td></tr>
+            <tr><td>Predictive optimization</td><td>On by default for accounts created on or after <strong>11 Nov 2024</strong>; <strong>managed tables only</strong></td></tr>
+            <tr><td>File arrival trigger</td><td>Checked about every <strong>minute</strong>; without file events, <strong>50 jobs</strong> per workspace and <strong>10,000 files</strong> per location</td></tr>
+            <tr><td>Run if settings</td><td><strong>6</strong> &mdash; All succeeded (default), At least one succeeded, None failed, All done, At least one failed, All failed</td></tr>
+            <tr><td>Job trigger types</td><td>Scheduled, table update, file arrival, model update (Beta), continuous, none</td></tr>
+            <tr><td>Notebook output on a job cluster</td><td><strong>30 MB</strong></td></tr>
+            <tr><td>Notebook size</td><td>100 MB (10 MB for DBC/HTML/source); <strong>6 MB</strong> per cell input</td></tr>
+            <tr><td>Notebook table results</td><td><strong>10,000 rows or 2 MB</strong>, whichever is lower</td></tr>
+            <tr><td>Row filters and column masks</td><td><strong>DBR 12.2 LTS</strong> or above; not on views</td></tr>
+            <tr><td>Bundle configuration</td><td>Exactly <strong>one <code>databricks.yml</code></strong> at the repository root</td></tr>
+            <tr><td>Unity Catalog namespace</td><td>Three levels: <code>catalog.schema.table</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 11 -->
+    <section id="tells">
+      <h2 class="sect"><span class="num">11</span><span>Distractor tells</span></h2>
+      <div class="sect-rule"></div>
+      <p class="lede">Patterns in how this exam writes wrong answers, from the deck's 147 and its
+      fact-check.</p>
+      <ol class="prose">
+        <li><strong>The invented option value.</strong> A configuration key or enum that sounds plausible and does not exist &mdash; the fact-check found two of these (a breakpoint said to raise type errors, a bare <code>TBLPROPERTIES PII</code> that is a syntax error). Any option naming a setting you cannot place is a candidate.</li>
+        <li><strong>A default quoted as a ceiling.</strong> The deck's fact-check found one outright. <code>VACUUM</code>'s 7 days is a default you can change; the 50-job file-arrival limit is a real ceiling. Know which is which.</li>
+        <li><strong>Transforming in Bronze.</strong> Any option that cleans, filters, deduplicates or conforms on the way into Bronze is wrong (<code>9356edb4</code>, <code>f936e928</code>).</li>
+        <li><strong>A roll-your-own where a platform feature exists.</strong> A scheduled <code>OPTIMIZE</code> job against predictive optimization; a custom file-tracking table against <code>COPY INTO</code>'s idempotency; a polling notebook against a file-arrival trigger.</li>
+        <li><strong>The wrong half of the streaming/batch pair.</strong> <code>spark.read</code> in a stem that says "incremental" (<code>e994ba67</code>); <code>CREATE LIVE TABLE</code> where the source is append-only (<code>8b96c6a7</code>); <code>processingTime</code> where the stem wants one pass and a stop (<code>db601c4b</code>).</li>
+        <li><strong>A grant that is missing its other half.</strong> <code>CREATE TABLE ON SCHEMA</code> with no <code>USE SCHEMA</code> (<code>d7737ad3</code>); a privilege on the table when the reader needs it on the view (<code>da42fde3</code>).</li>
+        <li><strong>Copying data when the question says not to.</strong> Replication, ETL into Databricks, or a nightly export, where Delta Sharing (<code>9df48f77</code>) or Lakehouse Federation (<code>145c9e5f</code>) is offered.</li>
+        <li><strong>The bigger cluster.</strong> "Increase cluster size" is the distractor of choice for a skew problem &mdash; it is the wrong answer in the exam guide's own sample question 1, because a single oversized partition still runs on one task however many executors you add.</li>
+        <li><strong>The retired tool by its old name.</strong> See &sect;12; on a May 2026 paper, a <em>Databricks Repos</em> or <em>Delta Live Tables</em> option is not automatically wrong, but the <em>current</em> name is the safer read of the intent.</li>
+        <li><strong><code>count(col)</code> treated as <code>count(*)</code>.</strong> <code>d4cff52c</code> exists to punish this.</li>
+      </ol>
+
+      <h3>Read the question's own verb</h3>
+      <ul>
+        <li><strong>"as soon as the file arrives"</strong> &rarr; Auto Loader for the read; a <strong>file-arrival trigger</strong> for the job.</li>
+        <li><strong>"incrementally", "only new data"</strong> &rarr; streaming table, Auto Loader, <code>COPY INTO</code>, or <code>availableNow</code>.</li>
+        <li><strong>"without duplicating", "up-to-date"</strong> &rarr; Lakehouse Federation or Delta Sharing.</li>
+        <li><strong>"the job must stop"</strong> &rarr; <code>ON VIOLATION FAIL UPDATE</code>; <strong>"keep the clean rows"</strong> &rarr; <code>DROP ROW</code>.</li>
+        <li><strong>"costly workflow", "already succeeded"</strong> &rarr; Repair run, not re-run.</li>
+        <li><strong>"exactly once"</strong> &rarr; checkpointing and write-ahead logs.</li>
+        <li><strong>"can be safely removed entirely"</strong> &rarr; managed table; <strong>"still used by another team"</strong> &rarr; external table.</li>
+        <li><strong>"whatever happened upstream"</strong> &rarr; Run if: All done.</li>
+        <li><strong>"different partner, not on Databricks"</strong> &rarr; Delta Sharing <strong>open</strong> protocol.</li>
+        <li><strong>"without managing infrastructure"</strong> &rarr; serverless.</li>
+      </ul>
+    </section>
+
+    <!-- 12 -->
+    <section id="stale">
+      <h2 class="sect"><span class="num">12</span><span>Where the deck is older than the exam</span></h2>
+      <div class="sect-rule"></div>
+
+      <div class="call alert">
+        <span class="tag">The largest staleness section of any guide in this repo</span>
+        <p>Almost all of it is <strong>vocabulary rather than mechanism</strong>. Between the scrape and the
+        4 May 2026 exam version, Databricks renamed four of the products this deck is mostly about. The
+        mechanisms did not change; the names on the screen and in the option text did.</p>
+      </div>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>The deck says</th><th>The exam and the docs now say</th><th>In the deck</th></tr></thead>
+          <tbody>
+            <tr><td>Delta Live Tables / DLT</td><td><strong>Lakeflow Spark Declarative Pipelines</strong> (docs: <em>Spark Declarative Pipelines</em>)</td><td class="num">11 questions</td></tr>
+            <tr><td>Databricks Repos</td><td><strong>Databricks Git folders</strong></td><td class="num">9 questions</td></tr>
+            <tr><td>Databricks Workflows / Jobs</td><td><strong>Lakeflow Jobs</strong></td><td class="num">13 questions</td></tr>
+            <tr><td>Databricks Asset Bundles (DAB)</td><td><strong>Declarative Automation Bundles</strong></td><td class="num">5 questions</td></tr>
+            <tr><td>Data Explorer</td><td><strong>Catalog Explorer</strong></td><td><code>c41ece0b</code> / <code>0327f145</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Two of the deck's explanations already use the new vocabulary &mdash; <code>253200f6</code> and
+      <code>9cd76b59</code> say "Lakeflow Declarative Pipelines (formerly Delta Live Tables)", written during
+      the 2026-08-15 fact-check. The option text does not, and it stays as scraped, which is this repo's
+      standing decision on product renames.</p>
+      <p><strong>Answer these the current way.</strong> The exam guide's own sub-objectives are written in
+      the new names throughout, so an option reading <em>Lakeflow Jobs</em> in a question whose deck twin
+      reads <em>Workflows</em> is the same answer, not a distractor.</p>
+
+      <h3>One item the documentation now contradicts</h3>
+      <div class="call alert">
+        <span class="tag"><code>94a481b8</code> &mdash; "Which Git operation must be performed outside of Databricks Repos?"</span>
+        <p>It keys <strong>Merge</strong>. The Git folders page documents <em>Merge branches</em>,
+        <em>Resolve merge conflicts</em>, <em>Rebase a branch</em> and <em>Reset a branch</em> as operations
+        you perform from the Git dialog inside Databricks, and says the thing you leave for the provider is
+        to "create a pull request and merge it into the default branch." The boundary moved from the merge to
+        the <strong>pull request</strong>, and Section 5's objective is written the same way: "creating pull
+        requests using Databricks Git integration."</p>
+        <p>The key has <strong>not</strong> been moved in the deck &mdash; a key change needs a fact-check
+        pass with its own citation and correction notice, not a study guide. Treat this item as the exam's
+        older answer and know the current one.</p>
+      </div>
+
+      <h3>Exam-right, production-wrong</h3>
+      <p>Three items where the deck's answer is what an exam aligned to an older platform tests, and not what
+      you would build today.</p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Item</th><th>Keyed as</th><th>What you would do now</th></tr></thead>
+          <tbody>
+            <tr><td><code>c86a38ee</code> &mdash; run only the last query in a daily SQL program on Sundays</td><td>Wrap the queries in PySpark and use Python control flow</td><td>An <strong>If/else condition task</strong> on a day-of-week expression, with the final query as its own task</td></tr>
+            <tr><td><code>b92b838e</code>, <code>cebba9ec</code> &mdash; keeping a large table's layout fast</td><td><code>OPTIMIZE ZORDER BY</code>, or altering the table to liquid clustering</td><td><strong>Liquid clustering</strong> plus <strong>predictive optimization</strong>, which runs <code>OPTIMIZE</code>, <code>VACUUM</code> and <code>ANALYZE</code> for you on a managed table</td></tr>
+            <tr><td><code>4f099cf4</code> &mdash; reclaiming storage from unreferenced files</td><td>Run <code>VACUUM</code></td><td>Predictive optimization runs it on managed tables; a hand-run <code>VACUUM</code> is for external tables and for a forced retention change</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>And one from the exam's own side: the <strong>exam guide's sample question 4</strong> keys <em>a
+      high-concurrency cluster with autoscaling</em> for multiple analysts running ad-hoc SQL.
+      High-concurrency is a legacy cluster mode; the current answer to that requirement is a <strong>serverless
+      SQL warehouse</strong>, which is what four deck items key (<code>7fc931cb</code>, <code>25c59e18</code>,
+      <code>047d9dcc</code>, <code>630dc828</code>). The sample questions are labelled as "retired from a
+      previous version of the exam", which is the vendor telling you the same thing this section does.</p>
+    </section>
+
+    <!-- 13 -->
+    <section id="plan">
+      <h2 class="sect"><span class="num">13</span><span>Two-week revision plan</span></h2>
+      <div class="sect-rule"></div>
+      <div class="tw">
+        <table>
+          <thead><tr><th class="num-col">Day</th><th>Focus</th></tr></thead>
+          <tbody>
+            <tr><td class="num">1</td><td>&sect;4 the four ways to land data; <strong>COPY INTO and Lakeflow Connect from scratch</strong> &mdash; they are pure gap</td></tr>
+            <tr><td class="num">2</td><td>&sect;4 Auto Loader in detail; schema inference and the evolution modes; drill the ingestion items</td></tr>
+            <tr><td class="num">3</td><td>&sect;4 Structured Streaming &mdash; checkpoints, watermarks, the two triggers, output modes</td></tr>
+            <tr><td class="num"><strong>4</strong></td><td><strong>&sect;6 Lakeflow Jobs: the six trigger types and the Run if settings from memory</strong> &mdash; the worst-covered domain</td></tr>
+            <tr><td class="num"><strong>5</strong></td><td><strong>&sect;6 control flow &mdash; If/else, For each, retries, exclusion cascading</strong>; re-answer <code>c86a38ee</code> the modern way</td></tr>
+            <tr><td class="num">6</td><td>&sect;5 medallion layers and expectations; write both <code>ON VIOLATION</code> clauses from memory</td></tr>
+            <tr><td class="num">7</td><td>&sect;5 DataFrame operations, the join table, the aggregate gap, and <code>count_if</code> semantics until <code>d4cff52c</code> is automatic</td></tr>
+            <tr><td class="num">8</td><td>&sect;5 DDL/DML and the four Gold objects &mdash; <strong>materialized view against view against streaming table</strong></td></tr>
+            <tr><td class="num"><strong>9</strong></td><td><strong>&sect;9 governance: the grant table, managed against external, and the masks/filters/ABAC gap</strong></td></tr>
+            <tr><td class="num">10</td><td>&sect;9 Delta Sharing and federation; &sect;3 the compute table</td></tr>
+            <tr><td class="num">11</td><td>&sect;8 Spark UI &mdash; the skew rule, the spill check, and the maintenance commands; <strong>predictive optimization</strong></td></tr>
+            <tr><td class="num">12</td><td>&sect;7 CI/CD &mdash; Git folders' boundary, bundle targets and deployment modes</td></tr>
+            <tr><td class="num">13</td><td>&sect;10 numbers (cover and reproduce); &sect;12 the rename table until the new names are the reflex</td></tr>
+            <tr><td class="num">14</td><td>Full deck run at 2 minutes a question &mdash; 147 items is two sittings. Re-read &sect;6 and &sect;12. Rest</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 14 -->
+    <section id="sources">
+      <h2 class="sect"><span class="num">14</span><span>Sources</span></h2>
+      <div class="sect-rule"></div>
+      <p>Every URL below was rendered and title-checked while writing this guide on 2026-09-25.
+      <code>docs.databricks.com</code> returns an honest HTTP 404 for an invented path, so these were checked
+      by status and title rather than in a browser &mdash; the exception to this repo's usual rule.</p>
+
+      <h4>The exam</h4>
+      <ul class="linklist">
+        <li><a href="https://www.databricks.com/learn/certification/data-engineer-associate">Databricks Certified Data Engineer Associate</a> &mdash; <span class="why">the domain weights, question count and time limit.</span></li>
+        <li><a href="https://www.databricks.com/sites/default/files/2026-05/databricks-certified-data-engineer-associate-exam-guide-may-2026-000.pdf">Data Engineer Associate Exam Guide (PDF, May 2026)</a> &mdash; <span class="why">the sub-objectives and five retired sample questions.</span></li>
+      </ul>
+
+      <h4>Platform</h4>
+      <ul class="linklist">
+        <li><a href="https://docs.databricks.com/aws/en/getting-started/overview">High-level architecture</a>, <a href="https://docs.databricks.com/aws/en/compute/serverless/">Connect to serverless compute</a>, <a href="https://docs.databricks.com/aws/en/compute/pool-index">Connect to pools</a></li>
+        <li><a href="https://docs.databricks.com/aws/en/notebooks/notebook-limitations">Notebook limitations</a> &mdash; <span class="why">the 30 MB, 6 MB and 10,000-row numbers.</span></li>
+      </ul>
+
+      <h4>Ingestion</h4>
+      <ul class="linklist">
+        <li><a href="https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/">What is Auto Loader?</a> and <a href="https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/schema">Configure schema inference and evolution in Auto Loader</a></li>
+        <li><a href="https://docs.databricks.com/aws/en/ingestion/copy-into/">Get started using COPY INTO to load data</a> and <a href="https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into">COPY INTO</a></li>
+        <li><a href="https://docs.databricks.com/aws/en/ingestion/lakeflow-connect/">Lakeflow Connect connector concepts</a> and <a href="https://docs.databricks.com/aws/en/ingestion/">Choose a standard connector</a></li>
+        <li><a href="https://docs.databricks.com/aws/en/structured-streaming/triggers">Configure Structured Streaming trigger intervals</a>, <a href="https://docs.databricks.com/aws/en/structured-streaming/watermarks">Apply watermarks</a>, <a href="https://docs.databricks.com/aws/en/structured-streaming/checkpoints">Checkpoints</a></li>
+      </ul>
+
+      <h4>Transformation and modeling</h4>
+      <ul class="linklist">
+        <li><a href="https://docs.databricks.com/aws/en/lakehouse/medallion">What is the medallion lakehouse architecture?</a></li>
+        <li><a href="https://docs.databricks.com/aws/en/ldp/expectations">Manage data quality with pipeline expectations</a>, <a href="https://docs.databricks.com/aws/en/ldp/">Spark Declarative Pipelines</a>, <a href="https://docs.databricks.com/aws/en/ldp/concepts/streaming-tables">Streaming tables</a></li>
+        <li><a href="https://docs.databricks.com/aws/en/views/materialized">Use standalone materialized views</a> and <a href="https://docs.databricks.com/aws/en/tables/streaming">Use standalone streaming tables</a></li>
+        <li><a href="https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join">JOIN</a>, <a href="https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-setops">Set operators</a>, <a href="https://docs.databricks.com/aws/en/sql/language-manual/functions/count_if">count_if</a>, <a href="https://docs.databricks.com/aws/en/sql/language-manual/functions/approx_count_distinct">approx_count_distinct</a>, <a href="https://docs.databricks.com/aws/en/sql/language-manual/functions/explode">explode</a></li>
+      </ul>
+
+      <h4>Jobs</h4>
+      <ul class="linklist">
+        <li><a href="https://docs.databricks.com/aws/en/jobs/triggers">Automate jobs with schedules and triggers</a> &mdash; <span class="why">the six trigger types.</span></li>
+        <li><a href="https://docs.databricks.com/aws/en/jobs/file-arrival-triggers">Trigger jobs when new files arrive</a> &mdash; <span class="why">the per-minute check and the 50-job / 10,000-file limits.</span></li>
+        <li><a href="https://docs.databricks.com/aws/en/jobs/conditional-tasks">Configure task dependencies</a> &mdash; <span class="why">Run if and the If/else condition task.</span></li>
+        <li><a href="https://docs.databricks.com/aws/en/jobs/for-each">Use a For each task to run another task in a loop</a></li>
+        <li><a href="https://docs.databricks.com/aws/en/jobs/repair-job-failures">Troubleshoot and repair job failures</a> and <a href="https://docs.databricks.com/aws/en/jobs/monitor">Monitor Lakeflow Jobs</a></li>
+      </ul>
+
+      <h4>CI/CD</h4>
+      <ul class="linklist">
+        <li><a href="https://docs.databricks.com/aws/en/repos/">Databricks Git folders</a> and <a href="https://docs.databricks.com/aws/en/repos/git-operations-with-repos">Create and manage Git folders</a> &mdash; <span class="why">the merge-versus-pull-request boundary.</span></li>
+        <li><a href="https://docs.databricks.com/aws/en/dev-tools/bundles/">What are Declarative Automation Bundles?</a>, <a href="https://docs.databricks.com/aws/en/dev-tools/bundles/deployment-modes">deployment modes</a>, <a href="https://docs.databricks.com/aws/en/dev-tools/bundles/variables">substitutions and variables</a></li>
+        <li><a href="https://docs.databricks.com/aws/en/dev-tools/cli/">Databricks CLI</a> and <a href="https://docs.databricks.com/aws/en/dev-tools/databricks-connect/">Databricks Connect</a></li>
+      </ul>
+
+      <h4>Troubleshooting and optimization</h4>
+      <ul class="linklist">
+        <li><a href="https://docs.databricks.com/aws/en/optimizations/spark-ui-guide/">Diagnose cost and performance issues using the Spark UI</a> and <a href="https://docs.databricks.com/aws/en/optimizations/spark-ui-guide/long-spark-stage-page">Skew and spill</a> &mdash; <span class="why">the 50%-above-75th-percentile rule.</span></li>
+        <li><a href="https://docs.databricks.com/aws/en/optimizations/aqe">Adaptive query execution</a></li>
+        <li><a href="https://docs.databricks.com/aws/en/optimizations/predictive-optimization">Predictive optimization</a>, <a href="https://docs.databricks.com/aws/en/delta/clustering">Use liquid clustering</a>, <a href="https://docs.databricks.com/aws/en/delta/vacuum">Remove unused data files with vacuum</a>, <a href="https://docs.databricks.com/aws/en/delta/history">Work with table history</a></li>
+        <li><a href="https://docs.databricks.com/aws/en/sql/user/alerts/">Databricks SQL alerts</a></li>
+      </ul>
+
+      <h4>Governance and security</h4>
+      <ul class="linklist">
+        <li><a href="https://docs.databricks.com/aws/en/data-governance/unity-catalog/access-control/privileges-reference">Unity Catalog privileges reference</a>, <a href="https://docs.databricks.com/aws/en/sql/language-manual/security-grant">GRANT</a>, <a href="https://docs.databricks.com/aws/en/sql/language-manual/security-revoke">REVOKE</a>, <a href="https://docs.databricks.com/aws/en/sql/language-manual/security-deny">DENY</a></li>
+        <li><a href="https://docs.databricks.com/aws/en/data-governance/unity-catalog/manage-privileges/admin-privileges">Admin privileges in Unity Catalog</a></li>
+        <li><a href="https://docs.databricks.com/aws/en/tables/row-and-column-filters">Row filters and column masks</a> and <a href="https://docs.databricks.com/aws/en/data-governance/unity-catalog/abac/">Attribute-based access control in Unity Catalog</a></li>
+        <li><a href="https://docs.databricks.com/aws/en/tables/managed">Unity Catalog managed tables</a>, <a href="https://docs.databricks.com/aws/en/tables/external">Work with external tables</a>, <a href="https://docs.databricks.com/aws/en/volumes/">Unity Catalog volumes</a></li>
+        <li><a href="https://docs.databricks.com/aws/en/delta-sharing/">What is OpenSharing?</a> and <a href="https://docs.databricks.com/aws/en/query-federation/">Connect to external databases and catalogs</a></li>
+      </ul>
+    </section>
+
+    <!-- 15 -->
+    <section id="notebooklm">
+      <h2 class="sect"><span class="num">15</span><span>Using this with NotebookLM</span></h2>
+      <div class="sect-rule"></div>
+      <p>Upload the Markdown version of this guide
+      (<code>study-guides/databricks-data-engineer-associate.md</code>) as a source. Markdown ingests cleanly
+      and the headings become NotebookLM's navigation.</p>
+      <p>Worth adding as additional sources: the
+      <a href="https://www.databricks.com/sites/default/files/2026-05/databricks-certified-data-engineer-associate-exam-guide-may-2026-000.pdf">exam guide PDF</a>,
+      <a href="https://docs.databricks.com/aws/en/jobs/triggers">Automate jobs with schedules and triggers</a>
+      and <a href="https://docs.databricks.com/aws/en/tables/row-and-column-filters">Row filters and column masks</a>
+      &mdash; the exam's own statement of scope, and the two pages behind the deck's biggest gaps.</p>
+
+      <h3>Prompts that produce useful study media</h3>
+      <ul class="prompts">
+        <li>"Generate an Audio Overview of section 6. Have the hosts describe a scheduling requirement &mdash; a nightly load, a vendor file that arrives at no fixed time, an upstream table that refreshes irregularly &mdash; and argue over which trigger type fits each one."</li>
+        <li>"Using section 4, drill me on ingestion tool selection: give me a source and a requirement and ask whether it is Auto Loader, COPY INTO, Lakeflow Connect managed, Lakeflow Connect standard, or federation. Don't give me the answer until I try."</li>
+        <li>"Turn section 10 into flashcards &mdash; one number per card."</li>
+        <li>"Using section 12, quiz me on each renamed product: give me the old name and make me produce the current one, then the reverse."</li>
+        <li>"Using section 9, give me a data-protection requirement and ask whether it needs a GRANT, a DENY, a row filter, a column mask, or an ABAC policy, and why the others do not fit."</li>
+      </ul>
+      <p>For the Audio Overview, sections 4, 6 and 11 reward listening &mdash; they are selection decisions
+      argued out loud. Sections 10 and 14 are lookups and will not survive being read aloud.</p>
+    </section>
+
+  </main>
+
+  <footer class="colophon">
+    Compiled from the 147 questions in <code>databricks-data-engineer-associate.json</code>, the official
+    Databricks Certified Data Engineer Associate exam guide of 4 May 2026, and the documentation those
+    questions cite. The deck carries no domain tags at all &mdash;
+    <code>study-guides/reclassify-databricks.mjs</code> holds the per-question calls against the seven
+    current sections. Every URL in &sect;14 was status- and title-checked on 2026-09-25;
+    <code>docs.databricks.com</code> answers an invented path with a real HTTP 404, so that check is
+    sufficient on this vendor in a way it is not on Salesforce Help.
+  </footer>
+
+</div>
+</body>
+</html>
