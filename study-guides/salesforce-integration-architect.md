@@ -1,6 +1,6 @@
 # Salesforce Certified Platform Integration Architect — Study Guide
 
-**Built from the 141 questions in `integration_architect_questions_corrected.json`, cross-checked
+**Built from the 146 questions in `integration_architect_questions_corrected.json`, cross-checked
 against the official exam outline and the documentation those questions cite.**
 
 Every fact below traces to a rendered Salesforce page (see [Sources](#16-sources)) or to this
@@ -41,16 +41,16 @@ Official outline weightings, and what they translate to in raw question count:
 
 | Domain | Weight | ≈ Questions | Deck coverage | Verdict |
 |---|---:|---:|---:|---|
-| Evaluate the Current System Landscape | 8% | ~5 | 4 (2.8%) | **under-trained** |
-| Evaluate Business Needs | 11% | ~7 | 4 (2.8%) | **under-trained** |
-| Translate Needs to Integration Requirements | 22% | ~13 | 7 (5.0%) | **badly under-trained** |
-| Design Integration Solutions | 28% | ~17 | 72 (51.1%) | over-represented |
-| Build Solution | 23% | ~14 | 37 (26.2%) | about right |
-| Maintain Integration | 8% | ~5 | 17 (12.1%) | over-represented |
+| Evaluate the Current System Landscape | 8% | ~5 | 4 (2.7%) | **under-trained** |
+| Evaluate Business Needs | 11% | ~7 | 4 (2.7%) | **under-trained** |
+| Translate Needs to Integration Requirements | 22% | ~13 | 7 (4.8%) | **badly under-trained** |
+| Design Integration Solutions | 28% | ~17 | 75 (51.4%) | over-represented |
+| Build Solution | 23% | ~14 | 39 (26.7%) | about right |
+| Maintain Integration | 8% | ~5 | 17 (11.6%) | over-represented |
 
 ### The gap you need to close
 
-The first three domains are **41% of the exam — roughly 25 of your 60 questions — and only 10.6%
+The first three domains are **41% of the exam — roughly 25 of your 60 questions — and only 10.3%
 of the deck.** If you drill the deck to 100% and walk in, you have thoroughly rehearsed the
 pattern-picking half of the exam and barely touched the requirements-gathering half.
 
@@ -66,24 +66,27 @@ unreliable per-question: `18073510` and `c7d46b81` are the same lead-migration q
 **Build** and **Design**; `ff6c0296` and `b054672a` are the same batch-size question tagged
 **Maintain** and **Build**.
 
-But re-classifying all 133 questions independently — by what each one actually tests, ignoring
-`_cat` — lands on the same distribution. (This was measured before the 2026-08-25 import added
-7 questions; all 7 landed in Design and Build, so it moved the gap the wrong way, not the right
-one.)
+But re-classifying all 146 questions independently — by what each one actually tests, ignoring
+`_cat` — lands on the same distribution. (Re-measured 2026-09-25, after the 2026-08-25
+loose-question import added 8 and the 2026-09-11 branch recovery added 5. Of those 13, seven
+landed in Design and three in Build, so the imports moved the gap the wrong way rather than the
+right one.)
 
 | Domain | Exam | Deck tag | Independent re-tag | Steelman |
 |---|---:|---:|---:|---:|
-| Evaluate the Current System Landscape | 8% | 3.0% | 3.0% | 3.0% |
-| Evaluate Business Needs | 11% | 3.0% | 2.3% | 2.3% |
-| Translate Needs to Integration Requirements | 22% | 4.5% | 5.3% | 12.8% |
-| Design Integration Solutions | 28% | 51.1% | 50.4% | 42.9% |
-| Build Solution | 23% | 26.3% | 28.6% | 28.6% |
-| Maintain Integration | 8% | 12.0% | 10.5% | 10.5% |
-| **Requirements domains (L+B+T)** | **41%** | **10.5%** | **10.5%** | **18.0%** |
+| Evaluate the Current System Landscape | 8% | 2.7% | 3.4% | 3.4% |
+| Evaluate Business Needs | 11% | 2.7% | 2.1% | 2.1% |
+| Translate Needs to Integration Requirements | 22% | 4.8% | 5.5% | 12.3% |
+| Design Integration Solutions | 28% | 51.4% | 50.7% | 43.8% |
+| Build Solution | 23% | 26.7% | 28.1% | 28.1% |
+| Maintain Integration | 8% | 11.6% | 10.3% | 10.3% |
+| **Requirements domains (L+B+T)** | **41%** | **10.3%** | **11.0%** | **17.8%** |
 
-Only **6 of 133** re-tags disagreed with the deck, and every one shuffled between
-Design / Build / Maintain — all three already over-weighted. **Nothing moved into the requirements
-domains.** The mis-tagging is lateral, so it cannot close the gap.
+Only **8 of 146** re-tags disagreed with the deck, and six of the eight shuffled between
+Design / Build / Maintain — all three already over-weighted. Two did move into the requirements
+domains (`998dcfd8` Business Needs → Translate, `7b684ea4` Design → Landscape), for a net gain of
+**one question**: 15 by the deck's tags against 16 by independent re-tag. The mis-tagging is
+essentially lateral, so it cannot close the gap.
 
 The **Steelman** column applies the most generous possible reading: the Translate objective says
 "identify performance needs (volumes, response times, latency) **and propose appropriate
@@ -92,10 +95,10 @@ that are pure volume/latency-driven proposals (10M transactions/day, 20M records
 90s-vs-9s-gateway item) into Translate. Even then the requirements domains reach 18%, not 41%.
 
 **The fair reframing:** the gap is more in question *form* than in knowledge. Someone who has
-worked 72 Design questions has absorbed much of the underlying judgment. What they have not
+worked 74 Design questions has absorbed much of the underlying judgment. What they have not
 rehearsed is the distinctive *shape* of a Translate item — every option a consideration rather
 than a product, and the right answer "evaluate current and future data usage" over "explore
-out-of-the-box connectors." The deck has 7 of those. The exam will have about 13.
+out-of-the-box connectors." The deck has 8 of those. The exam will have about 13.
 
 ---
 
@@ -883,5 +886,5 @@ read aloud.
 
 ---
 
-*Generated from the 141-question integration deck, the official exam guide (read 2026-08-24), and
+*Generated from the 146-question integration deck, the official exam guide (read 2026-08-24), and
 the verified documentation set in `.claude/skills/factcheck-deck/references/verified-docs.md`.*

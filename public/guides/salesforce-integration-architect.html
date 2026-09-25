@@ -591,7 +591,7 @@ html { scroll-behavior: smooth; }
     </p>
     <h1>Integration Architect Field Guide</h1>
     <p class="standfirst">
-      Built from the 141 questions in the practice deck, cross-checked against the official exam
+      Built from the 146 questions in the practice deck, cross-checked against the official exam
       outline and the documentation those questions cite. Every fact here traces to a rendered
       Salesforce page. <strong>Read &sect;13 before you sit the exam</strong> &mdash; it is the likeliest
       place to lose a point you thought you had.
@@ -693,7 +693,7 @@ html { scroll-behavior: smooth; }
                 <span class="bar" style="width:29%"></span>
                 <span class="bar deck" style="width:11%"></span>
               </td>
-              <td class="num">4 &middot; 3%</td>
+              <td class="num">4 &middot; 2.7%</td>
               <td><span class="verdict gap">under-trained</span></td>
             </tr>
             <tr>
@@ -703,7 +703,7 @@ html { scroll-behavior: smooth; }
                 <span class="bar" style="width:39%"></span>
                 <span class="bar deck" style="width:11%"></span>
               </td>
-              <td class="num">4 &middot; 3%</td>
+              <td class="num">4 &middot; 2.7%</td>
               <td><span class="verdict gap">under-trained</span></td>
             </tr>
             <tr>
@@ -713,7 +713,7 @@ html { scroll-behavior: smooth; }
                 <span class="bar" style="width:79%"></span>
                 <span class="bar deck" style="width:16%"></span>
               </td>
-              <td class="num">7 &middot; 5.0%</td>
+              <td class="num">7 &middot; 4.8%</td>
               <td><span class="verdict gap">badly under-trained</span></td>
             </tr>
             <tr>
@@ -723,7 +723,7 @@ html { scroll-behavior: smooth; }
                 <span class="bar" style="width:100%"></span>
                 <span class="bar deck" style="width:100%"></span>
               </td>
-              <td class="num">72 &middot; 51.1%</td>
+              <td class="num">75 &middot; 51.4%</td>
               <td><span class="verdict over">over-represented</span></td>
             </tr>
             <tr>
@@ -733,7 +733,7 @@ html { scroll-behavior: smooth; }
                 <span class="bar" style="width:82%"></span>
                 <span class="bar deck" style="width:51%"></span>
               </td>
-              <td class="num">37 &middot; 26.2%</td>
+              <td class="num">39 &middot; 26.7%</td>
               <td><span class="verdict ok">about right</span></td>
             </tr>
             <tr>
@@ -743,7 +743,7 @@ html { scroll-behavior: smooth; }
                 <span class="bar" style="width:29%"></span>
                 <span class="bar deck" style="width:24%"></span>
               </td>
-              <td class="num">17 &middot; 12.1%</td>
+              <td class="num">17 &middot; 11.6%</td>
               <td><span class="verdict over">over-represented</span></td>
             </tr>
           </tbody>
@@ -757,7 +757,7 @@ html { scroll-behavior: smooth; }
       <div class="call alert">
         <span class="tag">The gap you need to close</span>
         <p>The first three domains are <strong>41% of the exam &mdash; roughly 25 of your 60
-        questions &mdash; and only 10.6% of the deck.</strong> Drill the deck to 100% and you will have
+        questions &mdash; and only 10.3% of the deck.</strong> Drill the deck to 100% and you will have
         thoroughly rehearsed the pattern-picking half of the exam and barely touched the
         requirements-gathering half.</p>
         <p>Those 25 questions are not about APIs. They are about <em>what an architect does before
@@ -773,8 +773,11 @@ html { scroll-behavior: smooth; }
       <code>ff6c0296</code> and <code>b054672a</code> are the same batch-size question tagged
       <strong>Maintain</strong> and <strong>Build</strong>.</p>
 
-      <p>But re-classifying all 133 questions independently (before the 2026-08-25 import, whose 7 new questions all landed in Design and Build) &mdash; by what each one actually tests,
-      ignoring the tag &mdash; lands on the same distribution:</p>
+      <p>But re-classifying all 146 questions independently &mdash; by what each one actually tests,
+      ignoring the tag &mdash; lands on the same distribution. Re-measured 2026-09-25, after the
+      2026-08-25 loose-question import added 8 and the 2026-09-11 branch recovery added 5; of those
+      13, seven landed in Design and three in Build, so the imports moved the gap the wrong way
+      rather than the right one.</p>
 
       <div class="tw">
         <table>
@@ -788,27 +791,29 @@ html { scroll-behavior: smooth; }
             </tr>
           </thead>
           <tbody>
-            <tr><td>Evaluate the Current System Landscape</td><td class="num">8%</td><td class="num">3.0%</td><td class="num">3.0%</td><td class="num">3.0%</td></tr>
-            <tr><td>Evaluate Business Needs</td><td class="num">11%</td><td class="num">3.0%</td><td class="num">2.3%</td><td class="num">2.3%</td></tr>
-            <tr><td>Translate Needs to Integration Requirements</td><td class="num">22%</td><td class="num">4.5%</td><td class="num">5.3%</td><td class="num">12.8%</td></tr>
-            <tr><td>Design Integration Solutions</td><td class="num">28%</td><td class="num">51.1%</td><td class="num">50.4%</td><td class="num">42.9%</td></tr>
-            <tr><td>Build Solution</td><td class="num">23%</td><td class="num">26.3%</td><td class="num">28.6%</td><td class="num">28.6%</td></tr>
-            <tr><td>Maintain Integration</td><td class="num">8%</td><td class="num">12.0%</td><td class="num">10.5%</td><td class="num">10.5%</td></tr>
+            <tr><td>Evaluate the Current System Landscape</td><td class="num">8%</td><td class="num">2.7%</td><td class="num">3.4%</td><td class="num">3.4%</td></tr>
+            <tr><td>Evaluate Business Needs</td><td class="num">11%</td><td class="num">2.7%</td><td class="num">2.1%</td><td class="num">2.1%</td></tr>
+            <tr><td>Translate Needs to Integration Requirements</td><td class="num">22%</td><td class="num">4.8%</td><td class="num">5.5%</td><td class="num">12.3%</td></tr>
+            <tr><td>Design Integration Solutions</td><td class="num">28%</td><td class="num">51.4%</td><td class="num">50.7%</td><td class="num">43.8%</td></tr>
+            <tr><td>Build Solution</td><td class="num">23%</td><td class="num">26.7%</td><td class="num">28.1%</td><td class="num">28.1%</td></tr>
+            <tr><td>Maintain Integration</td><td class="num">8%</td><td class="num">11.6%</td><td class="num">10.3%</td><td class="num">10.3%</td></tr>
             <tr>
               <td><strong>Requirements domains (L+B+T)</strong></td>
               <td class="num"><strong>41%</strong></td>
-              <td class="num"><strong>10.5%</strong></td>
-              <td class="num"><strong>10.5%</strong></td>
-              <td class="num"><strong>18.0%</strong></td>
+              <td class="num"><strong>10.3%</strong></td>
+              <td class="num"><strong>11.0%</strong></td>
+              <td class="num"><strong>17.8%</strong></td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <p>Only <strong>6 of 133</strong> re-tags disagreed with the deck, and every one shuffled
-      between Design / Build / Maintain &mdash; all three already over-weighted. <strong>Nothing
-      moved into the requirements domains.</strong> The mis-tagging is lateral, so it cannot close
-      the gap.</p>
+      <p>Only <strong>8 of 146</strong> re-tags disagreed with the deck, and six of the eight
+      shuffled between Design / Build / Maintain &mdash; all three already over-weighted. Two did
+      move into the requirements domains (<code>998dcfd8</code> Business Needs &rarr; Translate,
+      <code>7b684ea4</code> Design &rarr; Landscape), for a net gain of <strong>one question</strong>:
+      15 by the deck's tags against 16 by independent re-tag. The mis-tagging is essentially lateral,
+      so it cannot close the gap.</p>
 
       <p>The <strong>Steelman</strong> column applies the most generous possible reading: the
       Translate objective says &ldquo;identify performance needs (volumes, response times, latency)
@@ -819,11 +824,11 @@ html { scroll-behavior: smooth; }
 
       <div class="call">
         <span class="tag">The fair reframing</span>
-        <p>The gap is more in question <em>form</em> than in knowledge. Someone who has worked 72
+        <p>The gap is more in question <em>form</em> than in knowledge. Someone who has worked 74
         Design questions has absorbed much of the underlying judgment. What they have not rehearsed
         is the distinctive <em>shape</em> of a Translate item &mdash; every option a consideration
         rather than a product, and the right answer &ldquo;evaluate current and future data
-        usage&rdquo; over &ldquo;explore out-of-the-box connectors.&rdquo; The deck has 7 of those.
+        usage&rdquo; over &ldquo;explore out-of-the-box connectors.&rdquo; The deck has 8 of those.
         The exam will have about 13.</p>
       </div>
     </section>
@@ -1904,7 +1909,7 @@ html { scroll-behavior: smooth; }
   </main>
 
   <footer class="colophon">
-    Compiled from the 141 questions in <code>integration_architect_questions_corrected.json</code>,
+    Compiled from the 146 questions in <code>integration_architect_questions_corrected.json</code>,
     the official Salesforce exam guide (read 24 Aug 2026), and the verified documentation set in
     <code>.claude/skills/factcheck-deck/references/verified-docs.md</code>. Deck-derived facts come
     from a deck that has had a full documentation pass &mdash; 37 correction stamps, 15 answer keys moved
