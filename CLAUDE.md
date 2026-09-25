@@ -893,12 +893,40 @@ the exam's own Section 5 objective is written the same way. **The key was not mo
 guide ships no citation and no correction notice, so a key change belongs to
 `factcheck-deck`. Verified in the browser on 2026-09-25, not just by WebFetch summary.
 
-**`verify-guide.mjs` found a real stale number on its first run**, which is the check
-worth having: **the integration guide states 141 and 133 questions in places where the
-deck now holds 146.** CLAUDE.md already records that deck growing 133 → 141 → 146; the
-guide was updated for the first step and not the second. Both its files need the header,
-its §2 table and its colophon re-measured. It also reports `.md`/`.artifact.html` section
-drift on integration, Dev II and IAM — headings that were reworded in one file only.
+**`verify-guide.mjs` found a real stale number on its first run, and the fix was four times
+bigger than the finding** — worth reading before writing the next guide, because the same
+shape will recur. It reported the integration guide stating 141 and 133 questions where the
+deck holds 146. The headline count was the small half: **both of that guide's §2 tables were
+computed at 133**, so every deck percentage in it was stale, not just the two numbers the
+check could name. A count check is a proxy for a whole derived section.
+
+**Why it drifted: `study-guides/reclassify.mjs` had no runner.** It is the oldest of the six
+and predates the pattern the other five follow, so `node study-guides/reclassify.mjs` printed
+nothing and the file sat two imports out of date — 13 questions unclassified, the 8 from
+2026-08-25 and the 5 from 2026-09-11. It has one now, and it reports unclassified and stale
+ids so the next import says so out loud. Its direct-invocation guard uses `pathToFileURL`
+rather than the backslash-escaping regex over `process.argv[1]` the other four use; that regex
+is also why they throw when imported under `node -e`, which is worth knowing the next time you
+want to read one's `CALLS` from a scratch script.
+
+The 13 were called 7 Design, 3 Build, and one each Landscape, Translate and Maintain. Both
+imports landed items that read as either side of the L/T and B/T boundaries, so the deciding
+rule is now written into that file's header: **L when the answer is a fact about the existing
+estate that must be discovered, T when it is a property of the integration being designed.**
+
+**One claim needed rewriting rather than renumbering, and that is the part to expect.** The
+guide said every re-tag disagreement "shuffled between Design / Build / Maintain" and that
+"nothing moved into the requirements domains". At 146 that is false: `998dcfd8` goes Business
+Needs → Translate and `7b684ea4` Design → Landscape. The net gain is one question (15 by tag
+against 16 by re-tag) so the section's conclusion survives, but its supporting sentence did
+not. **A stale count is rarely only a stale count** — re-measuring can overturn the prose
+built on top of it, so re-read the surrounding argument rather than swapping digits.
+
+Bar widths were left alone: no deck share moved by more than 0.6 points, which is under a pixel
+at the table's 120px scale. `verify-guide.mjs` is at **0 failures across all six guides** as of
+2026-09-25. It still reports `.md`/`.artifact.html` section drift on integration, Dev II and
+IAM — headings deliberately worded shorter in the fragment for the rail — which is why that
+check is a warning and not a failure.
 
 **The readability metric note worth keeping, because IAM is the worked example.**
 Its 34 unpunctuated stems all ended in a trailing "Choose N answers" after a question

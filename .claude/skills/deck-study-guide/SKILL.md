@@ -261,6 +261,19 @@ or a stale number, a **warn** is `.md`/`.artifact.html` section drift, which is
 sometimes a deliberate difference in wording and sometimes an edit made to one
 file only.
 
+**A stale count is rarely only a stale count.** The first run of this script on the
+existing guides reported the integration guide claiming 141 and 133 questions against
+a deck of 146 — and fixing it meant re-deriving both of that guide's §2 tables, which
+had been computed at 133, and then rewriting a paragraph whose *claim* no longer held
+at the new numbers ("nothing moved into the requirements domains" had become false).
+So when this check fires: re-run the deck's `reclassify-*.mjs`, re-derive every number
+that hangs off it, and **re-read the prose built on top of those numbers** rather than
+swapping digits. Budget an hour, not five minutes.
+
+That guide drifted because its `reclassify.mjs` **had no runner** and so printed nothing
+when invoked — it sat two imports out of date without ever saying so. This is why Phase 3
+insists on one.
+
 Finally, load the built page and confirm it renders:
 
 ```
