@@ -1,0 +1,1443 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Data 360 Consultant Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+</head>
+<body>
+<style>
+:root {
+  --paper:      #F1F4F6;
+  --surface:    #FFFFFF;
+  --surface-2:  #E8ECEF;
+  --ink:        #121A21;
+  --ink-2:      #37444F;
+  --muted:      #5E6C78;
+  --rule:       #D3DBE1;
+  --rule-soft:  #E3E9ED;
+
+  --primary:    #12494F;
+  --primary-2:  #1C6C71;
+  --primary-wash:#E2EEEE;
+
+  --amber:      #8F550A;
+  --amber-wash: #FAEEDC;
+  --amber-rule: #DFB877;
+
+  --crimson:    #962E2E;
+  --crimson-wash:#F9E7E5;
+  --crimson-rule:#DDA39C;
+
+  --good:       #2C6440;
+
+  --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --font-prose:   "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-ui:      "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono:    "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --shadow: 0 1px 2px rgba(18,26,33,.05), 0 8px 24px -12px rgba(18,26,33,.14);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:      #0C1216;
+    --surface:    #131B20;
+    --surface-2:  #1B252B;
+    --ink:        #DCE4E8;
+    --ink-2:      #B4C1C9;
+    --muted:      #8496A1;
+    --rule:       #263238;
+    --rule-soft:  #1C262C;
+
+    --primary:    #66C4BC;
+    --primary-2:  #8AD6CE;
+    --primary-wash:#15292C;
+
+    --amber:      #DFA45C;
+    --amber-wash: #221A0F;
+    --amber-rule: #5A431F;
+
+    --crimson:    #E28C80;
+    --crimson-wash:#231314;
+    --crimson-rule:#5C2E2C;
+
+    --good:       #6FBE8B;
+
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper:      #0C1216;
+  --surface:    #131B20;
+  --surface-2:  #1B252B;
+  --ink:        #DCE4E8;
+  --ink-2:      #B4C1C9;
+  --muted:      #8496A1;
+  --rule:       #263238;
+  --rule-soft:  #1C262C;
+
+  --primary:    #66C4BC;
+  --primary-2:  #8AD6CE;
+  --primary-wash:#15292C;
+
+  --amber:      #DFA45C;
+  --amber-wash: #221A0F;
+  --amber-rule: #5A431F;
+
+  --crimson:    #E28C80;
+  --crimson-wash:#231314;
+  --crimson-rule:#5C2E2C;
+
+  --good:       #6FBE8B;
+
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-prose);
+  font-size: 17px;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- shell ---------- */
+
+.shell {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  column-gap: 56px;
+  row-gap: 0;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 32px 120px;
+  align-items: start;
+}
+
+/* ---------- masthead ---------- */
+
+.masthead {
+  grid-column: 1 / -1;
+  padding: 64px 0 40px;
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: 48px;
+}
+
+.eyebrow {
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin: 0 0 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.eyebrow .sep { color: var(--rule); }
+
+h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.4rem, 6vw, 3.9rem);
+  line-height: 1.02;
+  letter-spacing: -.025em;
+  margin: 0 0 20px;
+  text-wrap: balance;
+  color: var(--ink);
+}
+
+.standfirst {
+  font-size: 1.18rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 62ch;
+  margin: 0 0 32px;
+}
+
+.standfirst strong { color: var(--ink); font-weight: 600; }
+
+/* exam vitals strip */
+.vitals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.vital {
+  background: var(--surface);
+  padding: 14px 16px 15px;
+}
+
+.vital dt {
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 6px;
+}
+
+.vital dd {
+  font-family: var(--font-mono);
+  font-size: 1.16rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.vital dd .sub {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-top: 4px;
+  letter-spacing: 0;
+}
+
+.vital.flag { background: var(--amber-wash); }
+.vital.flag dd { color: var(--amber); }
+
+/* ---------- toc rail ---------- */
+
+.rail {
+  position: sticky;
+  top: 28px;
+  font-family: var(--font-ui);
+  max-height: calc(100vh - 56px);
+  overflow-y: auto;
+}
+
+.rail h2 {
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.rail ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  counter-reset: toc;
+}
+
+.rail a {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 8px;
+  align-items: baseline;
+  padding: 5px 8px 5px 4px;
+  font-size: 13.5px;
+  line-height: 1.35;
+  color: var(--ink-2);
+  text-decoration: none;
+  border-radius: 3px;
+  border-left: 2px solid transparent;
+  transition: background .12s ease, color .12s ease, border-color .12s ease;
+}
+
+.rail a::before {
+  counter-increment: toc;
+  content: counter(toc);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.rail a:hover {
+  background: var(--surface);
+  color: var(--ink);
+  border-left-color: var(--primary);
+}
+
+.rail a:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+.rail a.key { color: var(--crimson); font-weight: 500; }
+.rail a.key::before { color: var(--crimson); }
+
+.rail .note {
+  margin: 16px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+/* ---------- content ---------- */
+
+.content { min-width: 0; }
+
+section { margin: 0 0 64px; scroll-margin-top: 24px; }
+
+h2.sect {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3vw, 1.95rem);
+  line-height: 1.14;
+  letter-spacing: -.018em;
+  margin: 0 0 8px;
+  text-wrap: balance;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: baseline;
+}
+
+h2.sect .num {
+  font-family: var(--font-mono);
+  font-size: .58em;
+  font-weight: 500;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+.sect-rule {
+  height: 2px;
+  background: var(--ink);
+  margin: 0 0 24px;
+}
+
+h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.13rem;
+  letter-spacing: -.008em;
+  margin: 36px 0 12px;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+h4 {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 26px 0 10px;
+}
+
+p { margin: 0 0 16px; max-width: 68ch; }
+
+a { color: var(--primary); text-underline-offset: 2px; text-decoration-thickness: 1px; }
+a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 2px; }
+
+strong { font-weight: 600; color: var(--ink); }
+em { font-style: italic; }
+
+code {
+  font-family: var(--font-mono);
+  font-size: .855em;
+  background: var(--surface-2);
+  padding: .1em .34em;
+  border-radius: 3px;
+  color: var(--ink);
+}
+
+ul, ol.prose { margin: 0 0 18px; padding-left: 20px; max-width: 68ch; }
+ul li, ol.prose li { margin-bottom: 8px; }
+ul li::marker { color: var(--primary); }
+ol.prose li::marker { color: var(--muted); font-family: var(--font-mono); font-size: .85em; }
+
+/* ---------- tables ---------- */
+
+.tw {
+  overflow-x: auto;
+  margin: 0 0 22px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-ui);
+  font-size: 14.2px;
+  line-height: 1.48;
+}
+
+thead th {
+  text-align: left;
+  font-weight: 600;
+  font-size: 10.5px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--surface-2);
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+
+tbody td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--rule-soft);
+  vertical-align: top;
+  color: var(--ink-2);
+}
+
+tbody tr:last-child td { border-bottom: none; }
+
+tbody td:first-child { color: var(--ink); font-weight: 500; }
+
+tbody td strong { color: var(--ink); font-weight: 600; }
+
+td code, th code { background: transparent; padding: 0; font-size: .9em; }
+
+.num-col, .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+
+/* two-col comparison tables read better with an emphasized first col */
+table.kv tbody td:first-child { width: 34%; }
+
+/* ---------- weight bars (domain table) ---------- */
+
+.bar {
+  display: block;
+  height: 7px;
+  border-radius: 1px;
+  background: var(--primary);
+  min-width: 2px;
+}
+.bar.deck { background: var(--muted); opacity: .55; }
+.bar-cell { width: 120px; }
+.bar-cell .lab {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--muted);
+  margin-bottom: 3px;
+  font-variant-numeric: tabular-nums;
+}
+.bar + .lab { margin-top: 6px; }
+
+.verdict {
+  display: inline-block;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  padding: 2.5px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.verdict.gap  { background: var(--crimson-wash); color: var(--crimson); border: 1px solid var(--crimson-rule); }
+.verdict.over { background: var(--surface-2); color: var(--muted); border: 1px solid var(--rule); }
+.verdict.ok   { background: var(--primary-wash); color: var(--primary); border: 1px solid var(--primary); }
+
+/* ---------- callouts ---------- */
+
+.call {
+  border-left: 3px solid var(--primary);
+  background: var(--surface);
+  padding: 16px 20px;
+  margin: 0 0 22px;
+  border-radius: 0 4px 4px 0;
+  max-width: 70ch;
+}
+.call p { margin: 0 0 10px; }
+.call p:last-child { margin-bottom: 0; }
+.call .tag {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: var(--primary);
+}
+
+.call.trap { border-left-color: var(--amber-rule); background: var(--amber-wash); }
+.call.trap .tag { color: var(--amber); }
+.call.trap strong { color: var(--ink); }
+
+.call.alert { border-left-color: var(--crimson-rule); background: var(--crimson-wash); }
+.call.alert .tag { color: var(--crimson); }
+
+/* ---------- misc ---------- */
+
+.lede {
+  font-size: 1.06rem;
+  color: var(--ink-2);
+  max-width: 66ch;
+  margin: 0 0 24px;
+}
+
+.yes { color: var(--good); font-weight: 600; }
+.no  { color: var(--crimson); font-weight: 600; }
+.warn{ color: var(--amber); font-weight: 600; }
+
+.linklist { list-style: none; padding: 0; margin: 0 0 20px; max-width: 72ch; }
+.linklist li { margin-bottom: 9px; padding-left: 14px; position: relative; font-size: 15px; }
+.linklist li::before {
+  content: "";
+  position: absolute; left: 0; top: .62em;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--rule);
+}
+.linklist .why { color: var(--muted); font-size: 14px; }
+
+.prompts { display: flex; flex-direction: column; gap: 12px; margin: 0 0 22px; max-width: 72ch; }
+.prompt {
+  font-family: var(--font-ui);
+  font-size: 14.3px;
+  line-height: 1.5;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 13px 16px;
+  color: var(--ink-2);
+}
+.prompt::before {
+  content: "Prompt";
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+
+.colophon {
+  grid-column: 1 / -1;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 74ch;
+}
+
+.colophon code { font-size: 11.5px; }
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 900px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding: 0 20px 80px;
+  }
+  .rail {
+    position: static;
+    max-height: none;
+    margin-bottom: 44px;
+    padding: 16px 18px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+  }
+  .rail ol { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 0; }
+  .masthead { padding-top: 44px; margin-bottom: 32px; }
+  body { font-size: 16.5px; }
+  section { margin-bottom: 52px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+
+html { scroll-behavior: smooth; }
+</style>
+<div class="shell">
+
+  <header class="masthead">
+    <p class="eyebrow">
+      <span>Salesforce Certified Data 360 Consultant</span>
+      <span class="sep">/</span>
+      <span>Spring '26 item bank</span>
+      <span class="sep">/</span>
+      <span>Data-Con-101</span>
+    </p>
+    <h1>Data 360 Consultant Field Guide</h1>
+    <p class="standfirst">
+      Built from the 100 questions in the practice deck, cross-checked against the official exam
+      outline and the documentation those questions cite. <strong>The product and the certification
+      have both been renamed, and the deck deliberately keeps the old names.</strong> Data Cloud
+      became <strong>Data 360</strong> on 14 October 2025; the certification became the
+      <strong>Data 360 Consultant</strong> on 27 March 2026, keeping the exam code. Every stem and
+      option still says "Data Cloud" &mdash; a deliberate repo decision, because meeting the old name
+      on the exam having only seen the new one is the worse failure. <strong>The deck teaches the
+      exam's vocabulary; this guide teaches the product's.</strong> &sect;11 maps every rename.
+    </p>
+    <dl class="vitals">
+      <div class="vital"><dt>Questions</dt><dd>60<span class="sub">+5 unscored</span></dd></div>
+      <div class="vital"><dt>Time</dt><dd>105<span class="sub">minutes</span></dd></div>
+      <div class="vital"><dt>Pass mark</dt><dd>70%<span class="sub">42 of 60</span></dd></div>
+      <div class="vital"><dt>Prerequisite</dt><dd>None<span class="sub">US$200</span></dd></div>
+      <div class="vital flag"><dt>Aligned to</dt><dd>Spring '26<span class="sub">rebuilt around AI</span></dd></div>
+    </dl>
+  </header>
+
+  <nav class="rail" aria-label="Contents">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#exam">The exam, factually</a></li>
+      <li><a href="#weights" class="key">Where the points are</a></li>
+      <li><a href="#positioning" class="key">Solution Positioning</a></li>
+      <li><a href="#admin">Setup and Administration</a></li>
+      <li><a href="#ingestion" class="key">Connection and Ingestion</a></li>
+      <li><a href="#unification">Harmonization and Unification</a></li>
+      <li><a href="#analysis" class="key">Enhancements and Analysis</a></li>
+      <li><a href="#activation">Activations and Utilization</a></li>
+      <li><a href="#numbers">Numbers to memorise</a></li>
+      <li><a href="#tells">Distractor tells</a></li>
+      <li><a href="#stale" class="key">Deck older than the exam</a></li>
+      <li><a href="#plan">Two-week plan</a></li>
+      <li><a href="#sources">Sources</a></li>
+      <li><a href="#notebooklm">Using NotebookLM</a></li>
+    </ol>
+    <p class="note">Sections in red carry the objectives the practice deck does not train you for.</p>
+  </nav>
+
+  <main class="content">
+
+    <!-- 1 -->
+    <section id="exam">
+      <h2 class="sect"><span class="num">01</span><span>The exam, factually</span></h2>
+      <div class="sect-rule"></div>
+
+      <div class="call alert">
+        <span class="tag">Two structural facts that matter more than any topic</span>
+        <p><strong>The exam is current and the deck is not.</strong> Unlike Revenue Management, where
+        the exam lags the documentation, here the exam was rebuilt around the Data 360 name
+        <em>and</em> around AI. That makes the deck's gaps real exam risk rather than trivia &mdash;
+        two named bullets about generative and predictive AI have no deck coverage whatsoever.</p>
+        <p><strong>70% is a real bar</strong>, and the deck's shape flatters you. It spends
+        <strong>32 of its 100 items</strong> on a domain worth 20%, so working the deck to completion
+        gives a false sense of readiness.</p>
+      </div>
+
+      <div class="tw">
+        <table class="kv">
+          <tbody>
+            <tr><td>Official name</td><td>Salesforce Certified Data 360 Consultant</td></tr>
+            <tr><td>Exam code</td><td><code>Data-Con-101</code> &mdash; unchanged through the rename</td></tr>
+            <tr><td>Content</td><td><strong>60 scored</strong> multiple-choice items, plus up to 5 unscored</td></tr>
+            <tr><td>Time</td><td><strong>105 minutes</strong></td></tr>
+            <tr><td>Passing score</td><td><strong>70%</strong> &mdash; 42 of 60</td></tr>
+            <tr><td>Prerequisite</td><td>None</td></tr>
+            <tr><td>Fee</td><td>US$200, retake US$100</td></tr>
+            <tr><td>Aligned to</td><td><strong>Spring '26</strong></td></tr>
+            <tr><td>Exam guide</td><td>Help article <code>005298940</code></td></tr>
+            <tr><td>Courses named</td><td>SDC101 <em>Discover Salesforce Data 360 Fundamentals</em>; SDC301 <em>Design and Build Effective Solutions with Data 360</em></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section id="weights">
+      <h2 class="sect"><span class="num">02</span><span>Where the points actually are</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">The deck's own six <code>_cat</code> tags are the <em>old</em> outline. The
+      current one has six domains with different boundaries, and it splits enrichment and analysis
+      away from segmentation &mdash; which is what exposes the imbalance. The deck column is an
+      independent re-classification of all 100 against the current domains
+      (<code>study-guides/reclassify-data-cloud.mjs</code>).</p>
+
+      <div class="tw">
+        <table>
+          <thead>
+            <tr><th>Domain</th><th class="num-col">Exam</th><th class="num-col">&asymp; Qs</th><th class="bar-cell">Exam vs deck</th><th class="num-col">Deck</th><th>Verdict</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Solution Positioning</td><td class="num">14%</td><td class="num">~8</td><td class="bar-cell"><span class="bar" style="width:70%"></span><span class="bar deck" style="width:22%"></span></td><td class="num">7 &middot; 7.0%</td><td><span class="verdict gap">badly under</span></td></tr>
+            <tr><td>Setup and Administration</td><td class="num">13%</td><td class="num">~8</td><td class="bar-cell"><span class="bar" style="width:65%"></span><span class="bar deck" style="width:28%"></span></td><td class="num">9 &middot; 9.0%</td><td><span class="verdict gap">under</span></td></tr>
+            <tr><td>Data Source Connection and Ingestion</td><td class="num">18%</td><td class="num">~11</td><td class="bar-cell"><span class="bar" style="width:90%"></span><span class="bar deck" style="width:72%"></span></td><td class="num">23 &middot; 23.0%</td><td><span class="verdict over">over</span></td></tr>
+            <tr><td>Harmonization and Unification</td><td class="num">17%</td><td class="num">~10</td><td class="bar-cell"><span class="bar" style="width:85%"></span><span class="bar deck" style="width:50%"></span></td><td class="num">16 &middot; 16.0%</td><td><span class="verdict ok">about right</span></td></tr>
+            <tr><td>Data Enhancements, Sharing and Analysis</td><td class="num">18%</td><td class="num">~11</td><td class="bar-cell"><span class="bar" style="width:90%"></span><span class="bar deck" style="width:41%"></span></td><td class="num">13 &middot; 13.0%</td><td><span class="verdict gap">under</span></td></tr>
+            <tr><td>Data Activations and Utilization</td><td class="num">20%</td><td class="num">~12</td><td class="bar-cell"><span class="bar" style="width:100%"></span><span class="bar deck" style="width:100%"></span></td><td class="num">32 &middot; 32.0%</td><td><span class="verdict gap">badly over</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-family:var(--font-ui);font-size:12.5px;color:var(--muted);margin-top:-8px;">
+        Teal bar = share of the exam. Grey bar = share of the deck. Each series scaled to its own largest value.
+      </p>
+
+      <div class="call trap">
+        <span class="tag">The over-drill is the headline</span>
+        <p><strong>Nearly a third of the deck is segments, containers, activations, publish schedules
+        and activation troubleshooting</strong> &mdash; worth about twelve real questions. You will
+        finish the deck fluent in the one domain that needed the least work.</p>
+      </div>
+
+      <div class="call alert">
+        <span class="tag">The two gaps that will cost you marks</span>
+        <p><strong>Solution Positioning, 14% against 7%.</strong> Eight real questions on
+        terminology, business value, initial use cases, data ethics &mdash; and Data 360's role in
+        <strong>generative and predictive AI</strong>, which the deck never touches at all.</p>
+        <p><strong>Data Enhancements, Sharing and Analysis, 18% against 13%</strong> &mdash; and the
+        shortfall is concentrated in exactly the bullets the deck ignores: predictive and generative AI
+        tooling, reports and dashboards over Data 360 data, and referencing Data 360 from other
+        systems.</p>
+      </div>
+
+      <h4>How the boundary was drawn</h4>
+      <p>One rule, applied consistently: <strong>a question whose discriminator is a calculated or
+      streaming <em>insight</em> is Enhancements, even when the scenario is a segment; a question whose
+      discriminator is the segment, container, activation or flow is Activations.</strong> Without that
+      split the two domains blur and the 32-item activation block looks like balanced coverage.</p>
+    </section>
+
+    <!-- 3 -->
+    <section id="positioning">
+      <h2 class="sect"><span class="num">03</span><span>Solution Positioning</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">14% of the exam, about eight questions, seven in the deck &mdash; and the seven
+      cover only half the bullets.</p>
+
+      <h4>What the deck does cover</h4>
+      <ul>
+        <li><strong>Use cases that fit:</strong> ingest and unify data from various sources to
+        reconcile customer identity; use harmonised data to understand the customer and business impact
+        (<code>9b1101be</code>, <code>a6d82413</code>, <code>84996fff</code>).</li>
+        <li><strong>The two functional areas to highlight</strong> to a customer with disjointed
+        sources: <strong>Data Harmonization</strong> and <strong>Unified Profiles</strong>
+        (<code>c50c16e0</code>).</li>
+        <li><strong>The first phase of the lifecycle:</strong> identify use cases <em>and</em> the
+        required data sources <em>and</em> data quality (<code>87c989ff</code>). Note all three
+        &mdash; an option naming only use cases is incomplete.</li>
+        <li><strong>Data ethics:</strong> carefully consider asking for sensitive data such as age,
+        gender or ethnicity (<code>3ce5cecc</code>). The deck's only principles question.</li>
+        <li><strong>High availability</strong> comes from distributing data across multiple regions and
+        data centres (<code>b2861a64</code>).</li>
+      </ul>
+
+      <div class="call alert">
+        <span class="tag">The single biggest content gap in this deck</span>
+        <p>"Articulate Data 360's foundational role in generative and predictive AI" is a named bullet,
+        and the deck returns <strong>zero hits</strong> for "generative", "predictive", "prediction",
+        "Einstein Studio", "Model Builder", "Agentforce", "Copilot" or "prompt". What to know:</p>
+        <ul>
+          <li><strong>Grounding</strong> is the process of adding additional context to a prompt. Data
+          360 is the grounding substrate: it holds the unified profile and the unstructured content,
+          and serves both to prompt templates and agents.</li>
+          <li><strong>Retrieval-Augmented Generation</strong> in Data 360 works through <strong>search
+          indexes</strong> and <strong>retrievers</strong> &mdash; the mechanism is in &sect;7.</li>
+          <li><strong>Predictive AI</strong> is built in <strong>AI Models (formerly Einstein
+          Studio)</strong>: train a model on Data 360 data, or register an externally hosted one
+          &mdash; a Databricks serving endpoint, say &mdash; through <strong>Model Builder</strong>,
+          and write its inferences back.</li>
+        </ul>
+        <p>The positioning sentence to be able to say: <strong>Data 360 is what makes an AI answer
+        about <em>this</em> customer rather than about customers in general</strong>, because it is the
+        layer that has already resolved identity and harmonised the model. On the exam, when an option
+        offers Data 360 as the foundation for an AI capability, that is usually the right shape &mdash;
+        and the deck will never have shown you one.</p>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section id="admin">
+      <h2 class="sect"><span class="num">04</span><span>Setup and Administration</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">13% of the exam, 9 deck items. Reasonable coverage, one clear hole.</p>
+
+      <h4>Permissions and permission sets &mdash; learn both names</h4>
+      <p>This is where the rename bites hardest, because the deck's option text sends you to a Setup
+      node that no longer exists. The capabilities map 1:1, so no key changes.</p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>The deck's options say</th><th>Salesforce now calls it</th><th>What decides it</th></tr></thead>
+          <tbody>
+            <tr><td>Data Cloud Admin</td><td><strong>Data Cloud Architect</strong></td><td>Segment Intelligence insights (<code>3b0c0a4e</code>)</td></tr>
+            <tr><td>Data Cloud Marketing Specialist</td><td><strong>Activation Specialist</strong></td><td>Create, manage and activate segments &mdash; but not reports or data sources (<code>1d6366ff</code>)</td></tr>
+            <tr><td>Data Cloud Marketing Manager</td><td><strong>Activation Manager</strong></td><td>&mdash;</td></tr>
+            <tr><td>Data Cloud for Marketing Data Aware Specialist</td><td><strong>Data Cloud Data Aware Specialist</strong></td><td>Review individual rows and validate modelling, nothing more (<code>860708a5</code>)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>One more, and the trap is the word <em>source</em>: a custom CRM object missing from New Data
+      Stream configuration means the <strong>View All</strong> object permission is off in the
+      <strong>source CRM org</strong>, not in Data 360 (<code>ddf8624d</code>).</p>
+
+      <h4>Data spaces</h4>
+      <p>Four deck items, all consistent: a data space is the tool for <strong>segregating data by
+      brand or business line</strong>.</p>
+      <ul>
+        <li>Six brands, one to be kept separate &rarr; <strong>separate that brand into a data
+        space</strong> (<code>480f5379</code>).</li>
+        <li>Business and personal loans sharing a Contact DLO &rarr; <strong>two data spaces</strong>
+        (<code>3e489c6f</code>).</li>
+        <li>An object missing when mapping a data stream in a data space &rarr; <strong>Data Space tab,
+        select the object to include</strong> (<code>0a109a96</code>).</li>
+      </ul>
+
+      <div class="call">
+        <span class="tag">The most exam-shaped fact in this domain</span>
+        <p><strong>Consent API</strong> for right-to-be-forgotten: deletion requests are submitted
+        <strong>for Individual profiles</strong>, and are <strong>reprocessed at 30, 60 and 90
+        days</strong> (<code>ff10adbd</code>).</p>
+      </div>
+
+      <div class="call alert">
+        <span class="tag">The hole: development lifecycle and tooling</span>
+        <p>The outline has two bullets here &mdash; "manage the development lifecycle with available
+        tooling" and "use tooling to diagnose and troubleshoot common issues". The deck has
+        <strong>one</strong> item: <strong>data kits</strong> move a tested S3 data stream and its
+        mappings between Data 360 orgs (<code>aa78cb1b</code>). Nothing on packaging beyond that,
+        nothing on sandbox-to-production promotion, nothing on metadata deployment. Know at minimum
+        that a data kit is the unit of portable Data 360 configuration.</p>
+      </div>
+    </section>
+
+    <!-- 5 -->
+    <section id="ingestion">
+      <h2 class="sect"><span class="num">05</span><span>Data Source Connection and Ingestion</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">18% of the exam, 23 deck items &mdash; over-covered by volume, but
+      <strong>one whole named bullet is missing</strong>, so do not skip this section.</p>
+
+      <div class="call alert">
+        <span class="tag">Zero deck questions &mdash; Zero-Copy</span>
+        <p>"Describe Data 360's data collaboration capabilities, <strong>including Zero-Copy</strong>"
+        is in the outline. <strong>"Zero-Copy" returns zero hits in the deck, as do Snowflake,
+        BigQuery, Databricks, Redshift, "data share" and "federation".</strong> It is the most
+        self-contained gap in this guide and therefore the cheapest to close.</p>
+        <p><strong>Zero copy data federation</strong> means querying data from multiple physically
+        distinct sources and treating them as one logical system &mdash; a <em>federation</em> &mdash;
+        while each system keeps its autonomy. It <strong>avoids duplicating data across system
+        boundaries</strong>. Every system has a <strong>storage</strong> component and a
+        <strong>compute</strong> component, and that is the key to the two methods.</p>
+      </div>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Method</th><th>Whose compute runs the query</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Query Federation</strong> (Compute)</td><td>Data 360 sends SQL to the <strong>external</strong> system's compute engine; it executes and returns records</td></tr>
+            <tr><td><strong>File Federation</strong> (Storage)</td><td>Data 360 queries external storage <strong>directly with its own</strong> query engine, provided the data uses a supported <strong>open table format</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p><strong>In both cases the records are not retained after the workflow completes.</strong> That
+      is the sentence to remember &mdash; zero copy means no persistent copy, in either direction.
+      Three more facts:</p>
+      <ul>
+        <li>Either way Data 360 <strong>creates a DLO</strong>, but a zero-copy DLO
+        <strong>contains no actual data</strong> &mdash; it is a <strong>pointer to the external
+        physical table</strong>. These are called <strong>external</strong> or <strong>virtual
+        DLOs</strong>.</li>
+        <li><strong>Caching, also called acceleration:</strong> enabling acceleration when you create a
+        data stream turns on caching, which pulls data into a DLO temporarily. Salesforce recommends it
+        <strong>when accessing large data sets or when data changes frequently</strong>, and you choose
+        the refresh frequency. So the three performance options are live query, accelerated query
+        against the local cache, and file federation.</li>
+        <li>The <strong>outbound</strong> direction is <strong>Data Shares</strong> &mdash; Data 360
+        objects exposed as <strong>views</strong> in a target account such as Snowflake.</li>
+      </ul>
+      <p>Partners named in the documentation: <strong>Amazon Redshift, Databricks, Google BigQuery,
+      Snowflake, Apache Iceberg, IBM watsonx.data.</strong></p>
+
+      <h4>Connectors and bundles</h4>
+      <ul>
+        <li><strong>CRM Connector:</strong> standard fields <strong>stream in real time</strong>
+        (<code>57588274</code>); initial setup is a <strong>full refresh</strong>
+        (<code>086bbfd8</code>); a <strong>column added or removed</strong> forces a full refresh
+        (<code>062012ec</code> &mdash; not settled, &sect;11).</li>
+        <li><strong>Web and Mobile Application Connector:</strong> the <strong>Tenant Specific
+        Endpoint is auto-generated</strong> when you set the connector up (<code>6c28ea56</code>).</li>
+        <li><strong>Ingestion API</strong> for fast, scalable near-real-time streaming
+        (<code>4ea7fff4</code>).</li>
+        <li><strong>Marketing Cloud Data Extension Data Stream</strong> for subscriber profile
+        attributes daily (<code>a0813551</code>).</li>
+        <li><strong>B2C Commerce:</strong> the <strong>Order Bundle ingests 30 days</strong> of history
+        (<code>d45cb02d</code>); for two years use <strong>Starter Bundles plus a custom
+        extract</strong> (<code>8fb738c4</code>).</li>
+        <li><strong>Bulk then streaming:</strong> load the last 90 days in bulk, then switch to
+        streaming (<code>3128d558</code>).</li>
+        <li>Separate S3 buckets for ingestion and activation &rarr; <strong>dedicated S3 data
+        sources</strong> in setup (<code>159e1391</code>).</li>
+        <li>S3 <code>NO FILE FOUND</code> &rarr; check the Data 360 user's permissions <strong>and</strong>
+        that the file exists at the specified bucket location (<code>485c7063</code>).</li>
+        <li>An S3 stream in upsert mode with a changed formula &rarr; <strong>full refresh, and the
+        formula updates on all records</strong> (<code>008f7008</code>).</li>
+      </ul>
+
+      <h4>Stream categories &mdash; a reliable exam target</h4>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Category</th><th>When</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Profile</strong></td><td>Data you will segment on, e.g. a list of employees (<code>74955e95</code>)</td></tr>
+            <tr><td><strong>Engagement</strong></td><td>Data used for <strong>date and time-based operations</strong> in segmentation and calculated insights (<code>7539b43f</code>)</td></tr>
+            <tr><td><strong>Other</strong></td><td>Everything else</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>And one that catches people: <strong>only Engagement category DLOs can be mapped to the Sales
+      Order DMO</strong> (<code>6c5846b5</code>).</p>
+
+      <h4>Transforms, formulas and keys</h4>
+      <ul>
+        <li>A <strong>formula on ingest</strong> turns a date-time field into a date for mapping
+        (<code>dab6989b</code>) and standardises a phone format for later SMS use
+        (<code>214e0fc6</code>).</li>
+        <li><strong>No primary key available</strong> &rarr; build a <strong>composite key from two or
+        more source fields through a formula field</strong> (<code>575074ec</code>), using
+        <strong><code>CONCAT</code></strong> (<code>746c2926</code>).</li>
+        <li><strong>Streaming transforms</strong> for real-time CRM integration
+        (<code>4dea9b59</code>) and for normalising three phone fields off a Contact into one
+        (<code>8446b713</code>).</li>
+        <li><strong>Batch data transform creating a new DLO</strong> when related-attribute values need
+        reshaping before activation (<code>4a344343</code>).</li>
+        <li><strong>Text</strong> field type preserves leading zeros in a purchase order number
+        (<code>98eda96e</code>).</li>
+        <li>Case data's event time field should be <strong>Creation Date</strong>
+        (<code>282c475b</code>).</li>
+      </ul>
+    </section>
+
+    <!-- 6 -->
+    <section id="unification">
+      <h2 class="sect"><span class="num">06</span><span>Harmonization and Unification</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">17% of the exam, 16 deck items &mdash; the best-matched domain, and the deck's
+      material is sound.</p>
+
+      <div class="call">
+        <span class="tag">The sentence that answers most of this domain</span>
+        <p><strong>Match rules decide <em>who</em> gets unified; reconciliation rules decide
+        <em>which value</em> wins when they conflict</strong> (<code>ab4092db</code>).</p>
+      </div>
+
+      <h4>Identity resolution</h4>
+      <ul>
+        <li>A <strong>low consolidation rate</strong> &rarr; <strong>increase the number of matching
+        rules</strong> (<code>d0a0a5f3</code>).</li>
+        <li>To unify on an ID that is not the customer's unique ID &mdash; a Loyalty ID, a Patient ID
+        &mdash; use the <strong>Party Identification</strong> object (<code>caf7811f</code>,
+        <code>a76eedab</code>). The healthcare case is worth noting: Party Identification on Patient ID
+        avoids unifying on PII.</li>
+        <li>Identity resolution is the configuration to complete <strong>after ingestion and before
+        segmenting</strong> (<code>d0755ebe</code>).</li>
+        <li><strong>Deleting a ruleset</strong> removes the unified customer data associated with it
+        <strong>and</strong> the dependencies on data model objects (<code>64df83e0</code>).</li>
+        <li>Validate a unified profile with <strong>Identity Resolution, Data Explorer and Profile
+        Explorer</strong> (<code>a82aca1f</code>), or with <strong>Data Explorer and the Query
+        API</strong> (<code>704331e8</code> &mdash; the deck contradicts itself here, &sect;11).</li>
+        <li>Segment on the <strong>Unified Individual</strong> entity (<code>ffde1996</code>).</li>
+      </ul>
+
+      <h4>Modelling</h4>
+      <ul>
+        <li>Map <strong>name to Individual</strong> and <strong>email address to Contact Point
+        Email</strong> &mdash; do not put the email on Individual (<code>73954651</code>).</li>
+        <li>A <strong>1-to-1 relationship error</strong> between Account and Contact Point Address
+        &rarr; <strong>map additional fields to the Contact Point Address DMO</strong>
+        (<code>53f152a2</code>).</li>
+        <li>Extra profile attributes such as eye colour &rarr; <strong>custom fields on the standard
+        Individual DMO</strong>, not a new custom DMO (<code>31242001</code>).</li>
+        <li>A new custom DMO that will not appear in segmentation &rarr; <strong>it is not of category
+        Profile</strong> (<code>a8a68101</code>).</li>
+        <li><strong>Value suggestion</strong> is enabled at <strong>Data Mapping</strong> time when you
+        create the DMO (<code>579f07b4</code>).</li>
+      </ul>
+    </section>
+
+    <!-- 7 -->
+    <section id="analysis">
+      <h2 class="sect"><span class="num">07</span><span>Data Enhancements, Sharing and Analysis</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">18% of the exam, 13 deck items, and <strong>three of its four bullets are barely
+      covered.</strong> After Solution Positioning this is the domain to spend time on.</p>
+
+      <h4>Calculated and streaming insights &mdash; what the deck does teach</h4>
+      <ul>
+        <li>A <strong>calculated insight</strong> when the criterion is an aggregate over history:
+        deposits over $250,000 in five years (<code>056ea0e6</code>), two page visits in 24 hours
+        (<code>0b702723</code>), lifetime value.</li>
+        <li>A <strong>streaming insight</strong> when the window is minutes and the trigger is
+        real-time: 15-minute aggregations from the Interaction or Mobile SDK (<code>a40ce191</code>),
+        or daily transaction volume outside a customer's norm paired with a <strong>data
+        action</strong> to notify (<code>a032b276</code>).</li>
+        <li>Streaming windows are set by the <strong>insights aggregation time window</strong> &mdash;
+        1 hour for an abandoned-browse journey (<code>d9f0e781</code>).</li>
+        <li><strong>Metrics on metrics</strong> builds a metric from another metric, for LTV broken
+        down by channel (<code>ce553d2c</code>).</li>
+        <li>The DMO join path for a unified LTV metric: <strong>Unified Individual &rarr; Unified Link
+        Individual &rarr; Sales Order</strong> (<code>537887b3</code>). Memorise the link object in the
+        middle.</li>
+        <li>For a calculated insight to appear in the segmentation canvas it needs <strong>a dimension
+        including the Individual or Unified Individual Id</strong> <em>and</em> <strong>the primary key
+        of the segmented table as a dimension</strong> (<code>01c4c7ad</code>).</li>
+        <li>The refresh order to respect: <strong>Data Stream &rarr; Identity Resolution &rarr;
+        Calculated Insight</strong> (<code>98a2f67b</code>).</li>
+      </ul>
+
+      <div class="call alert">
+        <span class="tag">Zero deck coverage &mdash; retrievers and search indexes</span>
+        <p>The outline asks you to "apply predictive and generative AI tooling capabilities of Data 360
+        to customer scenarios." The deck has nothing. <strong>Data preparation for retrieval is:
+        loading, chunking, vectorizing, and storing content in a search-optimised way.</strong> Data
+        360 uses a <strong>vector data store</strong> for unstructured data such as documents and
+        conversation histories.</p>
+        <ul>
+          <li>A <strong>search index</strong> stores the chunked and vectorized data. It is
+          <strong>defined in a data space and associated with a DMO</strong>, and is built for general
+          use &mdash; indexing a whole knowledge base.</li>
+          <li>A <strong>retriever</strong> conducts a <em>specialised</em> search over a search index
+          and hands results to agents, prompt templates and flows. You build retrievers in <strong>AI
+          Models (formerly Einstein Studio)</strong> and <strong>activate</strong> them to make them
+          available to Prompt Builder.</li>
+          <li>An <strong>individual retriever:</strong> choose its search index, define
+          <strong>filters</strong>, specify which <strong>fields</strong> to return and <strong>how
+          many results</strong>. Each save creates a <strong>new version</strong>, and <strong>only one
+          version can be active</strong>.</li>
+          <li>An <strong>ensemble retriever</strong> is a collection of individual retrievers: it runs
+          them, combines results into one list, <strong>reranks by relevance</strong>, and returns only
+          the most relevant.</li>
+          <li>A <strong>dynamic retriever</strong> uses placeholders that take run-time values from the
+          prompt template.</li>
+          <li>The <strong>Retriever Playground</strong> is where you configure pre-filters, select test
+          data and adjust result parameters before deploying.</li>
+          <li><strong>Citations</strong>, enabled in AI Models at the individual-retriever level, link a
+          generated response to its source content so a user can spot a hallucination.</li>
+          <li>Retrievers obey data governance, and <strong>row-level access checks</strong> apply to
+          what they return.</li>
+        </ul>
+      </div>
+
+      <div class="call alert">
+        <span class="tag">In the deck only as a wrong answer &mdash; data graphs</span>
+        <p>"Data graphs" appears once (<code>8a1c3eba</code>) and only as a <strong>distractor</strong>.
+        They are how Data 360 serves unified data fast, so know them properly:</p>
+        <ul>
+          <li>A data graph brings together structured data from <strong>DMOs</strong> into an
+          easy-to-use view. Because the data is <strong>preprepared</strong>, queries return "almost
+          instantly".</li>
+          <li>You choose the fields to combine; Data 360 produces a single <strong>read-only data graph
+          record</strong> holding all of it in <strong>one JSON blob</strong>.</li>
+          <li>Data graphs are <strong>crucial for real-time identity resolution, real-time calculated
+          insights and real-time segmentation</strong> &mdash; that triple is the exam-shaped fact.</li>
+          <li>Visible through <strong>Data Explorer</strong> and <strong>Query Editor</strong>;
+          queryable directly through the <strong>Metadata API</strong> and <strong>Query
+          API</strong>.</li>
+        </ul>
+      </div>
+
+      <h4>Reports, dashboards, and reaching Data 360 from elsewhere</h4>
+      <p>Two named bullets, one deck item each.</p>
+      <ul>
+        <li><strong>Tableau</strong> is the tool named for visualising and analysing unified data
+        (<code>e64df7b2</code>).</li>
+        <li>To see when each segment was last published, use a <strong>Dashboard and a Report</strong>
+        (<code>b0006afc</code>). Note this is monitoring, not analysis of customer data &mdash; the
+        outline wants the latter too.</li>
+        <li>To show all cases for a Unified Individual on a contact record: <strong>Profile API</strong>
+        plus <strong>Lightning Web Components</strong> (<code>0e845e09</code>). That is the deck's only
+        "reference Data 360 from another system" item; the broader surface is the Query API, the Connect
+        API and data graphs.</li>
+      </ul>
+    </section>
+
+    <!-- 8 -->
+    <section id="activation">
+      <h2 class="sect"><span class="num">08</span><span>Data Activations and Utilization</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">20% of the exam and <strong>32% of the deck</strong>. Work it once, confirm you
+      are fluent, and spend the time you save on &sect;3 and &sect;7.</p>
+
+      <h4>Segments</h4>
+      <ul>
+        <li>The three things you can build a segment on: <strong>direct attributes, calculated
+        insights, related attributes</strong> (<code>7fc59544</code>).</li>
+        <li><strong>Containers:</strong> product colour and product type must go in a <strong>single
+        container</strong> to mean "the same purchase" (<code>300d941c</code>). Two containers joined by
+        AND mean two <em>separate</em> purchases (<code>0147d0c4</code>). Multiple container paths make
+        the result <strong>larger or smaller than expected</strong> (<code>4627a1a2</code>).</li>
+        <li><strong>Nested segment</strong> for exclusion criteria shared across brand teams and
+        updated monthly (<code>0c1d58b4</code>). But <strong>"Segment is too complex"</strong> is fixed
+        by replacing nested segments with a <strong>calculated insight</strong>
+        (<code>884376a2</code>), and <strong>"too many data lake objects"</strong> by splitting the
+        segment <em>and</em> using calculated insights (<code>ee3e98b9</code>).</li>
+        <li><strong>Segmentation exclude rules</strong> to remove recent purchasers
+        (<code>4caa9078</code>).</li>
+        <li><strong>Last Number of Days</strong> is the filter operator for "visited in the previous 7
+        days" (<code>0b277734</code>).</li>
+        <li><strong>Value suggestion</strong> gives a picklist of text attribute values
+        (<code>d917a833</code>); if suggestions are missing it is <strong>still processing, up to 24
+        hours</strong> (<code>b16bbc31</code>, <code>e652607d</code>).</li>
+        <li>Segmentation filters are <strong>case-insensitive</strong>: <code>City Is Equal To 'San
+        Jose'</code> matches <code>SAN JOSE</code>, <code>san jose</code> and <code>San jose</code>
+        (<code>f3b19bee</code>).</li>
+        <li>Delays publishing many segments at once &rarr; <strong>increase the segmentation
+        concurrency limit</strong> (<code>f687a6b9</code>).</li>
+        <li>Schedules follow <strong>the time zone of the logged-in user who set them</strong>
+        (<code>e362f29c</code>).</li>
+      </ul>
+
+      <h4>Activations</h4>
+      <ul>
+        <li>The activation membership object is a <strong>Data Model Object</strong>
+        (<code>29f828ca</code>).</li>
+        <li><strong>Consent:</strong> include Consent Status for the applicable channel in the
+        <strong>filter criteria of each segment</strong> (<code>1148d70c</code>).</li>
+        <li><strong>Pause</strong> an activation you intend to reuse by <strong>stopping the publish
+        schedule</strong> (<code>8f5494a9</code>).</li>
+        <li><strong>Source priority order in activations</strong> decides which source's contact point
+        is used &mdash; the documented way to pick a best email or address
+        (<code>dc2c1055</code>).</li>
+        <li><strong>Preferred attribute names</strong> are set when configuring the activation, for
+        Cloud File Storage naming conventions (<code>5ce00e3e</code>).</li>
+        <li>S3 output: the <strong><code>.json</code> file carries the segment metadata</strong>, the
+        <strong><code>.csv</code> carries the activated data payload</strong> (<code>9d9d4efd</code>,
+        <code>a0c8b14c</code>).</li>
+        <li>To get a CRM Campaign ID into the file, put the campaign identifier in <strong>the
+        activation name</strong> and in <strong>the filename specification</strong>
+        (<code>625b0134</code>).</li>
+        <li>Related attributes missing from a payload &rarr; the related engagement events must be
+        <strong>within the last 90 days</strong> and the <strong>correct path</strong> selected
+        (<code>e80443fb</code>); or the attributes <strong>sit on different related paths</strong>
+        (<code>7001f646</code>, <code>2646b393</code>, <code>17b95a6b</code>).</li>
+        <li>Stale related attributes &rarr; <strong>filter the related attribute</strong> by date, e.g.
+        exclude orders older than 30 days (<code>8a1c3eba</code>).</li>
+        <li>Activation lag &rarr; check that <strong>calculated insights run before segments
+        refresh</strong> and that <strong>segments refresh after ingestion</strong>
+        (<code>e99bd25d</code>).</li>
+        <li>A Data 360 segment count differing from a Marketing Cloud data extension count &rarr;
+        <strong>business units</strong> (<code>49ee75cb</code>).</li>
+      </ul>
+
+      <h4>Data 360 in Salesforce flows</h4>
+      <p>Two deck items, both the same shape &mdash; flow is the glue for anything event-driven.</p>
+      <ul>
+        <li>Refresh calculated insights and segments when a nightly file lands &rarr; <strong>Flow
+        triggering a change data event</strong> (<code>b35887c5</code>).</li>
+        <li>Alert an admin on Slack and email when a data stream fails &rarr; <strong>Salesforce
+        flows</strong> (<code>b985f235</code>).</li>
+      </ul>
+    </section>
+
+    <!-- 9 -->
+    <section id="numbers">
+      <h2 class="sect"><span class="num">09</span><span>Numbers to memorise</span></h2>
+      <div class="sect-rule"></div>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Number</th><th>What it is</th></tr></thead>
+          <tbody>
+            <tr><td><strong>60 / 105 / 70%</strong></td><td>Scored items, minutes, pass mark. 42 of 60 to pass</td></tr>
+            <tr><td><strong>14 / 13 / 18 / 17 / 18 / 20</strong></td><td>Domain weights in outline order. They sum to 100</td></tr>
+            <tr><td><strong>Spring '26</strong></td><td>Exam alignment</td></tr>
+            <tr><td><strong>14 Oct 2025</strong></td><td>Data Cloud became Data 360</td></tr>
+            <tr><td><strong>27 Mar 2026</strong></td><td>The certification was renamed; exam code stayed <code>Data-Con-101</code></td></tr>
+            <tr><td><strong>30, 60, 90 days</strong></td><td>Consent API deletion requests are reprocessed at these intervals</td></tr>
+            <tr><td><strong>24 hours</strong></td><td>How long value suggestion can take to become available</td></tr>
+            <tr><td><strong>90 days</strong></td><td>The window for related engagement events to appear in an activation payload</td></tr>
+            <tr><td><strong>30 days</strong></td><td>History the B2C Commerce Order Bundle ingests</td></tr>
+            <tr><td><strong>2 methods</strong></td><td>Zero copy: Query Federation (their compute), File Federation (our compute)</td></tr>
+            <tr><td><strong>1 active version</strong></td><td>Of an individual retriever, however many you save</td></tr>
+            <tr><td><strong>3 real-time features</strong></td><td>Data graphs power real-time identity resolution, calculated insights and segmentation</td></tr>
+            <tr><td><strong>4 stages</strong></td><td>Retrieval data prep: loading, chunking, vectorizing, storing</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 10 -->
+    <section id="tells">
+      <h2 class="sect"><span class="num">10</span><span>Distractor tells</span></h2>
+      <div class="sect-rule"></div>
+
+      <div class="call">
+        <span class="tag">Read the question's own verb</span>
+        <p>"Which <strong>object</strong>" wants an object name. "Which <strong>feature</strong>" wants
+        a product capability. "What is the <strong>cause</strong>" wants a diagnosis, not a fix &mdash;
+        and this deck has several pairs where the fix is also an option.</p>
+      </div>
+
+      <ul>
+        <li><strong>The invented capability.</strong> This deck's fact-check found a "reusable container
+        block", a "Data Segmentation Object", and a phone field type that normalises to E164 &mdash;
+        none exists. If an option names a Data 360 object you cannot place in the DLO / DMO /
+        stream-category vocabulary, distrust it.</li>
+        <li><strong>The invented absence</strong> &mdash; the mirror. An option asserting Data 360
+        <em>cannot</em> do something is wrong more often than it is right.</li>
+        <li><strong>Match rules versus reconciliation rules.</strong> Both appear in
+        identity-resolution option sets. Match decides <em>who</em>; reconcile decides <em>which
+        value</em>.</li>
+        <li><strong>One container or two.</strong> The single most repeated discriminator in the
+        activation block. One container = the same record; two = two records.</li>
+        <li><strong>Nested segment versus calculated insight.</strong> Nested segments share criteria;
+        calculated insights reduce complexity. An error message about complexity points at the
+        insight.</li>
+        <li><strong>Profile versus Engagement category.</strong> Anything date- or time-based in
+        segmentation needs Engagement.</li>
+        <li><strong>The old product name in a doc-shaped option.</strong> The deck's options say Data
+        Cloud and so will the exam's. A current Setup-node name in an option set is not automatically
+        the right answer.</li>
+      </ul>
+    </section>
+
+    <!-- 11 -->
+    <section id="stale">
+      <h2 class="sect"><span class="num">11</span><span>Where the deck is older than the exam</span></h2>
+      <div class="sect-rule"></div>
+
+      <h4>The renames, in one table</h4>
+      <div class="tw">
+        <table>
+          <thead><tr><th>The deck says</th><th>Salesforce now says</th><th>Since</th></tr></thead>
+          <tbody>
+            <tr><td>Data Cloud</td><td><strong>Data 360</strong></td><td>14 Oct 2025</td></tr>
+            <tr><td>Data Cloud Consultant</td><td><strong>Data 360 Consultant</strong></td><td>27 Mar 2026</td></tr>
+            <tr><td>Data Cloud Admin</td><td><strong>Data Cloud Architect</strong></td><td>4 Sep 2025</td></tr>
+            <tr><td>Data Cloud Marketing Specialist</td><td><strong>Activation Specialist</strong></td><td>4 Sep 2025</td></tr>
+            <tr><td>Data Cloud Marketing Manager</td><td><strong>Activation Manager</strong></td><td>4 Sep 2025</td></tr>
+            <tr><td>Data Cloud for Marketing Data Aware Specialist</td><td><strong>Data Cloud Data Aware Specialist</strong></td><td>4 Sep 2025</td></tr>
+            <tr><td>Einstein Studio</td><td><strong>AI Models</strong></td><td>&mdash;</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="call">
+        <span class="tag">Why the deck was left alone &mdash; and it is the right call</span>
+        <p>The rename is unprovable at item level, because Salesforce publishes no sample items. A
+        learner who meets the old name on the exam having only ever seen the new one is worse off than
+        the reverse. The current names appear in the deck's <em>explanations</em>. So: <strong>answer
+        with the old names, navigate with the new ones.</strong></p>
+        <p>One consequence worth stating plainly: four items (<code>860708a5</code>,
+        <code>1d6366ff</code>, <code>3b0c0a4e</code>, and <code>49ee75cb</code> by implication) keep
+        correct keys while their option text points at a Setup node that no longer exists. The
+        capability mapping is 1:1, so the reasoning still works.</p>
+      </div>
+
+      <h4>Two defective items, kept as keyed</h4>
+      <div class="call trap">
+        <span class="tag">The deck contradicts itself &mdash; <code>704331e8</code></span>
+        <p>It keys Data Explorer + Query API and its explanation denies that Identity Resolution is a
+        validation surface &mdash; but the Resolution Summary reports match and reconciliation
+        statistics after every run, and <strong>this deck's own <code>a82aca1f</code> keys Identity
+        Resolution as exactly that.</strong> Three options are defensible.</p>
+      </div>
+      <div class="call trap">
+        <span class="tag">Two true options &mdash; <code>de949f0f</code></span>
+        <p>Adding a new <strong>dimension</strong> <em>and</em> adding a new <strong>measure</strong>
+        are both possible when modifying a calculated insight; only <strong>removal</strong> is blocked.
+        Learn the rule &mdash; <strong>you can add, you cannot remove</strong> &mdash; rather than the
+        keyed letter.</p>
+      </div>
+
+      <div class="call alert">
+        <span class="tag">Documentation contradicts the keyed mechanism &mdash; <code>859419eb</code></span>
+        <p>It keys "configure reconciliation rules on Contact Point Address" to pick the best address.
+        Salesforce states that <strong>reconciliation rules do not apply to contact points</strong>, and
+        that Source Priority sorts DLOs rather than DMOs. The documented way to choose a contact point's
+        source is <strong>source priority on the activation</strong> &mdash; which this same deck keys
+        correctly in <code>dc2c1055</code>. The key was kept because no option describes the documented
+        mechanism. <strong>Learn <code>dc2c1055</code>'s answer as the true one.</strong></p>
+      </div>
+
+      <h4>One item that is not settled, and one redundant pair</h4>
+      <ul>
+        <li><strong><code>062012ec</code></strong> &mdash; "when a column is added or removed, the CRM
+        connector performs a full refresh", and the 600K-deletion threshold in its distractor. Neither
+        is stated on any Data 360 page that could be rendered; the closest match was CRM Analytics'
+        <code>sfdcDigest</code>, a different product. Do not spend time on it.</li>
+        <li><strong><code>b16bbc31</code> and <code>e652607d</code></strong> are the same question with
+        the same intended answer. They differ only in whether the option states the documented "up to
+        24 hours". <code>find-duplicates.mjs</code> scores them 0.94. <strong><code>b16bbc31</code> is
+        the better copy</strong> because its option carries the number. If you see it twice, you are not
+        going mad.</li>
+      </ul>
+
+      <h4>Verification debt to be honest about</h4>
+      <p>About six of this deck's citations are <strong>topical rather than decisive</strong> &mdash;
+      the data-ethics item (<code>3ce5cecc</code>), the two "which use case fits" items, the
+      Flow-orchestration item (<code>b985f235</code>) and the LWC/Profile API item
+      (<code>0e845e09</code>) rest on judgment or product positioning rather than on a page that settles
+      them. The deck reaches 100/100 citation coverage, and that number means less on those six than on
+      the rest.</p>
+
+      <h4>How to verify any of this yourself</h4>
+      <p><code>help.salesforce.com</code> is a single-page app that answers <strong>every</strong>
+      article id with HTTP 200, so a status check proves nothing. Two things that do work:</p>
+      <ol class="prose">
+        <li><strong>Render the page and read <code>document.title</code>.</strong> A live article gives
+        its own title; a dead id gives the generic <code>Salesforce Help | Article</code> plus "We
+        looked high and low but couldn't find that page." Poll for a real title <em>and</em> a body over
+        ~1,500 characters &mdash; a half-loaded page reports live articles as dead.</li>
+        <li><strong>Grep the rendered text for the term the citation is meant to support</strong>, not
+        for the term the topic suggests. A page can render, be on the right topic, and not contain the
+        fact.</li>
+      </ol>
+      <div class="call trap">
+        <span class="tag">Two traps in the tooling</span>
+        <p><code>WebFetch</code> does <strong>not</strong> work on this host from a cloud container
+        &mdash; it returns the SPA's "CSS Error" shell for real and invented ids alike, re-confirmed
+        2026-09-26. And beware the keyword sweep: searching this deck for <code>RAG</code> returns
+        three hits, all of them the substring inside "sto<strong>rag</strong>e".</p>
+      </div>
+    </section>
+
+    <!-- 12 -->
+    <section id="plan">
+      <h2 class="sect"><span class="num">12</span><span>Two-week revision plan</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">Set by three facts: the pass mark is 70%, the deck spends a third of itself on a
+      fifth of the exam, and two domains worth 32% are under-covered.</p>
+
+      <h4>Week 1 &mdash; close the gaps the deck cannot close</h4>
+      <ol class="prose">
+        <li><strong>Day 1 &middot; Zero-Copy, start to finish.</strong> Read <em>Zero Copy Data
+        Federation</em> and the Data Shares page. Be able to state the Query-versus-File Federation
+        difference in one sentence, and what an external DLO contains. The most self-contained gap in
+        the guide.</li>
+        <li><strong>Day 2 &middot; Retrievers and search indexes.</strong> Read <em>Retrieve Data</em>.
+        Learn the four data-prep stages, and individual versus ensemble versus dynamic.</li>
+        <li><strong>Day 3 &middot; Data graphs, and AI positioning.</strong> Read <em>Data Graphs</em>.
+        Then write a paragraph explaining why Data 360 is the foundation for generative and predictive
+        AI &mdash; that paragraph is &sect;3's whole gap.</li>
+        <li><strong>Day 4 &middot; Solution Positioning, the rest.</strong> Terminology, business value,
+        initial use cases, data ethics. The deck's seven items take an hour.</li>
+        <li><strong>Day 5 &middot; Setup and Administration.</strong> The permission-set rename table
+        until it is automatic. Data spaces. Data kits and what else sits in the lifecycle bullet.</li>
+        <li><strong>Day 6&ndash;7 &middot; Work the deck's ingestion set</strong> &mdash; 23 items. Pay
+        attention to stream categories and refresh behaviour; both recur.</li>
+      </ol>
+
+      <h4>Week 2 &mdash; consolidate, then stop</h4>
+      <ol class="prose">
+        <li><strong>Day 8 &middot; Harmonization and Unification.</strong> 16 items, 17% of the exam,
+        and the deck is good here. One pass.</li>
+        <li><strong>Day 9 &middot; Enhancements and Analysis.</strong> The deck's 13 items, then re-read
+        Day 2 and Day 3.</li>
+        <li><strong>Day 10 &middot; Activations, once.</strong> 32 items in one sitting. Above 85%, do
+        not return.</li>
+        <li><strong>Day 11 &middot; &sect;11 in full.</strong> The renames, the three defective or
+        contradicted items, the unsettled one.</li>
+        <li><strong>Day 12 &middot; &sect;9 and &sect;10.</strong> Numbers and distractor tells.</li>
+        <li><strong>Day 13 &middot; full deck in Blitz mode</strong>, options read aloud off.</li>
+        <li><strong>Day 14 &middot; only the misses</strong>, plus the Zero-Copy and retriever
+        notes.</li>
+      </ol>
+    </section>
+
+    <!-- 13 -->
+    <section id="sources">
+      <h2 class="sect"><span class="num">13</span><span>Sources</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">Every URL below was rendered in a browser on 2026-09-26 and its title
+      confirmed.</p>
+
+      <div class="linklist">
+        <p><a href="https://help.salesforce.com/s/articleView?id=005298940&amp;type=1&amp;language=en_US">Salesforce Certified Data 360 Consultant Exam Guide</a>
+        <span class="why">The outline, the weights, the Spring '26 alignment, the 70% pass mark and the
+        SDC101/SDC301 course names. A second id, <code>005314086</code>, also surfaces in search;
+        <code>005298940</code> is the one that renders as the live guide.</span></p>
+
+        <p><a href="https://help.salesforce.com/s/articleView?id=data.c360_a_byol_data_federation.htm&amp;type=5&amp;language=en_US">Zero Copy Data Federation</a>
+        <span class="why">Query versus File Federation, external/virtual DLOs, caching and acceleration,
+        and the partner list. Zero deck questions cover this.</span></p>
+
+        <p><a href="https://help.salesforce.com/s/articleView?id=data.c360_a_ai_retriever.htm&amp;type=5&amp;language=en_US">Retrieve Data</a>
+        <span class="why">The four data-prep stages, individual/ensemble/dynamic retrievers, the
+        Retriever Playground, citations, row-level access, and the "AI Models (formerly Einstein
+        Studio)" rename. Also the note that Data 360 no longer creates a default retriever
+        automatically.</span></p>
+
+        <p><a href="https://help.salesforce.com/s/articleView?id=data.c360_a_data_graphs.htm&amp;type=5&amp;language=en_US">Data Graphs</a>
+        <span class="why">The read-only JSON-blob record, and the three real-time features data graphs
+        enable. A distractor in the deck, never an answer.</span></p>
+      </div>
+
+      <p>Per-question citations live in the deck itself: every one of the 100 explanations ends in a
+      <code>References:</code> block with at least one rendered URL.</p>
+    </section>
+
+    <!-- 14 -->
+    <section id="notebooklm">
+      <h2 class="sect"><span class="num">14</span><span>Using this with NotebookLM</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">Upload
+      <code>study-guides/salesforce-data-cloud-consultant.md</code>.</p>
+
+      <div class="prompts">
+        <p class="prompt">Quiz me only on Zero-Copy data federation, retrievers and data graphs. All
+        three are named exam objectives with no practice questions, so generate the questions from
+        sections 5 and 7.</p>
+
+        <p class="prompt">Give me the permission-set rename table from section 11 as flashcards, old
+        name on the front and new name plus the one capability that decides it on the back.</p>
+
+        <p class="prompt">List every item in this guide that is defective, contradicted by
+        documentation, or unsettled. For each, tell me what to answer on the exam and what is actually
+        true.</p>
+
+        <p class="prompt">I have eight days. Compress the plan in section 12, keeping the principle that
+        gaps come before consolidation.</p>
+
+        <p class="prompt">Explain Query Federation versus File Federation as if I already understand a
+        federated database. Then give me three scenarios where the wrong one would be the tempting
+        answer.</p>
+
+        <p class="prompt">Build me a decision tree for the activation-troubleshooting items in section
+        8: symptom in, cause out.</p>
+      </div>
+
+      <p class="colophon">Measured 2026-09-26 against
+      <code>public/decks/data_cloud_consultant_questions.json</code> and Help article
+      <code>005298940</code>. Question counts and domain weights both have a short shelf life &mdash;
+      re-run <code>node study-guides/reclassify-data-cloud.mjs</code> before trusting the table in
+      &sect;2.</p>
+    </section>
+
+  </main>
+</div>
+</body>
+</html>

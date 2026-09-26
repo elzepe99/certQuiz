@@ -50,6 +50,21 @@ const GUIDES = [
     out: 'public/guides/databricks-data-engineer-associate.html',
     lang: 'en',
   },
+  {
+    source: 'study-guides/revenue-cloud.artifact.html',
+    out: 'public/guides/salesforce-revenue-cloud.html',
+    lang: 'en',
+  },
+  {
+    source: 'study-guides/data-cloud-consultant.artifact.html',
+    out: 'public/guides/salesforce-data-cloud-consultant.html',
+    lang: 'en',
+  },
+  {
+    source: 'study-guides/agentforce-specialist.artifact.html',
+    out: 'public/guides/salesforce-agentforce-specialist.html',
+    lang: 'en',
+  },
 ];
 
 /** Pull the <title> out of the fragment so the standalone page keeps it. */

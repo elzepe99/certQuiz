@@ -15,6 +15,7 @@
       "shortName": "Revenue Cloud",
       "description": "Consultant-level certification covering CPQ, Billing, and Subscription Management.",
       "file": "salesforce-revenue-cloud.json",
+      "guide": "guides/salesforce-revenue-cloud.html",
       "accentColor": "#7AB8FF"
     },
     {
@@ -83,6 +84,7 @@
       "shortName": "Data Cloud",
       "description": "Consultant-level certification covering data ingestion and modeling, identity resolution, segmentation and insights, activation, and Data Cloud setup and administration.",
       "file": "data_cloud_consultant_questions.json",
+      "guide": "guides/salesforce-data-cloud-consultant.html",
       "accentColor": "#00C7BE"
     },
     {
@@ -99,6 +101,7 @@
       "shortName": "Agentforce",
       "description": "Specialist-level certification covering Agentforce and Agent Builder, custom and standard agent actions, prompt templates, Einstein Trust Layer, Data Cloud grounding, and agent testing and deployment.",
       "file": "agentforce_specialist_questions.json",
+      "guide": "guides/salesforce-agentforce-specialist.html",
       "accentColor": "#5E5CE6"
     },
     {
