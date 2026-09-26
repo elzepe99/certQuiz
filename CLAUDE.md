@@ -779,7 +779,8 @@ Three caveats on that row:
 
 As of 2026-09-21, **every deck has had a full documentation pass, every question is
 cited, and every question carries a "Why the other options are wrong:" section.** Both
-cross-cutting programmes this file has tracked are finished. That is a real milestone
+of the cross-cutting *content* programmes this file tracked to that point — full
+documentation coverage and readability — are finished. That is a real milestone
 and also the most dangerous line in this document, because the equivalent claim has
 been overtaken three times: on 2026-08-25 when two files of loose questions grew
 integration by 7, on 2026-09-08 when claude-architect-foundations arrived as a whole
@@ -813,7 +814,7 @@ rather than their worktree, so say so explicitly in the brief.
 - **Slack is the one deck where `reformat-stems.mjs` had nothing to do** — 0 stems,
   because that scrape kept its punctuation. Not every deck needs the stem half.
 
-**What remains, now that both programmes are closed:**
+**What remains — one programme still running, and the standing debt:**
 
 1. **A third programme is running: study guides, nine of fourteen decks done** as of
    2026-09-26. See "The study-guide programme" below. The five without a guide are
