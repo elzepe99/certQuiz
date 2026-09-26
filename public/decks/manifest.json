@@ -6,6 +6,7 @@
       "shortName": "Databricks DE Associate",
       "description": "Associate-level certification covering Delta Lake, Delta Live Tables, incremental ingestion, Databricks SQL, workflows, and Unity Catalog governance.",
       "file": "databricks-data-engineer-associate.json",
+      "guide": "guides/databricks-data-engineer-associate.html",
       "accentColor": "#FF3621"
     },
     {

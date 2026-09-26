@@ -29,6 +29,7 @@ a bug.
 | "audit / structurally check a deck" (no doc lookups) | `node scripts/audit-deck.mjs <deck>` | Phase 1 of the skill, standalone. Cheap. Leads, not verdicts. Takes a **path**, not a bare filename. |
 | "the questions read badly / the bot reads them wrong", "fix the punctuation", "format these stems" — **without** changing what a question says | `node scripts/reformat-stems.mjs <edits.json>` | Punctuation, spacing and capitalisation only, guarded so a formatting pass cannot alter the words. See the repo map below. Explanations and keys still go through `apply-findings.mjs`. |
 | "explain why the wrong answers are wrong" | `apply-findings.mjs` with `clarified` verdicts | Not a fact-check: no key moves, so no correction notice. Integration-architect is the worked example — see the deck table. |
+| "write / update a study guide for deck X", "what does this deck NOT cover?", "how does the deck compare to the real exam outline?", "make me a revision guide / cheat sheet" | **`deck-study-guide`** | Six guides exist (`study-guides/`). Two hand-maintained files per guide that must be edited **in parallel** — the `.md` and the `.artifact.html`; only the second is built. Never moves an answer key: a contradiction found while writing goes to `factcheck-deck`. |
 | "what did users comment on?" | `npm run review-comments` | Needs Supabase keys configured. |
 | "build me a chart / dashboard of deck progress" | `dataviz` | |
 | "make this a shareable page / artifact" | `artifact-design` | |
@@ -138,6 +139,34 @@ scripts/
                         a single file, because blitz.ts imports richtext.ts —
                         esbuild resolves the `@/` alias from tsconfig.json
   lib/corrections.mjs   stampCorrection() — LOAD-BEARING, see below
+  build-guide.mjs       wraps each study guide's shell-less `.artifact.html`
+                        fragment into a standalone page under public/guides/.
+                        Wired to `npm run build:guide` and to `prebuild`. **It
+                        reads ONLY the `.artifact.html`** — a guide's `.md` twin
+                        is hand-maintained beside it and changes nothing a
+                        learner sees. **A new guide must be added to its GUIDES
+                        array** or it is silently never built, and the script
+                        prints "built" for the five it did build either way
+study-guides/         six guides, each TWO hand-edited files that must move
+                      together: `<out-slug>.md` (the readable/NotebookLM source)
+                      and `<name>.artifact.html` (the fragment the build reads;
+                      no doctype/head/body, because it is also published as a
+                      Claude Artifact, which supplies its own skeleton). The two
+                      basenames differ — the `.md` is named after build-guide's
+                      `out`, the fragment after its `source`. The six fragments
+                      share one stylesheet BY COPY: lines 5–575 are
+                      byte-identical, so a palette change must be made in all
+                      six. `reclassify-*.mjs` holds one deck's per-question
+                      domain calls against the official exam outline, because no
+                      deck's `_cat` tags match the published domains
+.claude/skills/deck-study-guide/
+  SKILL.md            the study-guide workflow
+  scripts/verify-guide.mjs   checks the wiring the build cannot: GUIDES entry,
+                             manifest `guide` field, every section heading
+                             actually present in the built page, `.md`/fragment
+                             section parity, stylesheet drift, and whether the
+                             question count the guide states still matches the
+                             deck. Run it after `npm run build:guide`
 .claude/skills/factcheck-deck/
   SKILL.md            the deck workflow
   references/deck-format.md    deck + findings schema
@@ -786,9 +815,10 @@ rather than their worktree, so say so explicitly in the brief.
 
 **What remains, now that both programmes are closed:**
 
-1. **Nothing is queued.** The next work here is whatever arrives — a new deck, a fresh
-   scrape, a learner disputing a key, or a comment in the app. Run
-   `npm run review-comments` to see if anything is waiting.
+1. **A third programme started on 2026-09-25: study guides, six of fourteen decks
+   done.** See "The study-guide programme" below. The eight without a guide are
+   revenue-cloud, dld, data-architect, sharing-visibility, data-cloud-consultant,
+   slack-consultant, agentforce and claude-architect-foundations.
 2. **The judgment calls flagged for the repo owner are still open**, and they are the
    cheapest real work available: revenue-cloud's `87836da2` (flow name) and
    `832c6c98` (Contracts permission set), app-builder's `9ba9345d` (Sharing vs
@@ -801,6 +831,102 @@ rather than their worktree, so say so explicitly in the brief.
 4. **A re-render of the citation URLs on the decks not covered by the 2026-08-20 sweep**
    — that sweep proved app-builder, IAM, Dev II and integration clean, and the missing
    `language` parameter is the signature to check for first.
+
+### The study-guide programme — started 2026-09-25, 6 of 14 decks
+
+A guide measures a deck against the vendor's **published exam outline** and teaches the
+sub-objectives the deck never asks. It is a different job from a fact-check: a fact-check
+makes the deck's answers right, a guide asks whether the deck is the right set of
+questions at all. Every one of the six so far has found that it is not, by a wide margin.
+
+The workflow is `deck-study-guide` (the skill), and it was written up on 2026-09-25 from
+the five Salesforce guides that already existed plus the Databricks one built to prove it.
+
+| Deck | Guide | Domain finding |
+|---|---|---|
+| salesforce-integration-architect | yes | the repo's first |
+| salesforce-platform-developer-2 | yes | |
+| salesforce-iam-architect | yes | |
+| salesforce-admin | yes | |
+| salesforce-app-builder | yes | best-balanced deck in the repo; the gap was currency, not counts |
+| databricks-data-engineer-associate | **2026-09-25** | see below |
+
+**Eight decks have no guide**: revenue-cloud, dld, data-architect, sharing-visibility,
+data-cloud-consultant, slack-consultant, agentforce, claude-architect-foundations.
+
+**The Databricks guide is the worked example for a non-Salesforce vendor**, and the
+outline step is where it differed. Salesforce hides the outline in a Help article whose
+id clusters around `0052989xx` and is not alphabetical, so it has to be probed in the
+browser. **Databricks publishes it twice in the open** — the certification landing page
+carries the domain weights, the question count and the time limit as plain text, and
+links an **exam guide PDF** whose URL carries its own date and whose contents are the
+**sub-objectives**, which is the half that matters. The PDF will not render in the
+browser pane (it triggers a download dialog); fetch it with `curl` and extract with
+`pdfminer`, which is installed. A hand-rolled zlib inflate of its content streams returns
+a page of `fi`/`fl` ligatures, because the text is hex strings under a font CMap.
+
+Three findings from that deck worth keeping:
+
+- **The deck has no domain structure at all** — all 147 questions carry the single `_cat`
+  "Databricks Certified Data Engineer Associate". Every other deck had tags that merely
+  disagreed with the outline; this one had nothing to disagree with, so
+  `reclassify-databricks.mjs` is the only view of where its weight sits.
+- **It spends 16.3% of itself on a 6% domain** and 8.8% on a 16% one. Twenty-four
+  questions ask what a lakehouse is, what the control plane holds and which cluster to
+  pick — worth about three questions on a 45-question exam — while Lakeflow Jobs, at 16%,
+  gets thirteen that cluster on two of its four sub-objectives. **Thirteen named
+  sub-objectives have no deck item at all**, including `COPY INTO`, Lakeflow Connect,
+  column masks and row filters, ABAC, `DENY`, predictive optimization, and every job
+  trigger other than cron.
+- **Four products were renamed between the scrape and the 4 May 2026 exam version** —
+  Delta Live Tables → Lakeflow Spark Declarative Pipelines (11 questions), Databricks
+  Repos → Git folders (9), Workflows/Jobs → Lakeflow Jobs (13), Databricks Asset Bundles
+  → Declarative Automation Bundles (5). The mechanisms did not change. Options stay as
+  scraped, per the standing product-rename decision; the guide's §12 carries the mapping.
+
+**One deck item the documentation now contradicts, left for a fact-check pass.**
+`94a481b8` asks which Git operation must be performed outside Databricks Repos and keys
+**Merge**. The Git folders page now documents *Merge branches*, *Resolve merge conflicts*,
+*Rebase a branch* and *Reset a branch* as in-product operations and says what you go to
+the provider for is to "create a pull request and merge it into the default branch" — and
+the exam's own Section 5 objective is written the same way. **The key was not moved**: a
+guide ships no citation and no correction notice, so a key change belongs to
+`factcheck-deck`. Verified in the browser on 2026-09-25, not just by WebFetch summary.
+
+**`verify-guide.mjs` found a real stale number on its first run, and the fix was four times
+bigger than the finding** — worth reading before writing the next guide, because the same
+shape will recur. It reported the integration guide stating 141 and 133 questions where the
+deck holds 146. The headline count was the small half: **both of that guide's §2 tables were
+computed at 133**, so every deck percentage in it was stale, not just the two numbers the
+check could name. A count check is a proxy for a whole derived section.
+
+**Why it drifted: `study-guides/reclassify.mjs` had no runner.** It is the oldest of the six
+and predates the pattern the other five follow, so `node study-guides/reclassify.mjs` printed
+nothing and the file sat two imports out of date — 13 questions unclassified, the 8 from
+2026-08-25 and the 5 from 2026-09-11. It has one now, and it reports unclassified and stale
+ids so the next import says so out loud. Its direct-invocation guard uses `pathToFileURL`
+rather than the backslash-escaping regex over `process.argv[1]` the other four use; that regex
+is also why they throw when imported under `node -e`, which is worth knowing the next time you
+want to read one's `CALLS` from a scratch script.
+
+The 13 were called 7 Design, 3 Build, and one each Landscape, Translate and Maintain. Both
+imports landed items that read as either side of the L/T and B/T boundaries, so the deciding
+rule is now written into that file's header: **L when the answer is a fact about the existing
+estate that must be discovered, T when it is a property of the integration being designed.**
+
+**One claim needed rewriting rather than renumbering, and that is the part to expect.** The
+guide said every re-tag disagreement "shuffled between Design / Build / Maintain" and that
+"nothing moved into the requirements domains". At 146 that is false: `998dcfd8` goes Business
+Needs → Translate and `7b684ea4` Design → Landscape. The net gain is one question (15 by tag
+against 16 by re-tag) so the section's conclusion survives, but its supporting sentence did
+not. **A stale count is rarely only a stale count** — re-measuring can overturn the prose
+built on top of it, so re-read the surrounding argument rather than swapping digits.
+
+Bar widths were left alone: no deck share moved by more than 0.6 points, which is under a pixel
+at the table's 120px scale. `verify-guide.mjs` is at **0 failures across all six guides** as of
+2026-09-25. It still reports `.md`/`.artifact.html` section drift on integration, Dev II and
+IAM — headings deliberately worded shorter in the fragment for the rail — which is why that
+check is a warning and not a failure.
 
 **The readability metric note worth keeping, because IAM is the worked example.**
 Its 34 unpunctuated stems all ended in a trailing "Choose N answers" after a question
