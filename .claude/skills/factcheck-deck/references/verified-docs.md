@@ -2843,3 +2843,50 @@ and title-checked.
   `platform.flow_troubleshoot.htm` is DEAD.
 - **Prompt Template Types** — https://help.salesforce.com/s/articleView?id=ai.prompt_builder_standard_template_types.htm&language=en_US&type=5
 - **Who Has Access to Account Records?** — `platform.faq_record_access.htm` (already listed under the 2026-09-11 import) is the page for the Sharing Hierarchy action.
+
+## 2026-09-26 — Agentforce Specialist import (freecram v2026-08-19.q164, 106 new questions)
+
+Every URL below was rendered in the browser pane (or, for the developer guide, fetched as its `.md`) and checked for the sentence it is cited for.
+
+**Two speed-ups worth reusing.** `developer.salesforce.com/docs/ai/agentforce/guide/<page>.md` returns the page's raw markdown with a 200 from a same-origin `fetch()` in the browser, so the whole Agent Script reference (20 pages) loads in one call and can be searched; WebFetch gets a 403 from that host. On help.salesforce.com the article body is the text after the **last** occurrence of the article title (everything before it is the site menu and the table of contents); poll until the title is real and that tail is over ~800 chars.
+
+**One fact that dates existing items:** Considerations for Testing Center — "As of Summer '26, testing in Agentforce Testing Center is unmetered and doesn't consume Einstein Requests or Flex Credits" (Data 360 queries from tests are still metered). Any item keyed on "tests consume Einstein Requests" is stale.
+
+Agent Script (developer guide):
+- https://developer.salesforce.com/docs/ai/agentforce/guide/ascript-ref-actions.html — run in the logic "is run every time the subagent is run"; reasoning.actions tools are chosen "subjectively" by the LLM; complex_data_type_name
+- https://developer.salesforce.com/docs/ai/agentforce/guide/ascript-ref-variables.html — "To ensure a variable's value is never changed, define the variable without mutable"
+- https://developer.salesforce.com/docs/ai/agentforce/guide/ascript-flow.html — start_agent sets initial variable values; a transition reads the second subagent top to bottom
+- https://developer.salesforce.com/docs/ai/agentforce/guide/ascript-ref-before-after-reasoning.html — before_reasoning "functionally equivalent to adding logic to the beginning of a subagent's instructions". No page states when it runs relative to a mid-turn transition
+- https://developer.salesforce.com/docs/ai/agentforce/guide/ascript-ref-utils.html — "transition to executes immediately"
+- https://developer.salesforce.com/docs/ai/agentforce/guide/ascript-lang.html — "Logic instructions (->) run deterministically every time"
+- https://developer.salesforce.com/docs/ai/agentforce/guide/ascript-ref-tools.html — available when
+- https://developer.salesforce.com/docs/ai/agentforce/guide/ascript-patterns-filtering.html — filters; "Don't only rely on prompt engineering"
+- https://developer.salesforce.com/docs/ai/agentforce/guide/lightning-types-standard.html — strings map to lightning__stringType
+- https://developer.salesforce.com/docs/ai/agentforce/guide/testing-api-custom-scorers.html — custom scorers, LLM via prompt template
+- https://developer.salesforce.com/docs/einstein/genai/guide/get-started-einstein-studio.html — BYOLLM "using your own account"
+- https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts_named_credentials.htm — Named Credentials as Callout Endpoints
+- https://developer.salesforce.com/blogs/2025/04/agentforce-variables-a-new-way-to-structure-agent-memory — context variables "system generated"; custom variables as action input and output
+- https://developer.salesforce.com/blogs/2024/04/invoke-prompt-templates-from-flow-apex-or-the-rest-api — Connect REST API invokes prompt templates "from third-party systems"
+
+Help (type=5):
+- ai.data_library_file_upload — 4 MB text/HTML, 100 MB PDF, 1,000 files; "After you select a library's data source, you can't change it later"
+- ai.data_library_select_fields — identifying fields text/text area, 512 tokens; only published articles; Filter by Knowledge Data Categories; data streams, search index and retriever auto-created
+- ai.data_library_setup, ai.data_library_troubleshooting ("assign the Data Cloud User")
+- ai.prompt_builder_limits — 128,000 chars, 50 versions, 50 merge fields, 5 flow / 5 Apex / 5 related-list merge fields, 5 flex inputs
+- ai.prompt_builder_ground_related_list — related-list data "rendered in JSON"; fields from the parent's page layout
+- ai.prompt_builder_use_multiple_versions — Save as a New Version / Save as a New Template; activating makes a version immutable
+- ai.prompt_builder_override_standard_template — overridable standard templates: Save as a New Version; otherwise copy into a custom template
+- ai.prompt_builder_template_ingredients, ai.prompt_builder_best_practices (role play, triple-quoted instructions), ai.prompt_builder_ground_apex ("well-formatted JSON"), ai.prompt_builder_create_flex_prompt_template (Preview Settings)
+- ai.generative_ai_audit_trail (audit + feedback "stored in Data 360"), ai.generative_ai_audit_toxicity (categories 1 = most toxic; safety 1 = safest), ai.generative_ai_trust_arch (secure data retrieval), ai.generative_ai_large_language_model_support (Manage Model Provider Access)
+- ai.copilot_actions_instructions (dependent actions by API name), ai.agent_setup_explore_types (no "Sales Agent" type), ai.agent_user (the [Agent_Name]_Permissions set; a new set must use the Einstein Agent license), ai.agent_deploy_emp_slack, ai.service_agent_escalation (outbound Omni-Channel flow)
+- ai.copilot_setup_enhanced_event_logs ("Event logs store information for seven days"), ai.agent_testing_center_evaluations (subagent/action assertion, coherence), ai.agent_testing_center_considerations (Summer '26 unmetered)
+- ai.einstein_sales_emails_considerations (FLS → placeholder; the `sf.` id redirects here), ai.einstein_sales_emails_overview (fixed grounding fields), ai.copilot_actions_ref_summarize_record (custom Record Summary templates win)
+- data.c360_a_ai_retriever_about (renders as "Retrieve Data"), data.c360_a_ai_retriever_create, data.c360_a_hybridsearch_fusion_ranking, data.c360_a_search_index_grounding, data.c360_a_search_index_supported_chunking_strategies (no keyword-based strategy), data.c360_a_search_index_max_token_setting (512 default), data.c360_a_byol_data_federation (Zero Copy)
+- service.cc_generative_ai_work_summaries (conversation and case summaries), sales.eci_call_summaries, sales.call_coaching_setup, sales.sales_agent_sdr_permissions (now "Engagement Agent Permission Sets"; Use Engagement Agent), xcloud.wallet_monitor_usage (Digital Wallet), platform.flow_distribute_deploy_active (flows deploy inactive by default; the `sf.` id redirects here)
+
+Knowledge articles (type=1): 005232697 Agentforce Deployment with Change Set; 005226932 Learn About Agentforce Observability; 005317683 SOMA/MOMA/MCP/A2A.
+
+salesforce.com: /agentforce/ai-agents/agent2agent-protocol/, /blog/how-to-choose-integration-pattern-for-agentforce/, /agentforce/guide/ (subagent overlap), /agentforce/observability/ ("Agent Configuration and Inspection").
+Trailhead: data-cloud-process-content/use-rag-to-bring-unstructured-data-to-agentforce (Docling), prompt-engineering-techniques/improve-prompts-using-different-prompt-techniques (few-shot).
+
+Unresolved: `sales.sales_agent_sdr_setup_assign_agent_perms.htm` rendered only the cookie banner. Treat it as unverified, not dead.
