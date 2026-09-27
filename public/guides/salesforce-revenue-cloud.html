@@ -1,0 +1,1524 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Agentforce Revenue Management Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+</head>
+<body>
+<style>
+:root {
+  --paper:      #F1F4F6;
+  --surface:    #FFFFFF;
+  --surface-2:  #E8ECEF;
+  --ink:        #121A21;
+  --ink-2:      #37444F;
+  --muted:      #5E6C78;
+  --rule:       #D3DBE1;
+  --rule-soft:  #E3E9ED;
+
+  --primary:    #12494F;
+  --primary-2:  #1C6C71;
+  --primary-wash:#E2EEEE;
+
+  --amber:      #8F550A;
+  --amber-wash: #FAEEDC;
+  --amber-rule: #DFB877;
+
+  --crimson:    #962E2E;
+  --crimson-wash:#F9E7E5;
+  --crimson-rule:#DDA39C;
+
+  --good:       #2C6440;
+
+  --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --font-prose:   "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-ui:      "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono:    "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --shadow: 0 1px 2px rgba(18,26,33,.05), 0 8px 24px -12px rgba(18,26,33,.14);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:      #0C1216;
+    --surface:    #131B20;
+    --surface-2:  #1B252B;
+    --ink:        #DCE4E8;
+    --ink-2:      #B4C1C9;
+    --muted:      #8496A1;
+    --rule:       #263238;
+    --rule-soft:  #1C262C;
+
+    --primary:    #66C4BC;
+    --primary-2:  #8AD6CE;
+    --primary-wash:#15292C;
+
+    --amber:      #DFA45C;
+    --amber-wash: #221A0F;
+    --amber-rule: #5A431F;
+
+    --crimson:    #E28C80;
+    --crimson-wash:#231314;
+    --crimson-rule:#5C2E2C;
+
+    --good:       #6FBE8B;
+
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper:      #0C1216;
+  --surface:    #131B20;
+  --surface-2:  #1B252B;
+  --ink:        #DCE4E8;
+  --ink-2:      #B4C1C9;
+  --muted:      #8496A1;
+  --rule:       #263238;
+  --rule-soft:  #1C262C;
+
+  --primary:    #66C4BC;
+  --primary-2:  #8AD6CE;
+  --primary-wash:#15292C;
+
+  --amber:      #DFA45C;
+  --amber-wash: #221A0F;
+  --amber-rule: #5A431F;
+
+  --crimson:    #E28C80;
+  --crimson-wash:#231314;
+  --crimson-rule:#5C2E2C;
+
+  --good:       #6FBE8B;
+
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-prose);
+  font-size: 17px;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- shell ---------- */
+
+.shell {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  column-gap: 56px;
+  row-gap: 0;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 32px 120px;
+  align-items: start;
+}
+
+/* ---------- masthead ---------- */
+
+.masthead {
+  grid-column: 1 / -1;
+  padding: 64px 0 40px;
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: 48px;
+}
+
+.eyebrow {
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin: 0 0 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.eyebrow .sep { color: var(--rule); }
+
+h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.4rem, 6vw, 3.9rem);
+  line-height: 1.02;
+  letter-spacing: -.025em;
+  margin: 0 0 20px;
+  text-wrap: balance;
+  color: var(--ink);
+}
+
+.standfirst {
+  font-size: 1.18rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 62ch;
+  margin: 0 0 32px;
+}
+
+.standfirst strong { color: var(--ink); font-weight: 600; }
+
+/* exam vitals strip */
+.vitals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.vital {
+  background: var(--surface);
+  padding: 14px 16px 15px;
+}
+
+.vital dt {
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 6px;
+}
+
+.vital dd {
+  font-family: var(--font-mono);
+  font-size: 1.16rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.vital dd .sub {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-top: 4px;
+  letter-spacing: 0;
+}
+
+.vital.flag { background: var(--amber-wash); }
+.vital.flag dd { color: var(--amber); }
+
+/* ---------- toc rail ---------- */
+
+.rail {
+  position: sticky;
+  top: 28px;
+  font-family: var(--font-ui);
+  max-height: calc(100vh - 56px);
+  overflow-y: auto;
+}
+
+.rail h2 {
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.rail ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  counter-reset: toc;
+}
+
+.rail a {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 8px;
+  align-items: baseline;
+  padding: 5px 8px 5px 4px;
+  font-size: 13.5px;
+  line-height: 1.35;
+  color: var(--ink-2);
+  text-decoration: none;
+  border-radius: 3px;
+  border-left: 2px solid transparent;
+  transition: background .12s ease, color .12s ease, border-color .12s ease;
+}
+
+.rail a::before {
+  counter-increment: toc;
+  content: counter(toc);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.rail a:hover {
+  background: var(--surface);
+  color: var(--ink);
+  border-left-color: var(--primary);
+}
+
+.rail a:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+.rail a.key { color: var(--crimson); font-weight: 500; }
+.rail a.key::before { color: var(--crimson); }
+
+.rail .note {
+  margin: 16px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+/* ---------- content ---------- */
+
+.content { min-width: 0; }
+
+section { margin: 0 0 64px; scroll-margin-top: 24px; }
+
+h2.sect {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3vw, 1.95rem);
+  line-height: 1.14;
+  letter-spacing: -.018em;
+  margin: 0 0 8px;
+  text-wrap: balance;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: baseline;
+}
+
+h2.sect .num {
+  font-family: var(--font-mono);
+  font-size: .58em;
+  font-weight: 500;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+.sect-rule {
+  height: 2px;
+  background: var(--ink);
+  margin: 0 0 24px;
+}
+
+h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.13rem;
+  letter-spacing: -.008em;
+  margin: 36px 0 12px;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+h4 {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 26px 0 10px;
+}
+
+p { margin: 0 0 16px; max-width: 68ch; }
+
+a { color: var(--primary); text-underline-offset: 2px; text-decoration-thickness: 1px; }
+a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 2px; }
+
+strong { font-weight: 600; color: var(--ink); }
+em { font-style: italic; }
+
+code {
+  font-family: var(--font-mono);
+  font-size: .855em;
+  background: var(--surface-2);
+  padding: .1em .34em;
+  border-radius: 3px;
+  color: var(--ink);
+}
+
+ul, ol.prose { margin: 0 0 18px; padding-left: 20px; max-width: 68ch; }
+ul li, ol.prose li { margin-bottom: 8px; }
+ul li::marker { color: var(--primary); }
+ol.prose li::marker { color: var(--muted); font-family: var(--font-mono); font-size: .85em; }
+
+/* ---------- tables ---------- */
+
+.tw {
+  overflow-x: auto;
+  margin: 0 0 22px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-ui);
+  font-size: 14.2px;
+  line-height: 1.48;
+}
+
+thead th {
+  text-align: left;
+  font-weight: 600;
+  font-size: 10.5px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--surface-2);
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+
+tbody td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--rule-soft);
+  vertical-align: top;
+  color: var(--ink-2);
+}
+
+tbody tr:last-child td { border-bottom: none; }
+
+tbody td:first-child { color: var(--ink); font-weight: 500; }
+
+tbody td strong { color: var(--ink); font-weight: 600; }
+
+td code, th code { background: transparent; padding: 0; font-size: .9em; }
+
+.num-col, .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+
+/* two-col comparison tables read better with an emphasized first col */
+table.kv tbody td:first-child { width: 34%; }
+
+/* ---------- weight bars (domain table) ---------- */
+
+.bar {
+  display: block;
+  height: 7px;
+  border-radius: 1px;
+  background: var(--primary);
+  min-width: 2px;
+}
+.bar.deck { background: var(--muted); opacity: .55; }
+.bar-cell { width: 120px; }
+.bar-cell .lab {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--muted);
+  margin-bottom: 3px;
+  font-variant-numeric: tabular-nums;
+}
+.bar + .lab { margin-top: 6px; }
+
+.verdict {
+  display: inline-block;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  padding: 2.5px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.verdict.gap  { background: var(--crimson-wash); color: var(--crimson); border: 1px solid var(--crimson-rule); }
+.verdict.over { background: var(--surface-2); color: var(--muted); border: 1px solid var(--rule); }
+.verdict.ok   { background: var(--primary-wash); color: var(--primary); border: 1px solid var(--primary); }
+
+/* ---------- callouts ---------- */
+
+.call {
+  border-left: 3px solid var(--primary);
+  background: var(--surface);
+  padding: 16px 20px;
+  margin: 0 0 22px;
+  border-radius: 0 4px 4px 0;
+  max-width: 70ch;
+}
+.call p { margin: 0 0 10px; }
+.call p:last-child { margin-bottom: 0; }
+.call .tag {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: var(--primary);
+}
+
+.call.trap { border-left-color: var(--amber-rule); background: var(--amber-wash); }
+.call.trap .tag { color: var(--amber); }
+.call.trap strong { color: var(--ink); }
+
+.call.alert { border-left-color: var(--crimson-rule); background: var(--crimson-wash); }
+.call.alert .tag { color: var(--crimson); }
+
+/* ---------- misc ---------- */
+
+.lede {
+  font-size: 1.06rem;
+  color: var(--ink-2);
+  max-width: 66ch;
+  margin: 0 0 24px;
+}
+
+.yes { color: var(--good); font-weight: 600; }
+.no  { color: var(--crimson); font-weight: 600; }
+.warn{ color: var(--amber); font-weight: 600; }
+
+.linklist { list-style: none; padding: 0; margin: 0 0 20px; max-width: 72ch; }
+.linklist li { margin-bottom: 9px; padding-left: 14px; position: relative; font-size: 15px; }
+.linklist li::before {
+  content: "";
+  position: absolute; left: 0; top: .62em;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--rule);
+}
+.linklist .why { color: var(--muted); font-size: 14px; }
+
+.prompts { display: flex; flex-direction: column; gap: 12px; margin: 0 0 22px; max-width: 72ch; }
+.prompt {
+  font-family: var(--font-ui);
+  font-size: 14.3px;
+  line-height: 1.5;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 13px 16px;
+  color: var(--ink-2);
+}
+.prompt::before {
+  content: "Prompt";
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+
+.colophon {
+  grid-column: 1 / -1;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 74ch;
+}
+
+.colophon code { font-size: 11.5px; }
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 900px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding: 0 20px 80px;
+  }
+  .rail {
+    position: static;
+    max-height: none;
+    margin-bottom: 44px;
+    padding: 16px 18px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+  }
+  .rail ol { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 0; }
+  .masthead { padding-top: 44px; margin-bottom: 32px; }
+  body { font-size: 16.5px; }
+  section { margin-bottom: 52px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+
+html { scroll-behavior: smooth; }
+</style>
+<div class="shell">
+
+  <header class="masthead">
+    <p class="eyebrow">
+      <span>Salesforce Certified Agentforce Revenue Management Consultant</span>
+      <span class="sep">/</span>
+      <span>Summer '25 item bank</span>
+    </p>
+    <h1>Agentforce Revenue Management Field Guide</h1>
+    <p class="standfirst">
+      Built from the 135 questions in the practice deck, cross-checked against the official exam
+      outline and the documentation those questions cite. <strong>The certification has been
+      renamed and its outline rebuilt.</strong> The deck, its manifest entry and every stem say
+      "Revenue Cloud"; the exam is now the <strong>Agentforce Revenue Management Consultant</strong>
+      and the product is <strong>Revenue Management</strong>. Nothing in the deck is wrong because of
+      that &mdash; but the exam now names <strong>Agentforce</strong> in its CPQ objective, and the
+      word appears in none of the 135 stems. &sect;6 closes that gap; &sect;12 lists every other way
+      the deck lags.
+    </p>
+    <dl class="vitals">
+      <div class="vital"><dt>Questions</dt><dd>60<span class="sub">+5 unscored</span></dd></div>
+      <div class="vital"><dt>Time</dt><dd>105<span class="sub">minutes</span></dd></div>
+      <div class="vital flag"><dt>Pass mark</dt><dd>63%<span class="sub">38 of 60 &mdash; lowest here</span></dd></div>
+      <div class="vital"><dt>Prerequisite</dt><dd>None<span class="sub">US$200</span></dd></div>
+      <div class="vital flag"><dt>Aligned to</dt><dd>Summer '25<span class="sub">older than the docs</span></dd></div>
+    </dl>
+  </header>
+
+  <nav class="rail" aria-label="Contents">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#exam">The exam, factually</a></li>
+      <li><a href="#weights" class="key">Where the points are</a></li>
+      <li><a href="#platform" class="key">Platform Concepts</a></li>
+      <li><a href="#readiness" class="key">Implementation Readiness</a></li>
+      <li><a href="#catalog">Catalog Management</a></li>
+      <li><a href="#cpq" class="key">Configure, Price, Quote</a></li>
+      <li><a href="#orders">Contracts and Orders</a></li>
+      <li><a href="#assets">Asset Management</a></li>
+      <li><a href="#invoice">Invoice Management</a></li>
+      <li><a href="#numbers">Numbers to memorise</a></li>
+      <li><a href="#tells">Distractor tells</a></li>
+      <li><a href="#stale" class="key">Deck older than the exam</a></li>
+      <li><a href="#plan">Two-week plan</a></li>
+      <li><a href="#sources">Sources</a></li>
+      <li><a href="#notebooklm">Using NotebookLM</a></li>
+    </ol>
+    <p class="note">Sections in red carry the objectives the practice deck does not train you for.</p>
+  </nav>
+
+  <main class="content">
+
+    <!-- 1 -->
+    <section id="exam">
+      <h2 class="sect"><span class="num">01</span><span>The exam, factually</span></h2>
+      <div class="sect-rule"></div>
+
+      <div class="call alert">
+        <span class="tag">Two structural facts that matter more than any topic</span>
+        <p><strong>63% is unusually forgiving.</strong> You can miss 22 of 60 and still pass &mdash;
+        the lowest bar of any exam covered in this repo. That should change your revision strategy:
+        there is no domain you must be perfect in, and the right move is to stop polishing Asset
+        Management, which the deck has already drilled into you, and buy cheap marks in the two
+        domains the deck barely touches.</p>
+        <p><strong>The exam is aligned to Summer '25, and the product has moved on.</strong> This is
+        the opposite risk from the App Builder guide. There the exam was newer than the deck; here
+        the exam is <em>older</em> than the documentation you will revise from, so when a current
+        Help page contradicts a deck item the deck is often still what the exam wants. &sect;12 lists
+        every case found.</p>
+      </div>
+
+      <div class="tw">
+        <table class="kv">
+          <tbody>
+            <tr><td>Official name</td><td>Salesforce Certified Agentforce Revenue Management Consultant</td></tr>
+            <tr><td>Content</td><td><strong>60 scored</strong> multiple-choice items, plus up to 5 unscored</td></tr>
+            <tr><td>Time</td><td><strong>105 minutes</strong> (1 min 45 per item)</td></tr>
+            <tr><td>Passing score</td><td><strong>63%</strong> &mdash; 38 of 60</td></tr>
+            <tr><td>Prerequisite</td><td>None; 2&ndash;3 years of Product-to-Cash domain experience assumed</td></tr>
+            <tr><td>Fee</td><td>US$200, retake US$100</td></tr>
+            <tr><td>Aligned to</td><td><strong>Summer '25</strong></td></tr>
+            <tr><td>Exam guide</td><td>Help article <code>005298978</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="call">
+        <span class="tag">A naming trap in the guide itself</span>
+        <p>The Help article's <em>title</em> still reads "Revenue Management Consultant" while its
+        <em>body</em> says "Agentforce Revenue Management Consultant" throughout. Searching for either
+        name finds it. Do not conclude from the title that you have the wrong article.</p>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section id="weights">
+      <h2 class="sect"><span class="num">02</span><span>Where the points actually are</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">The deck's own nine <code>_cat</code> tags &mdash; Product Catalog, Pricing
+      &amp; Discounts, Subscriptions, Configuration, Quote &amp; Order, Billing &amp; Invoicing,
+      Context Service, General, Integration &amp; API &mdash; are not the exam's domains and never
+      were. The deck column is an independent re-classification of all 135 against the seven current
+      domains (<code>study-guides/reclassify-revenue-cloud.mjs</code>).</p>
+
+      <div class="tw">
+        <table>
+          <thead>
+            <tr><th>Domain</th><th class="num-col">Exam</th><th class="num-col">&asymp; Qs</th><th class="bar-cell">Exam vs deck</th><th class="num-col">Deck</th><th>Verdict</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Platform Concepts</td><td class="num">18%</td><td class="num">~11</td><td class="bar-cell"><span class="bar" style="width:100%"></span><span class="bar deck" style="width:62%"></span></td><td class="num">18 &middot; 13.3%</td><td><span class="verdict gap">under</span></td></tr>
+            <tr><td>Implementation Readiness</td><td class="num">14%</td><td class="num">~8</td><td class="bar-cell"><span class="bar" style="width:78%"></span><span class="bar deck" style="width:27%"></span></td><td class="num">8 &middot; 5.9%</td><td><span class="verdict gap">badly under</span></td></tr>
+            <tr><td>Catalog Management</td><td class="num">16%</td><td class="num">~10</td><td class="bar-cell"><span class="bar" style="width:89%"></span><span class="bar deck" style="width:76%"></span></td><td class="num">22 &middot; 16.3%</td><td><span class="verdict ok">about right</span></td></tr>
+            <tr><td>Configure, Price, Quote</td><td class="num">18%</td><td class="num">~11</td><td class="bar-cell"><span class="bar" style="width:100%"></span><span class="bar deck" style="width:86%"></span></td><td class="num">25 &middot; 18.5%</td><td><span class="verdict ok">about right</span></td></tr>
+            <tr><td>Contracts and Orders</td><td class="num">11%</td><td class="num">~7</td><td class="bar-cell"><span class="bar" style="width:61%"></span><span class="bar deck" style="width:66%"></span></td><td class="num">19 &middot; 14.1%</td><td><span class="verdict over">over</span></td></tr>
+            <tr><td>Asset Management</td><td class="num">16%</td><td class="num">~10</td><td class="bar-cell"><span class="bar" style="width:89%"></span><span class="bar deck" style="width:100%"></span></td><td class="num">29 &middot; 21.5%</td><td><span class="verdict over">over</span></td></tr>
+            <tr><td>Invoice Management</td><td class="num">7%</td><td class="num">~4</td><td class="bar-cell"><span class="bar" style="width:39%"></span><span class="bar deck" style="width:48%"></span></td><td class="num">14 &middot; 10.4%</td><td><span class="verdict over">over</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-family:var(--font-ui);font-size:12.5px;color:var(--muted);margin-top:-8px;">
+        Teal bar = share of the exam. Grey bar = share of the deck. Each series scaled to its own largest value.
+      </p>
+
+      <div class="call alert">
+        <span class="tag">The gap you need to close</span>
+        <p><strong>Implementation Readiness is 14% of the exam &mdash; about eight questions &mdash;
+        and 5.9% of the deck.</strong> It is the third-heaviest domain, and the deck gives you eight
+        items on it, none of which is about producing a scoped plan. <strong>"Scope of work" and
+        "project plan" return zero hits anywhere in the deck</strong>, and neither does "KPI". That is
+        roughly eight marks the deck cannot prepare you for, on an exam where 38 marks is a pass.</p>
+      </div>
+
+      <div class="call trap">
+        <span class="tag">The over-drill</span>
+        <p><strong>Asset Management: 29 deck items against about ten real questions.</strong> The deck
+        will make you genuinely fluent in Asset State Periods, Asset Actions and the
+        amend/renew/cancel flow &mdash; this is its strongest material. That fluency is worth a sixth
+        of the exam, not a fifth of your revision time.</p>
+      </div>
+
+      <h4>How the boundaries were drawn</h4>
+      <p>Two rules were applied consistently, and they are worth knowing so you can reproduce the
+      table rather than take it on trust.</p>
+      <ol class="prose">
+        <li>A question asking <strong>which permission set or PSL unlocks a feature</strong> is
+        Platform Concepts &mdash; configuration. Implementation Readiness is reserved for
+        project-lifecycle, methodology, stakeholder and deployment questions. Without that split,
+        Implementation Readiness absorbs every access question and the thinness disappears.</li>
+        <li>Everything about <strong>usage</strong> &mdash; rate cards and tier rate entries, Usage
+        Management ingestion, Usage Entitlement and Wallet &mdash; is Invoice Management, because in
+        Salesforce's own documentation usage rating sits in the billing arc that ends at an invoice
+        line.</li>
+      </ol>
+    </section>
+
+    <!-- 3 -->
+    <section id="platform">
+      <h2 class="sect"><span class="num">03</span><span>Platform Concepts</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">18% of the exam, about eleven questions. The deck gives you 18, and they are
+      good on Context Service and thin-to-absent on three named items.</p>
+
+      <h4>Context Service &mdash; the deck's strength here</h4>
+      <p>Six deck items turn on context definitions and they teach the mechanism properly. A
+      <strong>context definition</strong> is the shared vocabulary that lets applications read and
+      write the same data across the revenue lifecycle; it has <strong>nodes</strong>,
+      <strong>attributes</strong> and <strong>mappings</strong>.</p>
+      <ul>
+        <li>The two valid actions on a <em>standard</em> context definition are <strong>Extend</strong>
+        and <strong>Clone</strong> (<code>ea8501f7</code>). Extend inherits everything and lets you add
+        &mdash; <code>25acadca</code> extends <code>SalesTransactionContext</code>.</li>
+        <li>Mapping a CRM field into a transaction means mapping <strong>node to node, then attribute
+        to attribute</strong>: Catalog Product to Product2, then the field (<code>e02f90f5</code>).</li>
+        <li>The pricing procedure's context definition <strong>must be the one selected on Product
+        Discovery settings</strong>. When they differ, quoting breaks in ways that look random
+        (<code>42d9581e</code>).</li>
+        <li>A new custom field on a context definition needs a <strong>tag</strong> on the field
+        attribute before a pricing procedure can use it (<code>464876c9</code>).</li>
+        <li><strong>Persistence</strong> is the mapping setting that makes an attribute value survive
+        for downstream processes (<code>df8f0748</code>).</li>
+        <li>Salesforce ships <strong>Predefined Context Definitions</strong> for Revenue Management.
+        Know that before you build one.</li>
+      </ul>
+
+      <div class="call alert">
+        <span class="tag">Zero deck questions &mdash; Business Rules Engine</span>
+        <p>The outline names BRE beside Context Service, Omnistudio and APIs. <strong>"BRE" and
+        "Business Rules Engine" return zero hits in the deck's stems, options <em>and</em>
+        explanations.</strong> Learn it from scratch:</p>
+        <ul>
+          <li><strong>BRE</strong> is a suite of services, components and objects for business rules
+          that perform complex lookups and calculations.</li>
+          <li><strong>Expression sets</strong> are the calculation engine &mdash; a series of steps in
+          a logical flow, built from <strong>variables, constants, conditions, calculations, lookups
+          and aggregations</strong>.</li>
+          <li><strong>Decision matrices</strong> match input values to a table row and return that
+          row's output values. They take <strong>JSON in and return JSON out</strong> to the digital
+          processes that call them.</li>
+          <li>Expression sets and lookup tables can be called from <strong>Flow and
+          Omnistudio</strong>. Expression sets and digital procedures can call decision matrices.</li>
+        </ul>
+        <p>Do not let the deck's three <strong>decision table</strong> items
+        (<code>11baead8</code>, <code>c59aa725</code>, <code>b45b5d01</code>) convince you it covered
+        this. A decision table is a different object from a decision matrix, and the deck never
+        mentions an expression set.</p>
+      </div>
+
+      <div class="call alert">
+        <span class="tag">Near-zero &mdash; dashboards and KPIs</span>
+        <p>The outline asks you to "design context-aware dashboards and key performance indicators
+        using native Salesforce reporting tools." <strong>"KPI" returns zero hits in the
+        deck.</strong> The two dashboard items name a packaged app (<code>0b7cd50b</code>,
+        Subscription and Revenue Lifecycle Analytics) or an intelligence setup step
+        (<code>b1cfb9c8</code>, Revenue Management Intelligence needing Data Cloud configuration plus
+        a Dynamic dashboard package). Neither asks you to design a report.</p>
+        <p>The reporting objects the deck <em>does</em> teach are the ones a report has to be built
+        on, so memorise them: attribute runtime values at order activation live on <strong>Asset
+        State Periods</strong> and <strong>Asset State Period Attributes</strong>
+        (<code>5b126341</code>); ordered configurable attributes live on <strong>Order
+        Products</strong> and <strong>Order Product Attributes</strong> (<code>17453798</code>).</p>
+      </div>
+
+      <h4>Omnistudio &mdash; document generation only</h4>
+      <p>Both Omnistudio hits (<code>38db2a91</code>, <code>832c6c98</code>) are Document Generation.
+      No OmniScript, FlexCard, Integration Procedure or DataRaptor item exists, and the outline names
+      Omnistudio as an ARM feature without qualification.</p>
+
+      <h4>Core objects and identification</h4>
+      <div class="tw">
+        <table class="kv">
+          <tbody>
+            <tr><td><code>HasLifecycleManagement</code></td><td>Distinguishes a Revenue Management record from a custom-app record (<code>5ebe00f0</code>)</td></tr>
+            <tr><td>Application Usage Assignment</td><td>With the value <em>Revenue Lifecycle Management</em>, tells you which records Revenue Management created (<code>9bac03e6</code>)</td></tr>
+            <tr><td>Missing RLM record</td><td>Why a contract activates without its assets attached (<code>cdfa1139</code>)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section id="readiness">
+      <h2 class="sect"><span class="num">04</span><span>Implementation Readiness</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede"><strong>14% of the exam. The deck's weakest domain by a wide margin, at 8 items
+      of 135.</strong> This section is the reason this guide exists. Everything below is from
+      Salesforce's own implementation documentation, not from the deck.</p>
+
+      <h4>The named preparation activities</h4>
+      <p>Salesforce's <em>Get Ready for Your Revenue Management Implementation</em> lists these, and
+      an exam item asking "what should the consultant do first" is drawn from this shape. Note the
+      ordering: understanding before team, team before requirements, requirements before milestones.</p>
+      <ol class="prose">
+        <li>Learn the features and <strong>technical architecture</strong>.</li>
+        <li>Assemble a <strong>dedicated implementation team</strong>.</li>
+        <li><strong>Investigate pain points</strong> and assess current priorities.</li>
+        <li><strong>Solicit input from key stakeholders</strong>.</li>
+        <li>Define clear <strong>business objectives</strong>.</li>
+        <li>Establish <strong>realistic milestones</strong> to guide the project.</li>
+      </ol>
+      <p>The deck's <code>2fd9af4b</code> keys "assemble a team with Quote-to-Cash expertise, create a
+      phased plan covering core setup" and <code>41493562</code> keys "set up environments for
+      development, testing and production, and choose a deployment tool." Both are consistent with
+      this and both are correct &mdash; and between them they are almost the whole of the deck's
+      project coverage.</p>
+
+      <h4>The doc set to know by name</h4>
+      <div class="tw">
+        <table class="kv">
+          <tbody>
+            <tr><td>Plan Your Implementation</td><td>Gather requirements, <strong>sequence feature deployment</strong>, set milestones, import data, work with business users</td></tr>
+            <tr><td>Build Your Implementation Team</td><td>Job roles and areas of knowledge to grow and maintain in the organisation</td></tr>
+            <tr><td>Limits and Considerations</td><td>Read before designing or running the quote-to-cash lifecycle</td></tr>
+            <tr><td>Preconfiguration Steps</td><td>Complete <em>before</em> configuration begins. This is where the outline's <strong>prerequisite feature toggles</strong> live, and the deck has nothing on it</td></tr>
+            <tr><td>Set Up Revenue Management</td><td>Enable revenue settings, create profiles and users, assign permission sets, set up procedures</td></tr>
+            <tr><td>Glossary &middot; Data Model</td><td>Terminology, and the objects and relationships</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4>Licences and permission sets you can be asked about</h4>
+      <p>The deck only ever asks about these as troubleshooting &mdash; "the admin can view but not
+      edit" &mdash; so learn them as prerequisites too.</p>
+      <div class="tw">
+        <table class="kv">
+          <tbody>
+            <tr><td>Product Catalog Management Designer</td><td>PSL required to <em>edit</em> catalog records, not just view them (<code>2a61d2aa</code>)</td></tr>
+            <tr><td>Product Discovery User</td><td>Without it the Browse Products button does not appear on the quote page layout (<code>894e7d14</code>)</td></tr>
+            <tr><td>Product Configurator</td><td>Required to configure a bundle from the Transaction Line Table or Browse Catalog (<code>4c19bd08</code>)</td></tr>
+            <tr><td>Customer Asset Lifecycle Management</td><td>Required to generate Asset Actions and Asset State Periods and edit Lifecycle Asset fields during migration (<code>6d3a68c2</code>)</td></tr>
+            <tr><td>Place Supplemental Orders</td><td>Required to change an activated order (<code>d38922f8</code>)</td></tr>
+            <tr><td>Billing Administrator</td><td>Required to suspend invoicing on a delinquent account (<code>2ec8b053</code>)</td></tr>
+            <tr><td>Microsoft 365 Word Designer / User</td><td>Required to insert clauses into a Salesforce Contracts template (<code>832c6c98</code> &mdash; judgment call, &sect;12)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="call trap">
+        <span class="tag">Roles: what the deck has is not what the bullet asks</span>
+        <p>The outline asks for <strong>cross-product</strong> stakeholder roles. The deck has one item
+        (<code>6d2955d5</code>) and it is catalog-scoped: Catalog Administrator manages
+        classifications and attributes, Product Designer defines product structures and bundles. That
+        split is correct &mdash; Salesforce's Product Catalog Management Personas page states it
+        &mdash; but it is not the cross-product project-team question the bullet describes.</p>
+      </div>
+
+      <h4>Deployment</h4>
+      <p><code>11baead8</code> is the deck's only deployment item: to move a custom decision table to
+      a staging sandbox, deploy the custom object <strong>and</strong> the decision table, then map the
+      decision table in the default pricing procedure. Generalise it &mdash; a deployed ARM artefact
+      usually needs re-pointing at something in the target org after it lands. <code>1092afe5</code> is
+      the same lesson for flows: a duplicated amend/renew/cancel flow does nothing until Revenue
+      Settings points at the new one.</p>
+    </section>
+
+    <!-- 5 -->
+    <section id="catalog">
+      <h2 class="sect"><span class="num">05</span><span>Catalog Management</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">16% of the exam, 22 deck items &mdash; the best-matched domain in the deck, and
+      largely trustworthy.</p>
+
+      <h4>Structure and reuse</h4>
+      <ul>
+        <li>Lead with a <strong>shared catalog with reusable components, attributes and selling models
+        tailored per business</strong> rather than a catalog per line of business (<code>43661ef6</code>).</li>
+        <li>Use <strong>product classifications</strong> for attribute reuse; apply <strong>selling
+        models at the product level</strong> to support one-time, term-based and evergreen
+        (<code>231e4a3f</code>).</li>
+        <li>Use <strong>Product Attributes to rationalise</strong> a catalog that would otherwise need
+        thousands of SKUs (<code>bc9001d5</code> &mdash; 30,000 consultants by role and skill).</li>
+        <li>The <strong>Product Selling Model</strong> and <strong>Product Selling Model Option</strong>
+        collapse lease-versus-buy and payment-frequency variants into one product
+        (<code>69e0bfd0</code>; <code>0010599f</code> &mdash; Term Monthly for 12 equal instalments).</li>
+        <li>Establish the Salesforce Product Catalog as the <strong>single source of truth</strong> when
+        product data is scattered across a PIM and other systems (<code>21608eee</code>).</li>
+      </ul>
+
+      <h4>Bundles and cardinality</h4>
+      <ul>
+        <li><strong>Local Cardinality</strong> on a component carries its minimum and maximum quantity
+        (<code>c3716756</code>).</li>
+        <li>A per-component maximum <em>and</em> a bundle-wide total: local cardinality on each
+        component, the total on the parent (<code>cc6acf9f</code>).</li>
+        <li>Quantity scaling is <strong>Proportional</strong> (scales with the parent) or
+        <strong>Constant</strong> (fixed regardless) &mdash; <code>09695b88</code>, VPN License
+        proportional, Classroom Training constant.</li>
+        <li>A <strong>configurable bundled product</strong> is the one that lets users customise
+        components <em>and</em> attributes (<code>32f0b06f</code>).</li>
+      </ul>
+
+      <h4>Making products findable &mdash; the deck's most useful cluster</h4>
+      <p>Five separate items are the same lesson from different angles, and they are exam-shaped.</p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Symptom</th><th>Cause</th></tr></thead>
+          <tbody>
+            <tr><td>New product not appearing in search</td><td><strong>Rebuild Index</strong> (<code>4b7a292c</code>)</td></tr>
+            <tr><td>Product2 custom field not searchable</td><td>Index and Search Configuration, mark searchable, then <strong>Rebuild Index</strong> (<code>03439ed7</code>)</td></tr>
+            <tr><td>Products invisible while quoting</td><td>Wrong <strong>context definition</strong> in Product Discovery Settings (<code>94a4585c</code>)</td></tr>
+            <tr><td>Products invisible in Browse Catalog</td><td>No active <strong>price book entry</strong> in the price book on the quote (<code>df19fa7d</code>)</td></tr>
+            <tr><td>Users forced to pick a catalog every time</td><td>Set a <strong>default catalog</strong> in Product Discovery Settings (<code>a98e5518</code>)</td></tr>
+            <tr><td>Flow changes not appearing</td><td>Add the <strong>Flow Name</strong> in Product Discovery Setup (<code>910c3b97</code>)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4>Other catalog facts</h4>
+      <ul>
+        <li><strong>Product Usage Grant</strong> defines a default entitlement such as data storage
+        (<code>995de54c</code>).</li>
+        <li>Control availability by country with a <strong>disqualification rule</strong>
+        (<code>05d04dbc</code>).</li>
+        <li><strong>Attribute categories</strong> display in the sequence defined on the attribute
+        category records, with uncategorised attributes last (<code>a1290dae</code>).</li>
+        <li>Enable <strong>data translation</strong> and supply values via the Product List and Product
+        Details APIs for multi-language browsing (<code>da605d37</code>).</li>
+        <li>Decision-table evaluation criteria for eligibility are <strong>Product
+        Qualification</strong> or <strong>Product Category Qualification</strong>
+        (<code>c59aa725</code>).</li>
+        <li>The auto-renew default lives on the <strong>Product Selling Model</strong>
+        (<code>f769f864</code>) &mdash; this key moved in the 2026-09-15 re-check, &sect;12.</li>
+      </ul>
+    </section>
+
+    <!-- 6 -->
+    <section id="cpq">
+      <h2 class="sect"><span class="num">06</span><span>Configure, Price, Quote</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">18% of the exam, 25 deck items. Well matched by volume &mdash; and the single
+      most important thing to know is what the deck does <em>not</em> contain.</p>
+
+      <div class="call alert">
+        <span class="tag">The largest single gap in this deck</span>
+        <p>The CPQ objective reads: "Given a set of customer requirements, <strong>including using
+        Agentforce</strong>, configure and generate an accurate pricing quote." <strong>The word
+        "Agentforce" appears in zero of the 135 stems and option sets.</strong> On an exam named after
+        it, this is the gap to close first. From <em>Set Up Agentforce for Revenue Management</em>:</p>
+        <ul>
+          <li><strong>Licensing:</strong> Enterprise, Unlimited or Developer edition of Revenue
+          Management with the <strong>Revenue Cloud Advanced</strong> licence <strong>plus the
+          Agentforce Employee Agent add-on</strong>.</li>
+          <li><strong>Permission to create an agent:</strong> <strong>Manage AI Agents</strong> OR
+          <strong>Customize Application</strong>.</li>
+          <li><strong>Prerequisites, in order:</strong> set up Einstein Generative AI, turn on
+          Agentforce, set up the required Revenue solutions.</li>
+          <li><strong>Four shipped templates:</strong> Revenue Quote Management, Billing Employee
+          Assistance, Billing Service Assistance, Approval Agent.</li>
+          <li><strong>Every Revenue template is an Employee Agent template.</strong> If an option
+          offers a Service Agent for an internal revenue task, that is the wrong shape.</li>
+          <li><strong>Do not mix template topics.</strong> Salesforce explicitly warns against
+          including topics belonging to one template into another, for performance reasons.</li>
+          <li>External links must be added manually to <strong>trusted URLs</strong>; enable messaging
+          to create customer channels.</li>
+          <li>Grant users access with a <strong>custom permission set</strong>, turn on <strong>audit
+          trails</strong> to track Agentforce action usage, then <strong>activate</strong> the agent.
+          An agent that works in sandbox does nothing in production until it is activated.</li>
+        </ul>
+        <p>The shipped subagents, worth recognising by name: Product Selection, Quote Management,
+        Consumption Management, Invoice Line Explanation, Billing Collections Management, Billing
+        Inquiries, Approval Management, Search Approval Record, Summarize Multiple Approval Work
+        Items, Product Description Generation.</p>
+      </div>
+
+      <h4>Pricing procedures</h4>
+      <div class="tw">
+        <table class="kv">
+          <tbody>
+            <tr><td>Simulate</td><td>Traces the price waterfall when a quote total is unexpected (<code>394bdad2</code>)</td></tr>
+            <tr><td>Pricing Operations Console</td><td>Where you verify calculated prices against the procedure's logic (<code>ca1076cd</code>)</td></tr>
+            <tr><td>Discount Distribution Service</td><td>Spreads a calculated discount evenly across lines &mdash; must be the <strong>last step</strong> (<code>2f16d956</code>)</td></tr>
+            <tr><td>Proration element</td><td>Handles a mid-cycle upgrade (<code>e3a70193</code>)</td></tr>
+            <tr><td>Derived Price, scope Transactional</td><td>Prices one product as a percentage of another's price in the same transaction (<code>9de3e0b9</code>)</td></tr>
+            <tr><td>Bundle-Based Price + Price Adjustment Matrix</td><td>Gives a bundle a discounted price against the sum of its parts (<code>e2f73f23</code>)</td></tr>
+            <tr><td>Sales Transaction Type + Volume-Based Pricing</td><td>Bulk discounts across selling channels (<code>0821ddcd</code>)</td></tr>
+            <tr><td>Contracted Pricing</td><td>Negotiated product-specific rates, held on the contract (<code>a5f8cfae</code>)</td></tr>
+            <tr><td>Is Price Impacting</td><td>Set on the attribute <em>at product level</em> to use an inherited attribute for pricing (<code>f6c30064</code>)</td></tr>
+            <tr><td>Matrix rows</td><td>The product of the option counts: 3 memory sizes &times; 2 terms = <strong>6</strong> (<code>cd2224b8</code>)</td></tr>
+            <tr><td>Product Ramp Segment</td><td>Segment types are <strong>Free Trial, Yearly, Custom</strong> (<code>a4b16e2c</code>). "Monthly" is not one &mdash; &sect;12</td></tr>
+            <tr><td>Ramp MRR</td><td>The segment's annual value over 12: <code>(20 &times; $1000) / 12</code> (<code>43e0f10a</code>)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4>Product Configurator and CML</h4>
+      <p>Constraint Modeling Language shows up four times and is worth drilling, because the syntax is
+      recognisable even when the scenario is not.</p>
+      <ul>
+        <li>A relation with cardinality: <code>relation rooms : Room[0..5];</code> plus a
+        <code>require(...)</code> clause (<code>015f552d</code>).</li>
+        <li>A cross-product requirement at quote level: a relation per product plus
+        <code>require(desktop[...], monitor[...])</code> (<code>eac1d453</code>).</li>
+        <li>A warning when an attribute exceeds a threshold &rarr; <strong>constraint rule in the
+        Constraint Model at the Product Level</strong> (<code>244c6aa0</code>).</li>
+        <li>A context-aware rule can reference a parent-record field such as the Opportunity's
+        industry (<code>747d4014</code>).</li>
+        <li>To add a child product to a live constraint model, <strong>create a new type in the CML
+        Editor, then import it</strong> (<code>abd04873</code>).</li>
+        <li>A <strong>global constant</strong> lets a value be referenced consistently across rules
+        (<code>fc7a413b</code>) &mdash; though this wording is not settled, &sect;12.</li>
+      </ul>
+
+      <h4>Quote mechanics</h4>
+      <ul>
+        <li>The <strong>Transaction Line Editor</strong> provides <strong>filtering</strong>
+        (<code>122cab6a</code>) &mdash; All Lines, Errored Lines, Ramped Lines, Unconfigured Lines, plus
+        advanced filters of up to five conditions. Custom fields are exposed by adding them as
+        selected fields to the component in the Lightning record page (<code>66577d14</code>).</li>
+        <li>Force quotes to have an Opportunity: Quote Settings &rarr; <strong>Create Quotes Without a
+        Related Opportunity = False</strong> (<code>89816cb1</code>).</li>
+        <li><strong>Start Sync</strong> is the quick action that makes the opportunity forecast follow
+        the quote (<code>1ba9f913</code>).</li>
+        <li><strong>Smart Approvals:</strong> a step conditioned on "when the stage starts" behind a
+        decision node is ineligible; the fix is to make the step's condition match the stage's
+        (<code>a152b80a</code> &mdash; the key moved here in 2026-09-15, &sect;12).</li>
+      </ul>
+    </section>
+
+    <!-- 7 -->
+    <section id="orders">
+      <h2 class="sect"><span class="num">07</span><span>Contracts and Orders</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">11% of the exam, 19 deck items &mdash; over-represented, and the material is
+      straightforward. Revise it quickly and leave.</p>
+
+      <h4>Salesforce Contracts and CLM</h4>
+      <ul>
+        <li>Contract authoring and <strong>collaborative redlining</strong> run through an integration
+        with <strong>Microsoft 365</strong>, so the cloud provider is <strong>Microsoft Azure</strong>
+        (<code>6f59e427</code>). Templates use Microsoft 365 Word as the template type; negotiation
+        happens in Word via the Salesforce Contracts Connector add-in.</li>
+        <li>Very large contracts are broken up with a <strong>section in a document template</strong>
+        (<code>db7c75c3</code>).</li>
+        <li><strong>Obligations</strong> can be assigned Owners and Tasks, which is why you create
+        them to track contractual commitments (<code>3764c8f5</code>).</li>
+        <li><strong>Contracts AI:</strong> define <strong>attribute mapping and context mapping</strong>
+        on the contract extraction template to pull a new field out of a PDF (<code>6f99fe4e</code>,
+        <code>db199ded</code>).</li>
+        <li>Quote-to-contract conversion is customised by modifying the screen flow <strong>Create
+        Contract From Quote</strong> (<code>747e0c6b</code>).</li>
+      </ul>
+
+      <h4>Order Management and DRO</h4>
+      <ul>
+        <li>Changing line items after submission but before fulfilment requires that <strong>the entire
+        order is activated</strong> (<code>92f06ccd</code>); changing an <em>activated</em> order needs
+        <strong>Place Supplemental Order</strong> (<code>d38922f8</code>).</li>
+        <li><strong>Dynamic Revenue Orchestrator</strong> automates the order lifecycle and streamlines
+        fulfilment (<code>86417498</code>), and is the answer when each component of a bundle needs a
+        different fulfilment process (<code>ef6c3e48</code>).</li>
+        <li>Decomposition at <strong>Order Line Item</strong> scope creates <strong>one fulfilment
+        order line item per decomposition rule</strong> per decomposing order line
+        (<code>d815a350</code>).</li>
+        <li>A two-day delay between hardware delivery and software provisioning is <strong>Future-Dated
+        Steps in DRO settings</strong> (<code>a49cf7c1</code>).</li>
+        <li><strong>Technical products</strong> carry what the customer should not see as a quote line
+        but fulfilment needs: shipping services (<code>37ee4c5f</code>), user manuals with
+        decomposition rules (<code>3655d2ba</code>), installation details (<code>2a788a0c</code>).</li>
+        <li>Carrying specifications from a commercial product to its fulfilment counterpart is
+        <strong>Field &amp; Attributes Mapping</strong> (<code>1742b9ef</code>).</li>
+      </ul>
+    </section>
+
+    <!-- 8 -->
+    <section id="assets">
+      <h2 class="sect"><span class="num">08</span><span>Asset Management</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">16% of the exam, <strong>29 deck items</strong> &mdash; the deck's biggest
+      over-drill. You will know this material cold after working the deck; the job here is to confirm
+      it and move on.</p>
+
+      <div class="call">
+        <span class="tag">The four objects to memorise</span>
+        <p><strong>Asset, Asset Action, Asset State Period, Asset Action Source</strong>
+        (<code>f92918e7</code>). An <strong>Asset Action</strong> is a change event; an <strong>Asset
+        State Period</strong> is a dated window of state. That single distinction answers most of this
+        domain.</p>
+      </div>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Scenario</th><th>What gets created</th></tr></thead>
+          <tbody>
+            <tr><td>Subscription bought once, 36-month term</td><td><strong>One</strong> Asset Action, <strong>three</strong> Asset State Periods &mdash; one per term year (<code>6f5c6ce5</code>)</td></tr>
+            <tr><td>Same subscription, then amended</td><td><strong>Two</strong> Asset Actions, <strong>two</strong> Asset State Periods (<code>f63e3f43</code>)</td></tr>
+            <tr><td>Three custom ramp segments</td><td><strong>One</strong> Asset record, <strong>three</strong> Asset State Periods matching the segment dates (<code>3d12dbca</code>)</td></tr>
+            <tr><td>Tracing a renewal price to the original Net Unit Price</td><td><strong>Asset Action Source</strong> records (<code>e7f19278</code>)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4>Assetization</h4>
+      <ul>
+        <li>Assets are created automatically by the <strong>Assetize Order flow</strong>
+        (<code>6f6cf302</code>).</li>
+        <li>For a user to manage assets, products must be <strong>assetizable</strong> and the
+        <code>createOrUpdateAssetFromOrder</code> flow action must be in place
+        (<code>2a7b5f37</code>).</li>
+        <li>Migrating subscriptions from Salesforce CPQ: convert them to order lines and use the
+        <strong>Create or Update Asset From Order Item Action API</strong> (<code>39a152e8</code>).</li>
+      </ul>
+
+      <h4>Amend, renew, cancel</h4>
+      <ul>
+        <li>Renewing an asset: <strong>create a renewal quote with the asset, create the order,
+        activate the order</strong> (<code>c74d7076</code>).</li>
+        <li><strong>Renewal Flow Templates</strong> create renewal opportunities and quotes/orders out
+        of the box (<code>435f2087</code>).</li>
+        <li><code>InitiateRenewal</code> is the invocable action to wrap in a screen flow and expose as
+        a quick action (<code>6243552e</code>).</li>
+        <li>Expired assets are renewed by using <strong>Override Renewal Term</strong> first
+        (<code>1b631e67</code>, <code>b0621262</code>).</li>
+        <li>A ramped asset renewed via <code>InitiateRenew</code> has its <strong>ramped quote lines
+        recreated</strong> on the renewal quote (<code>36c657a7</code>).</li>
+        <li>Keeping varying historical quantities and prices through a renewal &rarr; <strong>Lot-based
+        or As-is Renewals</strong> (<code>c41101a6</code>).</li>
+        <li>Price-impacting attribute changes without touching the contract &rarr; <strong>Standard
+        Amendment</strong> (<code>4b342cdb</code>).</li>
+        <li>Repricing to new list prices &rarr; amend the original asset, keep the quantity, reprice,
+        run quote-to-order (<code>74259f96</code>).</li>
+        <li>Partial cancellation of a product bought repeatedly at different prices uses
+        <strong>LIFO</strong> (<code>c9a0acc7</code>).</li>
+        <li>Restricting cancel: <strong>unassign the <code>InitiateCancellation</code> API
+        permission</strong> (<code>c60cb035</code>).</li>
+      </ul>
+
+      <h4>The Managed Assets UI</h4>
+      <ul>
+        <li>Add the <strong>Managed Asset Viewer</strong> to the Account record page in Lightning App
+        Builder and tick the checkbox (<code>e242341d</code>).</li>
+        <li>To surface a custom Asset field during selection, modify the <strong>Managed Asset
+        Viewer</strong> component (<code>9bb4967d</code>).</li>
+        <li>To remove the renewal-term override option, modify the <strong>Amend, Renew, and Cancel
+        Assets</strong> flow's screen component (<code>87836da2</code> &mdash; judgment call,
+        &sect;12).</li>
+        <li>To capture the latest active Contract for an Asset: build a <strong>Contract lookup on
+        Asset</strong> and use automation on Asset update to find the latest-dated Asset Action Source
+        (<code>0fc81879</code>).</li>
+      </ul>
+    </section>
+
+    <!-- 9 -->
+    <section id="invoice">
+      <h2 class="sect"><span class="num">09</span><span>Invoice Management</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">Only <strong>7% of the exam</strong> &mdash; about four questions &mdash; against
+      14 deck items. The lightest domain on the exam and the one to revise last.</p>
+
+      <h4>Billing schedules and runs</h4>
+      <ul>
+        <li>A <strong>Billing Schedule Group</strong> groups related Billing Schedules under a single
+        order product, <strong>even across amendments</strong> (<code>6a9ce9dd</code>).</li>
+        <li>Changing a customer's monthly billing date: select the <strong>Billing Schedule
+        Group</strong> for that asset and change it there (<code>99592626</code> &mdash; key moved
+        2026-09-15).</li>
+        <li>Recurring invoices every Monday at 6:00 &rarr; a <strong>Recurring Invoice Run</strong> with
+        Weekly frequency and that start time (<code>826bd7e2</code>).</li>
+        <li><strong>Advance</strong> is the billing timing that collects before the service period
+        (<code>ba4a4163</code>).</li>
+        <li><strong>Billing Treatment at the Order Product level overrides the Product level</strong>
+        (<code>1ab5f73e</code>).</li>
+      </ul>
+
+      <h4>Proration, addresses, tax, legal entity</h4>
+      <ul>
+        <li>Proration multiplier = <strong>remaining days in the period &divide; total days in the
+        period</strong> (<code>ab527e42</code>).</li>
+        <li>Billing address precedence, four rows deep: <strong>the transaction's own values win</strong>,
+        then the associated billing profile, then the account's default profile, then org defaults
+        (<code>287332c0</code> &mdash; key moved 2026-09-15).</li>
+        <li>Custom tax logic integrates through the <strong>Billing <code>TaxEngineAdapter</code> Apex
+        interface</strong> (<code>9462b116</code>).</li>
+        <li><strong>Legal Entity</strong> is the construct for multi-country tax rules and invoicing
+        regulations (<code>ab6a9e3d</code>).</li>
+        <li>Negative amends and cancellations are captured as a <strong>Credit Memo</strong>
+        (<code>234fe505</code>).</li>
+        <li>Stop invoicing a delinquent account: <strong>Billing Administrator</strong> permission set,
+        then <strong>Suspend</strong> on the account (<code>2ec8b053</code>).</li>
+      </ul>
+
+      <h4>Usage</h4>
+      <ul>
+        <li><strong>Usage Management</strong> ingests, aggregates and rates consumption against the
+        products (<code>0ff325db</code>).</li>
+        <li>Usage-based rates by consumption band are <strong>tier rate entries</strong> on a Tier Rate
+        Card, each with a lower bound, upper bound and adjustment (<code>bac3a61d</code>).</li>
+        <li>After activating a usage-based order, expect <strong>Usage Entitlement Account</strong>,
+        <strong>Usage Entitlement Bucket</strong> and <strong>Wallet</strong>
+        (<code>841f964e</code>).</li>
+      </ul>
+    </section>
+
+    <!-- 10 -->
+    <section id="numbers">
+      <h2 class="sect"><span class="num">10</span><span>Numbers to memorise</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">A short list, because this exam has few hard numbers &mdash; which is itself
+      worth knowing, since an option quoting a precise limit is often invented.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Number</th><th>What it is</th></tr></thead>
+          <tbody>
+            <tr><td><strong>60 / 105 / 63%</strong></td><td>Scored items, minutes, pass mark. 38 of 60 to pass</td></tr>
+            <tr><td><strong>2&ndash;3 years</strong></td><td>Product-to-Cash domain experience the guide assumes</td></tr>
+            <tr><td><strong>18 / 14 / 16 / 18 / 11 / 16 / 7</strong></td><td>Domain weights in outline order. They sum to 100</td></tr>
+            <tr><td><strong>Summer '25</strong></td><td>Exam alignment &mdash; older than current docs</td></tr>
+            <tr><td><strong>6 rows</strong></td><td>3 memory options &times; 2 contract terms in an attribute pricing matrix (<code>cd2224b8</code>)</td></tr>
+            <tr><td><strong>4 templates</strong></td><td>Agentforce for Revenue: Quote Management, Billing Employee Assistance, Billing Service Assistance, Approval</td></tr>
+            <tr><td><strong>4-row precedence</strong></td><td>Billing address: transaction &rarr; billing profile &rarr; account default &rarr; org default</td></tr>
+            <tr><td><strong>3 ramp segment types</strong></td><td>Free Trial, Yearly, Custom</td></tr>
+            <tr><td><strong>2 actions</strong></td><td>On a standard context definition: Extend, Clone</td></tr>
+            <tr><td><strong>1 asset, N periods</strong></td><td>A term subscription makes one Asset State Period per term year</td></tr>
+            <tr><td><strong>last step</strong></td><td>Where Discount Distribution Service goes in a pricing procedure</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 11 -->
+    <section id="tells">
+      <h2 class="sect"><span class="num">11</span><span>Distractor tells</span></h2>
+      <div class="sect-rule"></div>
+
+      <div class="call">
+        <span class="tag">Read the question's own verb</span>
+        <p>This exam's stems are long and scenario-heavy, and the verb is usually the discriminator.
+        "Which <strong>objects</strong> should the consultant base the report on" wants object names,
+        not a feature. "What is the <strong>first</strong> step" wants the earliest action, not the most
+        important one. "Which <strong>permission</strong>" wants a permission set, not a profile.</p>
+      </div>
+
+      <p>Patterns that recur in this deck's wrong answers:</p>
+      <ul>
+        <li><strong>The plausible Setup node that does not exist.</strong> The deck's own fact-check
+        found this repeatedly. If an option names a settings page you cannot picture, distrust it.</li>
+        <li><strong>The workaround where a documented feature exists.</strong> Salesforce ships Renewal
+        Flow Templates, <code>InitiateRenewal</code>, Assetize Order and Usage Management. An option
+        proposing a custom flow or a batch job to do one of those is nearly always wrong.</li>
+        <li><strong>The right mechanism at the wrong level.</strong> Billing Treatment exists at product
+        <em>and</em> order-product level; attributes exist at class <em>and</em> product level;
+        cardinality is local <em>and</em> parent. Options often offer the correct feature at the level
+        that does not win.</li>
+        <li><strong>A precise-sounding number with no page behind it.</strong> See &sect;10 &mdash; this
+        exam has few real numbers.</li>
+        <li><strong>A Service Agent for an internal task.</strong> Every Agentforce template in Revenue
+        Management is an <strong>Employee Agent</strong> template.</li>
+        <li><strong>"Sync" versus "create."</strong> Start Sync links a quote to an opportunity
+        forecast; it does not create the opportunity.</li>
+      </ul>
+    </section>
+
+    <!-- 12 -->
+    <section id="stale">
+      <h2 class="sect"><span class="num">12</span><span>Where the deck is older than the exam</span></h2>
+      <div class="sect-rule"></div>
+
+      <div class="call alert">
+        <span class="tag">Read this before trusting a remembered answer</span>
+        <p>This deck has been fact-checked <strong>twice</strong> &mdash; 2026-08-15 and again
+        2026-09-15 &mdash; and the second pass moved <strong>7 keys on a deck already marked "fully
+        checked."</strong> If you worked the deck before 2026-09-15 you learned the old answers to
+        seven items.</p>
+      </div>
+
+      <h4>The renames</h4>
+      <div class="tw">
+        <table>
+          <thead><tr><th>The deck says</th><th>Salesforce now says</th></tr></thead>
+          <tbody>
+            <tr><td>Revenue Cloud (66 stems)</td><td><strong>Revenue Management</strong> &mdash; "Revenue Cloud is now Revenue Management"</td></tr>
+            <tr><td>Revenue Cloud Consultant</td><td><strong>Agentforce Revenue Management Consultant</strong></td></tr>
+            <tr><td>&mdash; nothing &mdash;</td><td><strong>Agentforce</strong> is now named in the CPQ objective</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Answer with the deck's vocabulary on the exam &mdash; it is aligned to Summer '25 &mdash; but
+      expect the new names on every doc page and Setup node.</p>
+
+      <h4>The seven keys that moved on 2026-09-15</h4>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Item</th><th>Moved</th><th>Now</th></tr></thead>
+          <tbody>
+            <tr><td><code>d38922f8</code></td><td>C &rarr; B</td><td><strong>Place Supplemental Orders</strong> is the permission set for changing an activated order</td></tr>
+            <tr><td><code>287332c0</code></td><td>B &rarr; A</td><td>The order's own billing address wins over the attached billing account</td></tr>
+            <tr><td><code>99592626</code></td><td>C &rarr; A</td><td>Billing date changes are edited on the <strong>Billing Schedule Group</strong>, not routed through a change order</td></tr>
+            <tr><td><code>f769f864</code></td><td>B &rarr; A</td><td>The product-level auto-renew default is on the term-based <strong>Product Selling Model</strong></td></tr>
+            <tr><td><code>a152b80a</code></td><td>A &rarr; B</td><td>Smart Approvals: <strong>mismatched</strong> stage/step conditions are the cause; matching them is the cure</td></tr>
+            <tr><td><code>832c6c98</code></td><td>A &rarr; C</td><td>Clauses are inserted via the <strong>Microsoft 365 Word Designer/User</strong> permission sets</td></tr>
+            <tr><td><code>87836da2</code></td><td>C &rarr; B</td><td>There is one registered <strong>Amend, Renew, and Cancel</strong> flow, not a separate Renew Assets flow</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="call trap">
+        <span class="tag">Two of those are judgment calls the owner may reverse</span>
+        <p><code>832c6c98</code> &mdash; OmniStudio Admin also appears in the CLM
+        permission-combination table for document generation, so the Microsoft 365 answer is
+        defensible rather than certain. <code>87836da2</code> &mdash; the managed package could hold a
+        subflow named for renewals that no documentation shows. If you meet either on the exam, note
+        that both options have a claim.</p>
+      </div>
+
+      <h4>Two items that are genuinely unsettled</h4>
+      <ul>
+        <li><code>fc7a413b</code> &mdash; the CML "global constant" wording rests on no page that
+        states it.</li>
+        <li><code>355a06ae</code> &mdash; the safe-harbor item (design only against generally available
+        features) is sound practice and not documented as a rule.</li>
+      </ul>
+      <p>Do not spend revision time resolving these. Know that the deck flags them.</p>
+
+      <h4>Exam-right, production-wrong</h4>
+      <p>Items where the deck's key is what the exam wants and the product has moved:</p>
+      <ul>
+        <li><code>c41101a6</code> &mdash; the Asset's Pricing Source field <em>is</em> a documented
+        prerequisite of lot-based renewal; the old explanation denied it.</li>
+        <li><code>fddbd719</code> &mdash; backdating a cancellation <em>is</em> now supported
+        (<em>Backdate Asset Transactions</em>). The item keeps the exam's legacy answer with a
+        note.</li>
+        <li><code>38db2a91</code> &mdash; Document Builder is no longer contract-only; <em>Document
+        Builder for Quotes</em> exists, so two options are defensible and OmniStudio Document
+        Generation is the keyed one.</li>
+        <li><code>a4b16e2c</code> &mdash; <strong>Monthly is not a ramp segment type.</strong> The three
+        are Free Trial, Yearly and Custom.</li>
+      </ul>
+
+      <h4>How to verify any of this yourself</h4>
+      <div class="call">
+        <span class="tag">On this vendor, pull the table of contents before searching the web</span>
+        <p><code>help.salesforce.com</code> renders its whole left-hand TOC on every article page, so
+        from any one <code>ind.</code> article you can walk the shadow DOM and get the entire Agentforce
+        Revenue Management doc set &mdash; <strong>1,308 titled entries in a single call</strong>,
+        confirmed again on 2026-09-26.</p>
+        <p>The recipe: from a loaded article, recurse the document and every <code>shadowRoot</code> collecting every <code>a[href*=articleView]</code> anchor, take each anchor's text plus the <code>id=</code> parameter out of its <code>href</code>, and de-duplicate. One call, the whole doc set, with titles.</p>
+        <p>This is the technique that made the 2026-09-15 re-check work. Ten of the twelve items the
+        first pass had marked "could not settle" turned out to be articles that existed under titles
+        web search never surfaced &mdash; <em>Turn On Future Dated Steps</em>, <em>Manage Suspend and
+        Resume Billing</em>, <em>Use Lot-Based Renewals</em>, <em>Backdate Asset Transactions</em>.</p>
+      </div>
+      <p>Two caveats. Run <strong>one top-level <code>navigate</code> per article</strong> and poll for
+      a real title <em>and</em> a body over ~1,500 characters, because a framed or half-loaded page
+      reports live articles as dead. And <code>WebFetch</code> does not work on this host from a cloud
+      container &mdash; it returns the SPA's "CSS Error" shell for both real and invented ids, which
+      was re-confirmed on 2026-09-26.</p>
+    </section>
+
+    <!-- 13 -->
+    <section id="plan">
+      <h2 class="sect"><span class="num">13</span><span>Two-week revision plan</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">The shape is set by three facts: the pass mark is 63%, the deck over-trains
+      Asset Management, and two domains worth 32% of the exam are under-covered by the deck.</p>
+
+      <h4>Week 1 &mdash; close the gaps the deck cannot close</h4>
+      <ol class="prose">
+        <li><strong>Day 1&ndash;2 &middot; Implementation Readiness</strong> (14%, deck 5.9%). Read
+        <em>Get Ready for Your Revenue Management Implementation</em> and its six children end to end.
+        Write out the six preparation activities from memory. Highest-yield reading in the plan.</li>
+        <li><strong>Day 3 &middot; Agentforce for Revenue Management.</strong> Read <em>Set Up
+        Agentforce for Revenue Management</em> and the Revenue Subagent Reference. Memorise the four
+        templates, the licence stack, and that every template is an Employee Agent template.</li>
+        <li><strong>Day 4 &middot; Business Rules Engine.</strong> Expression sets versus decision
+        matrices versus decision tables. Know what each takes in, what it returns, and who can call
+        it.</li>
+        <li><strong>Day 5 &middot; Platform Concepts, the rest.</strong> Context Service properly
+        &mdash; nodes, attributes, mappings, Extend versus Clone. Then build one report on Order
+        Products and Order Product Attributes so the reporting objects stick.</li>
+        <li><strong>Day 6&ndash;7 &middot; Work the deck's Catalog Management and CPQ sets</strong>
+        &mdash; 47 items. Read every explanation, not just the wrong ones.</li>
+      </ol>
+
+      <h4>Week 2 &mdash; consolidate what the deck is good at</h4>
+      <ol class="prose">
+        <li><strong>Day 8 &middot; Asset Management, once.</strong> Work its 29 items in one sitting. If
+        you score above 85%, do not come back to it &mdash; it is 16% of the exam.</li>
+        <li><strong>Day 9 &middot; Contracts and Orders.</strong> 19 items, 11% of the exam. Quick
+        pass.</li>
+        <li><strong>Day 10 &middot; Invoice Management.</strong> 14 items, 7% of the exam. Quicker
+        pass.</li>
+        <li><strong>Day 11 &middot; &sect;12 in full.</strong> Re-read the seven moved keys and the two
+        judgment calls. This is where a remembered answer will betray you.</li>
+        <li><strong>Day 12 &middot; &sect;10 and &sect;11.</strong> Numbers and distractor tells.</li>
+        <li><strong>Day 13 &middot; full deck in Blitz mode</strong>, options read aloud off. Note
+        every miss.</li>
+        <li><strong>Day 14 &middot; only the misses</strong>, plus the Implementation Readiness notes
+        from Day 1&ndash;2.</li>
+      </ol>
+    </section>
+
+    <!-- 14 -->
+    <section id="sources">
+      <h2 class="sect"><span class="num">14</span><span>Sources</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">Every URL below was rendered in a browser on 2026-09-26 and its title confirmed.
+      <code>WebFetch</code> does not resolve <code>help.salesforce.com</code> from a cloud container
+      &mdash; it returns an identical "CSS Error" shell for real and invented ids alike &mdash; so a
+      title check there means a browser.</p>
+
+      <div class="linklist">
+        <p><a href="https://help.salesforce.com/s/articleView?id=005298978&amp;type=1&amp;language=en_US">Salesforce Certified Agentforce Revenue Management Consultant Exam Guide</a>
+        <span class="why">The outline, the weights, the Summer '25 alignment and the 63% pass mark. The
+        article title still reads "Revenue Management Consultant" while the body says
+        "Agentforce Revenue Management."</span></p>
+
+        <p><a href="https://help.salesforce.com/s/articleView?id=ind.setup_revenue_cloud.htm&amp;type=5&amp;language=en_US">Get Ready for Your Revenue Management Implementation</a>
+        <span class="why">The six preparation activities, the doc set, and the note that Revenue Cloud
+        is now Revenue Management. The domain the deck under-covers most.</span></p>
+
+        <p><a href="https://help.salesforce.com/s/articleView?id=ind.rev_agent_setup.htm&amp;type=5&amp;language=en_US">Set Up Agentforce for Revenue Management</a>
+        <span class="why">Licensing, the four templates, the Employee Agent constraint, trusted URLs,
+        activation. Zero deck questions cover this.</span></p>
+
+        <p><a href="https://help.salesforce.com/s/articleView?id=ind.business_rules_engine.htm&amp;type=5&amp;language=en_US">Business Rules Engine</a>
+        <span class="why">Expression sets as the calculation engine. Zero deck questions.</span></p>
+
+        <p><a href="https://help.salesforce.com/s/articleView?id=sf.decision_matrices.htm&amp;type=5&amp;language=en_US">Decision Matrices</a>
+        <span class="why">JSON in, JSON out, row matching &mdash; and why a matrix is not a table.</span></p>
+
+        <p><a href="https://help.salesforce.com/s/articleView?id=sf.decision_tables.htm&amp;type=5&amp;language=en_US">Decision Tables for Business Rules Engine</a>
+        <span class="why">The object the deck <em>does</em> test, so you can keep the two
+        distinct.</span></p>
+      </div>
+
+      <p>Per-question citations live in the deck itself: every one of the 135 explanations ends in a
+      <code>References:</code> block with at least one rendered URL.</p>
+    </section>
+
+    <!-- 15 -->
+    <section id="notebooklm">
+      <h2 class="sect"><span class="num">15</span><span>Using this with NotebookLM</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">Upload <code>study-guides/salesforce-revenue-cloud.md</code>. It is written to be
+      a single source a notebook can answer from &mdash; the domain weights, the gap list and the moved
+      keys are all stated as facts rather than implied.</p>
+
+      <div class="prompts">
+        <p class="prompt">Quiz me only on Implementation Readiness and Business Rules Engine. Both are
+        named exam objectives with almost no practice items, so generate the questions yourself from
+        the documentation described in sections 4 and 3.</p>
+
+        <p class="prompt">List every fact in this guide that the guide itself says is unsettled, a
+        judgment call, or exam-right-but-production-wrong. For each, tell me what to answer on the exam
+        and what is true in a current org.</p>
+
+        <p class="prompt">I have eight days, not fourteen. Compress the plan in section 13, keeping the
+        ordering principle that gaps come before consolidation.</p>
+
+        <p class="prompt">Build me a table of every permission set and permission set licence named in
+        this guide, with the one thing it unlocks.</p>
+
+        <p class="prompt">Explain the difference between an expression set, a decision matrix and a
+        decision table as if I already know Flow. Then give me three scenarios where picking the wrong
+        one would be the tempting answer.</p>
+
+        <p class="prompt">For each of the seven keys that moved on 2026-09-15, state the old answer and
+        the new one, and tell me which single document settled it.</p>
+      </div>
+
+      <p class="colophon">Measured 2026-09-26 against <code>public/decks/salesforce-revenue-cloud.json</code>
+      and Help article <code>005298978</code>. Question counts and domain weights both have a short
+      shelf life &mdash; re-run <code>node study-guides/reclassify-revenue-cloud.mjs</code> before
+      trusting the table in &sect;2.</p>
+    </section>
+
+  </main>
+</div>
+</body>
+</html>

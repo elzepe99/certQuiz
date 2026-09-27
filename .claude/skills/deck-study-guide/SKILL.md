@@ -36,19 +36,63 @@ pass**, because the domain weights are the spine of the guide.
 ### Salesforce
 
 The outline lives in a Help article whose id clusters around `0052989xx` and
-**the ids are not alphabetical** — `005298964` is App Builder, and its neighbours
-are unrelated exams. Both WebFetch and Help's own search fail on these, so
-**probe in the in-app browser**: navigate to
-`https://help.salesforce.com/s/articleView?id=<id>&type=1&language=en_US` and read
-`document.title`. One top-level navigate per id, no iframes (see failure pattern
-4b in `CLAUDE.md`).
+**the ids are neither alphabetical nor contiguous** — `005298964` is App Builder, its
+neighbours are unrelated exams, and Agentforce Specialist sits at `005298924`, far
+below the `955`–`994` run where most of the certification guides live. Help's own
+search fails on these.
+
+**Do not sweep the range.** Three ids were found on 2026-09-26 with one
+`WebSearch` call each, restricted to the vendor's own host, which beat probing by
+an order of magnitude:
+
+```
+WebSearch  query: "Salesforce Certified <exam name> Exam Guide" articleView
+           allowed_domains: ["help.salesforce.com"]
+```
+
+Then **confirm the id in the in-app browser** before trusting it — navigate to
+`https://help.salesforce.com/s/articleView?id=<id>&type=1&language=en_US`, wait ~7s
+for the SPA, and read `document.title`. One top-level navigate per id, no iframes
+(see failure pattern 4b in `CLAUDE.md`). Search gets you the candidate; the
+rendered title is what makes it a fact. Search also returns stale twins — Data 360
+came back as both `005298940` and `005314086`, and only the first renders as the
+live guide.
+
+`get_page_text` on the confirmed page returns the entire guide, outline and all, in
+one call. No PDF, unlike Databricks.
 
 | Exam | Article id |
 |---|---|
+| Agentforce Specialist | `005298924` |
+| Agentforce Sales Consultant | `005298976` |
+| Agentforce Sales Foundations | `005298982` |
+| Agentforce Service Consultant | `005298989` |
+| Agentforce Life Sciences Consultant | `005305357` |
+| Agentforce Revenue Management Consultant | `005298978` |
+| Data 360 Consultant | `005298940` |
+| Identity and Access Management Architect | `005298975` |
+| MuleSoft Hyperautomation Developer | `005298960` |
+| Omnistudio Consultant | `005298970` |
+| Omnistudio Developer | `005298971` |
+| Platform Administrator | `005298966` |
 | Platform App Builder | `005298964` |
+| Platform Data Architect | `005298972` |
+| Platform Developer I | `005298965` |
+| Platform Developer II | `005298967` |
+| Platform Integration Architect | `005298980` |
+| Slack Administrator | `005298990` |
+| Tableau Architect | `005298985` |
+| Tableau Next Consultant | `005387158` |
 
 Add a row here every time you find one. That table is the compounding asset for
 this skill, the way `references/verified-docs.md` is for `factcheck-deck`.
+
+**Check the exam's name before you trust the deck's.** Two of the three decks done
+on 2026-09-26 sat under a certification Salesforce had since renamed — Revenue
+Cloud Consultant is now **Agentforce Revenue Management Consultant**, and Data Cloud
+Consultant is now **Data 360 Consultant**. Searching the deck's own name found the
+guide anyway, but a rename usually means the *outline* was rebuilt too, not just the
+title, and that is the guide's headline finding rather than a footnote.
 
 ### Databricks, and the general rule
 

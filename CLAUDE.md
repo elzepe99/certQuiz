@@ -29,7 +29,7 @@ a bug.
 | "audit / structurally check a deck" (no doc lookups) | `node scripts/audit-deck.mjs <deck>` | Phase 1 of the skill, standalone. Cheap. Leads, not verdicts. Takes a **path**, not a bare filename. |
 | "the questions read badly / the bot reads them wrong", "fix the punctuation", "format these stems" — **without** changing what a question says | `node scripts/reformat-stems.mjs <edits.json>` | Punctuation, spacing and capitalisation only, guarded so a formatting pass cannot alter the words. See the repo map below. Explanations and keys still go through `apply-findings.mjs`. |
 | "explain why the wrong answers are wrong" | `apply-findings.mjs` with `clarified` verdicts | Not a fact-check: no key moves, so no correction notice. Integration-architect is the worked example — see the deck table. |
-| "write / update a study guide for deck X", "what does this deck NOT cover?", "how does the deck compare to the real exam outline?", "make me a revision guide / cheat sheet" | **`deck-study-guide`** | Six guides exist (`study-guides/`). Two hand-maintained files per guide that must be edited **in parallel** — the `.md` and the `.artifact.html`; only the second is built. Never moves an answer key: a contradiction found while writing goes to `factcheck-deck`. |
+| "write / update a study guide for deck X", "what does this deck NOT cover?", "how does the deck compare to the real exam outline?", "make me a revision guide / cheat sheet" | **`deck-study-guide`** | Nine guides exist (`study-guides/`). Two hand-maintained files per guide that must be edited **in parallel** — the `.md` and the `.artifact.html`; only the second is built. Never moves an answer key: a contradiction found while writing goes to `factcheck-deck`. |
 | "what did users comment on?" | `npm run review-comments` | Needs Supabase keys configured. |
 | "build me a chart / dashboard of deck progress" | `dataviz` | |
 | "make this a shareable page / artifact" | `artifact-design` | |
@@ -146,17 +146,17 @@ scripts/
                         is hand-maintained beside it and changes nothing a
                         learner sees. **A new guide must be added to its GUIDES
                         array** or it is silently never built, and the script
-                        prints "built" for the five it did build either way
-study-guides/         six guides, each TWO hand-edited files that must move
+                        prints "built" for the ones it did build either way
+study-guides/         nine guides, each TWO hand-edited files that must move
                       together: `<out-slug>.md` (the readable/NotebookLM source)
                       and `<name>.artifact.html` (the fragment the build reads;
                       no doctype/head/body, because it is also published as a
                       Claude Artifact, which supplies its own skeleton). The two
                       basenames differ — the `.md` is named after build-guide's
-                      `out`, the fragment after its `source`. The six fragments
+                      `out`, the fragment after its `source`. The nine fragments
                       share one stylesheet BY COPY: lines 5–575 are
                       byte-identical, so a palette change must be made in all
-                      six. `reclassify-*.mjs` holds one deck's per-question
+                      nine. `reclassify-*.mjs` holds one deck's per-question
                       domain calls against the official exam outline, because no
                       deck's `_cat` tags match the published domains
 .claude/skills/deck-study-guide/
@@ -779,7 +779,8 @@ Three caveats on that row:
 
 As of 2026-09-21, **every deck has had a full documentation pass, every question is
 cited, and every question carries a "Why the other options are wrong:" section.** Both
-cross-cutting programmes this file has tracked are finished. That is a real milestone
+of the cross-cutting *content* programmes this file tracked to that point — full
+documentation coverage and readability — are finished. That is a real milestone
 and also the most dangerous line in this document, because the equivalent claim has
 been overtaken three times: on 2026-08-25 when two files of loose questions grew
 integration by 7, on 2026-09-08 when claude-architect-foundations arrived as a whole
@@ -813,12 +814,15 @@ rather than their worktree, so say so explicitly in the brief.
 - **Slack is the one deck where `reformat-stems.mjs` had nothing to do** — 0 stems,
   because that scrape kept its punctuation. Not every deck needs the stem half.
 
-**What remains, now that both programmes are closed:**
+**What remains — one programme still running, and the standing debt:**
 
-1. **A third programme started on 2026-09-25: study guides, six of fourteen decks
-   done.** See "The study-guide programme" below. The eight without a guide are
-   revenue-cloud, dld, data-architect, sharing-visibility, data-cloud-consultant,
-   slack-consultant, agentforce and claude-architect-foundations.
+1. **A third programme is running: study guides, nine of fourteen decks done** as of
+   2026-09-26. See "The study-guide programme" below. The five without a guide are
+   **dld, data-architect, sharing-visibility, slack-consultant and
+   claude-architect-foundations**. Slack and claude-architect are the two where a guide
+   will find least, since both are already documented in this file as decks a vendor page
+   largely cannot settle; dld, data-architect and sharing-visibility are the real
+   remainder.
 2. **The judgment calls flagged for the repo owner are still open**, and they are the
    cheapest real work available: revenue-cloud's `87836da2` (flow name) and
    `832c6c98` (Contracts permission set), app-builder's `9ba9345d` (Sharing vs
@@ -832,12 +836,12 @@ rather than their worktree, so say so explicitly in the brief.
    — that sweep proved app-builder, IAM, Dev II and integration clean, and the missing
    `language` parameter is the signature to check for first.
 
-### The study-guide programme — started 2026-09-25, 6 of 14 decks
+### The study-guide programme — started 2026-09-25, 9 of 14 decks
 
 A guide measures a deck against the vendor's **published exam outline** and teaches the
 sub-objectives the deck never asks. It is a different job from a fact-check: a fact-check
 makes the deck's answers right, a guide asks whether the deck is the right set of
-questions at all. Every one of the six so far has found that it is not, by a wide margin.
+questions at all. Every one of the nine so far has found that it is not, by a wide margin.
 
 The workflow is `deck-study-guide` (the skill), and it was written up on 2026-09-25 from
 the five Salesforce guides that already existed plus the Databricks one built to prove it.
@@ -850,9 +854,12 @@ the five Salesforce guides that already existed plus the Databricks one built to
 | salesforce-admin | yes | |
 | salesforce-app-builder | yes | best-balanced deck in the repo; the gap was currency, not counts |
 | databricks-data-engineer-associate | **2026-09-25** | see below |
+| salesforce-revenue-cloud | **2026-09-26** | Implementation Readiness 14% of the exam, 5.9% of the deck; "Agentforce" in 0 of 135 stems |
+| salesforce-data-cloud-consultant | **2026-09-26** | activations 32% of the deck against 20%; Zero-Copy a named bullet with 0 coverage |
+| salesforce-agentforce-specialist | **2026-09-26** | Governance + Multi-Agent are 15% of the exam and 3 deck questions |
 
-**Eight decks have no guide**: revenue-cloud, dld, data-architect, sharing-visibility,
-data-cloud-consultant, slack-consultant, agentforce, claude-architect-foundations.
+**Five decks have no guide**: dld, data-architect, sharing-visibility, slack-consultant,
+claude-architect-foundations.
 
 **The Databricks guide is the worked example for a non-Salesforce vendor**, and the
 outline step is where it differed. Salesforce hides the outline in a Help article whose
@@ -900,12 +907,12 @@ deck holds 146. The headline count was the small half: **both of that guide's §
 computed at 133**, so every deck percentage in it was stale, not just the two numbers the
 check could name. A count check is a proxy for a whole derived section.
 
-**Why it drifted: `study-guides/reclassify.mjs` had no runner.** It is the oldest of the six
-and predates the pattern the other five follow, so `node study-guides/reclassify.mjs` printed
+**Why it drifted: `study-guides/reclassify.mjs` had no runner.** It is the oldest of the nine
+and predates the pattern the other eight follow, so `node study-guides/reclassify.mjs` printed
 nothing and the file sat two imports out of date — 13 questions unclassified, the 8 from
 2026-08-25 and the 5 from 2026-09-11. It has one now, and it reports unclassified and stale
 ids so the next import says so out loud. Its direct-invocation guard uses `pathToFileURL`
-rather than the backslash-escaping regex over `process.argv[1]` the other four use; that regex
+rather than the backslash-escaping regex over `process.argv[1]` the other seven use; that regex
 is also why they throw when imported under `node -e`, which is worth knowing the next time you
 want to read one's `CALLS` from a scratch script.
 
@@ -923,10 +930,93 @@ not. **A stale count is rarely only a stale count** — re-measuring can overtur
 built on top of it, so re-read the surrounding argument rather than swapping digits.
 
 Bar widths were left alone: no deck share moved by more than 0.6 points, which is under a pixel
-at the table's 120px scale. `verify-guide.mjs` is at **0 failures across all six guides** as of
-2026-09-25. It still reports `.md`/`.artifact.html` section drift on integration, Dev II and
+at the table's 120px scale. `verify-guide.mjs` is at **0 failures across all nine guides** as of
+2026-09-26. It still reports `.md`/`.artifact.html` section drift on integration, Dev II and
 IAM — headings deliberately worded shorter in the fragment for the rail — which is why that
 check is a warning and not a failure.
+
+### The three consultant/specialist guides — 2026-09-26
+
+Revenue Cloud, Data Cloud and Agentforce, built in one pass (PR #55). **All three found the
+same thing, and it is a new shape for this programme: the exam had been rebuilt, not merely
+aged.** The five Salesforce guides before these found decks that were stale against a stable
+outline. These found outlines that had themselves changed underneath the deck.
+
+**Two of the three certifications have been renamed**, which is the first thing to check on
+any future guide — the deck's name is not evidence of the exam's:
+
+| The deck says | The certification is now called | Article id |
+|---|---|---|
+| Revenue Cloud Consultant | **Agentforce Revenue Management Consultant** | `005298978` |
+| Data Cloud Consultant | **Data 360 Consultant** (code still `Data-Con-101`) | `005298940` |
+| Agentforce Specialist | unchanged, but with **three new domains** | `005298924` |
+
+The product names moved too, and both are already covered by the standing product-rename
+decision (options stay as scraped, current names go in the prose): **Revenue Cloud is now
+Revenue Management**, stated in a note on Salesforce's own setup guide, and **Einstein Studio
+is now AI Models**, which affects six agentforce items as well as the data-cloud deck.
+
+**The per-deck findings:**
+
+- **revenue-cloud** — Implementation Readiness is 14% of the exam and **5.9%** of the deck;
+  "scope of work", "project plan" and "KPI" return zero hits anywhere in it. Asset Management
+  is over-drilled at 21.5% against 16%. The largest single gap is **Agentforce itself**: the
+  CPQ objective now reads "including using Agentforce" and the word appears in **0 of 135**
+  stems and option sets. **Business Rules Engine** is named in the outline and returns 0 in
+  stems, options *and* explanations — do not mistake the deck's three decision-*table* items
+  for coverage of expression sets or decision matrices. 8 uncovered sub-objectives.
+- **data-cloud-consultant** — activations are **32%** of the deck against 20% of the exam.
+  **Zero-Copy is a named bullet with zero coverage**, as are Snowflake, BigQuery, Databricks,
+  Redshift and "federation". "generative", "predictive" and "prediction" all return zero
+  against *two* named AI bullets. Data graphs appear once, as a distractor. 10 uncovered.
+- **agentforce-specialist** — **the biggest proportional gap in the repo**: Governance and
+  Observability plus Multi-Agent Orchestration are 15% of the exam and **3 deck questions
+  between them**. AI Agents matches by volume (34.7% against 35%) and not by content: **Agent
+  Script, hybrid reasoning, NGA, Canvas/Script view and template expressions** are all named
+  in the outline and appear nowhere in the deck. A2A appears only as a distractor; the Voice
+  channel and "standard topics" return zero. 12 uncovered.
+
+**Eight agentforce items map to no current sub-objective at all** — `a5c36a06`, `7fcd0d22`,
+`d7a65539`, `03dbb7ca`, `7b9b6189`, `4f60aa61`, `f1ad48dc`, `432e6ed5`, all Einstein-for-Service
+(Service Replies, Work Summaries, Call Insights, Service AI Grounding). They are not wrong and
+their keys are right; they are 6.6% of a learner's time buying zero marks. Filed under AI Agents
+as the nearest domain per the skill's no-escape-hatch rule, and named in that guide's §11.
+
+**Two findings left for `factcheck-deck`, neither acted on here:**
+
+1. **Agent topics are now called "subagents"** — "Beginning in April 2026, agent topics are now
+   called subagents. There are no changes to functionality." The Testing Center docs have
+   followed (its evaluation is **Subagent Assertion**); **the Spring '26 exam guide has not.**
+   This is a clean exam-versus-product split rather than a defect, and the guide tells the
+   reader to answer "topic" and expect "subagent" everywhere else.
+2. **`a5e3e038`** keys the automatic default retriever, which Salesforce has retired ("Data 360
+   no longer creates a default Retriever automatically when you create a search index").
+   **Its explanation already records the retirement**, so it reads as a worked
+   exam-right/production-wrong item rather than debt. No action needed unless the key is to be
+   revisited.
+
+**The method correction worth keeping: do not probe the `0052989xx` range.** The skill said to,
+and it would have cost ~30 browser navigations — and **missed Agentforce Specialist entirely**,
+because it sits at `005298924`, far below the 955–994 run where the other certification guides
+cluster. One `WebSearch` per exam, restricted to `allowed_domains: ["help.salesforce.com"]`,
+found all three in one call each; the rendered title is what turns the candidate into a fact.
+Search also returns stale twins — Data 360 came back as both `005298940` and `005314086`, and
+only the first renders. The skill now carries a **20-row id table** and the search-first recipe.
+
+Two environment notes confirmed again on 2026-09-26. **`WebFetch` returns only the SPA's "CSS
+Error" shell for `help.salesforce.com`** from this container, for real and invented ids alike,
+so every page here was read in the browser — but `developer.salesforce.com/docs/ai/*` renders
+directly and needs no polling, and it is the better source for Agent Script. And the TOC recipe
+still works: walking the shadow DOM for `a[href*=articleView]` from one `ind.` article returned
+**1,308 titled entries in a single call**, confirming the ~1,300 figure this file already
+carried.
+
+**One mechanical trap the browser caught and the build did not.** A single unbreakable
+`<code>` string — `developer.salesforce.com/docs/ai/agentforce/*`, 45 characters — pushed the
+whole page to 430px at a 375px viewport, because `.tw` only scrolls the *tables* it wraps and a
+long `<code>` in prose sits outside it. `verify-guide.mjs` passes such a page and so does the
+build. **Measure `document.documentElement.scrollWidth` at 375px on every new guide**, and keep
+inline `<code>` under ~30 unbroken characters.
 
 **The readability metric note worth keeping, because IAM is the worked example.**
 Its 34 unpunctuated stems all ended in a trailing "Choose N answers" after a question
