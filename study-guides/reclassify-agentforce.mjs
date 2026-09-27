@@ -1,7 +1,7 @@
 // Independent re-classification of the agentforce_specialist_questions deck against the
 // OFFICIAL exam outline, assigned by reading each question's stem + keyed option.
 //
-// There is nothing to re-classify FROM: all 121 questions carry the single tag "Salesforce
+// There is nothing to re-classify FROM: all 227 questions (121 until the 2026-09-26 import) carry the single tag "Salesforce
 // Agentforce Specialist". The deck has no domain structure at all, so the table this file
 // prints is the only view of where its weight actually sits.
 //
@@ -90,6 +90,36 @@ export const CALLS = {
 
   // --- MULTI (1)
   'db66ac22':'MULTI',
+  // --- 2026-09-26 import: 106 questions from the v2026-08-19 dump, called by the same rules
+  // PROMPT (+34)
+  '99c2546e':'PROMPT', '99b042b3':'PROMPT', '0289c710':'PROMPT', '91a40a4b':'PROMPT', '612eaa5c':'PROMPT',
+  '28fd0a5e':'PROMPT', '34335501':'PROMPT', '937a6e43':'PROMPT', 'e4dbb0be':'PROMPT', '8fd31b1d':'PROMPT',
+  'dd8cce0f':'PROMPT', 'b60aba06':'PROMPT', '54af4b28':'PROMPT', '84a2d57a':'PROMPT', '6b4ee217':'PROMPT',
+  'ce5fa288':'PROMPT', 'b3fba281':'PROMPT', '8fd58175':'PROMPT', '69b6ec7d':'PROMPT', 'eb9f3369':'PROMPT',
+  'e06e1688':'PROMPT', '01776739':'PROMPT', '0ec1e97a':'PROMPT', '9352ea5f':'PROMPT', 'b95f0351':'PROMPT',
+  'e84c4bab':'PROMPT', 'e7a4ae4d':'PROMPT', '934a80a2':'PROMPT', 'e9fcbcbc':'PROMPT', 'b7235ace':'PROMPT',
+  'f5285b77':'PROMPT', '91eceaaf':'PROMPT', '6e2e159c':'PROMPT', '21476283':'PROMPT',
+  // D360 (+20)
+  '6808979b':'D360', '1a925829':'D360', '63a974c4':'D360', 'ebc354d1':'D360', 'bd5a62cb':'D360',
+  '5cbefbee':'D360', 'e38eec6a':'D360', '99cb6909':'D360', '3f486e60':'D360', '119c02e9':'D360',
+  'ae9f4816':'D360', 'bcdba8b9':'D360', 'cddc1715':'D360', '502244f6':'D360', 'a74a21c6':'D360',
+  'dc4850e9':'D360', 'fb24d431':'D360', '66aab7c1':'D360', '0912d189':'D360', '3ab24f47':'D360',
+  // AGENT (+33)
+  '1445442b':'AGENT', '0cdd5e59':'AGENT', 'e0390194':'AGENT', 'adc9eb42':'AGENT', '3641dfeb':'AGENT',
+  '8fc464d2':'AGENT', '924940af':'AGENT', '361ad781':'AGENT', 'b2a77f20':'AGENT', '1f4db906':'AGENT',
+  '8f6695af':'AGENT', '84eea5a1':'AGENT', 'fb587b25':'AGENT', 'bf1df653':'AGENT', 'b0079191':'AGENT',
+  '1859bf70':'AGENT', '2e050c26':'AGENT', 'f2bd41ad':'AGENT', 'c6ff24aa':'AGENT', 'cfb28ed5':'AGENT',
+  '6fb289fc':'AGENT', '853a9381':'AGENT', '73f6b1a2':'AGENT', '23d1457b':'AGENT', 'e6327216':'AGENT',
+  'bb71fb2f':'AGENT', '94da16ff':'AGENT', 'b13d8bdb':'AGENT', 'dc3d23e2':'AGENT', 'b82f8c77':'AGENT',
+  '8c4cb037':'AGENT', 'c530da02':'AGENT', '6e6b152c':'AGENT',
+  // TDM (+8)
+  '9446e711':'TDM', '3733cf83':'TDM', 'a0031bf9':'TDM', '8a75d4ac':'TDM', '8796d3a5':'TDM',
+  'b66538d2':'TDM', '2d41f91f':'TDM', '7f39af7b':'TDM',
+  // GOV (+6)
+  '1ee2da69':'GOV', '8ea3652a':'GOV', '2c497408':'GOV', '2dbc88a4':'GOV', '2e95acca':'GOV',
+  '5e3a00f5':'GOV',
+  // MULTI (+5)
+  'bf884682':'MULTI', '173480bc':'MULTI', '2f3c2e1b':'MULTI', '96f5ba24':'MULTI', '7482dc59':'MULTI',
 };
 
 export const EXAM = { PROMPT:20, D360:20, AGENT:35, TDM:10, GOV:10, MULTI:5 };
@@ -102,22 +132,28 @@ export const NAMES = {
   MULTI:'Multi-Agent Orchestration',
 };
 
-// Sub-objectives named in the Spring '26 exam guide with NO deck item, found by reading all
-// 121 against the outline and confirmed by keyword sweep over stems, options and
-// explanations on 2026-09-26.
+// Sub-objectives named in the Spring '26 exam guide with NO keyed deck item. First found by
+// reading all 121 against the outline on 2026-09-26; re-swept over stems, options and keyed
+// answers after the same day's 106-question import (227 questions). Seven of the original
+// twelve were closed by that import -- see CLOSED_2026_09_26 below.
 export const UNCOVERED = [
-  'Agent Script and its building blocks. "Explain how an agent works and its basic building blocks of AGENT SCRIPT" is the first AGENT bullet. Agent Script returns 0 hits in stems, options and explanations. The deck teaches the older topic-and-action-only model throughout.',
-  'Hybrid reasoning, and Agent Script in Canvas and Script View (a named AGENT bullet). 0 hits for "hybrid reasoning" or "Script View". The four "Canvas" hits are the Flow Builder canvas and the Lightning record page canvas, not the authoring canvas.',
-  'Next-generation authoring (NGA). Named in the guide audience description as the way candidates are expected to engineer agents; 0 hits in the deck.',
-  'Template expressions as a determinism mechanism. The AGENT bullet names "filters, variables, and template expressions"; the deck covers filters and variables well (5 variable items, 9 filter items) and template expressions not at all.',
-  'Multi-Agent architecture (a named MULTI bullet). 0 hits for "multi-agent". The whole 5% domain rests on one question (db66ac22).',
-  'The A2A protocol as a keyed answer. It appears exactly once, as a DISTRACTOR in db66ac22 where MCP is correct, so the deck never teaches what A2A is for.',
-  'Agent analytics and agent optimization (a named GOV bullet). One item (f5501338, the User Utterances dashboard). "observab" returns 0.',
-  'Managing and monitoring agents (the other GOV bullet). One item (f97b4b49, Session Tracing). A 10% domain on 2 questions total is the deck\u2019s thinnest coverage by a wide margin.',
-  'The Voice channel. The AGENT bullet names "digital experience, email, voice, and Slack"; voice returns 0 stems and 0 options. Email (1b821f4b) and Slack (1c4982a0) get one each.',
-  'Standard topics. The AGENT bullet pairs "standard topics, custom topics, standard Agent actions, and custom Agent actions"; "standard topic" returns 0. The deck only ever configures custom ones.',
-  'How Testing Center EVALUATIONS work (a named TDM bullet). The deck has six Testing Center items, all about running batch CSV tests; none covers evaluation scoring or what an evaluation measures.',
-  'The renamed data platform. 15 stems and option sets say "Data Cloud"; "Data 360" appears in 21 explanations and 0 option sets. The exam guide uses Data 360 exclusively, including in the domain name.',
+  'Next-generation authoring (NGA). Named in the guide audience description as the way candidates are expected to engineer agents; still 0 hits in the deck after the 2026-09-26 import.',
+  'Template expressions as a determinism mechanism. The AGENT bullet names "filters, variables, and template expressions". Filters and variables are now well covered, including Agent Script\'s available when and mutable, but template expressions appear once, only as a DISTRACTOR (8f6695af).',
+  'Agent Script in Canvas and Script View. Hybrid reasoning is now keyed (b0079191, 1859bf70), but Canvas View and Script View appear only as distractors in those same two items, so the deck never teaches what each view is for.',
+  'The Voice channel. The AGENT bullet names "digital experience, email, voice, and Slack". The two "voice" hits are sales call recordings (Einstein Conversation Insights), not an agent deployed on a voice channel. Email (1b821f4b) and Slack (1c4982a0, and the 2026-09-26 Slack item) are covered.',
+  'Standard topics. The AGENT bullet pairs "standard topics, custom topics, standard Agent actions, and custom Agent actions"; "standard topic" and "standard subagent" still return 0. The deck only ever configures custom ones.',
+  'The renamed data platform, partly. Before the import "Data 360" appeared in 0 option sets; seven stems or option sets now use it, but the older items still say "Data Cloud" as scraped, per the standing product-rename decision.',
+];
+
+// Closed by the 2026-09-26 import, each by at least one KEYED item (not a distractor):
+export const CLOSED_2026_09_26 = [
+  'Agent Script and its building blocks: run versus reasoning.actions (1445442b), mutable (0cdd5e59), before_reasoning (e0390194), available when gating (8f6695af, cfb28ed5, e6327216), run ordering (6e6b152c).',
+  'Hybrid reasoning: b0079191, 1859bf70.',
+  'Multi-Agent architecture: SOMA with an orchestrator (7482dc59).',
+  'The A2A protocol as a keyed answer: bf884682, 2f3c2e1b, 96f5ba24. MCP gains a keyed scenario too (173480bc).',
+  'Agent analytics and agent optimization: Agent Analytics (1ee2da69, 8ea3652a), agent inspection (2dbc88a4).',
+  'Managing and monitoring agents: enhanced event logs (2c497408, 5e3a00f5), consumption in Digital Wallet (2e95acca).',
+  'How Testing Center evaluations work: coherence (8a75d4ac), custom LLM-judge scorers (b66538d2), action assertion (7f39af7b).',
 ];
 
 if (import.meta.url === `file:///${process.argv[1].replace(/\\/g, '/')}`) {
@@ -137,5 +173,5 @@ if (import.meta.url === `file:///${process.argv[1].replace(/\\/g, '/')}`) {
       `${NAMES[d].padEnd(32)} exam ${String(EXAM[d]).padStart(2)}%  ~${Math.round(EXAM[d] * 0.6).toString().padStart(2)} Qs   deck ${String(c).padStart(3)}  ${(100 * c / n).toFixed(1).padStart(5)}%`,
     );
   }
-  console.log(`\n${UNCOVERED.length} sub-objectives with no deck item.`);
+  console.log(`\n${UNCOVERED.length} sub-objectives with no keyed deck item (${CLOSED_2026_09_26.length} closed by the 2026-09-26 import).`);
 }
