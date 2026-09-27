@@ -1,19 +1,26 @@
 # Agentforce Specialist Field Guide
 
-Built from the 121 questions in the practice deck, cross-checked against the official exam
-outline and the documentation those questions cite. Measured 2026-09-26.
+Built from the 227 questions in the practice deck, cross-checked against the official exam
+outline and the documentation those questions cite. First measured 2026-09-26 at 121
+questions; **re-measured the same day after a 106-question import**, which is why this guide
+reports both numbers in places.
 
 **Read this first: this is the deck in this repo whose exam has changed most, and the change
 is structural rather than cosmetic.** The Spring '26 outline has **six domains, three of
 which did not previously exist as domains** — Data 360 Fundamentals, Governance and
 Observability, and Multi-Agent Orchestration. The authoring model changed too: the guide now
 expects you to engineer agents with **next-generation authoring (NGA)** using **Agent
-Script**, in a **Canvas** or **Script view**, with **hybrid reasoning**. None of those five
-terms appears anywhere in the deck — not in a stem, not in an option, not in an explanation.
+Script**, in a **Canvas** or **Script view**, with **hybrid reasoning**.
 
-That is not a criticism of the deck. It moved 16 keys in its own fact-check, the most of any
-Salesforce deck here, and its retriever and Data Library material is genuinely strong. But
-you cannot pass this exam on the deck alone, and §11 is the section that tells you why.
+At 121 questions none of those five terms appeared anywhere in the deck. **The 2026-09-26
+import closed most of that**: Agent Script now has eight keyed items and hybrid reasoning two.
+What is still missing is NGA by name, template expressions, and what the Canvas and Script
+views are for (§11 has the list).
+
+The deck moved 16 keys in its original fact-check and another 6 while importing the new
+questions, and its retriever and Data Library material is genuinely strong. It is now nearly
+four times the length of the exam, weighted toward the wrong domain, so §2 matters more than
+it did.
 
 ---
 
@@ -52,62 +59,74 @@ internals or a fine-tuning workflow is a distractor.
 
 ## 2. Where the points actually are
 
-There is nothing to re-classify *from*: all 121 questions carry the single tag "Salesforce
+There is nothing to re-classify *from*: all 227 questions carry the single tag "Salesforce
 Agentforce Specialist", so the deck has no domain structure at all. The deck column is an
-independent re-classification of all 121 against the six current domains
-(`study-guides/reclassify-agentforce.mjs`).
+independent re-classification of all 227 against the six current domains
+(`study-guides/reclassify-agentforce.mjs`); the "at 121" column is the same classification
+before the 2026-09-26 import.
 
-| Domain | Exam | ≈ Qs | Deck | Verdict |
-|---|---:|---:|---:|---|
-| **Prompt Engineering** | 20% | ~12 | **46 · 38.0%** | **badly over** |
-| Data 360 Fundamentals | 20% | ~12 | 19 · 15.7% | under |
-| AI Agents | 35% | ~21 | 42 · 34.7% | about right by volume |
-| Testing, Deployment, Maintenance | 10% | ~6 | 11 · 9.1% | about right |
-| **Governance and Observability** | **10%** | **~6** | **2 · 1.7%** | **badly under** |
-| **Multi-Agent Orchestration** | **5%** | **~3** | **1 · 0.8%** | **badly under** |
+| Domain | Exam | ≈ Qs | Deck at 121 | Deck now (227) | Verdict |
+|---|---:|---:|---:|---:|---|
+| **Prompt Engineering** | 20% | ~12 | 46 · 38.0% | **80 · 35.2%** | **badly over** |
+| Data 360 Fundamentals | 20% | ~12 | 19 · 15.7% | 39 · 17.2% | slightly under |
+| AI Agents | 35% | ~21 | 42 · 34.7% | 75 · 33.0% | about right, content now current |
+| Testing, Deployment, Maintenance | 10% | ~6 | 11 · 9.1% | 19 · 8.4% | about right |
+| **Governance and Observability** | **10%** | **~6** | 2 · 1.7% | **8 · 3.5%** | **under by share** |
+| **Multi-Agent Orchestration** | **5%** | **~3** | 1 · 0.8% | **6 · 2.6%** | **under by share** |
 
 Three things to read off that table.
 
-**Prompt Engineering is nearly double-weighted in the deck.** 46 questions for about twelve
-real ones. Prompt template types, grounding, the Trust Layer and Model Playground are the
-deck's comfort zone, and you will over-prepare them without noticing.
+**Prompt Engineering is still the deck's heaviest domain by far.** 80 questions against
+about twelve real ones — the import added 34 more. Prompt template types, grounding, the
+Trust Layer and model configuration are the deck's comfort zone, and you will over-prepare
+them without noticing.
 
 **Governance and Observability plus Multi-Agent Orchestration are 15% of the exam — about
-nine questions — and 3 deck questions between them.** That is the single largest
-proportional gap in any guide in this repo. §7 and §8 exist entirely to close it.
+nine questions — and now 14 deck questions between them, up from 3.** In absolute terms the
+deck now has more practice here than the exam has questions. As a *share* of the deck it is
+still 6%, so a reader who drills the deck in order meets these topics rarely; §7 and §8 still
+carry the documentation the deck does not.
 
-**AI Agents looks well matched and is not.** 34.7% against 35% by volume, but the *content*
-is the old authoring model: topics and actions, planner and reasoning engine. The current
-bullet asks for Agent Script's building blocks, hybrid reasoning, Canvas and Script view, and
-template expressions. See §5.
+**AI Agents is now matched in content as well as volume.** At 121 questions it was the old
+authoring model only — topics and actions, planner and reasoning engine. The import added
+Agent Script items (`run` versus `reasoning.actions`, `mutable`, `before_reasoning`,
+`available when`) and two on hybrid reasoning. What it still lacks is next-generation
+authoring by name, template expressions, standard topics and the Voice channel. See §5.
 
 Two boundary rules were applied consistently:
 
 1. **Trust Layer capabilities** — masking, toxicity, prompt defense, dynamic grounding, the
    audit trail — are **Prompt Engineering**, because the guide lists them under a Prompt
    Engineering bullet. **Governance and Observability** is reserved for *agent-level*
-   monitoring: Session Tracing, utterance dashboards, analytics, optimization. Collapsing the
-   two would hide that a 10% domain rests on two questions.
-2. The deck's **eight Einstein-for-Service questions** (`a5c36a06`, `7fcd0d22`, `d7a65539`,
-   `03dbb7ca`, `7b9b6189`, `4f60aa61`, `f1ad48dc`, `432e6ed5`) map to **no current
-   sub-objective**. They are filed under AI Agents as the nearest domain rather than put in an
-   escape-hatch bucket, and §11 names them as the deck's stalest block.
+   monitoring: Session Tracing, utterance dashboards, analytics, optimization, event logs.
+   Collapsing the two would hide how thin a 10% domain still is.
+2. The deck's **fourteen packaged-Einstein-feature questions** — eight from the original deck
+   (`a5c36a06`, `7fcd0d22`, `d7a65539`, `03dbb7ca`, `7b9b6189`, `4f60aa61`, `f1ad48dc`,
+   `432e6ed5`) and six from the import (`924940af`, `361ad781`, `fb587b25`, `2e050c26`,
+   `b82f8c77`, `c530da02`) — map to **no current sub-objective**. They are filed under AI
+   Agents as the nearest domain rather than put in an escape-hatch bucket, and §11 names them
+   as the deck's stalest block.
 
 ---
 
 ## 3. Prompt Engineering
 
-20% of the exam, 46 deck questions. Over-drilled — so this section is a checklist to confirm,
-not material to learn, with two exceptions flagged at the end.
+20% of the exam, 80 deck questions (46 before the import). Heavily over-drilled — so this
+section is a checklist to confirm, not material to learn, with the exceptions flagged at the
+end.
 
 ### Template types — the most reliable marks on the exam
 
 | Type | When | Deck items |
 |---|---|---|
 | **Field Generation** | Populate a field with generated output | `ddb9a877`, `e6352f25`, `5e73a591`, `7604dc8f`, `410726e6` |
-| **Flex** | Multiple unrelated objects as inputs, or a fully custom shape | `683fdd78`, `6e599964`, `1a055309`, `af0f9726` |
+| **Flex** | Multiple unrelated objects as inputs, a fully custom shape, or a template called from Apex behind a Lightning web component | `683fdd78`, `6e599964`, `1a055309`, `af0f9726`, `0ec1e97a` |
 | **Sales Email** | A personalised email; merge objects are Recipient, Sender, **Recipient Account** | `f36d01cc`, `66246094`, `41b8067f` |
-| **Record Summary** | Customise a standard summary, e.g. for Case | `b7ffd87e` |
+| **Record Summary** | Customise a standard summary; the Summarize Record action prefers a custom Record Summary template over the Salesforce-provided one | `21476283` |
+
+Customising a standard template: **Save As → Save as a New Template** works for any standard
+template; an *overridable* one can instead get **Save as a New Version**, which replaces the
+standard version once activated. Prompt Builder has no "Clone" (`b95f0351`).
 
 Three mechanics that recur:
 
@@ -124,7 +143,14 @@ Three mechanics that recur:
 
 - **Merge fields** reference a default related list, e.g. opportunities on an Account
   (`54b6a45e`). But the **Activities related list is not supported** because it is a
-  polymorphic field (`fde9ef6d`) — a favourite exam trap.
+  polymorphic field (`fde9ef6d`) — a favourite exam trap. A template takes **at most 5
+  related-list merge fields** (`99c2546e`), the related list's fields come from the **parent's
+  page layout for the current user** (`e06e1688`), and the data is always rendered as JSON.
+- **Well-formatted JSON** in a prompt is an **Apex merge field** job (`8fd31b1d`).
+- Draft Sales Emails show **placeholders** where the user lacks field access: field-level
+  security is enforced on grounding (`54af4b28`). Follow-ups built on a lead's current data
+  need **record merge fields** in a template, because the standard grounding covers a fixed
+  set of fields only (`eb9f3369`).
 - **Dynamic grounding with secure data retrieval** is the Trust Layer component that brings
   org data into the prompt (`3e120a2b`, `eba7605b`).
 - Ground on **CRM and Data Cloud data using standard foundation models** when the requirement
@@ -147,6 +173,8 @@ Three mechanics that recur:
 | **Dynamic Grounding** | Brings org data into the prompt securely | `eba7605b` |
 | **Audit trail** | Shows prompt sent, masking applied, masked response | `e3b0fcb4`, `e68a8732` |
 | **Toxicity detection** | A Trust Layer audit report in Data Cloud with a toxicity detector filter | `f1260f25` |
+| **Toxicity scores** | Categories run 0–1 with **1 the most toxic**; the *safety* score runs the other way, **1 the safest** | `69b6ec7d` |
+| **Audit data** | Masked data and toxicity scores, stored in Data 360 with feedback — turn on collection before you can validate masking | `01776739`, `6b4ee217` |
 
 One limitation worth memorising: **creating or updating a prompt template is *not* recorded in
 the Setup Audit Trail** (`80590e97`).
@@ -166,21 +194,28 @@ the Setup Audit Trail** (`80590e97`).
 - A prompt template version is **immutable**: once activated, no further changes can be saved
   to that version (`223dd5bd`).
 
-### The two things to actually learn here
+### The things to actually learn here
 
 The outline's bullet "**explain how to manage and prevent specific models from being
-accessed**" is only half covered — the deck teaches how to *add* a model (Model Builder,
-BYO-LLM) but never how to *block* one. And the preview pane's two outputs, **Resolution** and
-**Response**, are worth understanding rather than memorising: the Resolution shows the full
-text sent to the Trust Layer (`02699cee`).
+accessed**" was only half covered at 121 questions — the deck taught how to *add* a model but
+never how to *block* one. The import closed it: **Manage Model Provider Access** in Einstein
+setup chooses which providers are allowed org-wide (`dd8cce0f`), and a single prompt is pinned
+to an approved model by registering it as a BYO-LLM and selecting it in the template
+(`84a2d57a`).
+
+The preview pane's two outputs, **Resolution** and **Response**, are worth understanding
+rather than memorising: the Resolution shows the full text sent to the Trust Layer
+(`02699cee`). And a Flex template's Preview stays greyed out until you **select a record for
+each input** (`b7235ace`).
 
 ---
 
 ## 4. Data 360 Fundamentals
 
-20% of the exam, 19 deck questions — under-weighted but the deck's material here is its best.
-Note the domain name: **Data 360**, not Data Cloud. The deck says Data Cloud in 15 stems and
-Data 360 in none.
+20% of the exam, 39 deck questions (19 before the import) — slightly under-weighted, and the
+deck's material here is its best. Note the domain name: **Data 360**, not Data Cloud. The deck
+still says Data Cloud in 14 stems; Data 360 appears in 3 stems and 5 option sets, all from the
+import.
 
 ### The Agentforce Data Library
 
@@ -196,6 +231,15 @@ Data 360 in none.
   option plus the `ContentDocumentVersion` unstructured data model object** (`a11274ab`).
 - To make product tutorials and guides answerable, **publish them as Knowledge articles**
   (`78924287`).
+- **Upload limits: text and HTML up to 4 MB, PDF up to 100 MB**, up to 1,000 files per
+  library (`6808979b`). **A library's data source cannot be changed after you choose it**
+  (`1a925829`).
+- In a Knowledge library, **identifying fields** must be concise text or text-area fields
+  within 512 tokens — a summary, not the article body (`dc4850e9`); **only published articles
+  are indexed**, so Knowledge handles versions for you (`0912d189`); and **Filter by Knowledge
+  Data Categories** limits indexing to the categories you pick (`5cbefbee`).
+- Saving a library creates **a data stream, a search index and a retriever** automatically
+  (`3ab24f47`).
 
 ### Chunking, indexing, retrievers
 
@@ -212,11 +256,22 @@ phrase is worth memorising verbatim.
 - Too many irrelevant results → **define filters to narrow the search** (`381ae8be`). Latency
   too high → **the same answer**: filters limit the scope of each search (`5697b1fb`).
 - Outdated articles being surfaced → add a **ranking factor for recency based on
-  `LastModifiedDate`** (`42129525`).
+  `LastModifiedDate`** (`42129525`), or a retriever **filter on recently updated documents**
+  for a file library (`502244f6`).
+- Filtering by a field such as warranty status → **hybrid search with pre-filtering in a custom
+  retriever** (`ebc354d1`). Hybrid search **fuses a keyword index with a vector index**, which
+  helps queries mixing exact terms with intent (`ae9f4816`).
+- **Chunk size is the Max Token setting** (512 by default). Nested clauses losing context → a
+  **larger** chunk (`3f486e60`). Tables losing context → switch the parser to **Docling**, which
+  keeps layout, merged cells and nested tables (`119c02e9`). The documented strategies are
+  section-aware, semantic passage extraction, conversation, prepend-field and code — there is
+  no keyword-based one.
+- External data you must not copy → **Zero Copy data federation**, whose data lake object is a
+  pointer, not a copy (`63a974c4`).
 
 ### What the deck does not have, and the exam may
 
-Three retriever shapes the deck never mentions, all of them current:
+Three retriever shapes the deck never teaches (an ensemble retriever appears once, only as a wrong option), all of them current:
 
 - An **ensemble retriever** is a collection of individual retrievers: it runs them all,
   combines the results into one list, **reranks by relevance**, and returns only the most
@@ -235,16 +290,30 @@ are handled.
 
 ## 5. AI Agents
 
-35% of the exam — the heaviest domain — and 42 deck questions. **Matched by volume, mismatched
-in content.** Everything the deck teaches here is true; a third of what the outline asks for
-is missing.
+35% of the exam — the heaviest domain — and 75 deck questions (42 before the import).
+**Matched by volume, and since the import mostly matched in content too.** At 121 questions
+the deck taught only the older topic-and-action model; the import added the Agent Script
+material below, but a few named bullets are still missing.
 
-### Agent Script — the gap that defines this deck
+### Agent Script — the gap that defined this deck, now mostly closed
 
 The first bullet of the heaviest domain reads: "Explain how an agent works and its **basic
-building blocks of agent script**." **"Agent Script" returns zero hits in the deck.** So does
-"hybrid reasoning", "Script View", "template expression" and "next-generation authoring".
-Learn it from the developer guide:
+building blocks of agent script**." At 121 questions "Agent Script" returned zero hits. The
+import added eight keyed items, and they are the ones to drill:
+
+| What it tests | Deck item |
+|---|---|
+| `run @actions.x` in the logic **always** runs; a tool in `reasoning.actions` runs only if the LLM picks it | `1445442b`, `6e6b152c` |
+| A variable declared without **`mutable`** is read-only at runtime | `0cdd5e59` |
+| Gate an action with a mutable variable and **`available when`** | `8f6695af`, `cfb28ed5` |
+| `available when` is decided when the tools are handed to the LLM, so a flag set mid-turn does not expose the tool that turn | `e6327216` |
+| **Hybrid reasoning**: `->` logic runs deterministically, `\|` text is left to the LLM | `b0079191`, `1859bf70` |
+| `before_reasoning` timing after a transition (flagged — no page states the exam's answer) | `e0390194` |
+| Before reasoning versus the start_agent router for entitlement variables (flagged — both are documented) | `c6ff24aa` |
+
+Still **zero** in the deck: "next-generation authoring", "template expression" (it appears
+once, only as a wrong option), and what the **Canvas** and **Script** views are for (both
+appear only as wrong options). Learn those from the developer guide:
 
 **Agent Script is the language for building agents in Agentforce Builder.** It combines the
 flexibility of natural-language instructions for conversational tasks with the reliability of
@@ -309,7 +378,10 @@ exam-versus-product split in any guide in this repo.
 - **Action instructions help the reasoning engine decide which action to use** (`05f6c2b3`), so
   write them concisely and test in Agentforce Builder (`81823826`).
 - The core component of a Custom Agent Action is its **Instructions** (`cd9ab1cf`).
-- Topic setup is judged on **Topic Name and Classification Description** (`db26fe88`).
+- Topic setup is judged on **Topic Name and Classification Description** (`db26fe88`), and
+  persistent misrouting between two topics is **overlap in their descriptions**; the fix is
+  distinct descriptions plus deterministic filters, not keyword rules or a router flow
+  (`adc9eb42`, `bf1df653`).
 - **There is no standard Delete Record action** (`0b45cf29`).
 
 ### Determinism: filters and variables
@@ -321,28 +393,59 @@ two well and the third not at all.
   action, then apply a **conditional filter** (`c7094780`, `f02b7e14`).
 - Gate an action on a field value: a **context variable mapped to the membership tier**, then a
   conditional filter (`b02b7fbe`).
+- Stop the agent calling a refund action for the wrong tier → a **filter on the action**, not
+  a stricter instruction (`cfb28ed5`).
+- **Context versus custom variables**: context variables are system-generated from the session
+  (for example Messaging Session fields); **custom variables** are the ones you create to hold
+  values such as preferences taken from action outputs (`23d1457b` — the dump keyed this the
+  wrong way round).
+- Actions run **in a specific order** when their instructions name the **dependent actions by
+  API name** (`8fc464d2`). An Apex action taking a list of text values maps to the standard
+  Lightning type **`lightning__stringType`** (`6fb289fc`).
 
 ### Agent types and channels
 
 - **Employee Agent** for internal productivity — a marketing team finding campaign data and
-  generating content (`014997d2`).
+  generating content (`014997d2`), or sales staff scheduling their own tasks (`3641dfeb`).
+  **There is no "Sales Agent" type**; the documented types are Employee, Engagement (formerly
+  Lead Nurturing, formerly SDR), Sales Coach, Service Agent, Service Assistant and Setup with
+  Agentforce. The exam dump keyed "Sales Agent", which the import corrected.
 - **Service Agent** for customer-facing resolution: a partner portal on Experience Cloud
   (`31068c78`), end-to-end case resolution (`28b3a429`), guest complaints with a Flex prompt
   template (`1a055309`).
 - **SDR Agent**: **only works in the Email channel** (`6a1ae055`) and **only with the standard
-  Lead object** (`c15ac147`). Two hard constraints, both exam-shaped.
+  Lead object** (`c15ac147`). Two hard constraints, both exam-shaped. Reps who cannot find it
+  are missing the **Use SDR Agent** permission set (`8c4cb037`) — now called **Use Engagement
+  Agent**, since the agent was renamed Agentforce Engagement.
 - **Sales Coach** for objection handling and negotiation practice (`177ef534`).
 - **Channels**: an **Email Configuration** connects a template to a Service Agent
   (`1b821f4b`); a **connection between Salesforce and the Slack workspace** connects an
-  Employee Agent to Slack (`1c4982a0`); the **Route Work Action** connects an Omni-Channel Flow
-  to the agent (`52194fa8`).
-- **The Voice channel is named in the outline and returns zero hits in the deck.** Know that
-  voice is one of the four channels — digital experience, email, voice, Slack.
+  Employee Agent to Slack (`1c4982a0`) — add the Slack connection, install the agent from
+  **Manage Agentforce** in Slack, then give users access (`853a9381`); the **Route Work
+  Action** connects an Omni-Channel Flow to the agent (`52194fa8`); SMS runs on the
+  **Messaging** channel (`b2a77f20`); and escalating to a human queue uses an **outbound
+  Omni-Channel flow** (`f2bd41ad`).
+- **The Voice channel is named in the outline and still returns no agent-channel item.** The
+  two "voice" hits the import brought are sales call recordings. Know that voice is one of the
+  four channels — digital experience, email, voice, Slack.
 
 ### Security context — the deck's strongest cluster
 
-Five items, all the same lesson: **an agent acts as its agent user, and that user needs
-explicit permission.**
+Eleven items, all the same lesson: **an agent acts as its agent user, and that user needs
+explicit permission** — five from the original deck, then six more from the import:
+
+- Widen a Service Agent's access with **a new permission set on the Einstein Agent license**
+  (or the agent's own `[Agent_Name]_Permissions` set) — not the permission set group, which
+  holds no object or field permissions itself, and not the profile (`1f4db906`).
+- Knowledge access needs **Knowledge object and field access plus Allow View Knowledge**
+  (`84eea5a1`); a data library answering in Prompt Builder but not in the agent needs the
+  **Data Cloud User** permission set on the agent user (`cddc1715`).
+- Private records the agent cannot see → **object permissions plus sharing rules**, not system
+  mode or a wider org-wide default (`73f6b1a2`, `94da16ff`).
+- A callout authenticated with the user's **session ID** fails when the agent runs it; use a
+  **Named Credential** (`dc3d23e2`).
+
+From the original deck:
 
 - A Service Agent not answering knowledge questions → the agent user lacks **Allow View
   Knowledge** (`2de3ea26`).
@@ -366,25 +469,34 @@ variable**, so the LLM cannot modify it (`ec7f56b9`).
 
 ## 6. Testing, Deployment and Maintenance
 
-10% of the exam, 11 deck questions — well matched, with one named bullet under-covered.
+10% of the exam, 19 deck questions (11 before the import) — well matched. The one named
+bullet that was under-covered, evaluations, now has three items.
 
 ### Testing Center mechanics — what the deck teaches
 
 - **Upload a structured CSV test template and run batch test cases** (`0dd5d1d6`, `b2206ef2`).
 - **Structured batch testing with validation per test utterance** gives consistent pass/fail
   logic (`818da706`).
-- **Use Testing Center only in a sandbox** (`a44b4810`), because **running tests risks modifying
-  CRM data in a production environment** (`456918e7`). Those two are the same fact from both
-  sides, and it is the most likely Testing Center question on the exam.
+- **Use Testing Center only in a sandbox** (`a44b4810`, `a0031bf9`), because **running tests
+  risks modifying CRM data in a production environment** (`456918e7`). Those are the same fact
+  from both sides, and it is the most likely Testing Center question on the exam.
+- **As of Summer '26, Testing Center runs are unmetered** — they no longer consume Einstein
+  Requests or Flex Credits (only the Data 360 queries a test makes are still metered). That
+  makes the "does not consume Einstein Requests" option on `456918e7` true as well, and the
+  question carries a notice saying so. Credit usage that remains shows in **Digital Wallet**,
+  not in Testing Center (`2e95acca`).
 - To evaluate whether an action is selected for realistic utterances, use **Testing Center**
   (`63afa960`) — or, where the option set omits it, **Agent Builder**, whose Preview panel shows
   which subagents were selected and why (`e6949181`). Those two items are near-twins with
   different option sets; both keys are right.
 
-### How evaluations work — the under-covered bullet
+### How evaluations work
 
-"Explain how Testing Center **evaluations** work" is a named bullet, and the deck has six
-Testing Center items none of which covers scoring. The documentation is precise:
+"Explain how Testing Center **evaluations** work" is a named bullet. At 121 questions none of
+the deck's Testing Center items covered scoring; the import added three — **Coherence** for a
+response delivered as raw JSON (`8a75d4ac`), **Action Assertion** for an agent that found the
+right subagent but missed actions (`7f39af7b`), and a **custom LLM-judge scorer** for brand
+voice (`b66538d2`). The documentation is precise:
 
 **Three default evaluations, always run:**
 
@@ -408,8 +520,9 @@ instructions about it. Writing "the agent should mention the order number and be
 produces inaccurate scores. If an option describes the Expected Response as a rubric, it is
 wrong.
 
-Two more facts: **generating tests consumes credits**, and test generation covers Account,
-Lead, Opportunity and Contact out of the box — custom objects and the Answer Questions with
+Two more facts: the evaluations page still says **generating tests consumes credits**, which
+the Summer '26 unmetered change above overtakes; and test generation covers Account, Lead,
+Opportunity and Contact out of the box — custom objects and the Answer Questions with
 Knowledge action need explicit instructions in the description. Also note the scope: the
 evaluations article covers the **legacy Testing Center in Setup**, not the **new Testing Center
 in Agentforce Studio (Beta)**.
@@ -424,20 +537,33 @@ in Agentforce Studio (Beta)**.
   (`52a560b9`). The commonest "why doesn't it work" answer.
 - A prompt template that behaves differently after deployment → **the name of the LLM does not
   match between sandbox and production** (`8b365e6c`).
+- Agents, their flows and Apex deploy with **either change sets or the Salesforce CLI /
+  Metadata API** (`9446e711`); include every dependency, meet 75% Apex coverage, and plan
+  activation after the deploy (`2d41f91f`).
+- A flow that errors every time after a change-set deployment was **deployed inactive** — the
+  default, unless the org turns on "deploy processes and flows as active" (`8796d3a5`).
 
 ---
 
 ## 7. Governance and Observability
 
-**10% of the exam — about six questions — and 2 deck questions.** Along with §8, this is the
-biggest proportional gap in any guide in this repo. Everything below is from the documentation.
+**10% of the exam — about six questions — and 8 deck questions, up from 2.** At 121 questions
+this was, with §8, the biggest proportional gap in any guide in this repo; the import brought
+the practice up to roughly the exam's own count, though it is still only 3.5% of the deck.
 
-The deck's two items are both correct and both worth keeping:
+The deck's items:
 
 - **Agentforce Session Tracing** captures detailed interaction data and gives a full view of
   agent behaviour start to finish (`f97b4b49`).
 - The **User Utterances dashboard** is where you analyse inputs, requests and queries to find
   patterns and trends (`f5501338`).
+- **Agent Analytics** is the prebuilt answer for usability, action assignment, deflection and
+  escalation trends (`8ea3652a`, `1ee2da69`).
+- **Agent inspection** — Salesforce lists "Agent Configuration and Inspection" as an
+  Observability capability — is the view of one complete interaction (`2dbc88a4`).
+- **Event logs** show every session's events, errors and, with enhanced logging on, the user
+  and agent messages; they **keep seven days** (`2c497408`, `5e3a00f5`).
+- Credit consumption is monitored in **Digital Wallet** (`2e95acca`).
 
 ### Agentforce Observability
 
@@ -478,10 +604,17 @@ Tableau Plus licence.
 
 ## 8. Multi-Agent Orchestration
 
-**5% of the exam — about three questions — and one deck question.** The deck's single item
-(`db66ac22`) keys **Model Context Protocol (MCP)** for consuming an external product
-recommendation engine, and offers **A2A as a distractor**. So the deck never teaches what A2A
-is for, and never mentions multi-agent architecture at all.
+**5% of the exam — about three questions — and 6 deck questions, up from 1.** At 121
+questions the only item (`db66ac22`) keyed **MCP** for an external recommendation engine and
+offered A2A as a distractor, so the deck never taught what A2A was for. The import added:
+
+- **A2A** as the answer: the cross-vendor protocol for agents to communicate (`bf884682`), its
+  benefit is standardized cross-vendor discovery and communication (`2f3c2e1b`), and it is the
+  choice when agents need to **collaborate** (`96f5ba24`).
+- **MCP** in a scenario of its own: an agent dynamically finding a document-classification API
+  (`173480bc`).
+- **SOMA** with an orchestrator for specialised agents in one org (`7482dc59`) — the deck's
+  first multi-agent architecture item.
 
 ### The five-term map
 
@@ -582,6 +715,11 @@ makes them make sense.
 | **30 min / 45–60 min / daily / weekly** | Observability refresh: session tracing, analytics, moments and quality scores, tags |
 | **75%** | Apex code coverage needed for Apex invoked by an Agent Action |
 | **1 data library** | Per agent. Not two |
+| **4 MB / 100 MB / 1,000** | Data library uploads: text or HTML, PDF, files per library |
+| **5** | Related-list merge fields per prompt template (also 5 flow and 5 Apex merge fields) |
+| **512** | Default Max Token chunk size; also the limit on a Knowledge identifying field |
+| **7 days** | Event log retention |
+| **1 = most toxic** | Toxicity categories; the safety score runs the other way, 1 = safest |
 | **1 active version** | Of an individual retriever |
 | **4 stages** | Retrieval data prep: loading, chunking, vectorizing, storing |
 | **3 hyperparameters** | Temperature, Frequency Penalty, Presence Penalty |
@@ -598,20 +736,21 @@ product capability, and this product has a lot of similarly named ones.
 
 Patterns that recur in this deck's wrong answers:
 
-- **The plausible-but-absent capability.** This deck's fact-check moved 16 keys, and several
-  were invented settings. If an option names an Agentforce toggle you cannot picture in Setup,
-  distrust it.
+- **The plausible-but-absent capability.** This deck's fact-checks moved 22 keys between
+  them, and several were invented settings — the import's own examples are a "Sales Agent"
+  type that does not exist and a "Clone" button Prompt Builder does not have. If an option
+  names an Agentforce toggle you cannot picture in Setup, distrust it.
 - **Agent Builder versus Testing Center.** Both evaluate utterance handling. Agent Builder's
   Preview is interactive and single-shot; Testing Center is batch, CSV-driven and scored. The
   deck has a near-twin pair (`e6949181`, `63afa960`) that differ only in whether Testing Center
   is on the option list.
 - **Employee Agent versus Service Agent.** Internal productivity versus customer-facing
   resolution. Getting this wrong is the fastest way to lose an easy mark.
-- **Permission on the *agent user*, not the running human.** Five deck items hinge on this.
+- **Permission on the *agent user*, not the running human.** Eleven deck items hinge on this.
 - **Prompt Builder versus an Einstein feature.** Prompt Builder makes reusable templates;
   Service Replies, Work Summaries and Call Insights are packaged features you switch on. An
   option offering Prompt Builder where a packaged feature exists — or vice versa — is the
-  discriminator in at least eight deck items.
+  discriminator in at least fourteen deck items.
 - **A fine-tuning or transformer-internals option.** The exam guide explicitly says candidates
   are not expected to know these. That makes such options distractors by construction.
 - **"Hybrid reasoning solves it."** It solves drop-off and gives deterministic control; it does
@@ -621,17 +760,18 @@ Patterns that recur in this deck's wrong answers:
 
 ## 11. Where the deck is older than the exam
 
-This deck moved **16 keys in its own fact-check — the most of any Salesforce deck in this
-repo** — so the answers you have are the corrected ones. What follows is about the *exam*
-having moved, not about the deck being wrong.
+This deck moved **16 keys in its original fact-check and 6 more while importing the
+2026-09-26 dump** — so the answers you have are the corrected ones. What follows is about the
+*exam* and the *product* having moved, not about the deck being wrong.
 
 ### The renames
 
 | The deck says | Salesforce now says | Note |
 |---|---|---|
-| Data Cloud (15 stems) | **Data 360** | Appears in 21 explanations and 0 option sets |
-| Einstein Studio (6 items) | **AI Models** | "AI Models (formerly Einstein Studio)" |
-| topic / topics (8 items) | **subagent** | Since April 2026 — **but the exam guide still says topics** |
+| Data Cloud (14 stems, 25 stems or option sets) | **Data 360** | Appears in 33 explanations, 3 stems and 5 option sets |
+| Einstein Studio (10 items) | **AI Models** | "AI Models (formerly Einstein Studio)" |
+| topic / topics (12 items) | **subagent** | Since April 2026 — **but the exam guide still says topics**. 6 items already say subagent |
+| SDR Agent, Lead Nurturing | **Agentforce Engagement** | "Use SDR Agent" is now "Use Engagement Agent" |
 
 **The subagent rename is the cleanest exam-versus-product split in this repo.** The developer
 guide states it plainly: "Beginning in April 2026, agent topics are now called subagents. There
@@ -639,27 +779,37 @@ are no changes to functionality." The Testing Center docs have followed — the 
 called **Subagent Assertion**. The Spring '26 exam outline has not: it still says "standard
 topics, custom topics". **Answer "topic"; expect "subagent" everywhere else.**
 
-### Five concepts the exam names and the deck does not contain
+### Concepts the exam names — what the import closed and what is still missing
 
-| Concept | Deck hits | Where to learn it |
-|---|---:|---|
-| **Agent Script** and its building blocks | 0 | §5 |
-| **Hybrid reasoning**, Canvas and Script view | 0 | §5 |
-| **Next-generation authoring (NGA)** | 0 | §5 |
-| **Template expressions** as a determinism mechanism | 0 | §5 |
-| **Multi-Agent architecture** | 0 | §8 |
+At 121 questions five named concepts had zero deck items and three more were near-zero. The
+count below is items whose **keyed answer** covers the concept, measured after the import.
 
-Plus three near-zeros: **A2A** appears only as a distractor, the **Voice channel** returns zero
-stems and options, and **"standard topics"** returns zero — the deck only ever configures
-custom ones.
+| Concept | At 121 | Now | Where to learn it |
+|---|---:|---:|---|
+| **Agent Script** and its building blocks | 0 | 8 | §5 |
+| **Hybrid reasoning** | 0 | 2 | §5 |
+| **Multi-Agent architecture** (SOMA) | 0 | 1 | §8 |
+| **A2A** as an answer, not a distractor | 0 | 3 | §8 |
+| **Testing Center evaluations** | 0 | 3 | §6 |
+| **Canvas view and Script view** | 0 | 0 — wrong options only | §5 |
+| **Next-generation authoring (NGA)** | 0 | 0 | §5 |
+| **Template expressions** as a determinism mechanism | 0 | 0 — one wrong option | §5 |
+| **Voice channel** | 0 | 0 | §5 |
+| **Standard topics** | 0 | 0 | §5 |
 
-### The deck's stalest block: eight Einstein-for-Service items
+So the gap has narrowed from structural to specific: four named terms, plus the Canvas and
+Script views, are still learnable only from this guide and the documentation.
+
+### The deck's stalest block: fourteen packaged-Einstein-feature items
 
 `a5c36a06`, `7fcd0d22`, `d7a65539`, `03dbb7ca`, `7b9b6189`, `4f60aa61`, `f1ad48dc` and
 `432e6ed5` test **Service Replies, Einstein Work Summaries, Call Insights and Service AI
-Grounding**. These map to **no sub-objective in the Spring '26 outline.** They are not wrong —
-the features exist and the keys are right — but they are about 6.6% of your revision time
-buying zero marks. Recognise them and move past them:
+Grounding**, and the import added six more of the same kind — Call Summaries (`924940af`),
+Service Replies with case summaries (`361ad781`), Service AI Grounding (`fb587b25`), Work
+Summaries setup (`2e050c26`), and Einstein Conversation Insights (`b82f8c77`, `c530da02`).
+These map to **no sub-objective in the Spring '26 outline.** They are not wrong — the features
+exist and the keys are right — but they are about 6.2% of your revision time buying zero marks.
+Recognise them and move past them:
 
 - **Service Replies** for quick grounded chat responses (`7fcd0d22`, `4f60aa61`).
 - **Einstein Work Summaries** for handover summaries, producing **Issue and Resolution**
@@ -682,6 +832,13 @@ records the retirement, so **answer the deck's key and know it describes retired
 One knock-on: `6baf71a9` contrasts an individual retriever with "the default retriever". The
 contrast is still meaningful for orgs holding legacy defaults, but on a new org you create
 individual retrievers because there is nothing else.
+
+**`456918e7` is the second example, and it went stale during this guide's own week.** It asks
+what is true of Testing Center and keys "running tests risks modifying CRM data in a production
+environment". Its option B, "running tests does not consume Einstein Requests", was false when
+the deck was checked in August — and became true in **Summer '26**, when Testing Center runs
+went unmetered. The question now carries a notice. **Answer A on the exam; know that B is also
+true on a current org.**
 
 ### Its 27 in-app comments are already resolved — do not re-triage them
 
@@ -713,37 +870,41 @@ way.
 
 ## 12. Two-week revision plan
 
-Set by one fact above all: **15% of the exam sits in two domains the deck covers with three
-questions.** Week 1 is almost entirely outside the deck.
+Set by two facts: **the new material now has deck questions, but they are a small share of a
+227-question deck**, and **Prompt Engineering is 35% of the deck against 20% of the exam.**
+So week 1 pairs each gap's documentation with its handful of deck items, and week 2 works the
+rest of the deck in proportion.
 
-**Week 1 — the exam the deck does not test.**
+**Week 1 — the newest material, documentation first, then its deck items.**
 
 1. **Day 1–2 · Agent Script.** Read the Agentforce Developer Guide's Agent Script pages: Get
    Started, Language Characteristics, Agent Script Blocks, Flow of Control. Write a short script
    by hand with a variable, an if/else on `->`, an LLM instruction on `|`, and a subagent
-   transition. This is the heaviest domain's newest material.
+   transition. Then drill the eight Agent Script items in §5's table. Learn NGA, template
+   expressions and the Canvas and Script views from the docs; the deck does not test them.
 2. **Day 3 · Multi-Agent Orchestration.** Read the SOMA/MCP knowledge article end to end. Learn
    the five-term map, the ~8–10 topic threshold, Agent Cards, and inbound-versus-outbound A2A.
-   Three exam questions, currently one deck question.
+   Then the deck's six items (§8). Three exam questions.
 3. **Day 4 · Governance and Observability.** Read the Observability articles. Memorise the two
    use cases, the effectiveness metrics, the four refresh cadences and the agent-type support
-   matrix. Six exam questions, currently two deck questions.
+   matrix. Then the deck's eight items (§7). Six exam questions.
 4. **Day 5 · Testing Center evaluations.** Read *Choose Evaluations*. Three defaults, five
-   quality metrics, the LLM judge, and the Expected Response trap.
+   quality metrics, the LLM judge, the Expected Response trap, and the Summer '26 unmetered
+   change. Then the three evaluation items in §6.
 5. **Day 6 · Retriever shapes the deck lacks.** Ensemble, dynamic, the Playground, citations,
-   image processing. Then work the deck's 19 Data 360 items.
+   image processing. Then work the deck's 39 Data 360 items.
 6. **Day 7 · Consolidate week 1.** Re-read your Agent Script notes and §8's decision rule.
 
-**Week 2 — the deck.**
+**Week 2 — the rest of the deck.**
 
-7. **Day 8–9 · AI Agents.** The deck's 42 items. Pay most attention to the five security-context
-   items and the agent-type constraints; skim the eight Einstein-for-Service ones, which buy
-   nothing.
-8. **Day 10 · Prompt Engineering, once.** 46 items in one sitting. It is 20% of the exam and 38%
-   of the deck — if you score above 85%, do not return to it.
-9. **Day 11 · Testing and deployment.** The deck's 11 items, then re-read Day 5.
-10. **Day 12 · §11 in full.** The three renames, the five missing concepts, the eight stale
-    items, and `a5e3e038`.
+7. **Day 8–9 · AI Agents.** The deck's 75 items. Pay most attention to the eleven security-context
+   items and the agent-type constraints; skim the fourteen packaged-Einstein-feature ones, which
+   buy nothing.
+8. **Day 10 · Prompt Engineering, once.** 80 items in one sitting, or two halves. It is 20% of
+   the exam and 35% of the deck — if you score above 85%, do not return to it.
+9. **Day 11 · Testing and deployment.** The deck's 19 items, then re-read Day 5.
+10. **Day 12 · §11 in full.** The renames, the concepts still missing, the fourteen stale
+    items, `a5e3e038` and `456918e7`.
 11. **Day 13 · full deck in Blitz mode**, options read aloud off. Note every miss.
 12. **Day 14 · only the misses**, plus §8's five-term map and §7's cadence table.
 
@@ -759,28 +920,30 @@ Every URL below was rendered in a browser on 2026-09-26 and its title confirmed.
   — the six-domain outline, the weights, the Spring '26 alignment, the 72% pass mark, and the
   "not expected to know" list.
 
-**Agent Script, NGA and hybrid reasoning** (zero deck questions)
+**Agent Script, NGA and hybrid reasoning** (ten deck questions since the import; none on NGA)
 
 - [Get Started with Agent Script](https://developer.salesforce.com/docs/ai/agentforce/guide/agent-script.html)
   — the language, the three authoring routes, the blocks, the `->` and `|` syntax, and the note
   that agent topics are now called subagents.
 
-**Multi-agent orchestration** (one deck question)
+**Multi-agent orchestration** (six deck questions)
 
 - [Learn about Agentforce SOMA Orchestration and MCP](https://help.salesforce.com/s/articleView?id=005317683&type=1&language=en_US)
   — the SOMA/MOMA/MCP/A2A/Agent Gateway map, the ~8–10 topic threshold, Agent Cards, inbound
   versus outbound, rug-pull detection.
 
-**Governance and observability** (two deck questions)
+**Governance and observability** (eight deck questions)
 
 - [Learn About Agentforce Observability](https://help.salesforce.com/s/articleView?id=005226932&type=1&language=en_US)
   — the two use cases, the effectiveness metrics, the four refresh cadences, the agent-type
   support matrix.
 
-**Testing Center evaluations** (the under-covered bullet)
+**Testing Center evaluations** (three deck questions since the import)
 
 - [Choose Evaluations](https://help.salesforce.com/s/articleView?id=ai.agent_testing_center_evaluations.htm&type=5&language=en_US)
   — the three defaults, the five quality metrics, the LLM judge, and the Expected Response trap.
+- [Considerations for Testing Center](https://help.salesforce.com/s/articleView?id=ai.agent_testing_center_considerations.htm&language=en_US&type=5)
+  — "As of Summer '26, testing in Agentforce Testing Center is unmetered".
 
 **Retrievers and search indexes**
 
@@ -788,7 +951,7 @@ Every URL below was rendered in a browser on 2026-09-26 and its title confirmed.
   — individual, ensemble and dynamic retrievers, the Playground, citations, and the retirement
   of the automatic default retriever.
 
-Per-question citations live in the deck itself: every one of the 121 explanations ends in a
+Per-question citations live in the deck itself: every one of the 227 explanations ends in a
 `References:` block with at least one rendered URL.
 
 ---
@@ -798,8 +961,9 @@ Per-question citations live in the deck itself: every one of the 121 explanation
 Upload this file. Prompts that have produced useful output from the other guides in this repo:
 
 - "Quiz me only on Agent Script, multi-agent orchestration, and observability. All three are
-  named exam objectives with almost no practice questions, so generate the questions from
-  sections 5, 8 and 7."
+  named exam objectives with only a handful of practice questions, so generate more from
+  sections 5, 8 and 7 — and include NGA, template expressions and the Canvas and Script views,
+  which the deck does not test at all."
 - "Teach me Agent Script from section 5 as if I know Flow but not any scripting language. Then
   give me five snippets and ask me what each one does."
 - "Give me the five-term map in section 8 as flashcards, and then three scenarios where I have
