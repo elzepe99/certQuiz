@@ -96,6 +96,7 @@
       "shortName": "Slack Consultant",
       "description": "Consultant-level certification covering discovery, Enterprise Grid and channel design, administration roles, security and compliance, training and enablement, migration, and analytics for Slack deployments.",
       "file": "Salesforce_Slack_Consultant_Questions.json",
+      "guide": "guides/salesforce-slack-consultant.html",
       "accentColor": "#611F69"
     },
     {
@@ -122,6 +123,7 @@
       "shortName": "Claude Architect",
       "description": "Anthropic foundations certification covering prompt engineering, context management, tool and MCP server design, Claude Agent SDK multi-agent orchestration, and Claude Code workflows.",
       "file": "claude_architect_foundations.json",
+      "guide": "guides/claude-architect-foundations.html",
       "accentColor": "#D97757"
     }
   ]

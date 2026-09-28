@@ -1,0 +1,1334 @@
+<title>Slack Consultant Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+:root {
+  --paper:      #F1F4F6;
+  --surface:    #FFFFFF;
+  --surface-2:  #E8ECEF;
+  --ink:        #121A21;
+  --ink-2:      #37444F;
+  --muted:      #5E6C78;
+  --rule:       #D3DBE1;
+  --rule-soft:  #E3E9ED;
+
+  --primary:    #12494F;
+  --primary-2:  #1C6C71;
+  --primary-wash:#E2EEEE;
+
+  --amber:      #8F550A;
+  --amber-wash: #FAEEDC;
+  --amber-rule: #DFB877;
+
+  --crimson:    #962E2E;
+  --crimson-wash:#F9E7E5;
+  --crimson-rule:#DDA39C;
+
+  --good:       #2C6440;
+
+  --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --font-prose:   "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-ui:      "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono:    "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --shadow: 0 1px 2px rgba(18,26,33,.05), 0 8px 24px -12px rgba(18,26,33,.14);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:      #0C1216;
+    --surface:    #131B20;
+    --surface-2:  #1B252B;
+    --ink:        #DCE4E8;
+    --ink-2:      #B4C1C9;
+    --muted:      #8496A1;
+    --rule:       #263238;
+    --rule-soft:  #1C262C;
+
+    --primary:    #66C4BC;
+    --primary-2:  #8AD6CE;
+    --primary-wash:#15292C;
+
+    --amber:      #DFA45C;
+    --amber-wash: #221A0F;
+    --amber-rule: #5A431F;
+
+    --crimson:    #E28C80;
+    --crimson-wash:#231314;
+    --crimson-rule:#5C2E2C;
+
+    --good:       #6FBE8B;
+
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper:      #0C1216;
+  --surface:    #131B20;
+  --surface-2:  #1B252B;
+  --ink:        #DCE4E8;
+  --ink-2:      #B4C1C9;
+  --muted:      #8496A1;
+  --rule:       #263238;
+  --rule-soft:  #1C262C;
+
+  --primary:    #66C4BC;
+  --primary-2:  #8AD6CE;
+  --primary-wash:#15292C;
+
+  --amber:      #DFA45C;
+  --amber-wash: #221A0F;
+  --amber-rule: #5A431F;
+
+  --crimson:    #E28C80;
+  --crimson-wash:#231314;
+  --crimson-rule:#5C2E2C;
+
+  --good:       #6FBE8B;
+
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-prose);
+  font-size: 17px;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- shell ---------- */
+
+.shell {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  column-gap: 56px;
+  row-gap: 0;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 32px 120px;
+  align-items: start;
+}
+
+/* ---------- masthead ---------- */
+
+.masthead {
+  grid-column: 1 / -1;
+  padding: 64px 0 40px;
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: 48px;
+}
+
+.eyebrow {
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin: 0 0 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.eyebrow .sep { color: var(--rule); }
+
+h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.4rem, 6vw, 3.9rem);
+  line-height: 1.02;
+  letter-spacing: -.025em;
+  margin: 0 0 20px;
+  text-wrap: balance;
+  color: var(--ink);
+}
+
+.standfirst {
+  font-size: 1.18rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 62ch;
+  margin: 0 0 32px;
+}
+
+.standfirst strong { color: var(--ink); font-weight: 600; }
+
+/* exam vitals strip */
+.vitals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.vital {
+  background: var(--surface);
+  padding: 14px 16px 15px;
+}
+
+.vital dt {
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 6px;
+}
+
+.vital dd {
+  font-family: var(--font-mono);
+  font-size: 1.16rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.vital dd .sub {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-top: 4px;
+  letter-spacing: 0;
+}
+
+.vital.flag { background: var(--amber-wash); }
+.vital.flag dd { color: var(--amber); }
+
+/* ---------- toc rail ---------- */
+
+.rail {
+  position: sticky;
+  top: 28px;
+  font-family: var(--font-ui);
+  max-height: calc(100vh - 56px);
+  overflow-y: auto;
+}
+
+.rail h2 {
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.rail ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  counter-reset: toc;
+}
+
+.rail a {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 8px;
+  align-items: baseline;
+  padding: 5px 8px 5px 4px;
+  font-size: 13.5px;
+  line-height: 1.35;
+  color: var(--ink-2);
+  text-decoration: none;
+  border-radius: 3px;
+  border-left: 2px solid transparent;
+  transition: background .12s ease, color .12s ease, border-color .12s ease;
+}
+
+.rail a::before {
+  counter-increment: toc;
+  content: counter(toc);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.rail a:hover {
+  background: var(--surface);
+  color: var(--ink);
+  border-left-color: var(--primary);
+}
+
+.rail a:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+.rail a.key { color: var(--crimson); font-weight: 500; }
+.rail a.key::before { color: var(--crimson); }
+
+.rail .note {
+  margin: 16px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+/* ---------- content ---------- */
+
+.content { min-width: 0; }
+
+section { margin: 0 0 64px; scroll-margin-top: 24px; }
+
+h2.sect {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3vw, 1.95rem);
+  line-height: 1.14;
+  letter-spacing: -.018em;
+  margin: 0 0 8px;
+  text-wrap: balance;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: baseline;
+}
+
+h2.sect .num {
+  font-family: var(--font-mono);
+  font-size: .58em;
+  font-weight: 500;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+.sect-rule {
+  height: 2px;
+  background: var(--ink);
+  margin: 0 0 24px;
+}
+
+h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.13rem;
+  letter-spacing: -.008em;
+  margin: 36px 0 12px;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+h4 {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 26px 0 10px;
+}
+
+p { margin: 0 0 16px; max-width: 68ch; }
+
+a { color: var(--primary); text-underline-offset: 2px; text-decoration-thickness: 1px; }
+a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 2px; }
+
+strong { font-weight: 600; color: var(--ink); }
+em { font-style: italic; }
+
+code {
+  font-family: var(--font-mono);
+  font-size: .855em;
+  background: var(--surface-2);
+  padding: .1em .34em;
+  border-radius: 3px;
+  color: var(--ink);
+}
+
+ul, ol.prose { margin: 0 0 18px; padding-left: 20px; max-width: 68ch; }
+ul li, ol.prose li { margin-bottom: 8px; }
+ul li::marker { color: var(--primary); }
+ol.prose li::marker { color: var(--muted); font-family: var(--font-mono); font-size: .85em; }
+
+/* ---------- tables ---------- */
+
+.tw {
+  overflow-x: auto;
+  margin: 0 0 22px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-ui);
+  font-size: 14.2px;
+  line-height: 1.48;
+}
+
+thead th {
+  text-align: left;
+  font-weight: 600;
+  font-size: 10.5px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--surface-2);
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+
+tbody td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--rule-soft);
+  vertical-align: top;
+  color: var(--ink-2);
+}
+
+tbody tr:last-child td { border-bottom: none; }
+
+tbody td:first-child { color: var(--ink); font-weight: 500; }
+
+tbody td strong { color: var(--ink); font-weight: 600; }
+
+td code, th code { background: transparent; padding: 0; font-size: .9em; }
+
+.num-col, .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+
+/* two-col comparison tables read better with an emphasized first col */
+table.kv tbody td:first-child { width: 34%; }
+
+/* ---------- weight bars (domain table) ---------- */
+
+.bar {
+  display: block;
+  height: 7px;
+  border-radius: 1px;
+  background: var(--primary);
+  min-width: 2px;
+}
+.bar.deck { background: var(--muted); opacity: .55; }
+.bar-cell { width: 120px; }
+.bar-cell .lab {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--muted);
+  margin-bottom: 3px;
+  font-variant-numeric: tabular-nums;
+}
+.bar + .lab { margin-top: 6px; }
+
+.verdict {
+  display: inline-block;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  padding: 2.5px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.verdict.gap  { background: var(--crimson-wash); color: var(--crimson); border: 1px solid var(--crimson-rule); }
+.verdict.over { background: var(--surface-2); color: var(--muted); border: 1px solid var(--rule); }
+.verdict.ok   { background: var(--primary-wash); color: var(--primary); border: 1px solid var(--primary); }
+
+/* ---------- callouts ---------- */
+
+.call {
+  border-left: 3px solid var(--primary);
+  background: var(--surface);
+  padding: 16px 20px;
+  margin: 0 0 22px;
+  border-radius: 0 4px 4px 0;
+  max-width: 70ch;
+}
+.call p { margin: 0 0 10px; }
+.call p:last-child { margin-bottom: 0; }
+.call .tag {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: var(--primary);
+}
+
+.call.trap { border-left-color: var(--amber-rule); background: var(--amber-wash); }
+.call.trap .tag { color: var(--amber); }
+.call.trap strong { color: var(--ink); }
+
+.call.alert { border-left-color: var(--crimson-rule); background: var(--crimson-wash); }
+.call.alert .tag { color: var(--crimson); }
+
+/* ---------- misc ---------- */
+
+.lede {
+  font-size: 1.06rem;
+  color: var(--ink-2);
+  max-width: 66ch;
+  margin: 0 0 24px;
+}
+
+.yes { color: var(--good); font-weight: 600; }
+.no  { color: var(--crimson); font-weight: 600; }
+.warn{ color: var(--amber); font-weight: 600; }
+
+.linklist { list-style: none; padding: 0; margin: 0 0 20px; max-width: 72ch; }
+.linklist li { margin-bottom: 9px; padding-left: 14px; position: relative; font-size: 15px; }
+.linklist li::before {
+  content: "";
+  position: absolute; left: 0; top: .62em;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--rule);
+}
+.linklist .why { color: var(--muted); font-size: 14px; }
+
+.prompts { display: flex; flex-direction: column; gap: 12px; margin: 0 0 22px; max-width: 72ch; }
+.prompt {
+  font-family: var(--font-ui);
+  font-size: 14.3px;
+  line-height: 1.5;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 13px 16px;
+  color: var(--ink-2);
+}
+.prompt::before {
+  content: "Prompt";
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+
+.colophon {
+  grid-column: 1 / -1;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 74ch;
+}
+
+.colophon code { font-size: 11.5px; }
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 900px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding: 0 20px 80px;
+  }
+  .rail {
+    position: static;
+    max-height: none;
+    margin-bottom: 44px;
+    padding: 16px 18px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+  }
+  .rail ol { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 0; }
+  .masthead { padding-top: 44px; margin-bottom: 32px; }
+  body { font-size: 16.5px; }
+  section { margin-bottom: 52px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+
+html { scroll-behavior: smooth; }
+</style>
+<div class="shell">
+
+  <header class="masthead">
+    <p class="eyebrow">
+      <span>Salesforce Certified Slack Consultant</span>
+      <span class="sep">/</span>
+      <span>Summer '24 item bank</span>
+    </p>
+    <h1>Slack Consultant Field Guide</h1>
+    <p class="standfirst">
+      Built from the 37 questions in the practice deck, measured against the official exam outline
+      and the Slack documentation those questions cite, on 2026-09-28. <strong>Read &sect;3 before
+      anything else.</strong> Every question in this deck carries a citation, but <strong>only 15 of
+      the 37 turn on a fact any Slack page states.</strong> Twelve are consulting and training
+      judgment against strawman distractors, answerable by elimination and settled by no
+      documentation. The deck is also <strong>smaller than the exam</strong>, and three whole
+      outline bullets &mdash; workflows, SSO and the admin support model &mdash; have no question at
+      all.
+    </p>
+    <dl class="vitals">
+      <div class="vital"><dt>Questions</dt><dd>60<span class="sub">+5 unscored</span></dd></div>
+      <div class="vital"><dt>Time</dt><dd>90<span class="sub">minutes</span></dd></div>
+      <div class="vital"><dt>Pass mark</dt><dd>67%<span class="sub">41 of 60</span></dd></div>
+      <div class="vital"><dt>Fee</dt><dd>$200<span class="sub">retake $100</span></dd></div>
+      <div class="vital flag"><dt>Decidable</dt><dd>15 / 37<span class="sub">by any Slack page</span></dd></div>
+    </dl>
+  </header>
+
+  <nav class="rail" aria-label="Contents">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#exam">The exam, factually</a></li>
+      <li><a href="#weights" class="key">Where the points are</a></li>
+      <li><a href="#honesty" class="key">What any page can check</a></li>
+      <li><a href="#migration" class="key">Delivery and Migration</a></li>
+      <li><a href="#discovery">Discovery</a></li>
+      <li><a href="#grid" class="key">Grid Design</a></li>
+      <li><a href="#policies" class="key">Policies and Settings</a></li>
+      <li><a href="#channels" class="key">Channel Strategy</a></li>
+      <li><a href="#governance" class="key">Governance Structure</a></li>
+      <li><a href="#learning">Learning and Enablement</a></li>
+      <li><a href="#numbers">Numbers to memorise</a></li>
+      <li><a href="#tells">Distractor tells</a></li>
+      <li><a href="#stale">Deck older than the exam</a></li>
+      <li><a href="#plan">Two-week plan</a></li>
+      <li><a href="#sources">Sources</a></li>
+      <li><a href="#notebooklm">Using NotebookLM</a></li>
+    </ol>
+    <p class="note">Sections in red carry the objectives the practice deck does not train you for.</p>
+  </nav>
+
+  <main class="content">
+
+    <!-- 1 -->
+    <section id="exam">
+      <h2 class="sect"><span class="num">01</span><span>The exam, factually</span></h2>
+      <div class="sect-rule"></div>
+
+      <div class="call alert">
+        <span class="tag">A consulting exam, and a deck that can only half-teach it</span>
+        <p>This certification tests how you run a Slack engagement &mdash; discovery, design,
+        migration, governance, training &mdash; more than which toggle does what. That makes a practice
+        deck unusually weak evidence of readiness: most of what it asks is advice, and the deck's
+        wrong options are often absurd enough to eliminate without knowing anything. &sect;3 says how
+        much of your score the deck can genuinely predict.</p>
+      </div>
+
+      <div class="tw">
+        <table class="kv">
+          <tbody>
+            <tr><td>Official name</td><td>Salesforce Certified Slack Consultant</td></tr>
+            <tr><td>Content</td><td><strong>60 scored</strong> multiple-choice / multiple-select, plus up to 5 unscored</td></tr>
+            <tr><td>Time</td><td><strong>90 minutes</strong></td></tr>
+            <tr><td>Passing score</td><td><strong>67%</strong> &mdash; 41 of 60</td></tr>
+            <tr><td>Prerequisite</td><td>None; at least a year managing implementation projects is recommended</td></tr>
+            <tr><td>Fee</td><td>US$200, retake US$100</td></tr>
+            <tr><td>Aligned to</td><td><strong>Summer '24</strong></td></tr>
+            <tr><td>Maintenance</td><td>One Trailhead maintenance module a year</td></tr>
+            <tr><td>Exam guide</td><td>Help article <code>005298991</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4>How the outline was found &mdash; the part that generalises</h4>
+      <p>The obvious place to look is Slack's own site; the outline is not there. <strong>Slack's
+      consultant credential is a Salesforce certification now</strong>, and its exam guide is a
+      Salesforce Help article in the same <code>0052989xx</code> block as the others, beside Slack
+      Developer (<code>005298987</code>) and Slack Administrator (<code>005298990</code>). One web
+      search restricted to <code>help.salesforce.com</code> found it, and its top hit was a
+      <strong>named Trailhead redirect</strong> &mdash; a URL of the form
+      <code>trailhead.salesforce.com/help?article=</code> followed by the guide's title with hyphens
+      &mdash; that lands on the numeric id. That form is worth trying first for any Salesforce exam.
+      The guide renders fully with <code>get_page_text</code>; there is no PDF.</p>
+
+      <div class="call">
+        <span class="tag">The audience list tells you what kind of exam this is</span>
+        <p>Implementation consultant, engagement manager, enablement consultant, change management
+        consultant, learning consultant. The guide asks for project management, change management,
+        discovery, launch support and post-launch enablement. It recommends a single Trailmix for
+        study and says to search Help for the outline's topics. <strong>There is no list of documents
+        that would settle this exam</strong>, which is the honest shape of &sect;3.</p>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section id="weights">
+      <h2 class="sect"><span class="num">02</span><span>Where the points actually are</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">The deck's eleven <code>_cat</code> tags split what the outline treats as one
+      domain: analytics, identity, compliance, app approval and channel-creation permissions are
+      <strong>all</strong> Policies and Settings. The deck column is an independent re-classification
+      (<code>study-guides/reclassify-slack.mjs</code>). "Judgment" counts items no Slack page can
+      decide.</p>
+
+      <div class="tw">
+        <table>
+          <thead>
+            <tr><th>Domain</th><th class="num-col">Exam</th><th class="num-col">&asymp; Qs</th><th class="bar-cell">Exam vs deck</th><th class="num-col">Deck</th><th class="num-col">Judgment</th><th>Verdict</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Delivery and Migration</td><td class="num">17%</td><td class="num">~10</td><td class="bar-cell"><span class="bar" style="width:48%"></span><span class="bar deck" style="width:23%"></span></td><td class="num">3 &middot; 8.1%</td><td class="num">1</td><td><span class="verdict gap">under</span></td></tr>
+            <tr><td>Discovery</td><td class="num">10%</td><td class="num">~6</td><td class="bar-cell"><span class="bar" style="width:28%"></span><span class="bar deck" style="width:31%"></span></td><td class="num">4 &middot; 10.8%</td><td class="num">3</td><td><span class="verdict ok">about right</span></td></tr>
+            <tr><td>Grid Design</td><td class="num">15%</td><td class="num">~9</td><td class="bar-cell"><span class="bar" style="width:43%"></span><span class="bar deck" style="width:15%"></span></td><td class="num">2 &middot; 5.4%</td><td class="num">0</td><td><span class="verdict gap">badly under</span></td></tr>
+            <tr><td>Policies and Settings</td><td class="num">22%</td><td class="num">~13</td><td class="bar-cell"><span class="bar" style="width:63%"></span><span class="bar deck" style="width:100%"></span></td><td class="num">13 &middot; 35.1%</td><td class="num">0</td><td><span class="verdict over">over by share</span></td></tr>
+            <tr><td>Channel Strategy</td><td class="num">10%</td><td class="num">~6</td><td class="bar-cell"><span class="bar" style="width:28%"></span><span class="bar deck" style="width:23%"></span></td><td class="num">3 &middot; 8.1%</td><td class="num">0</td><td><span class="verdict gap">no workflows</span></td></tr>
+            <tr><td>Governance Structure</td><td class="num">8%</td><td class="num">~5</td><td class="bar-cell"><span class="bar" style="width:23%"></span><span class="bar deck" style="width:15%"></span></td><td class="num">2 &middot; 5.4%</td><td class="num">0</td><td><span class="verdict gap">one twin pair</span></td></tr>
+            <tr><td>Learning and Enablement</td><td class="num">18%</td><td class="num">~11</td><td class="bar-cell"><span class="bar" style="width:51%"></span><span class="bar deck" style="width:77%"></span></td><td class="num">10 &middot; 27.0%</td><td class="num">8</td><td><span class="verdict gap">mostly judgment</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-family:var(--font-ui);font-size:12.5px;color:var(--muted);margin-top:-8px;">
+        Teal bar = share of the exam. Grey bar = share of the deck. Both scaled to the deck's 35.1%.
+      </p>
+
+      <div class="call alert">
+        <span class="tag">The deck is smaller than the exam</span>
+        <p><strong>37 questions against 60</strong>, and five reworded pairs mean it is really about
+        32 distinct questions. Every other deck in this repo but one over-drills its exam; this one
+        cannot. Where it has fewer items than the exam has questions &mdash; Delivery and Migration
+        (3 for ~10), Grid Design (2 for ~9), Governance (2 for ~5) &mdash; the deck is not practice, it
+        is a sample.</p>
+      </div>
+
+      <div class="call trap">
+        <span class="tag">Where the deck's weight actually sits</span>
+        <p><strong>Policies and Settings</strong> is the deck's best domain: thirteen items, none of
+        them judgment, and three of them the source of the deck's hardest-won corrections (&sect;7).
+        <strong>Learning and Enablement</strong> looks well covered at ten items, but <strong>eight of
+        the ten are training advice against strawmen</strong> &mdash; the two that are decidable are both
+        user troubleshooting.</p>
+      </div>
+
+      <h4>Outline bullets with no keyed deck item &mdash; 15</h4>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Domain</th><th>Uncovered</th><th>Where</th></tr></thead>
+          <tbody>
+            <tr><td>Delivery and Migration</td><td>Pre-migration activities (scheduling, user cleanup, comms) &middot; executing a migration &middot; the import and export tools</td><td>&sect;4</td></tr>
+            <tr><td>Discovery</td><td>Researching the client first &middot; security and policy questions &middot; success metrics</td><td>&sect;5</td></tr>
+            <tr><td>Grid Design</td><td>From discovery outputs to feasible options &middot; sign-off</td><td>&sect;6</td></tr>
+            <tr><td>Policies and Settings</td><td><strong>SSO / SAML</strong> &middot; org-level security (session duration, 2FA) &middot; Slack Connect beyond DLP &middot; getting stakeholders to agree settings</td><td>&sect;7</td></tr>
+            <tr><td>Channel Strategy</td><td><strong>Workflows</strong> &mdash; the outline names the onboarding and standup workflows</td><td>&sect;8</td></tr>
+            <tr><td>Governance Structure</td><td><strong>The admin support model</strong> &middot; admin processes that can move into Slack</td><td>&sect;9</td></tr>
+            <tr><td>Learning and Enablement</td><td>Creating learning materials &middot; the rollout communication plan</td><td>&sect;10</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Confirmed by a keyword sweep over stems and options: "SSO", "SAML", "Workflow Builder",
+      "standup", "onboarding", "rollout", "schedul", "materials" and "sign-off" all return zero. Two-factor
+      authentication appears three times, always as a wrong option.</p>
+    </section>
+
+    <!-- 3 -->
+    <section id="honesty">
+      <h2 class="sect"><span class="num">03</span><span>How much of this deck any page can check</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">Every one of the 37 questions has a rendered Slack URL in its references, so the
+      deck reads 37/37 cited, the same number as a fully checked Salesforce deck. <strong>Here it means
+      less.</strong> The 2026-08-18 fact-check sorted the deck into three kinds of question, and only the
+      first kind is what "cited" means elsewhere.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Kind</th><th class="num-col">Items</th><th>What the citation does</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Decisive</strong></td><td class="num">15</td><td>A Slack page states the fact the key turns on &mdash; roles, channel-management permissions, app approval, DLP, SCIM, troubleshooting steps. Or, for three items, states that the fact the deck assumed <strong>is not true</strong></td></tr>
+            <tr><td><strong>Supported</strong></td><td class="num">10</td><td>A page points the same way as the key &mdash; naming conventions, project channels, analytics columns, org-level policy &mdash; but choosing between the options is still best practice</td></tr>
+            <tr><td><strong>Judgment</strong></td><td class="num">12</td><td><strong>Orienting only.</strong> Consulting and training advice; the reference is Slack's "launching Slack" admin resource or a migration blog post, and no page could settle it</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4>The twelve judgment items</h4>
+      <p>Discovery: <code>70cfc31f</code>, <code>4c998d54</code>, <code>a401a105</code>. Migration:
+      <code>663ae7a0</code>. Learning and Enablement: <code>7cdb2278</code>, <code>20885bb7</code>,
+      <code>9f6ca95b</code>, <code>0609296f</code>, <code>24d2ac86</code>, <code>eaa94ffb</code>,
+      <code>bd98bac0</code>, <code>0c94d85c</code>. Each says in its own explanation that its reference is
+      orienting rather than decisive.</p>
+
+      <div class="call alert">
+        <span class="tag">Why this matters for your score, not just the deck's</span>
+        <p>The judgment items are answerable because their wrong options are strawmen &mdash; "read the
+        user manual during the session", "replace their computer's sound card". <strong>Getting them
+        right proves you can spot a bad option, not that you know the good one.</strong> The real exam's
+        judgment items will have four plausible options. A high score on this deck's Discovery and
+        Learning items should move your confidence very little.</p>
+      </div>
+
+      <h4>How to answer a judgment item when the options are all plausible</h4>
+      <p>This is the skill the deck cannot drill. The pattern its twelve keys share, which is also the
+      pattern Slack's own launch guidance follows:</p>
+      <ol class="prose">
+        <li><strong>Client-specific over generic.</strong> The option that starts from the client's goals,
+        structure or pain points beats the one that applies a template.</li>
+        <li><strong>Measurable over aspirational.</strong> A vision statement with success metrics beats
+        one without.</li>
+        <li><strong>Hands-on over told.</strong> Experiential learning is the outline's own phrase: users
+        doing real work in Slack during the session beats a demo or a manual.</li>
+        <li><strong>Phased and ongoing over one-off.</strong> Basic then advanced, with refreshers and
+        post-launch support, beats a single big training day.</li>
+        <li><strong>Balanced over extreme.</strong> "Core global settings, regional adjustments on request"
+        (<code>c2a30421</code>) beats both "identical everywhere" and "each region on its own".</li>
+      </ol>
+
+      <div class="call">
+        <span class="tag">The five reworded pairs are redundancy, not error</span>
+        <p><code>1d57f94c</code>/<code>ff8a88a6</code> (Org Owner), <code>60708c05</code>/<code>cb206cbe</code>
+        (Workspace Admin), <code>ad687de6</code>/<code>016036e7</code> (naming conventions),
+        <code>7cdb2278</code>/<code>0609296f</code> (hands-on workshop) and
+        <code>535baa2b</code>/<code>6b1ec162</code> (channel analytics) ask the same thing with the same
+        keyed answer. Both copies are correct. The duplicate detector cannot see them because the stems
+        were reworded, not copied.</p>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section id="migration">
+      <h2 class="sect"><span class="num">04</span><span>Delivery and Migration</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede"><strong>17% of the exam &mdash; about ten questions &mdash; and three deck
+      items.</strong> The deck has a first step (a needs analysis, <code>96be8a94</code>), a rule for
+      who the client calls (<code>663ae7a0</code>) and an after-care step (<code>6b9124ed</code>). The
+      migration itself is missing.</p>
+
+      <h4>Roles on an engagement</h4>
+      <p>The outline's second bullet is the division of labour between <strong>Slack, the Partner and
+      the client</strong>. The deck's one item keys the answer the outline implies: in a partner-led
+      migration, <strong>the Partner's team is the client's first contact</strong> and escalates to Slack
+      as needed (<code>663ae7a0</code>). The client owns decisions and internal comms; the Partner runs
+      the project; Slack supplies the platform and its own support.</p>
+
+      <h4>What the deck skips: the migration itself</h4>
+      <p>No Slack page lays out a consultant's migration method, so this is <strong>practice, not
+      documentation</strong> &mdash; but it is exactly what the outline's bullets name:</p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Phase</th><th>The outline's words</th><th>What it means in practice</th></tr></thead>
+          <tbody>
+            <tr><td>Pre-migration</td><td>"scheduling, user cleanup, comms"</td><td>Agree the cutover window and any content freeze; clean the user list (leavers deactivated, duplicates merged, emails matching the identity provider); tell users what changes and when</td></tr>
+            <tr><td>Execution</td><td>"migration status, migration issues, coordination with the client and Slack"</td><td>Track progress against the plan, triage and log issues, keep one channel of communication with the client and one with Slack</td></tr>
+            <tr><td>After</td><td>(the deck's <code>6b9124ed</code>)</td><td>Support, extra training, check-ins &mdash; not "hand over and leave"</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The documented part is Slack's <strong>import and export tools</strong>: a standard export
+      covers public channels; a self-serve export of private channels and DMs needs Business+ or
+      Enterprise; and on Enterprise the <strong>Discovery API</strong> is the route eDiscovery partners
+      use.</p>
+    </section>
+
+    <!-- 5 -->
+    <section id="discovery">
+      <h2 class="sect"><span class="num">05</span><span>Discovery</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede"><strong>10% of the exam &mdash; about six questions &mdash; and four deck items,
+      three of them judgment.</strong> The deck's count is right; what it cannot give you is practice
+      against plausible options.</p>
+
+      <ul>
+        <li><strong>Articulate the value of Slack.</strong> The deck's one decidable item keys
+        <strong>integrations with the tools the client already uses</strong> (<code>4953a8af</code>) &mdash;
+        Slack's own guide to apps frames it the same way.</li>
+        <li><strong>Ask about long-term goals and current pain</strong>, not features
+        (<code>70cfc31f</code>, <code>a401a105</code>).</li>
+        <li><strong>A vision statement needs specific, measurable goals tied to business
+        objectives</strong> (<code>4c998d54</code>). The outline pairs it with <strong>success
+        metrics</strong>, which no deck item names: adoption (weekly active members), engagement
+        (messages in channels rather than DMs), and a business metric the client already tracks.</li>
+      </ul>
+
+      <div class="call trap">
+        <span class="tag">Two discovery bullets the deck never asks</span>
+        <p><strong>Research the client before the first meeting</strong> &mdash; their structure, their
+        current tools and ways of working &mdash; so the questions are informed. And <strong>ask about
+        security and policy</strong>: existing controls, compliance obligations, the desired future
+        state. That second one feeds straight into &sect;7's settings, and an exam item that pairs a
+        regulated client with a discovery question will want it.</p>
+      </div>
+    </section>
+
+    <!-- 6 -->
+    <section id="grid">
+      <h2 class="sect"><span class="num">06</span><span>Grid Design</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede"><strong>15% of the exam &mdash; about nine questions &mdash; and two deck
+      items.</strong> Proportionally the deck's thinnest domain after Governance.</p>
+
+      <p>"Grid" is Enterprise Grid: <strong>one organisation holding several workspaces</strong>. Org-level
+      policies apply across every workspace, and workspace-level settings sit underneath them. A grid
+      design decides how many workspaces there are, what each one is for, and which settings are fixed
+      at the org and which are left to workspaces.</p>
+      <ul>
+        <li><strong>Mirror the organisation's structure</strong> &mdash; departments, projects, regions
+        &mdash; rather than a generic template (<code>a0bf9e87</code>).</li>
+        <li><strong>Fix the core at org level, allow requested variation below it</strong>
+        (<code>c2a30421</code>).</li>
+      </ul>
+
+      <div class="call trap">
+        <span class="tag">What the outline asks and the deck does not</span>
+        <p>The four grid bullets are a sequence: <strong>use discovery outputs</strong> to make an
+        initial recommendation, know the <strong>best practices</strong>, lay out <strong>feasible
+        options</strong> with their trade-offs, and <strong>support final sign-off</strong>. The deck
+        tests the second only. Expect items that give you discovery findings and ask which design they
+        imply, or ask what a consultant does when stakeholders cannot agree &mdash; present options with
+        trade-offs, do not decide for them.</p>
+      </div>
+    </section>
+
+    <!-- 7 -->
+    <section id="policies">
+      <h2 class="sect"><span class="num">07</span><span>Policies and Settings</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede"><strong>22% of the exam &mdash; about 13 questions &mdash; and 13 deck items, none of
+      them judgment.</strong> This is the deck's strongest domain and where its fact-check did most of
+      its work. Three items were keyed on things Slack does not do, and each is worth learning as a
+      fact in its own right.</p>
+
+      <div class="call alert">
+        <span class="tag">1 &middot; Compliance Exports do not preserve anything &mdash; <code>296ced65</code></span>
+        <p>The item asks which feature suits a firm under <strong>legal hold</strong> and keys "Compliance
+        Exports". That name is not current Slack terminology, and an export <strong>retrieves</strong>
+        data; it does not <strong>preserve</strong> it. Slack's actual mechanism is the native
+        <strong>Legal Holds</strong> feature: on Enterprise, a member with the <strong>Legal Holds
+        Admin</strong> role places a hold on specific people, and their messages and files are kept
+        <strong>regardless of retention settings and regardless of edits or deletions</strong>. Held data
+        is then read through an export or the Discovery API. <strong>Legal Holds is not among the item's
+        options</strong>, so the key stands as the best of four &mdash; but on a real engagement, and on an
+        exam item that offers it, the answer is Legal Holds.</p>
+      </div>
+
+      <div class="call alert">
+        <span class="tag">2 &middot; There is no IP allowlist for member sign-in &mdash; <code>10bdf793</code></span>
+        <p>The item keys "IP whitelisting to restrict access to the office network". Slack's Help Center
+        documents no self-serve setting that limits <strong>where members sign in from</strong>. The
+        network control it does document is <strong>proxy-based</strong>: your proxy inserts
+        <code>X-Slack-Allowed-<wbr>Workspaces-<wbr>Requester</code> and <code>X-Slack-Allowed-<wbr>Workspaces</code>
+        headers, which limit <strong>which workspaces</strong> people on your network can reach &mdash; the
+        reverse direction. IP allowlisting exists in Slack only for <strong>app OAuth and SCIM
+        tokens</strong>. And Slack writes "allowlist" now, not "whitelist". The key stands as the only
+        option with a location component.</p>
+      </div>
+
+      <div class="call alert">
+        <span class="tag">3 &middot; There is no channel-creation approval queue &mdash; <code>2169924a</code>, <code>47e8ec41</code></span>
+        <p>Slack's channel-management setting is a <strong>permission</strong>: owners choose which roles
+        may create public channels, create private channels, archive and unarchive. There is
+        <strong>no propose-and-approve queue</strong> for new channels, <strong>no "justification"
+        prompt</strong> on creation, and <strong>no automatic archiving</strong> of inactive channels
+        &mdash; archiving is manual, one at a time or in bulk. Slack <em>does</em> ship approval queues,
+        but for <strong>Slack Connect invitations, workspace invitations and app requests</strong>.
+        <code>2169924a</code> keeps its "propose, subject to approval" key as an organisational
+        <em>process</em> (run through Workflow Builder or a request channel); <code>47e8ec41</code> had its
+        key moved <strong>C &rarr; A</strong> because its keyed "justification" setting does not exist.</p>
+      </div>
+
+      <h4>Administrative roles</h4>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Role</th><th>What sets it apart</th></tr></thead>
+          <tbody>
+            <tr><td>Org Primary Owner</td><td><strong>Exactly one</strong> per Enterprise org; the only one who can transfer ownership</td></tr>
+            <tr><td>Org Owner</td><td>Everything the Primary Owner can do except transfer ownership &mdash; the top role you assign (<code>1d57f94c</code>, <code>ff8a88a6</code>)</td></tr>
+            <tr><td>Org Admin</td><td>Manages org settings and policies, below the owners</td></tr>
+            <tr><td>Workspace Owner</td><td>Top of a single workspace; appoints Workspace Admins</td></tr>
+            <tr><td>Workspace Admin</td><td>Manages members and settings, but <strong>"can't access the Billing page"</strong> (<code>60708c05</code>, <code>cb206cbe</code>)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Slack documents <strong>no "Guest Admin" and no "User Group Admin"</strong>. Guests are
+      multi-channel or single-channel account types; managing user groups is a permission.</p>
+
+      <h4>Identity and org-level security</h4>
+      <ul>
+        <li><strong>SCIM provisioning</strong> ties accounts to the directory, so a leaver is deactivated
+        automatically (<code>d1ec6012</code>).</li>
+        <li><strong>SAML SSO &mdash; not in the deck.</strong> Members sign in through your identity
+        provider. Set up by Workspace or Org Owners; <strong>Business+ and Enterprise</strong> plans (or
+        Free and Pro with a connected Salesforce org).</li>
+        <li><strong>Session duration &mdash; not in the deck.</strong> On all plans, owners and admins can
+        sign members out on close or after a set time. Members are warned <strong>two hours</strong>
+        before and again <strong>15 minutes</strong> before; a change ends existing sessions at random
+        across the chosen period rather than all at once.</li>
+      </ul>
+
+      <h4>Compliance, DLP, Slack Connect, apps</h4>
+      <ul>
+        <li><strong>DLP is Enterprise only.</strong> It scans messages, text files and canvases, and a
+        DLP Admin can aim a rule at <strong>Slack Connect</strong> conversations (<code>d1458b4b</code>).</li>
+        <li><strong>Slack Connect approval settings &mdash; not in the deck.</strong> On paid plans,
+        owners and admins set <strong>who approves</strong> Slack Connect requests, <strong>when approval
+        is required</strong>, <strong>where requests go</strong>, and <strong>when invitations are
+        accepted automatically</strong>.</li>
+        <li><strong>App approval.</strong> By default <strong>members can install apps without
+        approval</strong>. Owners turn approval on, pre-approve or restrict apps, and appoint App
+        Managers. For a regulated client, require a security review per app and route installs through
+        IT (<code>6bfcfbed</code>, <code>79e98f8f</code>). Slack reviews Marketplace apps but says it
+        "doesn't endorse or certify" them &mdash; a listing is not assurance.</li>
+        <li><strong>Analytics.</strong> The Channels tab shows creation date, membership, messages posted,
+        members who posted and viewed, reactions and huddles &mdash; on Pro and Business+, <strong>public
+        channels only</strong> (<code>535baa2b</code>, <code>6b1ec162</code>).</li>
+      </ul>
+    </section>
+
+    <!-- 8 -->
+    <section id="channels">
+      <h2 class="sect"><span class="num">08</span><span>Channel Strategy</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede"><strong>10% of the exam &mdash; about six questions &mdash; and three deck
+      items</strong>, all about naming and project channels. The domain's fourth bullet, workflows, has
+      none.</p>
+
+      <ul>
+        <li><strong>Naming conventions</strong> with consistent prefixes by department, function or
+        project make channels findable (<code>ad687de6</code>, <code>016036e7</code>).</li>
+        <li><strong>A channel per project</strong> centralises its conversation and files
+        (<code>6febbd25</code>).</li>
+      </ul>
+
+      <div class="call alert">
+        <span class="tag">Workflows &mdash; named in the outline, absent from the deck</span>
+        <p>The outline says to educate the client on Slack workflows and names two: an
+        <strong>onboarding workflow</strong> and a <strong>standup workflow</strong>. They are built in
+        <strong>Workflow Builder</strong>, which automates everyday processes in Slack and can connect to
+        other apps. By default <strong>all members can create workflows</strong> and members and guests
+        can use them; it is on <strong>paid plans</strong>; and you start from a <strong>template</strong>
+        or from scratch. An onboarding workflow greets a new member in a channel and hands them what to
+        read; a standup workflow posts the same questions on a schedule and collects the answers. Expect
+        an item asking which Slack capability answers "we want every new joiner to get the same
+        welcome" &mdash; the answer is a workflow, not a pinned message or a bot you build.</p>
+      </div>
+    </section>
+
+    <!-- 9 -->
+    <section id="governance">
+      <h2 class="sect"><span class="num">09</span><span>Governance Structure (Owner and Admin Roles)</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede"><strong>8% of the exam &mdash; about five questions &mdash; and two deck items, which
+      are one question asked twice</strong> (who gets the top role: the Org Owner). The domain's other two
+      bullets have nothing.</p>
+
+      <h4>The admin support model &mdash; not in the deck</h4>
+      <p>The outline asks you to "facilitate admin support model discussions (for example:
+      request/help/approvals process flows)". No Slack page prescribes one, so this is practice: decide
+      <strong>where members ask for help</strong> (a help channel), <strong>how they request
+      things</strong> (a request workflow rather than a DM to whoever is an admin), and <strong>who
+      approves what</strong>. The concrete approvals are the ones Slack actually queues &mdash;
+      <strong>app requests, workspace invitations and Slack Connect invitations</strong> &mdash; plus
+      whatever you have restricted by permission, such as channel creation.</p>
+
+      <h4>Admin processes that can move into Slack &mdash; not in the deck</h4>
+      <p>The third bullet asks which of a client's admin processes and workflows can be migrated into
+      Slack. The answer shape is the same as &sect;8: request-and-approve processes that currently run
+      on email or forms become <strong>Workflow Builder workflows</strong> with a form step and a
+      channel for the approver.</p>
+
+      <div class="call trap">
+        <span class="tag">Assigning a role is Governance; knowing its permissions is Policies</span>
+        <p>This guide files "who <em>should be assigned</em> the top role" under Governance and "which
+        role <em>can do X</em> without billing access" under Policies and Settings, following the
+        outline's own wording. On the exam it rarely matters which domain a role question belongs to,
+        but it does matter that you know both the table in &sect;7 and why a governance team is chosen
+        before settings are.</p>
+      </div>
+    </section>
+
+    <!-- 10 -->
+    <section id="learning">
+      <h2 class="sect"><span class="num">10</span><span>Learning and Enablement</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede"><strong>18% of the exam &mdash; about eleven questions &mdash; and ten deck items,
+      eight of them judgment.</strong> Read &sect;3's five-point pattern before these; it is the only thing
+      that transfers.</p>
+
+      <ul>
+        <li><strong>The experiential learning approach</strong>: users learn by doing real or simulated
+        work in Slack, with guidance &mdash; a hands-on workshop, a mock project, a role-play of the team's
+        own process (<code>20885bb7</code>, <code>0609296f</code>, <code>24d2ac86</code>,
+        <code>7cdb2278</code>).</li>
+        <li><strong>Curricula differ for admins and users</strong>: admins get settings, security and
+        governance on top of the basics (<code>0c94d85c</code>); users get a path from basics to
+        advanced, tailored to their role (<code>eaa94ffb</code>).</li>
+        <li><strong>Phased and ongoing</strong>: initial, then advanced, then refreshers as Slack changes
+        (<code>9f6ca95b</code>, <code>bd98bac0</code>).</li>
+      </ul>
+
+      <h4>The two decidable items: user troubleshooting</h4>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Symptom</th><th>First step</th></tr></thead>
+          <tbody>
+            <tr><td>Cannot hear others on a call</td><td>Check Slack's audio settings and that the speakers or headphones are connected and selected (<code>e50e9a46</code>)</td></tr>
+            <tr><td>Slow loading, frequent disconnects</td><td>Clear the app's cache (<code>d7360bcf</code>), per Slack's connection troubleshooting page</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="call trap">
+        <span class="tag">Two bullets the deck skips</span>
+        <p><strong>Create learning materials</strong> &mdash; quick-reference guides, short videos, a
+        channel of tips &mdash; to support the curriculum after the live sessions. And <strong>recommend a
+        rollout communication plan</strong>, then <strong>enable the client to run it</strong>: what users
+        are told before launch, on launch day and after, and who sends it. Note the verb &mdash; the
+        consultant enables the client's comms; they do not become the client's comms team.</p>
+      </div>
+    </section>
+
+    <!-- 11 -->
+    <section id="numbers">
+      <h2 class="sect"><span class="num">11</span><span>Numbers to memorise</span></h2>
+      <div class="sect-rule"></div>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Number</th><th>What it is</th></tr></thead>
+          <tbody>
+            <tr><td><strong>60 / 90 / 67%</strong></td><td>Scored questions, minutes, pass mark. 41 of 60 to pass</td></tr>
+            <tr><td><strong>17 / 10 / 15 / 22 / 10 / 8 / 18</strong></td><td>Domain weights in outline order. They sum to 100</td></tr>
+            <tr><td><strong>Summer '24</strong></td><td>Exam alignment</td></tr>
+            <tr><td><strong>1</strong></td><td>Org Primary Owner per Enterprise org</td></tr>
+            <tr><td><strong>2 hours / 15 minutes</strong></td><td>Session-expiry warnings to members</td></tr>
+            <tr><td><strong>3 approval queues</strong></td><td>Slack Connect invitations, workspace invitations, app requests. Not channel creation</td></tr>
+            <tr><td><strong>4 channel permissions</strong></td><td>Create public, create private, archive, unarchive</td></tr>
+            <tr><td><strong>Enterprise only</strong></td><td>DLP, Legal Holds, the Discovery API</td></tr>
+            <tr><td><strong>Business+ and Enterprise</strong></td><td>SAML SSO; self-serve export of private channels and DMs</td></tr>
+            <tr><td><strong>Public only</strong></td><td>Channel analytics on Pro and Business+</td></tr>
+            <tr><td><strong>15 / 10 / 12</strong></td><td>This deck's decisive, supported and judgment items</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 12 -->
+    <section id="tells">
+      <h2 class="sect"><span class="num">12</span><span>Distractor tells</span></h2>
+      <div class="sect-rule"></div>
+
+      <div class="call">
+        <span class="tag">Read the question's own verb</span>
+        <p>"Which <strong>setting</strong>" wants something that exists in Slack's admin pages &mdash;
+        test every option against that. "Which <strong>approach</strong>" or "what should the
+        consultant <strong>do</strong>" is a judgment item: apply &sect;3's pattern. "Which
+        <strong>role</strong>" wants a role that exists.</p>
+      </div>
+
+      <ul>
+        <li><strong>A setting that sounds balanced but does not exist.</strong> Justification on channel
+        creation, automatic archiving of inactive channels, an approval queue for channels, an IP
+        allowlist for sign-in. The deck's three corrections were all this shape.</li>
+        <li><strong>A role that does not exist.</strong> Guest Admin, User Group Admin.</li>
+        <li><strong>An export offered as preservation.</strong> Exports retrieve; Legal Holds
+        preserve.</li>
+        <li><strong>Two-factor authentication as the answer to a location or compliance
+        problem.</strong> It proves who, not where, and preserves nothing.</li>
+        <li><strong>The extreme option</strong> in a judgment item &mdash; admins only, or no rules at
+        all; identical everywhere, or everyone for themselves.</li>
+        <li><strong>A plan-tier trap.</strong> DLP and Legal Holds on a Pro workspace are not available.</li>
+      </ul>
+    </section>
+
+    <!-- 13 -->
+    <section id="stale">
+      <h2 class="sect"><span class="num">13</span><span>Where the deck is older than the exam</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">Both are old: the exam is aligned to <strong>Summer '24</strong>, and the deck's
+      vocabulary is older still. <strong>No deck key is contradicted</strong> by anything found for this
+      guide; what has moved is the product's vocabulary.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>The deck says</th><th>Slack now says</th><th>Note</th></tr></thead>
+          <tbody>
+            <tr><td>Enterprise Grid</td><td>Enterprise plan; <strong>Enterprise org</strong></td><td>The outline still calls the domain "Grid Design"</td></tr>
+            <tr><td>Compliance Exports</td><td>Export tools, the <strong>Discovery API</strong>, and <strong>Legal Holds</strong></td><td>&sect;7, item 1</td></tr>
+            <tr><td>IP whitelisting</td><td><strong>Allowlist</strong> &mdash; and not for sign-in</td><td>&sect;7, item 2</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="call alert">
+        <span class="tag">Exam-right, production-wrong</span>
+        <p><strong><code>296ced65</code></strong> keys Compliance Exports for legal hold;
+        <strong><code>10bdf793</code></strong> keys IP whitelisting for office-only access;
+        <strong><code>2169924a</code></strong> keys a propose-and-approve channel policy. Each key is the
+        best of its four options and each explanation already says what Slack actually offers. Answer
+        the deck's key when those are the options; <strong>recommend Legal Holds, proxy headers and a
+        creation permission plus a request workflow</strong> on a real engagement.</p>
+      </div>
+
+      <div class="call">
+        <span class="tag">How to verify any of this yourself</span>
+        <p><code>slack.com/help</code> fails honestly: an invented article id returns a real HTTP 404, so
+        a status check works. But <strong>the URL slug is cosmetic</strong> &mdash; the article resolves
+        by its number alone, and a bare <code>slack.com/help/articles/&lt;id&gt;</code> redirects to the
+        current slug. So a stale slug is not a dead link, and a plausible one is no evidence. Check the
+        rendered title.</p>
+      </div>
+    </section>
+
+    <!-- 14 -->
+    <section id="plan">
+      <h2 class="sect"><span class="num">14</span><span>Two-week revision plan</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">The deck takes under an hour, so it cannot anchor two weeks. Week 1 learns the
+      facts and the missing bullets; week 2 practises judgment, which the deck can only partly
+      help with.</p>
+
+      <h4>Week 1 &mdash; the facts, and what the deck skips</h4>
+      <ol class="prose">
+        <li><strong>Day 1 &middot; Diagnostic.</strong> Read the exam guide's outline. Do all 37 deck
+        questions; note the misses by the three kinds in &sect;3.</li>
+        <li><strong>Day 2&ndash;3 &middot; Policies and Settings.</strong> &sect;7 in full: the three
+        corrections, the roles table, SSO, session duration, Slack Connect approvals, app approval, DLP.
+        Then the deck's 13 items. This is the domain where knowledge alone scores.</li>
+        <li><strong>Day 4 &middot; Channels and workflows.</strong> &sect;8. Build an onboarding workflow
+        and a standup workflow in a free trial workspace if you can.</li>
+        <li><strong>Day 5 &middot; Grid and governance.</strong> &sect;6 and &sect;9. Sketch a grid for a
+        three-region company and its admin support model.</li>
+        <li><strong>Day 6 &middot; Migration.</strong> &sect;4. Write a one-page pre-migration checklist
+        from memory.</li>
+        <li><strong>Day 7 &middot; Consolidate.</strong> &sect;11 and &sect;12.</li>
+      </ol>
+
+      <h4>Week 2 &mdash; judgment</h4>
+      <ol class="prose">
+        <li><strong>Day 8 &middot; Discovery.</strong> &sect;5. Write a vision statement with three
+        success metrics for an imaginary client.</li>
+        <li><strong>Day 9&ndash;10 &middot; Learning and Enablement.</strong> &sect;10, then draft an admin
+        curriculum and a rollout comms plan.</li>
+        <li><strong>Day 11 &middot; Generate harder judgment items</strong> (&sect;16) with four plausible
+        options each, and answer them with &sect;3's pattern.</li>
+        <li><strong>Day 12 &middot; &sect;13 in full.</strong></li>
+        <li><strong>Day 13 &middot; Full deck in Blitz mode</strong>, options read aloud off.</li>
+        <li><strong>Day 14 &middot; Only the misses</strong>, and the uncovered table in &sect;2 as a
+        checklist.</li>
+      </ol>
+    </section>
+
+    <!-- 15 -->
+    <section id="sources">
+      <h2 class="sect"><span class="num">15</span><span>Sources</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">The exam guide and the four pages marked new were rendered in the browser on
+      2026-09-28 and grepped for the facts cited. The rest were rendered and title-checked in the
+      2026-08-18 fact-check.</p>
+
+      <div class="linklist">
+        <p><a href="https://help.salesforce.com/s/articleView?id=005298991&amp;type=1&amp;language=en_US">Salesforce Certified Slack Consultant Exam Guide</a>
+        <span class="why">The seven-domain outline, weights, Summer '24 alignment, 67% pass mark.</span></p>
+
+        <p><a href="https://slack.com/help/articles/4401830811795-Create-and-manage-legal-holds">Create and manage legal holds</a>
+        <span class="why">The preservation mechanism &sect;7 item 1 turns on.</span></p>
+
+        <p><a href="https://slack.com/help/articles/360024821873-Approve-Slack-workspaces-for-your-network">Approve Slack workspaces for your network</a>
+        <span class="why">The proxy-header control; no sign-in allowlist.</span></p>
+
+        <p><a href="https://slack.com/help/articles/115004988303-Adjust-channel-management-permissions">Adjust channel management permissions</a>
+        <span class="why">The four channel permissions; no approval queue.</span></p>
+
+        <p><a href="https://slack.com/help/articles/360018112273-Types-of-roles-in-Slack">Types of roles in Slack</a>
+        <span class="why">The role hierarchy and the Workspace Admin billing exclusion.</span></p>
+
+        <p><a href="https://slack.com/help/articles/203772216-Set-up-SAML-single-sign-on-for-Slack">Set up SAML single sign-on for Slack</a>
+        <span class="why">New. Who sets it up and on which plans.</span></p>
+
+        <p><a href="https://slack.com/help/articles/115005223763-Manage-session-duration">Manage session duration</a>
+        <span class="why">New. All plans; the two warnings; staggered expiry.</span></p>
+
+        <p><a href="https://slack.com/help/articles/115005912706-Manage-Slack-Connect-channel-approval-settings-and-invitation-requests">Manage Slack Connect channel approval settings</a>
+        <span class="why">New. The four approval settings.</span></p>
+
+        <p><a href="https://slack.com/help/articles/360035692513-Guide-to-Slack-Workflow-Builder">Guide to Slack Workflow Builder</a>
+        <span class="why">New. Who can build, plans, templates.</span></p>
+
+        <p><a href="https://slack.com/help/articles/222386767-Manage-app-approval-for-your-workspace">Manage app approval for your workspace</a>
+        <span class="why">Default install behaviour, App Managers.</span></p>
+
+        <p><a href="https://slack.com/help/articles/204897248-Guide-to-Slack-import-and-export-tools">Guide to Slack import and export tools</a>
+        <span class="why">Export paths by plan, and the Discovery API.</span></p>
+
+        <p><a href="https://slack.com/resources/slack-for-admins/launching-slack">Launching Slack (Slack for admins)</a>
+        <span class="why">The orienting source for the twelve judgment items &mdash; useful reading,
+        not a settler.</span></p>
+      </div>
+
+      <p>Per-question citations live in the deck itself: every one of the 37 explanations ends in a
+      <code>References:</code> block with at least one rendered URL &mdash; with the caveat in &sect;3.</p>
+    </section>
+
+    <!-- 16 -->
+    <section id="notebooklm">
+      <h2 class="sect"><span class="num">16</span><span>Using this with NotebookLM</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">Upload <code>study-guides/salesforce-slack-consultant.md</code>. NotebookLM is
+      more useful for this exam than for most, because the deck's weakest area &mdash; judgment with
+      plausible options &mdash; is exactly what it can generate.</p>
+
+      <div class="prompts">
+        <p class="prompt">Write ten discovery and enablement scenario questions where all four options
+        are reasonable consulting advice and only one is best. Then explain the answer using the
+        five-point pattern in section 3.</p>
+
+        <p class="prompt">Quiz me on section 7's three corrections: legal hold, sign-in restrictions,
+        channel-creation approvals. For each, ask what the deck keys and what Slack actually offers.</p>
+
+        <p class="prompt">Give me twelve "which setting" questions where one option is a setting Slack
+        does not have. Use section 12's list.</p>
+
+        <p class="prompt">Walk me through a partner-led migration from discovery to post-launch, asking
+        me at each phase what the consultant does, the client does and Slack does.</p>
+
+        <p class="prompt">Drill the roles table in section 7 as flashcards, including the two roles that
+        do not exist.</p>
+
+        <p class="prompt">I have one week. Compress section 14, keeping Policies and Settings and
+        workflows in the first half.</p>
+      </div>
+
+      <p class="colophon">Measured 2026-09-28 against
+      <code>public/decks/<wbr>Salesforce_Slack_<wbr>Consultant_Questions.json</code> and Help article
+      <code>005298991</code>. Question counts and domain weights both have a short shelf life &mdash;
+      re-run <code>node study-guides/reclassify-slack.mjs</code> before trusting the table in &sect;2.</p>
+    </section>
+
+  </main>
+</div>
