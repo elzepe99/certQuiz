@@ -29,7 +29,7 @@ a bug.
 | "audit / structurally check a deck" (no doc lookups) | `node scripts/audit-deck.mjs <deck>` | Phase 1 of the skill, standalone. Cheap. Leads, not verdicts. Takes a **path**, not a bare filename. |
 | "the questions read badly / the bot reads them wrong", "fix the punctuation", "format these stems" — **without** changing what a question says | `node scripts/reformat-stems.mjs <edits.json>` | Punctuation, spacing and capitalisation only, guarded so a formatting pass cannot alter the words. See the repo map below. Explanations and keys still go through `apply-findings.mjs`. |
 | "explain why the wrong answers are wrong" | `apply-findings.mjs` with `clarified` verdicts | Not a fact-check: no key moves, so no correction notice. Integration-architect is the worked example — see the deck table. |
-| "write / update a study guide for deck X", "what does this deck NOT cover?", "how does the deck compare to the real exam outline?", "make me a revision guide / cheat sheet" | **`deck-study-guide`** | Twelve guides exist (`study-guides/`). Two hand-maintained files per guide that must be edited **in parallel** — the `.md` and the `.artifact.html`; only the second is built. Never moves an answer key: a contradiction found while writing goes to `factcheck-deck`. |
+| "write / update a study guide for deck X", "what does this deck NOT cover?", "how does the deck compare to the real exam outline?", "make me a revision guide / cheat sheet" | **`deck-study-guide`** | Fourteen guides exist, one per deck (`study-guides/`). Two hand-maintained files per guide that must be edited **in parallel** — the `.md` and the `.artifact.html`; only the second is built. Never moves an answer key: a contradiction found while writing goes to `factcheck-deck`. |
 | "what did users comment on?" | `npm run review-comments` | Needs Supabase keys configured. |
 | "build me a chart / dashboard of deck progress" | `dataviz` | |
 | "make this a shareable page / artifact" | `artifact-design` | |
@@ -147,16 +147,16 @@ scripts/
                         learner sees. **A new guide must be added to its GUIDES
                         array** or it is silently never built, and the script
                         prints "built" for the ones it did build either way
-study-guides/         twelve guides, each TWO hand-edited files that must move
+study-guides/         fourteen guides, each TWO hand-edited files that must move
                       together: `<out-slug>.md` (the readable/NotebookLM source)
                       and `<name>.artifact.html` (the fragment the build reads;
                       no doctype/head/body, because it is also published as a
                       Claude Artifact, which supplies its own skeleton). The two
                       basenames differ — the `.md` is named after build-guide's
-                      `out`, the fragment after its `source`. The twelve fragments
+                      `out`, the fragment after its `source`. The fourteen fragments
                       share one stylesheet BY COPY: lines 5–575 are
                       byte-identical, so a palette change must be made in all
-                      twelve. `reclassify-*.mjs` holds one deck's per-question
+                      fourteen. `reclassify-*.mjs` holds one deck's per-question
                       domain calls against the official exam outline, because no
                       deck's `_cat` tags match the published domains
 .claude/skills/deck-study-guide/
@@ -763,6 +763,11 @@ Three caveats on that row:
    its citation is marked orienting rather than decisive. This is the Slack caveat
    again, at a smaller scale — read 28/28 as weaker evidence than the same number on
    the tool-design and MCP items, where the documentation genuinely decides.
+   **Partly overtaken on 2026-09-28:** the exam guide PDF (v1.0, July 2026), found while
+   writing this deck's study guide, states all four keyed answers almost verbatim in task
+   statements 5.2 and 5.6. No *product* page settles them, but the exam's own blueprint
+   does, so on this exam they are fact. Their explanations still cite orienting sources;
+   citing the exam guide instead is a small `factcheck-deck` job, not a defect.
 2. **`92663975` is flagged, and the flag is about a real tension in Anthropic's own
    guidance.** *Define tools* says to consolidate related operations behind an
    `action` parameter because that reduces selection ambiguity; *Writing effective
@@ -814,13 +819,16 @@ rather than their worktree, so say so explicitly in the brief.
 - **Slack is the one deck where `reformat-stems.mjs` had nothing to do** — 0 stems,
   because that scrape kept its punctuation. Not every deck needs the stem half.
 
-**What remains — one programme still running, and the standing debt:**
+**What remains — all three programmes finished, and the standing debt:**
 
-1. **A third programme is running: study guides, twelve of fourteen decks done** as of
-   2026-09-28. See "The study-guide programme" below. The two without a guide are
-   **slack-consultant and claude-architect-foundations** — the two where a guide will find
-   least, since both are already documented in this file as decks a vendor page largely
-   cannot settle.
+1. **The third programme, study guides, is complete: all fourteen decks have one** as
+   of 2026-09-28. See "The study-guide programme" below. What it leaves behind is a
+   maintenance duty rather than a programme: **every import now has a guide to
+   re-measure** — re-run that deck's `reclassify-*.mjs` (it reports unclassified ids)
+   and `verify-guide.mjs` (it catches a stale question count), then re-read the prose
+   built on the numbers that moved. Slack and claude-architect were predicted to be the
+   guides that found least; neither did. Claude's found 17 of 30 task statements
+   uncovered, and Slack's found the deck is smaller than its exam.
 2. **The judgment calls flagged for the repo owner are still open**, and they are the
    cheapest real work available: revenue-cloud's `87836da2` (flow name) and
    `832c6c98` (Contracts permission set), app-builder's `9ba9345d` (Sharing vs
@@ -834,13 +842,13 @@ rather than their worktree, so say so explicitly in the brief.
    — that sweep proved app-builder, IAM, Dev II and integration clean, and the missing
    `language` parameter is the signature to check for first.
 
-### The study-guide programme — started 2026-09-25, 12 of 14 decks
+### The study-guide programme — 2026-09-25 to 2026-09-28, complete at 14 of 14 decks
 
 A guide measures a deck against the vendor's **published exam outline** and teaches the
 sub-objectives the deck never asks. It is a different job from a fact-check: a fact-check
 makes the deck's answers right, a guide asks whether the deck is the right set of
-questions at all. Every one of the twelve so far has found that it is not — though the
-three architect guides of 2026-09-28 found it by a narrower margin than the rest.
+questions at all. Every one of the fourteen found that it is not — though the three
+architect guides of 2026-09-28 found it by a narrower margin than the rest.
 
 The workflow is `deck-study-guide` (the skill), and it was written up on 2026-09-25 from
 the five Salesforce guides that already existed plus the Databricks one built to prove it.
@@ -859,8 +867,11 @@ the five Salesforce guides that already existed plus the Databricks one built to
 | salesforce-sharing-visibility | **2026-09-28** | Access to Records 55% of the deck against 39%; object/field permissions 16% against 27%; user mode, restriction rules, muting all 0 |
 | salesforce-data-architect | **2026-09-28** | MDM double-weighted (10.4% against 5%) yet no implementation style named; Salesforce Data Management 16% against 25% |
 | salesforce-dld | **2026-09-28** | best-balanced of the three once re-mapped from 5 old domains to 8; Operating 5% against 10%; DevOps Center in 0 stems |
+| salesforce-slack-consultant | **2026-09-28** | deck smaller than the exam (37 against 60); 15 decisive, 10 supported, 12 judgment; Learning and Enablement 8 of 10 judgment; workflows, SAML SSO, admin support model 0 |
+| claude-architect-foundations | **2026-09-28** | 17 of 30 task statements uncovered; Agentic Architecture 27% of the exam, 2 deck items; Tool Design 43% of the deck against 18%; Scenario 6 unused |
 
-**Two decks have no guide**: slack-consultant and claude-architect-foundations.
+**Every deck has a guide.** The programme is complete; see "What to work on next" item 1
+for what that leaves behind.
 
 ### The three architect guides — 2026-09-28
 
@@ -894,6 +905,67 @@ Visibility) were found by one `WebSearch` each and added to the skill's table; D
   documentation was rendered for them in this pass.
 - **Nothing contradicted a deck key.** No finding here needs `factcheck-deck`; the defective
   and retired-product items the guides name were all already flagged by earlier passes.
+
+### The last two guides: Slack Consultant and Claude Architect, 2026-09-28
+
+Built in one pass on a branch stacked on the architect guides (PR #57). **Both decks are
+smaller than their exams** (37 and 28 against 60 each), the only two in the repo that
+are, so neither guide can say "the deck over-drills X" the way the others do. Where a
+domain has fewer deck items than exam questions, the deck is a sample, not practice.
+
+**How each outline was found, which is the part that generalises:**
+
+- **Slack Consultant is a Salesforce certification now**, not a Slack one. Its exam guide
+  is Help article `005298991`, beside Slack Developer (`005298987`) and Slack
+  Administrator (`005298990`); Slack's own site does not host it. One `WebSearch` on
+  `help.salesforce.com` found it, and its top hit was a **named Trailhead redirect**,
+  `trailhead.salesforce.com/help?article=<Title-With-Hyphens>`, that lands on the numeric
+  id. That URL form is worth trying first for any Salesforce exam. Summer '24 alignment,
+  90 minutes, 67%.
+- **Claude Architect follows the Databricks pattern.** The Anthropic Academy page (Skilljar,
+  `anthropic.skilljar.com/claude-certified-architect-foundations-access-request`, which
+  redirects to the partner academy) carries weights, item count, time, fee and pass mark.
+  It links an **exam guide PDF on S3** holding the 30 task statements, 6 scenarios, 12
+  sample questions and explicit in-scope and out-of-scope lists. `curl` + `pdfminer`
+  extracted it cleanly (the FontBBox warnings it prints are harmless). v1.0, July 2026,
+  code `CCAR-F`.
+
+**Slack findings.** The guide's section 3 is the honesty section the deck needed. It
+reconstructs the fact-check's split from `findings-slack-b1.json` / `-b2.json` in git
+history: **15 decisive, 10 supported, 12 judgment**, listed per id in
+`study-guides/reclassify-slack.mjs` as `TIER`. **8 of Learning and Enablement's 10 items
+are judgment**, the other two being user troubleshooting. The three false things the
+fact-check found (legal hold, sign-in IP allowlist, channel-creation approval queue) are
+taught as facts. The uncovered bullets that matter are **workflows** (the outline names
+onboarding and standup workflows; "Workflow Builder" returns 0 in stems and options),
+**SAML SSO** (0) and **the admin support model** (0). A bare
+`slack.com/help/articles/<id>` redirects to the current slug, which is further proof the
+slug is cosmetic.
+
+**Claude findings.** **17 of 30 task statements have no keyed deck item.** Agentic
+Architecture (27%) and Claude Code (20%) have 2 deck items each, while Tool Design is 12
+of 28. **Scenario 6 (Structured Data Extraction) has no deck item**, and with 4 of 6
+scenarios drawn it appears on two sittings in three. Four items (`f77a79ec`, `5b0490ba`,
+`4a3ae657`, `8248aea1`) map to no task statement. **13 of the 28 keyed answers restate a
+task-statement bullet nearly word for word**, which reads as a deck authored from the
+blueprint. The guide's section 11 records **five places the exam guide and current docs
+disagree**, none of which moves a deck key:
+
+- the **Task** tool is **Agent** since Claude Code v2.1.63 (`system:init` still says Task);
+- skill **`allowed-tools`** *restricts* per the exam but *pre-approves* per the docs
+  (removal is `disallowed-tools`), so this one is exam-right and product-wrong;
+- commands have been merged into skills;
+- MCP has three scopes, not two;
+- the exam's "4–5 tools, not 18" (role scoping) sits beside the docs' "30–50" (catalogue
+  size).
+
+**Nothing contradicted a deck key on either deck.** One optional `factcheck-deck` job:
+re-cite the four Claude "judgment" items to the exam guide (see that deck's caveat 1).
+
+**The 375px trap came from underscored paths again.** The Slack colophon's
+`public/decks/Salesforce_Slack_Consultant_Questions.json` pushed the page to 407px, the
+same way the architect pass found. Fixed with `<wbr>`. Claude's colophon path is underscored too
+but 13 characters shorter, and it fit, so the limit is length as well as underscores.
 
 **The Databricks guide is the worked example for a non-Salesforce vendor**, and the
 outline step is where it differed. Salesforce hides the outline in a Help article whose
@@ -964,7 +1036,7 @@ not. **A stale count is rarely only a stale count** — re-measuring can overtur
 built on top of it, so re-read the surrounding argument rather than swapping digits.
 
 Bar widths were left alone: no deck share moved by more than 0.6 points, which is under a pixel
-at the table's 120px scale. `verify-guide.mjs` is at **0 failures across all twelve guides** as of
+at the table's 120px scale. `verify-guide.mjs` is at **0 failures across all fourteen guides** as of
 2026-09-28. It still reports `.md`/`.artifact.html` section drift on integration, Dev II and
 IAM — headings deliberately worded shorter in the fragment for the rail — which is why that
 check is a warning and not a failure.
