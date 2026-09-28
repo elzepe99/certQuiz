@@ -1,0 +1,126 @@
+%%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 30, "rankSpacing": 45}}}%%
+flowchart TB
+
+  subgraph CONTENT["Content & tooling (Node ESM, offline)"]
+    direction LR
+    DECKS[("public/decks/\n14 JSON decks + manifest.json\n1,866 questions")]
+    SCRIPTS["scripts/\naudit-deck · find-duplicates\nreformat-stems · remove-questions\nadd-question-ids · review-comments"]
+    SKILL["factcheck-deck skill\napply-findings.mjs\ncheck-urls · replace-refs\nlib/corrections.mjs"]
+    SCRAPER["freecram-scraper/\nscrape_freecram.py"]
+    GUIDES_SRC["study-guides/\n*.artifact.html"]
+    BUILD_GUIDE["scripts/build-guide.mjs\n(prebuild)"]
+    GUIDES_OUT["public/guides/*.html"]
+
+    SCRAPER -->|raw dump| SCRIPTS
+    SCRIPTS -->|mint ids · dedupe| DECKS
+    SKILL -->|findings JSON → keys, explanations, refs| DECKS
+    GUIDES_SRC --> BUILD_GUIDE --> GUIDES_OUT
+  end
+
+  subgraph BUILD["Build"]
+    VITE["Vite 5 + tsc -b\nbase /certQuiz/\ndist/404.html = index.html"]
+  end
+
+  subgraph APP["Browser app — React 18 · TypeScript · Tailwind"]
+    direction TB
+    MAIN["main.tsx\napplyQuestionFont() before first render"]
+    ROUTER["App.tsx\nBrowserRouter basename=BASE_URL"]
+
+    subgraph ROUTES["routes/"]
+      direction LR
+      PICKER["/  DeckPicker"]
+      QUIZ["/deck/:id  QuizView"]
+      BLITZ["/deck/:id/blitz  BlitzView"]
+      REVIEW["/deck/:id/review  ReviewScreen"]
+      DONE["/deck/:id/complete  CompletionScreen"]
+    end
+
+    subgraph COMP["components/"]
+      direction LR
+      UI["TopBar · OptionList · ExplanationBlock\nQuestionMap · RightPanel · SessionTimer\nPerformanceCard · SettingsMenu · CorrectionNotice"]
+      RT["RichText"]
+      QD["QuestionDiagram"]
+      BL["blitz/ Lobby · Stage · Podium · OptionShape"]
+      CP["CommentsPanel"]
+    end
+
+    subgraph STATE["state/ (Zustand)"]
+      direction LR
+      QS["quizStore\none deck session"]
+      BS["blitzStore\none Blitz run"]
+    end
+
+    subgraph LIB["lib/ (pure)"]
+      direction LR
+      DECKSLIB["decks.ts\nfetch + cache manifest/deck"]
+      QUIZLIB["quiz.ts\nparse explanation / References:"]
+      SETS["sets.ts\nset chunking"]
+      RICH["richtext.ts\ncode-fence heuristic"]
+      BLZ["blitz.ts\nscoring · speechScript"]
+      SPEECH["speech.ts\nWeb Speech API, chunked"]
+      SFX["sfx.ts\nWeb Audio tones"]
+      STORAGE["storage.ts"]
+      BSTORE["blitzStorage.ts"]
+      PREFS["prefs.ts"]
+      SHORT["shortcuts.ts"]
+      IDENT["identity.ts"]
+      COMMENTS["comments.ts"]
+      SUPA["supabase.ts\nnull without env keys"]
+    end
+
+    REG["diagrams/registry.ts\nquestion id → inline SVG figure\nprimitives.tsx"]
+  end
+
+  subgraph PERSIST["Persistence"]
+    direction LR
+    LS[("localStorage\nquiz:progress:‹deck›\nquiz:blitz:settings · quiz:blitz:best:‹deck›\nquiz:prefs:question-font · quiz:username")]
+    SB[("Supabase (optional)\ncomments table, RLS\nkeyed on question id")]
+  end
+
+  subgraph BROWSER["Browser APIs"]
+    direction LR
+    WSA["speechSynthesis"]
+    WAA["AudioContext"]
+  end
+
+  HOST["Static host\nGitHub Pages /certQuiz/"]
+
+  %% build & deploy
+  DECKS --> VITE
+  GUIDES_OUT --> VITE
+  VITE --> HOST
+  HOST -->|serves index.html + decks/*.json + guides/*.html| MAIN
+
+  %% app wiring
+  MAIN --> ROUTER --> ROUTES
+  MAIN -.-> PREFS
+  PICKER & QUIZ & REVIEW & DONE --> QS
+  BLITZ --> BS
+  QUIZ --> UI & RT & QD & CP
+  REVIEW --> RT & QD
+  BLITZ --> BL
+  BL --> RT & QD
+  QD --> REG
+
+  QS --> DECKSLIB & QUIZLIB & SETS & STORAGE
+  BS --> DECKSLIB & BLZ & SPEECH & SFX & BSTORE
+  BS -.->|reads order + active set only, never writes| STORAGE
+  BLZ --> RICH
+  RT --> RICH
+  QUIZ --> SHORT
+  CP --> COMMENTS & IDENT
+  COMMENTS --> SUPA
+
+  %% I/O
+  DECKSLIB -->|fetch decks/manifest.json, decks/‹file›.json| HOST
+  STORAGE & BSTORE & PREFS & IDENT --> LS
+  SUPA --> SB
+  SPEECH --> WSA
+  SFX --> WAA
+
+  classDef data fill:#eef3ff,stroke:#4a6cf7,color:#1a2b6d
+  classDef ext fill:#fff4e5,stroke:#e08a1e,color:#5a3600
+  classDef state fill:#eaf7ee,stroke:#2e9e5b,color:#124d2b
+  class DECKS,LS,SB data
+  class HOST,WSA,WAA ext
+  class QS,BS state
