@@ -1,6 +1,6 @@
 ---
 name: deck-study-guide
-description: Write a study guide for a deck in public/decks/ — find the vendor's official exam outline, re-classify every question against it, name the sub-objectives the deck never asks, and teach those gaps from rendered documentation. Produces two hand-maintained files (a Markdown source for NotebookLM and a shell-less HTML fragment), wires them into scripts/build-guide.mjs and public/decks/manifest.json, and verifies the built page. Use this whenever the user asks for a study guide, revision guide, field guide, exam guide or cheat sheet for a deck or certification; whenever they ask what the deck does not cover, where the gaps are, or how the deck compares to the real exam outline; and whenever they ask to update, extend or rebuild an existing guide.
+description: Write a study guide for a deck in public/decks/ — find the vendor's official exam outline, re-classify every question against it, name the sub-objectives the deck never asks, and teach those gaps from rendered documentation. Produces one hand-maintained shell-less HTML fragment written for the learner, wires it into scripts/build-guide.mjs and public/decks/manifest.json, and verifies the built page. Use this whenever the user asks for a study guide, revision guide, field guide, exam guide or cheat sheet for a deck or certification; whenever they ask what the deck does not cover, where the gaps are, or how the deck compares to the real exam outline; and whenever they ask to update, extend or rebuild an existing guide.
 ---
 
 # Write a study guide for a deck
@@ -225,26 +225,33 @@ Prefer the page with the **number** on it. A concept page explains liquid
 clustering; the stage-page guide gives you "Max duration 50% more than the 75th
 percentile", which is the thing a reader can hold and use.
 
-## Phase 6 — Write the two files
+## Phase 6 — Write the guide
 
-**Every guide is TWO hand-maintained files that must be edited in parallel.**
-There is no generator between them.
+**A guide is ONE hand-maintained file**: `study-guides/<name>.artifact.html`, a
+**shell-less fragment** — no doctype, no `<head>`, no `<body>` — because it is also
+published as a Claude Artifact, which supplies its own skeleton.
+`scripts/build-guide.mjs` wraps it into `public/guides/<out>.html`.
 
-| File | Is |
-|---|---|
-| `study-guides/<out-slug>.md` | The readable source, and what gets uploaded to NotebookLM |
-| `study-guides/<name>.artifact.html` | A **shell-less fragment** — no doctype, no `<head>`, no `<body>` — because it is also published as a Claude Artifact, which supplies its own skeleton |
+There used to be a Markdown twin per guide, uploaded to NotebookLM. **Both the twins
+and the NotebookLM section were removed on 2026-09-28 at the repo owner's request.**
+Do not bring either back.
 
-`scripts/build-guide.mjs` reads **only the `.artifact.html`** and wraps it into
-`public/guides/<out>.html`. **Editing the `.md` alone changes nothing a learner
-sees, and the build reports success either way.** That is the single most
-expensive mistake available here.
+### Write for the learner, not the maintainer
 
-The two basenames differ: the `.md` is named after the build's **`out`** path
-(`salesforce-app-builder.md`), the fragment after its **`source`**
-(`app-builder.artifact.html`). `verify-guide.mjs` assumes that pairing.
+The reader is someone studying for the exam inside this app. Two rules follow, and
+`verify-guide.mjs` enforces the first:
 
-### The section shape that has worked five times
+- **Never cite a question by its `id`.** The app shows no ids anywhere, so
+  `<code>47a349af</code>` gives the reader nothing to look up. Describe the item
+  instead — "the deck's control-plane question", "one item keys Merge" — or leave the
+  reference out.
+- **No maintenance history.** No script names (`reclassify-*.mjs`,
+  `find-duplicates.mjs`), no fact-check pass dates, no "the dump keyed", "scraped",
+  "imported on", "the repo owner", no notes on how a doc host behaves under WebFetch.
+  That belongs in `CLAUDE.md`. A sources section says what each page is for and
+  "Last checked <month year>", nothing more.
+
+### The section shape
 
 1. The exam, factually — a vitals strip and a facts table
 2. Where the points actually are — the domain table, then **the gap**
@@ -255,11 +262,6 @@ N+3 Where the deck is older than the exam — renames, contradictions, and
     **exam-right, production-wrong**
 N+4 Two-week revision plan
 N+5 Sources
-N+6 Using this with NotebookLM
-
-Cross-reference deck items by `id` in `<code>` throughout. It is what turns the
-guide from an essay into something a reader can drill against, and ids are
-permanent so the references never rot.
 
 ### House style for the fragment
 
@@ -268,14 +270,11 @@ permanent so the references never rot.
   `<span class="tag">`.
 - `.tw` wrapper around every `<table>`; `table.kv` for two-column ones.
 - `ol.prose` for numbered lists, `h4` for small uppercase labels,
-  `.linklist` with `.why` for the sources, `.prompts` for the NotebookLM prompts.
+  `.linklist` with `.why` for the sources.
 - `.verdict.gap` / `.over` / `.ok` chips and `.bar` / `.bar.deck` pairs in the
   domain table, both scaled to the largest value.
-- `<code>` for question ids and identifiers. **HTML entities, never literal em
+- `<code>` for identifiers (never question ids). **HTML entities, never literal em
   dashes** — `&mdash;`, `&rarr;`, `&sect;`, `&asymp;`.
-- **The content must be re-authored for the fragment, not pasted from the
-  Markdown.** A Markdown table becomes a `.tw` table; a bolded aside becomes a
-  `.call`.
 
 **The six fragments share one stylesheet by copy** — lines 5 to 575 are
 byte-identical across all of them. Start a new one by copying those lines rather
@@ -287,7 +286,7 @@ than retyping, and remember that a palette change has to be made in every file.
 
 ### Two mechanical traps
 
-- **Writing either file from Python with `newline='\n'` normalizes CRLF to LF**
+- **Writing the file from Python with `newline='\n'` normalizes CRLF to LF**
   and produces a whole-file diff plus a ~1.8 KB size drop that looks like lost
   content and is not. This repo checks out CRLF (`core.autocrlf=true`). Use
   `io.open(p, 'w', encoding='utf-8', newline='')` and keep the endings you read.
@@ -315,15 +314,10 @@ node .claude/skills/deck-study-guide/scripts/verify-guide.mjs <out-slug>
 for a file it did not need to change.
 
 `verify-guide.mjs` does that grep for every section heading and also checks:
-the fragment has no document shell; the `.md` exists and its sections match the
-fragment's; the manifest entry exists; the stylesheet has not diverged; and
-**the question count the guide states matches the deck**, which goes stale on
-every import. Run it with no argument to check all guides at once.
-
-It reports two kinds of finding and the difference matters: a **FAIL** is wiring
-or a stale number, a **warn** is `.md`/`.artifact.html` section drift, which is
-sometimes a deliberate difference in wording and sometimes an edit made to one
-file only.
+the fragment has no document shell; **it cites no question ids**; the manifest
+entry exists; the stylesheet has not diverged; and **the question count the guide
+states matches the deck**, which goes stale on every import. Run it with no
+argument to check all guides at once. Any FAIL exits non-zero.
 
 **A stale count is rarely only a stale count.** The first run of this script on the
 existing guides reported the integration guide claiming 141 and 133 questions against

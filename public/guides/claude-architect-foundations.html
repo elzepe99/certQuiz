@@ -368,6 +368,7 @@ code {
   padding: .1em .34em;
   border-radius: 3px;
   color: var(--ink);
+  overflow-wrap: anywhere;
 }
 
 ul, ol.prose { margin: 0 0 18px; padding-left: 20px; max-width: 68ch; }
@@ -591,10 +592,8 @@ html { scroll-behavior: smooth; }
     <h1>Claude Architect Field Guide</h1>
     <p class="standfirst">
       Built from the 28 questions in the practice deck, measured against Anthropic's own exam guide
-      and the documentation those questions cite, on 2026-09-28. <strong>This is the only deck in
-      the repo that was written rather than scraped, and it shows</strong>: thirteen of its keyed
-      answers restate a bullet from the exam guide almost word for word, and its fact-check moved
-      only one key. The problem is not accuracy, it is reach. <strong>Seventeen of the exam's thirty
+      and the documentation those questions cite. <strong>The deck is accurate</strong>: thirteen of
+      its keyed answers restate a bullet from the exam guide almost word for word. The problem is not accuracy, it is reach. <strong>Seventeen of the exam's thirty
       task statements have no deck question at all</strong>, the exam's largest domain gets two, and
       <strong>twelve of the 28 are tool design</strong> &mdash; a domain worth 18%.
     </p>
@@ -623,7 +622,6 @@ html { scroll-behavior: smooth; }
       <li><a href="#stale" class="key">Exam versus product</a></li>
       <li><a href="#plan">Two-week plan</a></li>
       <li><a href="#sources">Sources</a></li>
-      <li><a href="#notebooklm">Using NotebookLM</a></li>
     </ol>
     <p class="note">Sections in red carry the objectives the practice deck does not train you for.</p>
   </nav>
@@ -637,8 +635,7 @@ html { scroll-behavior: smooth; }
 
       <div class="call alert">
         <span class="tag">A small, accurate deck for a wide exam</span>
-        <p>The deck is sound &mdash; one key moved in its fact-check, one more was caught at import
-        &mdash; and where it teaches, it teaches the exam's own phrasing. But 28 questions cannot
+        <p>The deck is sound, and where it teaches, it teaches the exam's own phrasing. But 28 questions cannot
         cover 30 task statements, and they do not try evenly: <strong>tool design has twelve, Claude
         Code has two, agentic architecture has two.</strong> Read &sect;2 before you drill, and treat
         &sect;3, &sect;5, &sect;6 and &sect;7 as the main course rather than the appendix.</p>
@@ -697,8 +694,7 @@ html { scroll-behavior: smooth; }
         billing, deploying or hosting MCP servers, Claude's internals or training, embeddings and
         vector databases, computer use, vision, streaming, rate limits and pricing, OAuth, cloud
         provider configuration, benchmarks, prompt-caching details and tokenisation. An option that
-        leans on any of those is wrong by construction &mdash; and one deck item, temperature
-        (<code>8248aea1</code>), sits close to that line.</p>
+        leans on any of those is wrong by construction &mdash; and one deck item, temperature, sits close to that line.</p>
       </div>
     </section>
 
@@ -707,10 +703,9 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">02</span><span>Where the points actually are</span></h2>
       <div class="sect-rule"></div>
 
-      <p class="lede">The deck's nine <code>_cat</code> tags ("Tool Design", "Agent Behavior",
-      "Guardrails &amp; Enforcement"&hellip;) are topic labels, not exam domains. The deck column is
-      an independent re-classification against the five domains and 30 task statements
-      (<code>study-guides/reclassify-claude-architect.mjs</code>).</p>
+      <p class="lede">The deck's nine topic tags ("Tool Design", "Agent Behavior",
+      "Guardrails &amp; Enforcement"&hellip;) are topic labels, not exam domains. The deck column sorts
+      every question into the five domains and 30 task statements.</p>
 
       <div class="tw">
         <table>
@@ -742,10 +737,9 @@ html { scroll-behavior: smooth; }
       <div class="call trap">
         <span class="tag">Prompt Engineering has the right count and the wrong questions</span>
         <p>Six deck items against about twelve exam questions looks fine until you read them. Four
-        &mdash; the role goes in the system prompt (<code>f77a79ec</code>), exact Markdown column names
-        (<code>5b0490ba</code>), headings for maintainability (<code>4a3ae657</code>), lower temperature
-        (<code>8248aea1</code>) &mdash; map to <strong>no task statement</strong>. The two that do
-        (<code>2a123dd1</code> few-shot, <code>63976ace</code> JSON schema) leave explicit criteria,
+        &mdash; the role goes in the system prompt, exact Markdown column names, headings for maintainability, lower temperature
+ &mdash; map to <strong>no task statement</strong>. The two that do
+        (few-shot examples and a JSON schema) leave explicit criteria,
         validation-retry, batch processing and multi-instance review untouched.</p>
       </div>
 
@@ -762,7 +756,7 @@ html { scroll-behavior: smooth; }
           </tbody>
         </table>
       </div>
-      <p>Each was confirmed with a keyword sweep over stems and options &mdash;
+      <p>Each was confirmed by searching the deck's questions and options for its terms &mdash;
       <code>stop_reason</code>, <code>tool_choice</code>, <code>@import</code>,
       <code>.claude/rules</code>, "batch", "confidence", "resume", "fork" all return zero &mdash; and
       every nonzero hit was read. <code>Grep</code> and <code>Glob</code> appear only as distractors;
@@ -775,8 +769,8 @@ html { scroll-behavior: smooth; }
       <div class="sect-rule"></div>
 
       <p class="lede"><strong>27% of the exam &mdash; about 16 questions &mdash; and two deck
-      items</strong>: parallel subagents (<code>d7436e92</code>) and a hook that blocks refunds over
-      $500 (<code>17865baf</code>). Both are right and both are worth knowing cold. Everything else in
+      items</strong>: parallel subagents and a hook that blocks refunds over
+      $500. Both are right and both are worth knowing cold. Everything else in
       this section is new.</p>
 
       <h4>1.1 &middot; The agentic loop</h4>
@@ -817,8 +811,7 @@ html { scroll-behavior: smooth; }
       <h4>1.3 &middot; Spawning and context passing &mdash; the deck's one item</h4>
       <p>Subagents are spawned through a tool the exam guide calls <strong>Task</strong> and the
       current SDK calls <strong>Agent</strong> (&sect;11). The coordinator's allowed tools must include
-      it. To run two subagents in parallel, <strong>emit both calls in one response</strong>
-      (<code>d7436e92</code>); consecutive turns serialise them. Pass prior findings
+      it. To run two subagents in parallel, <strong>emit both calls in one response</strong>; consecutive turns serialise them. Pass prior findings
       <strong>in the prompt</strong>, as structured data that separates content from metadata (URL,
       document, page), and give the coordinator goals and quality criteria rather than a step-by-step
       procedure. <code>AgentDefinition</code> holds each subagent's description, prompt and tool
@@ -834,8 +827,7 @@ html { scroll-behavior: smooth; }
 
       <h4>1.5 &middot; Hooks</h4>
       <p><strong><code>PreToolUse</code></strong> fires before a tool runs and can block it by
-      returning <code>permissionDecision: "deny"</code> &mdash; the $500 refund rule
-      (<code>17865baf</code>). <strong><code>PostToolUse</code></strong> fires after a tool returns
+      returning <code>permissionDecision: "deny"</code> &mdash; the $500 refund rule. <strong><code>PostToolUse</code></strong> fires after a tool returns
       and can rewrite the result before Claude sees it, which is how you normalise Unix timestamps,
       ISO 8601 and numeric status codes from different MCP servers into one shape. The deciding
       phrase in a stem is "guaranteed" or "must": that wants a hook, not a prompt.</p>
@@ -874,10 +866,9 @@ html { scroll-behavior: smooth; }
       <h4>2.1 &middot; Descriptions are the selection mechanism</h4>
       <p>"Provide extremely detailed descriptions. This is by far the most important factor in tool
       performance." Include input formats, example queries, edge cases, and <strong>when to use this
-      tool rather than its neighbour</strong>. Deck: <code>16885805</code> (descriptions over schema
-      constraints), <code>06907581</code> (accept the id the caller already has),
-      <code>4d183e4f</code> (a composite tool that keeps the judgment with the agent),
-      <code>b091b723</code> (show the full input in the confirmation). Splitting and consolidating have
+      tool rather than its neighbour</strong>. The deck drills this four ways: descriptions over schema
+      constraints, accepting the id the caller already has, a composite tool that keeps the judgment
+      with the agent, and showing the full input in the confirmation. Splitting and consolidating have
       a section of their own &mdash; &sect;8.</p>
       <div class="call trap">
         <span class="tag">Check the system prompt, not just the tools</span>
@@ -887,13 +878,10 @@ html { scroll-behavior: smooth; }
       </div>
 
       <h4>2.2 &middot; Structured errors &mdash; five deck items</h4>
-      <p>Return the failure <strong>as a tool result with <code>isError: true</code></strong>
-      (<code>17dbb318</code>), carrying an <code>errorCategory</code> (transient / validation /
-      permission / business), an <code>isRetryable</code> flag and a readable message
-      (<code>4cd0dc5e</code>, <code>76ecf70b</code>, <code>bfe8ab8d</code>). MCP separates two
+      <p>Return the failure <strong>as a tool result with <code>isError: true</code></strong>, carrying an <code>errorCategory</code> (transient / validation /
+      permission / business), an <code>isRetryable</code> flag and a readable message. MCP separates two
       channels: a <strong>malformed request</strong> is a JSON-RPC protocol error; an <strong>API
-      failure or business rule</strong> is a tool result with <code>isError</code>
-      (<code>9bdf39a6</code>). And <strong>a valid empty result is not an error</strong> &mdash; "no
+      failure or business rule</strong> is a tool result with <code>isError</code>. And <strong>a valid empty result is not an error</strong> &mdash; "no
       orders found" is a successful query.</p>
 
       <h4>2.3 &middot; How many tools, and <code>tool_choice</code> &mdash; not in the deck</h4>
@@ -925,8 +913,7 @@ html { scroll-behavior: smooth; }
       committed, with secrets as <code>${GITHUB_TOKEN}</code>-style expansion rather than literals.
       Personal or experimental servers go in <strong><code>~/.claude.json</code></strong>. Every
       configured server's tools are discovered at connection and available at once. Prefer an
-      <strong>existing community server</strong> for a standard integration like Jira
-      (<code>ecb1b560</code>); expose catalogues (schemas, issue summaries) as <strong>MCP
+      <strong>existing community server</strong> for a standard integration like Jira; expose catalogues (schemas, issue summaries) as <strong>MCP
       resources</strong> so the agent can see what exists without exploratory calls; and if the agent
       keeps using <code>Grep</code> instead of your better MCP tool, the fix is the MCP tool's
       description.</p>
@@ -953,8 +940,7 @@ html { scroll-behavior: smooth; }
       <div class="sect-rule"></div>
 
       <p class="lede"><strong>20% of the exam &mdash; about 12 questions &mdash; and two deck
-      items</strong>: a project skill committed under <code>.claude/skills/</code>
-      (<code>0c6bd014</code>), and <code>--bare</code> in CI (<code>8c9e856e</code>). Four of this
+      items</strong>: a project skill committed under <code>.claude/skills/</code>, and <code>--bare</code> in CI. Four of this
       domain's six task statements have nothing.</p>
 
       <h4>3.1 &middot; The CLAUDE.md hierarchy</h4>
@@ -1026,7 +1012,7 @@ html { scroll-behavior: smooth; }
             <tr><td><code>-p</code> / <code>--print</code></td><td>Non-interactive: without it the job <strong>hangs waiting for input</strong> (sample question 10). <code>CLAUDE_HEADLESS</code> and <code>--batch</code> do not exist</td></tr>
             <tr><td><code>--output-format json</code></td><td>Machine-readable output</td></tr>
             <tr><td><code>--json-schema</code></td><td>Validated JSON matching a schema &mdash; findings you can post as inline PR comments</td></tr>
-            <tr><td><code>--bare</code></td><td>Skips discovery of hooks, skills, plugins, MCP servers and CLAUDE.md for fast start; pair it with <code>--append-system-prompt-file</code> to put the standards back (<code>8c9e856e</code>)</td></tr>
+            <tr><td><code>--bare</code></td><td>Skips discovery of hooks, skills, plugins, MCP servers and CLAUDE.md for fast start; pair it with <code>--append-system-prompt-file</code> to put the standards back</td></tr>
           </tbody>
         </table>
       </div>
@@ -1043,8 +1029,8 @@ html { scroll-behavior: smooth; }
       <div class="sect-rule"></div>
 
       <p class="lede"><strong>20% of the exam &mdash; about 12 questions.</strong> The deck's two
-      on-outline items are few-shot examples against false positives (<code>2a123dd1</code>) and
-      specifying the JSON schema (<code>63976ace</code>). This domain is where Scenario 6, which the
+      on-outline items are few-shot examples against false positives and
+      specifying the JSON schema. This domain is where Scenario 6, which the
       deck never uses, does most of its asking.</p>
 
       <h4>4.1 &middot; Explicit criteria beat "be careful"</h4>
@@ -1110,14 +1096,14 @@ html { scroll-behavior: smooth; }
       <div class="sect-rule"></div>
 
       <p class="lede"><strong>15% of the exam &mdash; about 9 questions &mdash; and six deck items,
-      proportionally the deck's best-covered domain.</strong> It is also where four items the repo had
-      called "judgment no page settles" turn out to be settled by the exam guide itself.</p>
+      proportionally the deck's best-covered domain.</strong> It is also where four items that look like pure judgment turn out to be settled by the exam
+      guide itself.</p>
 
       <div class="call alert">
         <span class="tag">Four "unsettleable" items, settled by the blueprint</span>
-        <p>This deck's fact-check marked <code>e9f005d6</code>, <code>5eb4dfc6</code>,
-        <code>9de1fc0a</code> and <code>a517cd7f</code> as agent-design judgment that no product page
-        decides. That was true of the documentation. <strong>The exam guide states each keyed answer
+        <p>Four deck items &mdash; on source dates, claim-source mappings, frustrated customers and
+        escalation triggers &mdash; read as agent-design judgment that no product page decides. That
+        is true of the documentation. <strong>The exam guide states each keyed answer
         almost verbatim</strong>: 5.6 "requiring subagents to include publication or data collection
         dates" and "structured claim-source mappings"; 5.2 "acknowledging frustration while offering
         resolution" and escalation on "customer requests for a human, policy exceptions/gaps&hellip; and
@@ -1127,7 +1113,7 @@ html { scroll-behavior: smooth; }
       <h4>5.1 &middot; Long conversations</h4>
       <p>Summaries flatten numbers, dates and promises. Keep a <strong>"case facts" block</strong> of
       amounts, dates, order ids and statuses outside the summarised history, one per issue in a
-      multi-issue session (<code>e5bbf3a3</code>). Trim tool results to the fields you need (5 of 40,
+      multi-issue session. Trim tool results to the fields you need (5 of 40,
       not 40). Put key findings <strong>first</strong> in long inputs &mdash; the middle is where
       models lose things.</p>
 
@@ -1135,11 +1121,11 @@ html { scroll-behavior: smooth; }
       <ul>
         <li><strong>Escalate</strong> when the customer asks for a human, when policy is silent or needs
         an exception (competitor price-matching when policy covers only your own site), or when you
-        cannot make progress (<code>a517cd7f</code>).</li>
+        cannot make progress.</li>
         <li><strong>An explicit demand for a human is honoured immediately</strong>, without
         investigating first. <strong>Frustration is not a demand</strong>: acknowledge it, offer the
-        resolution you can give, escalate if they ask again (<code>9de1fc0a</code> sits right on this
-        line and keys the second).</li>
+        resolution you can give, escalate if they ask again. One deck item sits right on this
+        line and keys the second.</li>
         <li><strong>Several matching customers</strong>: ask for another identifier; never pick by
         heuristic.</li>
         <li><strong>Sentiment scores and self-reported confidence are poor proxies</strong> for
@@ -1155,7 +1141,7 @@ html { scroll-behavior: smooth; }
 
       <h4>5.4 &middot; Big codebases</h4>
       <p>Context degradation shows up as vague answers about "typical patterns" instead of the classes
-      found earlier. Delegate specific questions to subagents (<code>c720d4bb</code>), keep a
+      found earlier. Delegate specific questions to subagents, keep a
       scratchpad file of findings, summarise a phase before starting the next, export state to a
       manifest for crash recovery, and <code>/compact</code> when discovery output fills the
       window.</p>
@@ -1168,8 +1154,8 @@ html { scroll-behavior: smooth; }
       validation set</strong> &mdash; calibrated, not taken at face value.</p>
 
       <h4>5.6 &middot; Provenance</h4>
-      <p>Carry claim-to-source mappings through every step (<code>5eb4dfc6</code>); require dates so
-      old and new figures are not read as a contradiction (<code>e9f005d6</code>); when credible
+      <p>Carry claim-to-source mappings through every step; require dates so
+      old and new figures are not read as a contradiction; when credible
       sources conflict, <strong>keep both values with attribution</strong> rather than choosing; and
       render financial data as tables, news as prose.</p>
     </section>
@@ -1185,7 +1171,7 @@ html { scroll-behavior: smooth; }
 
       <div class="tw">
         <table>
-          <thead><tr><th></th><th><code>92663975</code> &mdash; split</th><th><code>36351fa3</code> &mdash; consolidate</th></tr></thead>
+          <thead><tr><th></th><th>Split</th><th>Consolidate</th></tr></thead>
           <tbody>
             <tr><td>Symptom</td><td>One tool for refund / cancel / reship; the agent <strong>omits required parameters</strong> or adds irrelevant ones</td><td>Ten tools; the agent <strong>picks the wrong one</strong> between near-synonyms</td></tr>
             <tr><td>Key</td><td>Three tools, each declaring only its own parameters</td><td>Merge overlapping pairs behind an action parameter</td></tr>
@@ -1199,8 +1185,7 @@ html { scroll-behavior: smooth; }
         <span class="tag">The rule</span>
         <p><strong>Read the symptom.</strong> Wrong or missing <em>arguments</em> &rarr; split, so each
         schema is small and exact. Wrong <em>tool</em> among overlapping ones &rarr; consolidate or
-        rename. An option is only wrong if it claims one move buys both &mdash; which is exactly the
-        overclaim <code>92663975</code>'s explanation had to have removed.</p>
+        rename. An option is only wrong if it claims one move buys both.</p>
       </div>
 
       <div class="call trap">
@@ -1210,11 +1195,11 @@ html { scroll-behavior: smooth; }
         consolidation "a valid architectural choice" that "requires more effort than a first step
         warrants". Task statement 2.1 also names <strong>renaming</strong> an overlapping tool and
         rewriting its description as the fix. So consolidation wins when the stem asks what
-        <em>structurally eliminates</em> overlap (<code>36351fa3</code>'s wording); descriptions win when
+        <em>structurally eliminates</em> overlap; descriptions win when
         it asks for the <em>first</em> or <em>most effective</em> step and the descriptions are thin.</p>
       </div>
 
-      <p>A third item makes the same point from a different angle: <code>4d183e4f</code> merges
+      <p>A third item makes the same point from a different angle: it merges
       <em>discovery and analysis</em> into one tool but keeps <em>add to collection</em> separate,
       because the agent must still make the editorial choice. Consolidate the mechanics; leave the
       judgment callable.</p>
@@ -1241,7 +1226,7 @@ html { scroll-behavior: smooth; }
             <tr><td><strong>50% / 24 h / 29 days</strong></td><td>Batch discount, expiry window, results retention</td></tr>
             <tr><td><strong>100,000 or 256 MB</strong></td><td>Batch size limit, whichever comes first</td></tr>
             <tr><td><strong>1&ndash;64</strong></td><td>Characters in a <code>custom_id</code></td></tr>
-            <tr><td><strong>$500</strong></td><td>The exam's refund threshold for a blocking hook (<code>17865baf</code>)</td></tr>
+            <tr><td><strong>$500</strong></td><td>The exam's refund threshold for a blocking hook</td></tr>
             <tr><td><strong>v2.1.63</strong></td><td>Claude Code version where the Task tool became Agent in <code>tool_use</code> blocks</td></tr>
           </tbody>
         </table>
@@ -1287,8 +1272,7 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">11</span><span>Where the exam and the product disagree</span></h2>
       <div class="sect-rule"></div>
 
-      <p class="lede">The deck is new, so it is not "older than the exam" the way scraped decks are.
-      But the exam guide was frozen in July 2026 and Claude Code ships weekly, so <strong>the exam and
+      <p class="lede">The deck is not older than the exam. But the exam guide was frozen in July 2026 and Claude Code ships weekly, so <strong>the exam and
       the current docs already disagree in five places</strong>. None moves a deck key. Answer the exam
       in its own vocabulary; know the product's.</p>
 
@@ -1309,7 +1293,7 @@ html { scroll-behavior: smooth; }
         <span class="tag">The last row is two different questions, not a contradiction</span>
         <p>The exam's 4&ndash;5 is about <strong>role scoping</strong>: a specialist agent should hold
         only its own tools. The docs' 30&ndash;50 is about <strong>catalogue size</strong>: when the whole
-        set gets that large, defer loading and let the model search. <code>36351fa3</code> uses the
+        set gets that large, defer loading and let the model search. The deck's consolidation item uses the
         second number correctly to reject tool search for a ten-tool agent.</p>
       </div>
 
@@ -1320,15 +1304,6 @@ html { scroll-behavior: smooth; }
         <strong>grants</strong> tools for the turn; the field that <strong>removes</strong> them is
         <code>disallowed-tools</code>. No deck item touches this, so nothing needs fixing here &mdash;
         but do not carry the exam's reading into a real project.</p>
-      </div>
-
-      <div class="call">
-        <span class="tag">For whoever maintains this deck</span>
-        <p>No deck key is contradicted by the exam guide or by the docs checked for this guide. Two
-        notes for <code>factcheck-deck</code>, neither a defect: <code>d7436e92</code> already writes
-        "Agent tool calls &ndash; formerly Task tool calls", which is the right way round; and the
-        four items in &sect;7's alert could cite the exam guide as a decisive source, since their
-        current citations are marked orienting.</p>
       </div>
     </section>
 
@@ -1381,10 +1356,7 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">13</span><span>Sources</span></h2>
       <div class="sect-rule"></div>
 
-      <p class="lede">The exam guide PDF was fetched and extracted on 2026-09-28. Every other page was
-      rendered in the browser the same day and grepped for the fact it is cited for.
-      <code>check-urls.mjs</code> reports every <code>code.claude.com</code> page as dead; that is a
-      false positive (the page arrives only after JavaScript runs), so do not trust it there.</p>
+      <p class="lede">The official pages this guide is built from. Last checked September 2026.</p>
 
       <div class="linklist">
         <p><a href="https://anthropic.skilljar.com/claude-certified-architect-foundations-access-request">Claude Certified Architect &ndash; Foundations (Anthropic Academy)</a>
@@ -1442,43 +1414,6 @@ html { scroll-behavior: smooth; }
 
       <p>Per-question citations live in the deck itself: every one of the 28 explanations ends in a
       <code>References:</code> block with at least one rendered URL.</p>
-    </section>
-
-    <!-- 14 -->
-    <section id="notebooklm">
-      <h2 class="sect"><span class="num">14</span><span>Using this with NotebookLM</span></h2>
-      <div class="sect-rule"></div>
-
-      <p class="lede">Upload <code>study-guides/claude-architect-foundations.md</code>, and the exam
-      guide PDF alongside it &mdash; NotebookLM reads PDFs, and the PDF's own sample questions are the
-      best seed for generated ones.</p>
-
-      <div class="prompts">
-        <p class="prompt">Using the exam guide PDF, list the 30 task statements. For each, tell me
-        whether section 2 of the field guide says the practice deck covers it, and quiz me on the
-        uncovered ones first.</p>
-
-        <p class="prompt">Write ten scenario questions in the style of the exam guide's samples for
-        Scenario 6, Structured Data Extraction, which the practice deck never uses.</p>
-
-        <p class="prompt">Give me five tool-design scenarios and make me say, for each, whether to
-        split, consolidate, rename, or rewrite descriptions &mdash; using the rule in section 8.</p>
-
-        <p class="prompt">Drill me on section 11: for each row, ask what the exam wants and what a
-        current Claude Code actually does.</p>
-
-        <p class="prompt">Quiz me on the Claude Code configuration hierarchy: which file, which
-        directory, shared or personal, for twelve different situations.</p>
-
-        <p class="prompt">I have one week, not two. Compress section 12, keeping the guide's
-        exercises.</p>
-      </div>
-
-      <p class="colophon">Measured 2026-09-28 against
-      <code>public/decks/claude_architect_foundations.json</code> and the Claude Certified Architect
-      &ndash; Foundations Exam Guide v1.0. Question counts and domain weights both have a short shelf
-      life &mdash; re-run <code>node study-guides/reclassify-claude-architect.mjs</code> before
-      trusting the table in &sect;2.</p>
     </section>
 
   </main>

@@ -484,7 +484,7 @@
     "corrected": {
       "date": "2026-08-08",
       "via": "validation",
-      "note": "Answer stands at A. Carried forward from the earlier pass: the key was changed D->A because this question's twin answers Continuation for an identical stem and the deck contradicted itself. This pass additionally removed the phrase \"hit the synchronous callout ceiling\" — 10 seconds is the default Apex callout timeout, raisable to 120 seconds via setTimeout(), so the case for Continuation rests on releasing the request thread and on the concurrent long-running request limit, not on a ceiling that does not exist."
+      "note": "Answer stands at A. It moved from D to A because another question with an identical scenario answers Continuation. The explanation also no longer claims a \"synchronous callout ceiling\": 10 seconds is the default Apex callout timeout, raisable to 120 seconds via setTimeout(), so the case for Continuation rests on releasing the request thread and on the concurrent long-running request limit."
     }
   },
   {
@@ -513,7 +513,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "comments",
-      "note": "Q44 A->B. Salesforce documents that CDC ignores sharing settings and sends change events for all records, so \"CDC does not have record access support\" is the doc-backed true statement.",
+      "note": "Salesforce documents that CDC ignores sharing settings and sends change events for all records, so \"CDC does not have record access support\" is the documented true statement.",
       "from": "A",
       "to": "B"
     }
@@ -561,7 +561,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "comments",
-      "note": "Q47 option B was a verbatim copy of option A; restored the intended distractor."
+      "note": "Option B was a verbatim copy of option A; the intended distractor was restored."
     }
   },
   {
@@ -602,7 +602,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "validation",
-      "note": "Q50 B,C -> B,D, reverting an earlier change in this repo. Its twin Q22 keys Named Credentials plus Composite REST, and Salesforce documents composite resources as simplifying code and consuming one API call for the whole series.",
+      "note": "Named Credentials plus Composite REST is the pair. Salesforce documents composite resources as simplifying code and consuming one API call for the whole series, and another question in this deck with the same scenario keys the same pair.",
       "from": "B,C",
       "to": "B,D"
     }
@@ -746,7 +746,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "comments",
-      "note": "Q62 B->A. Requirement 5 names MDM as system of record for customers; option B omits it and invents a Pricing Engine.",
+      "note": "Requirement 5 names MDM as the system of record for customers; option B omits it and invents a Pricing Engine.",
       "from": "B",
       "to": "A"
     }
@@ -871,7 +871,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "comments",
-      "note": "Reviewed against the comment suggesting Change Data Capture. The answer stands: this asks for a query-scoped counter feeding a dashboard, which is what PushTopic is for. Note the opposite call on Q93, deliberately — CDC there, PushTopic here.",
+      "note": "Reviewed against a suggestion of Change Data Capture. The answer stands: this asks for a query-scoped counter feeding a dashboard, which is what PushTopic is for. A similar question in this deck deliberately goes the other way — CDC there, because it keeps an external system in sync.",
       "upheld": true
     }
   },
@@ -1026,7 +1026,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "comments",
-      "note": "Q84 A->D. Target sits behind a firewall, so the external system must initiate; Bulk API fits 2M/day one-way.",
+      "note": "The target sits behind a firewall, so the external system must initiate; Bulk API fits 2M records a day, one-way.",
       "from": "A",
       "to": "D"
     }
@@ -1045,7 +1045,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "validation",
-      "note": "Q83 A,B -> A,D. Remote Site Settings is a prerequisite for raw callouts, not a way to absorb an endpoint change; Named Credentials and an ESB both externalise the URL from code, which is what shortens the outage.",
+      "note": "Remote Site Settings is a prerequisite for raw callouts, not a way to absorb an endpoint change; Named Credentials and an ESB both externalise the URL from code, which is what shortens the outage.",
       "from": "A,B",
       "to": "A,D"
     }
@@ -1146,7 +1146,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "comments",
-      "note": "Q93 D->A. Keeping an external system in sync with record changes is CDC's purpose; PushTopic is for UI.",
+      "note": "Keeping an external system in sync with record changes is CDC's purpose; PushTopic is for UI.",
       "from": "D",
       "to": "A"
     }
@@ -1177,7 +1177,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "comments",
-      "note": "Q95 A,D,E->B,C,D. Requirement 1 forces an external IdP, so \"Salesforce native for all\" fails; custom auth is an anti-pattern.",
+      "note": "Requirement 1 forces an external IdP, so \"Salesforce native for all\" fails; custom auth is an anti-pattern.",
       "from": "A,D,E",
       "to": "B,C,D"
     }
@@ -1196,7 +1196,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "comments",
-      "note": "Q96 A,D->A,B. Declarative/packaged over custom Apex; C is manual.",
+      "note": "Declarative and packaged solutions beat custom Apex; C is manual.",
       "from": "A,D",
       "to": "A,B"
     }
@@ -1251,7 +1251,7 @@
     "corrected": {
       "date": "2026-08-10",
       "via": "validation",
-      "note": "Key D stands, but the item is defective and the explanation now says so instead of asserting Process Builder is 'the supported path' for a synchronous callout. Two problems. The pending-DML rule means a callout from Process Builder-invoked Apex requires @future(callout=true), so it is asynchronous — which contradicts the stem's synchronous requirement and undercuts the explanation's own reason for rejecting option A. No option satisfies both 'automatic on status change' and 'synchronous', so the stem is internally inconsistent. Separately, Process Builder hit end of support on 31 Dec 2025; per the established fact that this is retirement of support rather than removal of capability, the key remains correct, and Flow is the current equivalent. Flagged for the user: the clean repair is to drop 'synchronous' from the stem, or reword option D to name Flow."
+      "note": "Answer D stands, but the item is flawed and the explanation now says so. A callout from Process Builder-invoked Apex requires @future(callout=true) because of the pending-DML rule, so it is asynchronous — which contradicts the question's synchronous requirement. No option satisfies both 'automatic on status change' and 'synchronous'. Process Builder also reached end of support on 31 Dec 2025; end of support is not removal, so D remains correct, and Flow is the current equivalent."
     }
   },
   {
@@ -1304,7 +1304,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "validation",
-      "note": "Q102 B,C -> B,D. The stem asks for approaches that match the Salesforce UI; an iframe hosting a .NET application is precisely what does not.",
+      "note": "The question asks for approaches that match the Salesforce UI; an iframe hosting a .NET application is precisely what does not.",
       "from": "B,C",
       "to": "B,D"
     }
@@ -1395,7 +1395,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "comments",
-      "note": "Q112 A,C,E->B,C,E. Bulk ZIP attachment loading is documented; option A's wording is not defensible.",
+      "note": "Bulk ZIP attachment loading is documented; option A's wording is not defensible.",
       "from": "A,C,E",
       "to": "B,C,E"
     }
@@ -1438,7 +1438,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "comments",
-      "note": "Q115 options B and D were identical and only one answer was marked on a two-answer question; collapsed to four options, answer C,D.",
+      "note": "Options B and D were identical and only one answer was marked on a two-answer question; the options were collapsed to four, answer C,D.",
       "from": "E",
       "to": "C,D"
     }
@@ -1469,7 +1469,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "comments",
-      "note": "Q117 had two options merged into one string (\"Unit Testing C .Regression Testing\"); split into four distinct options.",
+      "note": "Two options had been merged into one string (\"Unit Testing C .Regression Testing\"); they were split into four distinct options.",
       "from": "B",
       "to": "C"
     }
@@ -1536,7 +1536,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "comments",
-      "note": "Q122 answer B confirmed against the diagram. The textual rendering added then was replaced on 2026-08-11 by a drawn sequence diagram, which shows the leg nesting the prose could not."
+      "note": "Answer B confirmed against the original diagram, which is now drawn above the question and shows the nesting the text alone could not."
     }
   },
   {
@@ -1606,7 +1606,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "validation",
-      "note": "Q124 option A read \"Data Visualization\", which names a different concept entirely. The pattern is Data Virtualization; the answer was always A."
+      "note": "Option A read \"Data Visualization\", which names a different concept. The pattern is Data Virtualization; the answer was always A."
     }
   },
   {
@@ -1659,7 +1659,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "comments",
-      "note": "Q131 C->D. Least privilege and audit attribution come from distinct users, not from Connected Apps.",
+      "note": "Least privilege and audit attribution come from distinct users, not from Connected Apps.",
       "from": "C",
       "to": "D"
     }
@@ -1750,7 +1750,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "comments",
-      "note": "Q139 B->D. Establish the access-prevention requirement first, then how fast it must propagate.",
+      "note": "Establish the access-prevention requirement first, then how fast it must propagate.",
       "from": "B",
       "to": "D"
     }
@@ -1769,7 +1769,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "comments",
-      "note": "Q140 answer A,D confirmed against the diagram. The textual rendering added then was replaced on 2026-08-11 by a drawn sequence diagram, which puts both exchanges on one time axis."
+      "note": "Answer A,D confirmed against the original diagram, which is now drawn above the question and puts both exchanges on one time axis."
     }
   },
   {
@@ -1786,7 +1786,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "validation",
-      "note": "Q141 options B and E were identical and only one answer was marked on a two-answer question; deduped, answer B,C. (Found by validation, not by a comment.)",
+      "note": "Options B and E were identical and only one answer was marked on a two-answer question; the duplicate option was removed and the answer is B,C.",
       "from": "C",
       "to": "B,C"
     }

@@ -361,6 +361,7 @@ code {
   padding: .1em .34em;
   border-radius: 3px;
   color: var(--ink);
+  overflow-wrap: anywhere;
 }
 
 ul, ol.prose { margin: 0 0 18px; padding-left: 20px; max-width: 68ch; }
@@ -586,7 +587,7 @@ html { scroll-behavior: smooth; }
     <p class="standfirst">
       Built from the 222 questions in the practice deck, cross-checked against the official exam
       outline and the documentation those questions cite. The exam is aligned to <strong>Summer '26</strong>
-      &mdash; the most current of any deck in this repo &mdash; so the risk runs the same way as the
+      &mdash; the most current of any exam in this app &mdash; so the risk runs the same way as the
       Administrator guide: not that the exam tests retired features, but that <strong>the deck still keys
       some</strong>. &sect;11 lists all ten.
     </p>
@@ -615,7 +616,6 @@ html { scroll-behavior: smooth; }
       <li><a href="#stale" class="key">Deck older than the exam</a></li>
       <li><a href="#plan">Two-week plan</a></li>
       <li><a href="#sources">Sources</a></li>
-      <li><a href="#notebooklm">Using NotebookLM</a></li>
     </ol>
     <p class="note">Sections in red carry the objectives the practice deck does not train you for.</p>
   </nav>
@@ -649,7 +649,7 @@ html { scroll-behavior: smooth; }
             <tr><td>Official name</td><td>Salesforce Certified Platform App Builder</td></tr>
             <tr><td>Content</td><td><strong>60 scored</strong> multiple-choice / multiple-select + up to 5 unscored</td></tr>
             <tr><td>Time</td><td><strong>105 minutes</strong> (1 min 45 s per question)</td></tr>
-            <tr><td>Passing score</td><td><strong>73%</strong> &rarr; <strong>44 of 60</strong> &mdash; the highest pass mark in this repo</td></tr>
+            <tr><td>Passing score</td><td><strong>73%</strong> &rarr; <strong>44 of 60</strong> &mdash; the highest pass mark in this app</td></tr>
             <tr><td>Prerequisite</td><td>None</td></tr>
             <tr><td>Fee</td><td>US$200 (retake US$100)</td></tr>
             <tr><td>Release alignment</td><td><strong>Summer '26</strong></td></tr>
@@ -666,8 +666,7 @@ html { scroll-behavior: smooth; }
       <p class="lede">Official outline weightings against the deck. The deck's five tags are close to the
       outline but not the same &mdash; the outline folds security and sharing into <em>Fundamentals</em>
       alongside AppExchange and reporting, and its automation domain is far larger &mdash; so the deck
-      column is an independent re-classification of all 222 questions
-      (<code>study-guides/reclassify-app-builder.mjs</code>).</p>
+      column re-reads all 222 questions against the current outline.</p>
 
       <div class="tw">
         <table>
@@ -689,7 +688,7 @@ html { scroll-behavior: smooth; }
 
       <div class="call alert">
         <span class="tag">The gap you need to close</span>
-        <p><strong>This is the best-balanced deck in the repo</strong> &mdash; every domain is within five
+        <p><strong>This is the best-balanced deck in this app</strong> &mdash; every domain is within five
         points of the outline &mdash; so the counts are not the story. The gap is <strong>currency</strong>.
         Reading all 222 against the Summer '26 sub-objectives, <strong>seven have no deck item</strong>, and
         all seven are the objectives added or reworded in the last two years. And in the other direction,
@@ -726,17 +725,17 @@ html { scroll-behavior: smooth; }
         <table>
           <thead><tr><th>Requirement</th><th>Declarative answer</th><th>When it becomes code</th></tr></thead>
           <tbody>
-            <tr><td>Summarise child records on a parent</td><td>Roll-up summary &mdash; <strong>master-detail only</strong> (<code>f0fcecae</code>, <code>dca21cdc</code>)</td><td>Across a <strong>lookup</strong>: a record-triggered flow that counts and writes (<code>2607cf61</code>), an AppExchange roll-up app, or Apex (<code>7fa13400</code>)</td></tr>
-            <tr><td>Block a save conditionally</td><td>Validation rule</td><td><strong>Block a delete</strong> &mdash; validation rules never run on delete; a before-delete Apex trigger does (<code>e1e7a031</code>)</td></tr>
-            <tr><td>Show live external data (a stock price) on a record</td><td>An <strong>AppExchange</strong> solution (<code>600c8f44</code>)</td><td>A custom Lightning web component calling an API</td></tr>
-            <tr><td>A custom component in 4 weeks with no developers</td><td>AppExchange (<code>cebb2770</code>); an unmanaged package to customise (<code>3075c7b3</code>)</td><td>In-house LWC</td></tr>
-            <tr><td>Read business cards into Contacts</td><td>AppExchange data-enrichment apps (<code>15f5f364</code>)</td><td>&mdash;</td></tr>
-            <tr><td>Migrate Classic &rarr; Lightning, drive adoption</td><td>AppExchange readiness apps and partners (<code>4ad9910b</code>)</td><td>&mdash;</td></tr>
+            <tr><td>Summarise child records on a parent</td><td>Roll-up summary &mdash; <strong>master-detail only</strong></td><td>Across a <strong>lookup</strong>: a record-triggered flow that counts and writes, an AppExchange roll-up app, or Apex</td></tr>
+            <tr><td>Block a save conditionally</td><td>Validation rule</td><td><strong>Block a delete</strong> &mdash; validation rules never run on delete; a before-delete Apex trigger does</td></tr>
+            <tr><td>Show live external data (a stock price) on a record</td><td>An <strong>AppExchange</strong> solution</td><td>A custom Lightning web component calling an API</td></tr>
+            <tr><td>A custom component in 4 weeks with no developers</td><td>AppExchange; an unmanaged package to customise</td><td>In-house LWC</td></tr>
+            <tr><td>Read business cards into Contacts</td><td>AppExchange data-enrichment apps</td><td>&mdash;</td></tr>
+            <tr><td>Migrate Classic &rarr; Lightning, drive adoption</td><td>AppExchange readiness apps and partners</td><td>&mdash;</td></tr>
           </tbody>
         </table>
       </div>
       <p>The tell in the stem: "quickly", "no developers", "prebuilt", "minimize maintenance" &rarr; a
-      <strong>managed package</strong> from AppExchange (<code>a0324c31</code>); "fully customise" &rarr;
+      <strong>managed package</strong> from AppExchange; "fully customise" &rarr;
       <strong>unmanaged</strong>.</p>
 
       <div class="call">
@@ -751,10 +750,10 @@ html { scroll-behavior: smooth; }
 
       <h3>Object, record and field access &mdash; the layers</h3>
       <ol>
-        <li><strong>Object permissions</strong> (profile or permission set): Create, Read, Edit, Delete, View All, Modify All. A Schema-Builder-created object is invisible to users until a permission set grants it (<code>8f327859</code>); a new field is visible and editable to <strong>internal profiles</strong> by default (<code>e0015d94</code>).</li>
-        <li><strong>Field-level security</strong> hides or locks a field for everyone who can see the record &mdash; the only tool that hides a field (<code>bd6ef1b0</code>, <code>31d03e0b</code>, <code>1e4e783a</code>); grant one user read on a finance field with a <strong>permission set</strong>, not a profile edit (<code>513fdca2</code>).</li>
-        <li><strong>Record types</strong> on a profile or permission set decide which record types a user can <em>create</em>; removing Bronze from the support profile stops new Bronze cases (<code>eb42de9c</code>); a permission set with the Salary record type limits who creates salary applicants (<code>b873fb5f</code>). Record type + page layout + FLS together make fields read-only after close (<code>1dd6fc7f</code>).</li>
-        <li><strong>Permission set groups</strong> bundle the sets a department always needs; add individual sets on top for senior staff (<code>f64f3731</code>); a <strong>muting</strong> set removes permissions from a group.</li>
+        <li><strong>Object permissions</strong> (profile or permission set): Create, Read, Edit, Delete, View All, Modify All. A Schema-Builder-created object is invisible to users until a permission set grants it; a new field is visible and editable to <strong>internal profiles</strong> by default.</li>
+        <li><strong>Field-level security</strong> hides or locks a field for everyone who can see the record &mdash; the only tool that hides a field; grant one user read on a finance field with a <strong>permission set</strong>, not a profile edit.</li>
+        <li><strong>Record types</strong> on a profile or permission set decide which record types a user can <em>create</em>; removing Bronze from the support profile stops new Bronze cases; a permission set with the Salary record type limits who creates salary applicants. Record type + page layout + FLS together make fields read-only after close.</li>
+        <li><strong>Permission set groups</strong> bundle the sets a department always needs; add individual sets on top for senior staff; a <strong>muting</strong> set removes permissions from a group.</li>
       </ol>
 
       <h3>Sharing &mdash; who sees which record</h3>
@@ -762,26 +761,25 @@ html { scroll-behavior: smooth; }
         <table>
           <thead><tr><th>Mechanism</th><th>Opens</th></tr></thead>
           <tbody>
-            <tr><td><strong>Organization-wide defaults</strong></td><td>The floor per object &mdash; Private, Public Read Only, Public Read/Write; <strong>tighten first, then open</strong> (<code>7ee5407d</code>, <code>ac554cce</code>)</td></tr>
-            <tr><td><strong>Role hierarchy</strong></td><td>Upward &mdash; put the reviewer <em>above</em> the technicians for broad, regional edit access (<code>d1692d01</code>); disable <strong>Grant Access Using Hierarchies</strong> on a custom object so managers do not inherit reviews about themselves (<code>3094912f</code>)</td></tr>
-            <tr><td><strong>Sharing rules</strong> &mdash; owner-based or criteria-based</td><td>Sideways, to groups, roles, roles and subordinates; <strong>criteria-based</strong> when the record's own field decides (<code>98a52146</code>, <code>7ee5407d</code>); owner-based between branches of the hierarchy (<code>5f869bc9</code>); rules can only <em>open</em> access (<code>2acc4e50</code>)</td></tr>
-            <tr><td><strong>Manual sharing</strong></td><td>One record, by the owner or above, to <strong>users, public groups, roles, roles and subordinates</strong>, manager groups (<code>3179a16e</code>)</td></tr>
-            <tr><td><strong>Teams</strong></td><td>Account, opportunity, case teams &mdash; one of three reasons a peer sees a record you cannot (<code>2be541c8</code>)</td></tr>
-            <tr><td><strong>View All / Modify All</strong> on the object</td><td>Everything, ignoring sharing &mdash; the permission-set answer for a team that must read and write all opportunities under a private model (<code>7bf2a1a0</code>, <code>f0d2a336</code>)</td></tr>
-            <tr><td><strong>Master-detail inheritance</strong></td><td>A detail record has <strong>no owner and no sharing of its own</strong>; share the <strong>master</strong> (<code>d36e669a</code>, <code>ff970202</code>); a junction record needs <strong>Read on both masters</strong> (<code>dec9a6b4</code>, <code>c308ee99</code>, <code>6e71484d</code>)</td></tr>
+            <tr><td><strong>Organization-wide defaults</strong></td><td>The floor per object &mdash; Private, Public Read Only, Public Read/Write; <strong>tighten first, then open</strong></td></tr>
+            <tr><td><strong>Role hierarchy</strong></td><td>Upward &mdash; put the reviewer <em>above</em> the technicians for broad, regional edit access; disable <strong>Grant Access Using Hierarchies</strong> on a custom object so managers do not inherit reviews about themselves</td></tr>
+            <tr><td><strong>Sharing rules</strong> &mdash; owner-based or criteria-based</td><td>Sideways, to groups, roles, roles and subordinates; <strong>criteria-based</strong> when the record's own field decides; owner-based between branches of the hierarchy; rules can only <em>open</em> access</td></tr>
+            <tr><td><strong>Manual sharing</strong></td><td>One record, by the owner or above, to <strong>users, public groups, roles, roles and subordinates</strong>, manager groups</td></tr>
+            <tr><td><strong>Teams</strong></td><td>Account, opportunity, case teams &mdash; one of three reasons a peer sees a record you cannot</td></tr>
+            <tr><td><strong>View All / Modify All</strong> on the object</td><td>Everything, ignoring sharing &mdash; the permission-set answer for a team that must read and write all opportunities under a private model</td></tr>
+            <tr><td><strong>Master-detail inheritance</strong></td><td>A detail record has <strong>no owner and no sharing of its own</strong>; share the <strong>master</strong>; a junction record needs <strong>Read on both masters</strong></td></tr>
           </tbody>
         </table>
       </div>
-      <p><strong>Troubleshooting "user can't see the contact"</strong> (<code>8048d229</code>): the parent Account's
+      <p><strong>Troubleshooting "user can't see the contact"</strong>: the parent Account's
       sharing, whether the contact has an account at all (private contacts are owner-only), and Read on
-      Contact. In Lightning, <strong>Sharing Hierarchy</strong> on the action menu shows who has access and why
-      (<code>9ba9345d</code>).</p>
+      Contact. In Lightning, <strong>Sharing Hierarchy</strong> on the action menu shows who has access and why.</p>
 
       <h3>Reports, report types, dashboards</h3>
       <ul>
-        <li><strong>Report types</strong> define the objects and fields. A master-detail relationship auto-creates a standard <strong>"A with B"</strong> type (<code>12796130</code>); converting it to a lookup makes reports on that type <strong>unusable, not deleted</strong> (<code>eca96cec</code>). A <strong>custom report type</strong> is the only way to get <strong>"with or without"</strong> (outer-join) reports (<code>7a5c4bb0</code>, <code>8fa11113</code>); its <strong>primary object is locked</strong> after save; new fields reach it only if <strong>Auto add to custom report type</strong> is on (<code>e7e093e4</code>) &mdash; otherwise add them to the field layout (<code>aa446baa</code>).</li>
-        <li><strong>Formats</strong>: tabular, summary (row groups), matrix (rows &times; columns &mdash; status by priority, <code>71a617ac</code>), joined. <strong>Charts need groupings</strong> &mdash; a tabular report cannot be charted or embedded on a record page (<code>5feb8608</code>). Bucket columns categorise without a field.</li>
-        <li><strong>Folders</strong> control who opens a report or dashboard; share the dashboard folder with roles and subordinates and the <em>source report</em> folder more narrowly to let people see the chart but not the data (<code>e2c4f8aa</code>).</li>
+        <li><strong>Report types</strong> define the objects and fields. A master-detail relationship auto-creates a standard <strong>"A with B"</strong> type; converting it to a lookup makes reports on that type <strong>unusable, not deleted</strong>. A <strong>custom report type</strong> is the only way to get <strong>"with or without"</strong> (outer-join) reports; its <strong>primary object is locked</strong> after save; new fields reach it only if <strong>Auto add to custom report type</strong> is on &mdash; otherwise add them to the field layout.</li>
+        <li><strong>Formats</strong>: tabular, summary (row groups), matrix (rows &times; columns &mdash; status by priority), joined. <strong>Charts need groupings</strong> &mdash; a tabular report cannot be charted or embedded on a record page. Bucket columns categorise without a field.</li>
+        <li><strong>Folders</strong> control who opens a report or dashboard; share the dashboard folder with roles and subordinates and the <em>source report</em> folder more narrowly to let people see the chart but not the data.</li>
         <li><strong>Dashboards</strong> &mdash; the part the deck skips: each chart or table has one source report; up to 25 widgets; <strong>dashboard filters</strong> (up to 5); the <strong>running user</strong> decides whose data everyone sees, and <strong>run as logged-in user</strong> makes it a <strong>dynamic dashboard</strong> (5 / 10 / 3 per org by edition, no private folder, no scheduled refresh, no subscription); <strong>subscriptions</strong> email a refresh on a schedule; feed tracking posts widgets to Chatter.</li>
       </ul>
     </section>
@@ -796,27 +794,27 @@ html { scroll-behavior: smooth; }
         <table>
           <thead><tr><th>Type</th><th>Access</th><th>User interface</th><th>Reporting</th><th>Deletion</th><th>Pick it when</th></tr></thead>
           <tbody>
-            <tr><td><strong>Lookup</strong></td><td>Independent owner and sharing</td><td>Related list on the parent (<code>108817b2</code>); on delete: clear the value, block the delete, or (custom objects) cascade</td><td>Custom report type for "with or without"</td><td>Child survives</td><td>The child must outlive the parent (<code>df028304</code> Contact side)</td></tr>
-            <tr><td><strong>Master-detail</strong></td><td>Detail <strong>inherits the master's owner and sharing</strong> (<code>ff970202</code>, <code>6be00595</code>); the field's sharing setting decides whether Read or Read/Write on the master is needed to edit children (<code>6e71484d</code>)</td><td>Required field; <strong>Allow Reparenting</strong> off by default &mdash; the parent cannot be changed once set (<code>cfee0562</code>, <code>ecc2f2d1</code>)</td><td>Auto "A with B" report type</td><td><strong>Cascade delete</strong> (<code>f275115f</code>, <code>df028304</code>)</td><td>Roll-ups, cascade delete, inherited visibility; up to <strong>2</strong> per object (<code>6e5ebb2c</code>); detail must be custom</td></tr>
-            <tr><td><strong>Junction</strong> (2 &times; master-detail)</td><td>Read needed on <strong>both</strong> masters</td><td>Two related lists</td><td></td><td>Deleting either master deletes the junction record</td><td>Many-to-many (<code>80cdeade</code>, <code>6d288fc9</code>)</td></tr>
+            <tr><td><strong>Lookup</strong></td><td>Independent owner and sharing</td><td>Related list on the parent; on delete: clear the value, block the delete, or (custom objects) cascade</td><td>Custom report type for "with or without"</td><td>Child survives</td><td>The child must outlive the parent (the Contact side of a two-parent design)</td></tr>
+            <tr><td><strong>Master-detail</strong></td><td>Detail <strong>inherits the master's owner and sharing</strong>; the field's sharing setting decides whether Read or Read/Write on the master is needed to edit children</td><td>Required field; <strong>Allow Reparenting</strong> off by default &mdash; the parent cannot be changed once set</td><td>Auto "A with B" report type</td><td><strong>Cascade delete</strong></td><td>Roll-ups, cascade delete, inherited visibility; up to <strong>2</strong> per object; detail must be custom</td></tr>
+            <tr><td><strong>Junction</strong> (2 &times; master-detail)</td><td>Read needed on <strong>both</strong> masters</td><td>Two related lists</td><td></td><td>Deleting either master deletes the junction record</td><td>Many-to-many</td></tr>
             <tr><td><strong>Hierarchical</strong></td><td>&mdash;</td><td>User only</td><td></td><td></td><td>Manager-style self-reference</td></tr>
-            <tr><td><strong>External lookup / indirect lookup</strong></td><td>Follows the external object</td><td>Related list of external records</td><td>Report on external objects</td><td></td><td>Salesforce Connect; <strong>indirect lookup needs an External ID + Unique field on the Salesforce parent</strong> (<code>f1910535</code>)</td></tr>
+            <tr><td><strong>External lookup / indirect lookup</strong></td><td>Follows the external object</td><td>Related list of external records</td><td>Report on external objects</td><td></td><td>Salesforce Connect; <strong>indirect lookup needs an External ID + Unique field on the Salesforce parent</strong></td></tr>
           </tbody>
         </table>
       </div>
       <p><strong>Converting</strong>: lookup &rarr; master-detail requires <strong>every</strong> child to have the lookup
-      populated and no more than one existing master-detail (<code>2b41b228</code>); master-detail &rarr; lookup
-      requires the <strong>roll-up summary fields to be deleted first</strong> (<code>99028ce3</code>). Modelling
+      populated and no more than one existing master-detail; master-detail &rarr; lookup
+      requires the <strong>roll-up summary fields to be deleted first</strong>. Modelling
       customers and dealers who each have their own rep and bill: <strong>separate accounts in an account
-      hierarchy</strong> (<code>c5f11c84</code>). A customer-service manager per account: a <strong>lookup to
-      User</strong> (<code>92ce68b5</code>).</p>
+      hierarchy</strong>. A customer-service manager per account: a <strong>lookup to
+      User</strong>.</p>
 
       <h3>Field types and what changing them does</h3>
       <ul>
-        <li>Coordinates &rarr; <strong>Geolocation</strong> (<code>696e6048</code>); descriptions with images and links &rarr; <strong>Rich Text Area</strong> (<code>448050ab</code>); a yes/no fact you will report on &rarr; <strong>Checkbox</strong> (<code>c0a59efc</code>); a system key that must survive migration and stay unique &rarr; <strong>Text, Unique, External ID</strong> (<code>dbc50a1e</code>); values shared across objects &rarr; a <strong>global value set</strong> (<code>5bc838e7</code>); up to <strong>25 external ID fields per object</strong>, auto-number included (<code>4442bb62</code>).</li>
-        <li><strong>Dependent picklists</strong>: custom picklists can be controlling or dependent; multi-select can be dependent but not controlling; checkboxes can control but not depend (<code>59cb33df</code>).</li>
-        <li><strong>Changing a type</strong>: Long Text Area &rarr; Text <strong>truncates to 255</strong> (<code>c2379d8e</code>); Date &harr; Date/Time is on the documented <strong>data-loss</strong> list (<code>e680953f</code>); Number &rarr; Text is <strong>refused</strong> while Apex, Visualforce or a formula references the field (<code>8393698f</code>); the conversion runs <strong>in the background</strong> and can delay a change set (<code>238aaeb2</code>). Too many inactive picklist values: set an <strong>upper bound</strong> in Picklist Settings (<code>728103c0</code>).</li>
-        <li><strong>Schema Builder</strong> views and creates objects, fields and relationships in one canvas (<code>ea9c253d</code>, <code>82f377a0</code>) but <strong>does not add fields to page layouts</strong> (<code>2fac7b8c</code>); <strong>Lightning Object Creator</strong> builds an object <em>and</em> loads its rows from a spreadsheet (<code>de845c25</code>).</li>
+        <li>Coordinates &rarr; <strong>Geolocation</strong>; descriptions with images and links &rarr; <strong>Rich Text Area</strong>; a yes/no fact you will report on &rarr; <strong>Checkbox</strong>; a system key that must survive migration and stay unique &rarr; <strong>Text, Unique, External ID</strong>; values shared across objects &rarr; a <strong>global value set</strong>; up to <strong>25 external ID fields per object</strong>, auto-number included.</li>
+        <li><strong>Dependent picklists</strong>: custom picklists can be controlling or dependent; multi-select can be dependent but not controlling; checkboxes can control but not depend.</li>
+        <li><strong>Changing a type</strong>: Long Text Area &rarr; Text <strong>truncates to 255</strong>; Date &harr; Date/Time is on the documented <strong>data-loss</strong> list; Number &rarr; Text is <strong>refused</strong> while Apex, Visualforce or a formula references the field; the conversion runs <strong>in the background</strong> and can delay a change set. Too many inactive picklist values: set an <strong>upper bound</strong> in Picklist Settings.</li>
+        <li><strong>Schema Builder</strong> views and creates objects, fields and relationships in one canvas but <strong>does not add fields to page layouts</strong>; <strong>Lightning Object Creator</strong> builds an object <em>and</em> loads its rows from a spreadsheet.</li>
       </ul>
 
       <h3>Importing, exporting, external data</h3>
@@ -824,13 +822,13 @@ html { scroll-behavior: smooth; }
         <table>
           <thead><tr><th>Need</th><th>Tool</th><th>Facts</th></tr></thead>
           <tbody>
-            <tr><td>&le; 50,000 accounts, contacts, leads, solutions, campaign members, custom objects, with dedupe</td><td><strong>Data Import Wizard</strong> (<code>192da39e</code>, <code>124809ca</code>)</td><td>Matching on name/email/ID/external ID; <strong>ignores blank cells</strong> &mdash; it cannot clear a field</td></tr>
-            <tr><td>60,000+ records, any object, delete, export, or clearing fields</td><td><strong>Data Loader</strong> (<code>9c4d665b</code>)</td><td>Insert / update / <strong>upsert on an external ID</strong> (<code>4183da4a</code>) / delete / hard delete / export; <strong>Insert Null Values</strong> to blank fields (<code>2a1d9baf</code>)</td></tr>
+            <tr><td>&le; 50,000 accounts, contacts, leads, solutions, campaign members, custom objects, with dedupe</td><td><strong>Data Import Wizard</strong></td><td>Matching on name/email/ID/external ID; <strong>ignores blank cells</strong> &mdash; it cannot clear a field</td></tr>
+            <tr><td>60,000+ records, any object, delete, export, or clearing fields</td><td><strong>Data Loader</strong></td><td>Insert / update / <strong>upsert on an external ID</strong> / delete / hard delete / export; <strong>Insert Null Values</strong> to blank fields</td></tr>
             <tr><td>Spreadsheet &rarr; new object + data</td><td><strong>Lightning Object Creator</strong></td><td></td></tr>
-            <tr><td>Backup</td><td><strong>Data Export Service</strong> &mdash; weekly (Enterprise+) or monthly (<code>f9e7f3dd</code>)</td><td>Zipped CSV, kept 48 hours</td></tr>
-            <tr><td>Archive but keep reporting</td><td><strong>Big objects</strong> and <strong>external objects</strong> (<code>e2e924df</code>)</td><td>Neither counts against data storage</td></tr>
+            <tr><td>Backup</td><td><strong>Data Export Service</strong> &mdash; weekly (Enterprise+) or monthly</td><td>Zipped CSV, kept 48 hours</td></tr>
+            <tr><td>Archive but keep reporting</td><td><strong>Big objects</strong> and <strong>external objects</strong></td><td>Neither counts against data storage</td></tr>
             <tr><td>Live data that stays outside Salesforce</td><td><strong>Salesforce Connect</strong></td><td>OData 2.0/4.0, cross-org, or custom Apex adapters; external objects (<code>__x</code>) support lookup, external lookup and indirect lookup; reports and list views but no triggers or roll-ups</td></tr>
-            <tr><td>Stop duplicates</td><td><strong>Duplicate rules</strong></td><td><strong>Block on Create</strong>, and <strong>Bypass Sharing Rules</strong> so a private OWD does not hide the matches (<code>daa8e06c</code>)</td></tr>
+            <tr><td>Stop duplicates</td><td><strong>Duplicate rules</strong></td><td><strong>Block on Create</strong>, and <strong>Bypass Sharing Rules</strong> so a private OWD does not hide the matches</td></tr>
           </tbody>
         </table>
       </div>
@@ -843,25 +841,25 @@ html { scroll-behavior: smooth; }
 
       <h3>Formula fields</h3>
       <ul>
-        <li><strong>Cross-object formulas</strong> read <em>up</em> &mdash; parent fields through lookups and master-detail, several levels deep (<code>2268b774</code>, <code>eae6a2e7</code>, <code>9b38319e</code>, <code>8f4d4727</code>); they <strong>cannot reference child records</strong> (<code>f8150bea</code>). <code>TEXT(picklist)</code> shows a parent's picklist value; <code>ISPICKVAL</code> returns a Boolean.</li>
-        <li><strong>Functions the exam names</strong>: <code>TODAY()</code> returns a Date, <code>NOW()</code> a Date/Time &mdash; subtract dates for whole days (<code>b4a0859a</code>); <code>IMAGE()</code> for colour indicators (<code>52bee9cd</code>); <code>HYPERLINK()</code> for a link to a grandparent (<code>2268b774</code>); <code>PRIORVALUE</code>, <code>ISCHANGED</code>, <code>ISNEW</code> in validation rules.</li>
-        <li>A formula recalculates on every read &mdash; the wrong tool for a value that must be <strong>frozen at creation</strong> (<code>39919e32</code>: copy it once with automation). It cannot output rich text. Roll-ups cannot reference a formula that uses <code>NOW</code>, <code>TODAY</code>, <code>$User</code> or a <strong>cross-object</strong> field (<code>c3ed7893</code>).</li>
+        <li><strong>Cross-object formulas</strong> read <em>up</em> &mdash; parent fields through lookups and master-detail, several levels deep; they <strong>cannot reference child records</strong>. <code>TEXT(picklist)</code> shows a parent's picklist value; <code>ISPICKVAL</code> returns a Boolean.</li>
+        <li><strong>Functions the exam names</strong>: <code>TODAY()</code> returns a Date, <code>NOW()</code> a Date/Time &mdash; subtract dates for whole days; <code>IMAGE()</code> for colour indicators; <code>HYPERLINK()</code> for a link to a grandparent; <code>PRIORVALUE</code>, <code>ISCHANGED</code>, <code>ISNEW</code> in validation rules.</li>
+        <li>A formula recalculates on every read &mdash; the wrong tool for a value that must be <strong>frozen at creation</strong> (copy it once with automation). It cannot output rich text. Roll-ups cannot reference a formula that uses <code>NOW</code>, <code>TODAY</code>, <code>$User</code> or a <strong>cross-object</strong> field.</li>
       </ul>
 
       <h3>Roll-up summary fields</h3>
       <ul>
-        <li><strong>Master-detail only</strong> &mdash; plus the built-in Account &larr; Opportunity case (<code>759295bd</code>, <code>82c18788</code>). Types: <strong>COUNT, SUM, MIN, MAX</strong>; on number, currency and percent (all four) and on date/date-time (<strong>MIN and MAX</strong>) (<code>e187aca4</code>, <code>93fc7f11</code>, <code>d4dfeb80</code>, <code>a2b1cdb4</code>). <strong>AVG does not exist</strong> (<code>f0fcecae</code>).</li>
+        <li><strong>Master-detail only</strong> &mdash; plus the built-in Account &larr; Opportunity case. Types: <strong>COUNT, SUM, MIN, MAX</strong>; on number, currency and percent (all four) and on date/date-time (<strong>MIN and MAX</strong>). <strong>AVG does not exist</strong>.</li>
         <li><strong>25 per object</strong> (raisable), with filters (won only, closed within a year).</li>
-        <li><strong>Advanced Currency Management blocks currency roll-ups from Opportunity to Account</strong> (<code>db1a97a8</code>).</li>
-        <li>Across a lookup: a flow, an AppExchange roll-up app, or Apex &mdash; or convert the relationship (<code>a51f3d87</code>, <code>dca21cdc</code>).</li>
+        <li><strong>Advanced Currency Management blocks currency roll-ups from Opportunity to Account</strong>.</li>
+        <li>Across a lookup: a flow, an AppExchange roll-up app, or Apex &mdash; or convert the relationship.</li>
       </ul>
 
       <h3>Validation rules</h3>
       <ul>
-        <li>A rule <strong>fires when its formula is TRUE</strong> &mdash; write the <em>forbidden</em> condition (<code>bb35f81f</code>: <code>NOT(ISBLANK(Job_Accepted__c)) &amp;&amp; ISCHANGED(Hire_Date__c)</code>).</li>
-        <li><strong>Conditional requirements</strong> are theirs alone: a field required only for a record type (<code>2583af7a</code>), only when the parent is High Priority (<code>b2ad3559</code>), only at a stage (<code>f2171f7e</code>), only when Closed Won and more than 14 days out (<code>b6e70e00</code>). Layout-required is unconditional.</li>
-        <li><code>PRIORVALUE</code> stops a value increasing (<code>48077126</code>) or a status going backwards (<code>ec780513</code>); <code>$UserRole.Name</code> / <code>$Profile.Name</code> gate who may set a value (<code>a7066a29</code>); <code>Owner:Queue.Id</code> tells a queue-owned lead from a user-owned one (<code>df7e220e</code>).</li>
-        <li>They <strong>do not run on delete</strong> (<code>e1e7a031</code>), are <strong>skipped on lead conversion</strong> unless <em>Require Validation for Converted Leads</em> is on (<code>e7674bf2</code>), and are <strong>not re-run by workflow field updates</strong> (<code>2b895c9b</code>).</li>
+        <li>A rule <strong>fires when its formula is TRUE</strong> &mdash; write the <em>forbidden</em> condition (<code>NOT(ISBLANK(Job_Accepted__c)) &amp;&amp; ISCHANGED(Hire_Date__c)</code>).</li>
+        <li><strong>Conditional requirements</strong> are theirs alone: a field required only for a record type, only when the parent is High Priority, only at a stage, only when Closed Won and more than 14 days out. Layout-required is unconditional.</li>
+        <li><code>PRIORVALUE</code> stops a value increasing or a status going backwards; <code>$UserRole.Name</code> / <code>$Profile.Name</code> gate who may set a value; <code>Owner:Queue.Id</code> tells a queue-owned lead from a user-owned one.</li>
+        <li>They <strong>do not run on delete</strong>, are <strong>skipped on lead conversion</strong> unless <em>Require Validation for Converted Leads</em> is on, and are <strong>not re-run by workflow field updates</strong>.</li>
       </ul>
     </section>
 
@@ -875,25 +873,24 @@ html { scroll-behavior: smooth; }
         <table>
           <thead><tr><th>Type</th><th>Use it when</th></tr></thead>
           <tbody>
-            <tr><td><strong>Screen flow</strong></td><td>A user answers prompts &mdash; a call script (<code>5eb59bb7</code>), a popup of questions from a button before approval (<code>d8a40894</code>), a guided step in the Actions &amp; Recommendations component (<code>047f35ce</code>)</td></tr>
-            <tr><td><strong>Record-triggered, before save</strong> ("Fast Field Updates")</td><td>Set fields on the triggering record only &mdash; cannot submit for approval or touch other records (<code>5b81e447</code>)</td></tr>
-            <tr><td><strong>Record-triggered, after save</strong> ("Actions and Related Records")</td><td>Create the renewal opportunity and notify (<code>c3dbacf5</code>), update contacts when the account changes (<code>5af0a805</code>), update the parent when a lookup child is deleted (<code>b26ceb79</code>), reach an external SOAP endpoint (<code>4b57de62</code>), assign a permission set on user creation (<code>e4b4892c</code>), submit for approval automatically (<code>aae29b1e</code>, <code>9183e3e5</code>), email one person and create a task for another with a Decision (<code>fedd4d8c</code>), delete rejected quotes (<code>f305b0dc</code>), post to Chatter (<code>42ba8f21</code>); <strong>scheduled paths</strong> for "after four business hours" (<code>a58ee5df</code>)</td></tr>
+            <tr><td><strong>Screen flow</strong></td><td>A user answers prompts &mdash; a call script, a popup of questions from a button before approval, a guided step in the Actions &amp; Recommendations component</td></tr>
+            <tr><td><strong>Record-triggered, before save</strong> ("Fast Field Updates")</td><td>Set fields on the triggering record only &mdash; cannot submit for approval or touch other records</td></tr>
+            <tr><td><strong>Record-triggered, after save</strong> ("Actions and Related Records")</td><td>Create the renewal opportunity and notify, update contacts when the account changes, update the parent when a lookup child is deleted, reach an external SOAP endpoint, assign a permission set on user creation, submit for approval automatically, email one person and create a task for another with a Decision, delete rejected quotes, post to Chatter; <strong>scheduled paths</strong> for "after four business hours"</td></tr>
             <tr><td><strong>Schedule-triggered</strong></td><td>Sweep a set of records on a schedule</td></tr>
             <tr><td><strong>Autolaunched</strong></td><td>Invoked by a button, another flow, Apex or an agent action</td></tr>
             <tr><td><strong>Flow Approval Process</strong></td><td>Multi-stage, multi-user, multi-system approvals &mdash; below</td></tr>
           </tbody>
         </table>
       </div>
-      <p><strong>Best practice</strong>: one record-triggered flow <strong>per object per trigger context</strong>
-      (<code>5c35d629</code>); avoid the infinite loop where an after-save update re-fires the same flow;
-      combine actions (<code>3231e6c1</code> says it for Process Builder &mdash; the principle survives the tool).</p>
+      <p><strong>Best practice</strong>: one record-triggered flow <strong>per object per trigger context</strong>; avoid the infinite loop where an after-save update re-fires the same flow;
+      combine actions (the deck says it for Process Builder &mdash; the principle survives the tool).</p>
 
       <h3>Classic approval processes &mdash; still on the outline as "approval process"</h3>
       <ul>
-        <li><strong>Entry criteria</strong> decide what enters; the record is <strong>locked</strong> while pending; <strong>Submit for Approval</strong> is manual unless a <strong>flow submits it</strong> (<code>aae29b1e</code>, <code>1e4a7642</code>, <code>9183e3e5</code>).</li>
-        <li><strong>Steps</strong> route to a user, a <strong>queue</strong> &mdash; the answer for "any member of the department" (<code>8d4883ca</code>) &mdash; the <strong>Manager</strong> field via <em>Next Automated Approver Determined By</em>, or an approval hierarchy; a second step with <code>Amount &gt; 10,000</code> routes larger contracts to a director (<code>62635d92</code>); <strong>unanimous</strong> approval when both the manager and the VP must sign (<code>9183e3e5</code>); a <strong>delegated approver</strong> covers vacations (<code>6ee193c4</code>).</li>
-        <li><strong>Actions</strong> &mdash; exactly four types: <strong>email alert, task, field update, outbound message</strong> (<code>70d99691</code>). An approval cannot create a record or delete one &mdash; gating a delete needs the approval plus a flow (<code>c25d186f</code>).</li>
-        <li>Approve from <strong>Chatter</strong> (Chatter Settings &rarr; Allow Approvals, <code>455b9add</code>) and from the mobile app via <strong>in-app notifications and the record</strong> (<code>d07b1682</code>).</li>
+        <li><strong>Entry criteria</strong> decide what enters; the record is <strong>locked</strong> while pending; <strong>Submit for Approval</strong> is manual unless a <strong>flow submits it</strong>.</li>
+        <li><strong>Steps</strong> route to a user, a <strong>queue</strong> &mdash; the answer for "any member of the department" &mdash; the <strong>Manager</strong> field via <em>Next Automated Approver Determined By</em>, or an approval hierarchy; a second step with <code>Amount &gt; 10,000</code> routes larger contracts to a director; <strong>unanimous</strong> approval when both the manager and the VP must sign; a <strong>delegated approver</strong> covers vacations.</li>
+        <li><strong>Actions</strong> &mdash; exactly four types: <strong>email alert, task, field update, outbound message</strong>. An approval cannot create a record or delete one &mdash; gating a delete needs the approval plus a flow.</li>
+        <li>Approve from <strong>Chatter</strong> (Chatter Settings &rarr; Allow Approvals) and from the mobile app via <strong>in-app notifications and the record</strong>.</li>
       </ul>
 
       <div class="call">
@@ -915,7 +912,7 @@ html { scroll-behavior: smooth; }
           <li><strong>Error emails</strong>: when a flow interview fails, a detailed email goes to the <strong>user who last modified the flow</strong> &mdash; or, via Process Automation Settings &rarr; <em>Send Process or Flow Error Email to</em>, to the <strong>Apex Exception Email recipients</strong>. The email carries the interview's data and a link that opens the failed path in Flow Builder.</li>
           <li><strong>The Automation app &rarr; Monitor tab</strong> lists every <strong>failed and paused</strong> interview with its error details; open one to see the debug run, <strong>resume</strong> a paused interview.</li>
           <li><strong>Debug</strong> in Flow Builder: run as another user, with rollback, watching each element's inputs and outputs; <strong>fault connectors</strong> route errors to a friendly screen.</li>
-          <li><strong>Versions</strong>: one active at a time; a change set deploys a flow <strong>inactive</strong> unless the org allows active deployment &mdash; which requires <strong>Apex test coverage</strong> for the flow (<code>aead4086</code>).</li>
+          <li><strong>Versions</strong>: one active at a time; a change set deploys a flow <strong>inactive</strong> unless the org allows active deployment &mdash; which requires <strong>Apex test coverage</strong> for the flow.</li>
           <li><strong>Order of execution</strong> for record-triggered flows: before-save flows &rarr; validation &rarr; after triggers &rarr; assignment/auto-response/workflow/escalation &rarr; after-save flows &rarr; roll-ups &rarr; commit &rarr; scheduled paths and email.</li>
         </ul>
       </div>
@@ -940,10 +937,10 @@ html { scroll-behavior: smooth; }
 
       <h3>Lightning App Builder</h3>
       <ul>
-        <li><strong>Page types</strong>: record, app and home pages; templates <strong>adapt to the device</strong> &mdash; one page, not one per device (<code>de4b2606</code>). <strong>Activation</strong>: org default, <strong>app default</strong>, or <strong>app + record type + profile</strong> &mdash; never by role or permission set (<code>9e57b515</code>).</li>
-        <li><strong>Component visibility</strong> by field value &mdash; including a <em>parent's</em> field (<code>2ebcd70e</code>) &mdash; by user profile (<code>5134cf87</code>), by <strong>device</strong> for mobile-only components (<code>2fc4a493</code>), or by a scheduled showing (<code>9bb789da</code>). <strong>Dynamic Forms</strong> put fields on the page with visibility rules (<code>3f3c54da</code>); <strong>Dynamic Actions</strong> make the Convert button appear only when Status is Qualified (<code>fb8423b6</code>).</li>
-        <li><strong>Standard components</strong> (<code>ffadd965</code>): Record Detail (all layout fields, <code>a50d3615</code>), <strong>Highlights Panel</strong> (up to 12 key fields, <code>ba782585</code>; it also carries the layout's mobile and Lightning actions, <code>a0daae5d</code>), <strong>Related Record</strong> (edit a parent in place with an Update action, <code>c1eb9ac9</code>), <strong>Related List</strong> &mdash; <strong>Enhanced List</strong> for up to 10 columns, sorting and wrapping (<code>db67d315</code>), <strong>Tabs</strong> and <strong>Accordion</strong> for 100 fields (<code>cf57c925</code>), <strong>Rich Text</strong>, List View, Recent Items, <strong>Path</strong>, <strong>Chatter</strong> (needs feed tracking, <code>61c9d73b</code>), Report Chart, Flow, <strong>Activities</strong> (where a New Task action surfaces, <code>78e7b0b9</code>), Actions &amp; Recommendations, Twitter (<code>c4104391</code>).</li>
-        <li><strong>Custom components</strong> come from <strong>Lightning Components in Setup</strong> and <strong>AppExchange</strong> (<code>e787099c</code>, <code>17a46fdf</code>), and are dragged onto a page in App Builder (<code>6963ca79</code>). A component appears only where its <strong>targets</strong> say &mdash; record page, home page, app page, <strong>utility bar</strong> (<code>cf83a80b</code>, <code>9b791b13</code>, which also needs My Domain deployed) &mdash; and only on the <strong>form factors</strong> it declares (<code>afe2479b</code>). Under the hood: Aura or LWC bundles with a <code>js-meta.xml</code> declaring targets and supported form factors.</li>
+        <li><strong>Page types</strong>: record, app and home pages; templates <strong>adapt to the device</strong> &mdash; one page, not one per device. <strong>Activation</strong>: org default, <strong>app default</strong>, or <strong>app + record type + profile</strong> &mdash; never by role or permission set.</li>
+        <li><strong>Component visibility</strong> by field value &mdash; including a <em>parent's</em> field &mdash; by user profile, by <strong>device</strong> for mobile-only components, or by a scheduled showing. <strong>Dynamic Forms</strong> put fields on the page with visibility rules; <strong>Dynamic Actions</strong> make the Convert button appear only when Status is Qualified.</li>
+        <li><strong>Standard components</strong>: Record Detail (all layout fields), <strong>Highlights Panel</strong> (up to 12 key fields; it also carries the layout's mobile and Lightning actions), <strong>Related Record</strong> (edit a parent in place with an Update action), <strong>Related List</strong> &mdash; <strong>Enhanced List</strong> for up to 10 columns, sorting and wrapping, <strong>Tabs</strong> and <strong>Accordion</strong> for 100 fields, <strong>Rich Text</strong>, List View, Recent Items, <strong>Path</strong>, <strong>Chatter</strong> (needs feed tracking), Report Chart, Flow, <strong>Activities</strong> (where a New Task action surfaces), Actions &amp; Recommendations, Twitter.</li>
+        <li><strong>Custom components</strong> come from <strong>Lightning Components in Setup</strong> and <strong>AppExchange</strong>, and are dragged onto a page in App Builder. A component appears only where its <strong>targets</strong> say &mdash; record page, home page, app page, <strong>utility bar</strong> (which also needs My Domain deployed) &mdash; and only on the <strong>form factors</strong> it declares. Under the hood: Aura or LWC bundles with a <code>js-meta.xml</code> declaring targets and supported form factors.</li>
       </ul>
 
       <h3>Buttons, links, actions</h3>
@@ -951,8 +948,8 @@ html { scroll-behavior: smooth; }
         <table>
           <thead><tr><th></th><th>Custom button / link</th><th>Object-specific quick action</th><th>Global action</th></tr></thead>
           <tbody>
-            <tr><td>Lives on</td><td>Page layout buttons</td><td>The object's layout, <strong>Mobile &amp; Lightning Actions</strong> section</td><td>Global publisher layout; almost any page that supports actions (<code>f9226263</code>)</td></tr>
-            <tr><td>Does</td><td>Opens a URL, a Visualforce page, or a flow (<code>d8a40894</code>)</td><td><strong>Create a Record</strong> (with <strong>predefined field values</strong> and its own field layout &mdash; <code>1b17f56d</code>, <code>c73b8857</code>, <code>12cbcf1f</code>), <strong>Update a Record</strong> (<code>25f618fa</code>), Log a Call, Send Email, custom Lightning component or flow</td><td>Create a record <em>not</em> related to the current one, log a call, send email, custom</td></tr>
+            <tr><td>Lives on</td><td>Page layout buttons</td><td>The object's layout, <strong>Mobile &amp; Lightning Actions</strong> section</td><td>Global publisher layout; almost any page that supports actions</td></tr>
+            <tr><td>Does</td><td>Opens a URL, a Visualforce page, or a flow</td><td><strong>Create a Record</strong> (with <strong>predefined field values</strong> and its own field layout), <strong>Update a Record</strong>, Log a Call, Send Email, custom Lightning component or flow</td><td>Create a record <em>not</em> related to the current one, log a call, send email, custom</td></tr>
             <tr><td>Shows in</td><td>Record header / list view</td><td>Highlights panel, Activities, Chatter publisher</td><td>Global actions menu, mobile action bar, feeds, groups</td></tr>
           </tbody>
         </table>
@@ -960,19 +957,19 @@ html { scroll-behavior: smooth; }
 
       <h3>The mobile app</h3>
       <ul>
-        <li><strong>Navigation</strong> comes from <strong>Lightning apps</strong> assigned to profiles (<code>a73d0a3c</code>); the Mobile Only navigation menu lists Groups beside Chatter (<code>194683e0</code>).</li>
-        <li><strong>Compact layouts</strong> put key fields at the top of a record (<code>f5d30d69</code>); global actions make vital tasks one tap away and a create-contact action with few fields lets reps add now and finish later (<code>b5e68679</code>, <code>d3acc683</code>); keep formula and lookup fields few for load time.</li>
-        <li>Components render on phone only if they declare the form factor; <strong>offline create, edit and delete</strong> keeps data flowing when there is no signal (<code>7babd714</code>).</li>
+        <li><strong>Navigation</strong> comes from <strong>Lightning apps</strong> assigned to profiles; the Mobile Only navigation menu lists Groups beside Chatter.</li>
+        <li><strong>Compact layouts</strong> put key fields at the top of a record; global actions make vital tasks one tap away and a create-contact action with few fields lets reps add now and finish later; keep formula and lookup fields few for load time.</li>
+        <li>Components render on phone only if they declare the form factor; <strong>offline create, edit and delete</strong> keeps data flowing when there is no signal.</li>
       </ul>
 
       <h3>Other UI facts the deck tests</h3>
       <ul>
-        <li><strong>Path</strong> guides but does not enforce (<code>298e3056</code>, <code>3e1b0e81</code>, <code>a8a96dba</code>) &mdash; a validation rule enforces (<code>f2171f7e</code>).</li>
-        <li>Record types give a short create form first and a fuller layout after (<code>2c33c2c4</code>).</li>
-        <li><strong>Search layouts</strong> decide the columns and filter fields users see (<code>d9d254c2</code>).</li>
-        <li><strong>Inline editing</strong> is off for list views spanning more than one record type and for Recently Viewed (<code>044ba50f</code>).</li>
-        <li><strong>Feed tracking</strong> posts field changes to Chatter (<code>f9f539f1</code>, <code>8e82f823</code>); <strong>streams</strong> combine chosen records' feeds; <strong>Out of Office</strong> shows availability (<code>6f868a8f</code>, <code>c0ddc67d</code>).</li>
-        <li>The <strong>utility bar</strong> &mdash; edited in <strong>App Manager</strong>, not App Builder &mdash; keeps tools docked on every page (<code>e8227b30</code>, <code>19c14a90</code>).</li>
+        <li><strong>Path</strong> guides but does not enforce &mdash; a validation rule enforces.</li>
+        <li>Record types give a short create form first and a fuller layout after.</li>
+        <li><strong>Search layouts</strong> decide the columns and filter fields users see.</li>
+        <li><strong>Inline editing</strong> is off for list views spanning more than one record type and for Recently Viewed.</li>
+        <li><strong>Feed tracking</strong> posts field changes to Chatter; <strong>streams</strong> combine chosen records' feeds; <strong>Out of Office</strong> shows availability.</li>
+        <li>The <strong>utility bar</strong> &mdash; edited in <strong>App Manager</strong>, not App Builder &mdash; keeps tools docked on every page.</li>
       </ul>
     </section>
 
@@ -1012,27 +1009,26 @@ html { scroll-behavior: smooth; }
       <h3>Application lifecycle and sandboxes</h3>
       <div class="tw">
         <table>
-          <thead><tr><th>Need</th><th>Sandbox</th><th>Deck</th></tr></thead>
+          <thead><tr><th>Need</th><th>Sandbox</th></tr></thead>
           <tbody>
-            <tr><td>One person's small project, refreshed at will, metadata only</td><td><strong>Developer</strong> &mdash; 200 MB, 1-day refresh</td><td><code>9e5ca684</code></td></tr>
-            <tr><td>~0.5 GB of test data, refreshed after each 3-day sprint</td><td><strong>Developer Pro</strong> &mdash; 1 GB, 1-day refresh</td><td><code>89710d72</code></td></tr>
-            <tr><td>A slice of production data under 5 GB, refreshed weekly, some objects excluded</td><td><strong>Partial Copy</strong> with a <strong>sandbox template</strong> &mdash; 5-day refresh</td><td><code>41de0feb</code>, <code>ffab0ef2</code></td></tr>
-            <tr><td>Everything, for staging and performance</td><td><strong>Full</strong> &mdash; 29-day refresh</td><td></td></tr>
-            <tr><td>20 sandboxes with the same base configuration and data</td><td><strong>Sandbox cloning</strong></td><td><code>b0d92c09</code></td></tr>
+            <tr><td>One person's small project, refreshed at will, metadata only</td><td><strong>Developer</strong> &mdash; 200 MB, 1-day refresh</td></tr>
+            <tr><td>~0.5 GB of test data, refreshed after each 3-day sprint</td><td><strong>Developer Pro</strong> &mdash; 1 GB, 1-day refresh</td></tr>
+            <tr><td>A slice of production data under 5 GB, refreshed weekly, some objects excluded</td><td><strong>Partial Copy</strong> with a <strong>sandbox template</strong> &mdash; 5-day refresh</td></tr>
+            <tr><td>Everything, for staging and performance</td><td><strong>Full</strong> &mdash; 29-day refresh</td></tr>
+            <tr><td>20 sandboxes with the same base configuration and data</td><td><strong>Sandbox cloning</strong></td></tr>
           </tbody>
         </table>
       </div>
-      <p>Releases are classed <strong>patch</strong> (bug fixes, simple changes), <strong>minor</strong>, <strong>major</strong>
-      (<code>d683ac97</code>). A <strong>preview sandbox</strong> runs the next release ~6 weeks early &mdash; a change
-      set using a feature that only exists there <strong>fails</strong> against production (<code>99abaa00</code>). Set a
-      sandbox's email deliverability to <strong>No access</strong> to stop test emails (<code>441636d1</code>).</p>
+      <p>Releases are classed <strong>patch</strong> (bug fixes, simple changes), <strong>minor</strong>, <strong>major</strong>. A <strong>preview sandbox</strong> runs the next release ~6 weeks early &mdash; a change
+      set using a feature that only exists there <strong>fails</strong> against production. Set a
+      sandbox's email deliverability to <strong>No access</strong> to stop test emails.</p>
 
       <h3>Change sets &mdash; mechanics and troubleshooting</h3>
       <ul>
-        <li>Outbound from the source, inbound to the target, over a <strong>deployment connection</strong>. <strong>Validate the inbound change set</strong> in production before the window (<code>ff1a414f</code>). An uploaded change set is <strong>frozen</strong> &mdash; to add or fix components, <strong>clone it</strong> (<code>d84d4c97</code>).</li>
-        <li><strong>Include the dependencies</strong>: a layout needs its custom fields and custom actions (<code>a56ee547</code>); deployed <strong>custom tabs are hidden until profiles arrive</strong> (<code>8d0b35d5</code>); reports must sit in a <strong>public folder</strong> (<code>c8e73298</code>). Custom objects, fields and Apex classes deploy; Web-to-Lead settings and standard fields do not (<code>ecea7391</code>).</li>
-        <li><strong>Not everything is a change-set component</strong> &mdash; expect manual steps in the target (<code>7d962a18</code>); a failed deployment <strong>rolls back</strong> entirely. A <strong>field type change</strong> in the set runs a background data conversion and can make the deployment slow (<code>238aaeb2</code>).</li>
-        <li>Active flows deploy <strong>inactive</strong> unless the org allows active deployment with test coverage (<code>aead4086</code>); Apex in a package or change set runs the org's tests and needs <strong>75%</strong> in production (<code>07e3af03</code>).</li>
+        <li>Outbound from the source, inbound to the target, over a <strong>deployment connection</strong>. <strong>Validate the inbound change set</strong> in production before the window. An uploaded change set is <strong>frozen</strong> &mdash; to add or fix components, <strong>clone it</strong>.</li>
+        <li><strong>Include the dependencies</strong>: a layout needs its custom fields and custom actions; deployed <strong>custom tabs are hidden until profiles arrive</strong>; reports must sit in a <strong>public folder</strong>. Custom objects, fields and Apex classes deploy; Web-to-Lead settings and standard fields do not.</li>
+        <li><strong>Not everything is a change-set component</strong> &mdash; expect manual steps in the target; a failed deployment <strong>rolls back</strong> entirely. A <strong>field type change</strong> in the set runs a background data conversion and can make the deployment slow.</li>
+        <li>Active flows deploy <strong>inactive</strong> unless the org allows active deployment with test coverage; Apex in a package or change set runs the org's tests and needs <strong>75%</strong> in production.</li>
       </ul>
 
       <h3>Packages</h3>
@@ -1040,8 +1036,8 @@ html { scroll-behavior: smooth; }
         <table>
           <thead><tr><th></th><th>Managed</th><th>Unmanaged</th></tr></thead>
           <tbody>
-            <tr><td>Namespace</td><td>Required, 1&ndash;15 characters, prevents collisions (<code>116a14c0</code>)</td><td>None</td></tr>
-            <tr><td>After install</td><td>Components locked; publisher <strong>upgrades</strong> it &mdash; least maintenance (<code>a0324c31</code>)</td><td>Components editable; <strong>cannot be upgraded</strong> &mdash; uninstall and reinstall (<code>e12c8221</code>); best when you must customise fast (<code>3075c7b3</code>)</td></tr>
+            <tr><td>Namespace</td><td>Required, 1&ndash;15 characters, prevents collisions</td><td>None</td></tr>
+            <tr><td>After install</td><td>Components locked; publisher <strong>upgrades</strong> it &mdash; least maintenance</td><td>Components editable; <strong>cannot be upgraded</strong> &mdash; uninstall and reinstall; best when you must customise fast</td></tr>
             <tr><td>Install options</td><td>Admins only / all users / specific profiles; in a sandbox the URL uses <code>test.salesforce.com</code></td><td>Same</td></tr>
           </tbody>
         </table>
@@ -1064,20 +1060,20 @@ html { scroll-behavior: smooth; }
     <section id="tells">
       <h2 class="sect"><span class="num">10</span><span>Distractor tells</span></h2>
       <div class="sect-rule"></div>
-      <p class="lede">Patterns in how this exam writes wrong answers, from the deck's 222 and its fact-check.</p>
+      <p class="lede">Patterns in how this exam writes wrong answers, drawn from the deck's questions.</p>
       <ol>
-        <li><strong>The relationship that does the opposite.</strong> Master-detail where the child must survive (<code>df028304</code>), lookup where a roll-up or cascade is required (<code>dca21cdc</code>, <code>f275115f</code>), master-detail on the <em>wrong</em> side (<code>c5f11c84</code>, <code>92ce68b5</code>).</li>
+        <li><strong>The relationship that does the opposite.</strong> Master-detail where the child must survive, lookup where a roll-up or cascade is required, master-detail on the <em>wrong</em> side.</li>
         <li><strong>A roll-up across a lookup.</strong> Any option that summarises through a lookup, uses AVG, or rolls up a formula with <code>TODAY()</code> in it.</li>
-        <li><strong>A formula for a value that must not change</strong> (<code>39919e32</code>) &mdash; or a formula that reads child records (<code>f8150bea</code>).</li>
-        <li><strong>Required in the wrong place.</strong> Layout-required for a conditional requirement; a validation rule for a delete (<code>e1e7a031</code>).</li>
-        <li><strong>Retired automation offered as current.</strong> Workflow Rules and Process Builder in a Summer '26 option set are distractors; Flow is the answer (&sect;11). "Before-save flow" for anything beyond the triggering record's fields (<code>5b81e447</code>, <code>4b57de62</code>).</li>
-        <li><strong>Approval process capabilities invented.</strong> "Automatic submission in the entry criteria" (<code>1e4a7642</code>), creating or deleting records as an approval action (<code>70d99691</code>, <code>c25d186f</code>).</li>
-        <li><strong>Access one layer off.</strong> A sharing rule for a field (<code>31d03e0b</code>); FLS for a component (<code>5134cf87</code>); a permission set for a <em>default</em> record type; sharing the detail instead of the master (<code>d36e669a</code>); OWD Public when the aim is restriction.</li>
-        <li><strong>Profile edit for one user.</strong> A permission set is always the answer for one person's extra access (<code>513fdca2</code>).</li>
-        <li><strong>The wrong builder.</strong> Page Layout editor for a Lightning component (<code>6963ca79</code>); App Builder for the utility bar (<code>e8227b30</code>); Schema Builder for page layouts (<code>2fac7b8c</code>).</li>
-        <li><strong>Import Wizard beyond its limits.</strong> More than 50,000 records (<code>9c4d665b</code>), or clearing a field (<code>2a1d9baf</code>).</li>
-        <li><strong>Change set myths.</strong> "Rename and redeploy" (<code>d84d4c97</code>); "reports are not supported" (<code>c8e73298</code>); "all users must log out" (<code>7d962a18</code>); an unmanaged package that "updates" (<code>e12c8221</code>).</li>
-        <li><strong>Custom code on a declarative exam.</strong> Apex, Visualforce or an LWC when an AppExchange solution, a flow or a formula is offered &mdash; except where the docs say only code works (deleting with a condition, <code>e1e7a031</code>).</li>
+        <li><strong>A formula for a value that must not change</strong> &mdash; or a formula that reads child records.</li>
+        <li><strong>Required in the wrong place.</strong> Layout-required for a conditional requirement; a validation rule for a delete.</li>
+        <li><strong>Retired automation offered as current.</strong> Workflow Rules and Process Builder in a Summer '26 option set are distractors; Flow is the answer (&sect;11). "Before-save flow" for anything beyond the triggering record's fields.</li>
+        <li><strong>Approval process capabilities invented.</strong> "Automatic submission in the entry criteria", creating or deleting records as an approval action.</li>
+        <li><strong>Access one layer off.</strong> A sharing rule for a field; FLS for a component; a permission set for a <em>default</em> record type; sharing the detail instead of the master; OWD Public when the aim is restriction.</li>
+        <li><strong>Profile edit for one user.</strong> A permission set is always the answer for one person's extra access.</li>
+        <li><strong>The wrong builder.</strong> Page Layout editor for a Lightning component; App Builder for the utility bar; Schema Builder for page layouts.</li>
+        <li><strong>Import Wizard beyond its limits.</strong> More than 50,000 records, or clearing a field.</li>
+        <li><strong>Change set myths.</strong> "Rename and redeploy"; "reports are not supported"; "all users must log out"; an unmanaged package that "updates".</li>
+        <li><strong>Custom code on a declarative exam.</strong> Apex, Visualforce or an LWC when an AppExchange solution, a flow or a formula is offered &mdash; except where the docs say only code works (deleting with a condition).</li>
       </ol>
 
       <h3>Read the question's own verb</h3>
@@ -1104,30 +1100,30 @@ html { scroll-behavior: smooth; }
         <span class="tag">Answer the Summer '26 way</span>
         <p>The exam is aligned to <strong>Summer '26</strong>; the outline's Business Logic domain lists flows, Flow
         Approval Processes, approval processes and Agentforce &mdash; <strong>not</strong> Workflow Rules or Process
-        Builder, whose support ended on 31 Dec 2025. Ten deck items still key them. In the deck these stay
-        keyed as scraped, and their explanations say so.</p>
+        Builder, whose support ended on 31 Dec 2025. Ten deck items still key them. In the deck these keep
+        their original answers, and their explanations say so.</p>
       </div>
 
       <div class="tw">
         <table>
           <thead><tr><th>Deck item</th><th>Keyed as</th><th>Summer '26 answer</th></tr></thead>
           <tbody>
-            <tr><td>Copy Account Billing State to an Opportunity once, at creation (<code>39919e32</code>)</td><td>Workflow rule with a field update on create</td><td>A <strong>record-triggered flow</strong> on create that sets the field once</td></tr>
-            <tr><td>Notify a web service when an Opportunity is won (<code>392c6b99</code>)</td><td>Workflow + outbound message; process + Apex</td><td>A <strong>flow</strong> with an <strong>outbound message</strong> action (or an HTTP callout action)</td></tr>
-            <tr><td>Auto-submit deals over 40% discount for approval (<code>1e4a7642</code>)</td><td>A process with Submit for Approval; a flow</td><td>The <strong>flow</strong> half only</td></tr>
-            <tr><td>Set Status to Working when a user takes a lead from a queue (<code>0c8f84d5</code>)</td><td>Process Builder criteria <code>BEGINS([Lead].OwnerId, '005')</code></td><td>The same test in a record-triggered flow's entry condition</td></tr>
-            <tr><td>Process Builder capabilities (<code>ff959d2d</code>), recursion (<code>5e649731</code>), considerations (<code>3231e6c1</code>)</td><td>Process Builder</td><td>The principles &mdash; avoid loops, combine actions, one automation per context &mdash; apply to <strong>Flow</strong>; the tool itself is retired</td></tr>
-            <tr><td>Workflow rule limits and re-evaluation loops (<code>8d600172</code>)</td><td>Workflow rules</td><td>Same shape in flows: entry conditions and <em>run only when a record is updated to meet the condition</em></td></tr>
-            <tr><td>Workflow field update vs validation rule (<code>2b895c9b</code>), what field updates ignore (<code>12fa9e7e</code>)</td><td>Workflow field updates</td><td>Field updates in <strong>flows</strong> behave the same way in the save order</td></tr>
+            <tr><td>Copy Account Billing State to an Opportunity once, at creation</td><td>Workflow rule with a field update on create</td><td>A <strong>record-triggered flow</strong> on create that sets the field once</td></tr>
+            <tr><td>Notify a web service when an Opportunity is won</td><td>Workflow + outbound message; process + Apex</td><td>A <strong>flow</strong> with an <strong>outbound message</strong> action (or an HTTP callout action)</td></tr>
+            <tr><td>Auto-submit deals over 40% discount for approval</td><td>A process with Submit for Approval; a flow</td><td>The <strong>flow</strong> half only</td></tr>
+            <tr><td>Set Status to Working when a user takes a lead from a queue</td><td>Process Builder criteria <code>BEGINS([Lead].OwnerId, '005')</code></td><td>The same test in a record-triggered flow's entry condition</td></tr>
+            <tr><td>Process Builder capabilities, recursion, considerations</td><td>Process Builder</td><td>The principles &mdash; avoid loops, combine actions, one automation per context &mdash; apply to <strong>Flow</strong>; the tool itself is retired</td></tr>
+            <tr><td>Workflow rule limits and re-evaluation loops</td><td>Workflow rules</td><td>Same shape in flows: entry conditions and <em>run only when a record is updated to meet the condition</em></td></tr>
+            <tr><td>Workflow field update vs validation rule, what field updates ignore</td><td>Workflow field updates</td><td>Field updates in <strong>flows</strong> behave the same way in the save order</td></tr>
             <tr><td>Classic approval processes (many items)</td><td>Still correct</td><td>The outline keeps "approval process" and adds <strong>Flow Approval Processes</strong> for multi-stage, multi-system reviews (&sect;6)</td></tr>
           </tbody>
         </table>
       </div>
 
-      <p>Not stale, but flagged in their own explanations: <code>194683e0</code> (the mobile navigation item
-      wording), <code>15524fc6</code> (Schema Builder "editing custom settings"), <code>d07b1682</code> (approval
-      delivery methods), <code>12fa9e7e</code> (decimal places and character limits), <code>99abaa00</code> and
-      <code>d683ac97</code> (cited as orienting only).</p>
+      <p>Not stale, but flagged in their own explanations: the mobile navigation item wording, Schema
+      Builder "editing custom settings", approval delivery methods, and decimal places and character
+      limits on field updates. Two more &mdash; patch versus minor versus major releases, and deploying
+      from a preview sandbox &mdash; rest on judgment rather than a page that settles them.</p>
     </section>
 
     <!-- 12 -->
@@ -1161,7 +1157,7 @@ html { scroll-behavior: smooth; }
     <section id="sources">
       <h2 class="sect"><span class="num">13</span><span>Sources</span></h2>
       <div class="sect-rule"></div>
-      <p>Every URL below was rendered and title-checked during this repo's fact-check work or while writing this guide.</p>
+      <p>Every link below was opened and checked when this guide was written.</p>
 
       <h4>The exam</h4>
       <ul class="linklist">
@@ -1211,38 +1207,11 @@ html { scroll-behavior: smooth; }
       </ul>
     </section>
 
-    <!-- 14 -->
-    <section id="notebooklm">
-      <h2 class="sect"><span class="num">14</span><span>Using this with NotebookLM</span></h2>
-      <div class="sect-rule"></div>
-      <p>Upload the Markdown version of this guide (<code>study-guides/salesforce-app-builder.md</code>) as a
-      source. Markdown ingests cleanly and the headings become NotebookLM's navigation.</p>
-      <p>Worth adding as additional sources: the <a href="https://help.salesforce.com/s/articleView?id=005298964&type=1&language=en_US">official exam guide</a>,
-      <a href="https://help.salesforce.com/s/articleView?id=platform.relationships_considerations.htm&language=en_US&type=5">Considerations for Relationships</a>
-      and <a href="https://help.salesforce.com/s/articleView?id=platform.automate_automated_approvals.htm&language=en_US&type=5">Automate Your Approvals with Flow Approval Processes</a>
-      &mdash; the page behind the deck's strongest area and the page behind its biggest gap.</p>
-
-      <h3>Prompts that produce useful study media</h3>
-      <ul class="prompts">
-        <li>"Generate an Audio Overview of section 4. Have the hosts describe a data requirement &mdash; cascade delete, inherited sharing, a total on the parent, a child that must survive &mdash; and argue over lookup versus master-detail versus junction each time."</li>
-        <li>"Using section 6, drill me on flow type selection: give me a requirement and ask whether it is a screen flow, a before-save flow, an after-save flow, a scheduled flow, a classic approval or a Flow Approval Process. Don't give me the answer until I try."</li>
-        <li>"Turn section 8 into flashcards &mdash; one number per card."</li>
-        <li>"Using section 11, quiz me on each deck item that keys Process Builder or a workflow rule, and make me give the Flow answer instead."</li>
-        <li>"Using section 9, walk me through a deployment plan for a change that includes a new object, a page layout, a flow and a report, and ask me what could go wrong at each step."</li>
-      </ul>
-      <p>For the Audio Overview, sections 4, 6 and 10 reward listening &mdash; they are decision tables
-      argued out loud. Sections 8 and 13 are lookups and will not survive being read aloud.</p>
-    </section>
-
   </main>
 
   <footer class="colophon">
-    Compiled from the 222 questions in <code>salesforce_app_builder_questions_corrected.json</code>, the
-    official Platform App Builder exam guide, and the documentation those questions cite. The deck's own
-    tags were not used for the domain table &mdash; <code>study-guides/reclassify-app-builder.mjs</code> holds
-    the per-question calls against the five current domains. Every URL in &sect;13 was rendered and
-    title-checked; the exam guide, Flow Approval Processes, flow error-email, Automation app Monitor,
-    flow runtime error and prompt template type pages were re-read for this guide on 2026-09-12.
+    Compiled from the 222 questions in this deck, the official Platform App Builder exam guide, and
+    the Salesforce documentation those questions cite. Last reviewed September 2026.
   </footer>
 
 </div>

@@ -15,7 +15,7 @@
     "corrected": {
       "date": "2026-08-15",
       "via": "validation",
-      "note": "The documentation names expectations as the data-quality mechanism and lists DROP ROW as the action that discards violating records without failing the update. The two scraped snapshots of this item disagreed: the v2026-06-09 copy keys Expectations and the v2026-07-28 copy keyed Error Handling. The documentation settles it for Expectations.",
+      "note": "The documentation names expectations as the data-quality mechanism and lists DROP ROW as the action that discards violating records without failing the update. Practice sources disagree on this item; the documentation settles it for Expectations.",
       "from": "A",
       "to": "D"
     }
@@ -57,7 +57,7 @@
     "optionD": "region_sales = sales_df. sum (\"salen_aiTiount\") . groupBy (\"region\") .alias (\"total_sale3_amount\")",
     "optionE": "",
     "correct": "B",
-    "explanation": "region_sales = sales_df.groupBy(\"region\").agg(sum(\"sales_amount\").alias(\"total_sales_amount\")) is the pattern for any Spark aggregation: group, then aggregate. It produces one row per region carrying the summed sales amount under the requested column name. As with its sibling question, the printed options carry scrape damage — judge them on structure.\nWhy the other options are wrong:\nOption A (.agg(sum(...).groupBy(\"region\"))) — nests .groupBy() inside .agg(), which is not valid; grouping must come before aggregation.\nOption C (.groupBy(\"category\").sum(...)) — groups by category, answering a different question than the per-region totals asked for.\nOption D (.sum(...).groupBy(\"region\")) — calls .sum() before .groupBy(), collapsing the whole DataFrame first and leaving nothing to group.\nReferences:\nhttps://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby",
+    "explanation": "region_sales = sales_df.groupBy(\"region\").agg(sum(\"sales_amount\").alias(\"total_sales_amount\")) is the pattern for any Spark aggregation: group, then aggregate. It produces one row per region carrying the summed sales amount under the requested column name. The printed options contain some transcription errors — judge them on structure.\nWhy the other options are wrong:\nOption A (.agg(sum(...).groupBy(\"region\"))) — nests .groupBy() inside .agg(), which is not valid; grouping must come before aggregation.\nOption C (.groupBy(\"category\").sum(...)) — groups by category, answering a different question than the per-region totals asked for.\nOption D (.sum(...).groupBy(\"region\")) — calls .sum() before .groupBy(), collapsing the whole DataFrame first and leaving nothing to group.\nReferences:\nhttps://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby",
     "_cat": "Databricks Certified Data Engineer Associate",
     "_url": "https://www.freecram.net/question/GAQM.Databricks-Certified-Data-Engineer-Associate.v2026-07-28.q73/exhibit-calculate-the-total-sales-amount-for-each-region-and-store-the-results-in-a-new-dataframe-called",
     "_src": "v2026-07-28.q73"
@@ -109,12 +109,7 @@
     "explanation": "COMMENT \"Contains PII\" is the line that completes this statement. COMMENT takes a bare string literal in exactly this position, so it parses, and it attaches the PII marker to the table where anyone inspecting it will see it.\nTBLPROPERTIES is a genuine way to tag a table, which is what makes it the tempting distractor, but it is not valid on its own. Its documented syntax takes parenthesised key-value pairs — TBLPROPERTIES ( { property_key [ = ] property_val } [, ...] ), where the value must be a BOOLEAN, STRING, INTEGER or DECIMAL literal — so a bare TBLPROPERTIES PII is a syntax error. Written properly it would be TBLPROPERTIES ('PII' = 'true'), which is not what that option offers.\nWhy the other options are wrong:\nOption A (no way to indicate PII) — false; both COMMENT and TBLPROPERTIES can carry the marker.\nOption B (\"COMMENT PII\") — quotes the keyword itself rather than the message, so it is a string literal where a clause is expected.\nOption C (TBLPROPERTIES PII) — a syntax error; TBLPROPERTIES needs parenthesised key-value pairs.\nOption E (PII) — a bare word is not a clause at all.\nReferences:\nhttps://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using\nhttps://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-tblproperties",
     "_cat": "Databricks Certified Data Engineer Associate",
     "_url": "https://www.freecram.net/question/GAQM.Databricks-Certified-Data-Engineer-Associate.v2026-07-28.q73/a-data-engineer-wants-to-create-a-new-table-containing-the-names-of-customers-that-live-in-france-they",
-    "_src": "v2026-07-28.q73",
-    "corrected": {
-      "date": "2026-08-15",
-      "via": "validation",
-      "note": "Answer stands. Absorbed the reasoning from the near-duplicate 472fcdb7, which was removed: its option set had been corrupted by the scrape (option A truncated to COMMENT \"Contains PIT and option B reduced to 511), so this clean five-option copy is the one worth keeping."
-    }
+    "_src": "v2026-07-28.q73"
   },
   {
     "id": "5b22314e",
@@ -188,7 +183,7 @@
     "corrected": {
       "date": "2026-08-15",
       "via": "validation",
-      "note": "The documentation describes setting a notebook default language and overriding it per cell via the language button or a leading %<language> magic. The override applies to the entire cell, so the reason the command fails is one language per cell. The v2026-06-09 snapshot of this same item keys this option; the v2026-07-28 copy keyed the magic-character option.",
+      "note": "The documentation describes setting a notebook default language and overriding it per cell via the language button or a leading %<language> magic. The override applies to the entire cell, so the reason the command fails is one language per cell. Practice sources disagree on this item; the documentation settles it.",
       "from": "D",
       "to": "B"
     }
@@ -382,7 +377,7 @@
     "corrected": {
       "date": "2026-08-15",
       "via": "validation",
-      "note": "Answer kept as the legacy exam key. Current documentation lists merge, rebase and conflict resolution as supported inside Git folders, so the premise of the question is now stale; flagged rather than silently confirmed."
+      "note": "Answer kept as the exam's older answer. Current documentation lists merge, rebase and conflict resolution as supported inside Git folders, so the premise of the question is now stale."
     }
   },
   {
@@ -602,7 +597,7 @@
     "corrected": {
       "date": "2026-08-15",
       "via": "validation",
-      "note": "The documentation names expectations with ON VIOLATION DROP ROW as the way to drop invalid records in a pipeline. The other scraped snapshot of this same question keys the expectations option, which agrees. Flagging that option B is also functionally valid, so this item has two workable answers and is weak.",
+      "note": "The documentation names expectations with ON VIOLATION DROP ROW as the way to drop invalid records in a pipeline. Option B is also functionally valid, so this item has two workable answers and is weak.",
       "from": "B",
       "to": "A"
     }
@@ -1515,7 +1510,7 @@
     "corrected": {
       "date": "2026-08-15",
       "via": "validation",
-      "note": "Answer stands as the best-supported option. Grounded the Python-over-Scala preference in the documented serverless restrictions on user code, and flagged that the stem asks for a step while the options list workloads -- Databricks publishes no prescribed migration sequence."
+      "note": "Answer stands as the best-supported option. The explanation now grounds the Python-over-Scala preference in the documented serverless restrictions on user code, and notes that the question asks for a step while the options list workloads — Databricks publishes no prescribed migration sequence."
     }
   },
   {
@@ -1786,7 +1781,7 @@
     "corrected": {
       "date": "2026-08-15",
       "via": "validation",
-      "note": "The documentation attributes Intelligent Workload Management -- worded almost exactly as the question is -- to Serverless SQL warehouses only. A near-duplicate of this item elsewhere in the deck already keys Serverless, so the two now agree.",
+      "note": "The documentation attributes Intelligent Workload Management — worded almost exactly as the question is — to Serverless SQL warehouses only.",
       "from": "B",
       "to": "D"
     }
@@ -1800,7 +1795,7 @@
     "optionD": "Repos",
     "optionE": "Data Explorer",
     "correct": "E",
-    "explanation": "Data Explorer is where the engineer reviews their permissions on the table. Opening the table there shows its owner and its granted privileges, which is how an engineer checks whether they already hold the access they need.\nOne naming note: Databricks has renamed Data Explorer to Catalog Explorer, so on a current workspace this is the Catalog Explorer entry in the sidebar. The answer is unchanged; only the label has moved. A near-duplicate of this question elsewhere in the deck uses the newer name.\nWhy the other options are wrong:\nOption A (Jobs) — lists and configures workflows; it shows no table privileges.\nOption B (Dashboards) — a visualisation surface.\nOption C (Databricks Filesystem) — a file view; Unity Catalog privileges are on the table object, not the files.\nOption D (Repos) — Git-backed code folders.\nReferences:\nhttps://docs.databricks.com/aws/en/discover/database-objects",
+    "explanation": "Data Explorer is where the engineer reviews their permissions on the table. Opening the table there shows its owner and its granted privileges, which is how an engineer checks whether they already hold the access they need.\nOne naming note: Databricks has renamed Data Explorer to Catalog Explorer, so on a current workspace this is the Catalog Explorer entry in the sidebar. The answer is unchanged; only the label has moved. You may see this question worded with either name.\nWhy the other options are wrong:\nOption A (Jobs) — lists and configures workflows; it shows no table privileges.\nOption B (Dashboards) — a visualisation surface.\nOption C (Databricks Filesystem) — a file view; Unity Catalog privileges are on the table object, not the files.\nOption D (Repos) — Git-backed code folders.\nReferences:\nhttps://docs.databricks.com/aws/en/discover/database-objects",
     "_cat": "Databricks Certified Data Engineer Associate",
     "_url": "https://www.freecram.net/question/GAQM.Databricks-Certified-Data-Engineer-Associate.v2026-06-09.q113/a-data-engineer-needs-to-use-a-delta-table-as-part-of-a-data-pipeline-but-they-do-not-know-if-they-have",
     "_src": "v2026-06-09.q113",
@@ -2029,7 +2024,7 @@
     "optionD": "Repos",
     "optionE": "",
     "correct": "C",
-    "explanation": "Catalog Explorer is where a table's permissions are reviewed. Selecting the table shows its owner and the privileges granted on it, which answers whether the engineer already has the access their pipeline needs. Catalog Explorer is the current name for what earlier documentation called Data Explorer; a near-duplicate of this question elsewhere in the deck still uses the older label.\nWhy the other options are wrong:\nOption A (Jobs) — lists and configures workflows; no table-level privilege information.\nOption B (Dashboards) — a visualisation surface.\nOption D (Repos) — Git-backed code folders.\nReferences:\nhttps://docs.databricks.com/aws/en/discover/database-objects",
+    "explanation": "Catalog Explorer is where a table's permissions are reviewed. Selecting the table shows its owner and the privileges granted on it, which answers whether the engineer already has the access their pipeline needs. Catalog Explorer is the current name for what earlier documentation called Data Explorer; you may see this question worded with either name.\nWhy the other options are wrong:\nOption A (Jobs) — lists and configures workflows; no table-level privilege information.\nOption B (Dashboards) — a visualisation surface.\nOption D (Repos) — Git-backed code folders.\nReferences:\nhttps://docs.databricks.com/aws/en/discover/database-objects",
     "_cat": "Databricks Certified Data Engineer Associate",
     "_url": "https://www.freecram.net/question/GAQM.Databricks-Certified-Data-Engineer-Associate.v2026-06-09.q113/a-data-engineer-needs-to-use-a-delta-table-as-part-of-a-data-pipeline-but-they-do-not-know-if-they-have-104",
     "_src": "v2026-06-09.q113"
@@ -2141,7 +2136,7 @@
     "optionD": "Swap the cluster",
     "optionE": "",
     "correct": "B",
-    "explanation": "Repairing the run is what reruns the workflow after the fix. When a job run fails, Databricks lets you repair that run rather than start a fresh one: the repair re-executes the failed task with the updated notebook and reuses whatever succeeded, without recreating the workflow or touching the cluster configuration. Repair run is the documented UI label, initiated from the failed run.\nWhy the other options are wrong:\nOption A (repair the task) — the object you repair in the UI is the run; a task is selected within the repair dialog, not repaired on its own. (A near-duplicate of this question elsewhere in the deck keys that wording, where the option set offers no better one.)\nOption C (restart the cluster) — the failure came from the notebook code, not the compute; new compute runs the same fixed code no faster.\nOption D (swap the cluster) — the same, with a reconfiguration step added.\nReferences:\nhttps://docs.databricks.com/aws/en/jobs/repair-job-failures",
+    "explanation": "Repairing the run is what reruns the workflow after the fix. When a job run fails, Databricks lets you repair that run rather than start a fresh one: the repair re-executes the failed task with the updated notebook and reuses whatever succeeded, without recreating the workflow or touching the cluster configuration. Repair run is the documented UI label, initiated from the failed run.\nWhy the other options are wrong:\nOption A (repair the task) — the object you repair in the UI is the run; a task is selected within the repair dialog, not repaired on its own. (If an option set offers no \"repair the run\" option, \"repair the task\" is the closest answer.)\nOption C (restart the cluster) — the failure came from the notebook code, not the compute; new compute runs the same fixed code no faster.\nOption D (swap the cluster) — the same, with a reconfiguration step added.\nReferences:\nhttps://docs.databricks.com/aws/en/jobs/repair-job-failures",
     "_cat": "Databricks Certified Data Engineer Associate",
     "_url": "https://www.freecram.net/question/GAQM.Databricks-Certified-Data-Engineer-Associate.v2026-06-09.q113/a-databricks-single-task-workflow-fails-due-to-an-error-in-a-notebook-the-data-engineer-fixes-the-mistake",
     "_src": "v2026-06-09.q113"

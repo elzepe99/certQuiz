@@ -20,12 +20,12 @@
     "optionD": "",
     "optionE": "",
     "correct": "B",
-    "explanation": "Agent Builder is the one option here that lets the Specialist evaluate real-world utterances: its Preview panel lets you test the agent by inputting utterances, and the canvas shows which subagents were selected and the reasoning behind the selection.\nThe tool Salesforce documents for evaluating many real-world utterances at once is Agentforce Testing Center, which batch-tests subagent and action selection from a CSV of scenarios. It is not among the options here. Treat this item as defective rather than subtle: the best answer to the question as written is Testing Center, and this option set omits it; a near-duplicate of this question elsewhere in the deck does offer Testing Center and keys it.\nWhy the other options are wrong:\nOption A (Agentforce) — the product family as a whole, not a tool; it names nothing you can open to observe which action an utterance selects.\nOption C (Model Playground) — not an agent-testing tool. It belongs to AI Models (formerly Einstein Studio) and the Bring Your Own LLM flow: you evaluate a foundation model's response to your prompts under different settings before deploying that model to production. It says nothing about whether an agent selects the right action for a given utterance.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ai.agent_builder_tour.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=ai.agent_testing_center.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_ai_foundation_models.htm&language=en_US&type=5",
+    "explanation": "Agent Builder is the one option here that lets the Specialist evaluate real-world utterances: its Preview panel lets you test the agent by inputting utterances, and the canvas shows which subagents were selected and the reasoning behind the selection.\nThe tool Salesforce documents for evaluating many real-world utterances at once is Agentforce Testing Center, which batch-tests subagent and action selection from a CSV of scenarios. It is not among the options here. Treat this item as defective rather than subtle: the best answer to the question as written is Testing Center, and this option set omits it.\nWhy the other options are wrong:\nOption A (Agentforce) — the product family as a whole, not a tool; it names nothing you can open to observe which action an utterance selects.\nOption C (Model Playground) — not an agent-testing tool. It belongs to AI Models (formerly Einstein Studio) and the Bring Your Own LLM flow: you evaluate a foundation model's response to your prompts under different settings before deploying that model to production. It says nothing about whether an agent selects the right action for a given utterance.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=ai.agent_builder_tour.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=ai.agent_testing_center.htm&language=en_US&type=5\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_ai_foundation_models.htm&language=en_US&type=5",
     "_cat": "Salesforce Agentforce Specialist",
     "corrected": {
       "date": "2026-08-17",
       "via": "validation",
-      "note": "C->B. Model Playground evaluates a foundation model's responses in the Bring Your Own LLM flow, not an agent's action selection, so the original key named the wrong tool. The item is also defective: the documented answer for evaluating multiple real-world utterances is Agentforce Testing Center, which this option set omits (its near-duplicate 63afa960 offers it and keys it). B is the best available option — Agent Builder's Preview panel tests utterances and shows which subagents and actions were selected, and why.",
+      "note": "Model Playground evaluates a foundation model's responses in the Bring Your Own LLM flow, not an agent's action selection, so the original answer named the wrong tool. The item is also flawed: the documented tool for evaluating many real-world utterances is Agentforce Testing Center, which this option set leaves out. B is the best option offered — Agent Builder's Preview panel tests utterances and shows which subagents and actions were selected, and why.",
       "from": "C",
       "to": "B"
     }
@@ -159,7 +159,7 @@
     "corrected": {
       "date": "2026-08-17",
       "via": "validation",
-      "note": "C->B. Service AI Grounding and Grounding with Knowledge configure what a reply is grounded on, but they do not generate replies. Salesforce documents Service Replies as the feature that drafts responses for reps and says to add grounding to Service Replies with Service AI Grounding, so all three are required for AI-generated replies drawn from the knowledge base. The deck's own explanation already argued for B while the key said C.",
+      "note": "Service AI Grounding and Grounding with Knowledge configure what a reply is grounded on, but they do not generate replies. Salesforce documents Service Replies as the feature that drafts responses for reps and says to add grounding to Service Replies with Service AI Grounding, so all three are required for AI-generated replies drawn from the knowledge base.",
       "from": "C",
       "to": "B"
     }
@@ -245,7 +245,7 @@
     "corrected": {
       "date": "2026-09-26",
       "via": "validation",
-      "note": "Summer '26 made option B true as well. Considerations for Testing Center now says testing \"is unmetered and doesn't consume Einstein Requests or Flex Credits\" (only Data 360 queries from tests are still metered), so the previous explanation's reason for rejecting B no longer holds. A is still true and stays the key. History: the 2026-08-17 pass moved this key B->A when test runs did consume Einstein Requests."
+      "note": "Summer '26 made option B true as well. Considerations for Testing Center now says testing \"is unmetered and doesn't consume Einstein Requests or Flex Credits\" (only Data 360 queries from tests are still metered), so the explanation's old reason for rejecting B no longer holds. A is still true and stays the answer; it moved from B to A when test runs did consume Einstein Requests."
     }
   },
   {
@@ -1736,7 +1736,7 @@
     "corrected": {
       "date": "2026-09-26",
       "via": "validation",
-      "note": "The dump keyed Sales Agent, which is not an agent type. Salesforce's Agent Types and Considerations lists Employee Agent, Engagement (formerly Lead Nurturing/SDR), Sales Coach, Service Agent, Service Assistant and Setup with Agentforce; an agent that helps internal sales staff with their own tasks is an Employee Agent, which \"Assists employees by providing access to company knowledge, performing tasks, and streamlining workflows\".",
+      "note": "Sales Agent is not an agent type. Salesforce's Agent Types and Considerations lists Employee Agent, Engagement (formerly Lead Nurturing/SDR), Sales Coach, Service Agent, Service Assistant and Setup with Agentforce; an agent that helps internal sales staff with their own tasks is an Employee Agent, which \"Assists employees by providing access to company knowledge, performing tasks, and streamlining workflows\".",
       "from": "C",
       "to": "B"
     }
@@ -1904,7 +1904,7 @@
     "corrected": {
       "date": "2026-09-26",
       "via": "validation",
-      "note": "The dump keyed updating object and field access on the AgentforceServiceAgentUserPsg permission set group. A permission set group holds no object or field permissions of its own, and Configure Service Agent Access says to edit the agent's [Agent_Name]_Permissions permission set or, \"If you want to create a different permission set for your agent user, make sure that it's associated with the Einstein Agent license and Einstein Agent User profile\" — which is option B.",
+      "note": "A permission set group holds no object or field permissions of its own, so updating access on AgentforceServiceAgentUserPsg does nothing. Configure Service Agent Access says to edit the agent's [Agent_Name]_Permissions permission set or, \"If you want to create a different permission set for your agent user, make sure that it's associated with the Einstein Agent license and Einstein Agent User profile\" — which is option B.",
       "from": "A",
       "to": "B"
     }
@@ -2324,7 +2324,7 @@
     "corrected": {
       "date": "2026-09-26",
       "via": "validation",
-      "note": "The dump keyed automatic grounding with Draft with Einstein, while its own explanation argued for Record Merge Fields. Standard Sales Emails grounding uses a fixed set of fields (contact or lead name, title, company, industry and the sender), per Understand How Einstein Generative AI Creates Sales Emails; follow-ups based on a lead's interactions and other current record data need a Sales Email template grounded with record merge fields.",
+      "note": "Automatic grounding with Draft with Einstein uses a fixed set of fields (contact or lead name, title, company, industry and the sender), per Understand How Einstein Generative AI Creates Sales Emails. Follow-ups based on a lead's interactions and other current record data need a Sales Email template grounded with record merge fields.",
       "from": "C",
       "to": "B"
     }
@@ -2415,7 +2415,7 @@
     "corrected": {
       "date": "2026-09-26",
       "via": "validation",
-      "note": "The dump keyed context variables. Salesforce defines context variables as \"system generated variables holding information about the user and the conversation sessions\" and custom variables as the ones you create, which \"can be used as both input and output for actions\" (Agentforce Variables, Salesforce Developers Blog). Preferences gathered from action outputs belong in custom variables. The dump's explanation quoted a \"Session Memory and Context Management Guide\" that does not exist.",
+      "note": "Salesforce defines context variables as \"system generated variables holding information about the user and the conversation sessions\" and custom variables as the ones you create, which \"can be used as both input and output for actions\" (Agentforce Variables, Salesforce Developers Blog). Preferences gathered from action outputs belong in custom variables.",
       "from": "C",
       "to": "A"
     }
@@ -2542,7 +2542,7 @@
     "corrected": {
       "date": "2026-09-26",
       "via": "validation",
-      "note": "The dump keyed Clone the existing template, which is not a Prompt Builder action; its explanation also claimed there is no Save as New Template option, which Use Multiple Versions of a Prompt Template contradicts (\"Save As | Save as a New Template\"). Override a Standard Prompt Template adds a nuance: an overridable standard template is customized with Save as a New Version (option C), and one that is not overridable is copied into a custom template. Save as New Template is kept as the answer that works for any standard template.",
+      "note": "Clone is not a Prompt Builder action, and Save as New Template does exist (Use Multiple Versions of a Prompt Template: \"Save As | Save as a New Template\"). Override a Standard Prompt Template adds a nuance: an overridable standard template is customized with Save as a New Version (option C), and one that is not overridable is copied into a custom template. Save as New Template is the answer that works for any standard template.",
       "from": "B",
       "to": "A"
     }
@@ -2669,7 +2669,7 @@
     "corrected": {
       "date": "2026-09-26",
       "via": "validation",
-      "note": "The dump keyed Testing Center and quoted a \"Testing Center Guide\" sentence about viewing credit consumption that appears on no Salesforce page. Digital Wallet is the documented consumption tool (\"granular, unified tracking of consumption-based products, including Data 360, Agentforce, and more\"). The premise is also partly stale: as of Summer '26, Testing Center runs are unmetered, and only the Data 360 queries they make still consume credits.",
+      "note": "Testing Center is not where credit consumption is viewed. Digital Wallet is the documented consumption tool (\"granular, unified tracking of consumption-based products, including Data 360, Agentforce, and more\"). The premise is also partly stale: as of Summer '26, Testing Center runs are unmetered, and only the Data 360 queries they make still consume credits.",
       "from": "C",
       "to": "B"
     }

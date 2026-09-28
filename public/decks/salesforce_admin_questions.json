@@ -1349,7 +1349,7 @@
     "corrected": {
       "date": "2026-08-18",
       "via": "validation",
-      "note": "The item pairs a global value set, which is right for consistency across objects, with a dependent picklist, which does not vary values by record type - record-type picklist assignment does. The key is unchanged because the documentation does not settle which option the source intended as the second answer, but the dependent-picklist half does not support the stem."
+      "note": "The item pairs a global value set, which is right for consistency across objects, with a dependent picklist, which does not vary values by record type - record-type picklist assignment does. The answer is unchanged because the documentation does not settle which option was intended as the second answer, but the dependent-picklist half does not support the question."
     }
   },
   {
@@ -1776,7 +1776,7 @@
     "corrected": {
       "date": "2026-08-07",
       "via": "validation",
-      "note": "A validation rule cannot create a record, so it can never be half of the answer here. The explanation argues for \"Flow Builder and Process Builder\", but Process Builder is not among the options — the source lost it. Only Flow Builder is defensible, so the item is now a single-answer question rather than a \"choose 2\" with one impossible half.",
+      "note": "A validation rule cannot create a record, so it can never be half of the answer here. The original answer relied on Process Builder, which is not among the options. Only Flow Builder is defensible, so the item is now a single-answer question rather than a \"choose 2\" with one impossible half.",
       "from": "B,D",
       "to": "B"
     }

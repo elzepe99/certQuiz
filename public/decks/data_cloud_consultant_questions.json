@@ -274,7 +274,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "comments",
-      "note": "Q24 D->B. More match rules means more chances to match, which raises the consolidation rate; the old answer had the logic inverted.",
+      "note": "More match rules mean more chances to match, which raises the consolidation rate; the old answer had the logic inverted.",
       "from": "D",
       "to": "B"
     }
@@ -392,7 +392,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "comments",
-      "note": "Q33 B->C. Streaming insights cannot be used in segmentation, which the stem explicitly requires.",
+      "note": "Streaming insights cannot be used in segmentation, which the question explicitly requires.",
       "from": "B",
       "to": "C"
     }
@@ -607,7 +607,7 @@
     "corrected": {
       "date": "2026-08-21",
       "via": "validation",
-      "note": "Item defect: three of the four options are defensible. The Resolution Summary is a documented way to validate identity resolution output, so option A is not simply wrong, and this deck's own question on the same topic keys Identity Resolution as a validation feature. Key kept as the two that inspect profile data directly."
+      "note": "Item defect: three of the four options are defensible. The Resolution Summary is a documented way to validate identity resolution output, so option A is not simply wrong, and another question in this deck keys Identity Resolution as a validation feature. The answer stays as the two options that inspect profile data directly."
     }
   },
   {
@@ -730,7 +730,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "comments",
-      "note": "Q61 had options B and D identical and C repeating one string twice; deduped, and moved the answer to A, which is what the explanation already argued for.",
+      "note": "Options B and D were identical and C repeated one string twice; the duplicates were removed and the answer moved to A, which the explanation already argued for.",
       "from": "D",
       "to": "A"
     }
@@ -924,7 +924,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "comments",
-      "note": "Q78 C,D->A,C. Deletion requests are reprocessed at 30/60/90 days, and they are NOT propagated to connected clouds — you must submit separately.",
+      "note": "Deletion requests are reprocessed at 30/60/90 days, and they are not propagated to connected clouds — you must submit them separately.",
       "from": "C,D",
       "to": "A,C"
     }
@@ -1112,7 +1112,7 @@
     "corrected": {
       "date": "2026-08-21",
       "via": "validation",
-      "note": "Item defect: options A and D are both true, so the item has no single correct answer as printed. The previous explanation acknowledged this and resolved it by deferring to what \"the source\" marked correct — an exam dump is not an authority, and the reasoning has been replaced."
+      "note": "Item defect: options A and D are both true, so the item has no single correct answer as printed. The explanation now teaches the rule instead: adding a dimension or a measure to a calculated insight is allowed; only removal is blocked."
     }
   },
   {

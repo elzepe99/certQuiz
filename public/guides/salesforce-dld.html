@@ -368,6 +368,7 @@ code {
   padding: .1em .34em;
   border-radius: 3px;
   color: var(--ink);
+  overflow-wrap: anywhere;
 }
 
 ul, ol.prose { margin: 0 0 18px; padding-left: 20px; max-width: 68ch; }
@@ -625,7 +626,6 @@ html { scroll-behavior: smooth; }
       <li><a href="#stale" class="key">Deck older than the platform</a></li>
       <li><a href="#plan">Two-week plan</a></li>
       <li><a href="#sources">Sources</a></li>
-      <li><a href="#notebooklm">Using NotebookLM</a></li>
     </ol>
     <p class="note">Sections in red carry the objectives the practice deck does not train you for.</p>
   </nav>
@@ -671,10 +671,10 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">02</span><span>Where the points actually are</span></h2>
       <div class="sect-rule"></div>
 
-      <p class="lede">The deck's five <code>_cat</code> tags &mdash; ALM, Project &amp; Release Management,
+      <p class="lede">The deck's five topic tags &mdash; ALM, Project &amp; Release Management,
       Development &amp; Testing, Deployment, Environment Management &mdash; are an older outline. The exam has
-      eight domains with different boundaries. The deck column is an independent re-classification of all 137
-      against the eight (<code>study-guides/reclassify-dld.mjs</code>).</p>
+      eight domains with different boundaries. The deck column re-reads all 137 questions
+      against the eight.</p>
 
       <div class="tw">
         <table>
@@ -705,8 +705,8 @@ html { scroll-behavior: smooth; }
       <strong>body</strong> is Planning, unless the question is which methodology to use.</p>
 
       <h4>Sub-objectives the deck never asks</h4>
-      <p>Found by reading all 137 against the outline, then confirmed by keyword sweep over stems, options
-      <em>and</em> explanations on 2026-09-28.</p>
+      <p>Found by reading all 137 questions against the outline, then confirmed by searching stems, options
+      <em>and</em> explanations.</p>
       <ol class="prose">
         <li><strong>ALM maturity.</strong> "Assess ALM maturity" and "governance strategies based on the customer
         maturity" are named in two domains. "Maturity" returns zero hits. &sect;3, &sect;4.</li>
@@ -732,19 +732,17 @@ html { scroll-behavior: smooth; }
         <table>
           <thead><tr><th>Waterfall fits when</th><th>Agile fits when</th></tr></thead>
           <tbody>
-            <tr><td>Many systems and inter-dependencies; outside agencies must validate for compliance (<code>a0fc764b</code>)</td><td>An existing process must adjust quickly; heavy DevOps investment supports rapid test and deploy (<code>ece03577</code>)</td></tr>
-            <tr><td>Upfront due diligence makes milestones and estimates predictable; complex processes are documented before coding (<code>f3d07cd1</code>)</td><td>Later requirements are expected by design; many small releases let stakeholders see the work (<code>004b8e73</code>)</td></tr>
+            <tr><td>Many systems and inter-dependencies; outside agencies must validate for compliance</td><td>An existing process must adjust quickly; heavy DevOps investment supports rapid test and deploy</td></tr>
+            <tr><td>Upfront due diligence makes milestones and estimates predictable; complex processes are documented before coding</td><td>Later requirements are expected by design; many small releases let stakeholders see the work</td></tr>
           </tbody>
         </table>
       </div>
       <ul>
         <li><strong>Kanban</strong> makes everything visible; <strong>Scrum</strong> lists openness among its five
-        values (<code>bc9a1ad1</code>). Transparency about timing, planning and obstacles is a Scrum principle
-        (<code>ade048ca</code>).</li>
+        values. Transparency about timing, planning and obstacles is a Scrum principle.</li>
         <li>A <strong>steering committee</strong> sets the criteria for choosing Agile or Waterfall, and approves
-        deviations (<code>bdae5231</code>).</li>
-        <li>Unknown requirements plus a fixed three-month promise is a feasibility risk even under Agile
-        (<code>9c991e6c</code>).</li>
+        deviations.</li>
+        <li>Unknown requirements plus a fixed three-month promise is a feasibility risk even under Agile.</li>
       </ul>
 
       <div class="call alert">
@@ -770,31 +768,27 @@ html { scroll-behavior: smooth; }
         <table>
           <thead><tr><th>Body or role</th><th>What the deck keys it to</th></tr></thead>
           <tbody>
-            <tr><td>Executive sponsor</td><td>Approves changes to scope (<code>2de25757</code>); sits on the CoE (<code>17935246</code>)</td></tr>
-            <tr><td>Executive steering committee</td><td>Where a late risk is escalated (<code>4f44277d</code>)</td></tr>
-            <tr><td>Center of Excellence</td><td>Executive sponsors and the programme team (<code>17935246</code>); add a change manager against scope creep (<code>26ed97a3</code>); triage feature requests (<code>92fc13de</code>)</td></tr>
-            <tr><td>Architecture Review Board</td><td>Decisions that are costly to reverse: SAML versus delegated authentication, new object versus a record type (<code>3639bf51</code>)</td></tr>
-            <tr><td>Change Control Board</td><td>The technical architect approves the release for production (<code>2c90c553</code>)</td></tr>
+            <tr><td>Executive sponsor</td><td>Approves changes to scope; sits on the CoE</td></tr>
+            <tr><td>Executive steering committee</td><td>Where a late risk is escalated</td></tr>
+            <tr><td>Center of Excellence</td><td>Executive sponsors and the programme team; add a change manager against scope creep; triage feature requests</td></tr>
+            <tr><td>Architecture Review Board</td><td>Decisions that are costly to reverse: SAML versus delegated authentication, new object versus a record type</td></tr>
+            <tr><td>Change Control Board</td><td>The technical architect approves the release for production</td></tr>
           </tbody>
         </table>
       </div>
 
       <h4>Risk</h4>
       <ul>
-        <li>Unknown requirements with a fixed date (<code>376e5852</code>); parallel work-streams with dependencies
-        (<code>b19ac21f</code>); late scope growth &mdash; escalate, then add resources or extend the timeline
-        (<code>02921bb0</code>).</li>
-        <li>A communication plan is consistent, to named stakeholders, and reports status, timelines and impact
-        (<code>d292fd5d</code>).</li>
+        <li>Unknown requirements with a fixed date; parallel work-streams with dependencies; late scope growth &mdash; escalate, then add resources or extend the timeline.</li>
+        <li>A communication plan is consistent, to named stakeholders, and reports status, timelines and impact.</li>
       </ul>
 
       <h4>Seasonal releases &mdash; the most checkable part of this domain</h4>
       <ul>
         <li>Refresh a sandbox <strong>during the release preview window</strong> to get the upcoming release, run
-        regression there, and read the release notes for auto-enabled features (<code>ef3368a2</code>,
-        <code>631e1af5</code>).</li>
-        <li>About six weeks before go-live, make sure the sandbox will be on preview (<code>7f719fb9</code>).</li>
-        <li>If the release must ship on the current version, ship before the upgrade (<code>cd632689</code>).</li>
+        regression there, and read the release notes for auto-enabled features.</li>
+        <li>About six weeks before go-live, make sure the sandbox will be on preview.</li>
+        <li>If the release must ship on the current version, ship before the upgrade.</li>
       </ul>
 
       <div class="call alert">
@@ -803,7 +797,7 @@ html { scroll-behavior: smooth; }
         required." Read a stem for the three: <strong>people</strong> (is there a release manager, a CoE, an
         ARB?), <strong>technology</strong> (source control, CI, sandboxes per stream?), <strong>process</strong>
         (a change policy, a cadence, a hotfix path?). The missing one is usually the answer. The deck's items on
-        citizen developers (<code>70a0c1d5</code>) and a traceability matrix (<code>6a25c420</code>) are the
+        citizen developers and a traceability matrix are the
         nearest it comes.</p>
       </div>
     </section>
@@ -819,11 +813,10 @@ html { scroll-behavior: smooth; }
       <h4>Org strategy</h4>
       <ul>
         <li><strong>Single org</strong> for consistent processes, collaboration and one data location
-        (<code>96992a86</code>) &mdash; at the cost of a more complex data model and stricter Apex governance
-        (<code>c50db85c</code>).</li>
+ &mdash; at the cost of a more complex data model and stricter Apex governance.</li>
         <li><strong>Multi-org</strong> when local law, language and process differ and innovation beats
-        standardisation (<code>3079812f</code>), or for an unrelated business unit (<code>69a9ff36</code>).</li>
-        <li>A 360&deg; view across orgs: <strong>hub-and-spoke</strong> (<code>3f3e8dd7</code>) &mdash; see
+        standardisation, or for an unrelated business unit.</li>
+        <li>A 360&deg; view across orgs: <strong>hub-and-spoke</strong> &mdash; see
         &sect;13 for why its second keyed option is weak.</li>
       </ul>
 
@@ -832,24 +825,19 @@ html { scroll-behavior: smooth; }
         <table>
           <thead><tr><th>Type</th><th>Refresh</th><th>Keyed for</th></tr></thead>
           <tbody>
-            <tr><td><strong>Full</strong></td><td>every 29 days</td><td>Performance diagnosis (<code>e06083f5</code>), staging as a full replica (<code>5c2251da</code>), production-bug analysis (<code>cb26f076</code>)</td></tr>
-            <tr><td><strong>Partial Copy</strong></td><td>every 5 days</td><td>A sampled data set via a sandbox template: weekly training (<code>50c2ae4b</code>), an integration benchmark (<code>db8dd0f5</code>)</td></tr>
-            <tr><td><strong>Developer / Developer Pro</strong></td><td>metadata only</td><td>One per developer or stream; clone one for a second stream (<code>46cb24ed</code>)</td></tr>
+            <tr><td><strong>Full</strong></td><td>every 29 days</td><td>Performance diagnosis, staging as a full replica, production-bug analysis</td></tr>
+            <tr><td><strong>Partial Copy</strong></td><td>every 5 days</td><td>A sampled data set via a sandbox template: weekly training, an integration benchmark</td></tr>
+            <tr><td><strong>Developer / Developer Pro</strong></td><td>metadata only</td><td>One per developer or stream; clone one for a second stream</td></tr>
           </tbody>
         </table>
       </div>
       <p>After a refresh, script the fixes a copy of production needs &mdash; remapping external IDs to
-      UAT-valid values, for one (<code>9ef00f77</code>).</p>
+      UAT-valid values, for one.</p>
 
       <h4>Deployment and agile tools</h4>
       <ul>
-        <li><strong>Change sets</strong> are simple and declarative and deploy related components
-        (<code>3a0f40db</code>). A CI build needs a migration tool or CLI, a CI server and source control
-        (<code>19382561</code>); an automated pipeline to every sandbox and to production is a CI/CD tool
-        (<code>0ab782ac</code>).</li>
-        <li>An agile tool manages backlog and sprint and assigns work (<code>28e4ec67</code>), tracks effort
-        (<code>c0976a29</code>), and is most useful wired to CI so a story shows its build and test status
-        (<code>c4e0249f</code>).</li>
+        <li><strong>Change sets</strong> are simple and declarative and deploy related components. A CI build needs a migration tool or CLI, a CI server and source control; an automated pipeline to every sandbox and to production is a CI/CD tool.</li>
+        <li>An agile tool manages backlog and sprint and assigns work, tracks effort, and is most useful wired to CI so a story shows its build and test status.</li>
       </ul>
 
       <div class="call alert">
@@ -878,40 +866,34 @@ html { scroll-behavior: smooth; }
 
       <h4>Source control and branching</h4>
       <ul>
-        <li>Source control lets distributed teams work in isolation and backs up every change
-        (<code>6e79fdb4</code>). Keep one entry point to production from the main branch, separate branches for
-        minor and major releases, and one repository with branches per project (<code>42760192</code>).</li>
-        <li>Several streams with separate timelines: the deck keys <strong>GitHub flow</strong>
-        (<code>20a0373a</code>).</li>
+        <li>Source control lets distributed teams work in isolation and backs up every change. Keep one entry point to production from the main branch, separate branches for
+        minor and major releases, and one repository with branches per project.</li>
+        <li>Several streams with separate timelines: the deck keys <strong>GitHub flow</strong>.</li>
         <li>A crowded shared sandbox: give each developer their own org plus a repository and CI, or coordinate
-        strictly (<code>c7cb14ef</code>).</li>
+        strictly.</li>
       </ul>
 
       <h4>Development model</h4>
       <ul>
         <li><strong>Package development</strong> improves collaboration, enables CI and replaces manual change
-        tracking (<code>ae8b6e7f</code>); it lets merged teams release artefacts independently
-        (<code>c60fdc56</code>).</li>
-        <li><strong>Scratch orgs</strong> for a fresh environment per project (<code>106ad44b</code>); moving to
-        packages means enabling <strong>Unlocked Packages and Second-Generation Managed Packages</strong> in Setup
-        (<code>2825c32c</code>).</li>
+        tracking; it lets merged teams release artefacts independently.</li>
+        <li><strong>Scratch orgs</strong> for a fresh environment per project; moving to
+        packages means enabling <strong>Unlocked Packages and Second-Generation Managed Packages</strong> in Setup.</li>
       </ul>
 
       <h4>Quality</h4>
       <ul>
         <li><strong>Static code analysis</strong> in the pipeline before human review, plus written standards and
-        training (<code>bf46c00b</code>, <code>4c9df2a3</code>). Salesforce's own tool is Code Analyzer.</li>
-        <li>CI with automated tests, peer review, test-driven development (<code>0788a944</code>).</li>
-        <li>The most common reason an AppExchange product fails security review: <strong>CRUD and FLS</strong>
-        (<code>c4314d7d</code>).</li>
+        training. Salesforce's own tool is Code Analyzer.</li>
+        <li>CI with automated tests, peer review, test-driven development.</li>
+        <li>The most common reason an AppExchange product fails security review: <strong>CRUD and FLS</strong>.</li>
       </ul>
 
       <h4>Unit tests and test data</h4>
       <ul>
-        <li>A <strong>mock</strong> is required for an HTTP callout, and isolates the unit from its dependencies
-        (<code>1f8fa592</code>).</li>
-        <li>Test data from a <strong>CSV static resource</strong> or a mock endpoint (<code>d1099662</code>).</li>
-        <li>Run tests under several profiles, with positive <em>and</em> negative data (<code>0a6666e2</code>)
+        <li>A <strong>mock</strong> is required for an HTTP callout, and isolates the unit from its dependencies.</li>
+        <li>Test data from a <strong>CSV static resource</strong> or a mock endpoint.</li>
+        <li>Run tests under several profiles, with positive <em>and</em> negative data
         &mdash; the outline's "positive, negative, permission-based".</li>
       </ul>
     </section>
@@ -927,20 +909,15 @@ html { scroll-behavior: smooth; }
       <h4>Metadata API and Tooling API</h4>
       <ul>
         <li>Metadata API deploys and retrieves up to <strong>10,000 files</strong> at once, with a <strong>39
-        MB</strong> maximum compressed .zip (<code>46826f40</code>).</li>
-        <li><strong>Tooling API</strong> for SOQL against smaller pieces of metadata from an application
-        (<code>023258c0</code>).</li>
-        <li>Deleting metadata needs <strong>package.xml</strong> and <strong>destructiveChanges.xml</strong>
-        (<code>47bcc6c5</code>); scripted removal is the repeatable rollback (<code>821c2331</code>).</li>
+        MB</strong> maximum compressed .zip.</li>
+        <li><strong>Tooling API</strong> for SOQL against smaller pieces of metadata from an application.</li>
+        <li>Deleting metadata needs <strong>package.xml</strong> and <strong>destructiveChanges.xml</strong>; scripted removal is the repeatable rollback.</li>
         <li><strong>RunSpecifiedTests</strong> plus <strong>Quick Deploy</strong> of a recent validation cuts
-        deployment time (<code>96a9af62</code>). A validation's job ID "is valid for 10 days". Specified tests take
-        classes, not methods, and each component still needs 75% coverage (<code>051864d9</code>).</li>
-        <li>A deploy locks the target for metadata changes while users keep working with data
-        (<code>7e0cf4e3</code>); field-type changes and profiles slow it (<code>1e158c90</code>,
-        <code>45cad6f6</code>).</li>
-        <li>A script pinned to an old API version fails on a field that only exists in a newer one
-        (<code>acf27c9e</code>).</li>
-        <li>Hand a release team a <strong>package.xml</strong> and the metadata .zip (<code>60b6639e</code>).</li>
+        deployment time. A validation's job ID "is valid for 10 days". Specified tests take
+        classes, not methods, and each component still needs 75% coverage.</li>
+        <li>A deploy locks the target for metadata changes while users keep working with data; field-type changes and profiles slow it.</li>
+        <li>A script pinned to an old API version fails on a field that only exists in a newer one.</li>
+        <li>Hand a release team a <strong>package.xml</strong> and the metadata .zip.</li>
       </ul>
 
       <div class="call alert">
@@ -952,18 +929,18 @@ html { scroll-behavior: smooth; }
         "some metadata types may also be unsupported in source tracking, packaging, and change sets".</p>
         <p>So the architect's job is a <strong>documented, rehearsed runbook</strong> of manual steps, executed
         in every environment on the way up, and checked against the <strong>Metadata Coverage</strong> report before
-        the plan is written. The deck's <code>41c787b2</code> gets close: a documented, approved manual step is
+        the plan is written. One deck item gets close: a documented, approved manual step is
         auditable, and "some post-deployment configuration cannot be automated".</p>
       </div>
 
       <h4>Technical reference data &mdash; configuration stored as records</h4>
       <ul>
         <li>Configuration that should travel with a deployment belongs in <strong>custom metadata types</strong>,
-        not custom settings or records (<code>63d84f51</code>, <code>12f79a7f</code>).</li>
+        not custom settings or records.</li>
         <li>Moving related configuration records is limited by <strong>circular relationships</strong> and the
-        <strong>depth of nested relationships</strong> (<code>82bf81bd</code>).</li>
+        <strong>depth of nested relationships</strong>.</li>
         <li>For CPQ-style configuration objects, a third-party data-deployment product or the sfdmu plugin with
-        version control (<code>f629a361</code>).</li>
+        version control.</li>
       </ul>
     </section>
 
@@ -980,30 +957,28 @@ html { scroll-behavior: smooth; }
         <table>
           <thead><tr><th>The stem says</th><th>The test is</th></tr></thead>
           <tbody>
-            <tr><td>Page response time at 1,500 concurrent users</td><td><strong>Load</strong> (<code>34e34718</code>)</td></tr>
-            <tr><td>A call centre must not slow down under volume</td><td><strong>Performance and load</strong> (<code>d6c3d18a</code>)</td></tr>
-            <tr><td>New releases keep breaking old features</td><td><strong>Automated regression in CI</strong> (<code>9164ffe1</code>, <code>9cb20e73</code>)</td></tr>
-            <tr><td>A seasonal release may break UI tests</td><td><strong>Browser tests</strong>, broken by DOM changes (<code>065657fa</code>, <code>2d70511f</code>)</td></tr>
-            <tr><td>A data migration</td><td>Success criteria, manual and automated validation, ownership, associations, transformations (<code>a44349e1</code>, <code>91eb375c</code>)</td></tr>
+            <tr><td>Page response time at 1,500 concurrent users</td><td><strong>Load</strong></td></tr>
+            <tr><td>A call centre must not slow down under volume</td><td><strong>Performance and load</strong></td></tr>
+            <tr><td>New releases keep breaking old features</td><td><strong>Automated regression in CI</strong></td></tr>
+            <tr><td>A seasonal release may break UI tests</td><td><strong>Browser tests</strong>, broken by DOM changes</td></tr>
+            <tr><td>A data migration</td><td>Success criteria, manual and automated validation, ownership, associations, transformations</td></tr>
           </tbody>
         </table>
       </div>
-      <p><strong>Stress testing production is prohibited because it is a shared environment</strong>
-      (<code>11f1d00f</code>).</p>
+      <p><strong>Stress testing production is prohibited because it is a shared environment</strong>.</p>
 
       <h4>Test data</h4>
       <p>Production data barred from sandboxes: <strong>generate mock data</strong> shaped like production, or
-      <strong>mask</strong> a Full sandbox after refresh (<code>52e1dadf</code>). Automated loads run unattended
-      and repeatably (<code>6156a463</code>).</p>
+      <strong>mask</strong> a Full sandbox after refresh. Automated loads run unattended
+      and repeatably.</p>
 
       <div class="call alert">
         <span class="tag">No deck question asks it &mdash; coverage requirements</span>
         <p>Named in the execution bullet, and quoted only inside explanations. Unit tests "must cover at least 75% of
         your Apex code, and those tests must pass" &mdash; but "code coverage serves as one indication of test
-        effectiveness", not proof (<code>6fcd633a</code>'s explanation). When you run specified tests during a
+        effectiveness", not proof. When you run specified tests during a
         deployment, "if the code coverage of an Apex component in the deployment is less than 75%, the deployment
-        fails" (<code>051864d9</code>'s). Run everything in sandboxes and a chosen set in production
-        (<code>4e87b7fd</code>).</p>
+        fails". Run everything in sandboxes and a chosen set in production.</p>
       </div>
     </section>
 
@@ -1019,10 +994,10 @@ html { scroll-behavior: smooth; }
         <table>
           <thead><tr><th>Package</th><th>When the deck keys it</th></tr></thead>
           <tbody>
-            <tr><td><strong>Unmanaged</strong></td><td>Hand over an app, IP and all, in the shortest time (<code>edf98922</code>, <code>69e82cf5</code>)</td></tr>
-            <tr><td><strong>Unlocked</strong></td><td>Internal apps in CI/CD; test before installing, check Metadata Coverage (<code>6d1e8ed6</code>, <code>7ae89b27</code>)</td></tr>
-            <tr><td><strong>Second-generation managed</strong></td><td>Two packages sharing a namespace expose methods with <code>@namespaceAccessible</code> (<code>947a218f</code>)</td></tr>
-            <tr><td><strong>Managed on AppExchange</strong></td><td>Objects and tabs don't count against edition limits (<code>36974ea1</code>)</td></tr>
+            <tr><td><strong>Unmanaged</strong></td><td>Hand over an app, IP and all, in the shortest time</td></tr>
+            <tr><td><strong>Unlocked</strong></td><td>Internal apps in CI/CD; test before installing, check Metadata Coverage</td></tr>
+            <tr><td><strong>Second-generation managed</strong></td><td>Two packages sharing a namespace expose methods with <code>@namespaceAccessible</code></td></tr>
+            <tr><td><strong>Managed on AppExchange</strong></td><td>Objects and tabs don't count against edition limits</td></tr>
           </tbody>
         </table>
       </div>
@@ -1030,13 +1005,11 @@ html { scroll-behavior: smooth; }
       <h4>Hotfixes and release plans</h4>
       <ul>
         <li>A <strong>dedicated hotfix sandbox</strong> &mdash; Developer Pro is enough &mdash; for urgent
-        production fixes during long projects (<code>b5cde063</code>, <code>d098ec60</code>,
-        <code>7e6cdb08</code>). Never fix in the test sandbox and promote from there (<code>1e990e83</code>).</li>
+        production fixes during long projects. Never fix in the test sandbox and promote from there.</li>
         <li>UAT for a weekly minor release on Partial Copy, for a four-weekly major release on Full, because of the
-        refresh intervals (<code>91f88d7e</code>).</li>
-        <li>For production: a rollback strategy, an announced maintenance window, a configuration freeze
-        (<code>2b7730d8</code>); no releases near peak season (<code>5e784c10</code>); a workflow-and-trigger
-        change is a minor release with training (<code>d1940574</code>).</li>
+        refresh intervals.</li>
+        <li>For production: a rollback strategy, an announced maintenance window, a configuration freeze; no releases near peak season; a workflow-and-trigger
+        change is a minor release with training.</li>
       </ul>
     </section>
 
@@ -1056,15 +1029,13 @@ html { scroll-behavior: smooth; }
 
       <ul>
         <li>A minor-change policy for admins in production: downstream environments won't update automatically,
-        changes must be documented on a cadence, and still tested (<code>bc626241</code>).</li>
-        <li>Admins editing permission sets in production break SOQL: extract them, commit, merge, and run CI
-        (<code>b00849d8</code>).</li>
+        changes must be documented on a cadence, and still tested.</li>
+        <li>Admins editing permission sets in production break SOQL: extract them, commit, merge, and run CI.</li>
         <li>Dashboards "rolling back" after each release: export report metadata daily and merge it into the
-        developer branches (<code>058e3da6</code>).</li>
-        <li>A regulated org: security review for every change including hotfixes, and explicit stakeholder approval
-        (<code>41c787b2</code>).</li>
+        developer branches.</li>
+        <li>A regulated org: security review for every change including hotfixes, and explicit stakeholder approval.</li>
         <li><strong>Common artefacts across orgs</strong>: an unlocked or managed package built once and installed
-        everywhere (<code>716287d1</code>, <code>8771e8d4</code>, <code>b06f104c</code>).</li>
+        everywhere.</li>
       </ul>
 
       <div class="call alert">
@@ -1108,10 +1079,9 @@ html { scroll-behavior: smooth; }
         mixes all three in its governance items.</p>
       </div>
       <ul>
-        <li><strong>Fix it in the test sandbox.</strong> Always wrong: fixes start in development and move up
-        (<code>1e990e83</code>, <code>7e6cdb08</code>).</li>
+        <li><strong>Fix it in the test sandbox.</strong> Always wrong: fixes start in development and move up.</li>
         <li><strong>A refresh interval the platform doesn't allow.</strong> Any option relying on refreshing a Full
-        sandbox more often than every 29 days is wrong (<code>cb26f076</code>, <code>cd632689</code>).</li>
+        sandbox more often than every 29 days is wrong.</li>
         <li><strong>A Developer sandbox for data work.</strong> Developer and Developer Pro copy metadata only; an
         option that ends in "and load the data with Data Loader every week" is the work a template removes.</li>
         <li><strong>"No manual steps at all."</strong> An admirable target, not a requirement &mdash; some
@@ -1130,15 +1100,15 @@ html { scroll-behavior: smooth; }
       the exam still tests them.</p>
 
       <div class="call alert">
-        <span class="tag">An entire item on a retired tool &mdash; <code>9845d66b</code></span>
+        <span class="tag">An entire item on a retired tool &mdash; Lightning Testing Service</span>
         <p>Both keyed statements describe the <strong>Lightning Testing Service</strong>. Salesforce now says: "We used
         to recommend Lightning Testing Service (LTS) but it's deprecated and no longer supported", and points to Jest,
-        UTAM, Jasmine, Mocha, Selenium and WebdriverIO. Answer with the key; <strong>do not install LTS.</strong> Its
-        neighbour <code>59848aee</code>, on where Aura accessibility tests run, is from the same era.</p>
+        UTAM, Jasmine, Mocha, Selenium and WebdriverIO. Answer with the key; <strong>do not install LTS.</strong> The
+        neighbouring item on where Aura accessibility tests run is from the same era.</p>
       </div>
 
       <div class="call trap">
-        <span class="tag">Weak rather than wrong &mdash; <code>3f3e8dd7</code></span>
+        <span class="tag">Weak rather than wrong &mdash; the customer 360 topology item</span>
         <p>Its second keyed option is the complete-graph multi-org topology, every org connected to every other.
         Salesforce's own org-strategy guidance warns where that goes: "before too long you have a spider web of
         integrations, data replication, and very brittle point-to-point connections". The item really asks which
@@ -1147,35 +1117,31 @@ html { scroll-behavior: smooth; }
       </div>
 
       <div class="call">
-        <span class="tag">Repaired from a dropped negation &mdash; <code>051864d9</code></span>
-        <p>The scrape turned "specifying the test method is <strong>not</strong> supported" into "is supported",
-        leaving a fluent sentence that meant the opposite and an item with only one true option. It was repaired
-        against Salesforce's <em>Running a Subset of Tests in a Deployment</em>: "You can specify only test classes.
-        You can't specify individual test methods." The key is now A,B. The exam dumps key B,C, which is the option
-        that page contradicts &mdash; if you have seen it elsewhere the other way round, this is why.</p>
+        <span class="tag">Running specific tests in a deployment &mdash; classes, not methods</span>
+        <p>Salesforce's <em>Running a Subset of Tests in a Deployment</em> is explicit: "You can specify only test
+        classes. You can't specify individual test methods." The deck keys that item A,B. Many practice sources
+        key it B,C, which is the option that page contradicts &mdash; if you have seen it the other way round,
+        this is why.</p>
       </div>
 
       <h4>Renamed or retired, answer unaffected</h4>
       <ul>
-        <li><strong>Ant Migration Tool</strong> &mdash; retired Spring '24 (<code>93601ed1</code>,
-        <code>8846055b</code>, <code>19382561</code>). Still the key on this exam.</li>
-        <li><strong>sfdx-style commands</strong> belong to the previous CLI generation (<code>0b8c5d16</code>).</li>
-        <li><strong>Workflow Rules and Process Builder</strong> reached end of support at the end of 2025
-        (<code>d1940574</code>, <code>feeeb5f2</code>).</li>
-        <li>The classic <strong>Development Lifecycle Guide</strong> behind <code>1fca2746</code>'s vocabulary is
+        <li><strong>Ant Migration Tool</strong> &mdash; retired Spring '24. Still the key on this exam.</li>
+        <li><strong>sfdx-style commands</strong> belong to the previous CLI generation.</li>
+        <li><strong>Workflow Rules and Process Builder</strong> reached end of support at the end of 2025.</li>
+        <li>The classic <strong>Development Lifecycle Guide</strong> behind some of the deck's vocabulary is
         retired; the lifecycle is now described through DevOps Center.</li>
-        <li><strong>"Aloha"</strong> is legacy vocabulary for the AppExchange limit exemption
-        (<code>36974ea1</code>).</li>
-        <li><strong>Data Mask</strong> is now "(Legacy)", end of service 31 December 2026 (<code>52e1dadf</code>).</li>
+        <li><strong>"Aloha"</strong> is legacy vocabulary for the AppExchange limit exemption.</li>
+        <li><strong>Data Mask</strong> is now "(Legacy)", end of service 31 December 2026.</li>
       </ul>
 
-      <h4>Verification debt to be honest about</h4>
-      <p>About thirty of this deck's citations are <strong>topical rather than decisive</strong>. The Planning and
+      <h4>Items that rest on judgment</h4>
+      <p>About thirty of this deck's items rest on judgment rather than a documented fact. The Planning and
       ALM items &mdash; steering committees, CoE membership, communication plans, risk &mdash; are governance
       practice no vendor page settles, and each says so in its own prose. Salesforce's Trailhead did settle a few
-      outright: the Kanban and Scrum options in <code>bc9a1ad1</code> and <code>ade048ca</code> are verbatim from
-      <em>Scrum and Kanban at Salesforce</em>. Read 137/137 citation coverage as weaker evidence on those domains
-      than on Deploying, Building and Releasing, where the documentation decides.</p>
+      outright: the Kanban and Scrum options are verbatim from
+      <em>Scrum and Kanban at Salesforce</em>. On Deploying, Building and Releasing, the documentation
+      decides.</p>
     </section>
 
     <!-- 14 -->
@@ -1215,7 +1181,7 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">15</span><span>Sources</span></h2>
       <div class="sect-rule"></div>
 
-      <p class="lede">Every URL below was rendered in a browser on 2026-09-28 and its title confirmed. The other
+      <p class="lede">The official pages this guide is built from. Last checked September 2026. The other
       numbers in &sect;11 come from the deck's own explanations, which cite the pages that state them.</p>
 
       <div class="linklist">
@@ -1232,45 +1198,14 @@ html { scroll-behavior: smooth; }
         promotion.</span></p>
 
         <p><a href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy_run_specific_tests.htm">Running a Subset of Tests in a Deployment</a>
-        <span class="why">Classes not methods, and the per-component 75% rule. Cited by <code>051864d9</code>, whose
-        dropped negation this page repaired.</span></p>
+        <span class="why">Classes not methods, and the per-component 75% rule. </span></p>
 
         <p><a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_code_coverage_intro.htm">Testing and Code Coverage</a>
-        <span class="why">The 75% requirement, and coverage as one indication of test effectiveness. Cited by
-        <code>6fcd633a</code>.</span></p>
+        <span class="why">The 75% requirement, and coverage as one indication of test effectiveness.</span></p>
       </div>
 
       <p>Per-question citations live in the deck itself: every one of the 137 explanations ends in a
       <code>References:</code> block with at least one rendered URL.</p>
-    </section>
-
-    <!-- 16 -->
-    <section id="notebooklm">
-      <h2 class="sect"><span class="num">16</span><span>Using this with NotebookLM</span></h2>
-      <div class="sect-rule"></div>
-
-      <p class="lede">Upload <code>study-guides/salesforce-dld.md</code>.</p>
-
-      <div class="prompts">
-        <p class="prompt">Give me eight stems and ask which governance body decides each: executive sponsor, steering
-        committee, CoE, ARB or CCB.</p>
-
-        <p class="prompt">Quiz me on the sandbox table in section 5. Include two stems where the refresh interval is
-        what rules an option out.</p>
-
-        <p class="prompt">Walk me through a release with one step the Metadata API can't deploy. Where does the manual
-        step go, and how is it tested?</p>
-
-        <p class="prompt">For every item in section 13, tell me the exam answer and what I would actually use
-        today.</p>
-
-        <p class="prompt">I have eight days. Compress section 14, keeping Operating on day one.</p>
-      </div>
-
-      <p class="colophon">Measured 2026-09-28 against
-      <code>public/decks/<wbr>salesforce_<wbr>dld_<wbr>questions_corrected.json</code> and Help article <code>005298968</code>.
-      Question counts and domain weights both have a short shelf life &mdash; re-run
-      <code>node study-guides/reclassify-dld.mjs</code> before trusting the table in &sect;2.</p>
     </section>
 
   </main>

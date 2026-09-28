@@ -361,6 +361,7 @@ code {
   padding: .1em .34em;
   border-radius: 3px;
   color: var(--ink);
+  overflow-wrap: anywhere;
 }
 
 ul, ol.prose { margin: 0 0 18px; padding-left: 20px; max-width: 68ch; }
@@ -584,17 +585,15 @@ html { scroll-behavior: smooth; }
     <h1>Agentforce Specialist Field Guide</h1>
     <p class="standfirst">
       Built from the 227 questions in the practice deck, cross-checked against the official exam
-      outline and the documentation those questions cite &mdash; first measured at 121 questions, then
-      <strong>re-measured after a 106-question import</strong> on 2026-09-26. <strong>This is the deck
-      in this repo whose exam has changed most, and the change is structural rather than
+      outline and the documentation those questions cite. <strong>This is the deck
+      whose exam has changed most, and the change is structural rather than
       cosmetic.</strong> The Spring '26 outline has six domains, <strong>three of which did not
       previously exist as domains</strong> &mdash; Data 360 Fundamentals, Governance and
       Observability, Multi-Agent Orchestration. The authoring model changed too: the guide expects
       you to engineer agents with <strong>next-generation authoring</strong> using <strong>Agent
       Script</strong>, in a <strong>Canvas</strong> or <strong>Script view</strong>, with
-      <strong>hybrid reasoning</strong>. At 121 questions none of those five terms appeared in the
-      deck; <strong>the import added eight Agent Script items and two on hybrid reasoning</strong>.
-      NGA, template expressions and the two views are still missing.
+      <strong>hybrid reasoning</strong>. The deck has eight Agent Script items and two on hybrid
+      reasoning; NGA, template expressions and the two views are missing.
     </p>
     <dl class="vitals">
       <div class="vital"><dt>Questions</dt><dd>60<span class="sub">+5 unscored</span></dd></div>
@@ -621,7 +620,6 @@ html { scroll-behavior: smooth; }
       <li><a href="#stale" class="key">Deck older than the exam</a></li>
       <li><a href="#plan">Two-week plan</a></li>
       <li><a href="#sources">Sources</a></li>
-      <li><a href="#notebooklm">Using NotebookLM</a></li>
     </ol>
     <p class="note">Sections in red carry the objectives the practice deck does not train you for.</p>
   </nav>
@@ -635,10 +633,8 @@ html { scroll-behavior: smooth; }
 
       <div class="call alert">
         <span class="tag">The deck is now four times the exam, and weighted wrongly</span>
-        <p>The deck moved <strong>16 keys in its original fact-check and 6 more while importing
-        106 new questions</strong>, and its retriever and Data Library material is genuinely strong.
-        The import closed most of the gaps this guide first found: the two smallest domains went from
-        <strong>3 deck questions to 14</strong>, and Agent Script from none to eight. But at 227
+        <p>Every answer in the deck has been checked against Salesforce's documentation, and its
+        retriever and Data Library material is genuinely strong. But at 227
         questions against an exam of 60, <strong>35% of the deck is Prompt Engineering</strong>, a
         20% domain, and a few named concepts are still absent. &sect;2 and &sect;11 are the sections
         that tell you where to spend your time.</p>
@@ -693,22 +689,20 @@ html { scroll-behavior: smooth; }
 
       <p class="lede">There is nothing to re-classify <em>from</em>: all 227 questions carry the single
       tag "Salesforce Agentforce Specialist", so the deck has no domain structure at all. The deck
-      column is an independent re-classification against the six current domains
-      (<code>study-guides/reclassify-agentforce.mjs</code>); "at 121" is the same classification
-      before the 2026-09-26 import.</p>
+      column sorts every question into the six current domains by what it actually tests.</p>
 
       <div class="tw">
         <table>
           <thead>
-            <tr><th>Domain</th><th class="num-col">Exam</th><th class="num-col">&asymp; Qs</th><th class="bar-cell">Exam vs deck</th><th class="num-col">At 121</th><th class="num-col">Deck now</th><th>Verdict</th></tr>
+            <tr><th>Domain</th><th class="num-col">Exam</th><th class="num-col">&asymp; Qs</th><th class="bar-cell">Exam vs deck</th><th class="num-col">Deck</th><th>Verdict</th></tr>
           </thead>
           <tbody>
-            <tr><td>Prompt Engineering</td><td class="num">20%</td><td class="num">~12</td><td class="bar-cell"><span class="bar" style="width:57%"></span><span class="bar deck" style="width:100%"></span></td><td class="num">46</td><td class="num">80 &middot; 35.2%</td><td><span class="verdict gap">badly over</span></td></tr>
-            <tr><td>Data 360 Fundamentals</td><td class="num">20%</td><td class="num">~12</td><td class="bar-cell"><span class="bar" style="width:57%"></span><span class="bar deck" style="width:49%"></span></td><td class="num">19</td><td class="num">39 &middot; 17.2%</td><td><span class="verdict ok">slightly under</span></td></tr>
-            <tr><td>AI Agents</td><td class="num">35%</td><td class="num">~21</td><td class="bar-cell"><span class="bar" style="width:100%"></span><span class="bar deck" style="width:94%"></span></td><td class="num">42</td><td class="num">75 &middot; 33.0%</td><td><span class="verdict ok">about right</span></td></tr>
-            <tr><td>Testing, Deployment, Maintenance</td><td class="num">10%</td><td class="num">~6</td><td class="bar-cell"><span class="bar" style="width:29%"></span><span class="bar deck" style="width:24%"></span></td><td class="num">11</td><td class="num">19 &middot; 8.4%</td><td><span class="verdict ok">about right</span></td></tr>
-            <tr><td>Governance and Observability</td><td class="num">10%</td><td class="num">~6</td><td class="bar-cell"><span class="bar" style="width:29%"></span><span class="bar deck" style="width:10%"></span></td><td class="num">2</td><td class="num">8 &middot; 3.5%</td><td><span class="verdict gap">under by share</span></td></tr>
-            <tr><td>Multi-Agent Orchestration</td><td class="num">5%</td><td class="num">~3</td><td class="bar-cell"><span class="bar" style="width:14%"></span><span class="bar deck" style="width:8%"></span></td><td class="num">1</td><td class="num">6 &middot; 2.6%</td><td><span class="verdict gap">under by share</span></td></tr>
+            <tr><td>Prompt Engineering</td><td class="num">20%</td><td class="num">~12</td><td class="bar-cell"><span class="bar" style="width:57%"></span><span class="bar deck" style="width:100%"></span></td><td class="num">80 &middot; 35.2%</td><td><span class="verdict gap">badly over</span></td></tr>
+            <tr><td>Data 360 Fundamentals</td><td class="num">20%</td><td class="num">~12</td><td class="bar-cell"><span class="bar" style="width:57%"></span><span class="bar deck" style="width:49%"></span></td><td class="num">39 &middot; 17.2%</td><td><span class="verdict ok">slightly under</span></td></tr>
+            <tr><td>AI Agents</td><td class="num">35%</td><td class="num">~21</td><td class="bar-cell"><span class="bar" style="width:100%"></span><span class="bar deck" style="width:94%"></span></td><td class="num">75 &middot; 33.0%</td><td><span class="verdict ok">about right</span></td></tr>
+            <tr><td>Testing, Deployment, Maintenance</td><td class="num">10%</td><td class="num">~6</td><td class="bar-cell"><span class="bar" style="width:29%"></span><span class="bar deck" style="width:24%"></span></td><td class="num">19 &middot; 8.4%</td><td><span class="verdict ok">about right</span></td></tr>
+            <tr><td>Governance and Observability</td><td class="num">10%</td><td class="num">~6</td><td class="bar-cell"><span class="bar" style="width:29%"></span><span class="bar deck" style="width:10%"></span></td><td class="num">8 &middot; 3.5%</td><td><span class="verdict gap">under by share</span></td></tr>
+            <tr><td>Multi-Agent Orchestration</td><td class="num">5%</td><td class="num">~3</td><td class="bar-cell"><span class="bar" style="width:14%"></span><span class="bar deck" style="width:8%"></span></td><td class="num">6 &middot; 2.6%</td><td><span class="verdict gap">under by share</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -718,20 +712,18 @@ html { scroll-behavior: smooth; }
 
       <div class="call alert">
         <span class="tag">Prompt Engineering is still the deck's heaviest domain by far</span>
-        <p><strong>80 deck items for about twelve real questions</strong> &mdash; the import added 34
-        more. Template types, grounding, the Trust Layer and model configuration are the deck's
+        <p><strong>80 deck items for about twelve real questions.</strong> Template types, grounding, the Trust Layer and model configuration are the deck's
         comfort zone, and you will over-prepare them without noticing.</p>
       </div>
 
       <div class="call trap">
-        <span class="tag">What the import changed in the same table</span>
+        <span class="tag">The small domains and the new authoring model</span>
         <p><strong>Governance and Observability plus Multi-Agent Orchestration are 15% of the exam
-        &mdash; about nine questions &mdash; and now 14 deck questions, up from 3.</strong> In
-        absolute terms the deck now has more practice here than the exam has questions, but they are
+        &mdash; about nine questions &mdash; and 14 deck questions.</strong> In
+        absolute terms the deck has more practice here than the exam has questions, but they are
         still only 6% of the deck, so drilling in order meets them rarely. &sect;7 and &sect;8 still
         carry what the deck does not.</p>
-        <p><strong>AI Agents is now matched in content as well as volume.</strong> At 121 questions it
-        was the old authoring model only. The import added Agent Script items (<code>run</code> versus
+        <p><strong>AI Agents is matched in content as well as volume.</strong> The deck has Agent Script items (<code>run</code> versus
         <code>reasoning.actions</code>, <code>mutable</code>, <code>before_reasoning</code>,
         <code>available when</code>) and hybrid reasoning. Still missing: NGA by name, template
         expressions, standard topics and the Voice channel. See &sect;5.</p>
@@ -745,12 +737,7 @@ html { scroll-behavior: smooth; }
         is reserved for <em>agent-level</em> monitoring: Session Tracing, utterance dashboards,
         analytics, optimization, event logs. Collapsing the two would hide how thin a 10% domain still
         is.</li>
-        <li>The deck's <strong>fourteen packaged-Einstein-feature questions</strong> &mdash; eight
-        original (<code>a5c36a06</code>, <code>7fcd0d22</code>, <code>d7a65539</code>,
-        <code>03dbb7ca</code>, <code>7b9b6189</code>, <code>4f60aa61</code>, <code>f1ad48dc</code>,
-        <code>432e6ed5</code>) and six from the import (<code>924940af</code>, <code>361ad781</code>,
-        <code>fb587b25</code>, <code>2e050c26</code>, <code>b82f8c77</code>, <code>c530da02</code>)
-        &mdash; map to <strong>no current sub-objective</strong>. They are filed under AI Agents as the nearest domain rather than put in
+        <li>The deck's <strong>fourteen packaged-Einstein-feature questions</strong> &mdash; map to <strong>no current sub-objective</strong>. They are filed under AI Agents as the nearest domain rather than put in
         an escape-hatch bucket, and &sect;11 names them as the deck's stalest block.</li>
       </ol>
     </section>
@@ -760,124 +747,110 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">03</span><span>Prompt Engineering</span></h2>
       <div class="sect-rule"></div>
 
-      <p class="lede">20% of the exam, 80 deck items (46 before the import). Heavily over-drilled
+      <p class="lede">20% of the exam, 80 deck items. Heavily over-drilled
       &mdash; so this is a checklist to confirm, not material to learn, with the exceptions flagged at
       the end.</p>
 
       <h4>Template types &mdash; the most reliable marks on the exam</h4>
       <div class="tw">
         <table>
-          <thead><tr><th>Type</th><th>When</th><th>Deck items</th></tr></thead>
+          <thead><tr><th>Type</th><th>When</th></tr></thead>
           <tbody>
-            <tr><td><strong>Field Generation</strong></td><td>Populate a field with generated output</td><td><code>ddb9a877</code> <code>e6352f25</code> <code>5e73a591</code> <code>7604dc8f</code> <code>410726e6</code></td></tr>
-            <tr><td><strong>Flex</strong></td><td>Multiple unrelated objects as inputs, a fully custom shape, or a template called from Apex behind a Lightning web component</td><td><code>683fdd78</code> <code>6e599964</code> <code>1a055309</code> <code>af0f9726</code> <code>0ec1e97a</code></td></tr>
-            <tr><td><strong>Sales Email</strong></td><td>A personalised email; merge objects are Recipient, Sender, <strong>Recipient Account</strong></td><td><code>f36d01cc</code> <code>66246094</code> <code>41b8067f</code></td></tr>
-            <tr><td><strong>Record Summary</strong></td><td>Customise a standard summary; Summarize Record prefers a custom Record Summary template over the Salesforce-provided one</td><td><code>21476283</code></td></tr>
+            <tr><td><strong>Field Generation</strong></td><td>Populate a field with generated output</td></tr>
+            <tr><td><strong>Flex</strong></td><td>Multiple unrelated objects as inputs, a fully custom shape, or a template called from Apex behind a Lightning web component</td></tr>
+            <tr><td><strong>Sales Email</strong></td><td>A personalised email; merge objects are Recipient, Sender, <strong>Recipient Account</strong></td></tr>
+            <tr><td><strong>Record Summary</strong></td><td>Customise a standard summary; Summarize Record prefers a custom Record Summary template over the Salesforce-provided one</td></tr>
           </tbody>
         </table>
       </div>
       <p>Customising a standard template: <strong>Save As &rarr; Save as a New Template</strong> works for
       any standard template; an <em>overridable</em> one can instead get <strong>Save as a New
       Version</strong>, which replaces the standard version once activated. Prompt Builder has no
-      "Clone" (<code>b95f0351</code>).</p>
+      "Clone".</p>
 
       <p>Three mechanics that recur:</p>
       <ul>
         <li><strong>Field Generation requires Dynamic Forms.</strong> The Lightning page must be
-        upgraded to Dynamic Forms before you can attach the template to a field
-        (<code>e6352f25</code>), you expose it by associating the template with the form field on the
-        page (<code>5e73a591</code>), and on mobile you must also <strong>enable Dynamic Forms on
-        Mobile</strong> (<code>3c41e65a</code>).</li>
+        upgraded to Dynamic Forms before you can attach the template to a field, you expose it by associating the template with the form field on the
+        page, and on mobile you must also <strong>enable Dynamic Forms on
+        Mobile</strong>.</li>
         <li><strong>Flex templates take five unrelated objects as inputs</strong> &mdash; the
-        discriminator against Record Summary (<code>683fdd78</code>).</li>
+        discriminator against Record Summary.</li>
         <li><strong>Token limit failures on a Field Generation template are random by design</strong>:
-        the number of tokens the dynamic prompt generates varies by record
-        (<code>410726e6</code>).</li>
+        the number of tokens the dynamic prompt generates varies by record.</li>
       </ul>
 
       <h4>Grounding</h4>
       <ul>
         <li><strong>Merge fields</strong> reference a default related list, e.g. opportunities on an
-        Account (<code>54b6a45e</code>). But <strong>the Activities related list is not
-        supported</strong> because it is a polymorphic field (<code>fde9ef6d</code>) &mdash; a
-        favourite exam trap. A template takes <strong>at most 5 related-list merge fields</strong>
-        (<code>99c2546e</code>), the list's fields come from the <strong>parent's page layout for the
-        current user</strong> (<code>e06e1688</code>), and the data is always rendered as JSON.</li>
-        <li><strong>Well-formatted JSON</strong> in a prompt is an <strong>Apex merge field</strong> job
-        (<code>8fd31b1d</code>).</li>
+        Account. But <strong>the Activities related list is not
+        supported</strong> because it is a polymorphic field &mdash; a
+        favourite exam trap. A template takes <strong>at most 5 related-list merge fields</strong>, the list's fields come from the <strong>parent's page layout for the
+        current user</strong>, and the data is always rendered as JSON.</li>
+        <li><strong>Well-formatted JSON</strong> in a prompt is an <strong>Apex merge field</strong> job.</li>
         <li>Draft Sales Emails show <strong>placeholders</strong> where the user lacks field access:
-        field-level security is enforced on grounding (<code>54af4b28</code>). Follow-ups built on a
+        field-level security is enforced on grounding. Follow-ups built on a
         lead's current data need <strong>record merge fields</strong> in a template, because the standard
-        grounding covers a fixed set of fields only (<code>eb9f3369</code>).</li>
+        grounding covers a fixed set of fields only.</li>
         <li><strong>Dynamic grounding with secure data retrieval</strong> is the Trust Layer component
-        that brings org data into the prompt (<code>3e120a2b</code>, <code>eba7605b</code>).</li>
+        that brings org data into the prompt.</li>
         <li>Ground on <strong>CRM and Data Cloud data using standard foundation models</strong> when
-        the requirement is no-code (<code>a8c6ed93</code>).</li>
+        the requirement is no-code.</li>
         <li>Reach Data 360 from Prompt Builder by <strong>accessing DMOs directly in Flex
-        templates</strong>, using <strong>Data Cloud related lists</strong>, and via retrievers
-        (<code>bdc1f672</code>).</li>
+        templates</strong>, using <strong>Data Cloud related lists</strong>, and via retrievers.</li>
         <li>Bring a REST callout's response into a template with the <strong>Add Prompt
-        Instructions</strong> flow element (<code>7173932f</code>, <code>af0f9726</code>), in a
-        <strong>template-triggered prompt flow</strong> (<code>8669895d</code>).</li>
-        <li>Use an existing template inside automation with a <strong>Flow action</strong>
-        (<code>c86206a7</code>).</li>
+        Instructions</strong> flow element, in a
+        <strong>template-triggered prompt flow</strong>.</li>
+        <li>Use an existing template inside automation with a <strong>Flow action</strong>.</li>
         <li>Bad summaries are usually <strong>incorrect or incomplete grounding data</strong>, not a bad
-        prompt (<code>2c9175ff</code>); the fix for mismatched generated content is concise, clear,
-        consistent templates with effective grounding and contextual role-play
-        (<code>4311b31c</code>).</li>
+        prompt; the fix for mismatched generated content is concise, clear,
+        consistent templates with effective grounding and contextual role-play.</li>
       </ul>
 
       <h4>The Trust Layer</h4>
       <div class="tw">
         <table>
-          <thead><tr><th>Feature</th><th>What it does</th><th>Item</th></tr></thead>
+          <thead><tr><th>Feature</th><th>What it does</th></tr></thead>
           <tbody>
-            <tr><td><strong>Data Masking</strong></td><td>You configure the <strong>privacy data entities</strong> to be masked</td><td><code>5f227c57</code></td></tr>
-            <tr><td><strong>Prompt Defense</strong></td><td>Minimises jailbreaking and prompt injection</td><td><code>e58a492d</code></td></tr>
-            <tr><td><strong>Dynamic Grounding</strong></td><td>Brings org data into the prompt securely</td><td><code>eba7605b</code></td></tr>
-            <tr><td><strong>Audit trail</strong></td><td>Shows the prompt sent, the masking applied, the masked response</td><td><code>e3b0fcb4</code> <code>e68a8732</code></td></tr>
-            <tr><td><strong>Toxicity detection</strong></td><td>A Trust Layer audit report in Data Cloud with a toxicity detector filter</td><td><code>f1260f25</code></td></tr>
-            <tr><td><strong>Toxicity scores</strong></td><td>Categories run 0&ndash;1 with <strong>1 the most toxic</strong>; the <em>safety</em> score runs the other way, <strong>1 the safest</strong></td><td><code>69b6ec7d</code></td></tr>
-            <tr><td><strong>Audit data</strong></td><td>Masked data and toxicity scores, stored in Data 360 with feedback &mdash; turn on collection before you can validate masking</td><td><code>01776739</code> <code>6b4ee217</code></td></tr>
+            <tr><td><strong>Data Masking</strong></td><td>You configure the <strong>privacy data entities</strong> to be masked</td></tr>
+            <tr><td><strong>Prompt Defense</strong></td><td>Minimises jailbreaking and prompt injection</td></tr>
+            <tr><td><strong>Dynamic Grounding</strong></td><td>Brings org data into the prompt securely</td></tr>
+            <tr><td><strong>Audit trail</strong></td><td>Shows the prompt sent, the masking applied, the masked response</td></tr>
+            <tr><td><strong>Toxicity detection</strong></td><td>A Trust Layer audit report in Data Cloud with a toxicity detector filter</td></tr>
+            <tr><td><strong>Toxicity scores</strong></td><td>Categories run 0&ndash;1 with <strong>1 the most toxic</strong>; the <em>safety</em> score runs the other way, <strong>1 the safest</strong></td></tr>
+            <tr><td><strong>Audit data</strong></td><td>Masked data and toxicity scores, stored in Data 360 with feedback &mdash; turn on collection before you can validate masking</td></tr>
           </tbody>
         </table>
       </div>
       <p>One limitation worth memorising: <strong>creating or updating a prompt template is <em>not</em>
-      recorded in the Setup Audit Trail</strong> (<code>80590e97</code>).</p>
+      recorded in the Setup Audit Trail</strong>.</p>
 
       <h4>Models and access control</h4>
       <ul>
-        <li><strong>Model Builder</strong> accesses an externally hosted model &mdash; an LLM on AWS
-        (<code>2aaa194d</code>), or a Databricks serving endpoint for an XGBoost classifier
-        (<code>c7919e17</code>).</li>
-        <li><strong>BYO-LLM</strong> lives in Einstein Studio &mdash; now <strong>AI Models</strong>
-        (<code>5fc6ac13</code>).</li>
-        <li><strong>Model Playground</strong> creates a model configuration with specified parameters
-        (<code>41b8067f</code>). The hyperparameters you can change on a Salesforce-enabled foundation
-        model are <strong>Temperature, Frequency Penalty, Presence Penalty</strong>
-        (<code>2814c093</code>), and <strong>Temperature</strong> is the one balancing consistency
-        against randomness (<code>3011c45c</code>).</li>
+        <li><strong>Model Builder</strong> accesses an externally hosted model &mdash; an LLM on AWS, or a Databricks serving endpoint for an XGBoost classifier.</li>
+        <li><strong>BYO-LLM</strong> lives in Einstein Studio &mdash; now <strong>AI Models</strong>.</li>
+        <li><strong>Model Playground</strong> creates a model configuration with specified parameters. The hyperparameters you can change on a Salesforce-enabled foundation
+        model are <strong>Temperature, Frequency Penalty, Presence Penalty</strong>, and <strong>Temperature</strong> is the one balancing consistency
+        against randomness.</li>
         <li><strong>Access controls:</strong> <strong>Prompt Template Manager</strong> to create,
-        <strong>Prompt Template User</strong> to execute (<code>8230cd22</code>,
-        <code>370396f2</code>). A data scientist needing both Einstein Studio and Prompt Builder gets
-        <strong>Data Cloud Admin and Prompt Template Manager</strong> (<code>65e4e8f4</code>).</li>
+        <strong>Prompt Template User</strong> to execute. A data scientist needing both Einstein Studio and Prompt Builder gets
+        <strong>Data Cloud Admin and Prompt Template Manager</strong>.</li>
         <li>A prompt template version is <strong>immutable</strong>: once activated, no further changes
-        can be saved to that version (<code>223dd5bd</code>).</li>
+        can be saved to that version.</li>
       </ul>
 
       <div class="call trap">
         <span class="tag">The things to actually learn here</span>
         <p>The bullet "<strong>explain how to manage and prevent specific models from being
-        accessed</strong>" was only half covered at 121 questions &mdash; the deck taught how to
-        <em>add</em> a model but never how to <em>block</em> one. The import closed it:
+        accessed</strong>" is the easy one to half-learn &mdash; knowing how to
+        <em>add</em> a model but not how to <em>block</em> one.
         <strong>Manage Model Provider Access</strong> in Einstein setup chooses which providers are
-        allowed org-wide (<code>dd8cce0f</code>), and a single prompt is pinned to an approved model by
-        registering it as a BYO-LLM and selecting it in the template (<code>84a2d57a</code>).</p>
+        allowed org-wide, and a single prompt is pinned to an approved model by
+        registering it as a BYO-LLM and selecting it in the template.</p>
         <p>The preview pane's two outputs &mdash; <strong>Resolution</strong> and
         <strong>Response</strong> &mdash; are worth understanding rather than memorising: the
-        Resolution shows the full text sent to the Trust Layer (<code>02699cee</code>). And a Flex
-        template's Preview stays greyed out until you <strong>select a record for each input</strong>
-        (<code>b7235ace</code>).</p>
+        Resolution shows the full text sent to the Trust Layer. And a Flex
+        template's Preview stays greyed out until you <strong>select a record for each input</strong>.</p>
       </div>
     </section>
 
@@ -886,70 +859,64 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">04</span><span>Data 360 Fundamentals</span></h2>
       <div class="sect-rule"></div>
 
-      <p class="lede">20% of the exam, 39 deck items (19 before the import) &mdash; slightly
+      <p class="lede">20% of the exam, 39 deck items &mdash; slightly
       under-weighted, and the deck's material here is its best. Note the domain name: <strong>Data
       360</strong>, not Data Cloud. The deck still says Data Cloud in 14 stems; Data 360 appears in 3
-      stems and 5 option sets, all from the import.</p>
+      stems and 5 option sets.</p>
 
       <h4>The Agentforce Data Library</h4>
       <ul>
         <li>A Data Library <strong>automates the ingestion and indexing of data and creates a default
-        retriever</strong> to be used in prompts (<code>11676c36</code>).</li>
-        <li><strong>An agent can have only one data library assigned to it</strong>
-        (<code>e699b633</code>). Clean, memorable, exam-shaped.</li>
+        retriever</strong> to be used in prompts.</li>
+        <li><strong>An agent can have only one data library assigned to it</strong>. Clean, memorable, exam-shaped.</li>
         <li>Upload PDFs sitting outside Salesforce as a <strong>File source in the Data
-        Library</strong>, which builds a <strong>Search Index</strong> &mdash; the clicks-only route
-        (<code>5cf8d8af</code>, <code>1a438749</code>, <code>9c22a0d8</code>).</li>
+        Library</strong>, which builds a <strong>Search Index</strong> &mdash; the clicks-only route.</li>
         <li>Restrict indexing to publicly available knowledge articles via <strong>Knowledge Settings
-        &rarr; Use Public Knowledge Article</strong> in the data library settings
-        (<code>ce534337</code>).</li>
+        &rarr; Use Public Knowledge Article</strong> in the data library settings.</li>
         <li>Knowledge articles with critical PDF attachments &rarr; <strong>Data Cloud's "Include
         Attachments" option plus the <code>ContentDocumentVersion</code> unstructured data model
-        object</strong> (<code>a11274ab</code>).</li>
+        object</strong>.</li>
         <li>To make product tutorials and guides answerable, <strong>publish them as Knowledge
-        articles</strong> (<code>78924287</code>).</li>
+        articles</strong>.</li>
         <li><strong>Upload limits: text and HTML up to 4 MB, PDF up to 100 MB</strong>, up to 1,000
-        files per library (<code>6808979b</code>). <strong>A library's data source cannot be changed
-        after you choose it</strong> (<code>1a925829</code>).</li>
+        files per library. <strong>A library's data source cannot be changed
+        after you choose it</strong>.</li>
         <li>In a Knowledge library, <strong>identifying fields</strong> must be concise text or
-        text-area fields within 512 tokens &mdash; a summary, not the article body
-        (<code>dc4850e9</code>); <strong>only published articles are indexed</strong>, so Knowledge
-        handles versions for you (<code>0912d189</code>); and <strong>Filter by Knowledge Data
-        Categories</strong> limits indexing to the categories you pick (<code>5cbefbee</code>).</li>
+        text-area fields within 512 tokens &mdash; a summary, not the article body; <strong>only published articles are indexed</strong>, so Knowledge
+        handles versions for you; and <strong>Filter by Knowledge Data
+        Categories</strong> limits indexing to the categories you pick.</li>
         <li>Saving a library creates <strong>a data stream, a search index and a retriever</strong>
-        automatically (<code>3ab24f47</code>).</li>
+        automatically.</li>
       </ul>
 
       <h4>Chunking, indexing, retrievers</h4>
       <p>The deck teaches the pipeline correctly. <strong>Data preparation involves loading, chunking,
-      vectorizing, and storing content in a search-optimised way</strong> (<code>3224ed4d</code>)
+      vectorizing, and storing content in a search-optimised way</strong>
       &mdash; that four-stage phrase is worth memorising verbatim.</p>
       <ul>
         <li><strong>Rebuild the search index</strong> to keep retrieval accurate as documentation
-        changes (<code>06dc0bbf</code>).</li>
+        changes.</li>
         <li>A <strong>custom retriever</strong> in Einstein Studio (now AI Models) with
         <strong>filters and recency ranking</strong> is the answer for filterable, freshness-ranked
-        results (<code>606f05b2</code>, <code>3c312af3</code>).</li>
+        results.</li>
         <li>An <strong>individual retriever's advantage over the default</strong> is that you configure
-        <strong>filters, specified fields, and how many results are returned</strong>
-        (<code>6baf71a9</code>).</li>
-        <li>Too many irrelevant results &rarr; <strong>define filters to narrow the search</strong>
-        (<code>381ae8be</code>). Latency too high &rarr; <strong>the same answer</strong>: filters limit
-        the scope of each search (<code>5697b1fb</code>).</li>
+        <strong>filters, specified fields, and how many results are returned</strong>.</li>
+        <li>Too many irrelevant results &rarr; <strong>define filters to narrow the search</strong>. Latency too high &rarr; <strong>the same answer</strong>: filters limit
+        the scope of each search.</li>
         <li>Outdated articles being surfaced &rarr; add a <strong>ranking factor for recency based on
-        <code>LastModifiedDate</code></strong> (<code>42129525</code>), or a retriever <strong>filter
-        on recently updated documents</strong> for a file library (<code>502244f6</code>).</li>
+        <code>LastModifiedDate</code></strong>, or a retriever <strong>filter
+        on recently updated documents</strong> for a file library.</li>
         <li>Filtering by a field such as warranty status &rarr; <strong>hybrid search with
-        pre-filtering in a custom retriever</strong> (<code>ebc354d1</code>). Hybrid search
+        pre-filtering in a custom retriever</strong>. Hybrid search
         <strong>fuses a keyword index with a vector index</strong>, which helps queries mixing exact
-        terms with intent (<code>ae9f4816</code>).</li>
+        terms with intent.</li>
         <li><strong>Chunk size is the Max Token setting</strong> (512 by default). Nested clauses losing
-        context &rarr; a <strong>larger</strong> chunk (<code>3f486e60</code>). Tables losing context
+        context &rarr; a <strong>larger</strong> chunk. Tables losing context
         &rarr; switch the parser to <strong>Docling</strong>, which keeps layout, merged cells and nested
-        tables (<code>119c02e9</code>). The documented strategies are section-aware, semantic passage
+        tables. The documented strategies are section-aware, semantic passage
         extraction, conversation, prepend-field and code &mdash; there is no keyword-based one.</li>
         <li>External data you must not copy &rarr; <strong>Zero Copy data federation</strong>, whose
-        data lake object is a pointer, not a copy (<code>63a974c4</code>).</li>
+        data lake object is a pointer, not a copy.</li>
       </ul>
 
       <div class="call alert">
@@ -977,28 +944,26 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">05</span><span>AI Agents</span></h2>
       <div class="sect-rule"></div>
 
-      <p class="lede">35% of the exam &mdash; the heaviest domain &mdash; and 75 deck items (42 before
-      the import). <strong>Matched by volume, and since the import mostly matched in content
-      too.</strong> At 121 questions the deck taught only the older topic-and-action model; the import
-      added the Agent Script material below, but a few named bullets are still missing.</p>
+      <p class="lede">35% of the exam &mdash; the heaviest domain &mdash; and 75 deck items. <strong>Matched by volume, and mostly matched in content
+      too</strong>, though a few named bullets are still missing.</p>
 
       <div class="call trap">
-        <span class="tag">Agent Script &mdash; the gap that defined this deck, now mostly closed</span>
+        <span class="tag">Agent Script &mdash; the newest material on the exam</span>
         <p>The first bullet of the heaviest domain reads: "Explain how an agent works and its
-        <strong>basic building blocks of agent script</strong>." At 121 questions "Agent Script"
-        returned zero hits. The import added these, and they are the ones to drill:</p>
+        <strong>basic building blocks of agent script</strong>." The deck's Agent Script items are
+        the ones to drill:</p>
       </div>
       <div class="tw">
         <table>
-          <thead><tr><th>What it tests</th><th>Deck item</th></tr></thead>
+          <thead><tr><th>What it tests</th></tr></thead>
           <tbody>
-            <tr><td><code>run @actions.x</code> in the logic <strong>always</strong> runs; a tool in <code>reasoning.actions</code> runs only if the LLM picks it</td><td><code>1445442b</code> <code>6e6b152c</code></td></tr>
-            <tr><td>A variable declared without <strong><code>mutable</code></strong> is read-only at runtime</td><td><code>0cdd5e59</code></td></tr>
-            <tr><td>Gate an action with a mutable variable and <strong><code>available when</code></strong></td><td><code>8f6695af</code> <code>cfb28ed5</code></td></tr>
-            <tr><td><code>available when</code> is decided when the tools are handed to the LLM, so a flag set mid-turn does not expose the tool that turn</td><td><code>e6327216</code></td></tr>
-            <tr><td><strong>Hybrid reasoning</strong>: <code>-&gt;</code> logic runs deterministically, <code>|</code> text is left to the LLM</td><td><code>b0079191</code> <code>1859bf70</code></td></tr>
-            <tr><td><code>before_reasoning</code> timing after a transition (flagged &mdash; no page states the exam's answer)</td><td><code>e0390194</code></td></tr>
-            <tr><td>Before reasoning versus the start_agent router for entitlement variables (flagged &mdash; both are documented)</td><td><code>c6ff24aa</code></td></tr>
+            <tr><td><code>run @actions.x</code> in the logic <strong>always</strong> runs; a tool in <code>reasoning.actions</code> runs only if the LLM picks it</td></tr>
+            <tr><td>A variable declared without <strong><code>mutable</code></strong> is read-only at runtime</td></tr>
+            <tr><td>Gate an action with a mutable variable and <strong><code>available when</code></strong></td></tr>
+            <tr><td><code>available when</code> is decided when the tools are handed to the LLM, so a flag set mid-turn does not expose the tool that turn</td></tr>
+            <tr><td><strong>Hybrid reasoning</strong>: <code>-&gt;</code> logic runs deterministically, <code>|</code> text is left to the LLM</td></tr>
+            <tr><td><code>before_reasoning</code> timing after a transition (flagged &mdash; no page states the exam's answer)</td></tr>
+            <tr><td>Before reasoning versus the start_agent router for entitlement variables (flagged &mdash; both are documented)</td></tr>
           </tbody>
         </table>
       </div>
@@ -1064,28 +1029,23 @@ html { scroll-behavior: smooth; }
         Assertion</strong>.</p>
         <p><strong>The exam guide has not.</strong> The Spring '26 outline still says "standard topics,
         custom topics, standard Agent actions, and custom Agent actions". So: <strong>answer "topic" on
-        the exam, expect "subagent" in the product and in every current doc page.</strong> This is the
-        cleanest exam-versus-product split in any guide in this repo.</p>
+        the exam, expect "subagent" in the product and in every current doc page.</strong> It is the
+        cleanest exam-versus-product split on this exam.</p>
       </div>
 
       <h4>How an agent reasons &mdash; what the deck does teach</h4>
       <ul>
         <li>The <strong>planner service</strong> / <strong>reasoning engine</strong> identifies the
-        topics and actions that respond to a user utterance (<code>67ac4dbb</code>,
-        <code>281cd372</code>, <code>79b1b8b1</code>).</li>
+        topics and actions that respond to a user utterance.</li>
         <li><strong>The LLM selects the right topic and action if they exist</strong>; with no match it
-        falls back (<code>d58f1670</code>) and the agent responds <strong>with a general message asking
-        the user to rephrase</strong> (<code>797bec34</code>).</li>
-        <li><strong>Action instructions help the reasoning engine decide which action to use</strong>
-        (<code>05f6c2b3</code>), so write them concisely and test in Agentforce Builder
-        (<code>81823826</code>).</li>
-        <li>The core component of a Custom Agent Action is its <strong>Instructions</strong>
-        (<code>cd9ab1cf</code>).</li>
-        <li>Topic setup is judged on <strong>Topic Name and Classification Description</strong>
-        (<code>db26fe88</code>), and persistent misrouting between two topics is <strong>overlap in
+        falls back and the agent responds <strong>with a general message asking
+        the user to rephrase</strong>.</li>
+        <li><strong>Action instructions help the reasoning engine decide which action to use</strong>, so write them concisely and test in Agentforce Builder.</li>
+        <li>The core component of a Custom Agent Action is its <strong>Instructions</strong>.</li>
+        <li>Topic setup is judged on <strong>Topic Name and Classification Description</strong>, and persistent misrouting between two topics is <strong>overlap in
         their descriptions</strong>; the fix is distinct descriptions plus deterministic filters, not
-        keyword rules or a router flow (<code>adc9eb42</code>, <code>bf1df653</code>).</li>
-        <li><strong>There is no standard Delete Record action</strong> (<code>0b45cf29</code>).</li>
+        keyword rules or a router flow.</li>
+        <li><strong>There is no standard Delete Record action</strong>.</li>
       </ul>
 
       <h4>Determinism: filters and variables</h4>
@@ -1093,90 +1053,82 @@ html { scroll-behavior: smooth; }
       covers the first two well and the third not at all.</p>
       <ul>
         <li>Gate sensitive data behind verification: create a <strong>custom variable</strong> set by a
-        verification action, then apply a <strong>conditional filter</strong> (<code>c7094780</code>,
-        <code>f02b7e14</code>).</li>
+        verification action, then apply a <strong>conditional filter</strong>.</li>
         <li>Gate an action on a field value: a <strong>context variable</strong> mapped to the membership
-        tier, then a conditional filter (<code>b02b7fbe</code>).</li>
+        tier, then a conditional filter.</li>
         <li>Stop the agent calling a refund action for the wrong tier &rarr; a <strong>filter on the
-        action</strong>, not a stricter instruction (<code>cfb28ed5</code>).</li>
+        action</strong>, not a stricter instruction.</li>
         <li><strong>Context versus custom variables</strong>: context variables are system-generated from
         the session (for example Messaging Session fields); <strong>custom variables</strong> are the ones
-        you create to hold values such as preferences taken from action outputs (<code>23d1457b</code>
-        &mdash; the dump keyed this the wrong way round).</li>
+        you create to hold values such as preferences taken from action outputs.</li>
         <li>Actions run <strong>in a specific order</strong> when their instructions name the
-        <strong>dependent actions by API name</strong> (<code>8fc464d2</code>). An Apex action taking a
-        list of text values maps to the standard Lightning type <code>lightning__stringType</code>
-        (<code>6fb289fc</code>).</li>
+        <strong>dependent actions by API name</strong>. An Apex action taking a
+        list of text values maps to the standard Lightning type <code>lightning__stringType</code>.</li>
       </ul>
 
       <h4>Agent types and channels</h4>
       <ul>
         <li><strong>Employee Agent</strong> for internal productivity &mdash; a marketing team finding
-        campaign data and generating content (<code>014997d2</code>), or sales staff scheduling their own
-        tasks (<code>3641dfeb</code>). <strong>There is no "Sales Agent" type</strong>; the documented
+        campaign data and generating content, or sales staff scheduling their own
+        tasks. <strong>There is no "Sales Agent" type</strong>; the documented
         types are Employee, Engagement (formerly Lead Nurturing, formerly SDR), Sales Coach, Service
-        Agent, Service Assistant and Setup with Agentforce. The exam dump keyed "Sales Agent", which the
-        import corrected.</li>
+        Agent, Service Assistant and Setup with Agentforce.</li>
         <li><strong>Service Agent</strong> for customer-facing resolution: a partner portal on
-        Experience Cloud (<code>31068c78</code>), end-to-end case resolution (<code>28b3a429</code>),
-        guest complaints with a Flex prompt template (<code>1a055309</code>).</li>
-        <li><strong>SDR Agent: only works in the Email channel</strong> (<code>6a1ae055</code>) and
-        <strong>only with the standard Lead object</strong> (<code>c15ac147</code>). Two hard
+        Experience Cloud, end-to-end case resolution,
+        guest complaints with a Flex prompt template.</li>
+        <li><strong>SDR Agent: only works in the Email channel</strong> and
+        <strong>only with the standard Lead object</strong>. Two hard
         constraints, both exam-shaped. Reps who cannot find it are missing the <strong>Use SDR
-        Agent</strong> permission set (<code>8c4cb037</code>) &mdash; now called <strong>Use Engagement
+        Agent</strong> permission set &mdash; now called <strong>Use Engagement
         Agent</strong>, since the agent was renamed Agentforce Engagement.</li>
-        <li><strong>Sales Coach</strong> for objection handling and negotiation practice
-        (<code>177ef534</code>).</li>
+        <li><strong>Sales Coach</strong> for objection handling and negotiation practice.</li>
         <li><strong>Channels:</strong> an <strong>Email Configuration</strong> connects a template to a
-        Service Agent (<code>1b821f4b</code>); a <strong>connection between Salesforce and the Slack
-        workspace</strong> connects an Employee Agent to Slack (<code>1c4982a0</code>) &mdash; add the
+        Service Agent; a <strong>connection between Salesforce and the Slack
+        workspace</strong> connects an Employee Agent to Slack &mdash; add the
         Slack connection, install the agent from <strong>Manage Agentforce</strong> in Slack, then give
-        users access (<code>853a9381</code>); the <strong>Route Work Action</strong> connects an
-        Omni-Channel Flow to the agent (<code>52194fa8</code>); SMS runs on the
-        <strong>Messaging</strong> channel (<code>b2a77f20</code>); and escalating to a human queue uses
-        an <strong>outbound Omni-Channel flow</strong> (<code>f2bd41ad</code>).</li>
+        users access; the <strong>Route Work Action</strong> connects an
+        Omni-Channel Flow to the agent; SMS runs on the
+        <strong>Messaging</strong> channel; and escalating to a human queue uses
+        an <strong>outbound Omni-Channel flow</strong>.</li>
         <li><strong>The Voice channel is named in the outline and still returns no agent-channel
-        item.</strong> The two "voice" hits the import brought are sales call recordings. Know that voice
+        item.</strong> The deck's two "voice" items are about sales call recordings. Know that voice
         is one of the four channels &mdash; digital experience, email, voice, Slack.</li>
       </ul>
 
       <h4>Security context &mdash; the deck's strongest cluster</h4>
       <p>Eleven items, all the same lesson: <strong>an agent acts as its agent user, and that user needs
-      explicit permission.</strong> Six came with the import:</p>
+      explicit permission.</strong> Among them:</p>
       <ul>
         <li>Widen a Service Agent's access with <strong>a new permission set on the Einstein Agent
         license</strong> (or the agent's own <code>[Agent_Name]_Permissions</code> set) &mdash; not the
-        permission set group, which holds no object or field permissions itself, and not the profile
-        (<code>1f4db906</code>).</li>
+        permission set group, which holds no object or field permissions itself, and not the profile.</li>
         <li>Knowledge access needs <strong>Knowledge object and field access plus Allow View
-        Knowledge</strong> (<code>84eea5a1</code>); a data library answering in Prompt Builder but not in
-        the agent needs the <strong>Data Cloud User</strong> permission set on the agent user
-        (<code>cddc1715</code>).</li>
+        Knowledge</strong>; a data library answering in Prompt Builder but not in
+        the agent needs the <strong>Data Cloud User</strong> permission set on the agent user.</li>
         <li>Private records the agent cannot see &rarr; <strong>object permissions plus sharing
-        rules</strong>, not system mode or a wider org-wide default (<code>73f6b1a2</code>,
-        <code>94da16ff</code>).</li>
+        rules</strong>, not system mode or a wider org-wide default.</li>
         <li>A callout authenticated with the user's <strong>session ID</strong> fails when the agent runs
-        it; use a <strong>Named Credential</strong> (<code>dc3d23e2</code>).</li>
+        it; use a <strong>Named Credential</strong>.</li>
       </ul>
       <p>From the original deck:</p>
       <ul>
         <li>A Service Agent not answering knowledge questions &rarr; the agent user lacks <strong>Allow
-        View Knowledge</strong> (<code>2de3ea26</code>).</li>
+        View Knowledge</strong>.</li>
         <li>An agent unable to help with a new custom object &rarr; its permission set needs
-        <strong>Read</strong> on that object (<code>0e61252b</code>).</li>
+        <strong>Read</strong> on that object.</li>
         <li>An agent unable to run a new flow-based action &rarr; assign <strong>Run Flows</strong> to
-        the agent user (<code>668d6ff3</code>).</li>
+        the agent user.</li>
         <li>A custom action calling a flow <strong>adheres to the permissions, field-level security and
-        sharing settings</strong> configured for the running user (<code>a623ffd0</code>).</li>
+        sharing settings</strong> configured for the running user.</li>
         <li>Sensitive medical research &rarr; <strong>follow least privilege and do not grant the agent
-        permission to view the object</strong> (<code>0160ee78</code>).</li>
+        permission to view the object</strong>.</li>
       </ul>
 
       <h4>Agent API</h4>
       <p>"Identify when it's appropriate to use Agent API" is a named bullet with one deck item, and it
       is a good one: to pass a verified customer ID between agents in different orgs, <strong>use the
       Agent API to start the downstream agent's session and pass the ID as a read-only context
-      variable</strong>, so the LLM cannot modify it (<code>ec7f56b9</code>).</p>
+      variable</strong>, so the LLM cannot modify it.</p>
     </section>
 
     <!-- 6 -->
@@ -1184,37 +1136,31 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">06</span><span>Testing, Deployment and Maintenance</span></h2>
       <div class="sect-rule"></div>
 
-      <p class="lede">10% of the exam, 19 deck items (11 before the import) &mdash; well matched. The
-      one named bullet that was under-covered, evaluations, now has three items.</p>
+      <p class="lede">10% of the exam, 19 deck items &mdash; well matched, including three on
+      evaluations.</p>
 
       <h4>Testing Center mechanics &mdash; what the deck teaches</h4>
       <ul>
-        <li><strong>Upload a structured CSV test template and run batch test cases</strong>
-        (<code>0dd5d1d6</code>, <code>b2206ef2</code>), with <strong>validation per test
-        utterance</strong> for consistent pass/fail logic (<code>818da706</code>).</li>
-        <li><strong>Use Testing Center only in a sandbox</strong> (<code>a44b4810</code>,
-        <code>a0031bf9</code>), because <strong>running tests risks modifying CRM data in a production
-        environment</strong> (<code>456918e7</code>). The same fact from both sides, and the most likely
+        <li><strong>Upload a structured CSV test template and run batch test cases</strong>, with <strong>validation per test
+        utterance</strong> for consistent pass/fail logic.</li>
+        <li><strong>Use Testing Center only in a sandbox</strong>, because <strong>running tests risks modifying CRM data in a production
+        environment</strong>. The same fact from both sides, and the most likely
         Testing Center question on the exam.</li>
         <li><strong>As of Summer '26, Testing Center runs are unmetered</strong> &mdash; they no longer
         consume Einstein Requests or Flex Credits (only the Data 360 queries a test makes are still
-        metered). That makes the "does not consume Einstein Requests" option on <code>456918e7</code>
-        true as well, and the question carries a notice saying so. Credit usage that remains shows in
-        <strong>Digital Wallet</strong>, not in Testing Center (<code>2e95acca</code>).</li>
+        metered). That makes the "does not consume Einstein Requests" option on the deck's Testing Center
+        question true as well, and the question carries a notice saying so. Credit usage that remains shows in
+        <strong>Digital Wallet</strong>, not in Testing Center.</li>
         <li>To evaluate whether an action is selected for realistic utterances, use <strong>Testing
-        Center</strong> (<code>63afa960</code>) &mdash; or, where the option set omits it,
-        <strong>Agent Builder</strong>, whose Preview panel shows which subagents were selected and why
-        (<code>e6949181</code>). Near-twins with different option sets; both keys are right.</li>
+        Center</strong> &mdash; or, where the option set omits it,
+        <strong>Agent Builder</strong>, whose Preview panel shows which subagents were selected and why. Near-twins with different option sets; both keys are right.</li>
       </ul>
 
       <div class="call">
         <span class="tag">How evaluations work</span>
-        <p>"Explain how Testing Center <strong>evaluations</strong> work" is a named bullet. At 121
-        questions none of the deck's Testing Center items covered scoring; the import added three
-        &mdash; <strong>Coherence</strong> for a response delivered as raw JSON (<code>8a75d4ac</code>),
-        <strong>Action Assertion</strong> for an agent that found the right subagent but missed actions
-        (<code>7f39af7b</code>), and a <strong>custom LLM-judge scorer</strong> for brand voice
-        (<code>b66538d2</code>).</p>
+        <p>"Explain how Testing Center <strong>evaluations</strong> work" is a named bullet, and the deck has three items on it
+        &mdash; <strong>Coherence</strong> for a response delivered as raw JSON,
+        <strong>Action Assertion</strong> for an agent that found the right subagent but missed actions, and a <strong>custom LLM-judge scorer</strong> for brand voice.</p>
       </div>
 
       <p><strong>Three default evaluations, always run:</strong></p>
@@ -1257,19 +1203,19 @@ html { scroll-behavior: smooth; }
       <h4>Deployment</h4>
       <ul>
         <li>The metadata type for topics, instructions and actions deployed via the CLI is
-        <strong><code>genAiPlannerBundle</code></strong> (<code>b37ea07b</code>).</li>
+        <strong><code>genAiPlannerBundle</code></strong>.</li>
         <li><strong>Apex invoked by an Agent Action needs at least 75% code coverage</strong> and all
-        dependencies present (<code>8ad060ca</code>).</li>
+        dependencies present.</li>
         <li><strong>An agent must be manually activated in production regardless of its sandbox
-        status</strong> (<code>52a560b9</code>). The commonest "why doesn't it work" answer.</li>
+        status</strong>. The commonest "why doesn't it work" answer.</li>
         <li>A prompt template behaving differently after deployment &rarr; <strong>the name of the LLM
-        does not match between sandbox and production</strong> (<code>8b365e6c</code>).</li>
+        does not match between sandbox and production</strong>.</li>
         <li>Agents, their flows and Apex deploy with <strong>either change sets or the Salesforce CLI /
-        Metadata API</strong> (<code>9446e711</code>); include every dependency, meet 75% Apex
-        coverage, and plan activation after the deploy (<code>2d41f91f</code>).</li>
+        Metadata API</strong>; include every dependency, meet 75% Apex
+        coverage, and plan activation after the deploy.</li>
         <li>A flow that errors every time after a change-set deployment was <strong>deployed
         inactive</strong> &mdash; the default, unless the org turns on "deploy processes and flows as
-        active" (<code>8796d3a5</code>).</li>
+        active".</li>
       </ul>
     </section>
 
@@ -1278,26 +1224,21 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">07</span><span>Governance and Observability</span></h2>
       <div class="sect-rule"></div>
 
-      <p class="lede"><strong>10% of the exam &mdash; about six questions &mdash; and 8 deck questions,
-      up from 2.</strong> At 121 questions this was, with &sect;8, the biggest proportional gap in any
-      guide here; the import brought the practice up to roughly the exam's own count, though it is
-      still only 3.5% of the deck.</p>
+      <p class="lede"><strong>10% of the exam &mdash; about six questions &mdash; and 8 deck questions</strong> &mdash; roughly the exam's own count, though only 3.5% of the
+      deck.</p>
 
       <ul>
         <li><strong>Agentforce Session Tracing</strong> captures detailed interaction data and gives a
-        full view of agent behaviour start to finish (<code>f97b4b49</code>).</li>
+        full view of agent behaviour start to finish.</li>
         <li>The <strong>User Utterances dashboard</strong> is where you analyse inputs, requests and
-        queries to find patterns and trends (<code>f5501338</code>).</li>
+        queries to find patterns and trends.</li>
         <li><strong>Agent Analytics</strong> is the prebuilt answer for usability, action assignment,
-        deflection and escalation trends (<code>8ea3652a</code>, <code>1ee2da69</code>).</li>
+        deflection and escalation trends.</li>
         <li><strong>Agent inspection</strong> &mdash; Salesforce lists "Agent Configuration and
-        Inspection" as an Observability capability &mdash; is the view of one complete interaction
-        (<code>2dbc88a4</code>).</li>
+        Inspection" as an Observability capability &mdash; is the view of one complete interaction.</li>
         <li><strong>Event logs</strong> show every session's events, errors and, with enhanced logging
-        on, the user and agent messages; they <strong>keep seven days</strong> (<code>2c497408</code>,
-        <code>5e3a00f5</code>).</li>
-        <li>Credit consumption is monitored in <strong>Digital Wallet</strong>
-        (<code>2e95acca</code>).</li>
+        on, the user and agent messages; they <strong>keep seven days</strong>.</li>
+        <li>Credit consumption is monitored in <strong>Digital Wallet</strong>.</li>
       </ul>
 
       <div class="call">
@@ -1352,18 +1293,13 @@ html { scroll-behavior: smooth; }
       <div class="sect-rule"></div>
 
       <p class="lede"><strong>5% of the exam &mdash; about three questions &mdash; and 6 deck
-      questions, up from 1.</strong> At 121 questions the only item (<code>db66ac22</code>) keyed
-      <strong>MCP</strong> for an external recommendation engine and offered A2A as a distractor, so
-      the deck never taught what A2A was for. The import added:</p>
+      questions.</strong> Know both protocols as answers, not just as distractors:</p>
       <ul>
-        <li><strong>A2A</strong> as the answer: the cross-vendor protocol for agents to communicate
-        (<code>bf884682</code>), its benefit is standardized cross-vendor discovery and communication
-        (<code>2f3c2e1b</code>), and it is the choice when agents need to <strong>collaborate</strong>
-        (<code>96f5ba24</code>).</li>
+        <li><strong>A2A</strong> as the answer: the cross-vendor protocol for agents to communicate, its benefit is standardized cross-vendor discovery and communication, and it is the choice when agents need to <strong>collaborate</strong>.</li>
         <li><strong>MCP</strong> in a scenario of its own: an agent dynamically finding a
-        document-classification API (<code>173480bc</code>).</li>
+        document-classification API.</li>
         <li><strong>SOMA</strong> with an orchestrator for specialised agents in one org
-        (<code>7482dc59</code>) &mdash; the deck's first multi-agent architecture item.</li>
+ &mdash; the deck's first multi-agent architecture item.</li>
       </ul>
 
       <div class="call">
@@ -1513,13 +1449,13 @@ html { scroll-behavior: smooth; }
       </div>
 
       <ul>
-        <li><strong>The plausible-but-absent capability.</strong> This deck's fact-checks moved 22 keys
-        between them, and several were invented settings &mdash; the import's own examples are a
-        "Sales Agent" type that does not exist and a "Clone" button Prompt Builder does not have. If an
+        <li><strong>The plausible-but-absent capability.</strong> Practice-exam sources for this certification
+        are full of invented settings &mdash; a "Sales Agent" type that does not exist, a "Clone"
+        button Prompt Builder does not have. If an
         option names an Agentforce toggle you cannot picture in Setup, distrust it.</li>
         <li><strong>Agent Builder versus Testing Center.</strong> Both evaluate utterance handling.
         Agent Builder's Preview is interactive and single-shot; Testing Center is batch, CSV-driven and
-        scored. The deck has a near-twin pair (<code>e6949181</code>, <code>63afa960</code>) that differ
+        scored. The deck has a near-twin pair that differ
         only in whether Testing Center is on the option list.</li>
         <li><strong>Employee Agent versus Service Agent.</strong> Internal productivity versus
         customer-facing resolution. Getting this wrong is the fastest way to lose an easy mark.</li>
@@ -1542,9 +1478,8 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">11</span><span>Where the deck is older than the exam</span></h2>
       <div class="sect-rule"></div>
 
-      <p class="lede">This deck moved <strong>16 keys in its original fact-check and 6 more while
-      importing the 2026-09-26 dump</strong> &mdash; so the answers you have are the corrected ones.
-      What follows is about the <em>exam</em> and the <em>product</em> having moved, not about the deck
+      <p class="lede">Every answer in the deck has been checked against the documentation, so the
+      answers you have are the corrected ones. What follows is about the <em>exam</em> and the <em>product</em> having moved, not about the deck
       being wrong.</p>
 
       <h4>The renames</h4>
@@ -1560,38 +1495,34 @@ html { scroll-behavior: smooth; }
         </table>
       </div>
 
-      <h4>Concepts the exam names &mdash; what the import closed and what is still missing</h4>
-      <p>Items whose <strong>keyed answer</strong> covers the concept, before and after the 2026-09-26
-      import.</p>
+      <h4>Concepts the exam names &mdash; what the deck covers and what is missing</h4>
+      <p>Deck items whose <strong>keyed answer</strong> covers the concept.</p>
       <div class="tw">
         <table>
-          <thead><tr><th>Concept</th><th class="num-col">At 121</th><th class="num-col">Now</th><th>Where to learn it</th></tr></thead>
+          <thead><tr><th>Concept</th><th class="num-col">Deck items</th><th>Where to learn it</th></tr></thead>
           <tbody>
-            <tr><td><strong>Agent Script</strong> and its building blocks</td><td class="num">0</td><td class="num">8</td><td>&sect;5</td></tr>
-            <tr><td><strong>Hybrid reasoning</strong></td><td class="num">0</td><td class="num">2</td><td>&sect;5</td></tr>
-            <tr><td><strong>Multi-Agent architecture</strong> (SOMA)</td><td class="num">0</td><td class="num">1</td><td>&sect;8</td></tr>
-            <tr><td><strong>A2A</strong> as an answer, not a distractor</td><td class="num">0</td><td class="num">3</td><td>&sect;8</td></tr>
-            <tr><td><strong>Testing Center evaluations</strong></td><td class="num">0</td><td class="num">3</td><td>&sect;6</td></tr>
-            <tr><td><strong>Canvas view and Script view</strong></td><td class="num">0</td><td class="num">0</td><td>&sect;5 &mdash; wrong options only</td></tr>
-            <tr><td><strong>Next-generation authoring (NGA)</strong></td><td class="num">0</td><td class="num">0</td><td>&sect;5</td></tr>
-            <tr><td><strong>Template expressions</strong> as a determinism mechanism</td><td class="num">0</td><td class="num">0</td><td>&sect;5 &mdash; one wrong option</td></tr>
-            <tr><td><strong>Voice channel</strong></td><td class="num">0</td><td class="num">0</td><td>&sect;5</td></tr>
-            <tr><td><strong>Standard topics</strong></td><td class="num">0</td><td class="num">0</td><td>&sect;5</td></tr>
+            <tr><td><strong>Agent Script</strong> and its building blocks</td><td class="num">8</td><td>&sect;5</td></tr>
+            <tr><td><strong>Hybrid reasoning</strong></td><td class="num">2</td><td>&sect;5</td></tr>
+            <tr><td><strong>Multi-Agent architecture</strong> (SOMA)</td><td class="num">1</td><td>&sect;8</td></tr>
+            <tr><td><strong>A2A</strong> as an answer, not a distractor</td><td class="num">3</td><td>&sect;8</td></tr>
+            <tr><td><strong>Testing Center evaluations</strong></td><td class="num">3</td><td>&sect;6</td></tr>
+            <tr><td><strong>Canvas view and Script view</strong></td><td class="num">0</td><td>&sect;5 &mdash; wrong options only</td></tr>
+            <tr><td><strong>Next-generation authoring (NGA)</strong></td><td class="num">0</td><td>&sect;5</td></tr>
+            <tr><td><strong>Template expressions</strong> as a determinism mechanism</td><td class="num">0</td><td>&sect;5 &mdash; one wrong option</td></tr>
+            <tr><td><strong>Voice channel</strong></td><td class="num">0</td><td>&sect;5</td></tr>
+            <tr><td><strong>Standard topics</strong></td><td class="num">0</td><td>&sect;5</td></tr>
           </tbody>
         </table>
       </div>
-      <p>So the gap has narrowed from structural to specific: four named terms, plus the Canvas and
-      Script views, are still learnable only from this guide and the documentation.</p>
+      <p>Four named terms, plus the Canvas and Script views, are learnable only from this guide and
+      the documentation.</p>
 
       <div class="call trap">
         <span class="tag">The deck's stalest block: fourteen packaged-Einstein-feature items</span>
-        <p><code>a5c36a06</code>, <code>7fcd0d22</code>, <code>d7a65539</code>, <code>03dbb7ca</code>,
-        <code>7b9b6189</code>, <code>4f60aa61</code>, <code>f1ad48dc</code> and <code>432e6ed5</code>
-        test <strong>Service Replies, Einstein Work Summaries, Call Insights and Service AI
-        Grounding</strong>, and the import added six more of the same kind &mdash; Call Summaries
-        (<code>924940af</code>), Service Replies with case summaries (<code>361ad781</code>), Service AI
-        Grounding (<code>fb587b25</code>), Work Summaries setup (<code>2e050c26</code>), and Einstein
-        Conversation Insights (<code>b82f8c77</code>, <code>c530da02</code>). These map to <strong>no
+        <p>Fourteen questions test <strong>Service Replies, Einstein Work Summaries, Call Insights
+        and Service AI Grounding</strong> &mdash; Call Summaries, Service Replies with case summaries, Service AI
+        Grounding, Work Summaries setup, and Einstein
+        Conversation Insights. These map to <strong>no
         sub-objective in the Spring '26 outline</strong>. They are not wrong &mdash; the features exist
         and the keys are right &mdash; but they are about 6.2% of your revision time buying zero
         marks. Recognise them and move past them: Service Replies
@@ -1601,7 +1532,7 @@ html { scroll-behavior: smooth; }
       </div>
 
       <div class="call alert">
-        <span class="tag">Exam-right, production-wrong &mdash; <code>a5e3e038</code></span>
+        <span class="tag">Exam-right, production-wrong &mdash; the default retriever</span>
         <p>It asks what is automatically created when a custom search index is created, and keys "a
         retriever that shares the name of the custom search index." Salesforce's current documentation
         says the opposite: <strong>"Data 360 no longer creates a default Retriever automatically when you
@@ -1609,46 +1540,20 @@ html { scroll-behavior: smooth; }
         retriever was created automatically."</strong> Existing default retrievers still work. The deck's
         explanation already records the retirement, so <strong>answer the deck's key and know it
         describes retired behaviour.</strong></p>
-        <p>One knock-on: <code>6baf71a9</code> contrasts an individual retriever with "the default
+        <p>One knock-on: another question contrasts an individual retriever with "the default
         retriever". The contrast is still meaningful for orgs holding legacy defaults, but on a new org
         you create individual retrievers because there is nothing else.</p>
       </div>
 
       <div class="call alert">
-        <span class="tag">Exam-right, production-wrong &mdash; <code>456918e7</code>, stale since Summer '26</span>
+        <span class="tag">Exam-right, production-wrong &mdash; Testing Center metering, stale since Summer '26</span>
         <p>It asks what is true of Testing Center and keys "running tests risks modifying CRM data in a
         production environment". Its option B, "running tests does not consume Einstein Requests", was
-        false when the deck was checked in August &mdash; and became true in <strong>Summer '26</strong>,
+        false when the deck was written &mdash; and became true in <strong>Summer '26</strong>,
         when Testing Center runs went unmetered. The question now carries a notice. <strong>Answer A on
         the exam; know that B is also true on a current org.</strong></p>
       </div>
 
-      <div class="call">
-        <span class="tag">Its 27 in-app comments are already resolved &mdash; do not re-triage them</span>
-        <p>This deck carries <strong>27 in-app comments</strong>, the largest comment set in the repo,
-        and they read like open disputes &mdash; "It is B", "Might be D". <strong>They were worked
-        through on 2026-08-17 and the repo owner confirmed they were addressed.</strong> If you are
-        studying, treat them as settled history rather than a list of contested answers. If you are
-        maintaining the deck, the same: they are not new signal.</p>
-      </div>
-
-      <h4>How to verify any of this yourself</h4>
-      <p>The Agentforce documentation lives in two places and they behave differently.</p>
-      <ul>
-        <li>The <strong>Agentforce Developer Guide</strong> on <code>developer.salesforce.com</code>
-        renders directly and is where Agent Script, hybrid reasoning and the DX workflow are documented. The better
-        source for the &sect;5 gap, and it returns a real page body without any polling tricks.</li>
-        <li><strong><code>help.salesforce.com</code></strong> is a single-page app that answers
-        <strong>every</strong> article id with HTTP 200, so a status check proves nothing. Render it and
-        read <code>document.title</code>; a dead id gives the generic <code>Salesforce Help |
-        Article</code> plus "We looked high and low but couldn't find that page." Poll for a real title
-        <strong>and</strong> a body over ~1,500 characters.</li>
-      </ul>
-      <p><code>WebFetch</code> does <strong>not</strong> resolve <code>help.salesforce.com</code> from a
-      cloud container &mdash; it returns the SPA's "CSS Error" shell for real and invented ids alike,
-      re-confirmed 2026-09-26. Two of the best sources for this guide are Help <em>knowledge</em>
-      articles rather than product docs (<code>005317683</code> for multi-agent, <code>005226932</code>
-      for observability), and those are only reachable that way.</p>
     </section>
 
     <!-- 12 -->
@@ -1694,7 +1599,7 @@ html { scroll-behavior: smooth; }
         <li><strong>Day 11 &middot; Testing and deployment.</strong> The deck's 19 items, then re-read
         Day 5.</li>
         <li><strong>Day 12 &middot; &sect;11 in full.</strong> The renames, the concepts still missing,
-        the fourteen stale items, <code>a5e3e038</code> and <code>456918e7</code>.</li>
+        the fourteen stale items, and the two exam-right, production-wrong questions.</li>
         <li><strong>Day 13 &middot; full deck in Blitz mode</strong>, options read aloud off. Note every
         miss.</li>
         <li><strong>Day 14 &middot; only the misses</strong>, plus &sect;8's five-term map and &sect;7's
@@ -1707,8 +1612,7 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">13</span><span>Sources</span></h2>
       <div class="sect-rule"></div>
 
-      <p class="lede">Every URL below was rendered in a browser on 2026-09-26 and its title
-      confirmed.</p>
+      <p class="lede">The official pages this guide is built from. Last checked September 2026.</p>
 
       <div class="linklist">
         <p><a href="https://help.salesforce.com/s/articleView?id=005298924&amp;type=1&amp;language=en_US">Salesforce Certified Agentforce Specialist Exam Guide</a>
@@ -1718,7 +1622,7 @@ html { scroll-behavior: smooth; }
         <p><a href="https://developer.salesforce.com/docs/ai/agentforce/guide/agent-script.html">Get Started with Agent Script</a>
         <span class="why">The language, the three authoring routes, the blocks, the <code>-&gt;</code>
         and <code>|</code> syntax, and the note that agent topics are now called subagents. Ten deck
-        questions since the import; none on NGA or the two views.</span></p>
+        questions; none on NGA or the two views.</span></p>
 
         <p><a href="https://help.salesforce.com/s/articleView?id=005317683&amp;type=1&amp;language=en_US">Learn about Agentforce SOMA Orchestration and MCP</a>
         <span class="why">The SOMA/MOMA/MCP/A2A/Agent Gateway map, the ~8&ndash;10 topic threshold, Agent
@@ -1730,7 +1634,7 @@ html { scroll-behavior: smooth; }
 
         <p><a href="https://help.salesforce.com/s/articleView?id=ai.agent_testing_center_evaluations.htm&amp;type=5&amp;language=en_US">Choose Evaluations</a>
         <span class="why">The three defaults, the five quality metrics, the LLM judge, and the Expected
-        Response trap. Three deck questions since the import.</span></p>
+        Response trap. Three deck questions.</span></p>
 
         <p><a href="https://help.salesforce.com/s/articleView?id=ai.agent_testing_center_considerations.htm&amp;language=en_US&amp;type=5">Considerations for Testing Center</a>
         <span class="why">"As of Summer '26, testing in Agentforce Testing Center is unmetered."</span></p>
@@ -1742,42 +1646,6 @@ html { scroll-behavior: smooth; }
 
       <p>Per-question citations live in the deck itself: every one of the 227 explanations ends in a
       <code>References:</code> block with at least one rendered URL.</p>
-    </section>
-
-    <!-- 14 -->
-    <section id="notebooklm">
-      <h2 class="sect"><span class="num">14</span><span>Using this with NotebookLM</span></h2>
-      <div class="sect-rule"></div>
-
-      <p class="lede">Upload <code>study-guides/salesforce-agentforce-specialist.md</code>.</p>
-
-      <div class="prompts">
-        <p class="prompt">Quiz me only on Agent Script, multi-agent orchestration, and observability.
-        All three are named exam objectives with only a handful of practice questions, so generate more
-        from sections 5, 8 and 7 &mdash; and include NGA, template expressions and the Canvas and Script
-        views, which the deck does not test at all.</p>
-
-        <p class="prompt">Teach me Agent Script from section 5 as if I know Flow but not any scripting
-        language. Then give me five snippets and ask me what each one does.</p>
-
-        <p class="prompt">Give me the five-term map in section 8 as flashcards, and then three scenarios
-        where I have to choose between MCP, A2A, SOMA and MOMA.</p>
-
-        <p class="prompt">List everything in this guide where the exam and the current product disagree.
-        For each, tell me what to answer on the exam and what is true in a current org.</p>
-
-        <p class="prompt">I have eight days. Compress the plan in section 12, keeping the principle that
-        week 1 covers what the deck cannot.</p>
-
-        <p class="prompt">Which parts of the practice deck are worth the least revision time, and why?
-        Quote the reasoning from sections 2 and 11.</p>
-      </div>
-
-      <p class="colophon">Measured 2026-09-26 against
-      <code>public/decks/agentforce_specialist_questions.json</code> and Help article
-      <code>005298924</code>. Question counts and domain weights both have a short shelf life &mdash;
-      re-run <code>node study-guides/reclassify-agentforce.mjs</code> before trusting the table in
-      &sect;2.</p>
     </section>
 
   </main>

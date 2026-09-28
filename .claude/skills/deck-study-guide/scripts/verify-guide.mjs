@@ -80,16 +80,6 @@ const titlesFromHtml = (html) =>
   [...html.matchAll(/<h2 class="sect">[\s\S]*?<span>([\s\S]*?)<\/span>\s*<\/h2>/g)]
     .map(([, t]) => t.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim());
 
-const titlesFromMd = (md) =>
-  [...md.matchAll(/^##\s+(?:\d+\.\s*)?(.+)$/gm)].map(([, t]) => t.trim());
-
-// HTML entities against the Markdown's literal characters; compare on words only.
-const norm = (s) =>
-  s.toLowerCase()
-    .replace(/&[a-z]+;|&#\d+;/g, ' ')
-    .replace(/[^a-z0-9]+/g, ' ')
-    .trim();
-
 for (const g of selected) {
   console.log(`\n${g.slug}`);
 
@@ -99,11 +89,6 @@ for (const g of selected) {
   if (/<!doctype|<html[\s>]/i.test(fragment)) {
     fail(`${g.source} contains a document shell; it must be a bare fragment`);
   } else ok('fragment has no document shell');
-
-  // The readable/NotebookLM source is named after the OUT basename, not the source.
-  const mdPath = `study-guides/${g.slug}.md`;
-  const hasMd = exists(mdPath);
-  if (!hasMd) fail(`${mdPath} is missing (the .md is the NotebookLM source and must be kept in parallel)`);
 
   // Built output
   if (!exists(g.out)) {
@@ -124,21 +109,11 @@ for (const g of selected) {
     }
   }
 
-  // .md / .artifact.html section parity
-  if (hasMd) {
-    const md = read(mdPath);
-    const h = titlesFromHtml(fragment).map(norm);
-    const m = titlesFromMd(md).map(norm);
-    const onlyHtml = h.filter((t) => !m.includes(t));
-    const onlyMd = m.filter((t) => !h.includes(t));
-    if (!onlyHtml.length && !onlyMd.length) ok(`.md and .artifact.html agree on all ${h.length} sections`);
-    else {
-      warn(`section drift between ${mdPath} and ${g.source}`);
-      for (const t of onlyHtml) console.log(`          html only: ${t}`);
-      for (const t of onlyMd) console.log(`          md only:   ${t}`);
-      console.log('        Both files are hand-maintained. Editing one alone is the classic mistake.');
-    }
-  }
+  // Learner-facing hygiene: the app never shows a question's id, so a guide that
+  // cites one gives the reader nothing to look up. Describe the question instead.
+  const ids = fragment.match(/<code>[0-9a-f]{8}<\/code>/g) || [];
+  if (ids.length) fail(`${ids.length} question id(s) in the fragment, e.g. ${ids[0]} — learners cannot see ids; describe the question instead`);
+  else ok('no question ids in the fragment');
 
   // Manifest wiring
   const want = `guides/${g.slug}.html`;
@@ -162,13 +137,11 @@ for (const g of selected) {
           /\ball\s+(\d{2,4})\s+(?:questions|against)\b/g,
         ];
         const claimed = new Set();
-        for (const text of [fragment, hasMd ? read(mdPath) : '']) {
-          for (const re of DECK_COUNT) {
-            for (const [, c] of text.matchAll(re)) claimed.add(Number(c));
-          }
+        for (const re of DECK_COUNT) {
+          for (const [, c] of fragment.matchAll(re)) claimed.add(Number(c));
         }
         const wrong = [...claimed].filter((c) => c !== n);
-        if (!claimed.size) warn(`neither file states a question count; the deck holds ${n}`);
+        if (!claimed.size) warn(`the guide states no question count; the deck holds ${n}`);
         else if (wrong.length) {
           fail(`the guide claims ${wrong.join(', ')} question(s) but ${deck.file} holds ${n}`);
           console.log('        Counts go stale on every import. Re-measure, do not copy the old row.');

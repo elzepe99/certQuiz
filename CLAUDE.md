@@ -29,7 +29,7 @@ a bug.
 | "audit / structurally check a deck" (no doc lookups) | `node scripts/audit-deck.mjs <deck>` | Phase 1 of the skill, standalone. Cheap. Leads, not verdicts. Takes a **path**, not a bare filename. |
 | "the questions read badly / the bot reads them wrong", "fix the punctuation", "format these stems" — **without** changing what a question says | `node scripts/reformat-stems.mjs <edits.json>` | Punctuation, spacing and capitalisation only, guarded so a formatting pass cannot alter the words. See the repo map below. Explanations and keys still go through `apply-findings.mjs`. |
 | "explain why the wrong answers are wrong" | `apply-findings.mjs` with `clarified` verdicts | Not a fact-check: no key moves, so no correction notice. Integration-architect is the worked example — see the deck table. |
-| "write / update a study guide for deck X", "what does this deck NOT cover?", "how does the deck compare to the real exam outline?", "make me a revision guide / cheat sheet" | **`deck-study-guide`** | Fourteen guides exist, one per deck (`study-guides/`). Two hand-maintained files per guide that must be edited **in parallel** — the `.md` and the `.artifact.html`; only the second is built. Never moves an answer key: a contradiction found while writing goes to `factcheck-deck`. |
+| "write / update a study guide for deck X", "what does this deck NOT cover?", "how does the deck compare to the real exam outline?", "make me a revision guide / cheat sheet" | **`deck-study-guide`** | Fourteen guides exist, one per deck (`study-guides/`). One hand-maintained `.artifact.html` per guide, written for the learner — no question ids, no maintenance history (see "Learner-facing text" below). Never moves an answer key: a contradiction found while writing goes to `factcheck-deck`. |
 | "what did users comment on?" | `npm run review-comments` | Needs Supabase keys configured. |
 | "build me a chart / dashboard of deck progress" | `dataviz` | |
 | "make this a shareable page / artifact" | `artifact-design` | |
@@ -141,19 +141,15 @@ scripts/
   lib/corrections.mjs   stampCorrection() — LOAD-BEARING, see below
   build-guide.mjs       wraps each study guide's shell-less `.artifact.html`
                         fragment into a standalone page under public/guides/.
-                        Wired to `npm run build:guide` and to `prebuild`. **It
-                        reads ONLY the `.artifact.html`** — a guide's `.md` twin
-                        is hand-maintained beside it and changes nothing a
-                        learner sees. **A new guide must be added to its GUIDES
+                        Wired to `npm run build:guide` and to `prebuild`.
+                        **A new guide must be added to its GUIDES
                         array** or it is silently never built, and the script
                         prints "built" for the ones it did build either way
-study-guides/         fourteen guides, each TWO hand-edited files that must move
-                      together: `<out-slug>.md` (the readable/NotebookLM source)
-                      and `<name>.artifact.html` (the fragment the build reads;
-                      no doctype/head/body, because it is also published as a
-                      Claude Artifact, which supplies its own skeleton). The two
-                      basenames differ — the `.md` is named after build-guide's
-                      `out`, the fragment after its `source`. The fourteen fragments
+study-guides/         fourteen guides, each ONE hand-edited `<name>.artifact.html`
+                      (no doctype/head/body, because it is also published as a
+                      Claude Artifact, which supplies its own skeleton). The
+                      Markdown/NotebookLM twins were deleted on 2026-09-28 at the
+                      repo owner's request — do not recreate them. The fourteen fragments
                       share one stylesheet BY COPY: lines 5–575 are
                       byte-identical, so a palette change must be made in all
                       fourteen. `reclassify-*.mjs` holds one deck's per-question
@@ -163,8 +159,8 @@ study-guides/         fourteen guides, each TWO hand-edited files that must move
   SKILL.md            the study-guide workflow
   scripts/verify-guide.mjs   checks the wiring the build cannot: GUIDES entry,
                              manifest `guide` field, every section heading
-                             actually present in the built page, `.md`/fragment
-                             section parity, stylesheet drift, and whether the
+                             actually present in the built page, no question
+                             ids in the text, stylesheet drift, and whether the
                              question count the guide states still matches the
                              deck. Run it after `npm run build:guide`
 .claude/skills/factcheck-deck/
@@ -1043,10 +1039,8 @@ not. **A stale count is rarely only a stale count** — re-measuring can overtur
 built on top of it, so re-read the surrounding argument rather than swapping digits.
 
 Bar widths were left alone: no deck share moved by more than 0.6 points, which is under a pixel
-at the table's 120px scale. `verify-guide.mjs` is at **0 failures across all fourteen guides** as of
-2026-09-28. It still reports `.md`/`.artifact.html` section drift on integration, Dev II and
-IAM — headings deliberately worded shorter in the fragment for the rail — which is why that
-check is a warning and not a failure.
+at the table's 120px scale. `verify-guide.mjs` is at **0 failures and 0 warnings across all
+fourteen guides** as of 2026-09-28, after the learner-facing cleanup below.
 
 ### The three consultant/specialist guides — 2026-09-26
 
@@ -2185,6 +2179,32 @@ not the missing file, was the real signal.
   `apply-findings.mjs` appends the references block and merges duplicates.
 - Adding a deck needs no code: drop JSON in `public/decks/`, add a manifest entry.
 - Leave deck changes uncommitted unless I ask otherwise.
+
+## Learner-facing text — settled 2026-09-28
+
+Everything a learner reads — explanations, correction-notice `note`s, study guides —
+is written for someone studying in the app, not for whoever maintains the deck. The
+repo owner asked for this after finding notices like "Absorbed the reasoning from the
+near-duplicate 472fcdb7" and guides full of question ids.
+
+- **Never name a question by its id, or by "Q50"/"#15".** The app shows neither, so
+  the reader cannot look it up. Say "another question in this deck on X", or leave it
+  out. `verify-guide.mjs` fails a guide that contains an id.
+- **No maintenance history in learner text**: no "the dump keyed", "scraped", "this
+  pass", pass dates, "the repo owner", "flagged for the user", script names, or notes
+  on how a doc host behaves. The notice already shows the date and the `from → to`;
+  the note says *why*, from the documentation. Maintenance history belongs here, in
+  `CLAUDE.md`, or in git.
+- **Say "practice sources" for exam dumps** when a disagreement is worth mentioning
+  at all.
+
+The 2026-09-28 cleanup rewrote 114 correction notes (and cleared `5e449a1e`'s, which said
+nothing once its duplicate reference went) and 8 explanations to this rule
+(notes as a text-level swap that left every other byte of the deck alone;
+explanations as `clarified` findings through `apply-findings.mjs`), and stripped about
+2,000 question ids, every NotebookLM section, and the maintainer paragraphs from all
+fourteen guides. **Many older paragraphs in this file cite ids and describe passes —
+that is correct here and wrong anywhere a learner reads.**
 
 ## Environment
 

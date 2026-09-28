@@ -368,6 +368,7 @@ code {
   padding: .1em .34em;
   border-radius: 3px;
   color: var(--ink);
+  overflow-wrap: anywhere;
 }
 
 ul, ol.prose { margin: 0 0 18px; padding-left: 20px; max-width: 68ch; }
@@ -625,7 +626,6 @@ html { scroll-behavior: smooth; }
       <li><a href="#tells">Distractor tells</a></li>
       <li><a href="#plan">Two-week plan</a></li>
       <li><a href="#sources">Sources</a></li>
-      <li><a href="#notebooklm">Using NotebookLM</a></li>
     </ol>
     <p class="note">Sections in red are the ones the practice deck does not train you for.</p>
   </nav>
@@ -675,8 +675,8 @@ html { scroll-behavior: smooth; }
 
       <p class="lede">Official outline weightings against what the practice deck contains. The deck
       arrived tagged with <em>four</em> categories and no Performance bucket, so its own tags cannot
-      be compared with the outline; the deck column is an independent re-classification of all 146
-      questions against the five real domains (<code>study-guides/reclassify-dev2.mjs</code>).</p>
+      be compared with the outline; the deck column re-reads all 146
+      questions against the five real domains.</p>
 
       <div class="tw">
         <table>
@@ -822,10 +822,10 @@ html { scroll-behavior: smooth; }
           <thead><tr><th>Fact from the sequence</th><th>The question it answers</th></tr></thead>
           <tbody>
             <tr><td>Validation rules run <strong>after</strong> before triggers</td><td>"Which trigger context can set a field the validation rule requires?" &rarr; <code>before insert</code></td></tr>
-            <tr><td>A workflow field update re-fires triggers <strong>once</strong></td><td>Two Survey records per Case (<code>7871e9fd</code>); a counter incremented twice (<code>72374e4c</code>) &mdash; the cause is a Field Update action, the cure is a static flag</td></tr>
+            <tr><td>A workflow field update re-fires triggers <strong>once</strong></td><td>Two Survey records per Case; a counter incremented twice &mdash; the cause is a Field Update action, the cure is a static flag</td></tr>
             <tr><td>Validation rules do <strong>not</strong> re-run after a field update</td><td>A field update that writes a value its own validation rule forbids <strong>saves</strong></td></tr>
             <tr><td>Roll-ups recalculate after the child's after trigger</td><td>The child's after trigger cannot read the parent's new roll-up value</td></tr>
-            <tr><td>Everything before the commit is <strong>one transaction</strong></td><td>Cascading triggers share the 10,000 DML-row limit &mdash; <code>d2a074ac</code>: 200 Accounts &rarr; 10,000 Contacts &rarr; 10,000 Campaign Members fails. A governor limit anywhere rolls back everything</td></tr>
+            <tr><td>Everything before the commit is <strong>one transaction</strong></td><td>Cascading triggers share the 10,000 DML-row limit &mdash; 200 Accounts &rarr; 10,000 Contacts &rarr; 10,000 Campaign Members fails. A governor limit anywhere rolls back everything</td></tr>
             <tr><td>Post-commit work is skipped on rollback</td><td>An <code>@future</code> enqueued from a trigger never runs if the transaction fails; a publish-after-commit platform event is never published</td></tr>
             <tr><td>The order of <strong>multiple triggers on one object is not guaranteed</strong></td><td>One trigger per object, per event, delegating to a handler class</td></tr>
           </tbody>
@@ -835,7 +835,7 @@ html { scroll-behavior: smooth; }
       <h3>Recursion &mdash; four shapes, one fix</h3>
       <ul>
         <li><strong>Self re-entry</strong>: an after-update trigger updates the same records &rarr; fires again &rarr; "Maximum trigger depth exceeded" (stack depth <strong>16</strong>).</li>
-        <li><strong>Workflow field update</strong> re-firing the trigger (<code>af20c4c2</code>, <code>7871e9fd</code>).</li>
+        <li><strong>Workflow field update</strong> re-firing the trigger.</li>
         <li><strong>Two objects' triggers updating each other</strong> (Account &harr; Contact).</li>
         <li><strong>A handler called twice</strong> from two triggers on the same object.</li>
       </ul>
@@ -843,7 +843,7 @@ html { scroll-behavior: smooth; }
         <span class="tag">The fix is always the same</span>
         <p>A <strong><code>public static Boolean</code></strong> (or <code>static Set&lt;Id&gt;</code> of processed ids)
         in a helper class, checked before the work and set after it. Statics live for the transaction
-        and die with it, which is exactly the scope you want. The deck's <code>72374e4c</code> is worth
+        and die with it, which is exactly the scope you want. The deck's recursion-guard item is worth
         reading twice: the keyed option declares the flag but never checks it, so the exam is
         identifying the <em>mechanism</em>, not a working snippet.</p>
       </div>
@@ -854,11 +854,11 @@ html { scroll-behavior: smooth; }
           <thead><tr><th>The stem says&hellip;</th><th>Answer</th></tr></thead>
           <tbody>
             <tr><td>"optimal", "minimal code", "administrator can maintain", one object, criteria on the record itself</td><td><strong>Record-triggered flow</strong> (or a validation rule for a check)</td></tr>
-            <tr><td>Create a related record when a field crosses a threshold (<code>77c104fc</code>)</td><td>Flow</td></tr>
-            <tr><td>Block a delete with a message, defaults from custom metadata, "depending on company personnel" (<code>a6345067</code>)</td><td>Flow <strong>or</strong> trigger &mdash; both correct, read the count</td></tr>
-            <tr><td>A callout, complex cross-object logic, custom-object team/sharing, the same logic needed in more than one place (<code>aa38d07c</code>)</td><td><strong>Apex</strong> &mdash; and put the logic in <strong>one helper class</strong> called from every entry point</td></tr>
+            <tr><td>Create a related record when a field crosses a threshold</td><td>Flow</td></tr>
+            <tr><td>Block a delete with a message, defaults from custom metadata, "depending on company personnel"</td><td>Flow <strong>or</strong> trigger &mdash; both correct, read the count</td></tr>
+            <tr><td>A callout, complex cross-object logic, custom-object team/sharing, the same logic needed in more than one place</td><td><strong>Apex</strong> &mdash; and put the logic in <strong>one helper class</strong> called from every entry point</td></tr>
             <tr><td>"reusable from flows"</td><td><code>@InvocableMethod</code> (one per class, <code>static</code>, <code>List</code> in and out) with <code>@InvocableVariable</code> on request/response classes</td></tr>
-            <tr><td>Start a flow from code</td><td><code>Flow.Interview.createInterview(name, inputs).start()</code> (<code>fc0bc95b</code>)</td></tr>
+            <tr><td>Start a flow from code</td><td><code>Flow.Interview.createInterview(name, inputs).start()</code></td></tr>
           </tbody>
         </table>
       </div>
@@ -873,19 +873,19 @@ html { scroll-behavior: smooth; }
       <p>A trigger receives <strong>up to 200 records</strong> per invocation (2,000 for platform-event
       and change-event triggers). Every deck item on trigger quality reduces to four rules:</p>
       <ol class="prose">
-        <li><strong>No SOQL in a loop.</strong> Collect keys into a <code>Set&lt;Id&gt;</code>, query once, put the results in a <code>Map</code>, look up inside the loop (<code>264d0eab</code>, <code>f7fd9efb</code>).</li>
-        <li><strong>No DML in a loop.</strong> Add to a <code>List</code>, one DML statement after the loop (<code>c0bd95df</code>).</li>
-        <li><strong>Never DML <code>Trigger.new</code> or <code>Trigger.old</code>.</strong> In a <em>before</em> trigger, set fields on <code>Trigger.new</code> and the save carries them; in an <em>after</em> trigger the records are read-only and you query fresh copies. <code>update accountList</code> where the list holds <code>Trigger.new</code> is an error, not merely redundant (<code>264d0eab</code>).</li>
+        <li><strong>No SOQL in a loop.</strong> Collect keys into a <code>Set&lt;Id&gt;</code>, query once, put the results in a <code>Map</code>, look up inside the loop.</li>
+        <li><strong>No DML in a loop.</strong> Add to a <code>List</code>, one DML statement after the loop.</li>
+        <li><strong>Never DML <code>Trigger.new</code> or <code>Trigger.old</code>.</strong> In a <em>before</em> trigger, set fields on <code>Trigger.new</code> and the save carries them; in an <em>after</em> trigger the records are read-only and you query fresh copies. <code>update accountList</code> where the list holds <code>Trigger.new</code> is an error, not merely redundant.</li>
         <li><strong>One trigger per object, logic in a handler</strong>, with <code>Trigger.isInsert / isUpdate / isBefore / isAfter</code> deciding what runs.</li>
       </ol>
       <p><code>Trigger.newMap</code> and <code>Trigger.oldMap</code> exist for update and delete;
       <code>Trigger.oldMap.get(c.Id)</code> is how you detect a transition &mdash; closed now, was not closed
-      before (<code>7871e9fd</code>). <code>Trigger.old</code> is always read-only.</p>
+      before. <code>Trigger.old</code> is always read-only.</p>
 
       <h4>Before or after?</h4>
       <ul>
         <li><strong>Before</strong>: validate, default, derive fields on the same record &mdash; no extra DML, no Id yet on insert.</li>
-        <li><strong>After</strong>: the record has an Id and its values are saved; use it to create related records (<code>53d0a7d2</code>), publish events, enqueue async work, read roll-ups the save computed. Records are read-only here.</li>
+        <li><strong>After</strong>: the record has an Id and its values are saved; use it to create related records, publish events, enqueue async work, read roll-ups the save computed. Records are read-only here.</li>
       </ul>
 
       <h3>Error handling and transactional integrity</h3>
@@ -900,9 +900,9 @@ html { scroll-behavior: smooth; }
             <tr><td><code>addError()</code> on a <code>Trigger.new</code> record</td><td>Marks that record failed with a message; the DML fails for that record (all-or-none) or that row only (partial)</td><td>"prevent the save and show a message" in a trigger; the Flow equivalent is the <strong>Custom Error</strong> element</td></tr>
             <tr><td><code>try / catch / finally</code></td><td>Catches <code>DmlException</code>, <code>QueryException</code>, <code>CalloutException</code>, custom exceptions &mdash; never <code>LimitException</code></td><td>Handle, log, rethrow as <code>AuraHandledException</code> in a Lightning controller</td></tr>
             <tr><td><code>class MyException extends Exception {}</code></td><td>Typed failures across layers</td><td>A service signalling a business-rule failure to a controller</td></tr>
-            <tr><td><code>Database.insert(records, false)</code> &rarr; <code>SaveResult[]</code></td><td><strong>Partial success</strong>: failed rows reported, the rest commit; <code>isSuccess()</code>, <code>getErrors()</code>, <code>getId()</code></td><td>"the integration should not fail because one Task failed" (<code>9d81f45b</code>)</td></tr>
+            <tr><td><code>Database.insert(records, false)</code> &rarr; <code>SaveResult[]</code></td><td><strong>Partial success</strong>: failed rows reported, the rest commit; <code>isSuccess()</code>, <code>getErrors()</code>, <code>getId()</code></td><td>"the integration should not fail because one Task failed"</td></tr>
             <tr><td><code>Database.DMLOptions</code></td><td><code>optAllOrNone</code>, <code>allowFieldTruncation</code>, <code>assignmentRuleHeader.useDefaultRule</code>, <code>emailHeader</code></td><td>Run assignment rules from Apex; truncate instead of failing</td></tr>
-            <tr><td><code>Database.setSavepoint()</code> / <code>Database.rollback(sp)</code></td><td>Undo everything since the savepoint, inside the transaction</td><td>"any error prevents all execution" across several DML statements (<code>f3d819e3</code>)</td></tr>
+            <tr><td><code>Database.setSavepoint()</code> / <code>Database.rollback(sp)</code></td><td>Undo everything since the savepoint, inside the transaction</td><td>"any error prevents all execution" across several DML statements</td></tr>
             <tr><td><code>DmlException.getNumDml()</code>, <code>getDmlIndex(i)</code>, <code>getDmlMessage(i)</code></td><td>Which row failed and why</td><td>Per-record error reporting</td></tr>
           </tbody>
         </table>
@@ -910,7 +910,7 @@ html { scroll-behavior: smooth; }
 
       <h4>Savepoint rules that get tested</h4>
       <ul>
-        <li>Rolling back to an earlier savepoint <strong>invalidates every later one</strong> &mdash; roll back to SP1, then to SP3 &rarr; runtime error (<code>d6fe74e5</code>).</li>
+        <li>Rolling back to an earlier savepoint <strong>invalidates every later one</strong> &mdash; roll back to SP1, then to SP3 &rarr; runtime error.</li>
         <li><code>setSavepoint()</code> and <code>rollback()</code> each <strong>count as a DML statement</strong> against the 150.</li>
         <li>Records inserted after a savepoint <strong>keep their Id in the Apex variable</strong> after a rollback; null the Id (or clone) before re-inserting.</li>
         <li>You cannot roll back a callout, an email, or a published-immediately platform event.</li>
@@ -925,19 +925,17 @@ html { scroll-behavior: smooth; }
         <span class="tag">"You have uncommitted work pending"</span>
         <p><strong>A callout is forbidden in a transaction with pending uncommitted DML.</strong> Three
         correct responses, and the exam accepts whichever fits the stem: <strong>reorder</strong> &mdash;
-        callout first, DML after (<code>11d22bd9</code>); <strong>go async</strong> &mdash; move the callout to
+        callout first, DML after; <strong>go async</strong> &mdash; move the callout to
         <code>@future(callout=true)</code> or a Queueable implementing <code>Database.AllowsCallouts</code>,
-        which runs in its own transaction after the commit (<code>ea09f5b0</code>); <strong>in a test</strong>
-        &mdash; insert the data <em>before</em> <code>Test.startTest()</code> and make the mock callout after it
-        (<code>595ebc61</code>, <code>614b99d9</code>).</p>
+        which runs in its own transaction after the commit; <strong>in a test</strong>
+        &mdash; insert the data <em>before</em> <code>Test.startTest()</code> and make the mock callout after it.</p>
         <p><code>Test.startTest()</code> does <strong>not</strong> commit anything &mdash; nothing in a test ever
         commits. It opens a fresh context, and that boundary is what the rule measures against.</p>
       </div>
       <p>Its cousin: <strong>a trigger cannot make a synchronous callout at all</strong> &mdash;
-      <code>System.CalloutException: Callout from triggers are currently not supported</code>
-      (<code>4f9da22c</code>, <code>03fa7cee</code>). The trigger hands ids to <code>@future(callout=true)</code>
-      or a Queueable (<code>a170139a</code>, <code>4c5d1329</code>). Note the type: a
-      <code>CalloutException</code>, <strong>not</strong> a <code>LimitException</code> &mdash; <code>474e9918</code>
+      <code>System.CalloutException: Callout from triggers are currently not supported</code>. The trigger hands ids to <code>@future(callout=true)</code>
+      or a Queueable. Note the type: a
+      <code>CalloutException</code>, <strong>not</strong> a <code>LimitException</code> &mdash; one deck item
       turns on exactly that distinction.</p>
     </section>
 
@@ -961,7 +959,7 @@ html { scroll-behavior: smooth; }
             <tr><td>Per-transaction cap</td><td><strong>50</strong> future calls (0 from batch or future)</td><td><strong>50</strong> <code>enqueueJob</code> (1 from async)</td><td>5 concurrent jobs; flex queue holds <strong>100</strong></td><td><strong>100</strong> scheduled classes (5 in Developer Edition)</td></tr>
             <tr><td>Monitoring</td><td>None &mdash; no Id</td><td><code>AsyncApexJob</code> by Id</td><td><code>AsyncApexJob</code>; Apex Jobs page; <code>BatchApexErrorEvent</code></td><td>Scheduled Jobs page; <code>CronTrigger</code></td></tr>
             <tr><td>Limits inside</td><td>Async (200 SOQL, 12 MB heap, 60 s CPU)</td><td>Async</td><td>Async, <strong>reset per <code>execute</code> chunk</strong></td><td><strong>Synchronous</strong> limits apply to scheduled Apex</td></tr>
-            <tr><td>Pick it when</td><td>Fire-and-forget after commit; callout from a trigger; mixed-DML split</td><td>You need the job Id, non-primitive input, sequential heavy steps (<code>218106b6</code>), a Finalizer</td><td><strong>More than 50,000 rows</strong> or millions of records (<code>7675adce</code>, <code>abea6c7c</code>); one-time seeding</td><td>Recurring cadence (<code>f62513eb</code> pairs it with Batchable)</td></tr>
+            <tr><td>Pick it when</td><td>Fire-and-forget after commit; callout from a trigger; mixed-DML split</td><td>You need the job Id, non-primitive input, sequential heavy steps, a Finalizer</td><td><strong>More than 50,000 rows</strong> or millions of records; one-time seeding</td><td>Recurring cadence (often paired with Batchable)</td></tr>
           </tbody>
         </table>
       </div>
@@ -970,7 +968,7 @@ html { scroll-behavior: smooth; }
       <ul>
         <li><strong>Why Batch for volume, not "async"</strong>: the 50,000 query-row limit is the <em>same</em> in async Apex. A Queueable fails on 50,001 rows exactly as a trigger would. Batch escapes it by a documented mechanism &mdash; "if you use a <code>QueryLocator</code>, the governor limit for the total number of records retrieved by SOQL queries is bypassed", up to <strong>50 million</strong> rows &mdash; and separately each <code>execute</code> chunk "is considered a discrete transaction" with <strong>reset limits</strong>. Two guarantees; the query headroom belongs to the <code>QueryLocator</code>, not the chunking. An <code>Iterable</code> <code>start</code> gets no bypass.</li>
         <li><strong>Scope</strong>: default <strong>200</strong> per <code>execute</code>, max <strong>2,000</strong>. In a test only <strong>one</strong> chunk runs, so keep test data within the scope.</li>
-        <li><strong><code>BatchApexErrorEvent</code></strong> fires when <code>start</code>, <code>execute</code> or <code>finish</code> throws unhandled &mdash; only if the class <code>implements Database.RaisesPlatformEvents</code>. Only the platform can fire it (<code>6845ba58</code>); subscribe with a trigger, flow, CometD or Pub/Sub.</li>
+        <li><strong><code>BatchApexErrorEvent</code></strong> fires when <code>start</code>, <code>execute</code> or <code>finish</code> throws unhandled &mdash; only if the class <code>implements Database.RaisesPlatformEvents</code>. Only the platform can fire it; subscribe with a trigger, flow, CometD or Pub/Sub.</li>
         <li><strong><code>enqueueJob(job, delayMinutes)</code></strong> accepts 0&ndash;10 minutes; <code>AsyncOptions</code> with a <code>DuplicateSignature</code> de-duplicates enqueues.</li>
         <li><strong>Transaction Finalizers</strong>: <code>implements Finalizer</code> with <code>execute(FinalizerContext ctx)</code>, attached with <code>System.attachFinalizer(f)</code> inside the Queueable's <code>execute</code>. Runs in its own transaction after the job <strong>succeeds or fails</strong>, can make callouts and re-enqueue the job &mdash; up to <strong>5</strong> consecutive re-enqueues after failure. <code>ctx.getResult()</code> is <code>SUCCESS</code> or <code>UNHANDLED_EXCEPTION</code>; <code>ctx.getException()</code> gives the cause. This is the documented answer to "recover from a failed Queueable" &mdash; the deck never asks it.</li>
         <li><strong>Daily allocation</strong>: <strong>250,000</strong> async executions per 24 hours or 200 &times; user licences, whichever is greater; batch <code>start</code> / <code>execute</code> / <code>finish</code> each count. Batch checks remaining capacity up front and refuses a job it cannot finish.</li>
@@ -981,10 +979,8 @@ html { scroll-behavior: smooth; }
       <h3>Testing async</h3>
       <p><code>Test.startTest()</code> &hellip; enqueue / call future / <code>executeBatch</code> / <code>schedule</code>
       &hellip; <code>Test.stopTest()</code> &mdash; <strong>everything queued inside the block runs synchronously
-      at <code>stopTest()</code></strong>, so query and assert <em>after</em> it (<code>3810d972</code>,
-      <code>6b4e2f7b</code>). A Queueable that chains another job <strong>cannot</strong> do so under test &mdash;
-      guard the inner <code>enqueueJob</code> with <code>if (!Test.isRunningTest())</code>
-      (<code>c91ba2b8</code>). At most <strong>5</strong> batch jobs per test.</p>
+      at <code>stopTest()</code></strong>, so query and assert <em>after</em> it. A Queueable that chains another job <strong>cannot</strong> do so under test &mdash;
+      guard the inner <code>enqueueJob</code> with <code>if (!Test.isRunningTest())</code>. At most <strong>5</strong> batch jobs per test.</p>
     </section>
 
     <!-- 6 -->
@@ -997,29 +993,29 @@ html { scroll-behavior: smooth; }
         <table>
           <thead><tr><th>Keyword</th><th>Effect</th><th>Trap</th></tr></thead>
           <tbody>
-            <tr><td><code>ALL ROWS</code></td><td>Returns Recycle Bin rows <strong>and archived activities</strong>; add <code>IsDeleted = false</code> for archived Tasks without deleted ones (<code>082893f1</code>)</td><td>Apex only, not the API</td></tr>
+            <tr><td><code>ALL ROWS</code></td><td>Returns Recycle Bin rows <strong>and archived activities</strong>; add <code>IsDeleted = false</code> for archived Tasks without deleted ones</td><td>Apex only, not the API</td></tr>
             <tr><td><code>FOR UPDATE</code></td><td>Locks the returned records for the transaction; others wait</td><td><strong>No <code>ORDER BY</code></strong> with <code>FOR UPDATE</code>; locks release at commit</td></tr>
             <tr><td><code>FOR VIEW</code> / <code>FOR REFERENCE</code></td><td>Updates <code>LastViewedDate</code> / <code>LastReferencedDate</code> for Recent Items</td><td>&mdash;</td></tr>
             <tr><td><code>TYPEOF &hellip; WHEN &hellip; THEN &hellip; END</code></td><td>Polymorphic fields (<code>Task.What</code>, <code>Event.Who</code>) select different fields per type</td><td>SELECT only</td></tr>
-            <tr><td><code>WITH SECURITY_ENFORCED</code></td><td>Throws <code>QueryException</code> if any selected field or object is not accessible</td><td><strong>The exam's answer</strong> for FLS in a query (<code>e9c0d546</code>); see &sect;14 for <code>WITH USER_MODE</code></td></tr>
+            <tr><td><code>WITH SECURITY_ENFORCED</code></td><td>Throws <code>QueryException</code> if any selected field or object is not accessible</td><td><strong>The exam's answer</strong> for FLS in a query; see &sect;14 for <code>WITH USER_MODE</code></td></tr>
             <tr><td><code>WITH USER_MODE</code> / <code>WITH SYSTEM_MODE</code></td><td>Enforce (or bypass) sharing <strong>and</strong> FLS on the query, whatever the class keyword</td><td>Newer; the recommended clause today</td></tr>
             <tr><td><code>USING SCOPE mine / team / everything</code></td><td>Ownership scopes</td><td>&mdash;</td></tr>
             <tr><td><code>GROUP BY</code> / <code>ROLLUP</code> / <code>CUBE</code>, <code>HAVING</code></td><td>Aggregates into <code>AggregateResult</code>; <code>ar.get('expr0')</code> or aliases</td><td>2,000-row cap on grouped results</td></tr>
-            <tr><td><code>COUNT()</code></td><td><strong>Costs one query row</strong>, not one per record (<code>497c27b5</code>); with <code>GROUP BY</code>, one per group</td><td><code>SUM()</code> is the wrong tool for a count</td></tr>
+            <tr><td><code>COUNT()</code></td><td><strong>Costs one query row</strong>, not one per record; with <code>GROUP BY</code>, one per group</td><td><code>SUM()</code> is the wrong tool for a count</td></tr>
             <tr><td><code>OFFSET n</code></td><td>Skip rows; <strong>max 2,000</strong></td><td>Beyond that: <code>StandardSetController</code> or an Id-keyed cursor</td></tr>
-            <tr><td>Semi-join / anti-join <code>WHERE Id IN (SELECT Contact__c FROM Order__c &hellip;)</code></td><td>Set membership against a child query (<code>59f7360d</code>)</td><td>The subquery selects the <strong>foreign key</strong>, not <code>Id</code>, when it runs on the child</td></tr>
+            <tr><td>Semi-join / anti-join <code>WHERE Id IN (SELECT Contact__c FROM Order__c &hellip;)</code></td><td>Set membership against a child query</td><td>The subquery selects the <strong>foreign key</strong>, not <code>Id</code>, when it runs on the child</td></tr>
             <tr><td>Relationship queries</td><td>Child-to-parent by dot (<code>Account.Owner.Name</code>, up to 5 levels); parent-to-child by subquery in SELECT</td><td><code>__r</code> for custom relationships; each subquery counts as an extra query (subqueries get 3&times;)</td></tr>
           </tbody>
         </table>
       </div>
       <p><code>List has more than one row for assignment to SObject</code> &mdash; when a multi-row query is
       assigned to a single sObject variable &mdash; is raised <strong>before</strong> any governor limit the same
-      loop would later hit (<code>9943756f</code>). Read code items for the <em>first</em> failure.</p>
+      loop would later hit. Read code items for the <em>first</em> failure.</p>
 
       <h4>SOQL for loops and SOSL</h4>
       <ul>
         <li><code>for (Account a : [SELECT &hellip;])</code> and <code>for (List&lt;Account&gt; chunk : [SELECT &hellip;])</code> fetch in <strong>batches of 200</strong> and keep the heap small.</li>
-        <li><strong>SOSL</strong>: <code>FIND 'term' IN ALL FIELDS RETURNING Account(Name), Contact(Name)</code> &mdash; up to <strong>2,000</strong> rows, <strong>20</strong> queries per transaction. <strong>Under test SOSL returns an empty list</strong> unless <code>Test.setFixedSearchResults(ids)</code> was called (<code>a3252caa</code>).</li>
+        <li><strong>SOSL</strong>: <code>FIND 'term' IN ALL FIELDS RETURNING Account(Name), Contact(Name)</code> &mdash; up to <strong>2,000</strong> rows, <strong>20</strong> queries per transaction. <strong>Under test SOSL returns an empty list</strong> unless <code>Test.setFixedSearchResults(ids)</code> was called.</li>
       </ul>
 
       <h3>Dynamic Apex</h3>
@@ -1027,10 +1023,10 @@ html { scroll-behavior: smooth; }
         <table>
           <thead><tr><th>Need</th><th>Feature</th></tr></thead>
           <tbody>
-            <tr><td>Query whose fields or filters are chosen at run time (<code>40004899</code>)</td><td><strong>Dynamic SOQL</strong>: <code>Database.query(String)</code>; bind variables in the string resolve to locals in scope; <code>Database.queryWithBinds(q, bindMap, AccessLevel.USER_MODE)</code>; <code>Database.countQuery</code></td></tr>
+            <tr><td>Query whose fields or filters are chosen at run time</td><td><strong>Dynamic SOQL</strong>: <code>Database.query(String)</code>; bind variables in the string resolve to locals in scope; <code>Database.queryWithBinds(q, bindMap, AccessLevel.USER_MODE)</code>; <code>Database.countQuery</code></td></tr>
             <tr><td>Same for search</td><td><code>Search.query(String)</code></td></tr>
             <tr><td>User input inside a query string</td><td><code>String.escapeSingleQuotes(input)</code> &mdash; SOQL injection is the exam's stated reason</td></tr>
-            <tr><td>Which objects are custom (<code>62592f03</code>)</td><td><code>Schema.getGlobalDescribe()</code> &rarr; <code>getDescribe()</code> &rarr; <code>DescribeSObjectResult.isCustom()</code></td></tr>
+            <tr><td>Which objects are custom</td><td><code>Schema.getGlobalDescribe()</code> &rarr; <code>getDescribe()</code> &rarr; <code>DescribeSObjectResult.isCustom()</code></td></tr>
             <tr><td>Object-level CRUD</td><td><code>DescribeSObjectResult.isAccessible() / isCreateable() / isUpdateable() / isDeletable()</code></td></tr>
             <tr><td>Field-level security</td><td><code>DescribeFieldResult.isAccessible() / isUpdateable()</code> via <code>Schema.SObjectType.Account.fields.Name</code>; or <code>Security.stripInaccessible(AccessType.READABLE, records)</code></td></tr>
             <tr><td>Picklist values, labels, types</td><td><code>DescribeFieldResult.getPicklistValues()</code>, <code>getLabel()</code> (translated for the running user), <code>getType()</code></td></tr>
@@ -1054,25 +1050,25 @@ html { scroll-behavior: smooth; }
         <table class="kv">
           <tbody>
             <tr><td>Define</td><td>Custom object suffixed <code>__e</code>; fields are the payload; retention <strong>72 hours</strong></td></tr>
-            <tr><td>Publish from Apex</td><td><code>EventBus.publish(event)</code> returns <code>Database.SaveResult</code> &mdash; <strong>check <code>isSuccess()</code></strong>; from the API, POST to <code>/sobjects/Event__e</code> (<code>59d5a8f8</code>); from a flow, Create Records</td></tr>
+            <tr><td>Publish from Apex</td><td><code>EventBus.publish(event)</code> returns <code>Database.SaveResult</code> &mdash; <strong>check <code>isSuccess()</code></strong>; from the API, POST to <code>/sobjects/Event__e</code>; from a flow, Create Records</td></tr>
             <tr><td>Publish behaviour</td><td><strong>Publish After Commit</strong> (default): counts as a DML statement and is <strong>not published if the transaction rolls back</strong>. <strong>Publish Immediately</strong>: sent even on rollback, capped at <strong>150</strong> calls per transaction &mdash; for logging errors mid-transaction</td></tr>
             <tr><td>Subscribe</td><td>Apex trigger (<strong>after insert only</strong>, runs as the <em>Automated Process</em> user unless you set one, batch <strong>2,000</strong>), flow, CometD <code>/event/Event__e</code>, Pub/Sub API, <code>lightning/empApi</code> in an LWC</td></tr>
             <tr><td>Replay</td><td><code>ReplayId</code>; CometD <code>-1</code> = new only, <code>-2</code> = everything retained. In a trigger, <code>EventBus.TriggerContext.currentContext().setResumeCheckpoint(replayId)</code> marks progress so a failure resumes after the checkpoint</td></tr>
-            <tr><td>Standard events</td><td><code>BatchApexErrorEvent</code> (only the platform fires it &mdash; <code>6845ba58</code>), <code>PlatformStatusAlertEvent</code>, <code>FlowExecutionErrorEvent</code></td></tr>
+            <tr><td>Standard events</td><td><code>BatchApexErrorEvent</code> (only the platform fires it), <code>PlatformStatusAlertEvent</code>, <code>FlowExecutionErrorEvent</code></td></tr>
             <tr><td>Test</td><td>Delivered at <code>Test.stopTest()</code>, or on demand with <code>Test.getEventBus().deliver()</code></td></tr>
             <tr><td>Change Data Capture</td><td><code>AccountChangeEvent</code> etc. on <code>/data/ChangeEvents</code>; same 72-hour retention; ignores sharing, respects FLS</td></tr>
           </tbody>
         </table>
       </div>
-      <p>Pick a platform event (<code>3870d944</code>) for <strong>several</strong> subscribers, no reply
+      <p>Pick a platform event for <strong>several</strong> subscribers, no reply
       expected, subscribers that may be offline, a transaction that must not wait. One SOAP endpoint
-      with declarative retries is an Outbound Message (<code>e92e64ee</code>) &mdash; 24-hour queue, SOAP
-      only. REST can only be reached from Apex (<code>f688895a</code>).</p>
+      with declarative retries is an Outbound Message &mdash; 24-hour queue, SOAP
+      only. REST can only be reached from Apex.</p>
 
       <h3>Outbound: callouts from Apex</h3>
       <ul>
         <li><code>HttpRequest</code> &rarr; <code>Http.send()</code> &rarr; <code>HttpResponse</code>; <code>setEndpoint</code>, <code>setMethod</code>, <code>setHeader</code>, <code>setBody</code>, <code>setTimeout(ms)</code>; <code>getStatusCode()</code>, <code>getBody()</code>.</li>
-        <li><strong>The endpoint must be authorised</strong>: a <strong>Remote Site Setting</strong> (<code>df3ee6db</code> &mdash; "Unauthorized endpoint") or a <strong>Named Credential</strong> referenced as <code>callout:My_Cred/path</code>. Named Credentials hold the URL <strong>and</strong> the authentication, so a vendor moving from basic auth to OAuth (<code>e67f6bc8</code>) or a changing URL (<code>caa4bfe8</code>) is a Setup change, not a code change. Never store secrets in custom settings or literals.</li>
+        <li><strong>The endpoint must be authorised</strong>: a <strong>Remote Site Setting</strong> ("Unauthorized endpoint") or a <strong>Named Credential</strong> referenced as <code>callout:My_Cred/path</code>. Named Credentials hold the URL <strong>and</strong> the authentication, so a vendor moving from basic auth to OAuth or a changing URL is a Setup change, not a code change. Never store secrets in custom settings or literals.</li>
         <li><strong>SOAP callouts</strong>: import the WSDL with <strong>WSDL2Apex</strong>; mock with <code>WebServiceMock</code>.</li>
         <li><strong>JSON</strong>: <code>JSON.serialize</code>, <code>JSON.deserialize(str, Type.class)</code>, <code>JSON.deserializeUntyped</code> &rarr; <code>Map&lt;String, Object&gt;</code>, <code>JSONParser</code> / <code>JSONGenerator</code>. <strong>XML</strong>: <code>Dom.Document</code>, <code>XmlStreamReader</code>.</li>
         <li>Limits: <strong>100</strong> callouts, <strong>120 s</strong> cumulative, <strong>10 s default</strong> timeout raised by <code>setTimeout()</code> to 120 s; request/response <strong>6 MB</strong> sync / <strong>12 MB</strong> async, counted toward heap.</li>
@@ -1084,19 +1080,18 @@ html { scroll-behavior: smooth; }
         <table>
           <thead><tr><th>Mechanism</th><th>When</th><th>Shape</th></tr></thead>
           <tbody>
-            <tr><td><strong>REST API</strong> (standard)</td><td>External code needs standard CRUD/query and knows the record (<code>50c95d23</code>) &mdash; no Apex</td><td><code>GET /services/data/vXX.X/sobjects/Account/{id}</code>; <code>PATCH &hellip;/Order__c/Order_Number__c/{value}</code> <strong>upserts by external Id</strong>, and a lookup can be set by external Id: <code>"Account__r": {"Customer_Number__c": "&hellip;"}</code> (<code>1b7b6b00</code>)</td></tr>
-            <tr><td><strong>SOAP API</strong></td><td>Strongly typed clients; <code>login()</code> returns a session Id placed in the <strong><code>SessionHeader</code></strong> of later calls (<code>2b360cbd</code>)</td><td>Enterprise WSDL (typed, one org) vs Partner WSDL (loosely typed, many orgs)</td></tr>
-            <tr><td><strong>Apex REST</strong></td><td>Custom logic per call, JSON, consolidate many objects (<code>cb0d4ef3</code>), <strong>cut API calls</strong> by doing a multi-step lookup server-side (<code>0eac03b0</code>)</td><td><code>@RestResource(urlMapping='/orders/*') global with sharing class X { @HttpGet global static Order__c get() {&hellip;} }</code>; also <code>@HttpPost / @HttpPut / @HttpPatch / @HttpDelete</code>; <code>RestContext.request / response</code>; endpoint <code>/services/apexrest/orders/</code></td></tr>
+            <tr><td><strong>REST API</strong> (standard)</td><td>External code needs standard CRUD/query and knows the record &mdash; no Apex</td><td><code>GET /services/data/vXX.X/sobjects/Account/{id}</code>; <code>PATCH &hellip;/Order__c/Order_Number__c/{value}</code> <strong>upserts by external Id</strong>, and a lookup can be set by external Id: <code>"Account__r": {"Customer_Number__c": "&hellip;"}</code></td></tr>
+            <tr><td><strong>SOAP API</strong></td><td>Strongly typed clients; <code>login()</code> returns a session Id placed in the <strong><code>SessionHeader</code></strong> of later calls</td><td>Enterprise WSDL (typed, one org) vs Partner WSDL (loosely typed, many orgs)</td></tr>
+            <tr><td><strong>Apex REST</strong></td><td>Custom logic per call, JSON, consolidate many objects, <strong>cut API calls</strong> by doing a multi-step lookup server-side</td><td><code>@RestResource(urlMapping='/orders/*') global with sharing class X { @HttpGet global static Order__c get() {&hellip;} }</code>; also <code>@HttpPost / @HttpPut / @HttpPatch / @HttpDelete</code>; <code>RestContext.request / response</code>; endpoint <code>/services/apexrest/orders/</code></td></tr>
             <tr><td><strong>Apex SOAP</strong></td><td>A SOAP client must call custom logic</td><td><code>global class X { webservice static String doIt(String p) {&hellip;} }</code>; WSDL generated from the class</td></tr>
-            <tr><td><strong>Email service</strong></td><td>Create records from inbound mail (<code>d85ba695</code>)</td><td><code>implements Messaging.InboundEmailHandler</code>; <code>handleInboundEmail(InboundEmail, InboundEnvelope)</code> returns <code>InboundEmailResult</code></td></tr>
-            <tr><td><strong>Bulk API 2.0</strong></td><td>Thousands to millions of rows</td><td>CSV jobs; "weekly, large, outside business hours" is an ETL that drives it (<code>0a52f212</code>)</td></tr>
+            <tr><td><strong>Email service</strong></td><td>Create records from inbound mail</td><td><code>implements Messaging.InboundEmailHandler</code>; <code>handleInboundEmail(InboundEmail, InboundEnvelope)</code> returns <code>InboundEmailResult</code></td></tr>
+            <tr><td><strong>Bulk API 2.0</strong></td><td>Thousands to millions of rows</td><td>CSV jobs; "weekly, large, outside business hours" is an ETL that drives it</td></tr>
             <tr><td><strong>Composite</strong></td><td>Several related REST calls in one round trip</td><td>Up to 25 subrequests, one API call</td></tr>
           </tbody>
         </table>
       </div>
       <p>Apex REST and Apex SOAP classes must be <strong><code>global</code></strong>; the "class must be global"
-      distractor is <em>wrong</em> for <code>@AuraEnabled</code> (public is fine &mdash; <code>69a6cded</code>,
-      <code>c8de9a78</code>) and <em>right</em> for <code>@RemoteAction</code> and web services.</p>
+      distractor is <em>wrong</em> for <code>@AuraEnabled</code> (public is fine) and <em>right</em> for <code>@RemoteAction</code> and web services.</p>
 
       <h4>Integration users and security, briefly</h4>
       <p>An integration gets its <strong>own user</strong> with an <strong>API Only</strong> profile, least-privilege
@@ -1132,8 +1127,8 @@ html { scroll-behavior: smooth; }
       <div class="tw">
         <table class="kv">
           <tbody>
-            <tr><td>Apex</td><td><code>Date.format()</code> &rarr; the user's locale date string (<code>c26371c1</code>); <code>Datetime.format()</code> &rarr; user's locale <strong>and time zone</strong>; <code>Datetime.format(pattern, tz)</code>; <code>formatGmt()</code>; <code>Decimal.format()</code>; <code>UserInfo.getLocale()</code>, <code>getLanguage()</code>, <code>getTimeZone()</code>, <code>getDefaultCurrency()</code></td></tr>
-            <tr><td>Aura</td><td><code>$Locale</code> value provider &mdash; date/time/number formats, currency code and symbol, separators, time zone (<code>e831eba6</code>); <code>$Browser.formFactor</code> for device</td></tr>
+            <tr><td>Apex</td><td><code>Date.format()</code> &rarr; the user's locale date string; <code>Datetime.format()</code> &rarr; user's locale <strong>and time zone</strong>; <code>Datetime.format(pattern, tz)</code>; <code>formatGmt()</code>; <code>Decimal.format()</code>; <code>UserInfo.getLocale()</code>, <code>getLanguage()</code>, <code>getTimeZone()</code>, <code>getDefaultCurrency()</code></td></tr>
+            <tr><td>Aura</td><td><code>$Locale</code> value provider &mdash; date/time/number formats, currency code and symbol, separators, time zone; <code>$Browser.formFactor</code> for device</td></tr>
             <tr><td>LWC</td><td><code>@salesforce/i18n/locale</code>, <code>@salesforce/i18n/currency</code>, <code>@salesforce/i18n/timeZone</code>, plus base components that localise for you: <code>lightning-formatted-date-time</code>, <code>-number</code>, <code>-currency</code></td></tr>
             <tr><td>Visualforce</td><td><code>&lt;apex:outputField&gt;</code> localises automatically; <code>&lt;apex:outputText value="{0,number,#,##0.00}"&gt;</code> with <code>&lt;apex:param&gt;</code> for explicit patterns</td></tr>
           </tbody>
@@ -1172,20 +1167,20 @@ html { scroll-behavior: smooth; }
         <li>Insert shares in bulk like any sObject: <code>Database.insert(shares, false)</code> and read the <code>SaveResult</code>s &mdash; a share granting no more than the OWD fails harmlessly.</li>
       </ul>
 
-      <p><strong>When the exam accepts code over configuration</strong> (<code>e2a749f7</code>, <code>380cc77c</code>):
+      <p><strong>When the exam accepts code over configuration</strong>:
       team functionality on a <strong>custom</strong> object (teams exist only on Account, Opportunity and Case),
       access driven by an <strong>external system of record</strong>, access derived from <strong>data
       relationships no rule can express</strong> (a junction between Contact and several Accounts), or
       measured <strong>poor performance of declarative sharing</strong>. Not: "manager sees reports' records"
       (role hierarchy), "everyone edits" (OWD), "partners see cases on their own account"
-      (<strong>sharing sets</strong> for Experience Cloud &mdash; <code>a8b17c49</code>).</p>
+      (<strong>sharing sets</strong> for Experience Cloud).</p>
 
       <h4>Class-level sharing keywords</h4>
       <div class="tw">
         <table>
           <thead><tr><th>Keyword</th><th>Record sharing</th><th>Notes</th></tr></thead>
           <tbody>
-            <tr><td><code>with sharing</code></td><td>Enforced</td><td>A <code>with sharing</code> <code>@AuraEnabled</code> query returns only what the user sees &mdash; the fix in <code>75e642fb</code> is <code>runAs(admin)</code>, not <code>without sharing</code></td></tr>
+            <tr><td><code>with sharing</code></td><td>Enforced</td><td>A <code>with sharing</code> <code>@AuraEnabled</code> query returns only what the user sees &mdash; the fix in a test is <code>runAs(admin)</code>, not <code>without sharing</code></td></tr>
             <tr><td><code>without sharing</code></td><td>Bypassed</td><td>Needed when code must read or write records the user cannot, e.g. writing share rows</td></tr>
             <tr><td><code>inherited sharing</code></td><td>Takes the caller's mode; <strong><code>with sharing</code> as an entry point</strong></td><td>The safe default for utility classes</td></tr>
             <tr><td>none</td><td>System mode, <strong>inherits the caller's</strong> sharing when called from a sharing class</td><td>A Lightning controller with no keyword runs as <code>with sharing</code> &mdash; but declare it</td></tr>
@@ -1203,7 +1198,7 @@ html { scroll-behavior: smooth; }
           <thead><tr><th></th><th>Custom metadata type (<code>__mdt</code>)</th><th>Custom setting (<code>__c</code>)</th></tr></thead>
           <tbody>
             <tr><td>Is</td><td><strong>Metadata</strong> &mdash; records deploy with change sets, packages and source</td><td><strong>Data</strong> &mdash; only the <em>definition</em> deploys; records are entered per org</td></tr>
-            <tr><td>In tests</td><td>Visible <strong>without</strong> <code>SeeAllData</code> (<code>1a279dfb</code>)</td><td>Invisible unless <code>SeeAllData=true</code> &mdash; create them in <code>@testSetup</code></td></tr>
+            <tr><td>In tests</td><td>Visible <strong>without</strong> <code>SeeAllData</code></td><td>Invisible unless <code>SeeAllData=true</code> &mdash; create them in <code>@testSetup</code></td></tr>
             <tr><td>Read in Apex</td><td><code>My_Type__mdt.getAll()</code>, <code>getInstance('DevName')</code> &mdash; no SOQL cost; SOQL on <code>__mdt</code> <strong>does not count</strong> against the query limit</td><td><code>getInstance()</code> (hierarchy: org &rarr; profile &rarr; user, most specific wins), <code>getOrgDefaults()</code>, <code>getValues('Name')</code>, <code>getAll()</code> (list) &mdash; from the application cache, no query</td></tr>
             <tr><td>Write in Apex</td><td><strong>No DML.</strong> Metadata API (<code>Metadata.Operations.enqueueDeployment</code>) &mdash; asynchronous</td><td>Ordinary DML at run time</td></tr>
             <tr><td>Varies by user/profile</td><td>No</td><td><strong>Hierarchy</strong> settings do</td></tr>
@@ -1214,9 +1209,9 @@ html { scroll-behavior: smooth; }
           </tbody>
         </table>
       </div>
-      <p>Field history (<code>f82f42e8</code>): standard tracking keeps <strong>18 months</strong> (24 via the
+      <p>Field history: standard tracking keeps <strong>18 months</strong> (24 via the
       API), <strong>20 fields</strong> per object; <strong>Field Audit Trail</strong> extends that to 10 years and 60
-      fields. <strong>Big objects</strong> (<code>87b506a2</code>, <code>6d242d63</code>): hundreds of millions of
+      fields. <strong>Big objects</strong>: hundreds of millions of
       rows, <code>__b</code> suffix, an <strong>index</strong> of up to five custom fields that every query must filter
       <strong>in index order</strong> with <code>=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>,
       <code>&gt;=</code>, <code>IN</code> only &mdash; no <code>LIKE</code>, <code>INCLUDES</code>, <code>!=</code> &mdash;
@@ -1233,12 +1228,9 @@ html { scroll-behavior: smooth; }
         <span class="tag">Wiring to Apex &mdash; the deck's most repeated code defect</span>
         <p>An Apex method a component uses must be <code>public</code> or <code>global</code>, <strong><code>static</code></strong>
         and <strong><code>@AuraEnabled</code></strong>; for <code>@wire</code> it must be
-        <strong><code>@AuraEnabled(cacheable=true)</code></strong> (<code>e2ba60ab</code>, <code>d5978be6</code>,
-        <code>e9c0d546</code>). Any inner class it returns needs <code>@AuraEnabled</code> on <strong>each property</strong>
-        or the object arrives empty (<code>15dc7a90</code>, <code>6686c9b7</code>). Parameters arrive by
-        <strong>name</strong>, typed to what JavaScript sends &mdash; an <code>Object</code> parameter breaks the call
-        (<code>c8de9a78</code>). The import path is <code>@salesforce/apex/Class.method</code>
-        (<code>00016277</code>).</p>
+        <strong><code>@AuraEnabled(cacheable=true)</code></strong>. Any inner class it returns needs <code>@AuraEnabled</code> on <strong>each property</strong>
+        or the object arrives empty. Parameters arrive by
+        <strong>name</strong>, typed to what JavaScript sends &mdash; an <code>Object</code> parameter breaks the call. The import path is <code>@salesforce/apex/Class.method</code>.</p>
       </div>
 
       <div class="tw">
@@ -1247,16 +1239,16 @@ html { scroll-behavior: smooth; }
           <tbody>
             <tr><td>Wire to a property</td><td><code>@wire(getX, { id: '$recordId' }) result;</code> &rarr; <code>result.data</code> / <code>result.error</code></td><td><code>$</code> makes the parameter <strong>reactive</strong></td></tr>
             <tr><td>Wire to a function</td><td><code>@wire(getX) wired({ data, error }) {&hellip;}</code></td><td>Keep the raw result to pass to <code>refreshApex()</code></td></tr>
-            <tr><td>Imperative</td><td><code>getX({ term }).then(r =&gt; &hellip;).catch(e =&gt; &hellip;)</code></td><td>User-initiated actions and DML; no <code>cacheable</code> needed (<code>15dc7a90</code>)</td></tr>
-            <tr><td>Client cache</td><td><code>@AuraEnabled(cacheable=true)</code> (<code>2388fdd4</code>)</td><td>LWC <strong>and</strong> Aura; read-only methods only &mdash; a cacheable method cannot do DML</td></tr>
-            <tr><td>Records without Apex</td><td><code>getRecord</code>, <code>updateRecord</code>, <code>createRecord</code>, <code>deleteRecord</code> from <code>lightning/uiRecordApi</code> (<code>2ddd7bf6</code>); <code>getRecordNotifyChange</code> after your own Apex DML</td><td>LDS enforces FLS and CRUD and shares one cache across components</td></tr>
-            <tr><td>Forms</td><td><code>lightning-record-form</code> (layout-driven), <code>lightning-record-edit-form</code> + <code>lightning-input-field</code> (place fields freely &mdash; <code>8ae9f7e4</code>), <code>lightning-record-view-form</code></td><td>Errors need <strong><code>lightning-messages</code></strong> inside the form (<code>295b0c8b</code>); validation belongs in <strong>validation rules</strong>, not JavaScript (<code>fb30207f</code>, <code>1698e7ee</code>)</td></tr>
+            <tr><td>Imperative</td><td><code>getX({ term }).then(r =&gt; &hellip;).catch(e =&gt; &hellip;)</code></td><td>User-initiated actions and DML; no <code>cacheable</code> needed</td></tr>
+            <tr><td>Client cache</td><td><code>@AuraEnabled(cacheable=true)</code></td><td>LWC <strong>and</strong> Aura; read-only methods only &mdash; a cacheable method cannot do DML</td></tr>
+            <tr><td>Records without Apex</td><td><code>getRecord</code>, <code>updateRecord</code>, <code>createRecord</code>, <code>deleteRecord</code> from <code>lightning/uiRecordApi</code>; <code>getRecordNotifyChange</code> after your own Apex DML</td><td>LDS enforces FLS and CRUD and shares one cache across components</td></tr>
+            <tr><td>Forms</td><td><code>lightning-record-form</code> (layout-driven), <code>lightning-record-edit-form</code> + <code>lightning-input-field</code> (place fields freely), <code>lightning-record-view-form</code></td><td>Errors need <strong><code>lightning-messages</code></strong> inside the form; validation belongs in <strong>validation rules</strong>, not JavaScript</td></tr>
           </tbody>
         </table>
       </div>
 
       <p><strong>Lifecycle</strong>: <code>constructor</code> &rarr; <code>connectedCallback</code> (inserted in the DOM
-      &mdash; the place for "on load" logic, <code>3598b33b</code>) &rarr; <code>renderedCallback</code> (after every
+      &mdash; the place for "on load" logic) &rarr; <code>renderedCallback</code> (after every
       render &mdash; guard it) &rarr; <code>disconnectedCallback</code>; <code>errorCallback(error, stack)</code>
       catches child errors. Decorators: <code>@api</code> (public, reactive), <code>@track</code> (only to observe
       <em>mutations inside</em> an object or array &mdash; every field is already reactive), <code>@wire</code>.</p>
@@ -1266,25 +1258,24 @@ html { scroll-behavior: smooth; }
         <table>
           <thead><tr><th>Direction</th><th>Mechanism</th></tr></thead>
           <tbody>
-            <tr><td>Child &rarr; parent</td><td><code>this.dispatchEvent(new CustomEvent('passthrough', { detail: this.passthrough }))</code> (<code>b92420f4</code>); parent handles <code>onpassthrough</code>, reads <code>event.detail</code>. <code>bubbles</code> and <code>composed</code> default to <strong>false</strong></td></tr>
+            <tr><td>Child &rarr; parent</td><td><code>this.dispatchEvent(new CustomEvent('passthrough', { detail: this.passthrough }))</code>; parent handles <code>onpassthrough</code>, reads <code>event.detail</code>. <code>bubbles</code> and <code>composed</code> default to <strong>false</strong></td></tr>
             <tr><td>Parent &rarr; child</td><td><code>@api</code> properties and <code>@api</code> methods on the child</td></tr>
             <tr><td>Unrelated components, Aura, Visualforce, utility bar</td><td><strong>Lightning Message Service</strong> &mdash; a message channel (<code>MyChannel__c</code>), <code>publish(messageContext, channel, payload)</code> / <code>subscribe(&hellip;)</code> from <code>lightning/messageService</code>; <code>MessageContext</code> via <code>@wire</code>; <code>APPLICATION_SCOPE</code> to reach the whole page</td></tr>
             <tr><td>Server &rarr; browser</td><td><code>lightning/empApi</code> subscribing to a platform event or CDC channel</td></tr>
-            <tr><td>Notifications</td><td><code>ShowToastEvent</code> from <code>lightning/platformShowToastEvent</code>; many components each toasting is the anti-pattern <code>036f6646</code> fixes with in-place <code>lwc:if</code> errors or one aggregating component</td></tr>
+            <tr><td>Notifications</td><td><code>ShowToastEvent</code> from <code>lightning/platformShowToastEvent</code>; many components each toasting is the anti-pattern; fix it with in-place <code>lwc:if</code> errors or one aggregating component</td></tr>
           </tbody>
         </table>
       </div>
 
       <p><strong>Templates</strong>: <code>lwc:if</code> / <code>lwc:elseif</code> / <code>lwc:else</code> (Spring '23 &mdash;
       <code>if:true</code> / <code>if:false</code> still work and are what the deck prints); <code>for:each</code> with a
-      <code>key</code>; <code>iterator:it</code> for first/last. <strong>Static resources</strong>
-      (<code>67563135</code>): <code>import lib from '@salesforce/resourceUrl/lib';</code> then
+      <code>key</code>; <code>iterator:it</code> for first/last. <strong>Static resources</strong>: <code>import lib from '@salesforce/resourceUrl/lib';</code> then
       <code>loadScript(this, lib + '/x.js')</code> / <code>loadStyle</code> from
       <code>lightning/platformResourceLoader</code>. Other modules: <code>@salesforce/schema/Account.Name</code>,
       <code>@salesforce/user/Id</code>, <code>@salesforce/client/formFactor</code> (<code>Large</code> /
       <code>Medium</code> / <code>Small</code>), <code>@salesforce/apexContinuation/&hellip;</code> (&sect;12).</p>
 
-      <p><strong>Form factor</strong> (<code>95587f24</code>, <code>f9c8f7b9</code>, <code>e91d90d4</code>):
+      <p><strong>Form factor</strong>:
       <code>lightning-layout</code> + <code>lightning-layout-item</code> are a mobile-first 12-column grid;
       <code>size</code> is the base and <code>small-</code> / <code>medium-</code> / <code>large-device-size</code> are
       <strong>additive upward</strong> &mdash; <code>size="12" medium-device-size="4"</code> gives three-in-a-row
@@ -1305,54 +1296,52 @@ html { scroll-behavior: smooth; }
       <h3>9b. Aura</h3>
       <ul>
         <li><strong>Server calls</strong>: <code>var a = component.get("c.method"); a.setParams({&hellip;}); a.setCallback(this, function(r) { r.getState() === "SUCCESS" &hellip; }); $A.enqueueAction(a);</code>. <code>a.setStorable()</code> caches the result &mdash; the equivalent of <code>cacheable=true</code>.</li>
-        <li><strong>Errors</strong>: throw <code>new AuraHandledException('message')</code> in Apex to replace "An internal server error has occurred" (<code>2f02cf00</code>); read <code>r.getError()</code> in the callback.</li>
-        <li><strong>Events</strong>: <strong>component event</strong> for parent/child inside a containment hierarchy &mdash; <code>component.getEvent("searchComplete")</code>, <code>setParams</code>, <code>fire()</code> (<code>adfa5369</code>); <strong>application event</strong> for components with no relationship, such as a utility-tray alert (<code>9f8cdefa</code>) &mdash; <code>$A.get("e.c:evt")</code>, <code>setParams</code>, <code>fire()</code>. <code>aura:method</code> for parent &rarr; child. <code>&lt;aura:handler name="init" value="{!this}" action="{!c.doInit}"/&gt;</code> for on-load.</li>
-        <li><strong>Interfaces</strong>: <code>flexipage:availableForAllPageTypes</code> / <code>availableForRecordHome</code> (App Builder &mdash; <code>17d8af13</code>, with <code>access="global"</code>), <code>force:hasRecordId</code>, <strong><code>force:hasSObjectName</code></strong> (<code>1963db51</code> &mdash; no Apex, no coverage), <code>force:appHostable</code> (tab), <code>force:lightningQuickAction</code> / <code>WithoutHeader</code> (<code>b3a07999</code>), <code>lightning:actionOverride</code>, <code>lightning:isUrlAddressable</code>, <code>lightning:availableForFlowScreens</code>, <code>forceCommunity:availableForAllPageTypes</code>.</li>
-        <li><strong>Design file</strong> (<code>c4cec291</code>): <code>&lt;design:component&gt;</code> with <code>&lt;design:attribute name label&gt;</code> for admin-set values and <code>&lt;sfdc:objects&gt;&lt;sfdc:object&gt;Account&lt;/sfdc:object&gt;&lt;/sfdc:objects&gt;</code> to limit record pages. A design attribute is how a page passes context &mdash; a record type, a field set &mdash; into the component (<code>20c11a40</code>).</li>
-        <li><strong>Static resources</strong>: <code>&lt;ltng:require scripts="&hellip;" afterScriptsLoaded="{!c.init}"/&gt;</code> &mdash; one zip, several files, loaded once in order (<code>7d4b9c57</code>).</li>
+        <li><strong>Errors</strong>: throw <code>new AuraHandledException('message')</code> in Apex to replace "An internal server error has occurred"; read <code>r.getError()</code> in the callback.</li>
+        <li><strong>Events</strong>: <strong>component event</strong> for parent/child inside a containment hierarchy &mdash; <code>component.getEvent("searchComplete")</code>, <code>setParams</code>, <code>fire()</code>; <strong>application event</strong> for components with no relationship, such as a utility-tray alert &mdash; <code>$A.get("e.c:evt")</code>, <code>setParams</code>, <code>fire()</code>. <code>aura:method</code> for parent &rarr; child. <code>&lt;aura:handler name="init" value="{!this}" action="{!c.doInit}"/&gt;</code> for on-load.</li>
+        <li><strong>Interfaces</strong>: <code>flexipage:availableForAllPageTypes</code> / <code>availableForRecordHome</code> (App Builder, with <code>access="global"</code>), <code>force:hasRecordId</code>, <strong><code>force:hasSObjectName</code></strong> (no Apex, no coverage), <code>force:appHostable</code> (tab), <code>force:lightningQuickAction</code> / <code>WithoutHeader</code>, <code>lightning:actionOverride</code>, <code>lightning:isUrlAddressable</code>, <code>lightning:availableForFlowScreens</code>, <code>forceCommunity:availableForAllPageTypes</code>.</li>
+        <li><strong>Design file</strong>: <code>&lt;design:component&gt;</code> with <code>&lt;design:attribute name label&gt;</code> for admin-set values and <code>&lt;sfdc:objects&gt;&lt;sfdc:object&gt;Account&lt;/sfdc:object&gt;&lt;/sfdc:objects&gt;</code> to limit record pages. A design attribute is how a page passes context &mdash; a record type, a field set &mdash; into the component.</li>
+        <li><strong>Static resources</strong>: <code>&lt;ltng:require scripts="&hellip;" afterScriptsLoaded="{!c.init}"/&gt;</code> &mdash; one zip, several files, loaded once in order.</li>
         <li><code>$Locale</code>, <code>$Label.c.x</code>, <code>$Browser.formFactor</code> (<code>DESKTOP</code> / <code>PHONE</code> / <code>TABLET</code>), <code>$Resource</code>.</li>
       </ul>
 
       <h3>9c. Visualforce</h3>
       <p><strong>Controllers</strong>: standard, standard set / list, custom, and <strong>extensions</strong>
-      (<code>extensions="A,B"</code> &mdash; when two define the same method, <strong>the leftmost wins</strong>,
-      <code>d50c6ceb</code>). An extension constructor takes <code>ApexPages.StandardController</code>; build it in
-      tests with <code>new ApexPages.StandardController(record)</code> (<code>788ce14e</code>).
+      (<code>extensions="A,B"</code> &mdash; when two define the same method, <strong>the leftmost wins</strong>). An extension constructor takes <code>ApexPages.StandardController</code>; build it in
+      tests with <code>new ApexPages.StandardController(record)</code>.
       <code>Test.setCurrentPage(Page.x)</code> and <code>ApexPages.currentPage().getParameters()</code> for page
       context. A getter that lazily instantiates its object avoids "Attempt to de-reference a null
-      object" (<code>74efe37c</code>).</p>
+      object".</p>
 
       <h4>Actions, partial refresh, asynchronous operations</h4>
       <div class="tw">
         <table>
           <thead><tr><th>Component</th><th>Does</th><th>Trap</th></tr></thead>
           <tbody>
-            <tr><td><code>&lt;apex:commandButton&gt;</code> / <code>&lt;apex:commandLink&gt;</code></td><td>Submit the form to an action; <strong><code>reRender="id"</code></strong> makes it an AJAX partial update (<code>4023a9a3</code>, <code>85a3fa6c</code>)</td><td>Inside <code>&lt;apex:form&gt;</code></td></tr>
-            <tr><td><code>&lt;apex:actionSupport&gt;</code></td><td>Adds AJAX to <strong>another component's browser event</strong> &mdash; sits inside the component it watches (<code>659c1a94</code>, <code>020e43fb</code>)</td><td>Not a JavaScript wrapper</td></tr>
+            <tr><td><code>&lt;apex:commandButton&gt;</code> / <code>&lt;apex:commandLink&gt;</code></td><td>Submit the form to an action; <strong><code>reRender="id"</code></strong> makes it an AJAX partial update</td><td>Inside <code>&lt;apex:form&gt;</code></td></tr>
+            <tr><td><code>&lt;apex:actionSupport&gt;</code></td><td>Adds AJAX to <strong>another component's browser event</strong> &mdash; sits inside the component it watches</td><td>Not a JavaScript wrapper</td></tr>
             <tr><td><code>&lt;apex:actionFunction&gt;</code></td><td>A <strong>JavaScript-callable</strong> function bound to an action, with <code>reRender</code></td><td>The JS wrapper &mdash; what actionSupport is not</td></tr>
             <tr><td><code>&lt;apex:actionPoller&gt;</code></td><td>Calls an action every <code>interval</code> seconds (min 5)</td><td>Resets if re-rendered</td></tr>
             <tr><td><code>&lt;apex:actionRegion&gt;</code></td><td>Limits which components are <strong>processed</strong> on submit</td><td>Does <strong>not</strong> shrink the view state</td></tr>
             <tr><td><code>&lt;apex:actionStatus&gt;</code>, <code>immediate="true"</code></td><td>In-flight indicator; skip validation</td><td>&mdash;</td></tr>
-            <tr><td><strong>JavaScript remoting</strong></td><td><code>@RemoteAction global static</code> method called from JS (<code>Visualforce.remoting.Manager.invokeAction</code>), result in a callback; <strong>no view state, no form</strong> &mdash; the tool under a third-party JS UI (<code>5f4a5b96</code>). Tests call it statically: <code>MyRemoter.getAccount('x')</code> (<code>ebb9f61a</code>)</td><td>Must be <code>global static</code></td></tr>
-            <tr><td><strong>Visualforce Remote Objects</strong></td><td>Declarative CRUD/query from JavaScript with <strong>no Apex</strong></td><td>Cannot run business logic &mdash; remoting's advantage (<code>075e76d2</code>)</td></tr>
-            <tr><td><code>&lt;apex:pageMessages&gt;</code></td><td>Renders everything added with <code>ApexPages.addMessage()</code> (<code>97dbf5bc</code>)</td><td><code>&lt;apex:messages&gt;</code> shows all errors unstyled; <code>&lt;apex:message for="id"&gt;</code> one component's</td></tr>
-            <tr><td><code>renderAs="pdf"</code></td><td>The consideration that forces Visualforce over Lightning (<code>254644b6</code>)</td><td>&mdash;</td></tr>
+            <tr><td><strong>JavaScript remoting</strong></td><td><code>@RemoteAction global static</code> method called from JS (<code>Visualforce.remoting.Manager.invokeAction</code>), result in a callback; <strong>no view state, no form</strong> &mdash; the tool under a third-party JS UI. Tests call it statically: <code>MyRemoter.getAccount('x')</code></td><td>Must be <code>global static</code></td></tr>
+            <tr><td><strong>Visualforce Remote Objects</strong></td><td>Declarative CRUD/query from JavaScript with <strong>no Apex</strong></td><td>Cannot run business logic &mdash; remoting's advantage</td></tr>
+            <tr><td><code>&lt;apex:pageMessages&gt;</code></td><td>Renders everything added with <code>ApexPages.addMessage()</code></td><td><code>&lt;apex:messages&gt;</code> shows all errors unstyled; <code>&lt;apex:message for="id"&gt;</code> one component's</td></tr>
+            <tr><td><code>renderAs="pdf"</code></td><td>The consideration that forces Visualforce over Lightning</td><td>&mdash;</td></tr>
           </tbody>
         </table>
       </div>
 
-      <p><strong>Order of execution, GET request</strong> (<code>f84106f3</code>): controller and extension
+      <p><strong>Order of execution, GET request</strong>: controller and extension
       constructors &rarr; custom components created, <em>their</em> constructors, their attribute expressions
       &rarr; <code>assignTo</code> attributes &rarr; page expressions, the <code>&lt;apex:page action&gt;</code> and other
       getters/setters &rarr; <strong>view state created if <code>&lt;apex:form&gt;</code> exists</strong> &rarr; HTML sent.
       Postbacks: view state decoded &rarr; expressions and setters &rarr; action method &rarr; getters &rarr; view
       state re-created &rarr; response.</p>
 
-      <p><strong>View state</strong> (<code>0d827147</code>, <code>b9fd412b</code>): everything the controller holds is
+      <p><strong>View state</strong>: everything the controller holds is
       serialised into a hidden field on every postback, capped at <strong>170 KB</strong>. Mark large
       collections and derived data <strong><code>transient</code></strong>, use <code>private static</code> for
-      constants, don't keep query results you re-fetch. <strong>Static resources</strong>
-      (<code>e82a5694</code>, <code>49c5e8ad</code>): <code>$Resource.name</code> and
+      constants, don't keep query results you re-fetch. <strong>Static resources</strong>: <code>$Resource.name</code> and
       <code>URLFOR($Resource.zip, 'path/file.js')</code>; benefits are referencing by name not Id, packaging
       a zip/jar, and relative paths inside the archive; 5 MB each, 250 MB per org.</p>
 
@@ -1381,16 +1370,16 @@ html { scroll-behavior: smooth; }
           <tbody>
             <tr><td>Coverage</td><td><strong>75%</strong> of the org's Apex to deploy to production; every trigger needs <em>some</em>; test classes don't count</td></tr>
             <tr><td>Assertions</td><td><code>System.assert / assertEquals / assertNotEquals</code> or the <code>Assert</code> class. A test without assertions is not a test the exam accepts</td></tr>
-            <tr><td>Data</td><td>Isolated by default; <code>@isTest(SeeAllData=true)</code> opens org data for <strong>queries only</strong> &mdash; inserts, updates and <strong>deletes are still rolled back</strong> (<code>ad6dc9c9</code>: five "Test" accounts remain). Custom settings need it or <code>@testSetup</code> data</td></tr>
-            <tr><td><code>@testSetup</code></td><td>Runs <strong>once per class</strong>; records re-provided to every method and rolled back between them (<code>dbe97ce5</code>, <code>41c7ada5</code>). <strong>Code run only from <code>@testSetup</code> earns no coverage</strong> (<code>d47df5e9</code>). Not with <code>SeeAllData=true</code>. Its locals are out of scope in test methods (<code>75e642fb</code>)</td></tr>
-            <tr><td><code>Test.startTest()</code> / <code>stopTest()</code></td><td>Once per method. Fresh limits; <strong>async runs synchronously at <code>stopTest()</code></strong>; setup DML <strong>before</strong> <code>startTest</code>, callouts <strong>after</strong>; <code>Test.setMock</code> <strong>after</strong> <code>startTest</code> and <strong>before</strong> the call (<code>b906dc2c</code>)</td></tr>
-            <tr><td>Callouts</td><td>Tests <strong>cannot</strong> make real callouts. <code>Test.setMock(HttpCalloutMock.class, mock)</code> for REST; <code>Test.setMock(WebServiceMock.class, mock)</code> for SOAP (<code>614b99d9</code>). Without one: "Methods defined as TestMethod do not support Web service callouts"</td></tr>
-            <tr><td>SOSL</td><td>Empty in tests &mdash; <code>Test.setFixedSearchResults(ids)</code> (<code>a3252caa</code>)</td></tr>
+            <tr><td>Data</td><td>Isolated by default; <code>@isTest(SeeAllData=true)</code> opens org data for <strong>queries only</strong> &mdash; inserts, updates and <strong>deletes are still rolled back</strong> (five "Test" accounts remain). Custom settings need it or <code>@testSetup</code> data</td></tr>
+            <tr><td><code>@testSetup</code></td><td>Runs <strong>once per class</strong>; records re-provided to every method and rolled back between them. <strong>Code run only from <code>@testSetup</code> earns no coverage</strong>. Not with <code>SeeAllData=true</code>. Its locals are out of scope in test methods</td></tr>
+            <tr><td><code>Test.startTest()</code> / <code>stopTest()</code></td><td>Once per method. Fresh limits; <strong>async runs synchronously at <code>stopTest()</code></strong>; setup DML <strong>before</strong> <code>startTest</code>, callouts <strong>after</strong>; <code>Test.setMock</code> <strong>after</strong> <code>startTest</code> and <strong>before</strong> the call</td></tr>
+            <tr><td>Callouts</td><td>Tests <strong>cannot</strong> make real callouts. <code>Test.setMock(HttpCalloutMock.class, mock)</code> for REST; <code>Test.setMock(WebServiceMock.class, mock)</code> for SOAP. Without one: "Methods defined as TestMethod do not support Web service callouts"</td></tr>
+            <tr><td>SOSL</td><td>Empty in tests &mdash; <code>Test.setFixedSearchResults(ids)</code></td></tr>
             <tr><td><code>Test.loadData(Account.sObjectType, 'csvResource')</code></td><td>Bulk fixtures from a CSV static resource</td></tr>
-            <tr><td><code>System.runAs(user)</code></td><td>Enforces sharing <strong>and</strong> object/field permissions for the block; how to test <code>with sharing</code> code and restricted profiles (<code>75e642fb</code>). Setup-object DML inside <code>runAs</code> avoids mixed-DML errors. A queried user works &mdash; no insert needed</td></tr>
-            <tr><td><code>Test.isRunningTest()</code></td><td>Escape hatch for what cannot run in a test: Queueable chaining (<code>c91ba2b8</code>), read-only system data like <code>AccountHistory</code> (<code>a7f95dd5</code> &mdash; a workaround, not a pattern)</td></tr>
+            <tr><td><code>System.runAs(user)</code></td><td>Enforces sharing <strong>and</strong> object/field permissions for the block; how to test <code>with sharing</code> code and restricted profiles. Setup-object DML inside <code>runAs</code> avoids mixed-DML errors. A queried user works &mdash; no insert needed</td></tr>
+            <tr><td><code>Test.isRunningTest()</code></td><td>Escape hatch for what cannot run in a test: Queueable chaining, read-only system data like <code>AccountHistory</code> (a workaround, not a pattern)</td></tr>
             <tr><td><code>@TestVisible</code></td><td>Reach a private member from a test without making it public</td></tr>
-            <tr><td>Re-query after DML</td><td>An in-memory sObject does not see what a trigger or page wrote &mdash; query again before asserting (<code>3467c031</code>, <code>5be4b08d</code>)</td></tr>
+            <tr><td>Re-query after DML</td><td>An in-memory sObject does not see what a trigger or page wrote &mdash; query again before asserting</td></tr>
             <tr><td><code>Test.setCreatedDate(id, dt)</code></td><td>Back-date a record for "older than 12 months" logic</td></tr>
             <tr><td>Limits</td><td>Apply <strong>per test method</strong>; <code>MAX_DML_ROWS</code> in a synchronous run is 450,000</td></tr>
             <tr><td>Environment independence</td><td>No hard-coded Ids; record types by <code>DeveloperName</code> through <code>Schema</code>, config through custom metadata; a shared test data factory</td></tr>
@@ -1415,10 +1404,10 @@ html { scroll-behavior: smooth; }
       <h3>Jest for Lightning web components</h3>
       <ul>
         <li>Package <code>@salesforce/sfdx-lwc-jest</code>; tests live in <code>__tests__</code> next to the component; <code>npm run test:unit</code>.</li>
-        <li><code>describe</code> &rarr; <code>it</code>; <code>const el = createElement('c-my-cmp', { is: MyCmp }); document.body.appendChild(el);</code> then query <code>el.shadowRoot</code>; <strong><code>afterEach</code></strong> removes children of <code>document.body</code> because jsdom is shared across tests (<code>e6067a5f</code>).</li>
+        <li><code>describe</code> &rarr; <code>it</code>; <code>const el = createElement('c-my-cmp', { is: MyCmp }); document.body.appendChild(el);</code> then query <code>el.shadowRoot</code>; <strong><code>afterEach</code></strong> removes children of <code>document.body</code> because jsdom is shared across tests.</li>
         <li>DOM updates are async: <code>await Promise.resolve()</code> (or a <code>flushPromises</code> helper) before asserting.</li>
         <li>Mock Apex: <code>jest.mock('@salesforce/apex/Ctrl.method', () =&gt; ({ default: jest.fn() }), { virtual: true })</code> for imperative calls; for wires, the test wire adapters and <code>emit()</code>. Base components and LDS adapters ship with mocks.</li>
-        <li>What Jest tests (<code>3bbf155f</code>): <strong>DOM output</strong>, <strong>basic user interaction</strong> (dispatch a click), <strong>events firing</strong>, public <code>@api</code> behaviour. Not: private state, several components integrating, real Apex.</li>
+        <li>What Jest tests: <strong>DOM output</strong>, <strong>basic user interaction</strong> (dispatch a click), <strong>events firing</strong>, public <code>@api</code> behaviour. Not: private state, several components integrating, real Apex.</li>
       </ul>
     </section>
 
@@ -1432,13 +1421,13 @@ html { scroll-behavior: smooth; }
         <table>
           <thead><tr><th>Tool</th><th>Use it for</th></tr></thead>
           <tbody>
-            <tr><td><strong>Debug logs</strong> &mdash; trace flag on a user, an Apex class or trigger, or the <em>Automated Process</em> user (platform-event triggers); log levels per category from <code>NONE</code> to <code>FINEST</code>; <strong>20 MB</strong> per log</td><td><code>System.debug()</code> narrative of a transaction &mdash; the deck's default answer for "why did the trigger run twice" (<code>be8e114a</code>)</td></tr>
-            <tr><td><strong>Developer Console &rarr; Log Inspector</strong> &mdash; <em>Execution Overview</em>: <strong>Executed Units</strong> (count and time per method/query &mdash; <code>42d0474c</code>), Save Order, Limits, Timeline; <em>Stack Tree</em>; <em>Execution Log</em> with filters</td><td>Counting calls, finding the slow unit, reading limit consumption</td></tr>
+            <tr><td><strong>Debug logs</strong> &mdash; trace flag on a user, an Apex class or trigger, or the <em>Automated Process</em> user (platform-event triggers); log levels per category from <code>NONE</code> to <code>FINEST</code>; <strong>20 MB</strong> per log</td><td><code>System.debug()</code> narrative of a transaction &mdash; the deck's default answer for "why did the trigger run twice"</td></tr>
+            <tr><td><strong>Developer Console &rarr; Log Inspector</strong> &mdash; <em>Execution Overview</em>: <strong>Executed Units</strong> (count and time per method/query), Save Order, Limits, Timeline; <em>Stack Tree</em>; <em>Execution Log</em> with filters</td><td>Counting calls, finding the slow unit, reading limit consumption</td></tr>
             <tr><td><strong>Checkpoints</strong> (Developer Console only) &mdash; a heap dump at a line, with a symbol table; up to 5</td><td>Inspect variable state without debug statements</td></tr>
             <tr><td><strong>Apex Replay Debugger</strong> (VS Code, free) replays a debug log with breakpoints; <strong>Apex Interactive Debugger</strong> (licensed) and <strong>ISV Customer Debugger</strong></td><td>Step through code</td></tr>
             <tr><td><code>Limits.getQueries()</code>, <code>getDmlStatements()</code>, <code>getHeapSize()</code>, <code>getCpuTime()</code> and their <code>getLimit&hellip;</code> twins</td><td>Guard rails inside code; the <em>wrong</em> answer when offered as a way to "stop the process"</td></tr>
             <tr><td><strong>Apex Jobs</strong>, <strong>Apex Flex Queue</strong>, <strong>Scheduled Jobs</strong>, <code>AsyncApexJob</code> SOQL</td><td>Async status, errors, reordering the flex queue</td></tr>
-            <tr><td><strong>Event Monitoring</strong> log files (<code>727db5f6</code>), <strong>Setup Audit Trail</strong> (180 days &mdash; <code>7e99199d</code>), Apex exception emails</td><td>After-the-fact forensics</td></tr>
+            <tr><td><strong>Event Monitoring</strong> log files, <strong>Setup Audit Trail</strong> (180 days), Apex exception emails</td><td>After-the-fact forensics</td></tr>
             <tr><td>Query Plan (Developer Console, Query Editor)</td><td>Cost of a query; <strong>cost &lt; 1</strong> means a selective index was found</td></tr>
           </tbody>
         </table>
@@ -1446,7 +1435,7 @@ html { scroll-behavior: smooth; }
 
       <h3>Diagnosing the front end</h3>
       <ul>
-        <li><strong>Lightning components</strong>: <code>console.log</code>, browser dev tools with breakpoints, and <strong>Debug Mode</strong> enabled per user &mdash; unminified framework, fuller messages, slower (<code>4ccc3eda</code>). <strong>Salesforce Lightning Inspector</strong> (Chrome) tabs: Component Tree, Performance, Transactions, Event Log, Actions, <strong>Storage</strong> &mdash; the last shows the client cache, the tab for "stale cached data" (<code>5c94971b</code>).</li>
+        <li><strong>Lightning components</strong>: <code>console.log</code>, browser dev tools with breakpoints, and <strong>Debug Mode</strong> enabled per user &mdash; unminified framework, fuller messages, slower. <strong>Salesforce Lightning Inspector</strong> (Chrome) tabs: Component Tree, Performance, Transactions, Event Log, Actions, <strong>Storage</strong> &mdash; the last shows the client cache, the tab for "stale cached data".</li>
         <li><strong>Visualforce</strong>: the view state inspector (Development Mode + Show View State on the user), the same debug logs for controller code, <code>apex:pageMessages</code> to surface controller errors.</li>
       </ul>
 
@@ -1455,11 +1444,11 @@ html { scroll-behavior: smooth; }
         <table>
           <thead><tr><th>Tool</th><th>Shape</th><th>When</th></tr></thead>
           <tbody>
-            <tr><td><strong>Salesforce CLI (<code>sf</code>) + Salesforce DX</strong></td><td>Project on disk (<code>sfdx-project.json</code>, <code>force-app/</code>), source of truth in <strong>version control</strong>, <code>sf project deploy start</code> / <code>retrieve start</code>, scriptable by any CI server (<code>e4d0d916</code>, <code>9199fb45</code>)</td><td>The answer to every "source-driven", "CI/CD", "version control" stem</td></tr>
+            <tr><td><strong>Salesforce CLI (<code>sf</code>) + Salesforce DX</strong></td><td>Project on disk (<code>sfdx-project.json</code>, <code>force-app/</code>), source of truth in <strong>version control</strong>, <code>sf project deploy start</code> / <code>retrieve start</code>, scriptable by any CI server</td><td>The answer to every "source-driven", "CI/CD", "version control" stem</td></tr>
             <tr><td><strong>Scratch orgs</strong></td><td>Disposable orgs from a definition file, created from a <strong>Dev Hub</strong>, <strong>1&ndash;30 days</strong> (default <strong>7</strong>), <strong>source tracking</strong> both ways; snapshots for prebuilt state</td><td>Per-feature development and automated test runs</td></tr>
             <tr><td><strong>Unlocked packages</strong> (2GP)</td><td>Versioned, upgradeable bundles whose source lives in VCS; no namespace required</td><td>Modular deployment across environments</td></tr>
             <tr><td><strong>Managed packages</strong></td><td>Namespaced, IP-protected, for ISVs / AppExchange; 2GP is current</td><td>Distributing to other orgs</td></tr>
-            <tr><td><strong>Change sets</strong></td><td>Point-and-click between sandboxes and production in one org family; <strong>no deletions, no version control, no automation</strong></td><td>Admin-led deployments; recovering an abandoned one starts with <strong>Setup Audit Trail</strong> (<code>7e99199d</code>)</td></tr>
+            <tr><td><strong>Change sets</strong></td><td>Point-and-click between sandboxes and production in one org family; <strong>no deletions, no version control, no automation</strong></td><td>Admin-led deployments; recovering an abandoned one starts with <strong>Setup Audit Trail</strong></td></tr>
             <tr><td><strong>Metadata API</strong></td><td><code>deploy()</code> / <code>retrieve()</code> with <code>package.xml</code>, <code>destructiveChanges.xml</code> for deletes; what every tool drives underneath</td><td>Tooling, large orchestrated deploys</td></tr>
             <tr><td><strong>Ant Migration Tool</strong>, <strong>Force.com IDE</strong></td><td>Legacy; Force.com IDE is retired</td><td>Distractors</td></tr>
             <tr><td><strong>Sandboxes</strong></td><td>Developer (200 MB, refresh daily), Developer Pro (1 GB, daily), Partial Copy (5 GB, template, every 5 days), Full (production copy, every 29 days)</td><td>Match the stem's data and refresh needs</td></tr>
@@ -1485,12 +1474,12 @@ html { scroll-behavior: smooth; }
         <table>
           <thead><tr><th>Problem</th><th>Mitigation</th></tr></thead>
           <tbody>
-            <tr><td>Visualforce view state near 170 KB, "ViewState errors in production" (<code>0d827147</code>, <code>b9fd412b</code>)</td><td><code>transient</code> on collections and derived data; <code>private static</code> constants; don't hold query results between requests; <code>&lt;apex:actionRegion&gt;</code> <strong>does not</strong> help</td></tr>
-            <tr><td>Visualforce page loads slowly with lots of data (<code>afd20ee7</code>)</td><td><strong>Lazy loading</strong> on demand instead of in the constructor; pagination with <code>StandardSetController</code> (<code>setPageSize</code>, <code>getHasNext</code>, <code>next()</code>) or SOQL <code>OFFSET</code>; <code>readOnly="true"</code> on <code>&lt;apex:page&gt;</code> raises the query-row limit to <strong>1,000,000</strong> and the iteration-component limit from 1,000 to 10,000 (no DML)</td></tr>
-            <tr><td>Repeated identical server calls from a component</td><td><code>@AuraEnabled(cacheable=true)</code> / <code>setStorable()</code> (<code>2388fdd4</code>); LDS wire adapters share one cache; <code>refreshApex()</code> only when data changed</td></tr>
+            <tr><td>Visualforce view state near 170 KB, "ViewState errors in production"</td><td><code>transient</code> on collections and derived data; <code>private static</code> constants; don't hold query results between requests; <code>&lt;apex:actionRegion&gt;</code> <strong>does not</strong> help</td></tr>
+            <tr><td>Visualforce page loads slowly with lots of data</td><td><strong>Lazy loading</strong> on demand instead of in the constructor; pagination with <code>StandardSetController</code> (<code>setPageSize</code>, <code>getHasNext</code>, <code>next()</code>) or SOQL <code>OFFSET</code>; <code>readOnly="true"</code> on <code>&lt;apex:page&gt;</code> raises the query-row limit to <strong>1,000,000</strong> and the iteration-component limit from 1,000 to 10,000 (no DML)</td></tr>
+            <tr><td>Repeated identical server calls from a component</td><td><code>@AuraEnabled(cacheable=true)</code> / <code>setStorable()</code>; LDS wire adapters share one cache; <code>refreshApex()</code> only when data changed</td></tr>
             <tr><td>Data every request needs, computed from many queries</td><td><strong>Platform Cache</strong> &mdash; below</td></tr>
             <tr><td>Many components on one page loading at once</td><td>Secondary content in tabs or accordion sections (rendered lazily); one component that aggregates the data; no <code>renderedCallback</code> work that re-triggers renders</td></tr>
-            <tr><td>Third-party JS loaded per component</td><td>One zipped static resource, loaded once via <code>loadScript</code> / <code>ltng:require</code> (<code>7d4b9c57</code>)</td></tr>
+            <tr><td>Third-party JS loaded per component</td><td>One zipped static resource, loaded once via <code>loadScript</code> / <code>ltng:require</code></td></tr>
             <tr><td>Diagnosing</td><td>Lightning Inspector <strong>Performance</strong> and <strong>Transactions</strong> tabs; browser network panel; <strong>Storage</strong> tab for what is cached</td></tr>
           </tbody>
         </table>
@@ -1507,20 +1496,20 @@ html { scroll-behavior: smooth; }
       <h3>12b. Queries and large data volumes</h3>
       <h4>Selectivity &mdash; the numbers that decide whether an index is used</h4>
       <ul>
-        <li><strong>Standard index</strong> (Id, Name, OwnerId, CreatedDate, SystemModstamp, RecordTypeId, Division, Email on Contact/Lead, lookup and master-detail fields &mdash; <code>10197f02</code>): used when the filter matches <strong>&lt; 30% of the first million</strong> records and &lt; 15% of the rest, up to 1 million rows.</li>
+        <li><strong>Standard index</strong> (Id, Name, OwnerId, CreatedDate, SystemModstamp, RecordTypeId, Division, Email on Contact/Lead, lookup and master-detail fields): used when the filter matches <strong>&lt; 30% of the first million</strong> records and &lt; 15% of the rest, up to 1 million rows.</li>
         <li><strong>Custom index</strong> (External Id and Unique fields automatically; others on request to Support): <strong>&lt; 10% of the first million</strong> and &lt; 5% of the rest, up to 333,333 rows.</li>
-        <li><code>AND</code>: indexes apply unless one filter returns more than 20%. <code>OR</code>: <strong>every</strong> field must be indexed and the combination under 10% &mdash; otherwise <strong>decompose the OR into two queries and merge</strong> (<code>738ade86</code>).</li>
-        <li><strong>Never selective</strong>: <code>!=</code>, <code>NOT IN</code>, <code>LIKE '%x'</code> (leading wildcard &mdash; trailing is fine, <code>44d8b26d</code>), most formula fields, <code>NULL</code> filters, and <code>Name != NULL</code> / <code>IsDeleted = false</code> as stand-ins for selectivity (<code>12c11e51</code>). For a NULL-heavy picklist, a <strong>formula field substituting a token for NULL, indexed</strong>, makes the filter selective (<code>ce2609d1</code>).</li>
+        <li><code>AND</code>: indexes apply unless one filter returns more than 20%. <code>OR</code>: <strong>every</strong> field must be indexed and the combination under 10% &mdash; otherwise <strong>decompose the OR into two queries and merge</strong>.</li>
+        <li><strong>Never selective</strong>: <code>!=</code>, <code>NOT IN</code>, <code>LIKE '%x'</code> (leading wildcard &mdash; trailing is fine), most formula fields, <code>NULL</code> filters, and <code>Name != NULL</code> / <code>IsDeleted = false</code> as stand-ins for selectivity. For a NULL-heavy picklist, a <strong>formula field substituting a token for NULL, indexed</strong>, makes the filter selective.</li>
         <li><strong>Skinny tables</strong>: Support-created, per object, up to <strong>200 columns</strong>, kept in sync, no soft-deleted rows, no fields from other objects, copied only to Full sandboxes.</li>
         <li><strong>Two-column custom indexes</strong> for select-by-one-field-sort-by-another list views. The <strong>Query Plan</strong> tool reports cost; below 1 the index wins.</li>
       </ul>
       <h4>Structuring the code</h4>
       <ul>
-        <li><code>COUNT()</code> for a count (<code>497c27b5</code>); aggregates over rows you would otherwise load.</li>
+        <li><code>COUNT()</code> for a count; aggregates over rows you would otherwise load.</li>
         <li><code>Database.getQueryLocator</code> and Batch Apex past 50,000 rows; a <strong>SOQL for loop</strong> for anything that would strain the 6 MB heap.</li>
         <li><code>Set&lt;Id&gt;</code> + one query + <code>Map&lt;Id, sObject&gt;</code> is the shape for every join; <strong>semi-joins</strong> push filtering into the database.</li>
         <li><code>LIMIT</code> and <code>ORDER BY</code> in the query, not in Apex; select only the fields you use.</li>
-        <li><strong>External Id</strong> fields are indexed and let you <strong>upsert</strong> without querying for Ids &mdash; <code>upsert orders Order_Number__c;</code> (<code>9efee9d1</code>), nightly integration loads (<code>fa810727</code>).</li>
+        <li><strong>External Id</strong> fields are indexed and let you <strong>upsert</strong> without querying for Ids &mdash; <code>upsert orders Order_Number__c;</code>, nightly integration loads.</li>
         <li>Archive to <strong>big objects</strong> or an external store; keep hot tables small. <strong>Bulk API</strong> (parallel by default; serial only to dodge lock contention) for loads; defer sharing calculations and disable non-essential automation during a mass load.</li>
       </ul>
 
@@ -1550,28 +1539,28 @@ html { scroll-behavior: smooth; }
 
       <h3>12d. Code reuse</h3>
       <ul>
-        <li><strong>One helper / service class</strong> for logic several entry points need (<code>aa38d07c</code>, <code>9e1c8386</code>) &mdash; a trigger and a Visualforce controller, or every class that calls one REST API. One query, one place to change, one place to test.</li>
+        <li><strong>One helper / service class</strong> for logic several entry points need &mdash; a trigger and a Visualforce controller, or every class that calls one REST API. One query, one place to change, one place to test.</li>
         <li>Trigger handler framework: one trigger per object dispatching to a handler; a base handler with virtual <code>beforeInsert()</code> etc. that concrete handlers override.</li>
         <li>Interfaces, <code>virtual</code> / <code>abstract</code> classes and inheritance for pluggable behaviour; <code>Type.forName()</code> + custom metadata for configuration-driven dispatch; dependency injection so the Stub API can replace a collaborator in tests.</li>
         <li><code>@InvocableMethod</code> exposes the same service to flows; a Queueable is reused by taking its work as constructor arguments.</li>
         <li>UI: LWC composition and <code>@api</code> contracts; Aura <code>aura:method</code>; one static resource for shared libraries; base components before custom ones.</li>
-        <li>The wrong answers are always "put the code in each class that needs it" or "store the code as a static resource" (<code>9e1c8386</code>).</li>
+        <li>The wrong answers are always "put the code in each class that needs it" or "store the code as a static resource".</li>
       </ul>
 
       <h3>12e. Spotting inefficiency in sample code</h3>
       <p>Read every code item for these, in this order &mdash; the exam expects you to find the <em>first</em>
       fatal one:</p>
       <ol class="prose">
-        <li>SOQL or DML inside a loop (<code>264d0eab</code>, <code>9943756f</code>, <code>f7fd9efb</code>); a per-record <code>@future</code> call (<code>474e9918</code> &mdash; 200 records &rarr; "Too many future calls" at 51).</li>
-        <li>A query without a filter the loop then filters in Apex (<code>017f2acb</code> &mdash; scope the <code>WHERE</code> with <code>IN :map.keySet()</code>); an <code>add()</code> outside the guard that writes every row.</li>
+        <li>SOQL or DML inside a loop; a per-record <code>@future</code> call (200 records &rarr; "Too many future calls" at 51).</li>
+        <li>A query without a filter the loop then filters in Apex (scope the <code>WHERE</code> with <code>IN :map.keySet()</code>); an <code>add()</code> outside the guard that writes every row.</li>
         <li>Nested loops where a <code>Map</code> lookup would do; <code>List.contains()</code> in a loop instead of a <code>Set</code>.</li>
         <li><code>Schema.getGlobalDescribe()</code> per iteration; describes not cached.</li>
         <li>Selecting fields never used; loading rows to count them; loading everything to update some.</li>
         <li>Non-selective filters on large objects (&sect;12b).</li>
         <li>Large collections in Visualforce view state; batch instance variables without needing <code>Database.Stateful</code>.</li>
-        <li>A recursion guard declared but never checked (<code>72374e4c</code>); a static flag never reset across a batch <code>execute</code>.</li>
+        <li>A recursion guard declared but never checked; a static flag never reset across a batch <code>execute</code>.</li>
         <li>Synchronous callouts where the user is not waiting, or in a loop.</li>
-        <li>DML with <code>allOrNone</code> true where one bad row should not kill the batch (<code>9d81f45b</code>).</li>
+        <li>DML with <code>allOrNone</code> true where one bad row should not kill the batch.</li>
       </ol>
     </section>
 
@@ -1657,15 +1646,15 @@ html { scroll-behavior: smooth; }
         <table>
           <thead><tr><th>Topic</th><th>Exam's answer (Winter '24)</th><th>Reality now</th></tr></thead>
           <tbody>
-            <tr><td><strong>Process Builder / Workflow Rules</strong> as an automation answer (<code>77c104fc</code> offers all three)</td><td><span class="yes">Valid</span>; Flow is "optimal" where the stem says so</td><td><strong>End of support 31 Dec 2025</strong>; existing ones still run. Flow is the only thing you would build</td></tr>
-            <tr><td><strong><code>WITH SECURITY_ENFORCED</code></strong> for FLS in SOQL (<code>e9c0d546</code>)</td><td><span class="yes">Keyed</span></td><td><strong><code>WITH USER_MODE</code></strong> is the recommended clause &mdash; it enforces sharing too and reports which field failed instead of throwing on the first</td></tr>
+            <tr><td><strong>Process Builder / Workflow Rules</strong> as an automation answer</td><td><span class="yes">Valid</span>; Flow is "optimal" where the stem says so</td><td><strong>End of support 31 Dec 2025</strong>; existing ones still run. Flow is the only thing you would build</td></tr>
+            <tr><td><strong><code>WITH SECURITY_ENFORCED</code></strong> for FLS in SOQL</td><td><span class="yes">Keyed</span></td><td><strong><code>WITH USER_MODE</code></strong> is the recommended clause &mdash; it enforces sharing too and reports which field failed instead of throwing on the first</td></tr>
             <tr><td><strong>"Apex runs in system mode by default"</strong></td><td><span class="yes">The premise</span> behind <code>with sharing</code> questions</td><td>The Apex guide now states that in <strong>API 67.0 and later Apex runs in user mode by default</strong>; a class on an older API version still runs in system mode. A Lightning controller with no keyword has long behaved as <code>with sharing</code></td></tr>
-            <tr><td><strong><code>if:true</code> / <code>if:false</code></strong> in LWC templates (<code>036f6646</code>)</td><td><span class="yes">Appears in options</span></td><td><strong><code>lwc:if</code> / <code>lwc:elseif</code> / <code>lwc:else</code></strong> since Spring '23; the old directives are deprecated</td></tr>
-            <tr><td><strong>Outbound Message "contains the session ID"</strong> (<code>e92e64ee</code>)</td><td><span class="yes">Listed as a capability</span></td><td><strong>Removed February 2026</strong> &mdash; no <code>&lt;sessionID&gt;</code> in the payload; callbacks use OAuth</td></tr>
+            <tr><td><strong><code>if:true</code> / <code>if:false</code></strong> in LWC templates</td><td><span class="yes">Appears in options</span></td><td><strong><code>lwc:if</code> / <code>lwc:elseif</code> / <code>lwc:else</code></strong> since Spring '23; the old directives are deprecated</td></tr>
+            <tr><td><strong>Outbound Message "contains the session ID"</strong></td><td><span class="yes">Listed as a capability</span></td><td><strong>Removed February 2026</strong> &mdash; no <code>&lt;sessionID&gt;</code> in the payload; callbacks use OAuth</td></tr>
             <tr><td><strong>Aura-only capabilities</strong>: URL-addressable component, standard action override, some surfaces</td><td>Aura (or LWC wrapped in Aura)</td><td>LWC has gained URL-addressable targets and action-override support in later releases</td></tr>
             <tr><td><strong><code>System.assert</code> family</strong></td><td><span class="yes">Fine</span></td><td>The <code>Assert</code> class (<code>Assert.areEqual</code>&hellip;) is the newer API; both work</td></tr>
             <tr><td><strong>Lightning Testing Service</strong> for Aura</td><td>May appear</td><td>Deprecated; <strong>Jest</strong> for LWC, browser tools for Aura</td></tr>
-            <tr><td><strong>Force.com IDE / Ant Migration Tool</strong> (<code>e4d0d916</code>)</td><td>Distractors</td><td>Force.com IDE retired; Ant is legacy; <code>sfdx</code> became <strong><code>sf</code></strong></td></tr>
+            <tr><td><strong>Force.com IDE / Ant Migration Tool</strong></td><td>Distractors</td><td>Force.com IDE retired; Ant is legacy; <code>sfdx</code> became <strong><code>sf</code></strong></td></tr>
             <tr><td><strong>Connected Apps</strong> for OAuth</td><td><span class="yes">Fine</span></td><td>Creation restricted from Spring '26 &mdash; External Client Apps are the recommendation; existing apps keep working</td></tr>
             <tr><td><strong>Async SOQL</strong> for big objects</td><td>May appear</td><td>Retired Summer '23 &mdash; Batch Apex or Bulk API instead</td></tr>
             <tr><td><strong><code>runAs</code> "only enforces record sharing"</strong></td><td>Was the documented behaviour</td><td>Now enforces object- and field-level permissions too</td></tr>
@@ -1675,8 +1664,8 @@ html { scroll-behavior: smooth; }
           </tbody>
         </table>
       </div>
-      <p>The last three are not staleness &mdash; they are widely repeated falsehoods that the deck's
-      fact-check found in its own explanations and that appear as distractors on the exam.</p>
+      <p>The last three are not staleness &mdash; they are widely repeated falsehoods that appear in
+      practice material and as distractors on the exam.</p>
     </section>
 
     <!-- 15 -->
@@ -1684,7 +1673,7 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">15</span><span>Distractor tells</span></h2>
       <div class="sect-rule"></div>
 
-      <p class="lede">Patterns in how this exam writes wrong answers, from the deck's 146 and its fact-check.</p>
+      <p class="lede">Patterns in how this exam writes wrong answers, drawn from the deck's questions.</p>
       <ol class="prose">
         <li><strong>A fabricated API member.</strong> <code>Test.fixedSearchResults()</code>, <code>@createData</code>, <code>Date.paras</code>, <code>Schema.getCustomObjects()</code>, <code>getObjectType()</code> returning 'Custom', <code>lightning-error</code>, <code>aura:messages</code>, <code>tablet-device-size</code>. If you have never seen the identifier, it does not exist &mdash; the real one is usually one option away.</li>
         <li><strong>A fabricated number stated confidently.</strong> "50 records per future call", "10-second ceiling", "100 (sync), 200 (async) DML statements". Every number in an option is checkable against &sect;13.</li>
@@ -1692,9 +1681,9 @@ html { scroll-behavior: smooth; }
         <li><strong>Broader than needed.</strong> "Make the class <code>global</code>" when <code>public static</code> is the defect; "delete and recreate the component"; "refresh the sandbox"; "disable all flows and re-enable one at a time".</li>
         <li><strong>Fixing security by weakening it.</strong> <code>without sharing</code> to make a query return rows; <code>SeeAllData=true</code> to make a test pass; "remove the Apex class from the integration user's profile"; "deactivate the trigger before the integration runs". When the stem says "preserving security" or "minimal impact to business logic", the option that removes a safeguard is wrong.</li>
         <li><strong>A synchronous answer to a forced-async problem.</strong> Any option that keeps a callout in a trigger, or a callout after DML in one transaction, or <code>Database.insert(x, true)</code> "to commit immediately". Nothing commits mid-transaction.</li>
-        <li><strong>The exception type or name swapped.</strong> <code>LimitException</code> vs <code>CalloutException</code> (<code>474e9918</code>); <code>QueryException: List has more than one row</code> vs <code>LimitException: Too many SOQL queries</code> (<code>9943756f</code>); "the test will fail" vs "the data is rolled back" (<code>ad6dc9c9</code>).</li>
+        <li><strong>The exception type or name swapped.</strong> <code>LimitException</code> vs <code>CalloutException</code>; <code>QueryException: List has more than one row</code> vs <code>LimitException: Too many SOQL queries</code>; "the test will fail" vs "the data is rolled back".</li>
         <li><strong>The wrong scope of storage.</strong> Custom setting where the config must deploy and be testable (custom metadata); custom object for a lookup table; static resource for <em>code</em> reuse; <code>SUM()</code> for a count; <code>apex:actionRegion</code> to shrink view state.</li>
-        <li><strong>A count trick.</strong> "Which two changes" where one option contains both (<code>e2ba60ab</code>, <code>15dc7a90</code>); "three reasons" where one is true but <em>not a reason to use Jest</em>.</li>
+        <li><strong>A count trick.</strong> "Which two changes" where one option contains both; "three reasons" where one is true but <em>not a reason to use Jest</em>.</li>
         <li><strong>Adjacent-tool name-dropping.</strong> Metadata API for coverage, Streaming API for a filter, Tooling API for record CRUD, Salesforce Connect for a nightly load, Heroku Data Clips for email, Fuel API for anything.</li>
       </ol>
 
@@ -1704,7 +1693,7 @@ html { scroll-behavior: smooth; }
         <li><strong>"best practice"</strong> &rarr; bulkify, handler, static flag, <code>@testSetup</code>, named credential, one trigger per object.</li>
         <li><strong>"what is wrong with it" / "which change"</strong> &rarr; find the single token: <code>static</code>, <code>public</code>, <code>@AuraEnabled</code>, <code>cacheable=true</code>, the parameter name, the import path.</li>
         <li><strong>"what will happen" / "expected result"</strong> &rarr; walk the code to the <strong>first</strong> failure and name its exception exactly.</li>
-        <li><strong>"only asynchronous Apex can&hellip;"</strong> &rarr; the trigger callout (<code>4f9da22c</code>); everything else has a synchronous form.</li>
+        <li><strong>"only asynchronous Apex can&hellip;"</strong> &rarr; the trigger callout; everything else has a synchronous form.</li>
         <li><strong>"without additional test coverage"</strong> &rarr; an interface or design attribute, not Apex.</li>
         <li><strong>"ensure &hellip; in both Production and all Sandboxes"</strong> &rarr; custom metadata.</li>
       </ul>
@@ -1744,8 +1733,7 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">17</span><span>Sources</span></h2>
       <div class="sect-rule"></div>
 
-      <p>Every URL below was rendered and title-checked during this repo's fact-check work or while
-      writing this guide.</p>
+      <p>Every link below was opened and checked when this guide was written.</p>
 
       <h4>The exam</h4>
       <ul class="linklist">
@@ -1834,42 +1822,11 @@ html { scroll-behavior: smooth; }
       </ul>
     </section>
 
-    <!-- 18 -->
-    <section id="notebooklm">
-      <h2 class="sect"><span class="num">18</span><span>Using this with NotebookLM</span></h2>
-      <div class="sect-rule"></div>
-
-      <p>Upload the Markdown version of this guide as a source &mdash; headings become NotebookLM's
-      navigation. Worth adding alongside it: the
-      <a href="https://help.salesforce.com/s/articleView?id=005298967&type=1&language=en_US">official exam guide</a>,
-      <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_order_of_execution.htm">Triggers and Order of Execution</a> and
-      <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_gov_limits.htm">Execution Governors and Limits</a>
-      &mdash; the two pages the exam leans on hardest.</p>
-
-      <h3>Prompts that produce useful study media</h3>
-      <div class="prompts">
-        <div class="prompt">Generate an Audio Overview of sections 3 and 5 &mdash; the save order of execution and the asynchronous Apex table. Have the hosts give each other a requirement and argue over whether it needs a future method, a Queueable, Batch Apex or a scheduled job.</div>
-        <div class="prompt">Using section 8, drill me on the topics the practice deck does not cover: give me a scenario about multi-currency, sharing objects or custom settings and ask what a developer should do. Don't give me the answer until I try.</div>
-        <div class="prompt">Turn section 13 into flashcards &mdash; one limit per card, the name on the front and the value plus the trap on the back.</div>
-        <div class="prompt">Using section 12, give me five short Apex snippets each with one inefficiency from the checklist in 12e, and ask me to find it.</div>
-        <div class="prompt">Using section 14, explain each case where the exam's expected answer differs from current Salesforce behaviour, and why the exam still keys the old answer.</div>
-      </div>
-
-      <p>For the Audio Overview specifically, sections 3, 5, 8 and 14 reward listening &mdash; they are
-      sequences and comparisons. Sections 13 and 17 are lookup tables and won't survive being read
-      aloud.</p>
-    </section>
-
   </main>
 
   <footer class="colophon">
-    Compiled from the 146 questions in <code>salesforce_questions_Dev2.json</code>, the official
-    Platform Developer II exam guide, and the documentation those questions cite. The deck's own
-    tags were not used for the domain table &mdash; <code>study-guides/reclassify-dev2.mjs</code> holds the
-    per-question calls against the five real domains. Every URL in &sect;17 was rendered and
-    title-checked; the exam guide, governor limits, Platform Cache, Stub API, Finalizer, sharing,
-    custom settings, scratch org, skinny table and Advanced Currency Management pages were re-read
-    for this guide on 2026-09-12.
+    Compiled from the 146 questions in this deck, the official Platform Developer II exam guide, and
+    the Salesforce documentation those questions cite. Last reviewed September 2026.
   </footer>
 
 </div>

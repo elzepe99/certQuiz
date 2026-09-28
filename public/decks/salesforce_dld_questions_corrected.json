@@ -769,7 +769,7 @@
     "corrected": {
       "date": "2026-08-20",
       "via": "validation",
-      "note": "Answer stands. The old explanation conceded that the integration-sandbox option \"is sometimes argued\" and that frequent integration refreshes break partner connections. The source it rests on says the opposite: refresh the system integration sandbox as often as is practical, and avoid a Full sandbox there precisely because 29 days is too infrequent."
+      "note": "Answer stands. The old explanation conceded that the integration-sandbox option \"is sometimes argued\" and that frequent integration refreshes break partner connections. The documentation says the opposite: refresh the system integration sandbox as often as is practical, and avoid a Full sandbox there precisely because 29 days is too infrequent."
     }
   },
   {
@@ -1137,7 +1137,7 @@
     "corrected": {
       "date": "2026-08-21",
       "via": "validation",
-      "note": "Answer moved B,C to A,B, and option A was repaired. The scrape had dropped a negation from option A, turning \"Specifying the test method is not supported in DeployOptions\" into its opposite and leaving a self-contradictory sentence; restoring it makes A true and the item answerable. Salesforce's Running a Subset of Tests in a Deployment states \"You can specify only test classes. You can't specify individual test methods\", so the previously keyed option asserting method-level support is false.",
+      "note": "Option A had lost a negation, turning \"Specifying the test method is not supported in DeployOptions\" into its opposite and leaving a self-contradictory sentence; with it restored, A is true and the item is answerable. Salesforce's Running a Subset of Tests in a Deployment states \"You can specify only test classes. You can't specify individual test methods\", so the previously keyed option asserting method-level support is false.",
       "from": "B,C",
       "to": "A,B"
     }

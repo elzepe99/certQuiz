@@ -68,7 +68,7 @@
     "corrected": {
       "date": "2026-08-11",
       "via": "validation",
-      "note": "Key C stands, but the old explanation was wrong on mechanism and has been corrected. It claimed that 'by restricting the report folder, only directors can see the underlying numbers'. The Viewer Access article contradicts that with a worked example: a sales rep who refreshes a dashboard and views the data in its underlying reports needs only Viewer access to the dashboard's folder. Dashboard components render as the running user, so report-folder access controls drill-down, not whether the component displays values. That makes the stem's 'see the data in the component' imprecise — flagged rather than silently confirmed, since a learner could otherwise take away a false model of dashboard security. The key is still the best answer because it is the only option that grants reps the dashboard while confining source-report access to directors."
+      "note": "Answer C stands, but the old explanation was wrong on mechanism. It claimed that 'by restricting the report folder, only directors can see the underlying numbers'. The Viewer Access article contradicts that with a worked example: a sales rep who refreshes a dashboard and views the data in its underlying reports needs only Viewer access to the dashboard's folder. Dashboard components render as the running user, so report-folder access controls drill-down, not whether the component displays values. That makes the question's 'see the data in the component' imprecise. C is still the best answer because it is the only option that grants reps the dashboard while confining source-report access to directors."
     }
   },
   {
@@ -157,7 +157,7 @@
     "corrected": {
       "date": "2026-09-11",
       "via": "validation",
-      "note": "In Lightning Experience the record access view is the Sharing Hierarchy action: \"click Sharing Hierarchy from the Action Menu on the account record. Click View next to the user's name\" to see each user's access and the reason for it (Who Has Access to Account Records?). The Sharing button is the Salesforce Classic route (Sharing, then Expand List, then Why?). The old explanation also claimed Sharing Hierarchy shows role-hierarchy access only and cannot be added to the layout; both claims are contradicted by the documentation. The 2026-09-05 exam dump keys Sharing Hierarchy.",
+      "note": "In Lightning Experience the record access view is the Sharing Hierarchy action: \"click Sharing Hierarchy from the Action Menu on the account record. Click View next to the user's name\" to see each user's access and the reason for it (Who Has Access to Account Records?). The Sharing button is the Salesforce Classic route (Sharing, then Expand List, then Why?). The old explanation also claimed Sharing Hierarchy shows role-hierarchy access only and cannot be added to the layout; both claims are contradicted by the documentation.",
       "from": "B",
       "to": "C"
     }
@@ -534,7 +534,7 @@
     "corrected": {
       "date": "2026-08-11",
       "via": "validation",
-      "note": "Key D left in place but this item looks defective and needs your decision — flagged rather than silently confirmed. The old explanation asserted that Groups 'appears in the Chatter section of the mobile navigation menu rather than as a standalone selectable item'. The Mobile Only Navigation Menu documentation contradicts both halves: it lists Groups as its own available item, and it describes no 'Chatter section' at all — Chatter and Groups are separate entries in the same list. What the documentation does describe is that Groups is available only when Chatter is enabled, and that if you do not add it to the menu, 'groups and the Groups item are automatically included in the set of Smart Search Items' — which is closer to option B than to option D. I did not move the key because option B as worded ('unavailable on the navigation menu') is not documented either, and I could not confirm the exact cause of an item missing from the picker. Recommended repair: reword the options around the documented facts, Chatter-enabled availability and Smart Search Items fallback."
+      "note": "Answer D is kept, but this item looks flawed. The old explanation asserted that Groups 'appears in the Chatter section of the mobile navigation menu rather than as a standalone selectable item'. The Mobile Only Navigation Menu documentation contradicts both halves: it lists Groups as its own available item, and it describes no 'Chatter section' at all. What it does describe is that Groups is available only when Chatter is enabled, and that if you do not add it to the menu, 'groups and the Groups item are automatically included in the set of Smart Search Items' — which is closer to option B than to D. Option B as worded ('unavailable on the navigation menu') is not documented either, so neither option is cleanly right."
     }
   },
   {
@@ -551,7 +551,7 @@
     "corrected": {
       "date": "2026-08-11",
       "via": "validation",
-      "note": "Key A stands; the explanation had the mechanism backwards, which the spot-check of the first fifty questions caught. It said a Number to Text change \"will cause compile errors in any Apex class or trigger that uses it\", implying Salesforce permits the change and the code breaks afterwards. Considerations for Converting the Field Type of a Custom Field says the platform refuses the change while the reference exists: \"You can't change the data type of a custom field referenced by other items in Setup such as Visualforce pages, Apex code, processes, or flows.\" Same answer, opposite sequence of events, and the corrected version explains why the stem's \"cannot modify any Apex code\" constraint is what makes A the answer. Also tightened B, which the earlier note described as being about \"reportability of encrypted data\"; the documented rule is that an existing field cannot be converted into an encrypted field at all."
+      "note": "Answer A stands; the explanation had the mechanism backwards. It said a Number to Text change \"will cause compile errors in any Apex class or trigger that uses it\", implying Salesforce permits the change and the code breaks afterwards. Considerations for Converting the Field Type of a Custom Field says the platform refuses the change while the reference exists: \"You can't change the data type of a custom field referenced by other items in Setup such as Visualforce pages, Apex code, processes, or flows.\" Same answer, opposite sequence of events — and that is why the question's \"cannot modify any Apex code\" constraint makes A the answer. Option B's explanation was also tightened: the documented rule is that an existing field cannot be converted into an encrypted field at all."
     }
   },
   {
@@ -633,7 +633,7 @@
     "corrected": {
       "date": "2026-08-11",
       "via": "validation",
-      "note": "Key A,D stands, but the explanation cited a retired capability. It justified Big Objects by saying they support 'async SOQL/queries' — Salesforce retired Async SOQL for Big Objects with Summer '23, almost three years before this deck was reviewed, and now directs you to Bulk API or batch Apex to query or report on them. Rewritten to name the current mechanism and to be honest about the trade-off the old text waved at with 'some limitations': big objects have no standard UI or list views and a narrow query surface, so they are archival storage with code-based retrieval rather than a drop-in reporting source."
+      "note": "Answer A,D stands, but the explanation cited a retired capability. It justified Big Objects by saying they support 'async SOQL/queries' — Salesforce retired Async SOQL for Big Objects with Summer '23 and now directs you to Bulk API or batch Apex to query or report on them. The explanation now names the current mechanism and the real trade-off: big objects have no standard UI or list views and a narrow query surface, so they are archival storage with code-based retrieval rather than a drop-in reporting source."
     }
   },
   {
@@ -881,7 +881,7 @@
     "corrected": {
       "date": "2026-08-11",
       "via": "validation",
-      "note": "Key B,C stands, but this item is built entirely on a tool that reached end of support on 31 Dec 2025, and the explanation now says so. Per the established fact that this is retirement of support rather than removal of capability, the answer remains correct for orgs running existing processes, and the reasoning about ungated criteria nodes and mutually invocable processes is sound. Added the currency flag and named the record-triggered flow equivalent — entry conditions and running only when specified changes are made — so a learner takes away transferable guidance rather than only Process Builder mechanics. Flagged for the user: of the questions reviewed so far, this is the one most tied to a retired tool, and it may be worth rewriting around flows rather than keeping."
+      "note": "Answer B,C stands, but this item is built on Process Builder, which reached end of support on 31 Dec 2025. End of support is not removal, so the answer remains correct for orgs running existing processes, and the reasoning about ungated criteria nodes and mutually invocable processes is sound. The explanation also names the record-triggered flow equivalent — entry conditions and running only when specified changes are made — so the lesson carries over to Flow."
     }
   },
   {
@@ -1115,7 +1115,7 @@
     "corrected": {
       "date": "2026-08-11",
       "via": "validation",
-      "note": "Answer moved A to B. The earlier pass kept A on the reasoning that a process genuinely can submit for approval and that the exam key should stand; further checking shows the item is decided by a capability limit, not by tool preference. Process Builder Record Change trigger offers only \"only when a record is created\" and \"when a record is created or edited\", and its remaining trigger types are Event and Invocable - so a process cannot run on a delete under any configuration, and option A cannot enforce a gate on deletion however it is built. A record-triggered flow can: it runs on delete and blocks one with a Custom Error element, which uses the same functionality as the addError() method in Apex. The approval process itself deletes nothing either way - Add Automated Actions to a Classic Approval Process lists four action types (Task, Email Alert, Field Update, Outbound Message) and none is a delete. That also disposes of the duplication that made this item ambiguous: A and B are no longer the same design in two tools, because only one of the two tools can reach a delete.",
+      "note": "The item is decided by a capability limit, not by tool preference. Process Builder's Record Change trigger offers only \"only when a record is created\" and \"when a record is created or edited\", and its remaining trigger types are Event and Invocable - so a process cannot run on a delete under any configuration, and option A cannot enforce a gate on deletion however it is built. A record-triggered flow can: it runs on delete and blocks one with a Custom Error element, which uses the same functionality as the addError() method in Apex. The approval process itself deletes nothing either way - Add Automated Actions to a Classic Approval Process lists four action types (Task, Email Alert, Field Update, Outbound Message) and none is a delete. So A and B are not the same design in two tools: only one of the two tools can reach a delete.",
       "from": "A",
       "to": "B"
     }
@@ -1134,7 +1134,7 @@
     "corrected": {
       "date": "2026-08-11",
       "via": "validation",
-      "note": "Key B,D confirmed. This item previously had a defective option set: its original option C read \"A deployment connection between source and target orgs must be authorized before change sets can be sent\", which Deployment Connections for Change Sets states almost verbatim — giving the question three true options in a \"choose 2\". Option C has been replaced with a false statement in the same subject area (that all users must be logged out before a deployment), so the item now has exactly two correct answers. Treat the new option C as authored, not original.\n\nSuperseded note from the 2026-08-11 pass, kept because its citations still stand: DEFECTIVE ITEM - flagged to the user. Key B,D preserved, but this 'choose 2' has three true options. C is documented almost word for word by Deployment Connections for Change Sets: 'A deployment connection alone doesn't enable change sets to be sent between orgs. Each org must be authorized to send and receive change sets. This added level of security enforces code promotion paths.' Only A is false. The explanation now says so explicitly rather than leaving a learner who picked C thinking they misunderstood the platform. D itself is settled by Deploy a Change Set: 'A change set is deployed in a single transaction. If the deployment is unable to complete for any reason, the entire transaction is rolled back.'"
+      "note": "Answer B,D confirmed. The original option C read \"A deployment connection between source and target orgs must be authorized before change sets can be sent\", which Deployment Connections for Change Sets states almost verbatim — giving three true options in a \"choose 2\". Option C was replaced with a false statement in the same subject area (that all users must be logged out before a deployment), so the item now has exactly two correct answers; treat that option as written for this deck rather than the exam's own. D is settled by Deploy a Change Set: 'A change set is deployed in a single transaction. If the deployment is unable to complete for any reason, the entire transaction is rolled back.'"
     }
   },
   {
@@ -1339,7 +1339,7 @@
     "corrected": {
       "date": "2026-08-11",
       "via": "validation",
-      "note": "Answer moved A,D to A,C. D is unsupported: Actions in Lightning Experience enumerates every place actions appear on a record page - the highlights panel's page-level action menu, the Activity tab, and the Chatter tab - and Path appears nowhere in it. The Path setup documentation contains no occurrence of the word 'action' at all; a path consists of steps, key fields and guidance text. The deck's explanation asserted that 'The Path component also exposes layout actions associated with each step', which nothing documents. C is documented twice over, in the Standard Lightning Page Components entry for Activities and in the worked example showing New Event and New Task moving off the highlights panel onto the Activity tab. Flagging one soft edge for the user: B is partly true as well, since the Chatter tab carries the standard Chatter actions from the same page-layout section, so this item has three options with some claim and one with none. A,C is the pair the documentation supports for the quick actions an app builder would be adding.\n\nFollow-up on the same day: option B originally read \"Chatter\", which was a soft edge rather than a clean distractor - the Chatter tab does carry the standard Chatter actions (Post, Poll, Question, Announcement) from the same page-layout section, so a reader could defend it. B has been replaced with \"Report Chart\", a display component that hosts no actions, leaving exactly two correct options. Treat the new option B as authored, not original.",
+      "note": "D is unsupported: Actions in Lightning Experience enumerates every place actions appear on a record page - the highlights panel's page-level action menu, the Activity tab, and the Chatter tab - and Path appears nowhere in it. A path consists of steps, key fields and guidance text; nothing documents Path exposing layout actions. C is documented twice over, in the Standard Lightning Page Components entry for Activities and in the worked example showing New Event and New Task moving off the highlights panel onto the Activity tab. Option B originally read \"Chatter\", which a reader could defend, since the Chatter tab carries the standard Chatter actions; it was replaced with \"Report Chart\", a display component that hosts no actions, leaving exactly two correct options. Treat option B as written for this deck, not the exam's own.",
       "from": "A,D",
       "to": "A,C"
     }
@@ -1435,7 +1435,7 @@
     "corrected": {
       "date": "2026-08-11",
       "via": "validation",
-      "note": "Key A stands and the item is sound as a formula-reading question; the explanation was extended rather than corrected. It previously stopped at \"Option A is the only formula that combines both conditions correctly with AND\", which is true but leaves a reader thinking the rule is production-ready. It is not: ISCHANGED \"returns FALSE when evaluating any field on a newly created record\", so with the AND the field is writable on insert and frozen afterwards, and the first entry of a hire date after acceptance is blocked along with genuine changes. The explanation now says so and names the PRIORVALUE guard that fixes it. Decision recorded: the repo owner chose to leave the key and options untouched and surface the caveat in the prose."
+      "note": "Answer A stands and the item is sound as a formula-reading question; the explanation was extended rather than corrected. It previously stopped at \"Option A is the only formula that combines both conditions correctly with AND\", which is true but leaves a reader thinking the rule is production-ready. It is not: ISCHANGED \"returns FALSE when evaluating any field on a newly created record\", so with the AND the field is writable on insert and frozen afterwards, and the first entry of a hire date after acceptance is blocked along with genuine changes. The explanation now says so and names the PRIORVALUE guard that fixes it."
     }
   },
   {
@@ -1601,7 +1601,7 @@
     "corrected": {
       "date": "2026-09-11",
       "via": "validation",
-      "note": "The dump keyed Global Value Sets. Manage Inactive Picklist Values documents the fix as \"Establish a Picklist Upper Bound Limit: you can enforce an upper bound limit of inactive values on existing picklists\" in Picklist Settings; global value sets carry their own combined active-and-inactive limit of 1,000 and do not address the accumulated inactive values.",
+      "note": "Manage Inactive Picklist Values documents the fix as \"Establish a Picklist Upper Bound Limit: you can enforce an upper bound limit of inactive values on existing picklists\" in Picklist Settings. Global value sets carry their own combined active-and-inactive limit of 1,000 and do not address the accumulated inactive values.",
       "from": "B",
       "to": "A"
     }
@@ -1632,7 +1632,7 @@
     "corrected": {
       "date": "2026-09-11",
       "via": "validation",
-      "note": "The dump keyed building the survey in Flow. The stem sets two constraints — very little time, so the solution cannot be built from scratch, and full customisation afterwards. An unmanaged AppExchange package meets both: its components install as editable metadata the org can change freely, whereas a managed package restricts what the subscriber may modify and a from-scratch flow build is what the deadline rules out. This is a judgment on the option set; no vendor page settles the scenario.",
+      "note": "The question sets two constraints — very little time, so the solution cannot be built from scratch, and full customisation afterwards. An unmanaged AppExchange package meets both: its components install as editable metadata the org can change freely, whereas a managed package restricts what the subscriber may modify and a from-scratch flow build is what the deadline rules out. This is a judgment on the option set; no vendor page settles the scenario.",
       "from": "B",
       "to": "D"
     }
@@ -1711,7 +1711,7 @@
     "corrected": {
       "date": "2026-09-11",
       "via": "validation",
-      "note": "The dump keyed \"form factor checkboxes\", which is not a Lightning App Builder feature. Visibility Rules on Lightning Pages documents the mechanism: \"With a filter using the Device context, you can set a component to display exclusively when its page is viewed in a specific experience, such as a phone or a desktop\" — a component visibility filter.",
+      "note": "\"Form factor checkboxes\" are not a Lightning App Builder feature. Visibility Rules on Lightning Pages documents the mechanism: \"With a filter using the Device context, you can set a component to display exclusively when its page is viewed in a specific experience, such as a phone or a desktop\" — a component visibility filter.",
       "from": "A",
       "to": "D"
     }
@@ -1766,7 +1766,7 @@
     "corrected": {
       "date": "2026-09-11",
       "via": "validation",
-      "note": "The dump keyed A and C on a question that asks for one functionality. Dynamic Forms alone meets it: a visibility rule on the Years of Previous Experience field shows it only when the checkbox is true. Two page layouts switched by a process would need a record-type change to swap layouts and is not how conditional display is built.",
+      "note": "The question asks for one functionality, and Dynamic Forms alone meets it: a visibility rule on the Years of Previous Experience field shows it only when the checkbox is true. Two page layouts switched by a process would need a record-type change to swap layouts and is not how conditional display is built.",
       "from": "A,C",
       "to": "C"
     }
@@ -2049,7 +2049,7 @@
     "corrected": {
       "date": "2026-09-11",
       "via": "validation",
-      "note": "The dump keyed one master-detail relationship on each object. A many-to-many relationship is modelled with a junction object carrying two master-detail relationships, one to each master — \"you create a custom object ... a junction object to connect the two objects you want to relate to each other\" — and neither Contact nor Solar Project can hold a master-detail field pointing at the other.",
+      "note": "A many-to-many relationship is modelled with a junction object carrying two master-detail relationships, one to each master — \"you create a custom object ... a junction object to connect the two objects you want to relate to each other\" — and neither Contact nor Solar Project can hold a master-detail field pointing at the other.",
       "from": "B",
       "to": "A"
     }
@@ -2289,7 +2289,7 @@
     "corrected": {
       "date": "2026-09-11",
       "via": "validation",
-      "note": "The dump keyed \"Report details\", which is not a Lightning App Builder component (the report component is Report Chart). Standard Lightning Page Components lists Rich Text, List View and Recent Items; the List View component was called Filter List in older releases, which is the name this item uses.",
+      "note": "\"Report details\" is not a Lightning App Builder component (the report component is Report Chart). Standard Lightning Page Components lists Rich Text, List View and Recent Items; the List View component was called Filter List in older releases, which is the name this item uses.",
       "from": "B,D,E",
       "to": "B,C,E"
     }
@@ -2320,7 +2320,7 @@
     "corrected": {
       "date": "2026-09-11",
       "via": "validation",
-      "note": "The dump keyed \"historical data will be updated to a 12:00 timestamp\", a behaviour no Salesforce page documents. Considerations for Converting the Field Type of a Custom Field lists \"changing to or from type Date or Date/Time\" among the situations in which \"changing the data type of an existing custom field can cause data loss\", and advises converting only fields that have no data.",
+      "note": "No Salesforce page documents historical data being updated to a 12:00 timestamp. Considerations for Converting the Field Type of a Custom Field lists \"changing to or from type Date or Date/Time\" among the situations in which \"changing the data type of an existing custom field can cause data loss\", and advises converting only fields that have no data.",
       "from": "B",
       "to": "D"
     }
@@ -2339,7 +2339,7 @@
     "corrected": {
       "date": "2026-09-11",
       "via": "validation",
-      "note": "The dump keys in-app notifications and the record detail. Both are documented for the mobile app, but so is a third route the option set also offers: \"To respond to approval requests, go to the Approvals navigation item\" — the navigation menu (option D). Kept as keyed; treat this item as having three defensible options."
+      "note": "In-app notifications and the record detail are both documented for the mobile app, but so is a third route the option set also offers: \"To respond to approval requests, go to the Approvals navigation item\" — the navigation menu (option D). The answer is unchanged; treat this item as having three defensible options."
     }
   },
   {
@@ -2409,7 +2409,7 @@
     "corrected": {
       "date": "2026-09-11",
       "via": "validation",
-      "note": "The dump keyed Lookup. The stated requirement is that reps who work an opportunity can see all of its installations, and Object Relationships Overview says lookup relationships \"don't support sharing or roll-up summary fields\" — record access on a lookup child is governed by that object's own org-wide default. A master-detail child is Controlled by Parent, so seeing the opportunity is seeing its installations. This is a judgment on which relationship best fits the stated visibility need; both relationships produce a related list.",
+      "note": "The stated requirement is that reps who work an opportunity can see all of its installations, and Object Relationships Overview says lookup relationships \"don't support sharing or roll-up summary fields\" — record access on a lookup child is governed by that object's own org-wide default. A master-detail child is Controlled by Parent, so seeing the opportunity is seeing its installations. This is a judgment on which relationship best fits the stated visibility need; both relationships produce a related list.",
       "from": "A",
       "to": "C"
     }
@@ -2440,7 +2440,7 @@
     "corrected": {
       "date": "2026-09-11",
       "via": "validation",
-      "note": "The dump keyed a public group. Identify Assigned Approvers for an Approval Step lists the approver choices — the submitter, a hierarchy field, \"automatically assign to a queue\" (\"available only for objects that support queues\"), or specific users and related users — and public groups are not among them. A custom object such as Shipments__c supports queues, so a queue of the department members is the documented way to let any of them approve.",
+      "note": "Identify Assigned Approvers for an Approval Step lists the approver choices — the submitter, a hierarchy field, \"automatically assign to a queue\" (\"available only for objects that support queues\"), or specific users and related users — and public groups are not among them. A custom object such as Shipments__c supports queues, so a queue of the department members is the documented way to let any of them approve.",
       "from": "C",
       "to": "D"
     }
@@ -2471,7 +2471,7 @@
     "corrected": {
       "date": "2026-09-11",
       "via": "validation",
-      "note": "The dump keyed two options describing an \"automatic submission\" setting on the approval process, which does not exist — a classic approval process has no setting that submits records on its own. What submits a record without the rep acting is the Submit for Approval action, available in Process Builder and as a provided flow core action.",
+      "note": "A classic approval process has no \"automatic submission\" setting — nothing on it submits records on its own. What submits a record without the rep acting is the Submit for Approval action, available in Process Builder and as a provided flow core action.",
       "from": "A,C",
       "to": "B,D"
     }
@@ -2543,7 +2543,7 @@
     "corrected": {
       "date": "2026-09-11",
       "via": "validation",
-      "note": "The dump keyed the import-wizard statement as true. Dependent Picklist Considerations says the opposite: \"The Data Import Wizard doesn't consider field dependencies. You can import any value into a dependent picklist regardless of the value imported for a controlling field.\" The three documented truths are that custom picklists can be either role, multi-select picklists can be dependent but not controlling, and checkboxes can be controlling but not dependent.",
+      "note": "Dependent Picklist Considerations says the Data Import Wizard ignores dependencies: \"The Data Import Wizard doesn't consider field dependencies. You can import any value into a dependent picklist regardless of the value imported for a controlling field.\" The three documented truths are that custom picklists can be either role, multi-select picklists can be dependent but not controlling, and checkboxes can be controlling but not dependent.",
       "from": "A,B,E",
       "to": "B,C,E"
     }
@@ -2574,7 +2574,7 @@
     "corrected": {
       "date": "2026-09-11",
       "via": "validation",
-      "note": "The dump keyed Partial Copy. Sandbox Licenses and Storage Limits by Type gives Partial Copy a 5-day refresh interval, so it cannot be refreshed after every three-day sprint. Developer Pro refreshes daily and holds 1 GB of data, which covers the half gigabyte the developer needs.",
+      "note": "Sandbox Licenses and Storage Limits by Type gives Partial Copy a 5-day refresh interval, so it cannot be refreshed after every three-day sprint. Developer Pro refreshes daily and holds 1 GB of data, which covers the half gigabyte the developer needs.",
       "from": "D",
       "to": "C"
     }
@@ -2689,7 +2689,7 @@
     "corrected": {
       "date": "2026-09-11",
       "via": "validation",
-      "note": "The dump keyed the Highlights Panel. Actions in Lightning Experience routes task-creating actions elsewhere: 'The Activity tab contains Create a Record quick actions that point to the Event and Task objects', and 'although they're quick actions, New Event and New Task don't show up' in the highlights panel's page-level action menu. A custom New Task action is a Create a Record action targeting Task, so the Activities component is where it appears.",
+      "note": "Actions in Lightning Experience routes task-creating actions away from the Highlights Panel: 'The Activity tab contains Create a Record quick actions that point to the Event and Task objects', and 'although they're quick actions, New Event and New Task don't show up' in the highlights panel's page-level action menu. A custom New Task action is a Create a Record action targeting Task, so the Activities component is where it appears.",
       "from": "C",
       "to": "D"
     }
@@ -2821,7 +2821,7 @@
     "corrected": {
       "date": "2026-09-11",
       "via": "validation",
-      "note": "The dump keyed a validation rule to stop edits during approval. That is unnecessary: \"when a record is submitted for approval, it's locked to prevent users from editing it during the classic approval process.\" The two configuration choices that route the request correctly are a second step with entry criteria of Amount__c > 10,000 assigned to the director, and Next Automated Approver Determined By set to the Manager field so the first step goes to the submitter's manager.",
+      "note": "A validation rule to stop edits during approval is unnecessary: \"when a record is submitted for approval, it's locked to prevent users from editing it during the classic approval process.\" The two configuration choices that route the request correctly are a second step with entry criteria of Amount__c > 10,000 assigned to the director, and Next Automated Approver Determined By set to the Manager field so the first step goes to the submitter's manager.",
       "from": "A,C",
       "to": "A,B"
     }
@@ -2852,7 +2852,7 @@
     "corrected": {
       "date": "2026-09-11",
       "via": "validation",
-      "note": "The dump keyed a custom report type \"with converted leads as the primary object\" — there is no such object, and none is needed: Converted Leads Displayed in Leads Report says \"standard Lead Reports in Salesforce display both active and converted Leads by default.\" What a rep lacks is the ability to open the converted lead records the report lists: \"to view the converted Lead record directly, the admin must assign the View and Edit Converted Leads permission to the user.\" That permission is the only option that changes what reps can do.",
+      "note": "There is no \"converted leads\" object for a custom report type, and none is needed: Converted Leads Displayed in Leads Report says \"standard Lead Reports in Salesforce display both active and converted Leads by default.\" What a rep lacks is the ability to open the converted lead records the report lists: \"to view the converted Lead record directly, the admin must assign the View and Edit Converted Leads permission to the user.\" That permission is the only option that changes what reps can do.",
       "from": "D",
       "to": "B"
     }
