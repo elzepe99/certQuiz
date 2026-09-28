@@ -191,6 +191,13 @@ removed in the Aug 2026 cleanup. They live in git history — recover any with
 `git show f9058ab:findings-dev2.json`. Their durable lessons are below; prefer
 this file to archaeology.
 
+**They piled up again and were cleared a second time on 2026-09-28**: 56
+`findings-*.json` from the August–September passes, plus `admin-dead-refs.json`
+and `slack-deck-prep.md`. Recover any with `git show d1c2e45:<file>` (for example
+`git show d1c2e45:findings-revenue-cloud-2026-09-15.json`). A findings file is a
+pass's working input, not a record — the record is the deck, its correction
+notices, and this file. Delete yours once the pass has merged.
+
 ### Verification commands
 
 ```sh
@@ -526,7 +533,7 @@ The passes that got there, newest first: data-cloud-consultant 2026-08-21 (100, 
 the last uncited deck), dld 2026-08-20 (138, PR #17), admin and data-architect
 2026-08-19 (154 and 135), slack-consultant 2026-08-18 (37), sharing-visibility and
 agentforce 2026-08-17 (136 and 121), revenue-cloud and databricks 2026-08-15 (135 and
-148). Per-pass detail is in the deck table below and in the `findings-*.json` files.
+148). Per-pass detail is in the deck table below and in the `findings-*.json` files (removed 2026-09-28; recover with `git show d1c2e45:<file>`).
 
 Most of the admin number was not new research: 47 of those questions *already had*
 citations the app was silently refusing to render. See failure pattern 4c.
@@ -677,7 +684,7 @@ flag residual uncertainty about the key. (33 until the 2026-08-17 dedupe removed
 `f5adf9ac` and dropped `f12dffa3`'s notice, which once its twin was gone announced a
 contradiction no reader could still see.) The same call was applied to
 `0327f145` in the Databricks deck, whose old citation was live but did not support
-its claim. Per-question provenance for all 50 is in the findings files and in git.
+its claim. Per-question provenance for all 50 is in the findings files, now in git history only (`git show d1c2e45:findings-revenue-cloud.json`).
 
 So the deck was generated with a *sound key and invented supporting prose* — the exact
 mirror of the IAM trap, where citations were attached to keys nobody had checked. The
