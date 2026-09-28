@@ -832,11 +832,14 @@ rather than their worktree, so say so explicitly in the brief.
    built on the numbers that moved. Slack and claude-architect were predicted to be the
    guides that found least; neither did. Claude's found 17 of 30 task statements
    uncovered, and Slack's found the deck is smaller than its exam.
-2. **The judgment calls flagged for the repo owner are still open**, and they are the
-   cheapest real work available: revenue-cloud's `87836da2` (flow name) and
-   `832c6c98` (Contracts permission set), app-builder's `9ba9345d` (Sharing vs
-   Sharing Hierarchy, documented per UI), and the data-architect and data-cloud open
-   items further down this file.
+2. **Four of the owner's judgment calls were settled on 2026-09-28, all as keyed.**
+   The repo owner kept revenue-cloud's `87836da2` on B (Amend, Renew, and Cancel
+   flow) and `832c6c98` on C (Microsoft 365 Word Designer), app-builder's `9ba9345d`
+   on C (Sharing Hierarchy, the Lightning route), and data-architect's `ba5e12d5`
+   (Data.com Clean) in the deck with its notice. **Do not re-open these without new
+   evidence**; the "owner may reverse" wording on their rows below predates the
+   decision. Still open: the other data-architect items (the two further Data.com
+   Clean questions, Async SOQL) and the data-cloud open items further down.
 3. **The duplicate work is partly closed, not closed.** Five true duplicates found by
    the keyed-text pass are read and ready to remove but have not been; the
    rewritten-stem pairs (`23b3dd3a`/`b8dcc15e` and the four below them) need a human
@@ -999,6 +1002,12 @@ Three findings from that deck worth keeping:
   Repos → Git folders (9), Workflows/Jobs → Lakeflow Jobs (13), Databricks Asset Bundles
   → Declarative Automation Bundles (5). The mechanisms did not change. Options stay as
   scraped, per the standing product-rename decision; the guide's §12 carries the mapping.
+
+**Resolved 2026-09-28 as a defective item, not a wrong key.** The fact-check re-rendered
+the page: all five options (commit, pull, push, clone, merge) are now in-product, and
+the only provider-side step, creating a pull request, is not offered. Merge stays keyed
+as the closest option and the exam's answer; explanation and notice now name the pull
+request. The original finding follows.
 
 **One deck item the documentation now contradicts, left for a fact-check pass.**
 `94a481b8` asks which Git operation must be performed outside Databricks Repos and keys

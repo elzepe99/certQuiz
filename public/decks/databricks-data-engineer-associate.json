@@ -370,14 +370,14 @@
     "optionD": "Clone",
     "optionE": "Merge",
     "correct": "E",
-    "explanation": "Merge is the answer this item is testing, and it reflects how Databricks Repos behaved when the feature was young: cloning, committing, pushing and pulling were available in the workspace, while merging a branch had to be done in the Git provider's own interface.\nBe aware that current Databricks Git folders have moved on. The documentation now lists Merge branches, Resolve merge conflicts, Rebase a branch and Reset a branch among the supported Git-folder operations, so on a current workspace none of the five listed operations strictly requires leaving Databricks. Merge remains the best answer to the question as written, but treat it as the historical answer rather than a present-day limitation.\nWhy the other options are wrong:\nOption A (Commit) — always available in the Repos dialog.\nOption B (Pull) — always available in the Repos dialog.\nOption C (Push) — always available in the Repos dialog.\nOption D (Clone) — adding a repo to the workspace is a clone, performed inside Databricks.\nReferences:\nhttps://docs.databricks.com/aws/en/repos/git-operations-with-repos",
+    "explanation": "Merge is the answer this item is testing, and it reflects how Databricks Repos behaved when the feature was young: cloning, committing, pushing and pulling were available in the workspace, while merging branches was done in the Git provider's own interface.\nOn a current workspace, none of the five listed operations requires leaving Databricks. The Git folders documentation lists Merge branches among the in-product operations (\"click the kebab menu and select Merge\"), alongside conflict resolution, rebase and reset. What it still sends you to the Git provider for is the pull request: if you cannot commit to the default branch, \"use your Git provider's interface to create a pull request and merge it into the default branch.\" That is why Merge remains the closest option offered: merging reviewed work into the default branch through a pull request still happens outside Databricks. But the operation that truly lives outside is creating the pull request, and it is not among the options.\nWhy the other options are wrong:\nOption A (Commit) — done in the Git dialog, which commits and pushes in one step.\nOption B (Pull) — done in the Git dialog.\nOption C (Push) — done in the Git dialog, together with the commit.\nOption D (Clone) — creating a Git folder from a repository URL is the clone, and it happens inside Databricks.\nReferences:\nhttps://docs.databricks.com/aws/en/repos/git-operations-with-repos",
     "_cat": "Databricks Certified Data Engineer Associate",
     "_url": "https://www.freecram.net/question/GAQM.Databricks-Certified-Data-Engineer-Associate.v2026-07-28.q73/which-of-the-following-git-operations-must-be-performed-outside-of-databricks-repos",
     "_src": "v2026-07-28.q73",
     "corrected": {
-      "date": "2026-08-15",
+      "date": "2026-09-28",
       "via": "validation",
-      "note": "Answer kept as the exam's older answer. Current documentation lists merge, rebase and conflict resolution as supported inside Git folders, so the premise of the question is now stale."
+      "note": "Merge is kept as the exam's answer, but no option is strictly correct on a current workspace: Git folders now merge branches in-product. The operation that still happens in the Git provider is creating a pull request, which the option set does not offer."
     }
   },
   {
