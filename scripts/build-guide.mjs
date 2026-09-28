@@ -65,6 +65,21 @@ const GUIDES = [
     out: 'public/guides/salesforce-agentforce-specialist.html',
     lang: 'en',
   },
+  {
+    source: 'study-guides/sharing-visibility.artifact.html',
+    out: 'public/guides/salesforce-sharing-visibility.html',
+    lang: 'en',
+  },
+  {
+    source: 'study-guides/data-architect.artifact.html',
+    out: 'public/guides/salesforce-data-architect.html',
+    lang: 'en',
+  },
+  {
+    source: 'study-guides/dld.artifact.html',
+    out: 'public/guides/salesforce-dld.html',
+    lang: 'en',
+  },
 ];
 
 /** Pull the <title> out of the fragment so the standalone page keeps it. */

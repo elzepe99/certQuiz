@@ -77,9 +77,11 @@ one call. No PDF, unlike Databricks.
 | Platform Administrator | `005298966` |
 | Platform App Builder | `005298964` |
 | Platform Data Architect | `005298972` |
+| Platform Development Lifecycle and Deployment Architect | `005298968` |
 | Platform Developer I | `005298965` |
 | Platform Developer II | `005298967` |
 | Platform Integration Architect | `005298980` |
+| Platform Sharing and Visibility Architect | `005298977` |
 | Slack Administrator | `005298990` |
 | Tableau Architect | `005298985` |
 | Tableau Next Consultant | `005387158` |

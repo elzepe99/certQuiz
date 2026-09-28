@@ -29,7 +29,7 @@ a bug.
 | "audit / structurally check a deck" (no doc lookups) | `node scripts/audit-deck.mjs <deck>` | Phase 1 of the skill, standalone. Cheap. Leads, not verdicts. Takes a **path**, not a bare filename. |
 | "the questions read badly / the bot reads them wrong", "fix the punctuation", "format these stems" — **without** changing what a question says | `node scripts/reformat-stems.mjs <edits.json>` | Punctuation, spacing and capitalisation only, guarded so a formatting pass cannot alter the words. See the repo map below. Explanations and keys still go through `apply-findings.mjs`. |
 | "explain why the wrong answers are wrong" | `apply-findings.mjs` with `clarified` verdicts | Not a fact-check: no key moves, so no correction notice. Integration-architect is the worked example — see the deck table. |
-| "write / update a study guide for deck X", "what does this deck NOT cover?", "how does the deck compare to the real exam outline?", "make me a revision guide / cheat sheet" | **`deck-study-guide`** | Nine guides exist (`study-guides/`). Two hand-maintained files per guide that must be edited **in parallel** — the `.md` and the `.artifact.html`; only the second is built. Never moves an answer key: a contradiction found while writing goes to `factcheck-deck`. |
+| "write / update a study guide for deck X", "what does this deck NOT cover?", "how does the deck compare to the real exam outline?", "make me a revision guide / cheat sheet" | **`deck-study-guide`** | Twelve guides exist (`study-guides/`). Two hand-maintained files per guide that must be edited **in parallel** — the `.md` and the `.artifact.html`; only the second is built. Never moves an answer key: a contradiction found while writing goes to `factcheck-deck`. |
 | "what did users comment on?" | `npm run review-comments` | Needs Supabase keys configured. |
 | "build me a chart / dashboard of deck progress" | `dataviz` | |
 | "make this a shareable page / artifact" | `artifact-design` | |
@@ -147,16 +147,16 @@ scripts/
                         learner sees. **A new guide must be added to its GUIDES
                         array** or it is silently never built, and the script
                         prints "built" for the ones it did build either way
-study-guides/         nine guides, each TWO hand-edited files that must move
+study-guides/         twelve guides, each TWO hand-edited files that must move
                       together: `<out-slug>.md` (the readable/NotebookLM source)
                       and `<name>.artifact.html` (the fragment the build reads;
                       no doctype/head/body, because it is also published as a
                       Claude Artifact, which supplies its own skeleton). The two
                       basenames differ — the `.md` is named after build-guide's
-                      `out`, the fragment after its `source`. The nine fragments
+                      `out`, the fragment after its `source`. The twelve fragments
                       share one stylesheet BY COPY: lines 5–575 are
                       byte-identical, so a palette change must be made in all
-                      nine. `reclassify-*.mjs` holds one deck's per-question
+                      twelve. `reclassify-*.mjs` holds one deck's per-question
                       domain calls against the official exam outline, because no
                       deck's `_cat` tags match the published domains
 .claude/skills/deck-study-guide/
@@ -816,13 +816,11 @@ rather than their worktree, so say so explicitly in the brief.
 
 **What remains — one programme still running, and the standing debt:**
 
-1. **A third programme is running: study guides, nine of fourteen decks done** as of
-   2026-09-26. See "The study-guide programme" below. The five without a guide are
-   **dld, data-architect, sharing-visibility, slack-consultant and
-   claude-architect-foundations**. Slack and claude-architect are the two where a guide
-   will find least, since both are already documented in this file as decks a vendor page
-   largely cannot settle; dld, data-architect and sharing-visibility are the real
-   remainder.
+1. **A third programme is running: study guides, twelve of fourteen decks done** as of
+   2026-09-28. See "The study-guide programme" below. The two without a guide are
+   **slack-consultant and claude-architect-foundations** — the two where a guide will find
+   least, since both are already documented in this file as decks a vendor page largely
+   cannot settle.
 2. **The judgment calls flagged for the repo owner are still open**, and they are the
    cheapest real work available: revenue-cloud's `87836da2` (flow name) and
    `832c6c98` (Contracts permission set), app-builder's `9ba9345d` (Sharing vs
@@ -836,12 +834,13 @@ rather than their worktree, so say so explicitly in the brief.
    — that sweep proved app-builder, IAM, Dev II and integration clean, and the missing
    `language` parameter is the signature to check for first.
 
-### The study-guide programme — started 2026-09-25, 9 of 14 decks
+### The study-guide programme — started 2026-09-25, 12 of 14 decks
 
 A guide measures a deck against the vendor's **published exam outline** and teaches the
 sub-objectives the deck never asks. It is a different job from a fact-check: a fact-check
 makes the deck's answers right, a guide asks whether the deck is the right set of
-questions at all. Every one of the nine so far has found that it is not, by a wide margin.
+questions at all. Every one of the twelve so far has found that it is not — though the
+three architect guides of 2026-09-28 found it by a narrower margin than the rest.
 
 The workflow is `deck-study-guide` (the skill), and it was written up on 2026-09-25 from
 the five Salesforce guides that already existed plus the Databricks one built to prove it.
@@ -857,9 +856,44 @@ the five Salesforce guides that already existed plus the Databricks one built to
 | salesforce-revenue-cloud | **2026-09-26** | Implementation Readiness 14% of the exam, 5.9% of the deck; "Agentforce" in 0 of 135 stems |
 | salesforce-data-cloud-consultant | **2026-09-26** | activations 32% of the deck against 20%; Zero-Copy a named bullet with 0 coverage |
 | salesforce-agentforce-specialist | **2026-09-26** | Governance + Multi-Agent are 15% of the exam and 3 deck questions |
+| salesforce-sharing-visibility | **2026-09-28** | Access to Records 55% of the deck against 39%; object/field permissions 16% against 27%; user mode, restriction rules, muting all 0 |
+| salesforce-data-architect | **2026-09-28** | MDM double-weighted (10.4% against 5%) yet no implementation style named; Salesforce Data Management 16% against 25% |
+| salesforce-dld | **2026-09-28** | best-balanced of the three once re-mapped from 5 old domains to 8; Operating 5% against 10%; DevOps Center in 0 stems |
 
-**Five decks have no guide**: dld, data-architect, sharing-visibility, slack-consultant,
-claude-architect-foundations.
+**Two decks have no guide**: slack-consultant and claude-architect-foundations.
+
+### The three architect guides — 2026-09-28
+
+Sharing and Visibility, Data Architect and DLD, built in one pass. **All three found the
+opposite of the consultant guides: the exams have NOT been rebuilt.** They align to Winter
+'23 (Sharing and Visibility) and Spring '23 (the other two), so the deck and the exam are
+roughly contemporary and the gaps are coverage, not currency. What aged is the *platform*,
+which is why each guide's "older than" section is titled "Deck older than the platform"
+rather than "than the exam". Exam ids `005298968` (DLD) and `005298977` (Sharing and
+Visibility) were found by one `WebSearch` each and added to the skill's table; Data Architect
+`005298972` was already there.
+
+- **Two of the three decks already carry the current domain names as `_cat` tags** —
+  data-architect and sharing-visibility, the first decks in the programme to do so. The
+  re-reading agreed on 122/135 and 129/136. So a tag match is *possible* and still has to
+  be measured. DLD's five tags are an older outline against the exam's eight.
+- **The DLD exam is 65% to pass**, the highest in the architect set; the other two are 58%.
+  Sharing and Visibility is the only one with 120 minutes.
+- **`developer.salesforce.com` returned HTTP 403 to `WebFetch` on 2026-09-28**, for every
+  page tried. The consultant-guide note that it "renders directly" did not hold this time;
+  read it in the browser, where it renders without polling.
+- **The Apex user-mode page has been retitled** "Set an Access Mode for Database
+  Operations" (same URL), and now opens by saying database operations run in user mode by
+  default. `verified-docs.md` still lists it under its old title.
+- **A 375px overflow came from an underscored deck path in a colophon**, not from an inline
+  code string in prose: `public/decks/sharing_visibility_questions_corrected.json` cannot
+  break at underscores. Fixed with `<wbr>`. Hyphenated paths wrap on their own; underscored
+  ones do not — measure `scrollWidth` with the page loaded top-level under mobile
+  emulation, because a mobile layout viewport silently widens to fit (it read 414, not 375).
+- **Guest users and Knowledge are named as sharing-visibility gaps but not taught** — no
+  documentation was rendered for them in this pass.
+- **Nothing contradicted a deck key.** No finding here needs `factcheck-deck`; the defective
+  and retired-product items the guides name were all already flagged by earlier passes.
 
 **The Databricks guide is the worked example for a non-Salesforce vendor**, and the
 outline step is where it differed. Salesforce hides the outline in a Help article whose
@@ -930,8 +964,8 @@ not. **A stale count is rarely only a stale count** — re-measuring can overtur
 built on top of it, so re-read the surrounding argument rather than swapping digits.
 
 Bar widths were left alone: no deck share moved by more than 0.6 points, which is under a pixel
-at the table's 120px scale. `verify-guide.mjs` is at **0 failures across all nine guides** as of
-2026-09-26. It still reports `.md`/`.artifact.html` section drift on integration, Dev II and
+at the table's 120px scale. `verify-guide.mjs` is at **0 failures across all twelve guides** as of
+2026-09-28. It still reports `.md`/`.artifact.html` section drift on integration, Dev II and
 IAM — headings deliberately worded shorter in the fragment for the rail — which is why that
 check is a warning and not a failure.
 

@@ -33,7 +33,8 @@
       "shortName": "Dev Lifecycle",
       "description": "Architect-level certification covering application lifecycle management, deployment strategies, environments, and release management.",
       "file": "salesforce_dld_questions_corrected.json",
-      "accentColor": "#FF9500"
+      "accentColor": "#FF9500",
+      "guide": "guides/salesforce-dld.html"
     },
     {
       "id": "salesforce-iam-architect",
@@ -59,7 +60,8 @@
       "shortName": "Data Architect",
       "description": "Architect-level certification covering data modeling, large data volumes, data migration, master data management, and data governance.",
       "file": "questions_data_architect_merged.json",
-      "accentColor": "#5AC8FA"
+      "accentColor": "#5AC8FA",
+      "guide": "guides/salesforce-data-architect.html"
     },
     {
       "id": "salesforce-sharing-visibility",
@@ -67,7 +69,8 @@
       "shortName": "Sharing & Visibility",
       "description": "Architect-level certification covering the security model, record access, sharing mechanisms, and visibility controls on the Salesforce platform.",
       "file": "sharing_visibility_questions_corrected.json",
-      "accentColor": "#FFD60A"
+      "accentColor": "#FFD60A",
+      "guide": "guides/salesforce-sharing-visibility.html"
     },
     {
       "id": "salesforce-platform-developer-2",
