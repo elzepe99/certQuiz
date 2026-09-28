@@ -75,7 +75,7 @@ export const CALLS = {
   '4362d421':'CICD', 'c6af1c01':'CICD', '4156034b':'CICD', 'cf9b73c2':'CICD', '3b2b15a2':'CICD',
 
   // --- Troubleshooting, Monitoring, and Optimization ------------------------------------
-  '42c11595':'OPS', '721d10bc':'OPS', 'd4bf69a2':'OPS', '9803cecf':'OPS', 'c59ebbbc':'OPS',
+  '42c11595':'OPS', '721d10bc':'OPS', 'd4bf69a2':'OPS', '9803cecf':'OPS',
   'be6c2bbb':'OPS', '4f099cf4':'OPS', '5c71f0db':'OPS', 'b8479190':'OPS', '42c02958':'OPS',
   'cebba9ec':'OPS', '80bcd63f':'OPS', 'b92b838e':'OPS', 'b0ef3381':'OPS', '334c542a':'OPS',
   'b88bac23':'OPS',

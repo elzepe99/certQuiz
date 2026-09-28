@@ -974,17 +974,6 @@
     "_cat": "Data Cloud Setup and Administration"
   },
   {
-    "id": "e652607d",
-    "question": "(Variant) A user is not seeing suggested values from newly-modeled data when building a segment. What is causing this issue?",
-    "optionA": "Value suggestion is still processing and will be available soon",
-    "optionB": "Value suggestion requires Data Aware Specialist permissions at a minimum",
-    "optionC": "Value suggestion can only work on direct attributes and not related attributes",
-    "optionD": "Value suggestion will only return results for the first 50 values of a specific attribute",
-    "correct": "A",
-    "explanation": "Value suggestion still processing and becoming available soon is what is causing the issue. Value suggestions are computed asynchronously after data is modeled, and Salesforce states that it can take up to 24 hours for suggested values to appear — so a user who has just modeled new data is most likely still waiting. Value suggestions are enabled per Text field from the DMO record home, for up to 500 attributes across the org, and are retained for 30 days.\nWhy the other options are wrong:\nOption B (requires Data Aware Specialist permissions) — permissions govern access rather than suggestion availability.\nOption C (direct attributes only, not related attributes) — narrower than stated: for a DMO in the Other category, value suggestion works on one-to-one and many-to-one relationships and is unavailable on one-to-many. It is not the cause here.\nOption D (only the first 50 values of an attribute) — there is no 50-value cap; the documented behaviour is that an attribute with more than 1,000 values shows the 1,000 most frequently occurring values alphabetically.\nReferences:\nhttps://help.salesforce.com/s/articleView?id=data.c360_a_suggested_values_in_segments.htm&language=en_US&type=5",
-    "_cat": "Segmentation and Insights"
-  },
-  {
     "id": "ffde1996",
     "question": "A retail customer wants to bring customer data from different sources and wants to take advantage of identity resolution so that it can be used in segmentation. On which entity should this be segmented for activation membership?",
     "optionA": "Subscriber",

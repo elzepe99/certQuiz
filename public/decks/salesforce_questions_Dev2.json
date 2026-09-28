@@ -272,23 +272,6 @@
     "_cat": "Testing, Debugging, and Deployment"
   },
   {
-    "id": "1698e7ee",
-    "question": "A developer created a Lightning web component that uses a Lightning_record_edit_fom to collect Information about Leads. Users complain that they only see one error message at a time about their input when trying to save a Lead record.\nWhich best practice should the developer use to perform the validations on more than one held, thus allowing more than one error message to be displayed simultaneously?",
-    "optionA": "Apex REST",
-    "optionB": "Client_side validation",
-    "optionC": "Custom validation rules",
-    "optionD": "Next Best Action",
-    "optionE": "",
-    "correct": "C",
-    "explanation": "Custom validation rules are the documented recommendation, and the lightning-record-edit-form guide states the comparison this question is built on directly: \"We recommend using custom validation rules to verify data input instead of implementing client-side validation errors.\" A validation rule's formula can evaluate the data in one or more fields, which is the multi-field validation the question asks for, and it is enforced on the object — so it holds for the API, Data Loader, flows and every other UI, not only for this component.\nBe careful with the premise, though. Reaching for validation rules will not, on its own, produce several error messages side by side. The component's documentation states that if a single field has multiple validation errors the form shows only the first error on that field, and that if a submitted form has multiple errors it shows only the first error encountered, showing the next one as each is corrected. The \"displays all error messages at once\" statement in Validation Rule Considerations describes the standard page-layout UI. If the requirement is genuinely to surface several problems in one pass, the honest answer is to write one rule whose formula covers the related fields and whose message names them together.\nWhy the other options are wrong:\nOption A (Apex REST) — an inbound integration mechanism; it does not validate form input.\nOption B (client-side validation) — reimplements business rules in JavaScript, protects one entry point, and is what the guide tells you not to do.\nOption D (Next Best Action) — serves recommendations; it validates nothing.\nReferences:\nhttps://developer.salesforce.com/docs/platform/lightning-component-reference/guide/lightning-record-edit-form.html\nhttps://help.salesforce.com/s/articleView?id=platform.fields_validation_considerations.htm&language=en_US&type=5",
-    "_cat": "User Interface",
-    "corrected": {
-      "date": "2026-08-10",
-      "via": "validation",
-      "note": "Answer C stands; two defects were fixed. The explanation was self-contradictory — it declared \"Option B (Client-side validation) is correct\" while the answer is C, and then listed C among the options that are \"not directly related\". The lightning-record-edit-form guide settles that head-to-head in favour of validation rules. A later version of the explanation claimed the form displays all failing validation messages at once; the component's documentation states the opposite, that it shows only the first error encountered, so that claim was removed."
-    }
-  },
-  {
     "id": "44d8b26d",
     "question": "Universal Containers uses a custom Lightning page to provide a mechanism to perform a step-by-step wizard search for Accounts. One of the steps in the wizard is to allow the user to input text into a text field, ERF Number_c, that is then used in a query to find matching Accounts. \nerpNumber = + '%';\nList<Account> accounts = [SELECT Id,Name FROM Account WHERE ERP_Number__c LIKE :erpNumber]\nThe query needs to be optimized. Which option would be best?",
     "optionA": "Perform the SOQL query as part of a for loop.",
