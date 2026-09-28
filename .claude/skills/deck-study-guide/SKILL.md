@@ -83,6 +83,7 @@ one call. No PDF, unlike Databricks.
 | Platform Integration Architect | `005298980` |
 | Platform Sharing and Visibility Architect | `005298977` |
 | Slack Administrator | `005298990` |
+| Slack Consultant | `005298991` |
 | Tableau Architect | `005298985` |
 | Tableau Next Consultant | `005387158` |
 
@@ -122,6 +123,23 @@ get a page of `fi`/`fl` ligatures.
 **The generalisable rule:** before assuming a vendor hides its outline behind a
 search, open the certification page and look for a link. Salesforce is the
 awkward one, not the norm. Record whichever you find here.
+
+**Anthropic (Claude Certified Architect – Foundations) follows the Databricks
+pattern.** The Anthropic Academy page,
+`https://anthropic.skilljar.com/claude-certified-architect-foundations-access-request`
+(it redirects to the partner academy), carries weights, item count, time, fee and pass
+mark. Its "Download the exam guide" link points to a PDF on an S3 bucket
+(`everpath-course-content...`) that holds the 30 task statements, 6 scenarios, 12
+sample questions and explicit in- and out-of-scope lists. The same `querySelectorAll`
+filter finds it. `pdfminer` prints "Could not get FontBBox" warnings on it, which are
+harmless. **Read the task statements against the deck's "judgment" items**: on this
+exam the blueprint itself settled four questions that no product page could.
+
+**Slack is not a vendor outline at all any more**: the Slack consultant, admin and
+developer credentials are Salesforce certifications, so the Help-article table above
+applies (`005298991` for Consultant). The named form
+`https://trailhead.salesforce.com/help?article=<Exam-Guide-Title-With-Hyphens>`
+redirects to the numeric id and is worth trying before a search on any Salesforce exam.
 
 Read the PDF's **sample questions** too. Databricks' are labelled "retired from a
 previous version of the exam" and one of them keys a legacy cluster mode — which
