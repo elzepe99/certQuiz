@@ -361,6 +361,7 @@ code {
   padding: .1em .34em;
   border-radius: 3px;
   color: var(--ink);
+  overflow-wrap: anywhere;
 }
 
 ul, ol.prose { margin: 0 0 18px; padding-left: 20px; max-width: 68ch; }
@@ -616,7 +617,6 @@ html { scroll-behavior: smooth; }
       <li><a href="#stale" class="key">Deck older than the platform</a></li>
       <li><a href="#plan">Two-week plan</a></li>
       <li><a href="#sources">Sources</a></li>
-      <li><a href="#notebooklm">Using NotebookLM</a></li>
     </ol>
     <p class="note">Sections in red carry the objectives the practice deck does not train you for.</p>
   </nav>
@@ -658,9 +658,8 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">02</span><span>Where the points actually are</span></h2>
       <div class="sect-rule"></div>
 
-      <p class="lede">This deck's six <code>_cat</code> tags already use the current domain names. Every item
-      was still re-read and placed on its own merits (<code>study-guides/reclassify-data-architect.mjs</code>).
-      The re-reading agreed with the tags on 122 of 135 and moved no domain by more than three items &mdash;
+      <p class="lede">This deck's six topic tags already use the current domain names. Every item
+      was still re-read and placed on its own merits. The re-reading agreed with the tags on 122 of 135 and moved no domain by more than three items &mdash;
       so the imbalance below is the deck's own, not a tagging artefact.</p>
 
       <div class="tw">
@@ -691,8 +690,8 @@ html { scroll-behavior: smooth; }
       </div>
 
       <h4>Sub-objectives the deck never asks</h4>
-      <p>Found by reading all 135 against the outline, then confirmed by keyword sweep over stems, options
-      <em>and</em> explanations on 2026-09-28.</p>
+      <p>Found by reading all 135 questions against the outline, then confirmed by searching stems, options
+      <em>and</em> explanations.</p>
       <ol class="prose">
         <li><strong>MDM implementation styles</strong> &mdash; registry, consolidation, coexistence,
         centralised. Zero hits. &sect;4.</li>
@@ -706,7 +705,7 @@ html { scroll-behavior: smooth; }
         <li><strong>Erasure and processing restrictions under GDPR</strong> &mdash; the deck covers consent and
         classification but never the "forget" and "don't process" side. &sect;6.</li>
         <li><strong>Protecting personal data outside production</strong> &mdash; zero hits for Data Mask. The
-        DLD deck's <code>52e1dadf</code> covers it. &sect;6.</li>
+        Development Lifecycle and Deployment deck covers it. &sect;6.</li>
       </ol>
     </section>
 
@@ -719,41 +718,35 @@ html { scroll-behavior: smooth; }
 
       <h4>Relationships &mdash; the choice the exam asks most</h4>
       <ul>
-        <li><strong>Many-to-many</strong> is a junction object with two master-detail relationships
-        (<code>d48ebc5a</code>).</li>
+        <li><strong>Many-to-many</strong> is a junction object with two master-detail relationships.</li>
         <li><strong>A required parent with its own sharing model</strong> is a <em>required lookup</em>, not
-        master-detail &mdash; master-detail children inherit the parent's sharing (<code>c36f8114</code>,
-        <code>490f04a3</code>).</li>
-        <li><strong>A roll-up is a reason to choose master-detail</strong> (<code>5f012203</code>).</li>
+        master-detail &mdash; master-detail children inherit the parent's sharing.</li>
+        <li><strong>A roll-up is a reason to choose master-detail</strong>.</li>
         <li><strong>Time-series readings are their own child records</strong>, with an archiving process to
-        keep the volume viable (<code>04d735c5</code>).</li>
+        keep the volume viable.</li>
         <li>One contact working for several accounts is <strong>Account Contact Relationships</strong>, not
-        duplicate contacts (<code>72d0a97f</code>).</li>
-        <li>B2C consumers are <strong>Person Accounts</strong> (<code>660b65ef</code>, <code>94c7d168</code>,
-        <code>02273426</code>).</li>
+        duplicate contacts.</li>
+        <li>B2C consumers are <strong>Person Accounts</strong>.</li>
       </ul>
 
       <h4>Skew is a modelling decision, not a load problem</h4>
       <ul>
         <li><strong>Ownership skew:</strong> one user owning more than 10,000 records. Spread ownership across
-        several placeholder users, and give a placeholder <strong>no role</strong> or the top role
-        (<code>198da736</code>, <code>bc116afe</code>).</li>
+        several placeholder users, and give a placeholder <strong>no role</strong> or the top role.</li>
         <li><strong>Lookup skew</strong> from a lookup to a small reference object is avoided with a
-        <strong>picklist</strong> (<code>ca99247f</code>).</li>
+        <strong>picklist</strong>.</li>
         <li><strong>Group-membership locking</strong> during territory and role changes: granular locking
-        (<code>23b3dd3a</code>, <code>b8dcc15e</code>) &mdash; now the default, &sect;11.</li>
+ &mdash; now the default, &sect;11.</li>
       </ul>
 
       <h4>Big objects versus custom objects</h4>
       <p>A big object gives "consistent performance, whether you have 1 million records, 100 million, or even 1
       billion", for a 360&deg; view, auditing and tracking, or historical archive. Build one in Setup or through
-      the Metadata API (<code>83a2f38e</code>); the loyalty ledger in <code>0fc4b859</code> is the textbook
+      the Metadata API; the deck's loyalty-ledger question is the textbook
       case. Querying one means filtering its index <strong>left to right, in order</strong>.</p>
 
       <h4>Business and technical metadata</h4>
-      <p>Covered: a data dictionary built from an ERD and the Metadata API (<code>6d6fb137</code>,
-      <code>c3169fdf</code>); field descriptions plus source control to trace configuration to requirements
-      (<code>6cea8580</code>); data classification fields (&sect;6).</p>
+      <p>Covered: a data dictionary built from an ERD and the Metadata API; field descriptions plus source control to trace configuration to requirements; data classification fields (&sect;6).</p>
       <div class="call alert">
         <span class="tag">Zero deck questions &mdash; lineage and taxonomy</span>
         <p>The bullet names <strong>data lineage</strong> (where a value came from and every transformation on
@@ -774,14 +767,10 @@ html { scroll-behavior: smooth; }
       <h4>What the deck teaches</h4>
       <ul>
         <li><strong>Decide the system of record per object, and where needed per field</strong>, with the
-        business (<code>494f56e1</code>, <code>d3d324d1</code>, <code>228d9ec1</code>).</li>
-        <li><strong>An MDM hub as the customer master</strong> with centralised integrations
-        (<code>0799aef6</code>, <code>c04b9186</code>, <code>32c1152d</code>, <code>7320edf2</code>).</li>
-        <li><strong>A global unique customer ID</strong> held in every system (<code>f2c6a011</code>,
-        <code>b6e90eb0</code>), stored in Salesforce as an <strong>external ID</strong>
-        (<code>e45b6fef</code>).</li>
-        <li><strong>Enrichment from external reference data</strong> (<code>64fb7668</code>,
-        <code>bc6a239c</code>).</li>
+        business.</li>
+        <li><strong>An MDM hub as the customer master</strong> with centralised integrations.</li>
+        <li><strong>A global unique customer ID</strong> held in every system, stored in Salesforce as an <strong>external ID</strong>.</li>
+        <li><strong>Enrichment from external reference data</strong>.</li>
       </ul>
 
       <div class="call alert">
@@ -801,14 +790,14 @@ html { scroll-behavior: smooth; }
         </div>
         <p>The exam-shaped reading: "one read-only view without moving data" is registry; "a clean record for
         BI" is consolidation; "keep the legacy CRM and Salesforce both live and in sync"
-        (<code>21f0d218</code>, <code>228d9ec1</code>) is coexistence.</p>
+ is coexistence.</p>
       </div>
 
       <div class="call alert">
         <span class="tag">Thin coverage &mdash; survivorship, thresholds and weights</span>
         <p>"Establishing data survivorship rules, thresholds and weights" and "criteria and methodology for
         picking the winning attributes" are both named. The deck reaches them only as "stakeholders decide per
-        field" (<code>d3d324d1</code>). Know the usual criteria a survivorship rule ranks by: <strong>source
+        field". Know the usual criteria a survivorship rule ranks by: <strong>source
         trust</strong> (which system is authoritative for this attribute), <strong>recency</strong>, and
         <strong>completeness</strong>; and that matching uses <strong>weights</strong> per attribute and a
         <strong>threshold</strong> above which two records are the same. Again industry vocabulary &mdash; no
@@ -826,39 +815,36 @@ html { scroll-behavior: smooth; }
 
       <h4>Licence types</h4>
       <ul>
-        <li>Complaints, white papers and paid support &rarr; <strong>Service Cloud</strong>
-        (<code>653108ec</code>).</li>
+        <li>Complaints, white papers and paid support &rarr; <strong>Service Cloud</strong>.</li>
         <li>Franchisees or resellers tracking opportunities and running reports and dashboards &rarr;
-        <strong>Partner Community</strong> (<code>9a854137</code>, <code>82f8541b</code>).</li>
+        <strong>Partner Community</strong>.</li>
       </ul>
 
       <h4>Data persisted consistently</h4>
       <ul>
-        <li><strong>Duplicate and matching rules</strong> to alert at entry (<code>62d57046</code>,
-        <code>8a9dd0ab</code>, <code>d944cd7b</code>).</li>
+        <li><strong>Duplicate and matching rules</strong> to alert at entry.</li>
         <li><strong>Required at the field level plus a validation rule</strong>, because a page-layout
-        requirement does not bind an integration (<code>ce519e3c</code>).</li>
-        <li><strong>FLS read-only</strong> on a field that only automation should set (<code>dbda5ce8</code>).</li>
+        requirement does not bind an integration.</li>
+        <li><strong>FLS read-only</strong> on a field that only automation should set.</li>
         <li><strong><code>FOR UPDATE</code></strong> to lock records and stop two processes updating the same
-        record at once (<code>bc9fbe75</code>).</li>
+        record at once.</li>
       </ul>
 
       <h4>A single view of the customer</h4>
-      <p>Surface external sources in Salesforce rather than copying them (<code>03d3d67f</code>), and send
-      contacts to Marketing Cloud with a reconciliation back (<code>fc881d63</code>).</p>
+      <p>Surface external sources in Salesforce rather than copying them, and send
+      contacts to Marketing Cloud with a reconciliation back.</p>
 
       <div class="call alert">
         <span class="tag">Thin coverage &mdash; data across multiple Salesforce orgs</span>
         <p>A bullet of its own, and two deck items. What they teach, and what to add:</p>
         <ul>
           <li><strong>Near-real-time, bidirectional:</strong> Heroku Connect with Heroku Postgres, middleware,
-          or Salesforce Connect's <strong>cross-org adapter</strong> (<code>1dcb0fad</code>). The adapter "uses
+          or Salesforce Connect's <strong>cross-org adapter</strong>. The adapter "uses
           Lightning Platform REST API calls to access records in other Salesforce orgs" and surfaces them as
           external objects that are read on demand, not copied.</li>
           <li><strong>External objects can be writable.</strong> An earlier version of this deck said the
           cross-org adapter was read-only; that was an invented absence and was corrected.</li>
-          <li><strong>Splitting an org</strong> in a divestiture is an ETL-orchestrated migration
-          (<code>e1bb3531</code>).</li>
+          <li><strong>Splitting an org</strong> in a divestiture is an ETL-orchestrated migration.</li>
         </ul>
       </div>
     </section>
@@ -874,13 +860,11 @@ html { scroll-behavior: smooth; }
       <h4>Classify and protect</h4>
       <ul>
         <li><strong>Data classification metadata fields</strong> on every field definition: data owner, field
-        usage, <strong>data sensitivity level</strong>, <strong>compliance categorization</strong>
-        (<code>7864209e</code>, <code>2381fc3c</code>, <code>62817718</code>).</li>
+        usage, <strong>data sensitivity level</strong>, <strong>compliance categorization</strong>.</li>
         <li><strong>Consent</strong> is recorded on the <strong>Individual</strong> object and on
-        <strong>Authorization Form Consent</strong> (<code>080ab665</code>, <code>fee3c3cb</code>).</li>
+        <strong>Authorization Form Consent</strong>.</li>
         <li>For a regulated customer: <strong>Event Monitoring</strong> to see every user action,
-        <strong>Transaction Security</strong> policies to stop exports, and <strong>encryption</strong> at rest
-        (<code>4bce9573</code>, <code>917fdd2a</code>).</li>
+        <strong>Transaction Security</strong> policies to stop exports, and <strong>encryption</strong> at rest.</li>
       </ul>
 
       <div class="call alert">
@@ -895,20 +879,17 @@ html { scroll-behavior: smooth; }
 
       <div class="call">
         <span class="tag">Personal data outside production</span>
-        <p>No item in this deck asks it. The DLD deck's <code>52e1dadf</code> keys masking a Full sandbox after
-        refresh. Salesforce Data Mask now carries a "(Legacy)" title, reaches end of service on
+        <p>No item in this deck asks it. The Development Lifecycle and Deployment deck keys masking a Full
+        sandbox after refresh. Salesforce Data Mask now carries a "(Legacy)" title, reaches end of service on
         <strong>31 December 2026</strong>, and is superseded by Data Mask &amp; Seed.</p>
       </div>
 
       <h4>The governance programme</h4>
       <ul>
         <li>First steps: <strong>executive sponsorship</strong> on strategy, then <strong>business units and
-        IT</strong> on current systems (<code>3fa0d934</code>).</li>
-        <li>The decision team includes <strong>data domain stewards</strong> and analytics owners
-        (<code>65d0445b</code>). The programme improves <strong>integrity and usability</strong>
-        (<code>059c5083</code>).</li>
-        <li>Measure quality on <strong>completeness, accuracy, timeliness, consistency</strong> and duplication
-        (<code>6aec9626</code>, <code>2720a20e</code>, <code>7677c4b0</code>).</li>
+        IT</strong> on current systems.</li>
+        <li>The decision team includes <strong>data domain stewards</strong> and analytics owners. The programme improves <strong>integrity and usability</strong>.</li>
+        <li>Measure quality on <strong>completeness, accuracy, timeliness, consistency</strong> and duplication.</li>
       </ul>
     </section>
 
@@ -923,35 +904,29 @@ html { scroll-behavior: smooth; }
       <h4>Query and report performance</h4>
       <ul>
         <li><strong>Selective filters on indexed fields</strong>, bounded date ranges, fewer joins, fewer rows
-        returned (<code>5e9beb7c</code>, <code>f0db132b</code>, <code>8240db57</code>).</li>
+        returned.</li>
         <li><strong>Skinny tables</strong> avoid joins, omit soft-deleted records, stay in sync with their
-        source &mdash; and hold <strong>a maximum of 200 columns</strong>. Salesforce Support enables them
-        (<code>9463eb8c</code>, <code>4a391507</code>, <code>835bdddc</code>).</li>
-        <li><strong>SOSL:</strong> search single objects, avoid wildcards (<code>57575bec</code>).</li>
+        source &mdash; and hold <strong>a maximum of 200 columns</strong>. Salesforce Support enables them.</li>
+        <li><strong>SOSL:</strong> search single objects, avoid wildcards.</li>
       </ul>
 
       <h4>Archiving and purging</h4>
       <ul>
-        <li>Ask first: must archived data be reported on, can it be aggregated, what does regulation require
-        (<code>3c855a77</code>).</li>
-        <li>Keep it in Salesforce but out of the way: a <strong>big object</strong> (<code>6c68223a</code>,
-        <code>37c626a7</code>, <code>ef7c3bbb</code>, <code>ec8bac62</code>).</li>
-        <li>Move it out: a <strong>batch job or ETL tool</strong> to export and delete (<code>e3a36fd1</code>,
-        <code>b335ae04</code>, <code>7aacafef</code>, <code>0492a3b0</code>). Summarise first where trends are
-        what matter (<code>75e5ce3f</code>).</li>
+        <li>Ask first: must archived data be reported on, can it be aggregated, what does regulation require.</li>
+        <li>Keep it in Salesforce but out of the way: a <strong>big object</strong>.</li>
+        <li>Move it out: a <strong>batch job or ETL tool</strong> to export and delete. Summarise first where trends are
+        what matter.</li>
       </ul>
 
       <h4>Virtualised data</h4>
       <ul>
         <li><strong>Salesforce Connect</strong> when you need real-time access, have too much to copy, and need
-        small amounts at a time (<code>a53d5bba</code>); external objects for 150 million read-only orders
-        (<code>6df7398a</code>, <code>92c5ec17</code>).</li>
-        <li>No OData endpoint? A custom adapter with the <strong>Apex Connector Framework</strong>
-        (<code>9c969490</code>). Watch <strong>OData callout limits</strong> (<code>4c72af32</code>).</li>
+        small amounts at a time; external objects for 150 million read-only orders.</li>
+        <li>No OData endpoint? A custom adapter with the <strong>Apex Connector Framework</strong>. Watch <strong>OData callout limits</strong>.</li>
         <li><strong>External objects can be reported on</strong> &mdash; an earlier explanation denied it and
-        was corrected (<code>9ffe285d</code>).</li>
+        was corrected.</li>
         <li>Data that workflows and developers must aggregate belongs <strong>in</strong> Salesforce, not
-        virtualised (<code>086174ae</code>).</li>
+        virtualised.</li>
       </ul>
     </section>
 
@@ -965,34 +940,25 @@ html { scroll-behavior: smooth; }
 
       <h4>The load recipe</h4>
       <ol class="prose">
-        <li><strong>Clean before you load</strong>, in a staging database keyed on external IDs
-        (<code>18c03f25</code>, <code>cef24a99</code>, <code>cc82d27c</code>); an ETL tool for type mismatches
-        (<code>f7f8df0e</code>).</li>
-        <li><strong>Defer sharing calculations</strong> for the load (<code>02d7d143</code>,
-        <code>bd39a845</code>, <code>aacf221c</code>).</li>
-        <li><strong>Disable triggers, validation, workflow and approvals</strong> for the load
-        (<code>1b5040e4</code>, <code>46b07a60</code>).</li>
+        <li><strong>Clean before you load</strong>, in a staging database keyed on external IDs; an ETL tool for type mismatches.</li>
+        <li><strong>Defer sharing calculations</strong> for the load.</li>
+        <li><strong>Disable triggers, validation, workflow and approvals</strong> for the load.</li>
         <li><strong>Load parents first, and sort children by parent ID</strong> so batches don't fight over
-        one parent's lock (<code>1829b7d4</code>, <code>0fcda086</code>).</li>
-        <li><strong>Serial mode</strong> when parallel batches still lock (<code>c18bcee7</code>,
-        <code>22459270</code>, <code>b2d96c78</code>).</li>
+        one parent's lock.</li>
+        <li><strong>Serial mode</strong> when parallel batches still lock.</li>
         <li><strong>Insert new and update existing</strong> rather than upsert everything: "insert() is fastest,
-        update() is next, and upsert() is next after that" (<code>c99f1959</code>); an upsert file with a repeated external ID fails
-        (<code>017a4f13</code>).</li>
+        update() is next, and upsert() is next after that"; an upsert file with a repeated external ID fails.</li>
         <li><strong>Preserve history</strong> with <em>Set Audit Fields upon Record Creation</em> and
-        <em>Update Records with Inactive Owners</em> (<code>49211aa0</code>).</li>
+        <em>Update Records with Inactive Owners</em>.</li>
       </ol>
 
       <h4>Exporting</h4>
       <ul>
-        <li><strong>Bulk API</strong> for a million rows (<code>8a8b4d53</code>); <strong>PK
-        chunking</strong> for tens of millions, set by the <code>Sforce-Enable-PKChunking</code> header
-        (<code>8060db43</code>, <code>b53c2dee</code>); an auto-number to chunk by if you must
-        (<code>6a70c4d2</code>).</li>
-        <li><strong>Data Export Service</strong> for a scheduled weekly CSV export from the UI
-        (<code>08d19a88</code>).</li>
+        <li><strong>Bulk API</strong> for a million rows; <strong>PK
+        chunking</strong> for tens of millions, set by the <code>Sforce-Enable-PKChunking</code> header; an auto-number to chunk by if you must.</li>
+        <li><strong>Data Export Service</strong> for a scheduled weekly CSV export from the UI.</li>
         <li>Classic-encrypted fields export masked unless the exporting user has <strong>View Encrypted
-        Data</strong> (<code>50edde4f</code>).</li>
+        Data</strong>.</li>
       </ul>
     </section>
 
@@ -1030,11 +996,11 @@ html { scroll-behavior: smooth; }
         This deck puts both kinds in the same option sets.</p>
       </div>
       <ul>
-        <li><strong>The invented absence.</strong> This deck's fact-check found five explanations denying
+        <li><strong>The invented absence.</strong> Practice material for this exam often denies
         capabilities that exist: external objects can't be reported on (they can), the cross-org adapter is
         read-only (it isn't), there is no native archiving (there are three archiving products). An option
         claiming Salesforce "cannot" do something is wrong more often than right.</li>
-        <li><strong>A wrong number on a real feature.</strong> <code>9463eb8c</code> offers skinny tables of "up
+        <li><strong>A wrong number on a real feature.</strong> One option offers skinny tables of "up
         to 100 columns"; the documented cap is 200. Numbers in options are checkable facts.</li>
         <li><strong>Upsert as the fast choice.</strong> It is the convenient one. The LDV guide ranks them:
         "insert() is fastest, update() is next, and upsert() is next after that."</li>
@@ -1056,11 +1022,11 @@ html { scroll-behavior: smooth; }
         <p>Data.com appears in Salesforce's Past Product &amp; Feature Retirements list, and its setup article
         is gone.</p>
         <ul>
-          <li><strong><code>ba5e12d5</code> has no correct answer on a current org.</strong> Its key is
+          <li><strong>One of them has no correct answer on a current org.</strong> Its key is
           Data.com Clean, and no other option does the job.</li>
-          <li><code>bc6a239c</code> keys Data.com Clean beside a third-party enrichment service; the second half
+          <li>One keys Data.com Clean beside a third-party enrichment service; the second half
           is the answer that survives.</li>
-          <li><code>d944cd7b</code> keys it beside Duplicate Management; same shape.</li>
+          <li>One keys it beside Duplicate Management; same shape.</li>
         </ul>
         <p><strong>On the exam, pick Data.com Clean where it is keyed. In real work, name a third-party
         enrichment service.</strong></p>
@@ -1068,7 +1034,7 @@ html { scroll-behavior: smooth; }
 
       <div class="call alert">
         <span class="tag">Async SOQL &mdash; retired Summer '23, no replacement offered</span>
-        <p><code>d0fb5008</code> keys Async SOQL for reporting on big objects. Salesforce's retirement notice:
+        <p>One item keys Async SOQL for reporting on big objects. Salesforce's retirement notice:
         "You must use the Bulk API or batch Apex to query or report on custom Big Objects after your org gets
         upgraded to the Summer '23 release." Neither is among the options, so the item is stale as printed.</p>
       </div>
@@ -1076,29 +1042,22 @@ html { scroll-behavior: smooth; }
       <h4>Renamed or changed, answer unaffected</h4>
       <ul>
         <li><strong>Wave / Einstein Analytics / Tableau CRM / CRM Analytics</strong> &mdash; one product, four
-        names (<code>f033e669</code>, <code>d5dd4ffc</code>, <code>ec8bac62</code>).</li>
-        <li><strong>Granular locking</strong> is now the default rather than something an admin enables
-        (<code>23b3dd3a</code>, <code>b8dcc15e</code>). The keyed answer stands; on a current org the diagnosis
+        names.</li>
+        <li><strong>Granular locking</strong> is now the default rather than something an admin enables. The keyed answer stands; on a current org the diagnosis
         matters more than the switch.</li>
         <li><strong>Workflow Rules</strong> reached end of support on 31 December 2025; a new build fires the same
-        outbound message from a record-triggered flow (<code>e557d7c9</code>).</li>
-        <li><strong>Classic Encryption</strong> is a legacy feature (<code>50edde4f</code>).</li>
+        outbound message from a record-triggered flow.</li>
+        <li><strong>Classic Encryption</strong> is a legacy feature.</li>
       </ul>
 
       <h4>Questions no documentation can settle</h4>
-      <p>About nineteen items are governance, MDM strategy or tooling judgment, and say so in their own prose
-      &mdash; among them <code>3fa0d934</code>, <code>65d0445b</code>, <code>059c5083</code>,
-      <code>6aec9626</code>, <code>494f56e1</code> and <code>0799aef6</code>. Their citations orient rather
-      than decide. Three licensing items (<code>653108ec</code>, <code>9a854137</code>,
-      <code>82f8541b</code>) rest on commercial bundles that change often.</p>
+      <p>About nineteen items are governance, MDM strategy or tooling judgment, and say so in their own prose. Their
+      citations orient rather than decide. Three licensing items rest on commercial bundles that change often.</p>
 
-      <h4>Near-duplicates the detector cannot see</h4>
-      <p>Eleven pairs ask the same thing with rewritten stems, which is why <code>find-duplicates.mjs</code>
-      misses them; four are self-labelled "(Variant)". All copies are correct, so treat them as repetition.
-      The clearest: <code>23b3dd3a</code> / <code>b8dcc15e</code> (granular locking),
-      <code>9a854137</code> / <code>82f8541b</code> (Partner Community), <code>2381fc3c</code> /
-      <code>62817718</code> (data classification), <code>9463eb8c</code> / <code>4a391507</code> (skinny
-      tables), <code>660b65ef</code> / <code>94c7d168</code> (B2C modelling).</p>
+      <h4>Questions that repeat</h4>
+      <p>Eleven pairs ask the same thing in different words, and both copies are correct, so treat them as
+      repetition. The clearest are on granular locking, Partner Community licences, data classification,
+      skinny tables and B2C modelling.</p>
     </section>
 
     <!-- 12 -->
@@ -1139,10 +1098,7 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">13</span><span>Sources</span></h2>
       <div class="sect-rule"></div>
 
-      <p class="lede">The exam guide, the privacy page and the cross-org adapter page were rendered in a browser
-      on 2026-09-28; the others
-      were verified by the deck's 2026-08-19 fact-check and its 2026-09-21 readability pass, and are recorded in
-      <code>verified-docs.md</code>.</p>
+      <p class="lede">The official pages this guide is built from. Last checked September 2026.</p>
 
       <div class="linklist">
         <p><a href="https://help.salesforce.com/s/articleView?id=005298972&amp;type=1&amp;language=en_US">Salesforce Certified Platform Data Architect Exam Guide</a>
@@ -1170,35 +1126,6 @@ html { scroll-behavior: smooth; }
 
       <p>Per-question citations live in the deck itself: every one of the 135 explanations ends in a
       <code>References:</code> block with at least one rendered URL.</p>
-    </section>
-
-    <!-- 14 -->
-    <section id="notebooklm">
-      <h2 class="sect"><span class="num">14</span><span>Using this with NotebookLM</span></h2>
-      <div class="sect-rule"></div>
-
-      <p class="lede">Upload <code>study-guides/salesforce-data-architect.md</code>.</p>
-
-      <div class="prompts">
-        <p class="prompt">Give me eight scenarios and ask which MDM implementation style fits each. Include a
-        stem where two styles look plausible and explain the tie-break.</p>
-
-        <p class="prompt">Quiz me on the load recipe in section 8. Give me a failing load and ask which step was
-        skipped.</p>
-
-        <p class="prompt">For every item in section 11, tell me the exam answer and what I would actually build
-        today.</p>
-
-        <p class="prompt">Explain the difference between a load-time lock and a design-time skew, then give me
-        five stems and ask which one each is.</p>
-
-        <p class="prompt">I have six days. Compress section 12, keeping Salesforce Data Management first.</p>
-      </div>
-
-      <p class="colophon">Measured 2026-09-28 against
-      <code>public/decks/<wbr>questions_<wbr>data_<wbr>architect_merged.json</code> and Help article <code>005298972</code>.
-      Question counts and domain weights both have a short shelf life &mdash; re-run
-      <code>node study-guides/reclassify-data-architect.mjs</code> before trusting the table in &sect;2.</p>
     </section>
 
   </main>

@@ -361,6 +361,7 @@ code {
   padding: .1em .34em;
   border-radius: 3px;
   color: var(--ink);
+  overflow-wrap: anywhere;
 }
 
 ul, ol.prose { margin: 0 0 18px; padding-left: 20px; max-width: 68ch; }
@@ -584,9 +585,9 @@ html { scroll-behavior: smooth; }
     <h1>Slack Consultant Field Guide</h1>
     <p class="standfirst">
       Built from the 37 questions in the practice deck, measured against the official exam outline
-      and the Slack documentation those questions cite, on 2026-09-28. <strong>Read &sect;3 before
-      anything else.</strong> Every question in this deck carries a citation, but <strong>only 15 of
-      the 37 turn on a fact any Slack page states.</strong> Twelve are consulting and training
+      and the Slack documentation those questions cite. <strong>Read &sect;3 before
+      anything else:</strong> <strong>only 15 of the 37 questions turn on a fact any Slack page
+      states.</strong> Twelve are consulting and training
       judgment against strawman distractors, answerable by elimination and settled by no
       documentation. The deck is also <strong>smaller than the exam</strong>, and three whole
       outline bullets &mdash; workflows, SSO and the admin support model &mdash; have no question at
@@ -606,7 +607,7 @@ html { scroll-behavior: smooth; }
     <ol>
       <li><a href="#exam">The exam, factually</a></li>
       <li><a href="#weights" class="key">Where the points are</a></li>
-      <li><a href="#honesty" class="key">What any page can check</a></li>
+      <li><a href="#honesty" class="key">What a page can settle</a></li>
       <li><a href="#migration" class="key">Delivery and Migration</a></li>
       <li><a href="#discovery">Discovery</a></li>
       <li><a href="#grid" class="key">Grid Design</a></li>
@@ -619,7 +620,6 @@ html { scroll-behavior: smooth; }
       <li><a href="#stale">Deck older than the exam</a></li>
       <li><a href="#plan">Two-week plan</a></li>
       <li><a href="#sources">Sources</a></li>
-      <li><a href="#notebooklm">Using NotebookLM</a></li>
     </ol>
     <p class="note">Sections in red carry the objectives the practice deck does not train you for.</p>
   </nav>
@@ -682,10 +682,10 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">02</span><span>Where the points actually are</span></h2>
       <div class="sect-rule"></div>
 
-      <p class="lede">The deck's eleven <code>_cat</code> tags split what the outline treats as one
+      <p class="lede">The deck's eleven topic tags split what the outline treats as one
       domain: analytics, identity, compliance, app approval and channel-creation permissions are
-      <strong>all</strong> Policies and Settings. The deck column is an independent re-classification
-      (<code>study-guides/reclassify-slack.mjs</code>). "Judgment" counts items no Slack page can
+      <strong>all</strong> Policies and Settings. The deck column re-reads every question against the
+      outline. "Judgment" counts items no Slack page can
       decide.</p>
 
       <div class="tw">
@@ -711,7 +711,7 @@ html { scroll-behavior: smooth; }
       <div class="call alert">
         <span class="tag">The deck is smaller than the exam</span>
         <p><strong>37 questions against 60</strong>, and five reworded pairs mean it is really about
-        32 distinct questions. Every other deck in this repo but one over-drills its exam; this one
+        32 distinct questions. Most decks in this app over-drill their exam; this one
         cannot. Where it has fewer items than the exam has questions &mdash; Delivery and Migration
         (3 for ~10), Grid Design (2 for ~9), Governance (2 for ~5) &mdash; the deck is not practice, it
         is a sample.</p>
@@ -741,24 +741,22 @@ html { scroll-behavior: smooth; }
           </tbody>
         </table>
       </div>
-      <p>Confirmed by a keyword sweep over stems and options: "SSO", "SAML", "Workflow Builder",
+      <p>Confirmed by searching the deck's questions and options: "SSO", "SAML", "Workflow Builder",
       "standup", "onboarding", "rollout", "schedul", "materials" and "sign-off" all return zero. Two-factor
       authentication appears three times, always as a wrong option.</p>
     </section>
 
     <!-- 3 -->
     <section id="honesty">
-      <h2 class="sect"><span class="num">03</span><span>How much of this deck any page can check</span></h2>
+      <h2 class="sect"><span class="num">03</span><span>Which questions a Slack page can settle</span></h2>
       <div class="sect-rule"></div>
 
-      <p class="lede">Every one of the 37 questions has a rendered Slack URL in its references, so the
-      deck reads 37/37 cited, the same number as a fully checked Salesforce deck. <strong>Here it means
-      less.</strong> The 2026-08-18 fact-check sorted the deck into three kinds of question, and only the
-      first kind is what "cited" means elsewhere.</p>
+      <p class="lede">Every question links to a Slack page, but the questions come in three kinds, and
+      only the first is settled by the page it links to.</p>
 
       <div class="tw">
         <table>
-          <thead><tr><th>Kind</th><th class="num-col">Items</th><th>What the citation does</th></tr></thead>
+          <thead><tr><th>Kind</th><th class="num-col">Items</th><th>What the linked page does</th></tr></thead>
           <tbody>
             <tr><td><strong>Decisive</strong></td><td class="num">15</td><td>A Slack page states the fact the key turns on &mdash; roles, channel-management permissions, app approval, DLP, SCIM, troubleshooting steps. Or, for three items, states that the fact the deck assumed <strong>is not true</strong></td></tr>
             <tr><td><strong>Supported</strong></td><td class="num">10</td><td>A page points the same way as the key &mdash; naming conventions, project channels, analytics columns, org-level policy &mdash; but choosing between the options is still best practice</td></tr>
@@ -768,11 +766,8 @@ html { scroll-behavior: smooth; }
       </div>
 
       <h4>The twelve judgment items</h4>
-      <p>Discovery: <code>70cfc31f</code>, <code>4c998d54</code>, <code>a401a105</code>. Migration:
-      <code>663ae7a0</code>. Learning and Enablement: <code>7cdb2278</code>, <code>20885bb7</code>,
-      <code>9f6ca95b</code>, <code>0609296f</code>, <code>24d2ac86</code>, <code>eaa94ffb</code>,
-      <code>bd98bac0</code>, <code>0c94d85c</code>. Each says in its own explanation that its reference is
-      orienting rather than decisive.</p>
+      <p>Three are in Discovery, one in Migration and eight in Learning and Enablement. Each says in its
+      own explanation that it rests on judgment rather than a documented fact.</p>
 
       <div class="call alert">
         <span class="tag">Why this matters for your score, not just the deck's</span>
@@ -796,17 +791,14 @@ html { scroll-behavior: smooth; }
         <li><strong>Phased and ongoing over one-off.</strong> Basic then advanced, with refreshers and
         post-launch support, beats a single big training day.</li>
         <li><strong>Balanced over extreme.</strong> "Core global settings, regional adjustments on request"
-        (<code>c2a30421</code>) beats both "identical everywhere" and "each region on its own".</li>
+ beats both "identical everywhere" and "each region on its own".</li>
       </ol>
 
       <div class="call">
         <span class="tag">The five reworded pairs are redundancy, not error</span>
-        <p><code>1d57f94c</code>/<code>ff8a88a6</code> (Org Owner), <code>60708c05</code>/<code>cb206cbe</code>
-        (Workspace Admin), <code>ad687de6</code>/<code>016036e7</code> (naming conventions),
-        <code>7cdb2278</code>/<code>0609296f</code> (hands-on workshop) and
-        <code>535baa2b</code>/<code>6b1ec162</code> (channel analytics) ask the same thing with the same
-        keyed answer. Both copies are correct. The duplicate detector cannot see them because the stems
-        were reworded, not copied.</p>
+        <p>Five pairs &mdash; on the Org Owner, the Workspace Admin, naming conventions, a hands-on
+        workshop and channel analytics &mdash; ask the same thing in different words with the same
+        answer. Both copies are correct.</p>
       </div>
     </section>
 
@@ -816,15 +808,15 @@ html { scroll-behavior: smooth; }
       <div class="sect-rule"></div>
 
       <p class="lede"><strong>17% of the exam &mdash; about ten questions &mdash; and three deck
-      items.</strong> The deck has a first step (a needs analysis, <code>96be8a94</code>), a rule for
-      who the client calls (<code>663ae7a0</code>) and an after-care step (<code>6b9124ed</code>). The
+      items.</strong> The deck has a first step (a needs analysis), a rule for
+      who the client calls and an after-care step. The
       migration itself is missing.</p>
 
       <h4>Roles on an engagement</h4>
       <p>The outline's second bullet is the division of labour between <strong>Slack, the Partner and
       the client</strong>. The deck's one item keys the answer the outline implies: in a partner-led
       migration, <strong>the Partner's team is the client's first contact</strong> and escalates to Slack
-      as needed (<code>663ae7a0</code>). The client owns decisions and internal comms; the Partner runs
+      as needed. The client owns decisions and internal comms; the Partner runs
       the project; Slack supplies the platform and its own support.</p>
 
       <h4>What the deck skips: the migration itself</h4>
@@ -836,7 +828,7 @@ html { scroll-behavior: smooth; }
           <tbody>
             <tr><td>Pre-migration</td><td>"scheduling, user cleanup, comms"</td><td>Agree the cutover window and any content freeze; clean the user list (leavers deactivated, duplicates merged, emails matching the identity provider); tell users what changes and when</td></tr>
             <tr><td>Execution</td><td>"migration status, migration issues, coordination with the client and Slack"</td><td>Track progress against the plan, triage and log issues, keep one channel of communication with the client and one with Slack</td></tr>
-            <tr><td>After</td><td>(the deck's <code>6b9124ed</code>)</td><td>Support, extra training, check-ins &mdash; not "hand over and leave"</td></tr>
+            <tr><td>After</td><td>(one deck item)</td><td>Support, extra training, check-ins &mdash; not "hand over and leave"</td></tr>
           </tbody>
         </table>
       </div>
@@ -857,12 +849,11 @@ html { scroll-behavior: smooth; }
 
       <ul>
         <li><strong>Articulate the value of Slack.</strong> The deck's one decidable item keys
-        <strong>integrations with the tools the client already uses</strong> (<code>4953a8af</code>) &mdash;
+        <strong>integrations with the tools the client already uses</strong> &mdash;
         Slack's own guide to apps frames it the same way.</li>
-        <li><strong>Ask about long-term goals and current pain</strong>, not features
-        (<code>70cfc31f</code>, <code>a401a105</code>).</li>
+        <li><strong>Ask about long-term goals and current pain</strong>, not features.</li>
         <li><strong>A vision statement needs specific, measurable goals tied to business
-        objectives</strong> (<code>4c998d54</code>). The outline pairs it with <strong>success
+        objectives</strong>. The outline pairs it with <strong>success
         metrics</strong>, which no deck item names: adoption (weekly active members), engagement
         (messages in channels rather than DMs), and a business metric the client already tracks.</li>
       </ul>
@@ -891,9 +882,8 @@ html { scroll-behavior: smooth; }
       at the org and which are left to workspaces.</p>
       <ul>
         <li><strong>Mirror the organisation's structure</strong> &mdash; departments, projects, regions
-        &mdash; rather than a generic template (<code>a0bf9e87</code>).</li>
-        <li><strong>Fix the core at org level, allow requested variation below it</strong>
-        (<code>c2a30421</code>).</li>
+        &mdash; rather than a generic template.</li>
+        <li><strong>Fix the core at org level, allow requested variation below it</strong>.</li>
       </ul>
 
       <div class="call trap">
@@ -913,12 +903,12 @@ html { scroll-behavior: smooth; }
       <div class="sect-rule"></div>
 
       <p class="lede"><strong>22% of the exam &mdash; about 13 questions &mdash; and 13 deck items, none of
-      them judgment.</strong> This is the deck's strongest domain and where its fact-check did most of
-      its work. Three items were keyed on things Slack does not do, and each is worth learning as a
+      them judgment.</strong> This is the deck's strongest domain. Three items turn on things Slack does
+      not do, and each is worth learning as a
       fact in its own right.</p>
 
       <div class="call alert">
-        <span class="tag">1 &middot; Compliance Exports do not preserve anything &mdash; <code>296ced65</code></span>
+        <span class="tag">1 &middot; Compliance Exports do not preserve anything</span>
         <p>The item asks which feature suits a firm under <strong>legal hold</strong> and keys "Compliance
         Exports". That name is not current Slack terminology, and an export <strong>retrieves</strong>
         data; it does not <strong>preserve</strong> it. Slack's actual mechanism is the native
@@ -931,7 +921,7 @@ html { scroll-behavior: smooth; }
       </div>
 
       <div class="call alert">
-        <span class="tag">2 &middot; There is no IP allowlist for member sign-in &mdash; <code>10bdf793</code></span>
+        <span class="tag">2 &middot; There is no IP allowlist for member sign-in</span>
         <p>The item keys "IP whitelisting to restrict access to the office network". Slack's Help Center
         documents no self-serve setting that limits <strong>where members sign in from</strong>. The
         network control it does document is <strong>proxy-based</strong>: your proxy inserts
@@ -943,16 +933,16 @@ html { scroll-behavior: smooth; }
       </div>
 
       <div class="call alert">
-        <span class="tag">3 &middot; There is no channel-creation approval queue &mdash; <code>2169924a</code>, <code>47e8ec41</code></span>
+        <span class="tag">3 &middot; There is no channel-creation approval queue</span>
         <p>Slack's channel-management setting is a <strong>permission</strong>: owners choose which roles
         may create public channels, create private channels, archive and unarchive. There is
         <strong>no propose-and-approve queue</strong> for new channels, <strong>no "justification"
         prompt</strong> on creation, and <strong>no automatic archiving</strong> of inactive channels
         &mdash; archiving is manual, one at a time or in bulk. Slack <em>does</em> ship approval queues,
         but for <strong>Slack Connect invitations, workspace invitations and app requests</strong>.
-        <code>2169924a</code> keeps its "propose, subject to approval" key as an organisational
-        <em>process</em> (run through Workflow Builder or a request channel); <code>47e8ec41</code> had its
-        key moved <strong>C &rarr; A</strong> because its keyed "justification" setting does not exist.</p>
+        One deck item keys "propose, subject to approval" as an organisational <em>process</em> (run
+        through Workflow Builder or a request channel), which is fine; an option that names a
+        "justification" setting is wrong, because that setting does not exist.</p>
       </div>
 
       <h4>Administrative roles</h4>
@@ -961,10 +951,10 @@ html { scroll-behavior: smooth; }
           <thead><tr><th>Role</th><th>What sets it apart</th></tr></thead>
           <tbody>
             <tr><td>Org Primary Owner</td><td><strong>Exactly one</strong> per Enterprise org; the only one who can transfer ownership</td></tr>
-            <tr><td>Org Owner</td><td>Everything the Primary Owner can do except transfer ownership &mdash; the top role you assign (<code>1d57f94c</code>, <code>ff8a88a6</code>)</td></tr>
+            <tr><td>Org Owner</td><td>Everything the Primary Owner can do except transfer ownership &mdash; the top role you assign</td></tr>
             <tr><td>Org Admin</td><td>Manages org settings and policies, below the owners</td></tr>
             <tr><td>Workspace Owner</td><td>Top of a single workspace; appoints Workspace Admins</td></tr>
-            <tr><td>Workspace Admin</td><td>Manages members and settings, but <strong>"can't access the Billing page"</strong> (<code>60708c05</code>, <code>cb206cbe</code>)</td></tr>
+            <tr><td>Workspace Admin</td><td>Manages members and settings, but <strong>"can't access the Billing page"</strong></td></tr>
           </tbody>
         </table>
       </div>
@@ -974,7 +964,7 @@ html { scroll-behavior: smooth; }
       <h4>Identity and org-level security</h4>
       <ul>
         <li><strong>SCIM provisioning</strong> ties accounts to the directory, so a leaver is deactivated
-        automatically (<code>d1ec6012</code>).</li>
+        automatically.</li>
         <li><strong>SAML SSO &mdash; not in the deck.</strong> Members sign in through your identity
         provider. Set up by Workspace or Org Owners; <strong>Business+ and Enterprise</strong> plans (or
         Free and Pro with a connected Salesforce org).</li>
@@ -987,7 +977,7 @@ html { scroll-behavior: smooth; }
       <h4>Compliance, DLP, Slack Connect, apps</h4>
       <ul>
         <li><strong>DLP is Enterprise only.</strong> It scans messages, text files and canvases, and a
-        DLP Admin can aim a rule at <strong>Slack Connect</strong> conversations (<code>d1458b4b</code>).</li>
+        DLP Admin can aim a rule at <strong>Slack Connect</strong> conversations.</li>
         <li><strong>Slack Connect approval settings &mdash; not in the deck.</strong> On paid plans,
         owners and admins set <strong>who approves</strong> Slack Connect requests, <strong>when approval
         is required</strong>, <strong>where requests go</strong>, and <strong>when invitations are
@@ -995,11 +985,11 @@ html { scroll-behavior: smooth; }
         <li><strong>App approval.</strong> By default <strong>members can install apps without
         approval</strong>. Owners turn approval on, pre-approve or restrict apps, and appoint App
         Managers. For a regulated client, require a security review per app and route installs through
-        IT (<code>6bfcfbed</code>, <code>79e98f8f</code>). Slack reviews Marketplace apps but says it
+        IT. Slack reviews Marketplace apps but says it
         "doesn't endorse or certify" them &mdash; a listing is not assurance.</li>
         <li><strong>Analytics.</strong> The Channels tab shows creation date, membership, messages posted,
         members who posted and viewed, reactions and huddles &mdash; on Pro and Business+, <strong>public
-        channels only</strong> (<code>535baa2b</code>, <code>6b1ec162</code>).</li>
+        channels only</strong>.</li>
       </ul>
     </section>
 
@@ -1014,9 +1004,8 @@ html { scroll-behavior: smooth; }
 
       <ul>
         <li><strong>Naming conventions</strong> with consistent prefixes by department, function or
-        project make channels findable (<code>ad687de6</code>, <code>016036e7</code>).</li>
-        <li><strong>A channel per project</strong> centralises its conversation and files
-        (<code>6febbd25</code>).</li>
+        project make channels findable.</li>
+        <li><strong>A channel per project</strong> centralises its conversation and files.</li>
       </ul>
 
       <div class="call alert">
@@ -1079,13 +1068,11 @@ html { scroll-behavior: smooth; }
       <ul>
         <li><strong>The experiential learning approach</strong>: users learn by doing real or simulated
         work in Slack, with guidance &mdash; a hands-on workshop, a mock project, a role-play of the team's
-        own process (<code>20885bb7</code>, <code>0609296f</code>, <code>24d2ac86</code>,
-        <code>7cdb2278</code>).</li>
+        own process.</li>
         <li><strong>Curricula differ for admins and users</strong>: admins get settings, security and
-        governance on top of the basics (<code>0c94d85c</code>); users get a path from basics to
-        advanced, tailored to their role (<code>eaa94ffb</code>).</li>
-        <li><strong>Phased and ongoing</strong>: initial, then advanced, then refreshers as Slack changes
-        (<code>9f6ca95b</code>, <code>bd98bac0</code>).</li>
+        governance on top of the basics; users get a path from basics to
+        advanced, tailored to their role.</li>
+        <li><strong>Phased and ongoing</strong>: initial, then advanced, then refreshers as Slack changes.</li>
       </ul>
 
       <h4>The two decidable items: user troubleshooting</h4>
@@ -1093,8 +1080,8 @@ html { scroll-behavior: smooth; }
         <table>
           <thead><tr><th>Symptom</th><th>First step</th></tr></thead>
           <tbody>
-            <tr><td>Cannot hear others on a call</td><td>Check Slack's audio settings and that the speakers or headphones are connected and selected (<code>e50e9a46</code>)</td></tr>
-            <tr><td>Slow loading, frequent disconnects</td><td>Clear the app's cache (<code>d7360bcf</code>), per Slack's connection troubleshooting page</td></tr>
+            <tr><td>Cannot hear others on a call</td><td>Check Slack's audio settings and that the speakers or headphones are connected and selected</td></tr>
+            <tr><td>Slow loading, frequent disconnects</td><td>Clear the app's cache, per Slack's connection troubleshooting page</td></tr>
           </tbody>
         </table>
       </div>
@@ -1184,21 +1171,11 @@ html { scroll-behavior: smooth; }
 
       <div class="call alert">
         <span class="tag">Exam-right, production-wrong</span>
-        <p><strong><code>296ced65</code></strong> keys Compliance Exports for legal hold;
-        <strong><code>10bdf793</code></strong> keys IP whitelisting for office-only access;
-        <strong><code>2169924a</code></strong> keys a propose-and-approve channel policy. Each key is the
+        <p>The deck keys Compliance Exports for legal hold, IP whitelisting for office-only access,
+        and a propose-and-approve channel policy. Each key is the
         best of its four options and each explanation already says what Slack actually offers. Answer
         the deck's key when those are the options; <strong>recommend Legal Holds, proxy headers and a
         creation permission plus a request workflow</strong> on a real engagement.</p>
-      </div>
-
-      <div class="call">
-        <span class="tag">How to verify any of this yourself</span>
-        <p><code>slack.com/help</code> fails honestly: an invented article id returns a real HTTP 404, so
-        a status check works. But <strong>the URL slug is cosmetic</strong> &mdash; the article resolves
-        by its number alone, and a bare <code>slack.com/help/articles/&lt;id&gt;</code> redirects to the
-        current slug. So a stale slug is not a dead link, and a plausible one is no evidence. Check the
-        rendered title.</p>
       </div>
     </section>
 
@@ -1247,9 +1224,7 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">15</span><span>Sources</span></h2>
       <div class="sect-rule"></div>
 
-      <p class="lede">The exam guide and the four pages marked new were rendered in the browser on
-      2026-09-28 and grepped for the facts cited. The rest were rendered and title-checked in the
-      2026-08-18 fact-check.</p>
+      <p class="lede">The official pages this guide is built from. Last checked September 2026.</p>
 
       <div class="linklist">
         <p><a href="https://help.salesforce.com/s/articleView?id=005298991&amp;type=1&amp;language=en_US">Salesforce Certified Slack Consultant Exam Guide</a>
@@ -1292,42 +1267,6 @@ html { scroll-behavior: smooth; }
 
       <p>Per-question citations live in the deck itself: every one of the 37 explanations ends in a
       <code>References:</code> block with at least one rendered URL &mdash; with the caveat in &sect;3.</p>
-    </section>
-
-    <!-- 16 -->
-    <section id="notebooklm">
-      <h2 class="sect"><span class="num">16</span><span>Using this with NotebookLM</span></h2>
-      <div class="sect-rule"></div>
-
-      <p class="lede">Upload <code>study-guides/salesforce-slack-consultant.md</code>. NotebookLM is
-      more useful for this exam than for most, because the deck's weakest area &mdash; judgment with
-      plausible options &mdash; is exactly what it can generate.</p>
-
-      <div class="prompts">
-        <p class="prompt">Write ten discovery and enablement scenario questions where all four options
-        are reasonable consulting advice and only one is best. Then explain the answer using the
-        five-point pattern in section 3.</p>
-
-        <p class="prompt">Quiz me on section 7's three corrections: legal hold, sign-in restrictions,
-        channel-creation approvals. For each, ask what the deck keys and what Slack actually offers.</p>
-
-        <p class="prompt">Give me twelve "which setting" questions where one option is a setting Slack
-        does not have. Use section 12's list.</p>
-
-        <p class="prompt">Walk me through a partner-led migration from discovery to post-launch, asking
-        me at each phase what the consultant does, the client does and Slack does.</p>
-
-        <p class="prompt">Drill the roles table in section 7 as flashcards, including the two roles that
-        do not exist.</p>
-
-        <p class="prompt">I have one week. Compress section 14, keeping Policies and Settings and
-        workflows in the first half.</p>
-      </div>
-
-      <p class="colophon">Measured 2026-09-28 against
-      <code>public/decks/<wbr>Salesforce_Slack_<wbr>Consultant_Questions.json</code> and Help article
-      <code>005298991</code>. Question counts and domain weights both have a short shelf life &mdash;
-      re-run <code>node study-guides/reclassify-slack.mjs</code> before trusting the table in &sect;2.</p>
     </section>
 
   </main>

@@ -102,7 +102,7 @@
     "corrected": {
       "date": "2026-08-10",
       "via": "validation",
-      "note": "Key A,C stands as the best-supported pair, but the item is partly defective and the explanation now says so. Option C is solidly documented. Option A is not: 'Brand Your Experience Builder Pages' never mentions the Customer Account Portal template at all, and states that *each* Experience Cloud template ships its own login/verification/reset/self-registration pages. The real requirement is an Experience Builder (Lightning) template — which is why option D, Salesforce Tabs + Visualforce, is the genuine exclusion. A is defensible only on the loose reading 'a Lightning template such as Customer Account Portal'; flagged rather than silently confirmed."
+      "note": "Answer A,C stands as the best-supported pair, but the item is partly flawed and the explanation now says so. Option C is solidly documented. Option A is not: 'Brand Your Experience Builder Pages' never mentions the Customer Account Portal template, and states that each Experience Cloud template ships its own login, verification, reset and self-registration pages. The real requirement is an Experience Builder (Lightning) template — which is why option D, Salesforce Tabs + Visualforce, is the genuine exclusion. A is defensible only on the loose reading 'a Lightning template such as Customer Account Portal'."
     }
   },
   {
@@ -222,7 +222,7 @@
     "corrected": {
       "date": "2026-08-09",
       "via": "validation",
-      "note": "Answer moved A->B. Option A says to \"configure an authentication provider to delegate authentication to the LDAP directory\", but Salesforce documents Authentication Providers as OpenID Connect or custom OAuth 2.0 integrations with a third party, with no LDAP support. The feature that validates credentials against LDAP is Delegated Authentication, which is a different feature and not what option A names. Option B is a complete, documented solution, and disabling Login Form authentication is what actually closes the bypass that left the 24-hour window. The deck's own structural audit flagged this as a near-miss: the explanation argued Delegated Authentication while the key pointed at the Auth Provider option.",
+      "note": "Option A says to \"configure an authentication provider to delegate authentication to the LDAP directory\", but Salesforce documents Authentication Providers as OpenID Connect or custom OAuth 2.0 integrations with a third party, with no LDAP support. The feature that validates credentials against LDAP is Delegated Authentication, which is a different feature and not what option A names. Option B is a complete, documented solution, and disabling Login Form authentication is what actually closes the bypass that left the 24-hour window.",
       "from": "A",
       "to": "B"
     }
@@ -728,7 +728,7 @@
     "corrected": {
       "date": "2026-08-10",
       "via": "validation",
-      "note": "Key A,C left in place but the item is now partly stale, and the explanation says so instead of asserting the old absolute. Option C claims 'Apex coding skills are needed for the Registration Handler', which was true when the item was written and is no longer: Salesforce documents Flow Builder as a first-class registration handler type requiring no developer knowledge. That also makes option B closer to true than the deck allowed. I did not move the key to A,B because B's wording names Process Builder, which is retired, so neither option is cleanly correct as printed. Flagged as a judgement call for the user: the cleanest repair is to reword C to 'a registration handler is required (Apex or Flow)' rather than to reletter the key."
+      "note": "Answer A,C is kept, but the item is now partly stale and the explanation says so. Option C claims 'Apex coding skills are needed for the Registration Handler', which was true when the item was written and is no longer: Salesforce documents Flow Builder as a first-class registration handler type requiring no developer knowledge. That makes option B closer to true than it looks — but B names Process Builder, which is retired, so neither option is cleanly correct as printed. Read C as 'a registration handler is required (Apex or Flow)'."
     }
   },
   {
@@ -901,7 +901,7 @@
     "corrected": {
       "date": "2026-08-10",
       "via": "validation",
-      "note": "Key A,D left in place, but flagged as a judgement call rather than confirmed, because the documentation does not settle it as cleanly as the deck implies. What is documented: for inbound mTLS Salesforce validates the client chain against a certificate you upload, which is what makes a self-signed pairing workable, and Salesforce can present a self-signed certificate outbound if the target installs it. What is not documented anywhere I could render: any statement that the asymmetric combinations B and C are invalid. They are coherent configurations, so the item's premise that only the symmetric pairs are 'valid choices' rests on a symmetry intuition rather than a source. I did not reletter the key, since A and D are genuinely workable and no documentation contradicts them; the honest repair would be to reword the stem toward 'most commonly used' rather than 'valid'. The explanation now states the real constraints, including the Chrome Root Program v1.7 rule against sharing one root CA for client and server certificates."
+      "note": "Answer A,D is kept, but the documentation does not settle this as cleanly as the question implies. What is documented: for inbound mTLS Salesforce validates the client chain against a certificate you upload, which is what makes a self-signed pairing workable, and Salesforce can present a self-signed certificate outbound if the target installs it. What is not documented anywhere: that the asymmetric combinations B and C are invalid. They are coherent configurations, so the question's premise that only the symmetric pairs are 'valid' rests on intuition rather than a source; read it as 'most commonly used'. The explanation states the real constraints, including the Chrome Root Program v1.7 rule against sharing one root CA for client and server certificates."
     }
   },
   {
@@ -954,7 +954,7 @@
     "corrected": {
       "date": "2026-08-10",
       "via": "validation",
-      "note": "Key C left in place, but flagged: this is the one item in the deck where I could not settle the answer decisively, and the user should decide. The case for C is that the question asks which OAuth authorization flow 'should be used', and the SAML bearer assertion flow is the mainstream one for API access via SAML, running through a connected app; Salesforce explicitly calls the plain SAML assertion flow 'an alternative' and documents real limitations on it. The case for D is the stem's wording, which paraphrases the assertion flow's opening sentence almost exactly — 'an existing SAML configuration that supports the company's single sign-on process to Salesforce' against 'orgs that use SAML to access Salesforce and want to access the API the same way'. Unlike the deck's other SAML-flow question, this stem contains no requirement that administrators authorise consuming apps, which is the requirement that cleanly selects bearer elsewhere in the deck. Review this together with the question keyed to the SAML Assertion Flow: the two stems are close enough that whichever way this one is decided, both should be worded so the discriminator is visible."
+      "note": "Answer C is kept, but this is the least settled item in the deck. The case for C is that the question asks which OAuth flow 'should be used', and the SAML bearer assertion flow is the mainstream one for API access via SAML, running through a connected app; Salesforce calls the plain SAML assertion flow 'an alternative' and documents real limitations on it. The case for D is the wording, which paraphrases the assertion flow's opening sentence almost exactly — 'an existing SAML configuration that supports the company's single sign-on process to Salesforce' against 'orgs that use SAML to access Salesforce and want to access the API the same way'. Unlike the deck's other SAML-flow question, this one does not require administrators to authorise consuming apps, which is what cleanly selects the bearer flow elsewhere."
     }
   },
   {
@@ -1127,7 +1127,7 @@
     "corrected": {
       "date": "2026-08-10",
       "via": "validation",
-      "note": "Key A,D left in place because both are correct, but the item is defective and the explanation now says so. Option B is equally correct: Open CTI is one of the nine documented values of the Locations field, described as making the canvas app appear in the call control tool, and the same page separately lists 'In an Open CTI call control tool after you add it to the call center's definition file' among the places canvas apps appear. So this is a choose-two with three true options. Only option C is false — Knowledge is not mentioned anywhere on the page. Flagged for the user: the clean repair is either to convert this to a choose-three, or to replace option B with a second genuinely false location, since as printed a well-prepared candidate can pick A, B or D and be right."
+      "note": "Answer A,D is kept because both are correct, but the item is flawed: option B is equally correct. Open CTI is one of the nine documented values of the Locations field, described as making the canvas app appear in the call control tool, and the same page separately lists 'In an Open CTI call control tool after you add it to the call center's definition file' among the places canvas apps appear. So this is a choose-two with three true options; only option C is false — Knowledge is not mentioned anywhere on the page. As printed, a well-prepared candidate can pick A, B or D and be right."
     }
   },
   {
@@ -1283,7 +1283,7 @@
     "corrected": {
       "date": "2026-08-10",
       "via": "validation",
-      "note": "Key A,B,C left in place, but option A is stale and the explanation now says so. The Enable Person Accounts article describes a self-service Setup flow and never mentions Salesforce Support — the phrase does not appear on the page — and Salesforce shipped a release note specifically titled around enabling person accounts without contacting support. So A is correct in substance (Person Accounts must be enabled) and wrong in mechanism (a support request). I did not move the key because there is no fourth correct option to promote: D is wrong on sharing, and E is wrong because business accounts are standard in all editions and need no enablement. That makes this a choose-three with only two cleanly correct options as printed. Flagged for the user: reword A to 'Enable Person Accounts in Setup'. Separate note on citations — the deck's existing person-account self-registration link renders but is a stub that only points elsewhere, so the enablement article is the one carrying the facts."
+      "note": "Answer A,B,C is kept, but option A is stale and the explanation says so. The Enable Person Accounts article describes a self-service Setup flow and never mentions Salesforce Support, and Salesforce shipped a release note about enabling person accounts without contacting support. So A is correct in substance (Person Accounts must be enabled) and wrong in mechanism (a support request). There is no fourth correct option to promote instead: D is wrong on sharing, and E is wrong because business accounts are standard in all editions and need no enablement. Read A as 'Enable Person Accounts in Setup'."
     }
   },
   {

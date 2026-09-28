@@ -659,7 +659,7 @@
     "corrected": {
       "date": "2026-08-17",
       "via": "validation",
-      "note": "Key stands, but option A (\"runAs does not enforce user permissions or field-level permissions\") contradicts the current Apex Developer Guide, which states that object-level and field-level permissions are enforced within a runAs block. That also makes option C arguably true, so the choose-three has four defensible options. Flagged as defective rather than re-keyed, because A is the answer the exam tests."
+      "note": "The answer stands, but option A (\"runAs does not enforce user permissions or field-level permissions\") contradicts the current Apex Developer Guide, which states that object-level and field-level permissions are enforced within a runAs block. That also makes option C arguably true, so the choose-three has four defensible options. A is kept because it is the answer the exam tests."
     }
   },
   {
@@ -705,7 +705,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "validation",
-      "note": "Q57 had no options and \"Executive, Manager, and User\" as the correct field; built the choice set and tidied the stem."
+      "note": "The original question arrived without answer options; the choice set was written for it and the question tidied."
     }
   },
   {
@@ -873,7 +873,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "validation",
-      "note": "Q71 had no options and \"Granular Locking\" as the correct field; turned the statement into a question and built the choice set."
+      "note": "The original arrived as a statement with no options; it was turned into a question and given a choice set."
     }
   },
   {
@@ -1531,7 +1531,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "validation",
-      "note": "Q126 options A and D were identical; replaced D with a distinct distractor."
+      "note": "Options A and D were identical; D was replaced with a distinct distractor."
     }
   },
   {
@@ -1656,7 +1656,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "validation",
-      "note": "Q136 had no options and \"Super user permission\" as the correct field; built the choice set."
+      "note": "The original question arrived without answer options; the choice set was written for it."
     }
   },
   {

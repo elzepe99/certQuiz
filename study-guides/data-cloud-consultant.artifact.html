@@ -361,6 +361,7 @@ code {
   padding: .1em .34em;
   border-radius: 3px;
   color: var(--ink);
+  overflow-wrap: anywhere;
 }
 
 ul, ol.prose { margin: 0 0 18px; padding-left: 20px; max-width: 68ch; }
@@ -619,7 +620,6 @@ html { scroll-behavior: smooth; }
       <li><a href="#stale" class="key">Deck older than the exam</a></li>
       <li><a href="#plan">Two-week plan</a></li>
       <li><a href="#sources">Sources</a></li>
-      <li><a href="#notebooklm">Using NotebookLM</a></li>
     </ol>
     <p class="note">Sections in red carry the objectives the practice deck does not train you for.</p>
   </nav>
@@ -665,11 +665,10 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">02</span><span>Where the points actually are</span></h2>
       <div class="sect-rule"></div>
 
-      <p class="lede">The deck's own six <code>_cat</code> tags are the <em>old</em> outline. The
+      <p class="lede">The deck's own six topic tags are the <em>old</em> outline. The
       current one has six domains with different boundaries, and it splits enrichment and analysis
-      away from segmentation &mdash; which is what exposes the imbalance. The deck column is an
-      independent re-classification of all 100 against the current domains
-      (<code>study-guides/reclassify-data-cloud.mjs</code>).</p>
+      away from segmentation &mdash; which is what exposes the imbalance. The deck column re-reads
+      all 100 questions against the current domains.</p>
 
       <div class="tw">
         <table>
@@ -726,18 +725,16 @@ html { scroll-behavior: smooth; }
       <h4>What the deck does cover</h4>
       <ul>
         <li><strong>Use cases that fit:</strong> ingest and unify data from various sources to
-        reconcile customer identity; use harmonised data to understand the customer and business impact
-        (<code>9b1101be</code>, <code>a6d82413</code>, <code>84996fff</code>).</li>
+        reconcile customer identity; use harmonised data to understand the customer and business impact.</li>
         <li><strong>The two functional areas to highlight</strong> to a customer with disjointed
-        sources: <strong>Data Harmonization</strong> and <strong>Unified Profiles</strong>
-        (<code>c50c16e0</code>).</li>
+        sources: <strong>Data Harmonization</strong> and <strong>Unified Profiles</strong>.</li>
         <li><strong>The first phase of the lifecycle:</strong> identify use cases <em>and</em> the
-        required data sources <em>and</em> data quality (<code>87c989ff</code>). Note all three
+        required data sources <em>and</em> data quality. Note all three
         &mdash; an option naming only use cases is incomplete.</li>
         <li><strong>Data ethics:</strong> carefully consider asking for sensitive data such as age,
-        gender or ethnicity (<code>3ce5cecc</code>). The deck's only principles question.</li>
+        gender or ethnicity. The deck's only principles question.</li>
         <li><strong>High availability</strong> comes from distributing data across multiple regions and
-        data centres (<code>b2861a64</code>).</li>
+        data centres.</li>
       </ul>
 
       <div class="call alert">
@@ -778,34 +775,33 @@ html { scroll-behavior: smooth; }
         <table>
           <thead><tr><th>The deck's options say</th><th>Salesforce now calls it</th><th>What decides it</th></tr></thead>
           <tbody>
-            <tr><td>Data Cloud Admin</td><td><strong>Data Cloud Architect</strong></td><td>Segment Intelligence insights (<code>3b0c0a4e</code>)</td></tr>
-            <tr><td>Data Cloud Marketing Specialist</td><td><strong>Activation Specialist</strong></td><td>Create, manage and activate segments &mdash; but not reports or data sources (<code>1d6366ff</code>)</td></tr>
+            <tr><td>Data Cloud Admin</td><td><strong>Data Cloud Architect</strong></td><td>Segment Intelligence insights</td></tr>
+            <tr><td>Data Cloud Marketing Specialist</td><td><strong>Activation Specialist</strong></td><td>Create, manage and activate segments &mdash; but not reports or data sources</td></tr>
             <tr><td>Data Cloud Marketing Manager</td><td><strong>Activation Manager</strong></td><td>&mdash;</td></tr>
-            <tr><td>Data Cloud for Marketing Data Aware Specialist</td><td><strong>Data Cloud Data Aware Specialist</strong></td><td>Review individual rows and validate modelling, nothing more (<code>860708a5</code>)</td></tr>
+            <tr><td>Data Cloud for Marketing Data Aware Specialist</td><td><strong>Data Cloud Data Aware Specialist</strong></td><td>Review individual rows and validate modelling, nothing more</td></tr>
           </tbody>
         </table>
       </div>
       <p>One more, and the trap is the word <em>source</em>: a custom CRM object missing from New Data
       Stream configuration means the <strong>View All</strong> object permission is off in the
-      <strong>source CRM org</strong>, not in Data 360 (<code>ddf8624d</code>).</p>
+      <strong>source CRM org</strong>, not in Data 360.</p>
 
       <h4>Data spaces</h4>
       <p>Four deck items, all consistent: a data space is the tool for <strong>segregating data by
       brand or business line</strong>.</p>
       <ul>
         <li>Six brands, one to be kept separate &rarr; <strong>separate that brand into a data
-        space</strong> (<code>480f5379</code>).</li>
-        <li>Business and personal loans sharing a Contact DLO &rarr; <strong>two data spaces</strong>
-        (<code>3e489c6f</code>).</li>
+        space</strong>.</li>
+        <li>Business and personal loans sharing a Contact DLO &rarr; <strong>two data spaces</strong>.</li>
         <li>An object missing when mapping a data stream in a data space &rarr; <strong>Data Space tab,
-        select the object to include</strong> (<code>0a109a96</code>).</li>
+        select the object to include</strong>.</li>
       </ul>
 
       <div class="call">
         <span class="tag">The most exam-shaped fact in this domain</span>
         <p><strong>Consent API</strong> for right-to-be-forgotten: deletion requests are submitted
         <strong>for Individual profiles</strong>, and are <strong>reprocessed at 30, 60 and 90
-        days</strong> (<code>ff10adbd</code>).</p>
+        days</strong>.</p>
       </div>
 
       <div class="call alert">
@@ -813,7 +809,7 @@ html { scroll-behavior: smooth; }
         <p>The outline has two bullets here &mdash; "manage the development lifecycle with available
         tooling" and "use tooling to diagnose and troubleshoot common issues". The deck has
         <strong>one</strong> item: <strong>data kits</strong> move a tested S3 data stream and its
-        mappings between Data 360 orgs (<code>aa78cb1b</code>). Nothing on packaging beyond that,
+        mappings between Data 360 orgs. Nothing on packaging beyond that,
         nothing on sandbox-to-production promotion, nothing on metadata deployment. Know at minimum
         that a data kit is the unit of portable Data 360 configuration.</p>
       </div>
@@ -871,27 +867,23 @@ html { scroll-behavior: smooth; }
 
       <h4>Connectors and bundles</h4>
       <ul>
-        <li><strong>CRM Connector:</strong> standard fields <strong>stream in real time</strong>
-        (<code>57588274</code>); initial setup is a <strong>full refresh</strong>
-        (<code>086bbfd8</code>); a <strong>column added or removed</strong> forces a full refresh
-        (<code>062012ec</code> &mdash; not settled, &sect;11).</li>
+        <li><strong>CRM Connector:</strong> standard fields <strong>stream in real time</strong>; initial setup is a <strong>full refresh</strong>; a <strong>column added or removed</strong> forces a full refresh
+        (not settled, &sect;11).</li>
         <li><strong>Web and Mobile Application Connector:</strong> the <strong>Tenant Specific
-        Endpoint is auto-generated</strong> when you set the connector up (<code>6c28ea56</code>).</li>
-        <li><strong>Ingestion API</strong> for fast, scalable near-real-time streaming
-        (<code>4ea7fff4</code>).</li>
+        Endpoint is auto-generated</strong> when you set the connector up.</li>
+        <li><strong>Ingestion API</strong> for fast, scalable near-real-time streaming.</li>
         <li><strong>Marketing Cloud Data Extension Data Stream</strong> for subscriber profile
-        attributes daily (<code>a0813551</code>).</li>
-        <li><strong>B2C Commerce:</strong> the <strong>Order Bundle ingests 30 days</strong> of history
-        (<code>d45cb02d</code>); for two years use <strong>Starter Bundles plus a custom
-        extract</strong> (<code>8fb738c4</code>).</li>
+        attributes daily.</li>
+        <li><strong>B2C Commerce:</strong> the <strong>Order Bundle ingests 30 days</strong> of history; for two years use <strong>Starter Bundles plus a custom
+        extract</strong>.</li>
         <li><strong>Bulk then streaming:</strong> load the last 90 days in bulk, then switch to
-        streaming (<code>3128d558</code>).</li>
+        streaming.</li>
         <li>Separate S3 buckets for ingestion and activation &rarr; <strong>dedicated S3 data
-        sources</strong> in setup (<code>159e1391</code>).</li>
+        sources</strong> in setup.</li>
         <li>S3 <code>NO FILE FOUND</code> &rarr; check the Data 360 user's permissions <strong>and</strong>
-        that the file exists at the specified bucket location (<code>485c7063</code>).</li>
+        that the file exists at the specified bucket location.</li>
         <li>An S3 stream in upsert mode with a changed formula &rarr; <strong>full refresh, and the
-        formula updates on all records</strong> (<code>008f7008</code>).</li>
+        formula updates on all records</strong>.</li>
       </ul>
 
       <h4>Stream categories &mdash; a reliable exam target</h4>
@@ -899,32 +891,28 @@ html { scroll-behavior: smooth; }
         <table>
           <thead><tr><th>Category</th><th>When</th></tr></thead>
           <tbody>
-            <tr><td><strong>Profile</strong></td><td>Data you will segment on, e.g. a list of employees (<code>74955e95</code>)</td></tr>
-            <tr><td><strong>Engagement</strong></td><td>Data used for <strong>date and time-based operations</strong> in segmentation and calculated insights (<code>7539b43f</code>)</td></tr>
+            <tr><td><strong>Profile</strong></td><td>Data you will segment on, e.g. a list of employees</td></tr>
+            <tr><td><strong>Engagement</strong></td><td>Data used for <strong>date and time-based operations</strong> in segmentation and calculated insights</td></tr>
             <tr><td><strong>Other</strong></td><td>Everything else</td></tr>
           </tbody>
         </table>
       </div>
       <p>And one that catches people: <strong>only Engagement category DLOs can be mapped to the Sales
-      Order DMO</strong> (<code>6c5846b5</code>).</p>
+      Order DMO</strong>.</p>
 
       <h4>Transforms, formulas and keys</h4>
       <ul>
         <li>A <strong>formula on ingest</strong> turns a date-time field into a date for mapping
-        (<code>dab6989b</code>) and standardises a phone format for later SMS use
-        (<code>214e0fc6</code>).</li>
+ and standardises a phone format for later SMS use.</li>
         <li><strong>No primary key available</strong> &rarr; build a <strong>composite key from two or
-        more source fields through a formula field</strong> (<code>575074ec</code>), using
-        <strong><code>CONCAT</code></strong> (<code>746c2926</code>).</li>
+        more source fields through a formula field</strong>, using
+        <strong><code>CONCAT</code></strong>.</li>
         <li><strong>Streaming transforms</strong> for real-time CRM integration
-        (<code>4dea9b59</code>) and for normalising three phone fields off a Contact into one
-        (<code>8446b713</code>).</li>
+ and for normalising three phone fields off a Contact into one.</li>
         <li><strong>Batch data transform creating a new DLO</strong> when related-attribute values need
-        reshaping before activation (<code>4a344343</code>).</li>
-        <li><strong>Text</strong> field type preserves leading zeros in a purchase order number
-        (<code>98eda96e</code>).</li>
-        <li>Case data's event time field should be <strong>Creation Date</strong>
-        (<code>282c475b</code>).</li>
+        reshaping before activation.</li>
+        <li><strong>Text</strong> field type preserves leading zeros in a purchase order number.</li>
+        <li>Case data's event time field should be <strong>Creation Date</strong>.</li>
       </ul>
     </section>
 
@@ -939,40 +927,38 @@ html { scroll-behavior: smooth; }
       <div class="call">
         <span class="tag">The sentence that answers most of this domain</span>
         <p><strong>Match rules decide <em>who</em> gets unified; reconciliation rules decide
-        <em>which value</em> wins when they conflict</strong> (<code>ab4092db</code>).</p>
+        <em>which value</em> wins when they conflict</strong>.</p>
       </div>
 
       <h4>Identity resolution</h4>
       <ul>
         <li>A <strong>low consolidation rate</strong> &rarr; <strong>increase the number of matching
-        rules</strong> (<code>d0a0a5f3</code>).</li>
+        rules</strong>.</li>
         <li>To unify on an ID that is not the customer's unique ID &mdash; a Loyalty ID, a Patient ID
-        &mdash; use the <strong>Party Identification</strong> object (<code>caf7811f</code>,
-        <code>a76eedab</code>). The healthcare case is worth noting: Party Identification on Patient ID
+        &mdash; use the <strong>Party Identification</strong> object. The healthcare case is worth noting: Party Identification on Patient ID
         avoids unifying on PII.</li>
         <li>Identity resolution is the configuration to complete <strong>after ingestion and before
-        segmenting</strong> (<code>d0755ebe</code>).</li>
+        segmenting</strong>.</li>
         <li><strong>Deleting a ruleset</strong> removes the unified customer data associated with it
-        <strong>and</strong> the dependencies on data model objects (<code>64df83e0</code>).</li>
+        <strong>and</strong> the dependencies on data model objects.</li>
         <li>Validate a unified profile with <strong>Identity Resolution, Data Explorer and Profile
-        Explorer</strong> (<code>a82aca1f</code>), or with <strong>Data Explorer and the Query
-        API</strong> (<code>704331e8</code> &mdash; the deck contradicts itself here, &sect;11).</li>
-        <li>Segment on the <strong>Unified Individual</strong> entity (<code>ffde1996</code>).</li>
+        Explorer</strong>, or with <strong>Data Explorer and the Query
+        API</strong> (the deck contradicts itself here, &sect;11).</li>
+        <li>Segment on the <strong>Unified Individual</strong> entity.</li>
       </ul>
 
       <h4>Modelling</h4>
       <ul>
         <li>Map <strong>name to Individual</strong> and <strong>email address to Contact Point
-        Email</strong> &mdash; do not put the email on Individual (<code>73954651</code>).</li>
+        Email</strong> &mdash; do not put the email on Individual.</li>
         <li>A <strong>1-to-1 relationship error</strong> between Account and Contact Point Address
-        &rarr; <strong>map additional fields to the Contact Point Address DMO</strong>
-        (<code>53f152a2</code>).</li>
+        &rarr; <strong>map additional fields to the Contact Point Address DMO</strong>.</li>
         <li>Extra profile attributes such as eye colour &rarr; <strong>custom fields on the standard
-        Individual DMO</strong>, not a new custom DMO (<code>31242001</code>).</li>
+        Individual DMO</strong>, not a new custom DMO.</li>
         <li>A new custom DMO that will not appear in segmentation &rarr; <strong>it is not of category
-        Profile</strong> (<code>a8a68101</code>).</li>
+        Profile</strong>.</li>
         <li><strong>Value suggestion</strong> is enabled at <strong>Data Mapping</strong> time when you
-        create the DMO (<code>579f07b4</code>).</li>
+        create the DMO.</li>
       </ul>
     </section>
 
@@ -987,24 +973,23 @@ html { scroll-behavior: smooth; }
       <h4>Calculated and streaming insights &mdash; what the deck does teach</h4>
       <ul>
         <li>A <strong>calculated insight</strong> when the criterion is an aggregate over history:
-        deposits over $250,000 in five years (<code>056ea0e6</code>), two page visits in 24 hours
-        (<code>0b702723</code>), lifetime value.</li>
+        deposits over $250,000 in five years, two page visits in 24 hours, lifetime value.</li>
         <li>A <strong>streaming insight</strong> when the window is minutes and the trigger is
-        real-time: 15-minute aggregations from the Interaction or Mobile SDK (<code>a40ce191</code>),
+        real-time: 15-minute aggregations from the Interaction or Mobile SDK,
         or daily transaction volume outside a customer's norm paired with a <strong>data
-        action</strong> to notify (<code>a032b276</code>).</li>
+        action</strong> to notify.</li>
         <li>Streaming windows are set by the <strong>insights aggregation time window</strong> &mdash;
-        1 hour for an abandoned-browse journey (<code>d9f0e781</code>).</li>
+        1 hour for an abandoned-browse journey.</li>
         <li><strong>Metrics on metrics</strong> builds a metric from another metric, for LTV broken
-        down by channel (<code>ce553d2c</code>).</li>
+        down by channel.</li>
         <li>The DMO join path for a unified LTV metric: <strong>Unified Individual &rarr; Unified Link
-        Individual &rarr; Sales Order</strong> (<code>537887b3</code>). Memorise the link object in the
+        Individual &rarr; Sales Order</strong>. Memorise the link object in the
         middle.</li>
         <li>For a calculated insight to appear in the segmentation canvas it needs <strong>a dimension
         including the Individual or Unified Individual Id</strong> <em>and</em> <strong>the primary key
-        of the segmented table as a dimension</strong> (<code>01c4c7ad</code>).</li>
+        of the segmented table as a dimension</strong>.</li>
         <li>The refresh order to respect: <strong>Data Stream &rarr; Identity Resolution &rarr;
-        Calculated Insight</strong> (<code>98a2f67b</code>).</li>
+        Calculated Insight</strong>.</li>
       </ul>
 
       <div class="call alert">
@@ -1042,7 +1027,7 @@ html { scroll-behavior: smooth; }
 
       <div class="call alert">
         <span class="tag">In the deck only as a wrong answer &mdash; data graphs</span>
-        <p>"Data graphs" appears once (<code>8a1c3eba</code>) and only as a <strong>distractor</strong>.
+        <p>"Data graphs" appears once and only as a <strong>distractor</strong>.
         They are how Data 360 serves unified data fast, so know them properly:</p>
         <ul>
           <li>A data graph brings together structured data from <strong>DMOs</strong> into an
@@ -1061,13 +1046,11 @@ html { scroll-behavior: smooth; }
       <h4>Reports, dashboards, and reaching Data 360 from elsewhere</h4>
       <p>Two named bullets, one deck item each.</p>
       <ul>
-        <li><strong>Tableau</strong> is the tool named for visualising and analysing unified data
-        (<code>e64df7b2</code>).</li>
-        <li>To see when each segment was last published, use a <strong>Dashboard and a Report</strong>
-        (<code>b0006afc</code>). Note this is monitoring, not analysis of customer data &mdash; the
+        <li><strong>Tableau</strong> is the tool named for visualising and analysing unified data.</li>
+        <li>To see when each segment was last published, use a <strong>Dashboard and a Report</strong>. Note this is monitoring, not analysis of customer data &mdash; the
         outline wants the latter too.</li>
         <li>To show all cases for a Unified Individual on a contact record: <strong>Profile API</strong>
-        plus <strong>Lightning Web Components</strong> (<code>0e845e09</code>). That is the deck's only
+        plus <strong>Lightning Web Components</strong>. That is the deck's only
         "reference Data 360 from another system" item; the broader surface is the Query API, the Connect
         API and data graphs.</li>
       </ul>
@@ -1084,71 +1067,59 @@ html { scroll-behavior: smooth; }
       <h4>Segments</h4>
       <ul>
         <li>The three things you can build a segment on: <strong>direct attributes, calculated
-        insights, related attributes</strong> (<code>7fc59544</code>).</li>
+        insights, related attributes</strong>.</li>
         <li><strong>Containers:</strong> product colour and product type must go in a <strong>single
-        container</strong> to mean "the same purchase" (<code>300d941c</code>). Two containers joined by
-        AND mean two <em>separate</em> purchases (<code>0147d0c4</code>). Multiple container paths make
-        the result <strong>larger or smaller than expected</strong> (<code>4627a1a2</code>).</li>
+        container</strong> to mean "the same purchase". Two containers joined by
+        AND mean two <em>separate</em> purchases. Multiple container paths make
+        the result <strong>larger or smaller than expected</strong>.</li>
         <li><strong>Nested segment</strong> for exclusion criteria shared across brand teams and
-        updated monthly (<code>0c1d58b4</code>). But <strong>"Segment is too complex"</strong> is fixed
-        by replacing nested segments with a <strong>calculated insight</strong>
-        (<code>884376a2</code>), and <strong>"too many data lake objects"</strong> by splitting the
-        segment <em>and</em> using calculated insights (<code>ee3e98b9</code>).</li>
-        <li><strong>Segmentation exclude rules</strong> to remove recent purchasers
-        (<code>4caa9078</code>).</li>
+        updated monthly. But <strong>"Segment is too complex"</strong> is fixed
+        by replacing nested segments with a <strong>calculated insight</strong>, and <strong>"too many data lake objects"</strong> by splitting the
+        segment <em>and</em> using calculated insights.</li>
+        <li><strong>Segmentation exclude rules</strong> to remove recent purchasers.</li>
         <li><strong>Last Number of Days</strong> is the filter operator for "visited in the previous 7
-        days" (<code>0b277734</code>).</li>
-        <li><strong>Value suggestion</strong> gives a picklist of text attribute values
-        (<code>d917a833</code>); if suggestions are missing it is <strong>still processing, up to 24
-        hours</strong> (<code>b16bbc31</code>, <code>e652607d</code>).</li>
+        days".</li>
+        <li><strong>Value suggestion</strong> gives a picklist of text attribute values; if suggestions are missing it is <strong>still processing, up to 24
+        hours</strong>.</li>
         <li>Segmentation filters are <strong>case-insensitive</strong>: <code>City Is Equal To 'San
-        Jose'</code> matches <code>SAN JOSE</code>, <code>san jose</code> and <code>San jose</code>
-        (<code>f3b19bee</code>).</li>
+        Jose'</code> matches <code>SAN JOSE</code>, <code>san jose</code> and <code>San jose</code>.</li>
         <li>Delays publishing many segments at once &rarr; <strong>increase the segmentation
-        concurrency limit</strong> (<code>f687a6b9</code>).</li>
-        <li>Schedules follow <strong>the time zone of the logged-in user who set them</strong>
-        (<code>e362f29c</code>).</li>
+        concurrency limit</strong>.</li>
+        <li>Schedules follow <strong>the time zone of the logged-in user who set them</strong>.</li>
       </ul>
 
       <h4>Activations</h4>
       <ul>
-        <li>The activation membership object is a <strong>Data Model Object</strong>
-        (<code>29f828ca</code>).</li>
+        <li>The activation membership object is a <strong>Data Model Object</strong>.</li>
         <li><strong>Consent:</strong> include Consent Status for the applicable channel in the
-        <strong>filter criteria of each segment</strong> (<code>1148d70c</code>).</li>
+        <strong>filter criteria of each segment</strong>.</li>
         <li><strong>Pause</strong> an activation you intend to reuse by <strong>stopping the publish
-        schedule</strong> (<code>8f5494a9</code>).</li>
+        schedule</strong>.</li>
         <li><strong>Source priority order in activations</strong> decides which source's contact point
-        is used &mdash; the documented way to pick a best email or address
-        (<code>dc2c1055</code>).</li>
+        is used &mdash; the documented way to pick a best email or address.</li>
         <li><strong>Preferred attribute names</strong> are set when configuring the activation, for
-        Cloud File Storage naming conventions (<code>5ce00e3e</code>).</li>
+        Cloud File Storage naming conventions.</li>
         <li>S3 output: the <strong><code>.json</code> file carries the segment metadata</strong>, the
-        <strong><code>.csv</code> carries the activated data payload</strong> (<code>9d9d4efd</code>,
-        <code>a0c8b14c</code>).</li>
+        <strong><code>.csv</code> carries the activated data payload</strong>.</li>
         <li>To get a CRM Campaign ID into the file, put the campaign identifier in <strong>the
-        activation name</strong> and in <strong>the filename specification</strong>
-        (<code>625b0134</code>).</li>
+        activation name</strong> and in <strong>the filename specification</strong>.</li>
         <li>Related attributes missing from a payload &rarr; the related engagement events must be
-        <strong>within the last 90 days</strong> and the <strong>correct path</strong> selected
-        (<code>e80443fb</code>); or the attributes <strong>sit on different related paths</strong>
-        (<code>7001f646</code>, <code>2646b393</code>, <code>17b95a6b</code>).</li>
+        <strong>within the last 90 days</strong> and the <strong>correct path</strong> selected; or the attributes <strong>sit on different related paths</strong>.</li>
         <li>Stale related attributes &rarr; <strong>filter the related attribute</strong> by date, e.g.
-        exclude orders older than 30 days (<code>8a1c3eba</code>).</li>
+        exclude orders older than 30 days.</li>
         <li>Activation lag &rarr; check that <strong>calculated insights run before segments
-        refresh</strong> and that <strong>segments refresh after ingestion</strong>
-        (<code>e99bd25d</code>).</li>
+        refresh</strong> and that <strong>segments refresh after ingestion</strong>.</li>
         <li>A Data 360 segment count differing from a Marketing Cloud data extension count &rarr;
-        <strong>business units</strong> (<code>49ee75cb</code>).</li>
+        <strong>business units</strong>.</li>
       </ul>
 
       <h4>Data 360 in Salesforce flows</h4>
       <p>Two deck items, both the same shape &mdash; flow is the glue for anything event-driven.</p>
       <ul>
         <li>Refresh calculated insights and segments when a nightly file lands &rarr; <strong>Flow
-        triggering a change data event</strong> (<code>b35887c5</code>).</li>
+        triggering a change data event</strong>.</li>
         <li>Alert an admin on Slack and email when a data stream fails &rarr; <strong>Salesforce
-        flows</strong> (<code>b985f235</code>).</li>
+        flows</strong>.</li>
       </ul>
     </section>
 
@@ -1192,8 +1163,8 @@ html { scroll-behavior: smooth; }
       </div>
 
       <ul>
-        <li><strong>The invented capability.</strong> This deck's fact-check found a "reusable container
-        block", a "Data Segmentation Object", and a phone field type that normalises to E164 &mdash;
+        <li><strong>The invented capability.</strong> Practice material for this exam has offered a "reusable
+        container block", a "Data Segmentation Object", and a phone field type that normalises to E164 &mdash;
         none exists. If an option names a Data 360 object you cannot place in the DLO / DMO /
         stream-category vocabulary, distrust it.</li>
         <li><strong>The invented absence</strong> &mdash; the mirror. An option asserting Data 360
@@ -1241,22 +1212,21 @@ html { scroll-behavior: smooth; }
         learner who meets the old name on the exam having only ever seen the new one is worse off than
         the reverse. The current names appear in the deck's <em>explanations</em>. So: <strong>answer
         with the old names, navigate with the new ones.</strong></p>
-        <p>One consequence worth stating plainly: four items (<code>860708a5</code>,
-        <code>1d6366ff</code>, <code>3b0c0a4e</code>, and <code>49ee75cb</code> by implication) keep
+        <p>One consequence worth stating plainly: four items keep
         correct keys while their option text points at a Setup node that no longer exists. The
         capability mapping is 1:1, so the reasoning still works.</p>
       </div>
 
       <h4>Two defective items, kept as keyed</h4>
       <div class="call trap">
-        <span class="tag">The deck contradicts itself &mdash; <code>704331e8</code></span>
-        <p>It keys Data Explorer + Query API and its explanation denies that Identity Resolution is a
+        <span class="tag">The deck contradicts itself &mdash; validating unified data</span>
+        <p>One item keys Data Explorer + Query API and its explanation denies that Identity Resolution is a
         validation surface &mdash; but the Resolution Summary reports match and reconciliation
-        statistics after every run, and <strong>this deck's own <code>a82aca1f</code> keys Identity
+        statistics after every run, and <strong>another item in this deck keys Identity
         Resolution as exactly that.</strong> Three options are defensible.</p>
       </div>
       <div class="call trap">
-        <span class="tag">Two true options &mdash; <code>de949f0f</code></span>
+        <span class="tag">Two true options &mdash; modifying a calculated insight</span>
         <p>Adding a new <strong>dimension</strong> <em>and</em> adding a new <strong>measure</strong>
         are both possible when modifying a calculated insight; only <strong>removal</strong> is blocked.
         Learn the rule &mdash; <strong>you can add, you cannot remove</strong> &mdash; rather than the
@@ -1264,55 +1234,30 @@ html { scroll-behavior: smooth; }
       </div>
 
       <div class="call alert">
-        <span class="tag">Documentation contradicts the keyed mechanism &mdash; <code>859419eb</code></span>
-        <p>It keys "configure reconciliation rules on Contact Point Address" to pick the best address.
+        <span class="tag">Documentation contradicts the keyed mechanism &mdash; the best address</span>
+        <p>One item keys "configure reconciliation rules on Contact Point Address" to pick the best address.
         Salesforce states that <strong>reconciliation rules do not apply to contact points</strong>, and
         that Source Priority sorts DLOs rather than DMOs. The documented way to choose a contact point's
-        source is <strong>source priority on the activation</strong> &mdash; which this same deck keys
-        correctly in <code>dc2c1055</code>. The key was kept because no option describes the documented
-        mechanism. <strong>Learn <code>dc2c1055</code>'s answer as the true one.</strong></p>
+        source is <strong>source priority on the activation</strong> &mdash; which another item in this deck keys
+        correctly. The key was kept because no option describes the documented
+        mechanism. <strong>Learn the activation answer as the true one.</strong></p>
       </div>
 
       <h4>One item that is not settled, and one redundant pair</h4>
       <ul>
-        <li><strong><code>062012ec</code></strong> &mdash; "when a column is added or removed, the CRM
-        connector performs a full refresh", and the 600K-deletion threshold in its distractor. Neither
-        is stated on any Data 360 page that could be rendered; the closest match was CRM Analytics'
-        <code>sfdcDigest</code>, a different product. Do not spend time on it.</li>
-        <li><strong><code>b16bbc31</code> and <code>e652607d</code></strong> are the same question with
-        the same intended answer. They differ only in whether the option states the documented "up to
-        24 hours". <code>find-duplicates.mjs</code> scores them 0.94. <strong><code>b16bbc31</code> is
-        the better copy</strong> because its option carries the number. If you see it twice, you are not
+        <li><strong>The CRM connector full-refresh item</strong> &mdash; "when a column is added or removed,
+        the CRM connector performs a full refresh", and the 600K-deletion threshold in its distractor.
+        Neither is stated on any Data 360 page. Do not spend time on it.</li>
+        <li><strong>Two value-suggestion items</strong> are the same question with the same intended
+        answer. They differ only in whether the option states the documented "up to 24 hours"; the
+        one that does is the better copy. If you see it twice, you are not
         going mad.</li>
       </ul>
 
-      <h4>Verification debt to be honest about</h4>
-      <p>About six of this deck's citations are <strong>topical rather than decisive</strong> &mdash;
-      the data-ethics item (<code>3ce5cecc</code>), the two "which use case fits" items, the
-      Flow-orchestration item (<code>b985f235</code>) and the LWC/Profile API item
-      (<code>0e845e09</code>) rest on judgment or product positioning rather than on a page that settles
-      them. The deck reaches 100/100 citation coverage, and that number means less on those six than on
-      the rest.</p>
-
-      <h4>How to verify any of this yourself</h4>
-      <p><code>help.salesforce.com</code> is a single-page app that answers <strong>every</strong>
-      article id with HTTP 200, so a status check proves nothing. Two things that do work:</p>
-      <ol class="prose">
-        <li><strong>Render the page and read <code>document.title</code>.</strong> A live article gives
-        its own title; a dead id gives the generic <code>Salesforce Help | Article</code> plus "We
-        looked high and low but couldn't find that page." Poll for a real title <em>and</em> a body over
-        ~1,500 characters &mdash; a half-loaded page reports live articles as dead.</li>
-        <li><strong>Grep the rendered text for the term the citation is meant to support</strong>, not
-        for the term the topic suggests. A page can render, be on the right topic, and not contain the
-        fact.</li>
-      </ol>
-      <div class="call trap">
-        <span class="tag">Two traps in the tooling</span>
-        <p><code>WebFetch</code> does <strong>not</strong> work on this host from a cloud container
-        &mdash; it returns the SPA's "CSS Error" shell for real and invented ids alike, re-confirmed
-        2026-09-26. And beware the keyword sweep: searching this deck for <code>RAG</code> returns
-        three hits, all of them the substring inside "sto<strong>rag</strong>e".</p>
-      </div>
+      <h4>Items that rest on judgment</h4>
+      <p>About six items &mdash; the data-ethics item, the two "which use case fits" items, the
+      Flow-orchestration item and the LWC/Profile API item &mdash; rest on judgment or product positioning rather than on a page that settles
+      them.</p>
     </section>
 
     <!-- 12 -->
@@ -1364,14 +1309,12 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">13</span><span>Sources</span></h2>
       <div class="sect-rule"></div>
 
-      <p class="lede">Every URL below was rendered in a browser on 2026-09-26 and its title
-      confirmed.</p>
+      <p class="lede">The official pages this guide is built from. Last checked September 2026.</p>
 
       <div class="linklist">
         <p><a href="https://help.salesforce.com/s/articleView?id=005298940&amp;type=1&amp;language=en_US">Salesforce Certified Data 360 Consultant Exam Guide</a>
         <span class="why">The outline, the weights, the Spring '26 alignment, the 70% pass mark and the
-        SDC101/SDC301 course names. A second id, <code>005314086</code>, also surfaces in search;
-        <code>005298940</code> is the one that renders as the live guide.</span></p>
+        SDC101/SDC301 course names.</span></p>
 
         <p><a href="https://help.salesforce.com/s/articleView?id=data.c360_a_byol_data_federation.htm&amp;type=5&amp;language=en_US">Zero Copy Data Federation</a>
         <span class="why">Query versus File Federation, external/virtual DLOs, caching and acceleration,
@@ -1390,44 +1333,6 @@ html { scroll-behavior: smooth; }
 
       <p>Per-question citations live in the deck itself: every one of the 100 explanations ends in a
       <code>References:</code> block with at least one rendered URL.</p>
-    </section>
-
-    <!-- 14 -->
-    <section id="notebooklm">
-      <h2 class="sect"><span class="num">14</span><span>Using this with NotebookLM</span></h2>
-      <div class="sect-rule"></div>
-
-      <p class="lede">Upload
-      <code>study-guides/salesforce-data-cloud-consultant.md</code>.</p>
-
-      <div class="prompts">
-        <p class="prompt">Quiz me only on Zero-Copy data federation, retrievers and data graphs. All
-        three are named exam objectives with no practice questions, so generate the questions from
-        sections 5 and 7.</p>
-
-        <p class="prompt">Give me the permission-set rename table from section 11 as flashcards, old
-        name on the front and new name plus the one capability that decides it on the back.</p>
-
-        <p class="prompt">List every item in this guide that is defective, contradicted by
-        documentation, or unsettled. For each, tell me what to answer on the exam and what is actually
-        true.</p>
-
-        <p class="prompt">I have eight days. Compress the plan in section 12, keeping the principle that
-        gaps come before consolidation.</p>
-
-        <p class="prompt">Explain Query Federation versus File Federation as if I already understand a
-        federated database. Then give me three scenarios where the wrong one would be the tempting
-        answer.</p>
-
-        <p class="prompt">Build me a decision tree for the activation-troubleshooting items in section
-        8: symptom in, cause out.</p>
-      </div>
-
-      <p class="colophon">Measured 2026-09-26 against
-      <code>public/decks/data_cloud_consultant_questions.json</code> and Help article
-      <code>005298940</code>. Question counts and domain weights both have a short shelf life &mdash;
-      re-run <code>node study-guides/reclassify-data-cloud.mjs</code> before trusting the table in
-      &sect;2.</p>
     </section>
 
   </main>

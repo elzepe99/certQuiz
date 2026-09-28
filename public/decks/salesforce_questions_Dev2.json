@@ -47,7 +47,7 @@
     "corrected": {
       "date": "2026-08-09",
       "via": "validation",
-      "note": "Duplicate resolved. This question and one other in the deck were the same item scraped twice; the other copy had OCR-damaged options (\"Test. fixsdSsarchReaulta [)\", \"Teat.loadData\") and has been removed, leaving this one. While consolidating, two scrape artifacts were cleaned here: the stem was wrapped in stray double quotes, and option A named the method \"Test.fixedSearchResults()\", which does not exist — corrected to Test.setFixedSearchResults(), the method the explanation had been describing all along. Answer unchanged at A."
+      "note": "Option A named the method \"Test.fixedSearchResults()\", which does not exist; it now reads Test.setFixedSearchResults(), the method the explanation describes. Stray quotes around the question were also removed. Answer unchanged at A."
     }
   },
   {
@@ -100,7 +100,7 @@
     "corrected": {
       "date": "2026-08-09",
       "via": "validation",
-      "note": "Item repaired; key unchanged at A. As scraped, options B, C, and D were the literal placeholder strings 'Option B/C/D', and option A was a truncated fragment (\"Set size='12' for desktop/tablet\") that was wrong as written, since size='12' alone stacks on every device. The option set has been reconstructed from this deck's sibling item, which asks the same question in Aura syntax with a complete set of four, transposed into lightning-layout-item kebab-case attributes and re-lettered so the correct combination sits on the existing key. This supersedes the earlier note recording the item as unanswerable."
+      "note": "Options B, C and D were missing, and option A was a truncated fragment (\"Set size='12' for desktop/tablet\") that was wrong as written, since size='12' alone stacks on every device. The options were rebuilt from another question in this deck that asks the same thing in Aura syntax, transposed into lightning-layout-item attributes, with the correct combination on the existing answer."
     }
   },
   {
@@ -184,7 +184,7 @@
     "corrected": {
       "date": "2026-08-09",
       "via": "validation",
-      "note": "Item repaired; key unchanged at B. As scraped, options A, C, and D were the placeholder strings 'Option A/C/D' and option B was a description of the answer rather than code, so the item could not be reasoned about. Unlike the deck's other repaired items, this one has no sibling to recover from, so the four code blocks were written against the documented Testing Queueable Jobs pattern rather than recovered from the source: B is that pattern, and A, C, and D each break it in one specific way (no start/stop block, assertion before stopTest, and Database.executeBatch against a Queueable). Treat the distractors as authored, not original."
+      "note": "Options A, C and D were missing and option B described the answer rather than showing code, so the item could not be reasoned about. The four code blocks were written against the documented Testing Queueable Jobs pattern: B is that pattern, and A, C and D each break it in one specific way (no start/stop block, assertion before stopTest, and Database.executeBatch against a Queueable). Treat the wrong options as written for this deck, not as the exam's own."
     }
   },
   {
@@ -285,7 +285,7 @@
     "corrected": {
       "date": "2026-08-10",
       "via": "validation",
-      "note": "Answer C stands; two separate defects fixed. First, as originally scraped the explanation was self-contradictory — it declared \"Option B (Client-side validation) is correct\" while the key names C, and then listed C among the options that are \"not directly related\". The lightning-record-edit-form guide settles that head-to-head explicitly in favour of validation rules. Second, the replacement text written in the first pass justified C by claiming the form displays all failing validation messages at once; the component's documentation states the opposite, that it shows only the first error encountered. That claim came from Validation Rule Considerations, which describes the standard page-layout UI, and has been removed rather than restated."
+      "note": "Answer C stands; two defects were fixed. The explanation was self-contradictory — it declared \"Option B (Client-side validation) is correct\" while the answer is C, and then listed C among the options that are \"not directly related\". The lightning-record-edit-form guide settles that head-to-head in favour of validation rules. A later version of the explanation claimed the form displays all failing validation messages at once; the component's documentation states the opposite, that it shows only the first error encountered, so that claim was removed."
     }
   },
   {
@@ -326,7 +326,7 @@
     "corrected": {
       "date": "2026-08-09",
       "via": "validation",
-      "note": "Item repaired; key unchanged at B,D. As scraped the trigger body was corrupted — a mangled SELECT clause, a missing object name, and the OwnerId assignment and add() call shown outside the loop — and optionA was an empty string, so a four-option question presented three. The stem has been replaced with the intact trigger and the missing fourth option restored, keeping the existing lettering so the key still resolves to \"move the query outside the loop\" and \"remove the update\". The reason for removing the update is now cited to the documented rule that trigger.new cannot be used in DML operations, rather than to it merely being redundant."
+      "note": "The trigger code was corrupted — a mangled SELECT clause, a missing object name, and the OwnerId assignment and add() call shown outside the loop — and option A was empty, so a four-option question showed three. The question now shows the intact trigger and the missing option is restored, keeping the lettering so the answer is still \"move the query outside the loop\" and \"remove the update\". The reason for removing the update is now the documented rule that trigger.new cannot be used in DML operations, rather than it merely being redundant."
     }
   },
   {
@@ -912,7 +912,7 @@
     "corrected": {
       "date": "2026-08-09",
       "via": "validation",
-      "note": "Key C stands as the best-supported option, but the item is weak and the old explanation cited an exam-dump site (ExamTopics) as its authority, which is not a source. Documentation establishes that A is impossible — history objects are read-only and system-generated — and that B cannot help, since the assertion targets a record created inside the test. Flagged: the printed test queries AccountHistory directly, so no change inside getAccountHistory() would make this exact snippet pass."
+      "note": "Answer C stands as the best-supported option, but the item is weak, and the old explanation cited a practice-exam website rather than documentation. The documentation establishes that A is impossible — history objects are read-only and system-generated — and that B cannot help, since the assertion targets a record created inside the test. Note: the printed test queries AccountHistory directly, so no change inside getAccountHistory() would make this exact snippet pass."
     }
   },
   {
@@ -1131,7 +1131,7 @@
     "corrected": {
       "date": "2026-08-09",
       "via": "validation",
-      "note": "Key A stands as the only option using the right mechanism — a static variable retains its value for the duration of the transaction, which is what makes it usable as a recursion guard. Flagged as defective: option A declares the static flag without ever checking it, so the printed code would not by itself prevent the second run, and options B and D pass a Map to a method that takes a List."
+      "note": "Answer A stands as the only option using the right mechanism — a static variable retains its value for the duration of the transaction, which is what makes it usable as a recursion guard. The item is flawed, though: option A declares the static flag without ever checking it, so the printed code would not by itself prevent the second run, and options B and D pass a Map to a method that takes a List."
     }
   },
   {
@@ -1203,7 +1203,7 @@
     "optionD": "import { jsUtilities } from '@salesforce/resourceUrl/jsUtils';",
     "optionE": "",
     "correct": "A",
-    "explanation": "import jsUtilities from '@salesforce/resourceUrl/jsUtils'; is the statement. Static resources are loaded into a Lightning web component with a default import from the @salesforce/resourceUrl module, naming the resource after the final slash; Salesforce's guide gives the form directly as import myLib from \"@salesforce/resourceUrl/myLib\";. The imported value is the resource's URL, which you then hand to loadScript or loadStyle from lightning/platformResourceLoader.\nAll four options and the stem reached this deck with OCR damage from the scrape and have been repaired against the documented syntax; the answer is unchanged.\nWhy the other options are wrong:\nOption B (<lightning-require scripts=\"{!$Resource.jsUtils}\"/>) — Aura's ltng:require with a $Resource expression; neither exists in a Lightning web component.\nOption C ($A.get('$Resource.jsUtils')) — $A is the Aura framework's global; it means nothing inside LWC.\nOption D (import { jsUtilities } from ...) — the right module imported as a named export; @salesforce/resourceUrl/<name> exposes only a default export, so the braces are exactly what makes it wrong.\nReferences:\nhttps://developer.salesforce.com/docs/platform/lwc/guide/create-resources.html\nhttps://developer.salesforce.com/docs/platform/lwc/guide/js-third-party-library.html",
+    "explanation": "import jsUtilities from '@salesforce/resourceUrl/jsUtils'; is the statement. Static resources are loaded into a Lightning web component with a default import from the @salesforce/resourceUrl module, naming the resource after the final slash; Salesforce's guide gives the form directly as import myLib from \"@salesforce/resourceUrl/myLib\";. The imported value is the resource's URL, which you then hand to loadScript or loadStyle from lightning/platformResourceLoader.\nWhy the other options are wrong:\nOption B (<lightning-require scripts=\"{!$Resource.jsUtils}\"/>) — Aura's ltng:require with a $Resource expression; neither exists in a Lightning web component.\nOption C ($A.get('$Resource.jsUtils')) — $A is the Aura framework's global; it means nothing inside LWC.\nOption D (import { jsUtilities } from ...) — the right module imported as a named export; @salesforce/resourceUrl/<name> exposes only a default export, so the braces are exactly what makes it wrong.\nReferences:\nhttps://developer.salesforce.com/docs/platform/lwc/guide/create-resources.html\nhttps://developer.salesforce.com/docs/platform/lwc/guide/js-third-party-library.html",
     "_cat": "User Interface"
   },
   {
@@ -1297,7 +1297,7 @@
     "corrected": {
       "date": "2026-09-08",
       "via": "validation",
-      "note": "Key moved A,B,E to B,D,E, and two scrape-damaged options were repaired. Raised by the repo owner, who spotted that A and E are the same change: @AuraEnabled(cacheable=true) IS @AuraEnabled with a parameter, so a method cannot carry both. Recovering the original item confirmed it — the exam prints WITH SECURITY_ENFORCED, @AuraEnabled(Cacheable=true) and with sharing as the three answers, with plain @AuraEnabled and without sharing as the two distractors. Option D's text had already been reconstructed from the scrape garbage 'WZ E D' by the 2026-08-17 pass and matches the original exactly; option C was repaired here from 'Implement the with keyword' to 'Implement the without sharing keyword'. Supersedes the two earlier notes, whose surviving point is that with sharing governs record access only and does not enforce object permissions or field-level security. Currency: WITH SECURITY_ENFORCED still works but the current LWC security page teaches WITH USER_MODE instead.",
+      "note": "A and E are the same change: @AuraEnabled(cacheable=true) IS @AuraEnabled with a parameter, so a method cannot carry both. The exam's own version of this item prints WITH SECURITY_ENFORCED, @AuraEnabled(Cacheable=true) and with sharing as the three answers, with plain @AuraEnabled and without sharing as the two distractors; options C and D were repaired to match it. With sharing governs record access only and does not enforce object permissions or field-level security. Currency: WITH SECURITY_ENFORCED still works, but the current LWC security page teaches WITH USER_MODE instead.",
       "from": "A,B,E",
       "to": "B,D,E"
     }
@@ -1436,12 +1436,12 @@
     "optionD": "System.CalloutException: Callout from triggers are currently not supported",
     "optionE": "",
     "correct": "A",
-    "explanation": "System.LimitException: Too many future calls is the exception this code can trigger. The helper's notifyExternalSystem is a properly annotated @future(callout=true) method, so calling it from the trigger is allowed — but the trigger calls it once per record inside the loop over Trigger.new, and Execution Governors and Limits sets the maximum number of methods with the future annotation per Apex invocation at 50. A bulk update of more than 50 Accounts (a Data Loader batch is 200) therefore throws Too many future calls on the 51st iteration. Note that the stem asks which LimitException the code could trigger, and this is the only option that is one.\nThe bulk-safe shape is a single future call per transaction: collect the ids from Trigger.new into a Set and pass the whole set to one @future(callout=true) method (or a Queueable), which then makes its callouts inside the asynchronous transaction.\nWhy the other options are wrong:\nOption B (Too many callouts) — each future invocation is its own transaction and makes one callout, well under the 100-callout limit; the calls never share a transaction.\nOption C (Too many SOQL queries) — the same: one query per future transaction, never 101 in one.\nOption D (Callout from triggers are currently not supported) — a CalloutException, not a LimitException, and it is raised only when a callout is attempted synchronously in trigger context; here the callout is correctly deferred to a future method, so this error does not occur. This option was the key until 2026-09-11, on a reading of the scraped code in which the @future annotation appeared to be missing; the source's `AccountTriggerHelperfuture(callout=true) {` is the annotation with its line break, `{` and `@` lost in the scrape.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts_timeouts.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_annotation_future.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_gov_limits.htm",
+    "explanation": "System.LimitException: Too many future calls is the exception this code can trigger. The helper's notifyExternalSystem is a properly annotated @future(callout=true) method, so calling it from the trigger is allowed — but the trigger calls it once per record inside the loop over Trigger.new, and Execution Governors and Limits sets the maximum number of methods with the future annotation per Apex invocation at 50. A bulk update of more than 50 Accounts (a Data Loader batch is 200) therefore throws Too many future calls on the 51st iteration. Note that the stem asks which LimitException the code could trigger, and this is the only option that is one.\nThe bulk-safe shape is a single future call per transaction: collect the ids from Trigger.new into a Set and pass the whole set to one @future(callout=true) method (or a Queueable), which then makes its callouts inside the asynchronous transaction.\nWhy the other options are wrong:\nOption B (Too many callouts) — each future invocation is its own transaction and makes one callout, well under the 100-callout limit; the calls never share a transaction.\nOption C (Too many SOQL queries) — the same: one query per future transaction, never 101 in one.\nOption D (Callout from triggers are currently not supported) — a CalloutException, not a LimitException, and it is raised only when a callout is attempted synchronously in trigger context; here the callout is correctly deferred to a future method, so this error does not occur.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts_timeouts.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_annotation_future.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_gov_limits.htm",
     "_cat": "Process Automation and Logic",
     "corrected": {
       "date": "2026-09-11",
       "via": "validation",
-      "note": "Execution Governors and Limits: maximum number of methods with the future annotation allowed per Apex invocation is 50. The trigger calls the future method once per record, so a bulk update throws Too many future calls. The previous key D (a CalloutException) rested on a scrape-damaged reading in which the @future annotation looked malformed; the repaired stem shows it is present, and D is not a LimitException at all.",
+      "note": "Execution Governors and Limits: the maximum number of methods with the future annotation allowed per Apex invocation is 50. The trigger calls the future method once per record, so a bulk update throws Too many future calls. The previous answer D (a CalloutException) rested on a damaged copy of the code in which the @future annotation looked malformed; the repaired code shows it is present, and D is not a LimitException at all.",
       "from": "D",
       "to": "A"
     }
@@ -1508,7 +1508,7 @@
     "corrected": {
       "date": "2026-08-09",
       "via": "validation",
-      "note": "Answer D (10,000) stands. The explanation described it as a per-statement ceiling — 'in a single DML operation you can process up to 10,000 records at once' — but the governor is the total number of records processed by DML across the whole transaction. The deck's own cascading-trigger question depends on the transaction-wide reading, so the two explanations contradicted each other."
+      "note": "Answer D (10,000) stands. The explanation described it as a per-statement ceiling — 'in a single DML operation you can process up to 10,000 records at once' — but the governor is the total number of records processed by DML across the whole transaction. The deck's cascading-trigger question depends on the transaction-wide reading, so the two explanations contradicted each other."
     }
   },
   {
@@ -1621,7 +1621,7 @@
     "corrected": {
       "date": "2026-08-09",
       "via": "validation",
-      "note": "Answer B,C,E stands as the three benefits the Visualforce guide itself lists, but the item is defective: option D is also true. Data and File Storage Allocations includes static resources in neither the file-storage list nor the data-storage list, and the Visualforce guide gives them a separate 5 MB per-resource / 250 MB per-org allocation, so they genuinely do not count against the data storage quota. This supersedes the earlier note, which had established only that the deck's original claim (\"they do count against the org's file storage\") was unsupported; the deeper check shows the opposite statement is the documented one."
+      "note": "Answer B,C,E stands as the three benefits the Visualforce guide itself lists, but the item is flawed: option D is also true. Data and File Storage Allocations includes static resources in neither the file-storage list nor the data-storage list, and the Visualforce guide gives them a separate 5 MB per-resource / 250 MB per-org allocation, so they genuinely do not count against the data storage quota."
     }
   },
   {
@@ -1753,12 +1753,12 @@
     "optionD": "Evaluate expressions, action attributes, and method calls",
     "optionE": "",
     "correct": "A",
-    "explanation": "Evaluating constructors and expressions on custom components is the step that follows. The documented order for a Visualforce get request is: the constructors on the custom controller or controller extensions run first; then any custom components on the page are created, their controllers' constructors run, and the expressions set on their attributes are evaluated; then assignTo attributes on those components execute; then page expressions, the action attribute on <apex:page>, and all other getter and setter calls are evaluated; then the view state is created if the page contains an <apex:form>; and finally the resulting HTML is sent to the browser.\nThis item is defective as scraped: the step the question asks you to look past — \"after this step\" — was carried by a diagram that did not survive, so the question cannot be answered from the printed text alone. Treat it as a prompt to know the sequence above.\nWhy the other options are wrong:\nOption B (create view state if <apex:form> exists) — the second-to-last step, after the page expressions.\nOption C (send the HTML response) — the final step.\nOption D (evaluate expressions, action attributes and method calls) — the page-level evaluation, which comes after the custom components have been constructed.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_controller_get_request.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_controller_lifecycle.htm",
+    "explanation": "Evaluating constructors and expressions on custom components is the step that follows. The documented order for a Visualforce get request is: the constructors on the custom controller or controller extensions run first; then any custom components on the page are created, their controllers' constructors run, and the expressions set on their attributes are evaluated; then assignTo attributes on those components execute; then page expressions, the action attribute on <apex:page>, and all other getter and setter calls are evaluated; then the view state is created if the page contains an <apex:form>; and finally the resulting HTML is sent to the browser.\nThis item is flawed: the step the question asks you to look past — \"after this step\" — was shown in a diagram that is missing, so the question cannot be answered from the printed text alone. Treat it as a prompt to know the sequence above.\nWhy the other options are wrong:\nOption B (create view state if <apex:form> exists) — the second-to-last step, after the page expressions.\nOption C (send the HTML response) — the final step.\nOption D (evaluate expressions, action attributes and method calls) — the page-level evaluation, which comes after the custom components have been constructed.\nReferences:\nhttps://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_controller_get_request.htm\nhttps://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_controller_lifecycle.htm",
     "_cat": "User Interface",
     "corrected": {
       "date": "2026-08-09",
       "via": "validation",
-      "note": "Key A stands, but the explanation gave the order backwards — it said custom-component constructors are evaluated after the page's expressions, action attributes, and method calls, while the Visualforce guide places them before. Also flagged: the stem refers to 'this step' from a diagram lost in scraping, so the item is unanswerable as printed."
+      "note": "Answer A stands, but the explanation gave the order backwards — it said custom-component constructors are evaluated after the page's expressions, action attributes, and method calls, while the Visualforce guide places them before. Note also that the question refers to 'this step' in a diagram that is missing, so the item is unanswerable as printed."
     }
   },
   {

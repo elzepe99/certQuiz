@@ -21,7 +21,7 @@
     "corrected": {
       "date": "2026-09-15",
       "via": "validation",
-      "note": "Answer B stands. The old explanation labelled the distractors \"Option A (Products List GET)\" and \"Option B (Product Related Records List POST)\" — but B is the key, and the related-records API is option C. A learner reading it would have taken the keyed letter to be the wrong API. Letters corrected; the unverifiable prose reference line was removed in the same pass."
+      "note": "Answer B stands. The old explanation labelled the distractors with the wrong letters — including B, the correct answer — so a reader would have taken the keyed letter to be the wrong API. The letters are fixed."
     }
   },
   {
@@ -46,7 +46,7 @@
     "corrected": {
       "date": "2026-08-15",
       "via": "validation",
-      "note": "Answer C stands, but the explanation's option letters were scrambled throughout: it declared 'Why B is Correct' against a key of C, and labelled Cancel/Replace as A and Early Renewal as C when the deck lists them as B and A. audit-deck.mjs did not flag this because the substance overlapped the key. Also removed three fabricated 'Exact Extracts from Salesforce Subscription Management Implementation Guide'."
+      "note": "Answer C stands, but the explanation's option letters were scrambled throughout: it declared 'Why B is Correct' against an answer of C, and mislabelled the options. The letters are fixed, and quotes attributed to a Salesforce guide that could not be found were removed."
     }
   },
   {
@@ -151,7 +151,7 @@
     "corrected": {
       "date": "2026-08-15",
       "via": "validation",
-      "note": "Answer A stands. Flagged by audit-deck.mjs as an explanation arguing against its own key, and the audit was right about the prose: the original argued for option B throughout, on the strength of a fabricated 'Exact Extract' claiming the popup's options derive from the Contract Item Price Discount Type picklist. That sentence appears nowhere. The documentation names the flow and says admins customize it by flow API name."
+      "note": "Answer A stands. The old explanation argued for option B throughout, on the strength of a quote that appears in no Salesforce documentation. The documentation names the flow and says admins customize it by flow API name."
     }
   },
   {
@@ -216,7 +216,7 @@
     "corrected": {
       "date": "2026-09-15",
       "via": "validation",
-      "note": "Answer A kept as the exam's intended answer, but the item is stale. The 2026-08-15 note said the backdating prohibition was undocumented; it is now contradicted outright. Backdate Asset Transactions (Growth or Advanced license, standard arcFlow) documents cancelling with an effective date \"in the past and on or after the asset's start date\", with a worked example entered on November 12 effective November 1. The old explanation's claim that backdating is \"not supported once the service has been active and billed\" is false on a current org. Read the item as testing the legacy rule its stem asserts."
+      "note": "Answer A is kept as the exam's intended answer, but the item is stale. Backdate Asset Transactions (Growth or Advanced license, standard arcFlow) documents cancelling with an effective date \"in the past and on or after the asset's start date\", with a worked example entered on November 12 effective November 1. The old explanation's claim that backdating is \"not supported once the service has been active and billed\" is false on a current org. Read the item as testing the legacy rule its question asserts."
     }
   },
   {
@@ -286,7 +286,7 @@
     "corrected": {
       "date": "2026-08-15",
       "via": "validation",
-      "note": "Answer A stands. Flagged by audit-deck.mjs, and the audit was right about the prose but not the key: the original explanation argued for option B (reactivation) using a fabricated 'Exact Extract' from 'Salesforce Revenue Cloud (Pricing Setup Documentation)'. The documentation shows pricing element input variables mapping to context tags, which is what makes tagging the missing step."
+      "note": "Answer A stands. The old explanation argued for option B (reactivation) using a quote that appears in no Salesforce documentation. The documentation shows pricing element input variables mapping to context tags, which is what makes tagging the missing step."
     }
   },
   {
@@ -496,7 +496,7 @@
     "corrected": {
       "date": "2026-08-15",
       "via": "validation",
-      "note": "Answer B stands. Verdict moved from confirmed to reasoning during URL verification: the original citation was a Safe Harbor page URL that returned HTTP 404, so it was replaced. No Salesforce documentation page I could render states the safe harbor rule in citable form, and the substituted reference covers implementation readiness rather than the safe harbor statement — flagged in the explanation itself so a reader is not misled about what the link proves."
+      "note": "Answer B stands. No Salesforce documentation page states the safe harbor rule in citable form; the linked reference covers implementation readiness rather than the safe harbor statement, and the explanation says so."
     }
   },
   {
@@ -551,7 +551,7 @@
     "corrected": {
       "date": "2026-08-15",
       "via": "validation",
-      "note": "Answer C stands. The original explanation argued this through Salesforce CPQ's legacy 'Product Option Quantity Scale' field, which is the wrong product: in Revenue Cloud the control is quantityScaleMethod on the product-related component. Rewritten against that field's documented enumeration, which also shows why A and B fail — 'None' is not a valid value. This is also the question audit-deck.mjs flagged as 'asks 2, marked 1'; that is a false positive, since the stem's 'two components' are answered by a single paired option."
+      "note": "Answer C stands. The old explanation argued this through Salesforce CPQ's legacy 'Product Option Quantity Scale' field, which is the wrong product: in Revenue Cloud the control is quantityScaleMethod on the product-related component. The explanation now follows that field's documented values, which also show why A and B fail — 'None' is not a valid value. The question's 'two components' are answered by a single paired option, so one answer is correct."
     }
   },
   {
@@ -646,7 +646,7 @@
     "corrected": {
       "date": "2026-08-15",
       "via": "validation",
-      "note": "Answer B left in place as the only option using the right keyword with declared cardinality ranges, but the option text is scrape-damaged: stray '/' characters sit inside the CML in options B and C, so no option is a clean transcription. Flagged rather than silently confirmed."
+      "note": "Answer B is the only option using the right keyword with declared cardinality ranges, but the option text is damaged: stray '/' characters sit inside the CML in options B and C, so no option is a clean transcription."
     }
   },
   {
@@ -671,7 +671,7 @@
     "corrected": {
       "date": "2026-09-15",
       "via": "validation",
-      "note": "Key moved B to A. The 2026-08-15 pass kept B and flagged that no article stated the precedence among the three addresses. Create Billing Profiles now does, in a table headed \"Billing follows the behavior mentioned in this table to determine which values to use\": the transaction record's own values win whenever present, then the associated billing profile, then the account's default billing profile, then org defaults. The order in this scenario has its own billing address, so New York is used.",
+      "note": "Create Billing Profiles now states the precedence among the addresses, in a table headed \"Billing follows the behavior mentioned in this table to determine which values to use\": the transaction record's own values win whenever present, then the associated billing profile, then the account's default billing profile, then org defaults. The order in this scenario has its own billing address, so New York is used.",
       "from": "B",
       "to": "A"
     }
@@ -813,7 +813,7 @@
     "corrected": {
       "date": "2026-09-15",
       "via": "validation",
-      "note": "Key moved C to B. The 2026-08-15 pass could not find any of the three option names in the permission set table and left C in place. The name is documented on \"Modify Activated Orders Before Fulfillment in Revenue Management\", whose User Permissions Needed block reads \"Place Supplemental Orders permission set AND Sales Operations Rep permission group\". No Place Change Order or Place Superseded Order permission set is documented.",
+      "note": "The permission set is documented on \"Modify Activated Orders Before Fulfillment in Revenue Management\", whose User Permissions Needed block reads \"Place Supplemental Orders permission set AND Sales Operations Rep permission group\". No Place Change Order or Place Superseded Order permission set is documented.",
       "from": "C",
       "to": "B"
     }
@@ -930,7 +930,7 @@
     "corrected": {
       "date": "2026-08-04",
       "via": "comments",
-      "note": "Q85 A->B. Collaborative redlining runs through the Microsoft 365 Word integration. Also replaced the placeholder explanation, which read \"?????? OR B\".",
+      "note": "Collaborative redlining runs through the Microsoft 365 Word integration. The placeholder explanation was also replaced.",
       "from": "A",
       "to": "B"
     }
@@ -964,7 +964,7 @@
     "corrected": {
       "date": "2026-09-15",
       "via": "validation",
-      "note": "Key moved A to B. The 2026-08-15 pass kept A on the reasoning that identical stage and step conditions make the feature \"skip a redundant approval\" — a mechanism Salesforce does not document. Smart Approvals is documented as skipping previously approved steps on a resubmission, and its only stage-versus-step rule is a limitation: a step conditioned on \"When the stage starts\" behind a decision node before the stage is ineligible, and the remedy is to put the decision node's criteria on the step. Mismatched conditions are the cause; matching them is the fix. The documentation does not use the option's exact wording, so the owner may want to re-read this one.",
+      "note": "The old answer rested on identical stage and step conditions making the feature \"skip a redundant approval\" — a mechanism Salesforce does not document. Smart Approvals is documented as skipping previously approved steps on a resubmission, and its only stage-versus-step rule is a limitation: a step conditioned on \"When the stage starts\" behind a decision node before the stage is ineligible, and the remedy is to put the decision node's criteria on the step. Mismatched conditions are the cause; matching them is the fix. The documentation does not use the option's exact wording, so treat this as a judgment call.",
       "from": "A",
       "to": "B"
     }
@@ -991,7 +991,7 @@
     "corrected": {
       "date": "2026-09-15",
       "via": "validation",
-      "note": "Key moved C to B. The 2026-08-15 pass could not confirm the flow name and kept C. Set Up Asset Lifecycle Flows documents a single \"Amend, Renew, and Cancel Salesforce Flow\" registered under Set Up Flow for Managing Assets (default runtime_revenue_arcflows__arcFlow), and no standalone Renew Assets flow appears anywhere in the Revenue Management documentation; the deck's own items on this flow (1092afe5, c60cb035) already treat it as the amend, renew, and cancel flow. The predefined flow could still contain a subflow of that name inside the managed package, which the documentation does not show, so this is a judgment call the owner may reverse.",
+      "note": "Set Up Asset Lifecycle Flows documents a single \"Amend, Renew, and Cancel Salesforce Flow\" registered under Set Up Flow for Managing Assets (default runtime_revenue_arcflows__arcFlow), and no standalone Renew Assets flow appears anywhere in the Revenue Management documentation; the deck's other questions on this flow treat it the same way. The managed package could still contain a subflow of that name that the documentation does not show, so this is a judgment call.",
       "from": "C",
       "to": "B"
     }
@@ -1018,7 +1018,7 @@
     "corrected": {
       "date": "2026-09-15",
       "via": "validation",
-      "note": "Key moved B to A. A 2026-08-04 comment moved this C to B on the (correct) ground that Product2 has no Auto Renew field, but the product-level setting is documented on the Product Selling Model: the Summer '25 release note reads \"Open a term based product selling model, click Edit, and then select Automatically Renew Asset by Default\", and the flow-template article lists that field on Product Selling Model pages with a separate per-asset Automatically Renew field on Quote Line Item, Order Item, and Asset. The Asset field is the per-deal override, not the product default.",
+      "note": "An earlier correction moved this from C to B on the (correct) ground that Product2 has no Auto Renew field, but the product-level setting is documented on the Product Selling Model: the Summer '25 release note reads \"Open a term based product selling model, click Edit, and then select Automatically Renew Asset by Default\", and the flow-template article lists that field on Product Selling Model pages with a separate per-asset Automatically Renew field on Quote Line Item, Order Item, and Asset. The Asset field is the per-deal override, not the product default.",
       "from": "B",
       "to": "A"
     }
@@ -1035,7 +1035,7 @@
     "corrected": {
       "date": "2026-08-15",
       "via": "validation",
-      "note": "Key moved B to A. Attribute mapping and context mapping are documented as living on the contract extraction template — the template is defined as the thing that holds them — so 'Modify the AI prompt template' was wrong. This deck previously carried a near-duplicate of this question keyed the opposite way; once the documentation settled the key, the two agreed and the redundant copy was removed on 2026-08-17.",
+      "note": "Attribute mapping and context mapping are documented as living on the contract extraction template — the template is defined as the thing that holds them — so 'Modify the AI prompt template' was wrong.",
       "from": "B",
       "to": "A"
     }
@@ -1369,7 +1369,7 @@
     "corrected": {
       "date": "2026-09-15",
       "via": "validation",
-      "note": "Key moved A to C. Building a template with clauses happens in the Microsoft 365 Word editor via the Salesforce Contracts for Word add-in, and the Salesforce Contracts persona table documents the Microsoft 365 Word Designer/User permission sets as what \"Allows users to insert Salesforce data such as clauses into documents and templates\"; Create Section in Document Template names Microsoft 365 Word Designer as the required permission. OmniStudio Admin appears in the CLM permission-set combination table for document generation, so the owner may want to re-read this one, but the task-specific pages point at the Word permission.",
+      "note": "Building a template with clauses happens in the Microsoft 365 Word editor via the Salesforce Contracts for Word add-in, and the Salesforce Contracts persona table documents the Microsoft 365 Word Designer/User permission sets as what \"Allows users to insert Salesforce data such as clauses into documents and templates\"; Create Section in Document Template names Microsoft 365 Word Designer as the required permission. OmniStudio Admin also appears in the CLM permission-set combination table for document generation, so treat this as a judgment call, but the task-specific pages point at the Word permission.",
       "from": "A",
       "to": "C"
     }

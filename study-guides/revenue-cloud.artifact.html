@@ -361,6 +361,7 @@ code {
   padding: .1em .34em;
   border-radius: 3px;
   color: var(--ink);
+  overflow-wrap: anywhere;
 }
 
 ul, ol.prose { margin: 0 0 18px; padding-left: 20px; max-width: 68ch; }
@@ -618,7 +619,6 @@ html { scroll-behavior: smooth; }
       <li><a href="#stale" class="key">Deck older than the exam</a></li>
       <li><a href="#plan">Two-week plan</a></li>
       <li><a href="#sources">Sources</a></li>
-      <li><a href="#notebooklm">Using NotebookLM</a></li>
     </ol>
     <p class="note">Sections in red carry the objectives the practice deck does not train you for.</p>
   </nav>
@@ -633,7 +633,7 @@ html { scroll-behavior: smooth; }
       <div class="call alert">
         <span class="tag">Two structural facts that matter more than any topic</span>
         <p><strong>63% is unusually forgiving.</strong> You can miss 22 of 60 and still pass &mdash;
-        the lowest bar of any exam covered in this repo. That should change your revision strategy:
+        the lowest bar of any exam in this app. That should change your revision strategy:
         there is no domain you must be perfect in, and the right move is to stop polishing Asset
         Management, which the deck has already drilled into you, and buy cheap marks in the two
         domains the deck barely touches.</p>
@@ -672,11 +672,11 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">02</span><span>Where the points actually are</span></h2>
       <div class="sect-rule"></div>
 
-      <p class="lede">The deck's own nine <code>_cat</code> tags &mdash; Product Catalog, Pricing
+      <p class="lede">The deck's own nine topic tags &mdash; Product Catalog, Pricing
       &amp; Discounts, Subscriptions, Configuration, Quote &amp; Order, Billing &amp; Invoicing,
       Context Service, General, Integration &amp; API &mdash; are not the exam's domains and never
-      were. The deck column is an independent re-classification of all 135 against the seven current
-      domains (<code>study-guides/reclassify-revenue-cloud.mjs</code>).</p>
+      were. The deck column re-reads all 135 questions against the seven current
+      domains.</p>
 
       <div class="tw">
         <table>
@@ -745,17 +745,16 @@ html { scroll-behavior: smooth; }
       <strong>attributes</strong> and <strong>mappings</strong>.</p>
       <ul>
         <li>The two valid actions on a <em>standard</em> context definition are <strong>Extend</strong>
-        and <strong>Clone</strong> (<code>ea8501f7</code>). Extend inherits everything and lets you add
-        &mdash; <code>25acadca</code> extends <code>SalesTransactionContext</code>.</li>
+        and <strong>Clone</strong>. Extend inherits everything and lets you add
+        &mdash; for example, extending <code>SalesTransactionContext</code>.</li>
         <li>Mapping a CRM field into a transaction means mapping <strong>node to node, then attribute
-        to attribute</strong>: Catalog Product to Product2, then the field (<code>e02f90f5</code>).</li>
+        to attribute</strong>: Catalog Product to Product2, then the field.</li>
         <li>The pricing procedure's context definition <strong>must be the one selected on Product
-        Discovery settings</strong>. When they differ, quoting breaks in ways that look random
-        (<code>42d9581e</code>).</li>
+        Discovery settings</strong>. When they differ, quoting breaks in ways that look random.</li>
         <li>A new custom field on a context definition needs a <strong>tag</strong> on the field
-        attribute before a pricing procedure can use it (<code>464876c9</code>).</li>
+        attribute before a pricing procedure can use it.</li>
         <li><strong>Persistence</strong> is the mapping setting that makes an attribute value survive
-        for downstream processes (<code>df8f0748</code>).</li>
+        for downstream processes.</li>
         <li>Salesforce ships <strong>Predefined Context Definitions</strong> for Revenue Management.
         Know that before you build one.</li>
       </ul>
@@ -778,7 +777,7 @@ html { scroll-behavior: smooth; }
           Omnistudio</strong>. Expression sets and digital procedures can call decision matrices.</li>
         </ul>
         <p>Do not let the deck's three <strong>decision table</strong> items
-        (<code>11baead8</code>, <code>c59aa725</code>, <code>b45b5d01</code>) convince you it covered
+ convince you it covered
         this. A decision table is a different object from a decision matrix, and the deck never
         mentions an expression set.</p>
       </div>
@@ -787,19 +786,17 @@ html { scroll-behavior: smooth; }
         <span class="tag">Near-zero &mdash; dashboards and KPIs</span>
         <p>The outline asks you to "design context-aware dashboards and key performance indicators
         using native Salesforce reporting tools." <strong>"KPI" returns zero hits in the
-        deck.</strong> The two dashboard items name a packaged app (<code>0b7cd50b</code>,
-        Subscription and Revenue Lifecycle Analytics) or an intelligence setup step
-        (<code>b1cfb9c8</code>, Revenue Management Intelligence needing Data Cloud configuration plus
+        deck.</strong> The two dashboard items name a packaged app (Subscription and Revenue Lifecycle Analytics) or an intelligence setup step
+        (Revenue Management Intelligence needing Data Cloud configuration plus
         a Dynamic dashboard package). Neither asks you to design a report.</p>
         <p>The reporting objects the deck <em>does</em> teach are the ones a report has to be built
         on, so memorise them: attribute runtime values at order activation live on <strong>Asset
-        State Periods</strong> and <strong>Asset State Period Attributes</strong>
-        (<code>5b126341</code>); ordered configurable attributes live on <strong>Order
-        Products</strong> and <strong>Order Product Attributes</strong> (<code>17453798</code>).</p>
+        State Periods</strong> and <strong>Asset State Period Attributes</strong>; ordered configurable attributes live on <strong>Order
+        Products</strong> and <strong>Order Product Attributes</strong>.</p>
       </div>
 
       <h4>Omnistudio &mdash; document generation only</h4>
-      <p>Both Omnistudio hits (<code>38db2a91</code>, <code>832c6c98</code>) are Document Generation.
+      <p>Both Omnistudio hits are Document Generation.
       No OmniScript, FlexCard, Integration Procedure or DataRaptor item exists, and the outline names
       Omnistudio as an ARM feature without qualification.</p>
 
@@ -807,9 +804,9 @@ html { scroll-behavior: smooth; }
       <div class="tw">
         <table class="kv">
           <tbody>
-            <tr><td><code>HasLifecycleManagement</code></td><td>Distinguishes a Revenue Management record from a custom-app record (<code>5ebe00f0</code>)</td></tr>
-            <tr><td>Application Usage Assignment</td><td>With the value <em>Revenue Lifecycle Management</em>, tells you which records Revenue Management created (<code>9bac03e6</code>)</td></tr>
-            <tr><td>Missing RLM record</td><td>Why a contract activates without its assets attached (<code>cdfa1139</code>)</td></tr>
+            <tr><td><code>HasLifecycleManagement</code></td><td>Distinguishes a Revenue Management record from a custom-app record</td></tr>
+            <tr><td>Application Usage Assignment</td><td>With the value <em>Revenue Lifecycle Management</em>, tells you which records Revenue Management created</td></tr>
+            <tr><td>Missing RLM record</td><td>Why a contract activates without its assets attached</td></tr>
           </tbody>
         </table>
       </div>
@@ -836,8 +833,8 @@ html { scroll-behavior: smooth; }
         <li>Define clear <strong>business objectives</strong>.</li>
         <li>Establish <strong>realistic milestones</strong> to guide the project.</li>
       </ol>
-      <p>The deck's <code>2fd9af4b</code> keys "assemble a team with Quote-to-Cash expertise, create a
-      phased plan covering core setup" and <code>41493562</code> keys "set up environments for
+      <p>One deck item keys "assemble a team with Quote-to-Cash expertise, create a
+      phased plan covering core setup" and another keys "set up environments for
       development, testing and production, and choose a deployment tool." Both are consistent with
       this and both are correct &mdash; and between them they are almost the whole of the deck's
       project coverage.</p>
@@ -862,13 +859,13 @@ html { scroll-behavior: smooth; }
       <div class="tw">
         <table class="kv">
           <tbody>
-            <tr><td>Product Catalog Management Designer</td><td>PSL required to <em>edit</em> catalog records, not just view them (<code>2a61d2aa</code>)</td></tr>
-            <tr><td>Product Discovery User</td><td>Without it the Browse Products button does not appear on the quote page layout (<code>894e7d14</code>)</td></tr>
-            <tr><td>Product Configurator</td><td>Required to configure a bundle from the Transaction Line Table or Browse Catalog (<code>4c19bd08</code>)</td></tr>
-            <tr><td>Customer Asset Lifecycle Management</td><td>Required to generate Asset Actions and Asset State Periods and edit Lifecycle Asset fields during migration (<code>6d3a68c2</code>)</td></tr>
-            <tr><td>Place Supplemental Orders</td><td>Required to change an activated order (<code>d38922f8</code>)</td></tr>
-            <tr><td>Billing Administrator</td><td>Required to suspend invoicing on a delinquent account (<code>2ec8b053</code>)</td></tr>
-            <tr><td>Microsoft 365 Word Designer / User</td><td>Required to insert clauses into a Salesforce Contracts template (<code>832c6c98</code> &mdash; judgment call, &sect;12)</td></tr>
+            <tr><td>Product Catalog Management Designer</td><td>PSL required to <em>edit</em> catalog records, not just view them</td></tr>
+            <tr><td>Product Discovery User</td><td>Without it the Browse Products button does not appear on the quote page layout</td></tr>
+            <tr><td>Product Configurator</td><td>Required to configure a bundle from the Transaction Line Table or Browse Catalog</td></tr>
+            <tr><td>Customer Asset Lifecycle Management</td><td>Required to generate Asset Actions and Asset State Periods and edit Lifecycle Asset fields during migration</td></tr>
+            <tr><td>Place Supplemental Orders</td><td>Required to change an activated order</td></tr>
+            <tr><td>Billing Administrator</td><td>Required to suspend invoicing on a delinquent account</td></tr>
+            <tr><td>Microsoft 365 Word Designer / User</td><td>Required to insert clauses into a Salesforce Contracts template (judgment call, &sect;12)</td></tr>
           </tbody>
         </table>
       </div>
@@ -876,18 +873,18 @@ html { scroll-behavior: smooth; }
       <div class="call trap">
         <span class="tag">Roles: what the deck has is not what the bullet asks</span>
         <p>The outline asks for <strong>cross-product</strong> stakeholder roles. The deck has one item
-        (<code>6d2955d5</code>) and it is catalog-scoped: Catalog Administrator manages
+ and it is catalog-scoped: Catalog Administrator manages
         classifications and attributes, Product Designer defines product structures and bundles. That
         split is correct &mdash; Salesforce's Product Catalog Management Personas page states it
         &mdash; but it is not the cross-product project-team question the bullet describes.</p>
       </div>
 
       <h4>Deployment</h4>
-      <p><code>11baead8</code> is the deck's only deployment item: to move a custom decision table to
+      <p>The deck's only deployment item: to move a custom decision table to
       a staging sandbox, deploy the custom object <strong>and</strong> the decision table, then map the
       decision table in the default pricing procedure. Generalise it &mdash; a deployed ARM artefact
-      usually needs re-pointing at something in the target org after it lands. <code>1092afe5</code> is
-      the same lesson for flows: a duplicated amend/renew/cancel flow does nothing until Revenue
+      usually needs re-pointing at something in the target org after it lands. The same lesson
+      applies to flows: a duplicated amend/renew/cancel flow does nothing until Revenue
       Settings points at the new one.</p>
     </section>
 
@@ -902,30 +899,28 @@ html { scroll-behavior: smooth; }
       <h4>Structure and reuse</h4>
       <ul>
         <li>Lead with a <strong>shared catalog with reusable components, attributes and selling models
-        tailored per business</strong> rather than a catalog per line of business (<code>43661ef6</code>).</li>
+        tailored per business</strong> rather than a catalog per line of business.</li>
         <li>Use <strong>product classifications</strong> for attribute reuse; apply <strong>selling
-        models at the product level</strong> to support one-time, term-based and evergreen
-        (<code>231e4a3f</code>).</li>
+        models at the product level</strong> to support one-time, term-based and evergreen.</li>
         <li>Use <strong>Product Attributes to rationalise</strong> a catalog that would otherwise need
-        thousands of SKUs (<code>bc9001d5</code> &mdash; 30,000 consultants by role and skill).</li>
+        thousands of SKUs (30,000 consultants by role and skill).</li>
         <li>The <strong>Product Selling Model</strong> and <strong>Product Selling Model Option</strong>
         collapse lease-versus-buy and payment-frequency variants into one product
-        (<code>69e0bfd0</code>; <code>0010599f</code> &mdash; Term Monthly for 12 equal instalments).</li>
+        (Term Monthly for 12 equal instalments).</li>
         <li>Establish the Salesforce Product Catalog as the <strong>single source of truth</strong> when
-        product data is scattered across a PIM and other systems (<code>21608eee</code>).</li>
+        product data is scattered across a PIM and other systems.</li>
       </ul>
 
       <h4>Bundles and cardinality</h4>
       <ul>
-        <li><strong>Local Cardinality</strong> on a component carries its minimum and maximum quantity
-        (<code>c3716756</code>).</li>
+        <li><strong>Local Cardinality</strong> on a component carries its minimum and maximum quantity.</li>
         <li>A per-component maximum <em>and</em> a bundle-wide total: local cardinality on each
-        component, the total on the parent (<code>cc6acf9f</code>).</li>
+        component, the total on the parent.</li>
         <li>Quantity scaling is <strong>Proportional</strong> (scales with the parent) or
-        <strong>Constant</strong> (fixed regardless) &mdash; <code>09695b88</code>, VPN License
-        proportional, Classroom Training constant.</li>
+        <strong>Constant</strong> (fixed regardless) &mdash; for example, a VPN License
+        proportional and Classroom Training constant.</li>
         <li>A <strong>configurable bundled product</strong> is the one that lets users customise
-        components <em>and</em> attributes (<code>32f0b06f</code>).</li>
+        components <em>and</em> attributes.</li>
       </ul>
 
       <h4>Making products findable &mdash; the deck's most useful cluster</h4>
@@ -934,31 +929,28 @@ html { scroll-behavior: smooth; }
         <table>
           <thead><tr><th>Symptom</th><th>Cause</th></tr></thead>
           <tbody>
-            <tr><td>New product not appearing in search</td><td><strong>Rebuild Index</strong> (<code>4b7a292c</code>)</td></tr>
-            <tr><td>Product2 custom field not searchable</td><td>Index and Search Configuration, mark searchable, then <strong>Rebuild Index</strong> (<code>03439ed7</code>)</td></tr>
-            <tr><td>Products invisible while quoting</td><td>Wrong <strong>context definition</strong> in Product Discovery Settings (<code>94a4585c</code>)</td></tr>
-            <tr><td>Products invisible in Browse Catalog</td><td>No active <strong>price book entry</strong> in the price book on the quote (<code>df19fa7d</code>)</td></tr>
-            <tr><td>Users forced to pick a catalog every time</td><td>Set a <strong>default catalog</strong> in Product Discovery Settings (<code>a98e5518</code>)</td></tr>
-            <tr><td>Flow changes not appearing</td><td>Add the <strong>Flow Name</strong> in Product Discovery Setup (<code>910c3b97</code>)</td></tr>
+            <tr><td>New product not appearing in search</td><td><strong>Rebuild Index</strong></td></tr>
+            <tr><td>Product2 custom field not searchable</td><td>Index and Search Configuration, mark searchable, then <strong>Rebuild Index</strong></td></tr>
+            <tr><td>Products invisible while quoting</td><td>Wrong <strong>context definition</strong> in Product Discovery Settings</td></tr>
+            <tr><td>Products invisible in Browse Catalog</td><td>No active <strong>price book entry</strong> in the price book on the quote</td></tr>
+            <tr><td>Users forced to pick a catalog every time</td><td>Set a <strong>default catalog</strong> in Product Discovery Settings</td></tr>
+            <tr><td>Flow changes not appearing</td><td>Add the <strong>Flow Name</strong> in Product Discovery Setup</td></tr>
           </tbody>
         </table>
       </div>
 
       <h4>Other catalog facts</h4>
       <ul>
-        <li><strong>Product Usage Grant</strong> defines a default entitlement such as data storage
-        (<code>995de54c</code>).</li>
-        <li>Control availability by country with a <strong>disqualification rule</strong>
-        (<code>05d04dbc</code>).</li>
+        <li><strong>Product Usage Grant</strong> defines a default entitlement such as data storage.</li>
+        <li>Control availability by country with a <strong>disqualification rule</strong>.</li>
         <li><strong>Attribute categories</strong> display in the sequence defined on the attribute
-        category records, with uncategorised attributes last (<code>a1290dae</code>).</li>
+        category records, with uncategorised attributes last.</li>
         <li>Enable <strong>data translation</strong> and supply values via the Product List and Product
-        Details APIs for multi-language browsing (<code>da605d37</code>).</li>
+        Details APIs for multi-language browsing.</li>
         <li>Decision-table evaluation criteria for eligibility are <strong>Product
-        Qualification</strong> or <strong>Product Category Qualification</strong>
-        (<code>c59aa725</code>).</li>
+        Qualification</strong> or <strong>Product Category Qualification</strong>.</li>
         <li>The auto-renew default lives on the <strong>Product Selling Model</strong>
-        (<code>f769f864</code>) &mdash; this key moved in the 2026-09-15 re-check, &sect;12.</li>
+        (&sect;12).</li>
       </ul>
     </section>
 
@@ -1006,18 +998,18 @@ html { scroll-behavior: smooth; }
       <div class="tw">
         <table class="kv">
           <tbody>
-            <tr><td>Simulate</td><td>Traces the price waterfall when a quote total is unexpected (<code>394bdad2</code>)</td></tr>
-            <tr><td>Pricing Operations Console</td><td>Where you verify calculated prices against the procedure's logic (<code>ca1076cd</code>)</td></tr>
-            <tr><td>Discount Distribution Service</td><td>Spreads a calculated discount evenly across lines &mdash; must be the <strong>last step</strong> (<code>2f16d956</code>)</td></tr>
-            <tr><td>Proration element</td><td>Handles a mid-cycle upgrade (<code>e3a70193</code>)</td></tr>
-            <tr><td>Derived Price, scope Transactional</td><td>Prices one product as a percentage of another's price in the same transaction (<code>9de3e0b9</code>)</td></tr>
-            <tr><td>Bundle-Based Price + Price Adjustment Matrix</td><td>Gives a bundle a discounted price against the sum of its parts (<code>e2f73f23</code>)</td></tr>
-            <tr><td>Sales Transaction Type + Volume-Based Pricing</td><td>Bulk discounts across selling channels (<code>0821ddcd</code>)</td></tr>
-            <tr><td>Contracted Pricing</td><td>Negotiated product-specific rates, held on the contract (<code>a5f8cfae</code>)</td></tr>
-            <tr><td>Is Price Impacting</td><td>Set on the attribute <em>at product level</em> to use an inherited attribute for pricing (<code>f6c30064</code>)</td></tr>
-            <tr><td>Matrix rows</td><td>The product of the option counts: 3 memory sizes &times; 2 terms = <strong>6</strong> (<code>cd2224b8</code>)</td></tr>
-            <tr><td>Product Ramp Segment</td><td>Segment types are <strong>Free Trial, Yearly, Custom</strong> (<code>a4b16e2c</code>). "Monthly" is not one &mdash; &sect;12</td></tr>
-            <tr><td>Ramp MRR</td><td>The segment's annual value over 12: <code>(20 &times; $1000) / 12</code> (<code>43e0f10a</code>)</td></tr>
+            <tr><td>Simulate</td><td>Traces the price waterfall when a quote total is unexpected</td></tr>
+            <tr><td>Pricing Operations Console</td><td>Where you verify calculated prices against the procedure's logic</td></tr>
+            <tr><td>Discount Distribution Service</td><td>Spreads a calculated discount evenly across lines &mdash; must be the <strong>last step</strong></td></tr>
+            <tr><td>Proration element</td><td>Handles a mid-cycle upgrade</td></tr>
+            <tr><td>Derived Price, scope Transactional</td><td>Prices one product as a percentage of another's price in the same transaction</td></tr>
+            <tr><td>Bundle-Based Price + Price Adjustment Matrix</td><td>Gives a bundle a discounted price against the sum of its parts</td></tr>
+            <tr><td>Sales Transaction Type + Volume-Based Pricing</td><td>Bulk discounts across selling channels</td></tr>
+            <tr><td>Contracted Pricing</td><td>Negotiated product-specific rates, held on the contract</td></tr>
+            <tr><td>Is Price Impacting</td><td>Set on the attribute <em>at product level</em> to use an inherited attribute for pricing</td></tr>
+            <tr><td>Matrix rows</td><td>The product of the option counts: 3 memory sizes &times; 2 terms = <strong>6</strong></td></tr>
+            <tr><td>Product Ramp Segment</td><td>Segment types are <strong>Free Trial, Yearly, Custom</strong>. "Monthly" is not one &mdash; &sect;12</td></tr>
+            <tr><td>Ramp MRR</td><td>The segment's annual value over 12: <code>(20 &times; $1000) / 12</code></td></tr>
           </tbody>
         </table>
       </div>
@@ -1027,32 +1019,32 @@ html { scroll-behavior: smooth; }
       recognisable even when the scenario is not.</p>
       <ul>
         <li>A relation with cardinality: <code>relation rooms : Room[0..5];</code> plus a
-        <code>require(...)</code> clause (<code>015f552d</code>).</li>
+        <code>require(...)</code> clause.</li>
         <li>A cross-product requirement at quote level: a relation per product plus
-        <code>require(desktop[...], monitor[...])</code> (<code>eac1d453</code>).</li>
+        <code>require(desktop[...], monitor[...])</code>.</li>
         <li>A warning when an attribute exceeds a threshold &rarr; <strong>constraint rule in the
-        Constraint Model at the Product Level</strong> (<code>244c6aa0</code>).</li>
+        Constraint Model at the Product Level</strong>.</li>
         <li>A context-aware rule can reference a parent-record field such as the Opportunity's
-        industry (<code>747d4014</code>).</li>
+        industry.</li>
         <li>To add a child product to a live constraint model, <strong>create a new type in the CML
-        Editor, then import it</strong> (<code>abd04873</code>).</li>
+        Editor, then import it</strong>.</li>
         <li>A <strong>global constant</strong> lets a value be referenced consistently across rules
-        (<code>fc7a413b</code>) &mdash; though this wording is not settled, &sect;12.</li>
+ &mdash; though this wording is not settled, &sect;12.</li>
       </ul>
 
       <h4>Quote mechanics</h4>
       <ul>
         <li>The <strong>Transaction Line Editor</strong> provides <strong>filtering</strong>
-        (<code>122cab6a</code>) &mdash; All Lines, Errored Lines, Ramped Lines, Unconfigured Lines, plus
+ &mdash; All Lines, Errored Lines, Ramped Lines, Unconfigured Lines, plus
         advanced filters of up to five conditions. Custom fields are exposed by adding them as
-        selected fields to the component in the Lightning record page (<code>66577d14</code>).</li>
+        selected fields to the component in the Lightning record page.</li>
         <li>Force quotes to have an Opportunity: Quote Settings &rarr; <strong>Create Quotes Without a
-        Related Opportunity = False</strong> (<code>89816cb1</code>).</li>
+        Related Opportunity = False</strong>.</li>
         <li><strong>Start Sync</strong> is the quick action that makes the opportunity forecast follow
-        the quote (<code>1ba9f913</code>).</li>
+        the quote.</li>
         <li><strong>Smart Approvals:</strong> a step conditioned on "when the stage starts" behind a
         decision node is ineligible; the fix is to make the step's condition match the stage's
-        (<code>a152b80a</code> &mdash; the key moved here in 2026-09-15, &sect;12).</li>
+        (&sect;12).</li>
       </ul>
     </section>
 
@@ -1067,38 +1059,34 @@ html { scroll-behavior: smooth; }
       <h4>Salesforce Contracts and CLM</h4>
       <ul>
         <li>Contract authoring and <strong>collaborative redlining</strong> run through an integration
-        with <strong>Microsoft 365</strong>, so the cloud provider is <strong>Microsoft Azure</strong>
-        (<code>6f59e427</code>). Templates use Microsoft 365 Word as the template type; negotiation
+        with <strong>Microsoft 365</strong>, so the cloud provider is <strong>Microsoft Azure</strong>. Templates use Microsoft 365 Word as the template type; negotiation
         happens in Word via the Salesforce Contracts Connector add-in.</li>
-        <li>Very large contracts are broken up with a <strong>section in a document template</strong>
-        (<code>db7c75c3</code>).</li>
+        <li>Very large contracts are broken up with a <strong>section in a document template</strong>.</li>
         <li><strong>Obligations</strong> can be assigned Owners and Tasks, which is why you create
-        them to track contractual commitments (<code>3764c8f5</code>).</li>
+        them to track contractual commitments.</li>
         <li><strong>Contracts AI:</strong> define <strong>attribute mapping and context mapping</strong>
-        on the contract extraction template to pull a new field out of a PDF (<code>6f99fe4e</code>,
-        <code>db199ded</code>).</li>
+        on the contract extraction template to pull a new field out of a PDF.</li>
         <li>Quote-to-contract conversion is customised by modifying the screen flow <strong>Create
-        Contract From Quote</strong> (<code>747e0c6b</code>).</li>
+        Contract From Quote</strong>.</li>
       </ul>
 
       <h4>Order Management and DRO</h4>
       <ul>
         <li>Changing line items after submission but before fulfilment requires that <strong>the entire
-        order is activated</strong> (<code>92f06ccd</code>); changing an <em>activated</em> order needs
-        <strong>Place Supplemental Order</strong> (<code>d38922f8</code>).</li>
+        order is activated</strong>; changing an <em>activated</em> order needs
+        <strong>Place Supplemental Order</strong>.</li>
         <li><strong>Dynamic Revenue Orchestrator</strong> automates the order lifecycle and streamlines
-        fulfilment (<code>86417498</code>), and is the answer when each component of a bundle needs a
-        different fulfilment process (<code>ef6c3e48</code>).</li>
+        fulfilment, and is the answer when each component of a bundle needs a
+        different fulfilment process.</li>
         <li>Decomposition at <strong>Order Line Item</strong> scope creates <strong>one fulfilment
-        order line item per decomposition rule</strong> per decomposing order line
-        (<code>d815a350</code>).</li>
+        order line item per decomposition rule</strong> per decomposing order line.</li>
         <li>A two-day delay between hardware delivery and software provisioning is <strong>Future-Dated
-        Steps in DRO settings</strong> (<code>a49cf7c1</code>).</li>
+        Steps in DRO settings</strong>.</li>
         <li><strong>Technical products</strong> carry what the customer should not see as a quote line
-        but fulfilment needs: shipping services (<code>37ee4c5f</code>), user manuals with
-        decomposition rules (<code>3655d2ba</code>), installation details (<code>2a788a0c</code>).</li>
+        but fulfilment needs: shipping services, user manuals with
+        decomposition rules, installation details.</li>
         <li>Carrying specifications from a commercial product to its fulfilment counterpart is
-        <strong>Field &amp; Attributes Mapping</strong> (<code>1742b9ef</code>).</li>
+        <strong>Field &amp; Attributes Mapping</strong>.</li>
       </ul>
     </section>
 
@@ -1113,8 +1101,7 @@ html { scroll-behavior: smooth; }
 
       <div class="call">
         <span class="tag">The four objects to memorise</span>
-        <p><strong>Asset, Asset Action, Asset State Period, Asset Action Source</strong>
-        (<code>f92918e7</code>). An <strong>Asset Action</strong> is a change event; an <strong>Asset
+        <p><strong>Asset, Asset Action, Asset State Period, Asset Action Source</strong>. An <strong>Asset Action</strong> is a change event; an <strong>Asset
         State Period</strong> is a dated window of state. That single distinction answers most of this
         domain.</p>
       </div>
@@ -1123,61 +1110,57 @@ html { scroll-behavior: smooth; }
         <table>
           <thead><tr><th>Scenario</th><th>What gets created</th></tr></thead>
           <tbody>
-            <tr><td>Subscription bought once, 36-month term</td><td><strong>One</strong> Asset Action, <strong>three</strong> Asset State Periods &mdash; one per term year (<code>6f5c6ce5</code>)</td></tr>
-            <tr><td>Same subscription, then amended</td><td><strong>Two</strong> Asset Actions, <strong>two</strong> Asset State Periods (<code>f63e3f43</code>)</td></tr>
-            <tr><td>Three custom ramp segments</td><td><strong>One</strong> Asset record, <strong>three</strong> Asset State Periods matching the segment dates (<code>3d12dbca</code>)</td></tr>
-            <tr><td>Tracing a renewal price to the original Net Unit Price</td><td><strong>Asset Action Source</strong> records (<code>e7f19278</code>)</td></tr>
+            <tr><td>Subscription bought once, 36-month term</td><td><strong>One</strong> Asset Action, <strong>three</strong> Asset State Periods &mdash; one per term year</td></tr>
+            <tr><td>Same subscription, then amended</td><td><strong>Two</strong> Asset Actions, <strong>two</strong> Asset State Periods</td></tr>
+            <tr><td>Three custom ramp segments</td><td><strong>One</strong> Asset record, <strong>three</strong> Asset State Periods matching the segment dates</td></tr>
+            <tr><td>Tracing a renewal price to the original Net Unit Price</td><td><strong>Asset Action Source</strong> records</td></tr>
           </tbody>
         </table>
       </div>
 
       <h4>Assetization</h4>
       <ul>
-        <li>Assets are created automatically by the <strong>Assetize Order flow</strong>
-        (<code>6f6cf302</code>).</li>
+        <li>Assets are created automatically by the <strong>Assetize Order flow</strong>.</li>
         <li>For a user to manage assets, products must be <strong>assetizable</strong> and the
-        <code>createOrUpdateAssetFromOrder</code> flow action must be in place
-        (<code>2a7b5f37</code>).</li>
+        <code>createOrUpdateAssetFromOrder</code> flow action must be in place.</li>
         <li>Migrating subscriptions from Salesforce CPQ: convert them to order lines and use the
-        <strong>Create or Update Asset From Order Item Action API</strong> (<code>39a152e8</code>).</li>
+        <strong>Create or Update Asset From Order Item Action API</strong>.</li>
       </ul>
 
       <h4>Amend, renew, cancel</h4>
       <ul>
         <li>Renewing an asset: <strong>create a renewal quote with the asset, create the order,
-        activate the order</strong> (<code>c74d7076</code>).</li>
+        activate the order</strong>.</li>
         <li><strong>Renewal Flow Templates</strong> create renewal opportunities and quotes/orders out
-        of the box (<code>435f2087</code>).</li>
+        of the box.</li>
         <li><code>InitiateRenewal</code> is the invocable action to wrap in a screen flow and expose as
-        a quick action (<code>6243552e</code>).</li>
-        <li>Expired assets are renewed by using <strong>Override Renewal Term</strong> first
-        (<code>1b631e67</code>, <code>b0621262</code>).</li>
+        a quick action.</li>
+        <li>Expired assets are renewed by using <strong>Override Renewal Term</strong> first.</li>
         <li>A ramped asset renewed via <code>InitiateRenew</code> has its <strong>ramped quote lines
-        recreated</strong> on the renewal quote (<code>36c657a7</code>).</li>
+        recreated</strong> on the renewal quote.</li>
         <li>Keeping varying historical quantities and prices through a renewal &rarr; <strong>Lot-based
-        or As-is Renewals</strong> (<code>c41101a6</code>).</li>
+        or As-is Renewals</strong>.</li>
         <li>Price-impacting attribute changes without touching the contract &rarr; <strong>Standard
-        Amendment</strong> (<code>4b342cdb</code>).</li>
+        Amendment</strong>.</li>
         <li>Repricing to new list prices &rarr; amend the original asset, keep the quantity, reprice,
-        run quote-to-order (<code>74259f96</code>).</li>
+        run quote-to-order.</li>
         <li>Partial cancellation of a product bought repeatedly at different prices uses
-        <strong>LIFO</strong> (<code>c9a0acc7</code>).</li>
+        <strong>LIFO</strong>.</li>
         <li>Restricting cancel: <strong>unassign the <code>InitiateCancellation</code> API
-        permission</strong> (<code>c60cb035</code>).</li>
+        permission</strong>.</li>
       </ul>
 
       <h4>The Managed Assets UI</h4>
       <ul>
         <li>Add the <strong>Managed Asset Viewer</strong> to the Account record page in Lightning App
-        Builder and tick the checkbox (<code>e242341d</code>).</li>
+        Builder and tick the checkbox.</li>
         <li>To surface a custom Asset field during selection, modify the <strong>Managed Asset
-        Viewer</strong> component (<code>9bb4967d</code>).</li>
+        Viewer</strong> component.</li>
         <li>To remove the renewal-term override option, modify the <strong>Amend, Renew, and Cancel
-        Assets</strong> flow's screen component (<code>87836da2</code> &mdash; judgment call,
+        Assets</strong> flow's screen component (judgment call,
         &sect;12).</li>
         <li>To capture the latest active Contract for an Asset: build a <strong>Contract lookup on
-        Asset</strong> and use automation on Asset update to find the latest-dated Asset Action Source
-        (<code>0fc81879</code>).</li>
+        Asset</strong> and use automation on Asset update to find the latest-dated Asset Action Source.</li>
       </ul>
     </section>
 
@@ -1192,44 +1175,38 @@ html { scroll-behavior: smooth; }
       <h4>Billing schedules and runs</h4>
       <ul>
         <li>A <strong>Billing Schedule Group</strong> groups related Billing Schedules under a single
-        order product, <strong>even across amendments</strong> (<code>6a9ce9dd</code>).</li>
+        order product, <strong>even across amendments</strong>.</li>
         <li>Changing a customer's monthly billing date: select the <strong>Billing Schedule
-        Group</strong> for that asset and change it there (<code>99592626</code> &mdash; key moved
-        2026-09-15).</li>
+        Group</strong> for that asset and change it there.</li>
         <li>Recurring invoices every Monday at 6:00 &rarr; a <strong>Recurring Invoice Run</strong> with
-        Weekly frequency and that start time (<code>826bd7e2</code>).</li>
-        <li><strong>Advance</strong> is the billing timing that collects before the service period
-        (<code>ba4a4163</code>).</li>
-        <li><strong>Billing Treatment at the Order Product level overrides the Product level</strong>
-        (<code>1ab5f73e</code>).</li>
+        Weekly frequency and that start time.</li>
+        <li><strong>Advance</strong> is the billing timing that collects before the service period.</li>
+        <li><strong>Billing Treatment at the Order Product level overrides the Product level</strong>.</li>
       </ul>
 
       <h4>Proration, addresses, tax, legal entity</h4>
       <ul>
         <li>Proration multiplier = <strong>remaining days in the period &divide; total days in the
-        period</strong> (<code>ab527e42</code>).</li>
+        period</strong>.</li>
         <li>Billing address precedence, four rows deep: <strong>the transaction's own values win</strong>,
-        then the associated billing profile, then the account's default profile, then org defaults
-        (<code>287332c0</code> &mdash; key moved 2026-09-15).</li>
+        then the associated billing profile, then the account's default profile, then org defaults.</li>
         <li>Custom tax logic integrates through the <strong>Billing <code>TaxEngineAdapter</code> Apex
-        interface</strong> (<code>9462b116</code>).</li>
+        interface</strong>.</li>
         <li><strong>Legal Entity</strong> is the construct for multi-country tax rules and invoicing
-        regulations (<code>ab6a9e3d</code>).</li>
-        <li>Negative amends and cancellations are captured as a <strong>Credit Memo</strong>
-        (<code>234fe505</code>).</li>
+        regulations.</li>
+        <li>Negative amends and cancellations are captured as a <strong>Credit Memo</strong>.</li>
         <li>Stop invoicing a delinquent account: <strong>Billing Administrator</strong> permission set,
-        then <strong>Suspend</strong> on the account (<code>2ec8b053</code>).</li>
+        then <strong>Suspend</strong> on the account.</li>
       </ul>
 
       <h4>Usage</h4>
       <ul>
         <li><strong>Usage Management</strong> ingests, aggregates and rates consumption against the
-        products (<code>0ff325db</code>).</li>
+        products.</li>
         <li>Usage-based rates by consumption band are <strong>tier rate entries</strong> on a Tier Rate
-        Card, each with a lower bound, upper bound and adjustment (<code>bac3a61d</code>).</li>
+        Card, each with a lower bound, upper bound and adjustment.</li>
         <li>After activating a usage-based order, expect <strong>Usage Entitlement Account</strong>,
-        <strong>Usage Entitlement Bucket</strong> and <strong>Wallet</strong>
-        (<code>841f964e</code>).</li>
+        <strong>Usage Entitlement Bucket</strong> and <strong>Wallet</strong>.</li>
       </ul>
     </section>
 
@@ -1249,7 +1226,7 @@ html { scroll-behavior: smooth; }
             <tr><td><strong>2&ndash;3 years</strong></td><td>Product-to-Cash domain experience the guide assumes</td></tr>
             <tr><td><strong>18 / 14 / 16 / 18 / 11 / 16 / 7</strong></td><td>Domain weights in outline order. They sum to 100</td></tr>
             <tr><td><strong>Summer '25</strong></td><td>Exam alignment &mdash; older than current docs</td></tr>
-            <tr><td><strong>6 rows</strong></td><td>3 memory options &times; 2 contract terms in an attribute pricing matrix (<code>cd2224b8</code>)</td></tr>
+            <tr><td><strong>6 rows</strong></td><td>3 memory options &times; 2 contract terms in an attribute pricing matrix</td></tr>
             <tr><td><strong>4 templates</strong></td><td>Agentforce for Revenue: Quote Management, Billing Employee Assistance, Billing Service Assistance, Approval</td></tr>
             <tr><td><strong>4-row precedence</strong></td><td>Billing address: transaction &rarr; billing profile &rarr; account default &rarr; org default</td></tr>
             <tr><td><strong>3 ramp segment types</strong></td><td>Free Trial, Yearly, Custom</td></tr>
@@ -1276,8 +1253,8 @@ html { scroll-behavior: smooth; }
 
       <p>Patterns that recur in this deck's wrong answers:</p>
       <ul>
-        <li><strong>The plausible Setup node that does not exist.</strong> The deck's own fact-check
-        found this repeatedly. If an option names a settings page you cannot picture, distrust it.</li>
+        <li><strong>The plausible Setup node that does not exist.</strong> Practice material for this
+        exam invents these often. If an option names a settings page you cannot picture, distrust it.</li>
         <li><strong>The workaround where a documented feature exists.</strong> Salesforce ships Renewal
         Flow Templates, <code>InitiateRenewal</code>, Assetize Order and Usage Management. An option
         proposing a custom flow or a batch job to do one of those is nearly always wrong.</li>
@@ -1299,14 +1276,6 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">12</span><span>Where the deck is older than the exam</span></h2>
       <div class="sect-rule"></div>
 
-      <div class="call alert">
-        <span class="tag">Read this before trusting a remembered answer</span>
-        <p>This deck has been fact-checked <strong>twice</strong> &mdash; 2026-08-15 and again
-        2026-09-15 &mdash; and the second pass moved <strong>7 keys on a deck already marked "fully
-        checked."</strong> If you worked the deck before 2026-09-15 you learned the old answers to
-        seven items.</p>
-      </div>
-
       <h4>The renames</h4>
       <div class="tw">
         <table>
@@ -1321,36 +1290,36 @@ html { scroll-behavior: smooth; }
       <p>Answer with the deck's vocabulary on the exam &mdash; it is aligned to Summer '25 &mdash; but
       expect the new names on every doc page and Setup node.</p>
 
-      <h4>The seven keys that moved on 2026-09-15</h4>
+      <h4>Seven answers practice sources often get wrong</h4>
       <div class="tw">
         <table>
-          <thead><tr><th>Item</th><th>Moved</th><th>Now</th></tr></thead>
+          <thead><tr><th>The documented answer</th></tr></thead>
           <tbody>
-            <tr><td><code>d38922f8</code></td><td>C &rarr; B</td><td><strong>Place Supplemental Orders</strong> is the permission set for changing an activated order</td></tr>
-            <tr><td><code>287332c0</code></td><td>B &rarr; A</td><td>The order's own billing address wins over the attached billing account</td></tr>
-            <tr><td><code>99592626</code></td><td>C &rarr; A</td><td>Billing date changes are edited on the <strong>Billing Schedule Group</strong>, not routed through a change order</td></tr>
-            <tr><td><code>f769f864</code></td><td>B &rarr; A</td><td>The product-level auto-renew default is on the term-based <strong>Product Selling Model</strong></td></tr>
-            <tr><td><code>a152b80a</code></td><td>A &rarr; B</td><td>Smart Approvals: <strong>mismatched</strong> stage/step conditions are the cause; matching them is the cure</td></tr>
-            <tr><td><code>832c6c98</code></td><td>A &rarr; C</td><td>Clauses are inserted via the <strong>Microsoft 365 Word Designer/User</strong> permission sets</td></tr>
-            <tr><td><code>87836da2</code></td><td>C &rarr; B</td><td>There is one registered <strong>Amend, Renew, and Cancel</strong> flow, not a separate Renew Assets flow</td></tr>
+            <tr><td><strong>Place Supplemental Orders</strong> is the permission set for changing an activated order</td></tr>
+            <tr><td>The order's own billing address wins over the attached billing account</td></tr>
+            <tr><td>Billing date changes are edited on the <strong>Billing Schedule Group</strong>, not routed through a change order</td></tr>
+            <tr><td>The product-level auto-renew default is on the term-based <strong>Product Selling Model</strong></td></tr>
+            <tr><td>Smart Approvals: <strong>mismatched</strong> stage/step conditions are the cause; matching them is the cure</td></tr>
+            <tr><td>Clauses are inserted via the <strong>Microsoft 365 Word Designer/User</strong> permission sets</td></tr>
+            <tr><td>There is one registered <strong>Amend, Renew, and Cancel</strong> flow, not a separate Renew Assets flow</td></tr>
           </tbody>
         </table>
       </div>
 
       <div class="call trap">
-        <span class="tag">Two of those are judgment calls the owner may reverse</span>
-        <p><code>832c6c98</code> &mdash; OmniStudio Admin also appears in the CLM
+        <span class="tag">Two of those are judgment calls</span>
+        <p>On clauses, OmniStudio Admin also appears in the CLM
         permission-combination table for document generation, so the Microsoft 365 answer is
-        defensible rather than certain. <code>87836da2</code> &mdash; the managed package could hold a
+        defensible rather than certain. On the renewal flow, the managed package could hold a
         subflow named for renewals that no documentation shows. If you meet either on the exam, note
         that both options have a claim.</p>
       </div>
 
       <h4>Two items that are genuinely unsettled</h4>
       <ul>
-        <li><code>fc7a413b</code> &mdash; the CML "global constant" wording rests on no page that
+        <li>The CML "global constant" wording rests on no page that
         states it.</li>
-        <li><code>355a06ae</code> &mdash; the safe-harbor item (design only against generally available
+        <li>The safe-harbor item (design only against generally available
         features) is sound practice and not documented as a rule.</li>
       </ul>
       <p>Do not spend revision time resolving these. Know that the deck flags them.</p>
@@ -1358,36 +1327,17 @@ html { scroll-behavior: smooth; }
       <h4>Exam-right, production-wrong</h4>
       <p>Items where the deck's key is what the exam wants and the product has moved:</p>
       <ul>
-        <li><code>c41101a6</code> &mdash; the Asset's Pricing Source field <em>is</em> a documented
-        prerequisite of lot-based renewal; the old explanation denied it.</li>
-        <li><code>fddbd719</code> &mdash; backdating a cancellation <em>is</em> now supported
+        <li>The Asset's Pricing Source field <em>is</em> a documented prerequisite of lot-based
+        renewal.</li>
+        <li>Backdating a cancellation <em>is</em> now supported
         (<em>Backdate Asset Transactions</em>). The item keeps the exam's legacy answer with a
         note.</li>
-        <li><code>38db2a91</code> &mdash; Document Builder is no longer contract-only; <em>Document
+        <li>Document Builder is no longer contract-only; <em>Document
         Builder for Quotes</em> exists, so two options are defensible and OmniStudio Document
         Generation is the keyed one.</li>
-        <li><code>a4b16e2c</code> &mdash; <strong>Monthly is not a ramp segment type.</strong> The three
+        <li><strong>Monthly is not a ramp segment type.</strong> The three
         are Free Trial, Yearly and Custom.</li>
       </ul>
-
-      <h4>How to verify any of this yourself</h4>
-      <div class="call">
-        <span class="tag">On this vendor, pull the table of contents before searching the web</span>
-        <p><code>help.salesforce.com</code> renders its whole left-hand TOC on every article page, so
-        from any one <code>ind.</code> article you can walk the shadow DOM and get the entire Agentforce
-        Revenue Management doc set &mdash; <strong>1,308 titled entries in a single call</strong>,
-        confirmed again on 2026-09-26.</p>
-        <p>The recipe: from a loaded article, recurse the document and every <code>shadowRoot</code> collecting every <code>a[href*=articleView]</code> anchor, take each anchor's text plus the <code>id=</code> parameter out of its <code>href</code>, and de-duplicate. One call, the whole doc set, with titles.</p>
-        <p>This is the technique that made the 2026-09-15 re-check work. Ten of the twelve items the
-        first pass had marked "could not settle" turned out to be articles that existed under titles
-        web search never surfaced &mdash; <em>Turn On Future Dated Steps</em>, <em>Manage Suspend and
-        Resume Billing</em>, <em>Use Lot-Based Renewals</em>, <em>Backdate Asset Transactions</em>.</p>
-      </div>
-      <p>Two caveats. Run <strong>one top-level <code>navigate</code> per article</strong> and poll for
-      a real title <em>and</em> a body over ~1,500 characters, because a framed or half-loaded page
-      reports live articles as dead. And <code>WebFetch</code> does not work on this host from a cloud
-      container &mdash; it returns the SPA's "CSS Error" shell for both real and invented ids, which
-      was re-confirmed on 2026-09-26.</p>
     </section>
 
     <!-- 13 -->
@@ -1439,10 +1389,7 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">14</span><span>Sources</span></h2>
       <div class="sect-rule"></div>
 
-      <p class="lede">Every URL below was rendered in a browser on 2026-09-26 and its title confirmed.
-      <code>WebFetch</code> does not resolve <code>help.salesforce.com</code> from a cloud container
-      &mdash; it returns an identical "CSS Error" shell for real and invented ids alike &mdash; so a
-      title check there means a browser.</p>
+      <p class="lede">The official pages this guide is built from. Last checked September 2026.</p>
 
       <div class="linklist">
         <p><a href="https://help.salesforce.com/s/articleView?id=005298978&amp;type=1&amp;language=en_US">Salesforce Certified Agentforce Revenue Management Consultant Exam Guide</a>
@@ -1471,44 +1418,6 @@ html { scroll-behavior: smooth; }
 
       <p>Per-question citations live in the deck itself: every one of the 135 explanations ends in a
       <code>References:</code> block with at least one rendered URL.</p>
-    </section>
-
-    <!-- 15 -->
-    <section id="notebooklm">
-      <h2 class="sect"><span class="num">15</span><span>Using this with NotebookLM</span></h2>
-      <div class="sect-rule"></div>
-
-      <p class="lede">Upload <code>study-guides/salesforce-revenue-cloud.md</code>. It is written to be
-      a single source a notebook can answer from &mdash; the domain weights, the gap list and the moved
-      keys are all stated as facts rather than implied.</p>
-
-      <div class="prompts">
-        <p class="prompt">Quiz me only on Implementation Readiness and Business Rules Engine. Both are
-        named exam objectives with almost no practice items, so generate the questions yourself from
-        the documentation described in sections 4 and 3.</p>
-
-        <p class="prompt">List every fact in this guide that the guide itself says is unsettled, a
-        judgment call, or exam-right-but-production-wrong. For each, tell me what to answer on the exam
-        and what is true in a current org.</p>
-
-        <p class="prompt">I have eight days, not fourteen. Compress the plan in section 13, keeping the
-        ordering principle that gaps come before consolidation.</p>
-
-        <p class="prompt">Build me a table of every permission set and permission set licence named in
-        this guide, with the one thing it unlocks.</p>
-
-        <p class="prompt">Explain the difference between an expression set, a decision matrix and a
-        decision table as if I already know Flow. Then give me three scenarios where picking the wrong
-        one would be the tempting answer.</p>
-
-        <p class="prompt">For each of the seven keys that moved on 2026-09-15, state the old answer and
-        the new one, and tell me which single document settled it.</p>
-      </div>
-
-      <p class="colophon">Measured 2026-09-26 against <code>public/decks/salesforce-revenue-cloud.json</code>
-      and Help article <code>005298978</code>. Question counts and domain weights both have a short
-      shelf life &mdash; re-run <code>node study-guides/reclassify-revenue-cloud.mjs</code> before
-      trusting the table in &sect;2.</p>
     </section>
 
   </main>

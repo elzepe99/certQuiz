@@ -368,6 +368,7 @@ code {
   padding: .1em .34em;
   border-radius: 3px;
   color: var(--ink);
+  overflow-wrap: anywhere;
 }
 
 ul, ol.prose { margin: 0 0 18px; padding-left: 20px; max-width: 68ch; }
@@ -624,7 +625,6 @@ html { scroll-behavior: smooth; }
       <li><a href="#tells">Distractor tells</a></li>
       <li><a href="#plan">Two-week plan</a></li>
       <li><a href="#sources">Sources</a></li>
-      <li><a href="#notebooklm">Using NotebookLM</a></li>
     </ol>
     <p class="note">Sections in red are the ones the practice deck does not train you for.</p>
   </nav>
@@ -766,18 +766,13 @@ html { scroll-behavior: smooth; }
 
       <h3>&ldquo;Isn&rsquo;t this just bad tagging?&rdquo; &mdash; tested, and no</h3>
 
-      <p>The deck's domain tags came in with the scrape, so the obvious objection is that the skew
-      is a labelling artifact rather than a real content gap. It was worth checking, and the tags
-      <em>are</em> unreliable per-question: <code>18073510</code> and <code>c7d46b81</code> are the
-      same lead-migration question tagged <strong>Build</strong> and <strong>Design</strong>;
-      <code>ff6c0296</code> and <code>b054672a</code> are the same batch-size question tagged
-      <strong>Maintain</strong> and <strong>Build</strong>.</p>
+      <p>The obvious objection is that the skew is a labelling artifact rather than a real content
+      gap. It was worth checking, and the deck's tags <em>are</em> unreliable per question: the same
+      lead-migration question appears tagged <strong>Build</strong> once and <strong>Design</strong>
+      once, and the same batch-size question <strong>Maintain</strong> and <strong>Build</strong>.</p>
 
       <p>But re-classifying all 146 questions independently &mdash; by what each one actually tests,
-      ignoring the tag &mdash; lands on the same distribution. Re-measured 2026-09-25, after the
-      2026-08-25 loose-question import added 8 and the 2026-09-11 branch recovery added 5; of those
-      13, seven landed in Design and three in Build, so the imports moved the gap the wrong way
-      rather than the right one.</p>
+      ignoring the tag &mdash; lands on the same distribution.</p>
 
       <div class="tw">
         <table>
@@ -810,8 +805,7 @@ html { scroll-behavior: smooth; }
 
       <p>Only <strong>8 of 146</strong> re-tags disagreed with the deck, and six of the eight
       shuffled between Design / Build / Maintain &mdash; all three already over-weighted. Two did
-      move into the requirements domains (<code>998dcfd8</code> Business Needs &rarr; Translate,
-      <code>7b684ea4</code> Design &rarr; Landscape), for a net gain of <strong>one question</strong>:
+      move into the requirements domains, for a net gain of <strong>one question</strong>:
       15 by the deck's tags against 16 by independent re-tag. The mis-tagging is essentially lateral,
       so it cannot close the gap.</p>
 
@@ -1463,8 +1457,8 @@ html { scroll-behavior: smooth; }
       <h3>The ranking ladder &mdash; choosing between plausible considerations</h3>
       <p>The habit above tells you what to avoid. It does not help on the hard version of these
       items, where a choose-3 gives you five options that are <em>all</em> things a sensible
-      architect would think about. <code>a2ae17cb</code>, <code>9fa544c5</code>,
-      <code>21e6ad5a</code> and <code>998dcfd8</code> all have that shape, and eliminating on
+      architect would think about. Four deck items
+      have that shape, and eliminating on
       "is this reasonable?" fails on every one of them &mdash; because they are all reasonable.</p>
 
       <p>Rank the options instead. Apply in order, and stop at the first rule that separates
@@ -1475,17 +1469,16 @@ html { scroll-behavior: smooth; }
         "Consider" and "determine" want a <em>question to answer</em>, not a decision already
         taken. Anything naming a product, a connector, or a middleware vendor drops out here
         &mdash; even when it is the thing you would eventually build. This kills "explore
-        out-of-the-box connectors" and "propose a middleware system" in
-        <code>2924d322</code>.</li>
+        out-of-the-box connectors" and "propose a middleware system".</li>
         <li><strong>Measurable.</strong> Between two options at the right altitude, prefer the one
         whose answer is a number, a direction, or an enumerable list. <em>Data volume and
-        processing volume</em> beats <em>reporting and usability requirements</em> in
-        <code>dc227c12</code> for exactly this reason &mdash; one has an answer, the other has an
+        processing volume</em> beats <em>reporting and usability requirements</em>
+        for exactly this reason &mdash; one has an answer, the other has an
         opinion.</li>
         <li><strong>Drives the design.</strong> Prefer the consideration that would <em>change the
         integration pattern</em> if the answer came back differently. Latency, volume,
         directionality and idempotency all flip the pattern; multi-currency and license choice do
-        not. This is the rule that settles <code>9fa544c5</code>.</li>
+        not. This is the rule that settles the deck's requirements-gathering choose-3.</li>
         <li><strong>In scope for the integration architect.</strong> Program governance, SME
         availability and integration skills are real project risks and belong to someone else's
         exam. If an option is about <em>staffing or running the project</em> rather than about the
@@ -1566,7 +1559,7 @@ html { scroll-behavior: smooth; }
 
       <h3>The "why bother with middleware" shape</h3>
       <p>A recurring Translate item puts a sceptical CIO in the stem: <em>if we have to write custom
-      code anyway, why buy middleware?</em> (<code>21e6ad5a</code>). The trap is that the tempting
+      code anyway, why buy middleware?</em>. The trap is that the tempting
       answers &mdash; <strong>bulkification</strong> and <strong>performance</strong> &mdash; are things
       you can achieve perfectly well in hand-written Apex. They are not arguments for
       middleware.</p>
@@ -1614,15 +1607,15 @@ html { scroll-behavior: smooth; }
         <li><strong>The stem's explicit keeps win over everything.</strong> If a numbered
         requirement says "reuse enterprise capabilities for Quoting and Order Management", those two
         are integrated no matter how well Salesforce could replace them. This single clause decides
-        <code>73466e15</code>: Salesforce <em>could</em> do quoting, but goal (3) says reuse it, so
+        the quoting-and-OMS item: Salesforce <em>could</em> do quoting, but goal (3) says reuse it, so
         Quoting and OMS survive and the answer is the other three.</li>
-        <li><strong>A named system of record is never retired.</strong> <code>3262c8d0</code> says
-        MDM is the system of record for customers and ERP for pricing &mdash; so both are in the
+        <li><strong>A named system of record is never retired.</strong> When a stem says
+        MDM is the system of record for customers and ERP for pricing, both are in the
         integration list, and options offering a separate <em>Inventory</em> or <em>Pricing
         Engine</em> are wrong because the stem already told you those facts live in ERP.</li>
         <li><strong>Integrate with the data store, not the tool sitting on it.</strong> Both
-        landscape items in the deck turn on this. <code>47d1f854</code> and <code>3262c8d0</code>
-        each include the <strong>Data Warehouse</strong> and exclude the <strong>BI / Analytics
+        landscape items in the deck turn on this. Both
+        include the <strong>Data Warehouse</strong> and exclude the <strong>BI / Analytics
         tool</strong> it feeds &mdash; you integrate with where the data is, and the dashboard
         downstream comes along for free. An option naming the BI tool is a reliable wrong
         answer.</li>
@@ -1649,8 +1642,7 @@ html { scroll-behavior: smooth; }
         Write the three questions. That is the Translate item hiding behind every Design item, and
         it is the cheapest way to turn the deck's over-representation into practice you actually
         need.</li>
-        <li><strong>Run the landscape table.</strong> For <code>73466e15</code>,
-        <code>47d1f854</code> and <code>3262c8d0</code>, build the table and apply the four rules in
+        <li><strong>Run the landscape table.</strong> For the deck's three landscape items, build the table and apply the four rules in
         order. You should reach the key without weighing options against each other.</li>
         <li><strong>Argue the CIO both ways.</strong> Justify middleware to a sceptic in three
         bullets, then justify skipping it. Notice which arguments survive rule 1 of the ranking
@@ -1815,7 +1807,7 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">16</span><span>Sources</span></h2>
       <div class="sect-rule"></div>
 
-      <p>Every URL below was rendered and title-checked during this repo's fact-check work.</p>
+      <p>Every link below was opened and checked when this guide was written.</p>
 
       <h4>Patterns and architecture</h4>
       <ul class="linklist">
@@ -1880,41 +1872,11 @@ html { scroll-behavior: smooth; }
       </ul>
     </section>
 
-    <!-- 17 -->
-    <section id="notebooklm">
-      <h2 class="sect"><span class="num">17</span><span>Using this with NotebookLM</span></h2>
-      <div class="sect-rule"></div>
-
-      <p>Upload the Markdown version of this guide as a source &mdash; headings become NotebookLM's
-      navigation. Worth adding alongside it: the
-      <a href="https://architect.salesforce.com/docs/architect/fundamentals/guide/integration-patterns.html">Integration
-      Patterns guide</a> and the
-      <a href="https://help.salesforce.com/s/articleView?id=005298980&type=1&language=en_US">official
-      exam guide</a>, both of which NotebookLM can ingest by URL.</p>
-
-      <h3>Prompts that produce useful study media</h3>
-      <div class="prompts">
-        <div class="prompt">Generate an Audio Overview focused only on sections 3, 4 and 6 &mdash; the integration patterns, their mechanisms, and the event types. Have the hosts quiz each other on which pattern a scenario describes.</div>
-        <div class="prompt">I have two weeks. Using section 12, drill me on requirements-gathering questions: give me a business scenario with a system landscape and ask what an architect should determine first. Don't give me the answer until I try.</div>
-        <div class="prompt">Turn section 7 into flashcards &mdash; one number per card, the limit on the front, the value plus the trap on the back.</div>
-        <div class="prompt">Using section 13, explain each case where the exam's expected answer differs from current Salesforce behaviour, and why the exam still keys the old answer.</div>
-        <div class="prompt">Build a study guide from section 14 &mdash; for each distractor pattern, write three fresh example options that would be wrong for that reason.</div>
-      </div>
-
-      <p>For the Audio Overview specifically, sections 3, 6, 12 and 13 are the ones that reward
-      listening &mdash; they're conceptual and comparative. Sections 7 and 16 are lookup tables and won't
-      survive being read aloud.</p>
-    </section>
-
   </main>
 
   <footer class="colophon">
-    Compiled from the 146 questions in <code>integration_architect_questions_corrected.json</code>,
-    the official Salesforce exam guide (read 24 Aug 2026), and the verified documentation set in
-    <code>.claude/skills/factcheck-deck/references/verified-docs.md</code>. Deck-derived facts come
-    from a deck that has had a full documentation pass &mdash; 37 correction stamps, 15 answer keys moved
-    &mdash; so the explanations behind this guide have themselves been checked against vendor
-    documentation.
+    Compiled from the 146 questions in this deck, the official Platform Integration Architect exam guide, and
+    the Salesforce documentation those questions cite. Last reviewed September 2026.
   </footer>
 
 </div>

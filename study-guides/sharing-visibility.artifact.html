@@ -361,6 +361,7 @@ code {
   padding: .1em .34em;
   border-radius: 3px;
   color: var(--ink);
+  overflow-wrap: anywhere;
 }
 
 ul, ol.prose { margin: 0 0 18px; padding-left: 20px; max-width: 68ch; }
@@ -614,7 +615,6 @@ html { scroll-behavior: smooth; }
       <li><a href="#stale" class="key">Deck older than the platform</a></li>
       <li><a href="#plan">Two-week plan</a></li>
       <li><a href="#sources">Sources</a></li>
-      <li><a href="#notebooklm">Using NotebookLM</a></li>
     </ol>
     <p class="note">Sections in red carry the objectives the practice deck does not train you for.</p>
   </nav>
@@ -631,8 +631,8 @@ html { scroll-behavior: smooth; }
         <p><strong>The deck over-drills the domain you are most likely to know already.</strong> 75 of
         its 136 items are record access &mdash; OWDs, roles, sharing rules, teams, sharing sets &mdash;
         against 39% of the exam. Object and field permissions, 27% of the exam, get 22.</p>
-        <p><strong>58% is a low bar and 120 minutes is a long exam.</strong> This is the only architect
-        exam in the repo with two hours for 60 questions. Long scenario stems are the norm; read the last
+        <p><strong>58% is a low bar and 120 minutes is a long exam.</strong> It is the only architect
+        exam in this app with two hours for 60 questions. Long scenario stems are the norm; read the last
         sentence first.</p>
       </div>
 
@@ -657,9 +657,8 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">02</span><span>Where the points actually are</span></h2>
       <div class="sect-rule"></div>
 
-      <p class="lede">Unusually, this deck's <code>_cat</code> tags already use the four current domain
-      names. Every item was still re-read and placed on its own merits
-      (<code>study-guides/reclassify-sharing-visibility.mjs</code>); the re-reading agreed with the tags
+      <p class="lede">Unusually, this deck's topic tags already use the four current domain
+      names. Every item was still re-read and placed on its own merits; the re-reading agreed with the tags
       on 129 of 136 and moved the other seven for stated reasons.</p>
 
       <div class="tw">
@@ -688,8 +687,8 @@ html { scroll-behavior: smooth; }
       </div>
 
       <h4>Sub-objectives the deck never asks</h4>
-      <p>Found by reading all 136 against the outline, then confirmed by keyword sweep over stems, options
-      <em>and</em> explanations on 2026-09-28. Each is taught in the section named.</p>
+      <p>Found by reading all 136 questions against the outline, then confirmed by searching stems, options
+      <em>and</em> explanations. Each is taught in the section named.</p>
       <ol class="prose">
         <li><strong>Programmatic enforcement the modern way</strong> &mdash; <code>WITH USER_MODE</code>,
         <code>as user</code> DML, <code>stripInaccessible</code>. Zero hits. The deck teaches only
@@ -703,10 +702,10 @@ html { scroll-behavior: smooth; }
         after sharing has granted it. Zero hits. &sect;4.</li>
         <li><strong>Manager groups.</strong> Zero hits, under a named "groups" bullet. &sect;4.</li>
         <li><strong>The external OWD ceiling</strong> &mdash; external access can never be more permissive
-        than internal. The deck uses separate external OWDs (<code>42ccc679</code>) but never states the
+        than internal. The deck uses separate external OWDs but never states the
         rule. &sect;4.</li>
-        <li><strong>Guest users and Knowledge.</strong> Zero hits for either. Named here as gaps only;
-        this pass did not render documentation for them.</li>
+        <li><strong>Guest users and Knowledge.</strong> Zero hits for either. Named here as gaps; read
+        Salesforce's documentation on each before the exam.</li>
       </ol>
     </section>
 
@@ -720,32 +719,26 @@ html { scroll-behavior: smooth; }
       <h4>What the deck does cover</h4>
       <ul>
         <li><strong>Remove the object permission, not the record:</strong> stop Order deletion by removing
-        Order Delete from profiles and permission sets (<code>5511f656</code>); stop reps editing
-        system-provisioned work orders by removing Work Order Edit (<code>89980a66</code>).</li>
-        <li><strong>Missing fields on a detail page are field-level security</strong>, not sharing
-        (<code>67edf27b</code>). A field vanishing after a deployment that did not touch the layout is
-        diagnosed with <strong>View Field Accessibility</strong> (<code>7f7fa913</code>,
-        <code>5cb48d4c</code>).</li>
-        <li><strong>Readable by one team, editable by another:</strong> FLS per profile
-        (<code>719e1654</code>); three of a hundred users need read-only on one field &rarr; a new profile
-        without edit (<code>43b7241d</code>); fields for reporting only &rarr; FLS without adding them to a
-        layout (<code>79d8546f</code>).</li>
+        Order Delete from profiles and permission sets; stop reps editing
+        system-provisioned work orders by removing Work Order Edit.</li>
+        <li><strong>Missing fields on a detail page are field-level security</strong>, not sharing. A field vanishing after a deployment that did not touch the layout is
+        diagnosed with <strong>View Field Accessibility</strong>.</li>
+        <li><strong>Readable by one team, editable by another:</strong> FLS per profile; three of a hundred users need read-only on one field &rarr; a new profile
+        without edit; fields for reporting only &rarr; FLS without adding them to a
+        layout.</li>
         <li><strong>OWD does not beat object permissions:</strong> a manager with no Read on Invoice sees
-        nothing of a subordinate's Invoice even though the OWD is Public Read Only
-        (<code>c9f8748f</code>). Object access is the gate; sharing only opens records behind it.</li>
-        <li><strong>Encryption:</strong> encrypted fields can't drive criteria-based sharing rules
-        (<code>f5aa4d62</code>); new fields added to Shield Platform Encryption need Salesforce to
-        re-encrypt existing values (<code>0f59fb2a</code>).</li>
-        <li><strong>Login hours are a profile setting</strong> (<code>ced866bb</code>).</li>
+        nothing of a subordinate's Invoice even though the OWD is Public Read Only. Object access is the gate; sharing only opens records behind it.</li>
+        <li><strong>Encryption:</strong> encrypted fields can't drive criteria-based sharing rules; new fields added to Shield Platform Encryption need Salesforce to
+        re-encrypt existing values.</li>
+        <li><strong>Login hours are a profile setting</strong>.</li>
         <li><strong>Modify All Data</strong> for a tool that must write everything regardless of sharing
-        and CRUD (<code>6a078f90</code>).</li>
+        and CRUD.</li>
       </ul>
 
       <div class="call alert">
         <span class="tag">Zero deck questions &mdash; enforcing security from Apex, the modern way</span>
         <p>"Recommend the appropriate programmatic solution to ensure security settings are enforced" is a
-        named bullet. The deck's answer is always <code>isAccessible()</code> (<code>43c201b6</code>,
-        <code>abd2e57b</code>) or a sharing keyword. Know the three current tools:</p>
+        named bullet. The deck's answer is always <code>isAccessible()</code> or a sharing keyword. Know the three current tools:</p>
         <ul>
           <li><strong>User mode on the query:</strong> "insert a <code>WITH USER_MODE</code> or
           <code>WITH SYSTEM_MODE</code> clause". User mode "finds all FLS errors in your SOQL query".</li>
@@ -777,7 +770,7 @@ html { scroll-behavior: smooth; }
         permission set group, not users assigned directly to a permission set outside of the permission set
         group". You can mute object, field and user permissions. That is the modern
         answer to "these three users need everything the team has except X", where the deck's answer is a
-        new profile (<code>43b7241d</code>). Both are valid; know that the exam may offer either.</p>
+        new profile. Both are valid; know that the exam may offer either.</p>
       </div>
 
       <div class="call alert">
@@ -792,9 +785,9 @@ html { scroll-behavior: smooth; }
       <h4>Regulated data &mdash; name the requirement, then pick the control</h4>
       <p>The outline names PCI, PII and HIPAA; the deck never does. Map the words to controls you already
       know: <strong>field-level security</strong> to hide, <strong>Shield Platform Encryption</strong> to
-      protect at rest (<code>0f59fb2a</code>), and monitoring of who read or exported it. The deck has no
-      item on Event Monitoring or Transaction Security policies; the data-architect deck's
-      <code>4bce9573</code> keys both for exactly this kind of regulated customer.</p>
+      protect at rest, and monitoring of who read or exported it. The deck has no
+      item on Event Monitoring or Transaction Security policies; the Data Architect deck keys
+      both for exactly this kind of regulated customer.</p>
     </section>
 
     <!-- 4 -->
@@ -807,41 +800,35 @@ html { scroll-behavior: smooth; }
 
       <h4>The order access is decided in</h4>
       <ol class="prose">
-        <li><strong>Object permission</strong> &mdash; no Read, no records, whatever else is true
-        (<code>c9f8748f</code>, <code>f06ffe05</code>).</li>
-        <li><strong>OWD</strong> sets the floor. Choose the most restrictive any user needs, then open up
-        (<code>ecf35f6a</code>, <code>13e3a0cb</code>, <code>3f1c2bdd</code>).</li>
+        <li><strong>Object permission</strong> &mdash; no Read, no records, whatever else is true.</li>
+        <li><strong>OWD</strong> sets the floor. Choose the most restrictive any user needs, then open up.</li>
         <li><strong>Role hierarchy</strong> opens upward, unless <strong>Grant Access Using
-        Hierarchies</strong> is off &mdash; custom objects only (<code>4bea0db4</code>,
-        <code>32ca6c0b</code>, <code>fe13cd62</code>, <code>9e11ff8d</code>).</li>
+        Hierarchies</strong> is off &mdash; custom objects only.</li>
         <li><strong>Sharing rules</strong> &mdash; owner-based or criteria-based, to roles, roles and
-        subordinates, or public groups (<code>437bd895</code>, <code>921e28b3</code>,
-        <code>b893344a</code>).</li>
-        <li><strong>Teams, manual shares, Apex managed sharing</strong> for what rules can't express
-        (<code>96a7a404</code>, <code>2832551d</code>, <code>6da44329</code>).</li>
+        subordinates, or public groups.</li>
+        <li><strong>Teams, manual shares, Apex managed sharing</strong> for what rules can't express.</li>
         <li><strong>Implicit sharing</strong> fills in parent access: opportunity access gives Read on the
-        account (<code>16f36e7f</code>, <code>1b589ed2</code>).</li>
+        account.</li>
       </ol>
 
       <h4>What survives an owner change &mdash; a reliable exam target</h4>
       <ul>
-        <li><strong>Manual shares are deleted</strong> on ownership transfer (<code>30e22baa</code>).</li>
+        <li><strong>Manual shares are deleted</strong> on ownership transfer.</li>
         <li><strong>Apex managed shares with a custom sharing reason survive</strong>; that is the point of
-        the reason (<code>3f1bd5c8</code>, <code>276034b7</code>).</li>
-        <li>After a transfer between peers, the previous owner has <strong>no access</strong>
-        (<code>1cb4aa5f</code>).</li>
+        the reason.</li>
+        <li>After a transfer between peers, the previous owner has <strong>no access</strong>.</li>
       </ul>
 
       <h4>External users</h4>
       <ul>
         <li><strong>Customer Community (high-volume) users have no roles</strong> &mdash; use a
-        <strong>sharing set</strong> (<code>68234b0a</code>, <code>b90e1a88</code>), and a <strong>share
-        group</strong> to give internal users access to what they own (<code>ca3ab1d9</code>).</li>
+        <strong>sharing set</strong>, and a <strong>share
+        group</strong> to give internal users access to what they own.</li>
         <li><strong>Partner users get a three-tier role hierarchy</strong> per account &mdash; Executive,
-        Manager, User (<code>46cf2c6f</code>). <strong>Partner Super User</strong> widens a user's reach
-        to their peers' records (<code>741614b9</code>, <code>e53d2012</code>, <code>681f22f4</code>).</li>
+        Manager, User. <strong>Partner Super User</strong> widens a user's reach
+        to their peers' records.</li>
         <li>Collaborating on <strong>opportunities</strong> needs a <strong>Partner Community</strong>
-        licence (<code>094a753b</code>).</li>
+        licence.</li>
       </ul>
 
       <div class="call alert">
@@ -872,7 +859,7 @@ html { scroll-behavior: smooth; }
 
       <div class="call">
         <span class="tag">The external OWD ceiling</span>
-        <p>Separate internal and external defaults are in the deck (<code>42ccc679</code>). The rule it never
+        <p>Separate internal and external defaults are in the deck. The rule it never
         states: <strong>"The external access level for an object can't be more permissive than the internal
         access level."</strong> An option setting external Public Read Only over an internal Private is
         wrong on sight.</p>
@@ -888,28 +875,23 @@ html { scroll-behavior: smooth; }
       standard or custom object record &mdash; and the deck covers its main families.</p>
 
       <ul>
-        <li><strong>Files:</strong> a file in a private library is visible only to its owner
-        (<code>e39a74a8</code>); a file posted to a record's feed is visible to the poster and to users who
-        can see the record (<code>5314dea1</code>, <code>7afcfb38</code>). Password-protected links come
-        from a <strong>content delivery</strong> (<code>b1f7ddb3</code>).</li>
+        <li><strong>Files:</strong> a file in a private library is visible only to its owner; a file posted to a record's feed is visible to the poster and to users who
+        can see the record. Password-protected links come
+        from a <strong>content delivery</strong>.</li>
         <li><strong>Report and dashboard folders</strong> are shared with users, roles, roles and
-        subordinates, and public groups (<code>83bc5172</code>, <code>11c6463d</code>). To share one you
-        need <strong>Manage Reports in Public Folders</strong> plus <strong>Manager</strong> on the folder
-        (<code>19b83d4f</code>, <code>42219114</code>). Export is its own profile permission
-        (<code>f8cfaa5e</code>).</li>
+        subordinates, and public groups. To share one you
+        need <strong>Manage Reports in Public Folders</strong> plus <strong>Manager</strong> on the folder. Export is its own profile permission.</li>
         <li><strong>List views</strong> are shared with public groups and roles, which is also how you hide
-        irrelevant ones (<code>ea780ddf</code>, <code>36f6a143</code>, <code>0fa57dbd</code>).</li>
-        <li><strong>External objects:</strong> access is an object permission on the profile
-        (<code>e4ff9eb3</code>); limiting which external rows each user sees means connecting over
-        OAuth and restricting access in the source system itself (<code>d40bd22a</code>).</li>
+        irrelevant ones.</li>
+        <li><strong>External objects:</strong> access is an object permission on the profile; limiting which external rows each user sees means connecting over
+        OAuth and restricting access in the source system itself.</li>
         <li><strong>Secrets:</strong> protected custom metadata or protected custom settings in a managed
-        package, or named credentials (<code>0da8893e</code>, <code>b53a73d3</code>,
-        <code>d2ab6b1e</code>).</li>
+        package, or named credentials.</li>
       </ul>
       <div class="call">
         <span class="tag">Not covered, and not taught here</span>
-        <p>No item touches <strong>Knowledge</strong> article visibility. It belongs to this bullet; this
-        pass did not render its documentation, so it is named rather than taught.</p>
+        <p>No item touches <strong>Knowledge</strong> article visibility. It belongs to this bullet; read
+        Salesforce's Knowledge sharing documentation before the exam.</p>
       </div>
     </section>
 
@@ -924,31 +906,27 @@ html { scroll-behavior: smooth; }
       <h4>Scalability</h4>
       <ul>
         <li><strong>Ownership skew</strong> is one user owning more than <strong>10,000</strong> records of
-        an object. Spread the ownership, and give a parking user <strong>no role</strong>
-        (<code>b9762333</code>, <code>d8e912b9</code>).</li>
+        an object. Spread the ownership, and give a parking user <strong>no role</strong>.</li>
         <li><strong>Parent (lookup) skew</strong> &mdash; too many children under one parent &mdash;
-        produces <code>UNABLE_TO_LOCK_ROW</code>; redistribute the children (<code>ffc0447d</code>,
-        <code>d91acca1</code>).</li>
-        <li><strong>Granular locking</strong> lets group changes in separate hierarchies run concurrently
-        (<code>80e1fa53</code>, <code>d603efad</code>, <code>9dde825b</code>).</li>
+        produces <code>UNABLE_TO_LOCK_ROW</code>; redistribute the children.</li>
+        <li><strong>Granular locking</strong> lets group changes in separate hierarchies run concurrently.</li>
         <li><strong>Deferred sharing recalculation</strong> for a reorganisation; <strong>parallel sharing
-        rule recalculation</strong> for a 24x7 org (<code>57e4ff8c</code>, <code>a8ae2576</code>).</li>
+        rule recalculation</strong> for a 24x7 org.</li>
         <li>Share Apex managed sharing to <strong>groups, not users</strong>, so team changes don't force a
-        recalculation (<code>53a40bfb</code>).</li>
+        recalculation.</li>
       </ul>
 
       <h4>Licences</h4>
       <p>A million distributor users on opportunities point at a <strong>Partner Community</strong>
-      licence (<code>af9c0811</code>); partner roles stop at three levels (<code>57ea8ddf</code>).</p>
+      licence; partner roles stop at three levels.</p>
 
       <h4>Testing the model</h4>
       <ul>
-        <li><strong><code>runAs()</code></strong> in tests, per user and profile (<code>5982cba0</code>,
-        <code>b3eeee28</code>, <code>c095ab36</code>) &mdash; read &sect;9 before the two items that ask
+        <li><strong><code>runAs()</code></strong> in tests, per user and profile &mdash; read &sect;9 before the two items that ask
         what it enforces.</li>
-        <li><strong>Login As</strong> a sample user in each role and profile (<code>43e1b231</code>); the
-        <strong>Sharing</strong> button's access view to troubleshoot (<code>b26eae84</code>); an export of
-        <strong>AccountShare</strong> to review (<code>32457136</code>).</li>
+        <li><strong>Login As</strong> a sample user in each role and profile; the
+        <strong>Sharing</strong> button's access view to troubleshoot; an export of
+        <strong>AccountShare</strong> to review.</li>
       </ul>
     </section>
 
@@ -983,8 +961,7 @@ html { scroll-behavior: smooth; }
         <span class="tag">Read the question's own verb</span>
         <p>"Which <strong>feature</strong>" wants a mechanism. "What is <strong>causing</strong>" wants a
         diagnosis, and this deck pairs several diagnoses with their fixes in one option set. "What is the
-        <strong>impact</strong>" wants the side effect &mdash; usually implicit sharing
-        (<code>33731b3c</code>, <code>cdd5ba1f</code>).</p>
+        <strong>impact</strong>" wants the side effect &mdash; usually implicit sharing.</p>
       </div>
       <ul>
         <li><strong>Sharing can't fix a permissions problem.</strong> If the user lacks the object or field
@@ -995,9 +972,9 @@ html { scroll-behavior: smooth; }
         building their access on the role hierarchy is wrong.</li>
         <li><strong>Manual sharing for anything that must survive an owner change</strong> is wrong; Apex
         sharing with a reason is right.</li>
-        <li><strong>A denial of a real capability.</strong> This deck's fact-check found explanations
-        denying things Enterprise Territory Management can do (<code>9c505fbc</code>) and calling
-        <code>isAccessible()</code> not a real Apex member when it is. Distrust an option that says a
+        <li><strong>A denial of a real capability.</strong> Practice material for this exam denies things
+        Enterprise Territory Management can do and calls <code>isAccessible()</code> not a real Apex
+        member when it is. Distrust an option that says a
         platform feature "cannot" do something.</li>
       </ul>
     </section>
@@ -1007,8 +984,8 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">09</span><span>Where the deck is older than the platform</span></h2>
       <div class="sect-rule"></div>
 
-      <p class="lede">The exam froze at Winter '23; the platform did not. Two Apex facts moved, and every deck
-      in this repo that touches Apex security still teaches them the old way.</p>
+      <p class="lede">The exam froze at Winter '23; the platform did not. Two Apex facts moved, and exam-era
+      material still teaches them the old way.</p>
 
       <div class="call alert">
         <span class="tag">runAs now enforces object and field permissions</span>
@@ -1018,46 +995,43 @@ html { scroll-behavior: smooth; }
         <p>Two items key the legacy reading and are <strong>defective as printed</strong>, because a second
         option is now also true:</p>
         <ul>
-          <li><code>09876cfd</code> keys "record sharing"; FLS and user permissions are now also
+          <li>One keys "record sharing"; FLS and user permissions are now also
           enforced.</li>
-          <li><code>e4de4c7a</code> keys "runAs does not enforce user or field-level permissions" as a
+          <li>One keys "runAs does not enforce user or field-level permissions" as a
           consideration &mdash; the statement the documentation now contradicts.</li>
         </ul>
-        <p><strong>Answer with the key on the exam; know the current rule for real work.</strong> Neither key
-        was moved, because the exam still tests the legacy reading.</p>
+        <p><strong>Answer with the key on the exam; know the current rule for real work.</strong> The deck keeps
+        the exam's legacy answers.</p>
       </div>
 
       <div class="call alert">
         <span class="tag">Apex's default access mode flipped at API 67.0</span>
         <p>"In API version 66.0 and earlier, Apex runs in system mode by default"; "in API version 67.0 and
-        later, Apex runs in user mode by default". So <code>28b6b693</code>'s keyed premise &mdash; Apex runs
-        in system mode, so you must enforce visibility yourself &mdash; is version-dependent, and its
+        later, Apex runs in user mode by default". So a keyed premise like "Apex runs
+        in system mode, so you must enforce visibility yourself" is version-dependent, and the deck's
         explanation says so. On the exam, assume system mode.</p>
       </div>
 
       <h4>Defective items, kept as keyed</h4>
       <ul>
-        <li><strong><code>7d2c8e5f</code></strong> &mdash; super user access reaches records "at their role
+        <li><strong>Partner super user, Partner User role</strong> &mdash; super user access reaches records "at their role
         level or below". For a Partner <strong>User</strong> that means same-role records only, so the
         stem's "any user, regardless of role, at the same distributor" is delivered by no option. Its twin
-        <code>681f22f4</code> asks about the partner <strong>manager</strong> role, where the same mechanism
+        asks about the partner <strong>manager</strong> role, where the same mechanism
         does reach what the stem wants, so that one is simply correct.</li>
-        <li><strong><code>9c505fbc</code></strong> &mdash; a choose-three about Enterprise Territory
+        <li><strong>Enterprise Territory Management capabilities</strong> &mdash; a choose-three about Enterprise Territory
         Management where Salesforce's comparison table marks <em>five</em> options Yes.</li>
       </ul>
 
       <h4>Repeats that are redundancy, not error</h4>
-      <p>Several scenarios appear more than once, reworded. All copies were fact-checked and are correct, so
-      meeting one twice is practice, not a contradiction: <code>13e3a0cb</code> / <code>3f1c2bdd</code>
-      (lead OWD), <code>5314dea1</code> / <code>7afcfb38</code> (a file on a record feed),
-      <code>80e1fa53</code> / <code>d603efad</code> (granular locking), <code>42219114</code> /
-      <code>19b83d4f</code> (report folder permissions). Two look like repeats and are not:
-      <code>ea780ddf</code> is a choose-one whose "(Variant)" <code>36f6a143</code> adds the role hierarchy as
-      a second right answer, and <code>b3eeee28</code> / <code>c095ab36</code> differ in their option sets
-      &mdash; only the second offers <code>with sharing</code>.</p>
+      <p>Several scenarios appear more than once, reworded. All copies are correct, so
+      meeting one twice is practice, not a contradiction: lead OWD, a file on a record feed, granular
+      locking, and report folder permissions. Two look like repeats and are not: a choose-one whose
+      "(Variant)" adds the role hierarchy as a second right answer, and a pair on Apex visibility that
+      differ in their option sets &mdash; only one offers <code>with sharing</code>.</p>
 
       <h4>Retired products in distractors</h4>
-      <p>Process Builder appears as a distractor (<code>ee79628f</code>); it reached end of support at the
+      <p>Process Builder appears as a distractor; it reached end of support at the
       end of 2025. It was never the right answer there, so nothing changes.</p>
     </section>
 
@@ -1104,7 +1078,7 @@ html { scroll-behavior: smooth; }
       <h2 class="sect"><span class="num">11</span><span>Sources</span></h2>
       <div class="sect-rule"></div>
 
-      <p class="lede">Every URL below was rendered in a browser on 2026-09-28 and its title confirmed.</p>
+      <p class="lede">The official pages this guide is built from. Last checked September 2026.</p>
 
       <div class="linklist">
         <p><a href="https://help.salesforce.com/s/articleView?id=005298977&amp;type=1&amp;language=en_US">Salesforce Certified Platform Sharing and Visibility Architect Exam Guide</a>
@@ -1134,44 +1108,11 @@ html { scroll-behavior: smooth; }
         redirects here.</span></p>
 
         <p><a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_tools_runas.htm">Using the runAs Method</a>
-        <span class="why">Object and field permissions enforced inside the block. Verified in an earlier
-        pass; see <code>verified-docs.md</code>.</span></p>
+        <span class="why">Object and field permissions enforced inside the block.</span></p>
       </div>
 
       <p>Per-question citations live in the deck itself: every one of the 136 explanations ends in a
       <code>References:</code> block with at least one rendered URL.</p>
-    </section>
-
-    <!-- 12 -->
-    <section id="notebooklm">
-      <h2 class="sect"><span class="num">12</span><span>Using this with NotebookLM</span></h2>
-      <div class="sect-rule"></div>
-
-      <p class="lede">Upload
-      <code>study-guides/salesforce-sharing-visibility.md</code>.</p>
-
-      <div class="prompts">
-        <p class="prompt">Quiz me on user mode versus stripInaccessible versus with sharing. For each
-        scenario, tell me which one fails, which one degrades, and which one only handles records.</p>
-
-        <p class="prompt">Give me ten scenarios and ask whether the answer is a restriction rule, a scoping
-        rule, a sharing rule or field-level security. Include at least three where the tempting answer is
-        wrong.</p>
-
-        <p class="prompt">Walk me through the order access is decided in, from section 4, then give me five
-        stems where one step silently blocks the rest.</p>
-
-        <p class="prompt">List every item in this guide that is defective or version-dependent. For each,
-        tell me what to answer on the exam and what is actually true.</p>
-
-        <p class="prompt">I have seven days. Compress section 10, keeping the permissions domain first.</p>
-      </div>
-
-      <p class="colophon">Measured 2026-09-28 against
-      <code>public/decks/<wbr>sharing_<wbr>visibility_<wbr>questions_corrected.json</code> and Help article
-      <code>005298977</code>. Question counts and domain weights both have a short shelf life &mdash;
-      re-run <code>node study-guides/reclassify-sharing-visibility.mjs</code> before trusting the table
-      in &sect;2.</p>
     </section>
 
   </main>
