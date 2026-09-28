@@ -370,14 +370,14 @@
     "optionD": "Clone",
     "optionE": "Merge",
     "correct": "E",
-    "explanation": "Merge is the answer this item is testing, and it reflects how Databricks Repos behaved when the feature was young: cloning, committing, pushing and pulling were available in the workspace, while merging a branch had to be done in the Git provider's own interface.\nBe aware that current Databricks Git folders have moved on. The documentation now lists Merge branches, Resolve merge conflicts, Rebase a branch and Reset a branch among the supported Git-folder operations, so on a current workspace none of the five listed operations strictly requires leaving Databricks. Merge remains the best answer to the question as written, but treat it as the historical answer rather than a present-day limitation.\nWhy the other options are wrong:\nOption A (Commit) — always available in the Repos dialog.\nOption B (Pull) — always available in the Repos dialog.\nOption C (Push) — always available in the Repos dialog.\nOption D (Clone) — adding a repo to the workspace is a clone, performed inside Databricks.\nReferences:\nhttps://docs.databricks.com/aws/en/repos/git-operations-with-repos",
+    "explanation": "Merge is the answer this item is testing, and it reflects how Databricks Repos behaved when the feature was young: cloning, committing, pushing and pulling were available in the workspace, while merging branches was done in the Git provider's own interface.\nOn a current workspace, none of the five listed operations requires leaving Databricks. The Git folders documentation lists Merge branches among the in-product operations (\"click the kebab menu and select Merge\"), alongside conflict resolution, rebase and reset. What it still sends you to the Git provider for is the pull request: if you cannot commit to the default branch, \"use your Git provider's interface to create a pull request and merge it into the default branch.\" That is why Merge remains the closest option offered: merging reviewed work into the default branch through a pull request still happens outside Databricks. But the operation that truly lives outside is creating the pull request, and it is not among the options.\nWhy the other options are wrong:\nOption A (Commit) — done in the Git dialog, which commits and pushes in one step.\nOption B (Pull) — done in the Git dialog.\nOption C (Push) — done in the Git dialog, together with the commit.\nOption D (Clone) — creating a Git folder from a repository URL is the clone, and it happens inside Databricks.\nReferences:\nhttps://docs.databricks.com/aws/en/repos/git-operations-with-repos",
     "_cat": "Databricks Certified Data Engineer Associate",
     "_url": "https://www.freecram.net/question/GAQM.Databricks-Certified-Data-Engineer-Associate.v2026-07-28.q73/which-of-the-following-git-operations-must-be-performed-outside-of-databricks-repos",
     "_src": "v2026-07-28.q73",
     "corrected": {
-      "date": "2026-08-15",
+      "date": "2026-09-28",
       "via": "validation",
-      "note": "Answer kept as the exam's older answer. Current documentation lists merge, rebase and conflict resolution as supported inside Git folders, so the premise of the question is now stale."
+      "note": "Merge is kept as the exam's answer, but no option is strictly correct on a current workspace: Git folders now merge branches in-product. The operation that still happens in the Git provider is creating a pull request, which the option set does not offer."
     }
   },
   {
@@ -836,20 +836,6 @@
     "explanation": "The pipeline can have different notebook sources in SQL and Python, so no language change is needed. Delta Live Tables supports multi-language pipelines: a pipeline is configured with one or more source files, each in Python or SQL, and DLT resolves the dependencies between the datasets they declare. The engineer's Python bronze and silver layers and the analyst's SQL gold layer can be added as separate sources of the same pipeline.\nWhy the other options are wrong:\nOption B (rewritten entirely in SQL) — unnecessary; Python sources are supported alongside SQL.\nOption C (rewritten entirely in Python) — unnecessary for the same reason.\nOption D (a batch source instead of streaming) — DLT streaming tables are built for streaming input; the source does not have to change.\nReferences:\nhttps://docs.databricks.com/aws/en/ldp/configure-pipeline",
     "_cat": "Databricks Certified Data Engineer Associate",
     "_url": "https://www.freecram.net/question/GAQM.Databricks-Certified-Data-Engineer-Associate.v2026-07-28.q73/a-data-engineer-and-data-analyst-are-working-together-on-a-data-pipeline-the-data-engineer-is-working",
-    "_src": "v2026-07-28.q73"
-  },
-  {
-    "id": "c59ebbbc",
-    "question": "A data engineer has been using a Databricks SQL dashboard to monitor the cleanliness of the input data to an ELT job. The ELT job has its Databricks SQL query that returns the number of input records containing unexpected NULL values. The data engineer wants their entire team to be notified via a messaging webhook whenever this value reaches 100. Which of the following approaches can the data engineer use to notify their entire team via a messaging webhook whenever the number of NULL values reaches 100?",
-    "optionA": "They can set up an Alert with a custom template.",
-    "optionB": "They can set up an Alert with a new email alert destination.",
-    "optionC": "They can set up an Alert with a new webhook alert destination.",
-    "optionD": "They can set up an Alert with one-time notifications.",
-    "optionE": "They can set up an Alert without notifications.",
-    "correct": "C",
-    "explanation": "Setting up an Alert with a new webhook alert destination is how the team gets notified over a messaging webhook. A webhook notification destination sends an HTTP request to an external endpoint when the alert fires — Slack, Microsoft Teams and similar integrations are built this way. The steps: create the webhook destination under notification destinations (admin settings), then open the query that counts unexpected NULLs, create an alert with the condition \"value >= 100\", and select the webhook destination in the alert's notification settings.\nWhy the other options are wrong:\nOption A (an Alert with a custom template) — a template shapes the message body; it does not choose where the message is delivered.\nOption B (a new email alert destination) — delivers by email, not through the messaging webhook the team asked for.\nOption D (one-time notifications) — the team wants to hear whenever the value reaches 100, which needs the alert to keep evaluating and notifying.\nOption E (an Alert without notifications) — an alert that notifies no one does not meet the requirement.\nReferences:\nhttps://docs.databricks.com/aws/en/sql/user/alerts/",
-    "_cat": "Databricks Certified Data Engineer Associate",
-    "_url": "https://www.freecram.net/question/GAQM.Databricks-Certified-Data-Engineer-Associate.v2026-07-28.q73/a-data-engineer-has-been-using-a-databricks-sql-dashboard-to-monitor-the-cleanliness-of-the-input-data-68",
     "_src": "v2026-07-28.q73"
   },
   {
