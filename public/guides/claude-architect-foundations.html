@@ -1,0 +1,1487 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Claude Architect Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+</head>
+<body>
+<style>
+:root {
+  --paper:      #F1F4F6;
+  --surface:    #FFFFFF;
+  --surface-2:  #E8ECEF;
+  --ink:        #121A21;
+  --ink-2:      #37444F;
+  --muted:      #5E6C78;
+  --rule:       #D3DBE1;
+  --rule-soft:  #E3E9ED;
+
+  --primary:    #12494F;
+  --primary-2:  #1C6C71;
+  --primary-wash:#E2EEEE;
+
+  --amber:      #8F550A;
+  --amber-wash: #FAEEDC;
+  --amber-rule: #DFB877;
+
+  --crimson:    #962E2E;
+  --crimson-wash:#F9E7E5;
+  --crimson-rule:#DDA39C;
+
+  --good:       #2C6440;
+
+  --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --font-prose:   "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-ui:      "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono:    "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --shadow: 0 1px 2px rgba(18,26,33,.05), 0 8px 24px -12px rgba(18,26,33,.14);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:      #0C1216;
+    --surface:    #131B20;
+    --surface-2:  #1B252B;
+    --ink:        #DCE4E8;
+    --ink-2:      #B4C1C9;
+    --muted:      #8496A1;
+    --rule:       #263238;
+    --rule-soft:  #1C262C;
+
+    --primary:    #66C4BC;
+    --primary-2:  #8AD6CE;
+    --primary-wash:#15292C;
+
+    --amber:      #DFA45C;
+    --amber-wash: #221A0F;
+    --amber-rule: #5A431F;
+
+    --crimson:    #E28C80;
+    --crimson-wash:#231314;
+    --crimson-rule:#5C2E2C;
+
+    --good:       #6FBE8B;
+
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper:      #0C1216;
+  --surface:    #131B20;
+  --surface-2:  #1B252B;
+  --ink:        #DCE4E8;
+  --ink-2:      #B4C1C9;
+  --muted:      #8496A1;
+  --rule:       #263238;
+  --rule-soft:  #1C262C;
+
+  --primary:    #66C4BC;
+  --primary-2:  #8AD6CE;
+  --primary-wash:#15292C;
+
+  --amber:      #DFA45C;
+  --amber-wash: #221A0F;
+  --amber-rule: #5A431F;
+
+  --crimson:    #E28C80;
+  --crimson-wash:#231314;
+  --crimson-rule:#5C2E2C;
+
+  --good:       #6FBE8B;
+
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-prose);
+  font-size: 17px;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- shell ---------- */
+
+.shell {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  column-gap: 56px;
+  row-gap: 0;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 32px 120px;
+  align-items: start;
+}
+
+/* ---------- masthead ---------- */
+
+.masthead {
+  grid-column: 1 / -1;
+  padding: 64px 0 40px;
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: 48px;
+}
+
+.eyebrow {
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin: 0 0 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.eyebrow .sep { color: var(--rule); }
+
+h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.4rem, 6vw, 3.9rem);
+  line-height: 1.02;
+  letter-spacing: -.025em;
+  margin: 0 0 20px;
+  text-wrap: balance;
+  color: var(--ink);
+}
+
+.standfirst {
+  font-size: 1.18rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 62ch;
+  margin: 0 0 32px;
+}
+
+.standfirst strong { color: var(--ink); font-weight: 600; }
+
+/* exam vitals strip */
+.vitals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.vital {
+  background: var(--surface);
+  padding: 14px 16px 15px;
+}
+
+.vital dt {
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 6px;
+}
+
+.vital dd {
+  font-family: var(--font-mono);
+  font-size: 1.16rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.vital dd .sub {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-top: 4px;
+  letter-spacing: 0;
+}
+
+.vital.flag { background: var(--amber-wash); }
+.vital.flag dd { color: var(--amber); }
+
+/* ---------- toc rail ---------- */
+
+.rail {
+  position: sticky;
+  top: 28px;
+  font-family: var(--font-ui);
+  max-height: calc(100vh - 56px);
+  overflow-y: auto;
+}
+
+.rail h2 {
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.rail ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  counter-reset: toc;
+}
+
+.rail a {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 8px;
+  align-items: baseline;
+  padding: 5px 8px 5px 4px;
+  font-size: 13.5px;
+  line-height: 1.35;
+  color: var(--ink-2);
+  text-decoration: none;
+  border-radius: 3px;
+  border-left: 2px solid transparent;
+  transition: background .12s ease, color .12s ease, border-color .12s ease;
+}
+
+.rail a::before {
+  counter-increment: toc;
+  content: counter(toc);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.rail a:hover {
+  background: var(--surface);
+  color: var(--ink);
+  border-left-color: var(--primary);
+}
+
+.rail a:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+.rail a.key { color: var(--crimson); font-weight: 500; }
+.rail a.key::before { color: var(--crimson); }
+
+.rail .note {
+  margin: 16px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+/* ---------- content ---------- */
+
+.content { min-width: 0; }
+
+section { margin: 0 0 64px; scroll-margin-top: 24px; }
+
+h2.sect {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3vw, 1.95rem);
+  line-height: 1.14;
+  letter-spacing: -.018em;
+  margin: 0 0 8px;
+  text-wrap: balance;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: baseline;
+}
+
+h2.sect .num {
+  font-family: var(--font-mono);
+  font-size: .58em;
+  font-weight: 500;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+.sect-rule {
+  height: 2px;
+  background: var(--ink);
+  margin: 0 0 24px;
+}
+
+h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.13rem;
+  letter-spacing: -.008em;
+  margin: 36px 0 12px;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+h4 {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 26px 0 10px;
+}
+
+p { margin: 0 0 16px; max-width: 68ch; }
+
+a { color: var(--primary); text-underline-offset: 2px; text-decoration-thickness: 1px; }
+a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 2px; }
+
+strong { font-weight: 600; color: var(--ink); }
+em { font-style: italic; }
+
+code {
+  font-family: var(--font-mono);
+  font-size: .855em;
+  background: var(--surface-2);
+  padding: .1em .34em;
+  border-radius: 3px;
+  color: var(--ink);
+}
+
+ul, ol.prose { margin: 0 0 18px; padding-left: 20px; max-width: 68ch; }
+ul li, ol.prose li { margin-bottom: 8px; }
+ul li::marker { color: var(--primary); }
+ol.prose li::marker { color: var(--muted); font-family: var(--font-mono); font-size: .85em; }
+
+/* ---------- tables ---------- */
+
+.tw {
+  overflow-x: auto;
+  margin: 0 0 22px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-ui);
+  font-size: 14.2px;
+  line-height: 1.48;
+}
+
+thead th {
+  text-align: left;
+  font-weight: 600;
+  font-size: 10.5px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--surface-2);
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+
+tbody td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--rule-soft);
+  vertical-align: top;
+  color: var(--ink-2);
+}
+
+tbody tr:last-child td { border-bottom: none; }
+
+tbody td:first-child { color: var(--ink); font-weight: 500; }
+
+tbody td strong { color: var(--ink); font-weight: 600; }
+
+td code, th code { background: transparent; padding: 0; font-size: .9em; }
+
+.num-col, .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+
+/* two-col comparison tables read better with an emphasized first col */
+table.kv tbody td:first-child { width: 34%; }
+
+/* ---------- weight bars (domain table) ---------- */
+
+.bar {
+  display: block;
+  height: 7px;
+  border-radius: 1px;
+  background: var(--primary);
+  min-width: 2px;
+}
+.bar.deck { background: var(--muted); opacity: .55; }
+.bar-cell { width: 120px; }
+.bar-cell .lab {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--muted);
+  margin-bottom: 3px;
+  font-variant-numeric: tabular-nums;
+}
+.bar + .lab { margin-top: 6px; }
+
+.verdict {
+  display: inline-block;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  padding: 2.5px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.verdict.gap  { background: var(--crimson-wash); color: var(--crimson); border: 1px solid var(--crimson-rule); }
+.verdict.over { background: var(--surface-2); color: var(--muted); border: 1px solid var(--rule); }
+.verdict.ok   { background: var(--primary-wash); color: var(--primary); border: 1px solid var(--primary); }
+
+/* ---------- callouts ---------- */
+
+.call {
+  border-left: 3px solid var(--primary);
+  background: var(--surface);
+  padding: 16px 20px;
+  margin: 0 0 22px;
+  border-radius: 0 4px 4px 0;
+  max-width: 70ch;
+}
+.call p { margin: 0 0 10px; }
+.call p:last-child { margin-bottom: 0; }
+.call .tag {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: var(--primary);
+}
+
+.call.trap { border-left-color: var(--amber-rule); background: var(--amber-wash); }
+.call.trap .tag { color: var(--amber); }
+.call.trap strong { color: var(--ink); }
+
+.call.alert { border-left-color: var(--crimson-rule); background: var(--crimson-wash); }
+.call.alert .tag { color: var(--crimson); }
+
+/* ---------- misc ---------- */
+
+.lede {
+  font-size: 1.06rem;
+  color: var(--ink-2);
+  max-width: 66ch;
+  margin: 0 0 24px;
+}
+
+.yes { color: var(--good); font-weight: 600; }
+.no  { color: var(--crimson); font-weight: 600; }
+.warn{ color: var(--amber); font-weight: 600; }
+
+.linklist { list-style: none; padding: 0; margin: 0 0 20px; max-width: 72ch; }
+.linklist li { margin-bottom: 9px; padding-left: 14px; position: relative; font-size: 15px; }
+.linklist li::before {
+  content: "";
+  position: absolute; left: 0; top: .62em;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--rule);
+}
+.linklist .why { color: var(--muted); font-size: 14px; }
+
+.prompts { display: flex; flex-direction: column; gap: 12px; margin: 0 0 22px; max-width: 72ch; }
+.prompt {
+  font-family: var(--font-ui);
+  font-size: 14.3px;
+  line-height: 1.5;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 13px 16px;
+  color: var(--ink-2);
+}
+.prompt::before {
+  content: "Prompt";
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+
+.colophon {
+  grid-column: 1 / -1;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 74ch;
+}
+
+.colophon code { font-size: 11.5px; }
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 900px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding: 0 20px 80px;
+  }
+  .rail {
+    position: static;
+    max-height: none;
+    margin-bottom: 44px;
+    padding: 16px 18px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+  }
+  .rail ol { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 0; }
+  .masthead { padding-top: 44px; margin-bottom: 32px; }
+  body { font-size: 16.5px; }
+  section { margin-bottom: 52px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+
+html { scroll-behavior: smooth; }
+</style>
+<div class="shell">
+
+  <header class="masthead">
+    <p class="eyebrow">
+      <span>Claude Certified Architect &ndash; Foundations</span>
+      <span class="sep">/</span>
+      <span>Exam guide v1.0, July 2026</span>
+    </p>
+    <h1>Claude Architect Field Guide</h1>
+    <p class="standfirst">
+      Built from the 28 questions in the practice deck, measured against Anthropic's own exam guide
+      and the documentation those questions cite, on 2026-09-28. <strong>This is the only deck in
+      the repo that was written rather than scraped, and it shows</strong>: thirteen of its keyed
+      answers restate a bullet from the exam guide almost word for word, and its fact-check moved
+      only one key. The problem is not accuracy, it is reach. <strong>Seventeen of the exam's thirty
+      task statements have no deck question at all</strong>, the exam's largest domain gets two, and
+      <strong>twelve of the 28 are tool design</strong> &mdash; a domain worth 18%.
+    </p>
+    <dl class="vitals">
+      <div class="vital"><dt>Questions</dt><dd>60<span class="sub">4 scenarios of 6</span></dd></div>
+      <div class="vital"><dt>Time</dt><dd>120<span class="sub">minutes</span></dd></div>
+      <div class="vital"><dt>Pass mark</dt><dd>720<span class="sub">scaled, 100&ndash;1,000</span></dd></div>
+      <div class="vital"><dt>Fee</dt><dd>$125<span class="sub">valid 12 months</span></dd></div>
+      <div class="vital flag"><dt>Uncovered</dt><dd>17 / 30<span class="sub">task statements</span></dd></div>
+    </dl>
+  </header>
+
+  <nav class="rail" aria-label="Contents">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#exam">The exam, factually</a></li>
+      <li><a href="#weights" class="key">Where the points are</a></li>
+      <li><a href="#arch" class="key">Agentic Architecture</a></li>
+      <li><a href="#tools">Tool Design and MCP</a></li>
+      <li><a href="#code" class="key">Claude Code</a></li>
+      <li><a href="#prompt" class="key">Prompt Engineering</a></li>
+      <li><a href="#context" class="key">Context and Reliability</a></li>
+      <li><a href="#tension" class="key">Split or consolidate</a></li>
+      <li><a href="#numbers">Numbers to memorise</a></li>
+      <li><a href="#tells">Distractor tells</a></li>
+      <li><a href="#stale" class="key">Exam versus product</a></li>
+      <li><a href="#plan">Two-week plan</a></li>
+      <li><a href="#sources">Sources</a></li>
+      <li><a href="#notebooklm">Using NotebookLM</a></li>
+    </ol>
+    <p class="note">Sections in red carry the objectives the practice deck does not train you for.</p>
+  </nav>
+
+  <main class="content">
+
+    <!-- 1 -->
+    <section id="exam">
+      <h2 class="sect"><span class="num">01</span><span>The exam, factually</span></h2>
+      <div class="sect-rule"></div>
+
+      <div class="call alert">
+        <span class="tag">A small, accurate deck for a wide exam</span>
+        <p>The deck is sound &mdash; one key moved in its fact-check, one more was caught at import
+        &mdash; and where it teaches, it teaches the exam's own phrasing. But 28 questions cannot
+        cover 30 task statements, and they do not try evenly: <strong>tool design has twelve, Claude
+        Code has two, agentic architecture has two.</strong> Read &sect;2 before you drill, and treat
+        &sect;3, &sect;5, &sect;6 and &sect;7 as the main course rather than the appendix.</p>
+      </div>
+
+      <div class="tw">
+        <table class="kv">
+          <tbody>
+            <tr><td>Official name</td><td>Claude Certified Architect &ndash; Foundations</td></tr>
+            <tr><td>Exam code</td><td><code>CCAR-F</code></td></tr>
+            <tr><td>Items</td><td><strong>60</strong>, multiple choice and multiple response; each item says how many to pick</td></tr>
+            <tr><td>Structure</td><td><strong>4 scenarios</strong>, drawn at random from a published bank of <strong>6</strong></td></tr>
+            <tr><td>Time</td><td><strong>120 minutes</strong> (~135 minutes of seat time)</td></tr>
+            <tr><td>Passing score</td><td><strong>720</strong> on a scaled 100&ndash;1,000; criterion-referenced, not curved</td></tr>
+            <tr><td>Fee</td><td>US$125 per attempt</td></tr>
+            <tr><td>Validity</td><td><strong>12 months</strong>; on-time renewal is a free, unproctored assessment</td></tr>
+            <tr><td>Retakes</td><td>Wait <strong>14, then 30, then 90 days</strong>; at most <strong>4 attempts</strong> in a rolling 12 months</td></tr>
+            <tr><td>Delivery</td><td>Pearson VUE, online proctored or test centre</td></tr>
+            <tr><td>Exam guide</td><td>Version 1.0, effective <strong>July 2026</strong> &mdash; a PDF, see below</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4>How the outline was found &mdash; the part that generalises</h4>
+      <p>Anthropic publishes the outline in the open, the way Databricks does. The certification
+      page on the Anthropic Academy (a Skilljar site) carries the five domain weights, the item
+      count, the time, the fee and the pass mark as plain text, and links an <strong>exam guide
+      PDF</strong> hosted on S3. The PDF is the one that matters: it holds the <strong>30 task
+      statements</strong>, each split into "Knowledge of" and "Skills in" bullets, plus the six
+      scenarios, twelve sample questions, and an explicit in-scope and out-of-scope list. It will not
+      render in the browser pane; fetch it with <code>curl</code> and extract with
+      <code>pdfminer</code>.</p>
+
+      <h4>The six scenarios &mdash; the exam picks four</h4>
+      <div class="tw">
+        <table>
+          <thead><tr><th>#</th><th>Scenario</th><th>Primary domains</th><th class="num-col">Deck items</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Customer Support Resolution Agent</td><td>1, 2, 5</td><td class="num">1 + many unlabelled</td></tr>
+            <tr><td>2</td><td>Code Generation with Claude Code</td><td>3, 5</td><td class="num">1</td></tr>
+            <tr><td>3</td><td>Multi-Agent Research System</td><td>1, 2, 5</td><td class="num">3</td></tr>
+            <tr><td>4</td><td>Developer Productivity with Claude</td><td>2, 3, 1</td><td class="num">2</td></tr>
+            <tr><td>5</td><td>Claude Code for Continuous Integration</td><td>3, 4</td><td class="num">1</td></tr>
+            <tr><td>6</td><td><strong>Structured Data Extraction</strong></td><td>4, 5</td><td class="num"><strong>0</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>"Deck items" counts stems that open with the scenario's published preamble. Many more
+      customer-support items (refunds, <code>lookup_order</code>, escalation) sit inside Scenario 1
+      without the preamble. <strong>Scenario 6 has nothing</strong>, and with four of six drawn it
+      appears on two exams in three. &sect;6 and &sect;7 cover what it tests.</p>
+
+      <div class="call">
+        <span class="tag">The out-of-scope list is a distractor filter</span>
+        <p>The guide says these will <strong>not</strong> appear: fine-tuning, API authentication and
+        billing, deploying or hosting MCP servers, Claude's internals or training, embeddings and
+        vector databases, computer use, vision, streaming, rate limits and pricing, OAuth, cloud
+        provider configuration, benchmarks, prompt-caching details and tokenisation. An option that
+        leans on any of those is wrong by construction &mdash; and one deck item, temperature
+        (<code>8248aea1</code>), sits close to that line.</p>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section id="weights">
+      <h2 class="sect"><span class="num">02</span><span>Where the points actually are</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">The deck's nine <code>_cat</code> tags ("Tool Design", "Agent Behavior",
+      "Guardrails &amp; Enforcement"&hellip;) are topic labels, not exam domains. The deck column is
+      an independent re-classification against the five domains and 30 task statements
+      (<code>study-guides/reclassify-claude-architect.mjs</code>).</p>
+
+      <div class="tw">
+        <table>
+          <thead>
+            <tr><th>Domain</th><th class="num-col">Exam</th><th class="num-col">&asymp; Qs</th><th class="bar-cell">Exam vs deck</th><th class="num-col">Deck</th><th>Verdict</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Agentic Architecture &amp; Orchestration</td><td class="num">27%</td><td class="num">~16</td><td class="bar-cell"><span class="bar" style="width:63%"></span><span class="bar deck" style="width:17%"></span></td><td class="num">2 &middot; 7.1%</td><td><span class="verdict gap">badly under</span></td></tr>
+            <tr><td>Tool Design &amp; MCP Integration</td><td class="num">18%</td><td class="num">~11</td><td class="bar-cell"><span class="bar" style="width:42%"></span><span class="bar deck" style="width:100%"></span></td><td class="num">12 &middot; 42.9%</td><td><span class="verdict over">over-drilled</span></td></tr>
+            <tr><td>Claude Code Configuration &amp; Workflows</td><td class="num">20%</td><td class="num">~12</td><td class="bar-cell"><span class="bar" style="width:47%"></span><span class="bar deck" style="width:17%"></span></td><td class="num">2 &middot; 7.1%</td><td><span class="verdict gap">badly under</span></td></tr>
+            <tr><td>Prompt Engineering &amp; Structured Output</td><td class="num">20%</td><td class="num">~12</td><td class="bar-cell"><span class="bar" style="width:47%"></span><span class="bar deck" style="width:50%"></span></td><td class="num">6 &middot; 21.4%</td><td><span class="verdict gap">right share, wrong content</span></td></tr>
+            <tr><td>Context Management &amp; Reliability</td><td class="num">15%</td><td class="num">~9</td><td class="bar-cell"><span class="bar" style="width:35%"></span><span class="bar deck" style="width:50%"></span></td><td class="num">6 &middot; 21.4%</td><td><span class="verdict ok">about right</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-family:var(--font-ui);font-size:12.5px;color:var(--muted);margin-top:-8px;">
+        Teal bar = share of the exam. Grey bar = share of the deck. Both scaled to the deck's 42.9%.
+      </p>
+
+      <div class="call alert">
+        <span class="tag">The two biggest gaps are 47% of the exam</span>
+        <p><strong>Agentic Architecture and Claude Code are about 28 of 60 questions, and the deck has
+        four items between them.</strong> The agentic loop, coordinator design, handoffs, task
+        decomposition, sessions, the CLAUDE.md hierarchy, path rules, plan mode and iterative
+        refinement are all missing. You cannot drill your way to these from this deck; &sect;3 and
+        &sect;5 teach them.</p>
+      </div>
+
+      <div class="call trap">
+        <span class="tag">Prompt Engineering has the right count and the wrong questions</span>
+        <p>Six deck items against about twelve exam questions looks fine until you read them. Four
+        &mdash; the role goes in the system prompt (<code>f77a79ec</code>), exact Markdown column names
+        (<code>5b0490ba</code>), headings for maintainability (<code>4a3ae657</code>), lower temperature
+        (<code>8248aea1</code>) &mdash; map to <strong>no task statement</strong>. The two that do
+        (<code>2a123dd1</code> few-shot, <code>63976ace</code> JSON schema) leave explicit criteria,
+        validation-retry, batch processing and multi-instance review untouched.</p>
+      </div>
+
+      <h4>Task statements with no keyed deck item &mdash; 17 of 30</h4>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Domain</th><th>Uncovered task statements</th><th>Where</th></tr></thead>
+          <tbody>
+            <tr><td>1 &middot; Architecture</td><td>1.1 agentic loop &middot; 1.2 coordinator design &middot; 1.4 enforcement and handoff &middot; 1.6 decomposition &middot; 1.7 sessions</td><td>&sect;3</td></tr>
+            <tr><td>2 &middot; Tools and MCP</td><td>2.3 tool distribution and <code>tool_choice</code> &middot; 2.5 built-in tools</td><td>&sect;4</td></tr>
+            <tr><td>3 &middot; Claude Code</td><td>3.1 CLAUDE.md hierarchy &middot; 3.3 path rules &middot; 3.4 plan mode &middot; 3.5 iterative refinement</td><td>&sect;5</td></tr>
+            <tr><td>4 &middot; Prompting</td><td>4.1 explicit criteria &middot; 4.4 validation and retry &middot; 4.5 batches &middot; 4.6 multi-instance review</td><td>&sect;6</td></tr>
+            <tr><td>5 &middot; Context</td><td>5.3 error propagation &middot; 5.5 human review and calibration</td><td>&sect;7</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Each was confirmed with a keyword sweep over stems and options &mdash;
+      <code>stop_reason</code>, <code>tool_choice</code>, <code>@import</code>,
+      <code>.claude/rules</code>, "batch", "confidence", "resume", "fork" all return zero &mdash; and
+      every nonzero hit was read. <code>Grep</code> and <code>Glob</code> appear only as distractors;
+      "plan mode" appears only inside Scenario 2's boilerplate.</p>
+    </section>
+
+    <!-- 3 -->
+    <section id="arch">
+      <h2 class="sect"><span class="num">03</span><span>Agentic Architecture &amp; Orchestration</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede"><strong>27% of the exam &mdash; about 16 questions &mdash; and two deck
+      items</strong>: parallel subagents (<code>d7436e92</code>) and a hook that blocks refunds over
+      $500 (<code>17865baf</code>). Both are right and both are worth knowing cold. Everything else in
+      this section is new.</p>
+
+      <h4>1.1 &middot; The agentic loop</h4>
+      <p>Send the request; read <code>stop_reason</code>. If it is <strong><code>tool_use</code></strong>,
+      run the tool, append the <code>tool_result</code> to the conversation, and call again. If it is
+      <strong><code>end_turn</code></strong>, Claude has finished &mdash; use the response. The Stop
+      reasons page lists these alongside <code>max_tokens</code>, <code>stop_sequence</code>,
+      <code>pause_turn</code> (a server-tool loop hit its iteration limit; send the content back to
+      continue) and <code>refusal</code>.</p>
+      <div class="call trap">
+        <span class="tag">The three anti-patterns the guide names</span>
+        <p>Deciding the loop is done by <strong>parsing Claude's text</strong> for "I'm finished";
+        using an <strong>iteration cap as the primary stop</strong>; and treating <strong>the presence
+        of assistant text</strong> as completion. A response can carry text <em>and</em> a
+        <code>tool_use</code> block. Any option built on one of these is the distractor.</p>
+      </div>
+
+      <h4>1.2 &middot; Coordinator and subagents</h4>
+      <ul>
+        <li><strong>Hub and spoke.</strong> All inter-subagent traffic, error handling and routing go
+        through the coordinator &mdash; for observability and consistent recovery.</li>
+        <li><strong>Subagents do not inherit the coordinator's history.</strong> "Each subagent runs
+        in its own conversation, which starts fresh." Whatever it needs goes into its prompt.</li>
+        <li><strong>Pick subagents per query</strong> rather than always running the full pipeline,
+        and <strong>partition scope</strong> (distinct subtopics or source types) to avoid
+        duplication.</li>
+        <li><strong>Iterate</strong>: the coordinator checks synthesis for gaps, re-delegates targeted
+        queries, re-runs synthesis.</li>
+      </ul>
+      <div class="call alert">
+        <span class="tag">The failure the exam loves: decomposition too narrow</span>
+        <p>Sample question 7 in the guide: every subagent succeeds, yet a report on "AI in creative
+        industries" covers only visual arts. The coordinator's log shows three visual-arts subtasks.
+        <strong>The root cause is the coordinator's decomposition</strong>, not search, analysis or
+        synthesis &mdash; they did what they were told. When the logs show the plan, blame the plan.</p>
+      </div>
+
+      <h4>1.3 &middot; Spawning and context passing &mdash; the deck's one item</h4>
+      <p>Subagents are spawned through a tool the exam guide calls <strong>Task</strong> and the
+      current SDK calls <strong>Agent</strong> (&sect;11). The coordinator's allowed tools must include
+      it. To run two subagents in parallel, <strong>emit both calls in one response</strong>
+      (<code>d7436e92</code>); consecutive turns serialise them. Pass prior findings
+      <strong>in the prompt</strong>, as structured data that separates content from metadata (URL,
+      document, page), and give the coordinator goals and quality criteria rather than a step-by-step
+      procedure. <code>AgentDefinition</code> holds each subagent's description, prompt and tool
+      list.</p>
+
+      <h4>1.4 &middot; Enforcement and handoff</h4>
+      <p>When ordering matters for money or identity, <strong>prompt instructions have a non-zero
+      failure rate</strong>. Make it programmatic: block <code>process_refund</code> until
+      <code>get_customer</code> has returned a verified id. This is the guide's sample question 1, and
+      the prompt-only and few-shot options are the distractors. When escalating to a human who
+      <strong>cannot see the transcript</strong>, send a structured handoff: customer id, root cause,
+      amount, recommended action.</p>
+
+      <h4>1.5 &middot; Hooks</h4>
+      <p><strong><code>PreToolUse</code></strong> fires before a tool runs and can block it by
+      returning <code>permissionDecision: "deny"</code> &mdash; the $500 refund rule
+      (<code>17865baf</code>). <strong><code>PostToolUse</code></strong> fires after a tool returns
+      and can rewrite the result before Claude sees it, which is how you normalise Unix timestamps,
+      ISO 8601 and numeric status codes from different MCP servers into one shape. The deciding
+      phrase in a stem is "guaranteed" or "must": that wants a hook, not a prompt.</p>
+
+      <h4>1.6 &middot; Decomposition</h4>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Pattern</th><th>Use it when</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Prompt chaining</strong> (fixed sequence)</td><td>The steps are predictable &mdash; review each file, then run one cross-file integration pass</td></tr>
+            <tr><td><strong>Dynamic decomposition</strong></td><td>The work is open-ended &mdash; "add tests to a legacy codebase": map structure, find high-impact areas, plan, adapt as dependencies appear</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4>1.7 &middot; Sessions</h4>
+      <ul>
+        <li><strong><code>--resume</code></strong> continues a named prior session; add
+        <strong><code>--fork-session</code></strong> (or <code>fork_session=True</code> in the SDK) to
+        branch it under a new session id &mdash; two refactoring approaches from one analysis.</li>
+        <li><strong>Resume when the prior context is still valid; start fresh with an injected
+        summary when the tool results are stale.</strong> If files changed since, tell the resumed
+        session which ones, so it re-reads those rather than everything.</li>
+      </ul>
+    </section>
+
+    <!-- 4 -->
+    <section id="tools">
+      <h2 class="sect"><span class="num">04</span><span>Tool Design &amp; MCP Integration</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede"><strong>18% of the exam &mdash; about 11 questions &mdash; and 12 deck items, the
+      deck's home ground.</strong> Tool interfaces (2.1) and structured errors (2.2) are drilled
+      thoroughly. Tool distribution (2.3) and built-in tools (2.5) are not drilled at all.</p>
+
+      <h4>2.1 &middot; Descriptions are the selection mechanism</h4>
+      <p>"Provide extremely detailed descriptions. This is by far the most important factor in tool
+      performance." Include input formats, example queries, edge cases, and <strong>when to use this
+      tool rather than its neighbour</strong>. Deck: <code>16885805</code> (descriptions over schema
+      constraints), <code>06907581</code> (accept the id the caller already has),
+      <code>4d183e4f</code> (a composite tool that keeps the judgment with the agent),
+      <code>b091b723</code> (show the full input in the confirmation). Splitting and consolidating have
+      a section of their own &mdash; &sect;8.</p>
+      <div class="call trap">
+        <span class="tag">Check the system prompt, not just the tools</span>
+        <p>The guide names a failure the deck does not: <strong>keyword-sensitive wording in the system
+        prompt</strong> that pulls the model toward the wrong tool and overrides good descriptions.
+        When descriptions are already good and selection is still wrong, read the system prompt.</p>
+      </div>
+
+      <h4>2.2 &middot; Structured errors &mdash; five deck items</h4>
+      <p>Return the failure <strong>as a tool result with <code>isError: true</code></strong>
+      (<code>17dbb318</code>), carrying an <code>errorCategory</code> (transient / validation /
+      permission / business), an <code>isRetryable</code> flag and a readable message
+      (<code>4cd0dc5e</code>, <code>76ecf70b</code>, <code>bfe8ab8d</code>). MCP separates two
+      channels: a <strong>malformed request</strong> is a JSON-RPC protocol error; an <strong>API
+      failure or business rule</strong> is a tool result with <code>isError</code>
+      (<code>9bdf39a6</code>). And <strong>a valid empty result is not an error</strong> &mdash; "no
+      orders found" is a successful query.</p>
+
+      <h4>2.3 &middot; How many tools, and <code>tool_choice</code> &mdash; not in the deck</h4>
+      <ul>
+        <li><strong>Scope tools by role.</strong> The guide's number: an agent with <strong>18 tools
+        instead of 4&ndash;5</strong> selects worse. A synthesis agent with web-search tools will
+        search. Give a narrowly scoped cross-role tool for the frequent case (a
+        <code>verify_fact</code> for synthesis, sample question 9) and route the rest through the
+        coordinator.</li>
+        <li><strong>Replace generic tools with constrained ones</strong> &mdash; a
+        <code>load_document</code> that validates URLs instead of a bare <code>fetch_url</code>.</li>
+      </ul>
+      <div class="tw">
+        <table>
+          <thead><tr><th><code>tool_choice</code></th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td><code>auto</code></td><td>Claude may call a tool or answer in text. Default when tools are provided</td></tr>
+            <tr><td><code>any</code></td><td>Claude <strong>must</strong> call a tool, but chooses which &mdash; guarantees structured output when the document type is unknown</td></tr>
+            <tr><td><code>{"type":"tool","name":&hellip;}</code></td><td>Claude must call <strong>that</strong> tool &mdash; forcing <code>extract_metadata</code> to run first</td></tr>
+            <tr><td><code>none</code></td><td>No tools. Default when none are provided</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Forced modes (<code>any</code>, named tool) are not supported with manual extended thinking;
+      <code>auto</code> and <code>none</code> still work.</p>
+
+      <h4>2.4 &middot; MCP servers in Claude Code</h4>
+      <p>Shared team servers go in <strong><code>.mcp.json</code> at the project root</strong>,
+      committed, with secrets as <code>${GITHUB_TOKEN}</code>-style expansion rather than literals.
+      Personal or experimental servers go in <strong><code>~/.claude.json</code></strong>. Every
+      configured server's tools are discovered at connection and available at once. Prefer an
+      <strong>existing community server</strong> for a standard integration like Jira
+      (<code>ecb1b560</code>); expose catalogues (schemas, issue summaries) as <strong>MCP
+      resources</strong> so the agent can see what exists without exploratory calls; and if the agent
+      keeps using <code>Grep</code> instead of your better MCP tool, the fix is the MCP tool's
+      description.</p>
+
+      <h4>2.5 &middot; Built-in tools</h4>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Tool</th><th>For</th></tr></thead>
+          <tbody>
+            <tr><td><code>Grep</code></td><td>Searching file <strong>contents</strong> &mdash; callers of a function, an error string</td></tr>
+            <tr><td><code>Glob</code></td><td>Finding files by <strong>path pattern</strong> &mdash; <code>**/*.test.tsx</code></td></tr>
+            <tr><td><code>Read</code> / <code>Write</code></td><td>Whole files. <strong>Read + Write is the fallback when <code>Edit</code> cannot find a unique anchor</strong></td></tr>
+            <tr><td><code>Edit</code></td><td>Targeted change by unique text match</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Build understanding incrementally: Grep for the entry point, Read to follow imports &mdash;
+      not read everything up front.</p>
+    </section>
+
+    <!-- 5 -->
+    <section id="code">
+      <h2 class="sect"><span class="num">05</span><span>Claude Code Configuration &amp; Workflows</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede"><strong>20% of the exam &mdash; about 12 questions &mdash; and two deck
+      items</strong>: a project skill committed under <code>.claude/skills/</code>
+      (<code>0c6bd014</code>), and <code>--bare</code> in CI (<code>8c9e856e</code>). Four of this
+      domain's six task statements have nothing.</p>
+
+      <h4>3.1 &middot; The CLAUDE.md hierarchy</h4>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Level</th><th>Location</th><th>Shared with</th></tr></thead>
+          <tbody>
+            <tr><td>User</td><td><code>~/.claude/CLAUDE.md</code></td><td><strong>Just you</strong>, all projects &mdash; never reaches teammates</td></tr>
+            <tr><td>Project</td><td><code>./CLAUDE.md</code> or <code>./.claude/CLAUDE.md</code></td><td>The team, via version control</td></tr>
+            <tr><td>Directory</td><td>a <code>CLAUDE.md</code> in a subdirectory</td><td>The team; loads for that subtree</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The diagnosis the exam wants: <strong>a new team member is not getting the instructions
+      because they live in someone's user-level file.</strong> Move them to the project file. Keep the
+      file modular with <strong><code>@path/to/file</code> imports</strong>, or split it into topic
+      files under <strong><code>.claude/rules/</code></strong>. Use <strong><code>/memory</code></strong>
+      to see which memory files actually loaded. (The docs add two levels the exam does not ask about:
+      an organisation-wide managed policy file, and <code>CLAUDE.local.md</code> for personal
+      project notes.)</p>
+
+      <h4>3.2 &middot; Commands and skills</h4>
+      <ul>
+        <li><strong>Project</strong> commands in <code>.claude/commands/</code> and skills in
+        <code>.claude/skills/&lt;name&gt;/SKILL.md</code> are shared through the repo; the
+        <strong>user</strong> versions live under <code>~/.claude/</code>. Sample question 4: a team
+        <code>/review</code> command goes in the project's <code>.claude/commands/</code>.</li>
+        <li><strong>Skill frontmatter</strong>: <code>context: fork</code> runs the skill in its own
+        subagent context so verbose output does not flood the session; <code>allowed-tools</code>
+        governs tools during the skill (see &sect;11 on what it now means); <code>argument-hint</code>
+        prompts for the argument.</li>
+        <li><strong>Skill versus CLAUDE.md</strong>: a skill is invoked on demand for a task;
+        CLAUDE.md is always loaded, for standards that always apply.</li>
+      </ul>
+
+      <h4>3.3 &middot; Path-specific rules</h4>
+      <p>A file in <code>.claude/rules/</code> with a <code>paths:</code> list of globs in its YAML
+      frontmatter loads <strong>only when Claude works on matching files</strong>. That beats a
+      subdirectory CLAUDE.md whenever the files are scattered &mdash; test files living next to the
+      code they test are the canonical case (sample question 6). A skill is wrong there too: it is not
+      applied automatically by path.</p>
+
+      <h4>3.4 &middot; Plan mode or direct execution</h4>
+      <p>Plan mode "tells Claude to research and propose changes without making them" &mdash; it reads
+      and explores, writes a plan, and edits stay blocked until you approve. Use it for
+      <strong>architectural</strong> work, <strong>many files</strong>, or <strong>several valid
+      approaches</strong> (a monolith split, a 45-file library migration). Use direct execution for a
+      well-scoped change (one-file fix with a stack trace). The guide's sample question 5 rejects
+      "start direct and switch if it gets complicated" &mdash; the complexity was stated up front. The
+      <strong>Explore</strong> subagent keeps verbose discovery out of the main context.</p>
+
+      <h4>3.5 &middot; Iterative refinement</h4>
+      <ul>
+        <li>When prose instructions are read inconsistently, give <strong>2&ndash;3 concrete
+        input/output examples</strong>.</li>
+        <li><strong>Test-driven iteration</strong>: write the tests first, then feed Claude the
+        failures.</li>
+        <li><strong>The interview pattern</strong>: have Claude ask you questions before it builds in
+        an unfamiliar domain.</li>
+        <li><strong>Interacting problems in one message; independent problems one at a
+        time.</strong></li>
+      </ul>
+
+      <h4>3.6 &middot; CI/CD &mdash; one deck item, and the flags it does not use</h4>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Flag</th><th>Why CI needs it</th></tr></thead>
+          <tbody>
+            <tr><td><code>-p</code> / <code>--print</code></td><td>Non-interactive: without it the job <strong>hangs waiting for input</strong> (sample question 10). <code>CLAUDE_HEADLESS</code> and <code>--batch</code> do not exist</td></tr>
+            <tr><td><code>--output-format json</code></td><td>Machine-readable output</td></tr>
+            <tr><td><code>--json-schema</code></td><td>Validated JSON matching a schema &mdash; findings you can post as inline PR comments</td></tr>
+            <tr><td><code>--bare</code></td><td>Skips discovery of hooks, skills, plugins, MCP servers and CLAUDE.md for fast start; pair it with <code>--append-system-prompt-file</code> to put the standards back (<code>8c9e856e</code>)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>In the exam guide's own model, <strong>CLAUDE.md is how CI-invoked Claude Code gets project
+      context</strong> &mdash; testing standards, fixtures, review criteria. <code>--bare</code> is
+      newer than that model; if a stem has no startup-time problem, CLAUDE.md is the answer. Two more
+      CI skills: on a re-run, include the prior findings and ask only for new or unaddressed issues;
+      and give test generation the existing tests so it does not duplicate them.</p>
+    </section>
+
+    <!-- 6 -->
+    <section id="prompt">
+      <h2 class="sect"><span class="num">06</span><span>Prompt Engineering &amp; Structured Output</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede"><strong>20% of the exam &mdash; about 12 questions.</strong> The deck's two
+      on-outline items are few-shot examples against false positives (<code>2a123dd1</code>) and
+      specifying the JSON schema (<code>63976ace</code>). This domain is where Scenario 6, which the
+      deck never uses, does most of its asking.</p>
+
+      <h4>4.1 &middot; Explicit criteria beat "be careful"</h4>
+      <p>"Flag a comment only when its claimed behaviour contradicts the code" works; "check comments
+      are accurate" or "only report high-confidence findings" does not. Write which categories to
+      report and which to skip. When one category floods developers with false positives,
+      <strong>turn it off</strong> while you fix it &mdash; noisy categories erode trust in the accurate
+      ones.</p>
+
+      <h4>4.2 &middot; Few-shot</h4>
+      <p>The guide calls few-shot "the most effective technique" when instructions alone give
+      inconsistent output. Use <strong>2&ndash;4 targeted examples</strong> for the ambiguous cases,
+      each showing <em>why</em> one action beat the plausible alternative. Anthropic's prompting page
+      says 3&ndash;5 and "cover edge cases" &mdash; the same advice at a slightly different count.</p>
+
+      <h4>4.3 &middot; Structured output with <code>tool_use</code></h4>
+      <ul>
+        <li><strong>A tool whose input schema is the output you want</strong> is the most reliable way
+        to get schema-compliant JSON. It eliminates <strong>syntax</strong> errors, not
+        <strong>semantic</strong> ones &mdash; line items that do not sum to the total still get
+        through.</li>
+        <li>Make a field <strong>optional or nullable</strong> when the source may not contain it, or
+        the model will invent a value to satisfy <code>required</code>.</li>
+        <li>For extensible categories use an enum with <code>"other"</code> plus a detail string, and
+        add <code>"unclear"</code> for genuinely ambiguous input.</li>
+      </ul>
+
+      <h4>4.4 &middot; Validation and retry</h4>
+      <p>On a failed validation, send back <strong>the document, the failed extraction and the
+      specific error</strong>. That fixes format and structure. <strong>It cannot fix absence</strong>:
+      if the value is only in a document you did not provide, retrying burns tokens. For self-checks,
+      extract <code>calculated_total</code> beside <code>stated_total</code>, and add a
+      <code>conflict_detected</code> flag.</p>
+
+      <h4>4.5 &middot; The Message Batches API</h4>
+      <div class="tw">
+        <table class="kv">
+          <tbody>
+            <tr><td>Cost</td><td><strong>50%</strong> of standard</td></tr>
+            <tr><td>Latency</td><td>Most finish within an hour; <strong>no SLA</strong>; a batch expires if not done in <strong>24 hours</strong></td></tr>
+            <tr><td>Size</td><td>Up to <strong>100,000</strong> requests or <strong>256 MB</strong></td></tr>
+            <tr><td>Results</td><td>Kept <strong>29 days</strong>; correlate by <code>custom_id</code> (1&ndash;64 characters)</td></tr>
+            <tr><td>Cannot</td><td>Run <strong>multi-turn tool calling</strong> inside one request</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>So: <strong>overnight reports yes, blocking pre-merge checks no</strong> (sample question 11).
+      Resubmit only the failed <code>custom_id</code>s, chunking any that overflowed. To meet a 30-hour
+      SLA with a 24-hour window, submit every 4 hours. Refine the prompt on a sample before sending the
+      bulk.</p>
+
+      <h4>4.6 &middot; Multi-instance review</h4>
+      <p>A model reviewing its own output <strong>in the same session</strong> keeps its reasoning and
+      rarely questions it. An <strong>independent instance</strong> without that context catches more
+      &mdash; more than "review your work carefully" or extended thinking. For a large PR, per-file
+      passes plus one integration pass (sample question 12); a bigger context window does not fix
+      attention dilution.</p>
+    </section>
+
+    <!-- 7 -->
+    <section id="context">
+      <h2 class="sect"><span class="num">07</span><span>Context Management &amp; Reliability</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede"><strong>15% of the exam &mdash; about 9 questions &mdash; and six deck items,
+      proportionally the deck's best-covered domain.</strong> It is also where four items the repo had
+      called "judgment no page settles" turn out to be settled by the exam guide itself.</p>
+
+      <div class="call alert">
+        <span class="tag">Four "unsettleable" items, settled by the blueprint</span>
+        <p>This deck's fact-check marked <code>e9f005d6</code>, <code>5eb4dfc6</code>,
+        <code>9de1fc0a</code> and <code>a517cd7f</code> as agent-design judgment that no product page
+        decides. That was true of the documentation. <strong>The exam guide states each keyed answer
+        almost verbatim</strong>: 5.6 "requiring subagents to include publication or data collection
+        dates" and "structured claim-source mappings"; 5.2 "acknowledging frustration while offering
+        resolution" and escalation on "customer requests for a human, policy exceptions/gaps&hellip; and
+        inability to make meaningful progress". On this exam, those four are fact.</p>
+      </div>
+
+      <h4>5.1 &middot; Long conversations</h4>
+      <p>Summaries flatten numbers, dates and promises. Keep a <strong>"case facts" block</strong> of
+      amounts, dates, order ids and statuses outside the summarised history, one per issue in a
+      multi-issue session (<code>e5bbf3a3</code>). Trim tool results to the fields you need (5 of 40,
+      not 40). Put key findings <strong>first</strong> in long inputs &mdash; the middle is where
+      models lose things.</p>
+
+      <h4>5.2 &middot; Escalation</h4>
+      <ul>
+        <li><strong>Escalate</strong> when the customer asks for a human, when policy is silent or needs
+        an exception (competitor price-matching when policy covers only your own site), or when you
+        cannot make progress (<code>a517cd7f</code>).</li>
+        <li><strong>An explicit demand for a human is honoured immediately</strong>, without
+        investigating first. <strong>Frustration is not a demand</strong>: acknowledge it, offer the
+        resolution you can give, escalate if they ask again (<code>9de1fc0a</code> sits right on this
+        line and keys the second).</li>
+        <li><strong>Several matching customers</strong>: ask for another identifier; never pick by
+        heuristic.</li>
+        <li><strong>Sentiment scores and self-reported confidence are poor proxies</strong> for
+        complexity (sample question 3).</li>
+      </ul>
+
+      <h4>5.3 &middot; Error propagation between agents &mdash; not in the deck</h4>
+      <p>A subagent that fails should hand the coordinator <strong>the failure type, what it tried,
+      any partial results, and alternatives</strong> (sample question 8). It should retry transient
+      failures itself first. Two anti-patterns are equally wrong: <strong>returning an empty result
+      marked as success</strong>, and <strong>killing the whole workflow</strong> on one timeout.
+      Synthesis should annotate which areas are thin because a source was unavailable.</p>
+
+      <h4>5.4 &middot; Big codebases</h4>
+      <p>Context degradation shows up as vague answers about "typical patterns" instead of the classes
+      found earlier. Delegate specific questions to subagents (<code>c720d4bb</code>), keep a
+      scratchpad file of findings, summarise a phase before starting the next, export state to a
+      manifest for crash recovery, and <code>/compact</code> when discovery output fills the
+      window.</p>
+
+      <h4>5.5 &middot; Human review and calibration &mdash; not in the deck</h4>
+      <p><strong>97% overall can hide a document type at 60%.</strong> Measure accuracy by document
+      type and field before cutting human review. Keep a <strong>stratified random sample</strong> of
+      high-confidence extractions under review to catch new error patterns. Have the model emit
+      <strong>field-level confidence</strong>, then set thresholds against a <strong>labelled
+      validation set</strong> &mdash; calibrated, not taken at face value.</p>
+
+      <h4>5.6 &middot; Provenance</h4>
+      <p>Carry claim-to-source mappings through every step (<code>5eb4dfc6</code>); require dates so
+      old and new figures are not read as a contradiction (<code>e9f005d6</code>); when credible
+      sources conflict, <strong>keep both values with attribution</strong> rather than choosing; and
+      render financial data as tables, news as prose.</p>
+    </section>
+
+    <!-- 8 -->
+    <section id="tension">
+      <h2 class="sect"><span class="num">08</span><span>Split or consolidate: the tension in the guidance</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">Two deck items key opposite moves on tool count, and <strong>both are
+      correct</strong>. This is the most useful thing the deck teaches, because the exam lists
+      "splitting vs consolidating tools" as an in-scope topic by name.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th></th><th><code>92663975</code> &mdash; split</th><th><code>36351fa3</code> &mdash; consolidate</th></tr></thead>
+          <tbody>
+            <tr><td>Symptom</td><td>One tool for refund / cancel / reship; the agent <strong>omits required parameters</strong> or adds irrelevant ones</td><td>Ten tools; the agent <strong>picks the wrong one</strong> between near-synonyms</td></tr>
+            <tr><td>Key</td><td>Three tools, each declaring only its own parameters</td><td>Merge overlapping pairs behind an action parameter</td></tr>
+            <tr><td>What it buys</td><td><strong>Parameter accuracy</strong> &mdash; each <code>required</code> array means something</td><td><strong>Selection accuracy</strong> &mdash; fewer competing definitions</td></tr>
+            <tr><td>Guidance behind it</td><td>"Make sure each tool you build has a clear, distinct purpose" (Writing tools for agents)</td><td>"Fewer, more capable tools reduce selection ambiguity" (Define tools)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="call">
+        <span class="tag">The rule</span>
+        <p><strong>Read the symptom.</strong> Wrong or missing <em>arguments</em> &rarr; split, so each
+        schema is small and exact. Wrong <em>tool</em> among overlapping ones &rarr; consolidate or
+        rename. An option is only wrong if it claims one move buys both &mdash; which is exactly the
+        overclaim <code>92663975</code>'s explanation had to have removed.</p>
+      </div>
+
+      <div class="call trap">
+        <span class="tag">But "first step" changes the answer</span>
+        <p>The exam guide's sample question 2 is a selection problem between two tools with
+        <strong>minimal descriptions</strong>, and it keys <strong>better descriptions</strong>. It calls
+        consolidation "a valid architectural choice" that "requires more effort than a first step
+        warrants". Task statement 2.1 also names <strong>renaming</strong> an overlapping tool and
+        rewriting its description as the fix. So consolidation wins when the stem asks what
+        <em>structurally eliminates</em> overlap (<code>36351fa3</code>'s wording); descriptions win when
+        it asks for the <em>first</em> or <em>most effective</em> step and the descriptions are thin.</p>
+      </div>
+
+      <p>A third item makes the same point from a different angle: <code>4d183e4f</code> merges
+      <em>discovery and analysis</em> into one tool but keeps <em>add to collection</em> separate,
+      because the agent must still make the editorial choice. Consolidate the mechanics; leave the
+      judgment callable.</p>
+    </section>
+
+    <!-- 9 -->
+    <section id="numbers">
+      <h2 class="sect"><span class="num">09</span><span>Numbers to memorise</span></h2>
+      <div class="sect-rule"></div>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Number</th><th>What it is</th></tr></thead>
+          <tbody>
+            <tr><td><strong>60 / 120 / 720</strong></td><td>Items, minutes, scaled pass mark out of 1,000</td></tr>
+            <tr><td><strong>27 / 18 / 20 / 20 / 15</strong></td><td>Domain weights in outline order</td></tr>
+            <tr><td><strong>4 of 6</strong></td><td>Scenarios per sitting, from the published bank</td></tr>
+            <tr><td><strong>30</strong></td><td>Task statements; 17 have no deck question</td></tr>
+            <tr><td><strong>14 / 30 / 90 days, 4 a year</strong></td><td>Retake waits, and the cap per rolling 12 months</td></tr>
+            <tr><td><strong>12 months</strong></td><td>Credential validity; renewal is free if on time</td></tr>
+            <tr><td><strong>4&ndash;5 tools, not 18</strong></td><td>The exam's per-agent scoping example</td></tr>
+            <tr><td><strong>30&ndash;50 tools</strong></td><td>Where the docs say selection degrades and tool search earns its place</td></tr>
+            <tr><td><strong>2&ndash;3 / 2&ndash;4</strong></td><td>I/O examples for refinement; few-shot examples for ambiguous cases</td></tr>
+            <tr><td><strong>50% / 24 h / 29 days</strong></td><td>Batch discount, expiry window, results retention</td></tr>
+            <tr><td><strong>100,000 or 256 MB</strong></td><td>Batch size limit, whichever comes first</td></tr>
+            <tr><td><strong>1&ndash;64</strong></td><td>Characters in a <code>custom_id</code></td></tr>
+            <tr><td><strong>$500</strong></td><td>The exam's refund threshold for a blocking hook (<code>17865baf</code>)</td></tr>
+            <tr><td><strong>v2.1.63</strong></td><td>Claude Code version where the Task tool became Agent in <code>tool_use</code> blocks</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 10 -->
+    <section id="tells">
+      <h2 class="sect"><span class="num">10</span><span>Distractor tells</span></h2>
+      <div class="sect-rule"></div>
+
+      <div class="call">
+        <span class="tag">Read the question's own verb</span>
+        <p>"Most effective <strong>first step</strong>" wants the cheap, proportionate fix &mdash;
+        descriptions, explicit criteria, few-shot &mdash; before a classifier or new infrastructure.
+        "<strong>Guarantee</strong>" or "<strong>must</strong>" wants code: a hook, a prerequisite gate,
+        forced <code>tool_choice</code>. "<strong>Root cause</strong>" wants the component whose logs
+        show the fault, not the one downstream of it.</p>
+      </div>
+
+      <ul>
+        <li><strong>Prompt-only enforcement of a money or identity rule.</strong> Always the distractor
+        when a hook or gate is offered.</li>
+        <li><strong>Over-engineering.</strong> A routing classifier, a separately trained model, or a
+        sentiment pipeline where a description or criterion change would do. The guide's own answer
+        explanations call these out repeatedly.</li>
+        <li><strong>"Bigger context window."</strong> Never fixes attention dilution or lost-in-the-middle.</li>
+        <li><strong>Self-reported confidence as a router.</strong> Wrong for escalation (poorly
+        calibrated). Right only as <em>field-level</em> confidence <em>calibrated on labelled data</em>
+        for review routing. Watch which one the option describes.</li>
+        <li><strong>Swallowing an error</strong> as an empty success, or <strong>aborting
+        everything</strong> on one failure. Both wrong.</li>
+        <li><strong>A flag or setting that does not exist.</strong> <code>CLAUDE_HEADLESS</code>,
+        <code>--batch</code>, a <code>.claude/config.json</code> commands array &mdash; the guide's own
+        distractors. If you cannot picture it in the docs, distrust it.</li>
+        <li><strong>User-level configuration for a team problem.</strong> <code>~/.claude/</code> is
+        personal; the team's copy is in the repo.</li>
+      </ul>
+    </section>
+
+    <!-- 11 -->
+    <section id="stale">
+      <h2 class="sect"><span class="num">11</span><span>Where the exam and the product disagree</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">The deck is new, so it is not "older than the exam" the way scraped decks are.
+      But the exam guide was frozen in July 2026 and Claude Code ships weekly, so <strong>the exam and
+      the current docs already disagree in five places</strong>. None moves a deck key. Answer the exam
+      in its own vocabulary; know the product's.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Topic</th><th>The exam guide says</th><th>The docs now say</th></tr></thead>
+          <tbody>
+            <tr><td>Spawning subagents</td><td>The <strong>Task</strong> tool; <code>allowedTools</code> must include <code>"Task"</code></td><td>The <strong>Agent</strong> tool since Claude Code v2.1.63; examples allow <code>"Agent"</code>. The <code>system:init</code> tool list still says Task</td></tr>
+            <tr><td>Skill <code>allowed-tools</code></td><td>Restricts tool access during the skill</td><td>Tools Claude may use <strong>without asking</strong> &mdash; a pre-approval. Removing tools is <code>disallowed-tools</code></td></tr>
+            <tr><td>Commands</td><td><code>.claude/commands/</code> and skills as separate things</td><td>"Custom commands have been merged into skills"; old command files still work</td></tr>
+            <tr><td>MCP scopes</td><td>Two: project (<code>.mcp.json</code>) and user (<code>~/.claude.json</code>)</td><td>Three: <strong>local</strong> is the default, stored in <code>~/.claude.json</code> under the project path</td></tr>
+            <tr><td>How many tools is too many</td><td>18 instead of 4&ndash;5, per agent</td><td>Selection degrades past 30&ndash;50 available tools, where tool search helps</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="call trap">
+        <span class="tag">The last row is two different questions, not a contradiction</span>
+        <p>The exam's 4&ndash;5 is about <strong>role scoping</strong>: a specialist agent should hold
+        only its own tools. The docs' 30&ndash;50 is about <strong>catalogue size</strong>: when the whole
+        set gets that large, defer loading and let the model search. <code>36351fa3</code> uses the
+        second number correctly to reject tool search for a ten-tool agent.</p>
+      </div>
+
+      <div class="call alert">
+        <span class="tag">Exam-right, product-wrong: <code>allowed-tools</code></span>
+        <p>If an exam item asks how to stop a skill running destructive commands, the guide's intended
+        answer is <code>allowed-tools</code> in the frontmatter. In a current Claude Code, that field
+        <strong>grants</strong> tools for the turn; the field that <strong>removes</strong> them is
+        <code>disallowed-tools</code>. No deck item touches this, so nothing needs fixing here &mdash;
+        but do not carry the exam's reading into a real project.</p>
+      </div>
+
+      <div class="call">
+        <span class="tag">For whoever maintains this deck</span>
+        <p>No deck key is contradicted by the exam guide or by the docs checked for this guide. Two
+        notes for <code>factcheck-deck</code>, neither a defect: <code>d7436e92</code> already writes
+        "Agent tool calls &ndash; formerly Task tool calls", which is the right way round; and the
+        four items in &sect;7's alert could cite the exam guide as a decisive source, since their
+        current citations are marked orienting.</p>
+      </div>
+    </section>
+
+    <!-- 12 -->
+    <section id="plan">
+      <h2 class="sect"><span class="num">12</span><span>Two-week revision plan</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">The deck takes an hour to work through, so it cannot anchor two weeks. The plan
+      follows the exam's weights and uses the deck twice: once early as a diagnostic, once at the end.
+      The Exercises in section 8 of the exam guide are the best practice material that exists &mdash;
+      build them.</p>
+
+      <h4>Week 1 &mdash; the half of the exam the deck does not reach</h4>
+      <ol class="prose">
+        <li><strong>Day 1 &middot; Diagnostic.</strong> Read the exam guide's sections 4&ndash;6 end to
+        end. Do all 28 deck questions and all 12 sample questions. Note every miss.</li>
+        <li><strong>Day 2&ndash;3 &middot; Agentic architecture.</strong> &sect;3. Write an agentic loop
+        by hand on <code>stop_reason</code>. Build the guide's Exercise 1: tools, a hook blocking over a
+        threshold, a multi-concern request.</li>
+        <li><strong>Day 4&ndash;5 &middot; Claude Code.</strong> &sect;5. Do Exercise 2 on a real repo:
+        project CLAUDE.md, a <code>@</code> import, two <code>.claude/rules/</code> files with
+        <code>paths:</code>, a skill with <code>context: fork</code>, a <code>.mcp.json</code> with an
+        env-var token. Try plan mode on a multi-file change.</li>
+        <li><strong>Day 6 &middot; Structured extraction.</strong> &sect;6. Exercise 3: a nullable
+        schema, a validation-retry loop, a batch of documents by <code>custom_id</code>. This is
+        Scenario 6.</li>
+        <li><strong>Day 7 &middot; Consolidate.</strong> Re-read &sect;9 and &sect;10.</li>
+      </ol>
+
+      <h4>Week 2 &mdash; the rest, then the deck again</h4>
+      <ol class="prose">
+        <li><strong>Day 8 &middot; Multi-agent research.</strong> Exercise 4: parallel subagents,
+        structured errors from a timed-out subagent, conflicting sources kept with attribution.</li>
+        <li><strong>Day 9 &middot; Context and reliability.</strong> &sect;7, especially 5.3 and 5.5,
+        which the deck does not test.</li>
+        <li><strong>Day 10 &middot; Tool design.</strong> &sect;4 and &sect;8. The deck's twelve tool
+        items, then write the split-or-consolidate rule from memory.</li>
+        <li><strong>Day 11 &middot; &sect;11 in full</strong>, and the out-of-scope list in &sect;1.</li>
+        <li><strong>Day 12 &middot; The sample questions again</strong>, reading only the explanations
+        of the wrong options.</li>
+        <li><strong>Day 13 &middot; Full deck in Blitz mode</strong>, options read aloud off.</li>
+        <li><strong>Day 14 &middot; Only the misses</strong>, and the uncovered-task table in &sect;2
+        as a checklist.</li>
+      </ol>
+    </section>
+
+    <!-- 13 -->
+    <section id="sources">
+      <h2 class="sect"><span class="num">13</span><span>Sources</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">The exam guide PDF was fetched and extracted on 2026-09-28. Every other page was
+      rendered in the browser the same day and grepped for the fact it is cited for.
+      <code>check-urls.mjs</code> reports every <code>code.claude.com</code> page as dead; that is a
+      false positive (the page arrives only after JavaScript runs), so do not trust it there.</p>
+
+      <div class="linklist">
+        <p><a href="https://anthropic.skilljar.com/claude-certified-architect-foundations-access-request">Claude Certified Architect &ndash; Foundations (Anthropic Academy)</a>
+        <span class="why">Weights, item count, time, fee, pass mark, and the link to the exam guide
+        PDF. Redirects to the partner academy.</span></p>
+
+        <p><a href="https://everpath-course-content.s3-accelerate.amazonaws.com/instructor%2F6nizmqk8tpzpfjvt6qmmav7rh%2Fpublic%2F1783542750%2FClaude+Certified+Architect+%E2%80%93+Foundations+Exam+Guide.pdf">Exam Guide, v1.0, July 2026 (PDF)</a>
+        <span class="why">The 30 task statements, six scenarios, twelve sample questions, and the in-
+        and out-of-scope lists. The spine of this guide.</span></p>
+
+        <p><a href="https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons">Stop reasons and fallback</a>
+        <span class="why"><code>end_turn</code>, <code>tool_use</code>, <code>pause_turn</code> and the
+        rest &mdash; &sect;3's loop.</span></p>
+
+        <p><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools">Define tools</a>
+        <span class="why">Descriptions as "by far the most important factor", consolidation behind an
+        action parameter, and the four <code>tool_choice</code> modes.</span></p>
+
+        <p><a href="https://platform.claude.com/docs/en/build-with-claude/batch-processing">Batch processing</a>
+        <span class="why">50%, 24 hours, 100,000 requests or 256 MB, 29-day results,
+        <code>custom_id</code>.</span></p>
+
+        <p><a href="https://code.claude.com/docs/en/agent-sdk/subagents">Subagents in the SDK</a>
+        <span class="why">Fresh context per subagent, parallelism, and the Task-to-Agent rename.</span></p>
+
+        <p><a href="https://code.claude.com/docs/en/agent-sdk/hooks">Hooks in the Agent SDK</a>
+        <span class="why"><code>PreToolUse</code> deny, <code>PostToolUse</code> output
+        replacement.</span></p>
+
+        <p><a href="https://code.claude.com/docs/en/agent-sdk/sessions">Work with sessions</a>
+        <span class="why">Continue, resume and <code>fork_session</code>.</span></p>
+
+        <p><a href="https://code.claude.com/docs/en/memory">How Claude remembers your project</a>
+        <span class="why">The CLAUDE.md hierarchy, <code>@</code> imports, <code>.claude/rules/</code>
+        with <code>paths:</code>, <code>/memory</code>.</span></p>
+
+        <p><a href="https://code.claude.com/docs/en/skills">Extend Claude with skills</a>
+        <span class="why">Frontmatter fields, including what <code>allowed-tools</code> means today, and
+        the merge of commands into skills.</span></p>
+
+        <p><a href="https://code.claude.com/docs/en/mcp">Connect Claude Code to tools via MCP</a>
+        <span class="why">Local, project and user scopes; <code>.mcp.json</code>; variable
+        expansion.</span></p>
+
+        <p><a href="https://code.claude.com/docs/en/cli-reference">CLI reference</a>
+        <span class="why"><code>-p</code>, <code>--output-format</code>, <code>--json-schema</code>,
+        <code>--resume</code>, <code>--fork-session</code>, <code>--bare</code>.</span></p>
+
+        <p><a href="https://code.claude.com/docs/en/permission-modes">Choose a permission mode</a>
+        <span class="why">What plan mode does and does not do.</span></p>
+
+        <p><a href="https://www.anthropic.com/engineering/writing-tools-for-agents">Writing effective tools for AI agents</a>
+        <span class="why">"A clear, distinct purpose" &mdash; the split half of &sect;8.</span></p>
+      </div>
+
+      <p>Per-question citations live in the deck itself: every one of the 28 explanations ends in a
+      <code>References:</code> block with at least one rendered URL.</p>
+    </section>
+
+    <!-- 14 -->
+    <section id="notebooklm">
+      <h2 class="sect"><span class="num">14</span><span>Using this with NotebookLM</span></h2>
+      <div class="sect-rule"></div>
+
+      <p class="lede">Upload <code>study-guides/claude-architect-foundations.md</code>, and the exam
+      guide PDF alongside it &mdash; NotebookLM reads PDFs, and the PDF's own sample questions are the
+      best seed for generated ones.</p>
+
+      <div class="prompts">
+        <p class="prompt">Using the exam guide PDF, list the 30 task statements. For each, tell me
+        whether section 2 of the field guide says the practice deck covers it, and quiz me on the
+        uncovered ones first.</p>
+
+        <p class="prompt">Write ten scenario questions in the style of the exam guide's samples for
+        Scenario 6, Structured Data Extraction, which the practice deck never uses.</p>
+
+        <p class="prompt">Give me five tool-design scenarios and make me say, for each, whether to
+        split, consolidate, rename, or rewrite descriptions &mdash; using the rule in section 8.</p>
+
+        <p class="prompt">Drill me on section 11: for each row, ask what the exam wants and what a
+        current Claude Code actually does.</p>
+
+        <p class="prompt">Quiz me on the Claude Code configuration hierarchy: which file, which
+        directory, shared or personal, for twelve different situations.</p>
+
+        <p class="prompt">I have one week, not two. Compress section 12, keeping the guide's
+        exercises.</p>
+      </div>
+
+      <p class="colophon">Measured 2026-09-28 against
+      <code>public/decks/claude_architect_foundations.json</code> and the Claude Certified Architect
+      &ndash; Foundations Exam Guide v1.0. Question counts and domain weights both have a short shelf
+      life &mdash; re-run <code>node study-guides/reclassify-claude-architect.mjs</code> before
+      trusting the table in &sect;2.</p>
+    </section>
+
+  </main>
+</div>
+</body>
+</html>

@@ -80,6 +80,16 @@ const GUIDES = [
     out: 'public/guides/salesforce-dld.html',
     lang: 'en',
   },
+  {
+    source: 'study-guides/slack-consultant.artifact.html',
+    out: 'public/guides/salesforce-slack-consultant.html',
+    lang: 'en',
+  },
+  {
+    source: 'study-guides/claude-architect-foundations.artifact.html',
+    out: 'public/guides/claude-architect-foundations.html',
+    lang: 'en',
+  },
 ];
 
 /** Pull the <title> out of the fragment so the standalone page keeps it. */
