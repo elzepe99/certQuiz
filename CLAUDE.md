@@ -412,8 +412,8 @@ deferred, not overlooked.
 ### Reading preferences — the gear in the top bar
 
 `lib/prefs.ts` plus `components/SettingsMenu.tsx`. Today it holds one setting,
-the **question font**: Serif (the original Instrument Serif), Sans, System, or
-Mono. Added 2026-09-05 at the repo owner's request.
+the **question font**: Serif (the original Instrument Serif), Sans, Inter, System,
+or Mono. Added 2026-09-05 at the repo owner's request; Inter joined on 2026-10-11.
 
 Two things about how it is wired, both deliberate:
 
@@ -425,13 +425,18 @@ Two things about how it is wired, both deliberate:
 - **It is applied in `main.tsx` before the first render**, so a reader who has
   chosen a font never sees a frame of the default one.
 
-Every stack offered is already loaded or needs no loading (`system-ui`). **Do
-not add a face that has to be fetched** — that would put a font download in
+Every stack offered is loaded by the single Google Fonts `<link>` in
+`index.html` or needs no loading (`system-ui`). **A new face goes into that same
+request, never a second one** — a separate fetch would put a font download in
 front of the question a reader is waiting to read.
 
 The setting covers the question *stem* only. Options stay in the body sans,
 which is already the most legible thing on the screen; pushing the default
 serif onto them would make them worse, not better.
+
+**The body sans is Inter since 2026-10-11** (`fontFamily.sans` in
+`tailwind.config.js`), at the repo owner's request; it was Source Sans 3. Source
+Sans stays loaded because the picker's "Sans" option still offers it for the stem.
 
 ### Questions that need a figure
 

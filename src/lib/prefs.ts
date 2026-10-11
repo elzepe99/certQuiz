@@ -15,7 +15,7 @@
 export const QUESTION_FONT_KEY = 'quiz:prefs:question-font';
 export const QUESTION_FONT_VAR = '--font-question';
 
-export type QuestionFontId = 'serif' | 'sans' | 'system' | 'mono';
+export type QuestionFontId = 'serif' | 'sans' | 'inter' | 'system' | 'mono';
 
 export type QuestionFont = {
   id: QuestionFontId;
@@ -26,9 +26,9 @@ export type QuestionFont = {
 };
 
 /**
- * Every stack here is already loaded, or needs no loading at all. Adding a face
- * that has to be fetched would put a font download in front of the question a
- * reader is waiting to read, which is the opposite of the point.
+ * Every stack here is loaded by the one Google Fonts request in index.html, or
+ * needs no loading at all. Add a new face to that same request rather than a
+ * second one, so a font download never sits in front of the question.
  */
 export const QUESTION_FONTS: QuestionFont[] = [
   {
@@ -42,6 +42,12 @@ export const QUESTION_FONTS: QuestionFont[] = [
     label: 'Sans',
     hint: 'Plainer and heavier. Easiest on a long question.',
     stack: '"Source Sans 3", ui-sans-serif, system-ui, sans-serif',
+  },
+  {
+    id: 'inter',
+    label: 'Inter',
+    hint: 'Clean and even. Built for reading on screens.',
+    stack: 'Inter, ui-sans-serif, system-ui, sans-serif',
   },
   {
     id: 'system',
