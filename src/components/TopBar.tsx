@@ -3,6 +3,7 @@ import { BookOpen, ChevronDown } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import type { DeckMeta } from '@/types';
 import { SettingsMenu } from '@/components/SettingsMenu';
+import { FocusMenu } from '@/components/FocusMenu';
 
 type Props = {
   currentDeck?: DeckMeta;
@@ -116,6 +117,7 @@ export function TopBar({ currentDeck, decks }: Props) {
           still decorative and is the first thing to drop when the bar runs out
           of room. */}
       <div className="flex shrink-0 items-center gap-2">
+        <FocusMenu />
         <SettingsMenu />
         <div
           className="hidden h-7 w-7 rounded-full sm:block"
