@@ -43,7 +43,7 @@ export const CALLS = {
 
   // --- User Interface -------------------------------------------------------------
   'fb30207f':'UI', '3598b33b':'UI', '95587f24':'UI', 'f9c8f7b9':'UI', 'b3a07999':'UI',
-  '295b0c8b':'UI', '659c1a94':'UI', '1698e7ee':'UI', '8ae9f7e4':'UI', '92f1ec38':'UI',
+  '295b0c8b':'UI', '659c1a94':'UI', '8ae9f7e4':'UI', '92f1ec38':'UI',
   '69a6cded':'UI', '254644b6':'UI', '075e76d2':'UI', '17d8af13':'UI', 'c4cec291':'UI',
   '85a3fa6c':'UI', '9f8cdefa':'UI', '15dc7a90':'UI', 'c8de9a78':'UI', '6686c9b7':'UI',
   'b92420f4':'UI', '20c11a40':'UI', 'e2ba60ab':'UI', 'd5978be6':'UI', '4023a9a3':'UI',
