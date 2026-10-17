@@ -433,6 +433,33 @@ The setting covers the question *stem* only. Options stay in the body sans,
 which is already the most legible thing on the screen; pushing the default
 serif onto them would make them worse, not better.
 
+### Focus mode — the timer button in the top bar
+
+An optional Pomodoro plus generative focus music, added 2026-10-17 at the repo
+owner's request. `lib/pomodoro.ts` (pure timer logic), `state/focusStore.ts`,
+`lib/focusMusic.ts`, `components/FocusMenu.tsx`. Decisions the owner made, so do
+not "fix" them back:
+
+- **In the top bar, not the right sidebar**, because that sidebar only exists at
+  `xl`. On a phone a running clock replaces the icon, and the deck pill shrinks
+  to nearly nothing while it shows — accepted.
+- **Focus end rolls straight into the break; break end waits** for a click.
+  Focus 25/45/50/60, break 5/10/15.
+- **The music is independent of the timer** — it keeps playing through breaks
+  until switched off, including in Blitz, where it can clash with the narrator.
+- **Never writes `quiz:progress:*`.** Its keys are `quiz:focus:settings` and
+  `quiz:focus:timer`. A reload resumes a block, catching up on phases that ended
+  while the page was closed (no chime for those). `musicOn` is not persisted,
+  since audio cannot start without a click.
+- **Time is a deadline (`endsAt`), never a counter** — the Blitz verdict-screen
+  lesson. One module-level interval runs only while a phase does.
+- **The music is composed live, never played back**: a Markov chain over diatonic
+  seventh chords (12–20 s each), random-walk bells on the pentatonic (no
+  semitones, so they never clash with a chord), a key change every 3–6 minutes,
+  and a 3 s lookahead scheduler. Zero audio bytes. It has its own `AudioContext`,
+  separate from `sfx.ts`. Verified 2026-10-17 that the context runs and schedules
+  oscillators after a real click; how it *sounds* is the owner's call.
+
 ### Questions that need a figure
 
 Some scraped items were written against a diagram that did not survive the
