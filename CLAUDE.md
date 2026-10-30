@@ -465,6 +465,27 @@ not "fix" them back:
   separate from `sfx.ts`. Verified 2026-10-17 that the context runs and schedules
   oscillators after a real click; how it *sounds* is the owner's call.
 
+### Jackpot Rush — the casino in the bottom-right corner
+
+A joke survival mode added 2026-10-30 at the repo owner's request, deliberately
+louder than the rest of the app. `lib/rush.ts` (pure: clock, spin, heat),
+`state/rushStore.ts`, `components/RushDock.tsx`, styles at the end of
+`styles/index.css`, tests in `npm run test:rush`. Decisions the owner made:
+
+- **Not a separate route.** It is a dock started from the normal exam view and
+  scores whatever is submitted there, by subscribing to the quiz store. So,
+  unlike Blitz, **its answers are ordinary answers and do write
+  `quiz:progress:*`**. Its own key is only `quiz:rush:best:<deckId>`.
+- 4:00 to start, +1:00 per right answer, −0:15 per wrong one, and a slot
+  machine spun on each right answer that pays +1:00 on three of a kind at
+  **exactly 1 in 8** (rolled first, not left to independent reels, which would
+  be 1 in 36). A run lives in memory; leaving the deck ends it.
+- Streak lights at 3 / 5 / 8 in a row via `html[data-rush-heat]`: a screen-edge
+  glow, then colour cycling, then the question column itself sways. Every effect
+  layer is `pointer-events: none`, and `prefers-reduced-motion` stops them all.
+- `html[data-rush-active]` pads the bottom of `main` so the action bar can be
+  scrolled clear of the card on a phone, where the card is most of the width.
+
 ### Questions that need a figure
 
 Some scraped items were written against a diagram that did not survive the

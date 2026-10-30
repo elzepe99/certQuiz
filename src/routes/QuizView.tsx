@@ -12,6 +12,7 @@ import { ActionBar } from '@/components/ActionBar';
 import { SessionTimer } from '@/components/SessionTimer';
 import { PerformanceCard } from '@/components/PerformanceCard';
 import { RightPanel, type RightPaneId } from '@/components/RightPanel';
+import { RushDock } from '@/components/RushDock';
 import { useDeck, useManifest } from '@/lib/decks';
 import { useQuiz, useSetInfo } from '@/state/quizStore';
 import { isMultiCorrectPrompt } from '@/lib/quiz';
@@ -305,7 +306,8 @@ export function QuizView() {
                 'radial-gradient(ellipse at 60% -10%, rgba(122, 184, 255, 0.04), transparent 60%)',
             }}
           />
-          <div className="relative">
+          {/* data-rush-zone: what the Jackpot Rush streak lights may warp. */}
+          <div className="relative" data-rush-zone>
             <Breadcrumbs
               deckName={deckLoad.deck.shortName}
               cat={q._cat || 'General'}
@@ -359,6 +361,8 @@ export function QuizView() {
           <RightPanel active={paneTab} onChange={setPaneTab} />
         </aside>
       </div>
+
+      <RushDock deckId={deckLoad.deck.id} />
     </div>
   );
 }

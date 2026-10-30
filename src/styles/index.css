@@ -105,3 +105,207 @@ button {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ── Jackpot Rush ─────────────────────────────────────────────────────────
+   The casino dock in the bottom-right corner (components/RushDock.tsx) and the
+   streak lights it switches on through `html[data-rush-heat]`. Every layer
+   here is pointer-events: none except the card itself, so no effect can ever
+   sit between the reader and an option tile. */
+
+.rush-pill {
+  background: linear-gradient(135deg, #2a1a05, #1a1206);
+  border-color: rgba(251, 191, 36, 0.5);
+  color: #fcd34d;
+  box-shadow: 0 0 18px -6px rgba(251, 191, 36, 0.8);
+}
+
+.rush-card {
+  background: linear-gradient(180deg, #1b1408 0%, var(--bg-panel) 55%);
+  border-color: rgba(251, 191, 36, 0.45);
+  box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.12), 0 18px 40px -12px rgba(0, 0, 0, 0.8),
+    0 0 30px -10px rgba(251, 191, 36, 0.55);
+  overflow: hidden;
+}
+.rush-card[data-heat='2'],
+.rush-card[data-heat='3'] {
+  animation: rush-hue 2.4s linear infinite;
+}
+
+.rush-title {
+  background: linear-gradient(90deg, #fde68a, #f59e0b, #fde68a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Marquee bulbs chasing round the top edge of the card. */
+.rush-bulbs {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: repeating-linear-gradient(90deg, #fbbf24 0 6px, transparent 6px 14px);
+  background-size: 28px 3px;
+  animation: rush-chase 0.9s linear infinite;
+  opacity: 0.85;
+}
+
+.rush-lever {
+  background: linear-gradient(180deg, #fbbf24, #d97706);
+  color: #1a1206;
+  box-shadow: 0 4px 0 #92400e, 0 0 20px -6px rgba(251, 191, 36, 0.9);
+  transition: transform 80ms, box-shadow 80ms;
+}
+.rush-lever:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #92400e;
+}
+
+.rush-clock-ok { color: var(--text-primary); }
+.rush-clock-warn { color: var(--warning); }
+.rush-clock-danger {
+  color: var(--danger);
+  animation: rush-pulse 0.5s ease-in-out infinite alternate;
+}
+
+.rush-machine {
+  background: linear-gradient(180deg, #3b2506, #20160a);
+  box-shadow: inset 0 0 0 1px rgba(251, 191, 36, 0.35);
+}
+.rush-machine-win {
+  animation: rush-win 0.35s ease-in-out 4 alternate;
+}
+.rush-reel {
+  background: linear-gradient(180deg, #f8f5ec 0%, #fffdf7 45%, #d9d2bf 100%);
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.35), inset 0 -3px 6px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+.rush-reel-spin {
+  filter: blur(1.2px);
+  animation: rush-roll 70ms linear infinite;
+}
+
+.rush-toast {
+  position: absolute;
+  left: 50%;
+  top: -6px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  pointer-events: none;
+  animation: rush-float 1.3s ease-out forwards;
+}
+.rush-toast-correct { color: var(--success); }
+.rush-toast-wrong { color: var(--danger); }
+.rush-toast-jackpot {
+  color: #fde047;
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.9);
+}
+
+.rush-newbest {
+  background: rgba(251, 191, 36, 0.15);
+  color: #fcd34d;
+  border: 1px solid rgba(251, 191, 36, 0.5);
+}
+
+html[data-rush-active] main {
+  padding-bottom: 300px;
+}
+
+/* The screen-edge glow. Heat 1 is a warm halo, 2 cycles colour, 3 throbs. */
+.rush-lights {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  box-shadow: inset 0 0 60px 6px rgba(251, 146, 60, 0.35);
+  animation: rush-breathe 1.6s ease-in-out infinite alternate;
+}
+html[data-rush-heat='2'] .rush-lights {
+  box-shadow: inset 0 0 80px 10px rgba(236, 72, 153, 0.4);
+  animation: rush-breathe 1s ease-in-out infinite alternate, rush-hue 2s linear infinite;
+}
+html[data-rush-heat='3'] .rush-lights {
+  box-shadow: inset 0 0 110px 18px rgba(168, 85, 247, 0.5);
+  animation: rush-breathe 0.5s ease-in-out infinite alternate, rush-hue 1.2s linear infinite;
+}
+
+/* The stage itself: a chromatic fringe on the question at heat 2, and at heat 3
+   the whole question column sways and shifts colour a little. Small on
+   purpose — the reader still has to read it. */
+html[data-rush-heat='2'] [data-rush-zone] h1,
+html[data-rush-heat='3'] [data-rush-zone] h1 {
+  text-shadow: 1.5px 0 rgba(255, 0, 90, 0.35), -1.5px 0 rgba(0, 210, 255, 0.35);
+}
+html[data-rush-heat='3'] [data-rush-zone] {
+  animation: rush-warp 3.2s ease-in-out infinite;
+}
+
+.rush-burst {
+  position: fixed;
+  inset: 0;
+  z-index: 35;
+  pointer-events: none;
+  overflow: hidden;
+  animation: rush-goldflash 1.6s ease-out forwards;
+}
+.rush-coin {
+  position: absolute;
+  top: -40px;
+  font-size: 26px;
+  animation: rush-fall 1.4s ease-in forwards;
+}
+
+@keyframes rush-hue {
+  from { filter: hue-rotate(0deg); }
+  to { filter: hue-rotate(360deg); }
+}
+@keyframes rush-chase {
+  from { background-position: 0 0; }
+  to { background-position: 28px 0; }
+}
+@keyframes rush-pulse {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0.7; transform: scale(1.04); }
+}
+@keyframes rush-win {
+  from { box-shadow: inset 0 0 0 1px rgba(251, 191, 36, 0.35); }
+  to { box-shadow: inset 0 0 0 2px #fde047, 0 0 24px rgba(253, 224, 71, 0.8); }
+}
+@keyframes rush-roll {
+  from { transform: translateY(-3px); }
+  to { transform: translateY(3px); }
+}
+@keyframes rush-float {
+  0% { opacity: 0; transform: translate(-50%, 6px) scale(0.9); }
+  15% { opacity: 1; transform: translate(-50%, -4px) scale(1.1); }
+  100% { opacity: 0; transform: translate(-50%, -34px) scale(1); }
+}
+@keyframes rush-breathe {
+  from { opacity: 0.55; }
+  to { opacity: 1; }
+}
+@keyframes rush-warp {
+  0%, 100% { transform: skewX(0deg) translateX(0); filter: saturate(1) hue-rotate(0deg); }
+  25% { transform: skewX(0.5deg) translateX(1px); filter: saturate(1.35) hue-rotate(10deg); }
+  75% { transform: skewX(-0.5deg) translateX(-1px); filter: saturate(1.35) hue-rotate(-10deg); }
+}
+@keyframes rush-goldflash {
+  0% { background: rgba(253, 224, 71, 0.28); }
+  100% { background: rgba(253, 224, 71, 0); }
+}
+@keyframes rush-fall {
+  from { transform: translateY(0) rotate(0deg); opacity: 1; }
+  to { transform: translateY(110vh) rotate(540deg); opacity: 0.6; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rush-card,
+  .rush-bulbs,
+  .rush-lights,
+  .rush-reel-spin,
+  .rush-clock-danger,
+  .rush-machine-win,
+  .rush-coin,
+  html[data-rush-heat] [data-rush-zone] {
+    animation: none !important;
+  }
+}
