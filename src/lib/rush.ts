@@ -41,9 +41,18 @@ export function isDifficulty(v: unknown): v is Difficulty {
 
 /** Probability that a spin lands three of a kind. */
 export const JACKPOT_ODDS = 1 / 8;
+/** Of the jackpots, the share that are three Tinchos: 1/6 of 1/8 = 1 in 48 spins. */
+export const TINCHO_SHARE = 1 / 6;
+/** A Tincho jackpot pays this many times the difficulty's jackpot bonus. */
+export const TINCHO_MULTIPLIER = 2;
 
-/** Drawn as artwork by `SlotSymbol` in the dock, never as emoji. */
-export const SYMBOLS = ['cherry', 'lemon', 'bell', 'bar', 'diamond', 'seven'] as const;
+/**
+ * Drawn as artwork by `SlotSymbol`, never as emoji. `tincho` is the easter
+ * egg: a casino chip named for the colleague whose idea this mode was. It
+ * turns up on the reels like any other symbol, but three of them is rarer than
+ * an ordinary jackpot and pays double — see `TINCHO_SHARE`.
+ */
+export const SYMBOLS = ['cherry', 'lemon', 'bell', 'bar', 'diamond', 'seven', 'tincho'] as const;
 export type Symbol = (typeof SYMBOLS)[number];
 export type Reels = [Symbol, Symbol, Symbol];
 
@@ -60,6 +69,8 @@ export type RushState = {
   correct: number;
   wrong: number;
   jackpots: number;
+  /** How many of those jackpots were three Tinchos. */
+  tinchos: number;
   /** Total time earned on top of the starting four minutes. */
   bonusMs: number;
   startedAt: number;
@@ -76,6 +87,7 @@ export const IDLE_RUSH: RushState = {
   correct: 0,
   wrong: 0,
   jackpots: 0,
+  tinchos: 0,
   bonusMs: 0,
   startedAt: 0,
   endedAt: 0,
@@ -133,14 +145,20 @@ export function applyAnswer(s: RushState, correct: boolean, now: number): RushSt
   return now >= next.endsAt ? endRush(next, now) : next;
 }
 
-export function applyJackpot(s: RushState): RushState {
-  if (s.phase !== 'running') return s;
+export function jackpotPayMs(s: RushState, tincho = false): number {
   const { jackpotMs } = DIFFICULTIES[s.difficulty];
+  return tincho ? jackpotMs * TINCHO_MULTIPLIER : jackpotMs;
+}
+
+export function applyJackpot(s: RushState, tincho = false): RushState {
+  if (s.phase !== 'running') return s;
+  const pay = jackpotPayMs(s, tincho);
   return {
     ...s,
-    endsAt: s.endsAt + jackpotMs,
-    bonusMs: s.bonusMs + jackpotMs,
+    endsAt: s.endsAt + pay,
+    bonusMs: s.bonusMs + pay,
     jackpots: s.jackpots + 1,
+    tinchos: s.tinchos + (tincho ? 1 : 0),
   };
 }
 
@@ -151,15 +169,23 @@ export function applyJackpot(s: RushState): RushState {
  * a kind. Two of a kind still happens often, which is the near miss that keeps
  * a slot machine fun.
  */
-export function spin(rand: () => number = Math.random): { reels: Reels; jackpot: boolean } {
+export function spin(rand: () => number = Math.random): {
+  reels: Reels;
+  jackpot: boolean;
+  tincho: boolean;
+} {
   const pick = () => SYMBOLS[Math.floor(rand() * SYMBOLS.length) % SYMBOLS.length];
   if (rand() < JACKPOT_ODDS) {
-    const s = pick();
-    return { reels: [s, s, s], jackpot: true };
+    // The winning symbol is chosen apart from the reels, so the Tincho's share
+    // of jackpots is set here rather than falling out of the symbol count.
+    if (rand() < TINCHO_SHARE) return { reels: ['tincho', 'tincho', 'tincho'], jackpot: true, tincho: true };
+    const plain = SYMBOLS.filter((x) => x !== 'tincho');
+    const s = plain[Math.floor(rand() * plain.length) % plain.length];
+    return { reels: [s, s, s], jackpot: true, tincho: false };
   }
   for (;;) {
     const reels: Reels = [pick(), pick(), pick()];
-    if (!(reels[0] === reels[1] && reels[1] === reels[2])) return { reels, jackpot: false };
+    if (!(reels[0] === reels[1] && reels[1] === reels[2])) return { reels, jackpot: false, tincho: false };
   }
 }
 

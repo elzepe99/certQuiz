@@ -37,7 +37,7 @@ export const SPIN_MS = 1400;
 
 export type RushBest = { correct: number; survivedMs: number; bestStreak: number };
 
-type Flash = { kind: 'correct' | 'wrong' | 'jackpot'; id: number };
+type Flash = { kind: 'correct' | 'wrong' | 'jackpot' | 'tincho'; id: number };
 
 type Store = RushState & {
   deckId: string | null;
@@ -189,15 +189,21 @@ function flash(kind: Flash['kind']): Flash {
  */
 function runSpin() {
   const id = ++spinSeq;
-  const { reels, jackpot } = spin();
+  const { reels, jackpot, tincho } = spin();
   useRush.setState({ spinning: true, target: reels });
   window.setTimeout(() => {
     if (id !== spinSeq) return;
     const s = useRush.getState();
     if (s.phase !== 'running') return;
     if (jackpot) {
-      useRush.setState({ ...applyJackpot(s), reels, spinning: false, flash: flash('jackpot') });
+      useRush.setState({
+        ...applyJackpot(s, tincho),
+        reels,
+        spinning: false,
+        flash: flash(tincho ? 'tincho' : 'jackpot'),
+      });
       sfx.jackpot();
+      if (tincho) sfx.tincho();
     } else {
       useRush.setState({ reels, spinning: false });
     }

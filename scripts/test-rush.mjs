@@ -28,6 +28,8 @@ const built = await esbuild.build({
 const {
   DIFFICULTIES,
   JACKPOT_ODDS,
+  TINCHO_MULTIPLIER,
+  TINCHO_SHARE,
   applyAnswer,
   applyJackpot,
   endRush,
@@ -115,19 +117,33 @@ check('idle clock shows the chosen start', remainingMs({ ...startRush(T0, 'hard'
 const rand = mulberry32(42);
 const N = 40_000;
 let wins = 0;
+let tinchos = 0;
+let tinchoOnReels = 0;
 let falseWins = 0;
 let pairs = 0;
 for (let i = 0; i < N; i++) {
-  const { reels, jackpot } = spin(rand);
+  const spun = spin(rand);
+  const { reels, jackpot } = spun;
   const triple = reels[0] === reels[1] && reels[1] === reels[2];
   if (jackpot) wins++;
+  if (spun.tincho) tinchos++;
+  if (spun.tincho !== (triple && reels[0] === 'tincho')) falseWins++;
+  if (!jackpot && reels.includes('tincho')) tinchoOnReels++;
   if (triple !== jackpot) falseWins++;
   if (!triple && (reels[0] === reels[1] || reels[1] === reels[2] || reels[0] === reels[2])) pairs++;
 }
 const rate = wins / N;
 check('jackpot rate is about 1 in 8', Math.abs(rate - JACKPOT_ODDS) < 0.01, `got ${rate.toFixed(4)}`);
 check('jackpot flag matches the reels', falseWins === 0, `${falseWins} mismatches`);
+const tinchoRate = tinchos / N;
+check('Tincho jackpot is about 1 in 48', Math.abs(tinchoRate - JACKPOT_ODDS * TINCHO_SHARE) < 0.005, `got ${tinchoRate.toFixed(4)}`);
+check('Tincho shows up on losing spins too', tinchoOnReels / N > 0.2);
 check('near misses happen', pairs / N > 0.3, `pairs ${(pairs / N).toFixed(3)}`);
+
+const run = startRush(T0, 'normal');
+check('Tincho jackpot pays double', applyJackpot(run, true).endsAt === run.endsAt + DIFFICULTIES.normal.jackpotMs * TINCHO_MULTIPLIER);
+check('Tincho jackpot is counted twice over', applyJackpot(run, true).tinchos === 1 && applyJackpot(run, true).jackpots === 1);
+check('a plain jackpot is not a Tincho', applyJackpot(run).tinchos === 0);
 
 // ── heat and formatting ──
 check('heat thresholds', [0, 2, 3, 4, 5, 7, 8, 20].map(heatFor).join() === '0,0,1,1,2,2,3,3');
@@ -135,5 +151,6 @@ check('clock format', formatClock(240_000) === '4:00' && formatClock(61_000) ===
 check('clock rounds up', formatClock(100) === '0:01' && formatClock(0) === '0:00');
 
 console.log(`\n${pass} passed, ${fail} failed`);
+console.log(`Tincho jackpot rate: ${(tinchoRate * 100).toFixed(2)}% (target ${(JACKPOT_ODDS * TINCHO_SHARE * 100).toFixed(2)}%)`);
 console.log(`Jackpot rate over ${N} seeded spins: ${(rate * 100).toFixed(2)}% (target ${(JACKPOT_ODDS * 100).toFixed(1)}%)`);
 process.exit(fail ? 1 : 0);

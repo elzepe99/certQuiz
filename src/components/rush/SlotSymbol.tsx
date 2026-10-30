@@ -8,10 +8,14 @@ import type { Symbol } from '@/lib/rush';
  * Literal colours on purpose: these are printed reel strips, which stay red,
  * gold and black whatever the app's palette does. No gradient ids either, so
  * dozens of these on one page can never collide.
+ *
+ * `tincho` is the easter egg — a casino chip for the colleague whose idea
+ * Jackpot Rush was. Three of them pays double (see lib/rush.ts).
  */
 export function SlotSymbol({ id, size = 40 }: { id: Symbol; size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" aria-label={id} role="img">
+      {id === 'tincho' ? <title>Tincho</title> : null}
       {ART[id]}
     </svg>
   );
@@ -80,6 +84,46 @@ const ART: Record<Symbol, JSX.Element> = {
       <path d="M12 12 L18 21 L24 12 L30 21 L36 12" stroke="#0d4f8b" strokeWidth="1.2" fill="none" />
       <path d="M18 21 L24 43 L30 21" stroke="#0d4f8b" strokeWidth="1.2" fill="none" />
       <path d="M12 12 L18 21 L4 21 Z" fill="#b3e5fc" opacity="0.8" />
+    </g>
+  ),
+  tincho: (
+    <g>
+      <circle cx="24" cy="24" r="21" fill="#0b7a3b" stroke="#064522" strokeWidth="1.6" />
+      {Array.from({ length: 8 }, (_, i) => (
+        <rect
+          key={i}
+          x="21.5"
+          y="3.6"
+          width="5"
+          height="7"
+          rx="1"
+          fill="#f5f0e1"
+          transform={`rotate(${i * 45} 24 24)`}
+        />
+      ))}
+      <circle cx="24" cy="24" r="13.5" fill="#f5f0e1" stroke="#d4a017" strokeWidth="2" />
+      <text
+        x="24"
+        y="29"
+        textAnchor="middle"
+        fontFamily="Georgia, 'Times New Roman', serif"
+        fontSize="17"
+        fontWeight="900"
+        fill="#0b7a3b"
+      >
+        T
+      </text>
+      <text
+        x="24"
+        y="34.6"
+        textAnchor="middle"
+        fontFamily="Impact, 'Arial Black', sans-serif"
+        fontSize="4.6"
+        letterSpacing="0.4"
+        fill="#064522"
+      >
+        TINCHO
+      </text>
     </g>
   ),
   seven: (

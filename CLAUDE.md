@@ -489,6 +489,11 @@ spin, heat), `state/rushStore.ts`, `components/rush/` (`RushGame.tsx`,
   **exactly 1 in 8** (rolled first, not left to independent reels, which would
   be 1 in 36). A run lives in memory; leaving the deck ends it. **There is no
   cash-out**: it only ended a run early, and the owner found it confusing.
+- **The Tincho chip is an easter egg — keep it.** Tincho is the owner's
+  colleague, who came up with this mode first. His green casino chip is a
+  seventh reel symbol; three of them is **1 in 48 spins** (`TINCHO_SHARE` of
+  the jackpots) and pays **double** the jackpot, with its own banner, chip
+  rain and fanfare. It is deliberately not listed in the rules.
 - **The reel symbols are drawn SVG, never emoji.** Windows renders the keycap
   7 as a grey tile that reads as a calendar, and no emoji set looks like a
   real slot machine.

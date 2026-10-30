@@ -334,6 +334,46 @@ html[data-rush-heat='3'] [data-rush-zone] {
   animation: rush-fall 1.4s ease-in forwards;
 }
 
+/* Three Tinchos: a green flash, his chips in the coin rain, and a banner. */
+.rush-burst-tincho {
+  animation: rush-greenflash 2.2s ease-out forwards;
+}
+.rush-coin-chip {
+  width: auto;
+  height: auto;
+  background: none;
+  box-shadow: none;
+}
+.rush-tincho-banner {
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  transform: translate(-50%, -50%);
+  padding: 10px 26px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #0b7a3b, #064522);
+  border: 2px solid #d4a017;
+  color: #fff7d6;
+  font-weight: 900;
+  font-size: 34px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 0 40px rgba(74, 222, 128, 0.6);
+  animation: rush-banner 2.2s ease-out forwards;
+}
+
+@keyframes rush-greenflash {
+  0% { background: rgba(74, 222, 128, 0.3); }
+  100% { background: rgba(74, 222, 128, 0); }
+}
+@keyframes rush-banner {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.6) rotate(-4deg); }
+  15% { opacity: 1; transform: translate(-50%, -50%) scale(1.08) rotate(2deg); }
+  25% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -60%) scale(1); }
+}
 @keyframes rush-hue {
   from { filter: hue-rotate(0deg); }
   to { filter: hue-rotate(360deg); }
@@ -390,6 +430,7 @@ html[data-rush-heat='3'] [data-rush-zone] {
   .rush-meter-on,
   .rush-machine-win,
   .rush-coin,
+  .rush-tincho-banner,
   html[data-rush-heat] [data-rush-zone] {
     animation: none !important;
   }

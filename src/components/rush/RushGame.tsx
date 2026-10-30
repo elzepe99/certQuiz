@@ -6,6 +6,7 @@ import {
   DIFFICULTY_ORDER,
   HEAT_LABEL,
   SYMBOLS,
+  TINCHO_MULTIPLIER,
   formatClock,
   heatFor,
   remainingMs,
@@ -301,6 +302,14 @@ function Results() {
           New best on {DIFFICULTIES[s.difficulty].label}
         </div>
       ) : null}
+      {s.tinchos > 0 ? (
+        <div
+          className="mb-2 flex items-center justify-center gap-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.12em]"
+          style={{ color: '#4ade80' }}
+        >
+          <SlotSymbol id="tincho" size={18} /> Tincho jackpot ×{s.tinchos}
+        </div>
+      ) : null}
       <div className="grid grid-cols-2 gap-1.5 text-left font-mono text-[11px] tabular-nums">
         <Stat label="Survived" value={formatClock(survivedMs(s, s.now))} />
         <Stat label="Right" value={String(s.correct)} />
@@ -397,7 +406,9 @@ function FlashToast() {
   }, [flash]);
   if (!flash || !visible) return null;
   const text =
-    flash.kind === 'jackpot'
+    flash.kind === 'tincho'
+      ? `TINCHO JACKPOT +${formatClock(rules.jackpotMs * TINCHO_MULTIPLIER)}`
+      : flash.kind === 'jackpot'
       ? `JACKPOT +${formatClock(rules.jackpotMs)}`
       : flash.kind === 'correct'
         ? `+${formatClock(rules.correctMs)}`
@@ -413,22 +424,36 @@ function FlashToast() {
 function JackpotBurst() {
   const flash = useRush((s) => s.flash);
   const [id, setId] = useState<number | null>(null);
+  const [tincho, setTincho] = useState(false);
   useEffect(() => {
-    if (flash?.kind !== 'jackpot') return;
+    if (flash?.kind !== 'jackpot' && flash?.kind !== 'tincho') return;
     setId(flash.id);
-    const t = window.setTimeout(() => setId(null), 1600);
+    setTincho(flash.kind === 'tincho');
+    const t = window.setTimeout(() => setId(null), 2200);
     return () => window.clearTimeout(t);
   }, [flash]);
   if (id === null) return null;
   return (
-    <div key={id} className="rush-burst" aria-hidden>
-      {Array.from({ length: 22 }, (_, i) => (
-        <span
-          key={i}
-          className="rush-coin"
-          style={{ left: `${(i * 47) % 100}%`, animationDelay: `${(i % 7) * 0.07}s` }}
-        />
-      ))}
+    <div key={id} className={`rush-burst ${tincho ? 'rush-burst-tincho' : ''}`} aria-hidden>
+      {tincho ? <div className="rush-tincho-banner">Tincho Jackpot!</div> : null}
+      {Array.from({ length: tincho ? 30 : 22 }, (_, i) =>
+        // Three Tinchos rain Tincho chips between the coins.
+        tincho && i % 2 ? (
+          <span
+            key={i}
+            className="rush-coin rush-coin-chip"
+            style={{ left: `${(i * 47) % 100}%`, animationDelay: `${(i % 7) * 0.07}s` }}
+          >
+            <SlotSymbol id="tincho" size={28} />
+          </span>
+        ) : (
+          <span
+            key={i}
+            className="rush-coin"
+            style={{ left: `${(i * 47) % 100}%`, animationDelay: `${(i % 7) * 0.07}s` }}
+          />
+        ),
+      )}
     </div>
   );
 }

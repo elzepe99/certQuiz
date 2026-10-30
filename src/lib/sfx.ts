@@ -144,6 +144,14 @@ export const sfx = {
     }
   },
 
+  /** Three Tinchos: a second, higher fanfare over the jackpot one. */
+  tincho() {
+    const notes = [783.99, 987.77, 1174.66, 1567.98, 1174.66, 1567.98, 2093];
+    notes.forEach((f, i) =>
+      tone({ freq: f, at: 0.55 + i * 0.09, dur: 0.18, type: 'triangle', gain: 0.09 }),
+    );
+  },
+
   /** End of run. */
   finish() {
     tone({ freq: 523.25, dur: 0.14 });
