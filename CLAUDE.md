@@ -465,6 +465,42 @@ not "fix" them back:
   separate from `sfx.ts`. Verified 2026-10-17 that the context runs and schedules
   oscillators after a real click; how it *sounds* is the owner's call.
 
+### Jackpot Rush — the slot machine in the right sidebar
+
+A joke survival mode added 2026-10-30 at the repo owner's request, deliberately
+louder than the rest of the app. `lib/rush.ts` (pure: clock, difficulty,
+spin, heat), `state/rushStore.ts`, `components/rush/` (`RushGame.tsx`,
+`SlotSymbol.tsx`), styles at the end of `styles/index.css`, tests in
+`npm run test:rush`. Decisions the owner made:
+
+- **It lives in the right sidebar as a fourth tab, "Rush"**, beside Comments,
+  Notes and Refs, and the tab label carries the live clock. That sidebar only
+  exists at `xl`; below it the original corner card (`RushDock`) is kept, but
+  **desktop is the only target** — the owner asked not to spend effort on
+  mobile.
+- **Not a separate route.** It scores whatever is submitted in the exam view,
+  by subscribing to the quiz store. So, unlike Blitz, **its answers are
+  ordinary answers and do write `quiz:progress:*`**. Its own keys are
+  `quiz:rush:settings` (difficulty) and `quiz:rush:best:<deckId>:<difficulty>`.
+- **Three difficulties** (`DIFFICULTIES`): Easy 4:00 / +1:00 / −0:15 / jackpot
+  +1:00 (the original game), Normal 2:00 / +0:30 / −0:15 / +0:45, Hard 1:00 /
+  +0:20 / −0:20 / +0:30. Normal is the default; four minutes felt too long.
+- The slot machine spins on each right answer and pays on three of a kind at
+  **exactly 1 in 8** (rolled first, not left to independent reels, which would
+  be 1 in 36). A run lives in memory; leaving the deck ends it. **There is no
+  cash-out**: it only ended a run early, and the owner found it confusing.
+- **The Tincho chip is an easter egg — keep it.** Tincho is the owner's
+  colleague, who came up with this mode first. His green casino chip is a
+  seventh reel symbol; three of them is **1 in 48 spins** (`TINCHO_SHARE` of
+  the jackpots) and pays **double** the jackpot, with its own banner, chip
+  rain and fanfare. It is deliberately not listed in the rules.
+- **The reel symbols are drawn SVG, never emoji.** Windows renders the keycap
+  7 as a grey tile that reads as a calendar, and no emoji set looks like a
+  real slot machine.
+- Streak lights at 3 / 5 / 8 in a row via `html[data-rush-heat]`: a screen-edge
+  glow, then colour cycling, then the question column itself sways. Every effect
+  layer is `pointer-events: none`, and `prefers-reduced-motion` stops them all.
+
 ### Questions that need a figure
 
 Some scraped items were written against a diagram that did not survive the

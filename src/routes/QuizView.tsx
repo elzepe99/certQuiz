@@ -12,6 +12,7 @@ import { ActionBar } from '@/components/ActionBar';
 import { SessionTimer } from '@/components/SessionTimer';
 import { PerformanceCard } from '@/components/PerformanceCard';
 import { RightPanel, type RightPaneId } from '@/components/RightPanel';
+import { RushDock, RushEffects } from '@/components/rush/RushGame';
 import { useDeck, useManifest } from '@/lib/decks';
 import { useQuiz, useSetInfo } from '@/state/quizStore';
 import { isMultiCorrectPrompt } from '@/lib/quiz';
@@ -305,7 +306,8 @@ export function QuizView() {
                 'radial-gradient(ellipse at 60% -10%, rgba(122, 184, 255, 0.04), transparent 60%)',
             }}
           />
-          <div className="relative">
+          {/* data-rush-zone: what the Jackpot Rush streak lights may warp. */}
+          <div className="relative" data-rush-zone>
             <Breadcrumbs
               deckName={deckLoad.deck.shortName}
               cat={q._cat || 'General'}
@@ -358,6 +360,13 @@ export function QuizView() {
           <PerformanceCard />
           <RightPanel active={paneTab} onChange={setPaneTab} />
         </aside>
+      </div>
+
+      {/* Jackpot Rush lives in the right sidebar's Rush tab; the corner card is
+          only for screens too narrow to show that sidebar. */}
+      <RushEffects deckId={deckLoad.deck.id} />
+      <div className="xl:hidden">
+        <RushDock />
       </div>
     </div>
   );

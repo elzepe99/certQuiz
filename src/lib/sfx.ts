@@ -125,6 +125,33 @@ export const sfx = {
     tone({ freq: 300, slideTo: 90, dur: 0.4, type: 'triangle', gain: 0.1 });
   },
 
+  /** One reel clicking past a symbol while the slot machine spins. */
+  reelTick() {
+    tone({ freq: 1500, dur: 0.025, type: 'square', gain: 0.025 });
+  },
+
+  /** A reel landing. `n` is 0–2, rising so the three stops read as a run. */
+  reelStop(n: number) {
+    tone({ freq: 330 * Math.pow(1.26, n), dur: 0.08, type: 'triangle', gain: 0.1 });
+  },
+
+  /** Three of a kind: a rising arpeggio and a coin shower. */
+  jackpot() {
+    const notes = [523.25, 659.25, 783.99, 1046.5, 1318.5, 1568];
+    notes.forEach((f, i) => tone({ freq: f, at: i * 0.07, dur: 0.16, type: 'square', gain: 0.07 }));
+    for (let i = 0; i < 8; i++) {
+      tone({ freq: 2000 + (i % 3) * 400, at: 0.45 + i * 0.05, dur: 0.05, type: 'sine', gain: 0.05 });
+    }
+  },
+
+  /** Three Tinchos: a second, higher fanfare over the jackpot one. */
+  tincho() {
+    const notes = [783.99, 987.77, 1174.66, 1567.98, 1174.66, 1567.98, 2093];
+    notes.forEach((f, i) =>
+      tone({ freq: f, at: 0.55 + i * 0.09, dur: 0.18, type: 'triangle', gain: 0.09 }),
+    );
+  },
+
   /** End of run. */
   finish() {
     tone({ freq: 523.25, dur: 0.14 });
