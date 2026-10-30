@@ -26,10 +26,7 @@ const built = await esbuild.build({
   logLevel: 'silent',
 });
 const {
-  START_MS,
-  CORRECT_BONUS_MS,
-  WRONG_PENALTY_MS,
-  JACKPOT_BONUS_MS,
+  DIFFICULTIES,
   JACKPOT_ODDS,
   applyAnswer,
   applyJackpot,
@@ -64,12 +61,14 @@ function mulberry32(seed) {
   };
 }
 
-// ── the clock ──
+// ── the clock, on the original four-minute table ──
+const { startMs: START_MS, correctMs: CORRECT_BONUS_MS, wrongMs: WRONG_PENALTY_MS, jackpotMs: JACKPOT_BONUS_MS } =
+  DIFFICULTIES.easy;
 const T0 = 1_000_000;
-let s = startRush(T0);
+let s = startRush(T0, 'easy');
 check('starts running', s.phase === 'running');
 check('starts with four minutes', remainingMs(s, T0) === START_MS);
-check('four minutes is 240s', START_MS === 240_000);
+check('easy is four minutes', START_MS === 240_000);
 
 s = applyAnswer(s, true, T0 + 10_000);
 check('right answer adds a minute', remainingMs(s, T0 + 10_000) === START_MS - 10_000 + CORRECT_BONUS_MS);
@@ -91,16 +90,26 @@ const late = applyAnswer(s, true, s.endsAt + 5);
 check('an answer after the deadline scores nothing', late === s);
 
 // A wrong answer that takes the clock through zero ends the run there.
-let close = startRush(T0);
+let close = startRush(T0, 'easy');
 const nearEnd = close.endsAt - 5_000;
 close = applyAnswer(close, false, nearEnd);
 check('penalty through zero ends the run', close.phase === 'over' && close.finalMs === 0);
 check('ended run records when it ended', survivedMs(close, nearEnd + 99_999) === nearEnd - T0);
 
-const over = endRush(startRush(T0), T0 + 60_000);
+const over = endRush(startRush(T0, 'easy'), T0 + 60_000);
 check('cashing out freezes the clock', remainingMs(over, T0 + 999_999) === START_MS - 60_000);
 check('survival is time played', survivedMs(over, T0 + 999_999) === 60_000);
 check('ending twice is a no-op', endRush(over, T0 + 70_000) === over);
+
+// ── difficulty ──
+check('normal is two minutes', remainingMs(startRush(T0, 'normal'), T0) === 120_000);
+check('hard is one minute', remainingMs(startRush(T0, 'hard'), T0) === 60_000);
+check('harder pays less per right answer',
+  DIFFICULTIES.easy.correctMs > DIFFICULTIES.normal.correctMs && DIFFICULTIES.normal.correctMs > DIFFICULTIES.hard.correctMs);
+const hard = applyAnswer(startRush(T0, 'hard'), true, T0);
+check('hard right answer uses the hard table', hard.endsAt === T0 + 60_000 + DIFFICULTIES.hard.correctMs);
+check("jackpot uses the run's table", applyJackpot(hard).endsAt === hard.endsAt + DIFFICULTIES.hard.jackpotMs);
+check('idle clock shows the chosen start', remainingMs({ ...startRush(T0, 'hard'), phase: 'idle' }, T0) === 60_000);
 
 // ── the slot machine ──
 const rand = mulberry32(42);

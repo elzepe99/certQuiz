@@ -465,26 +465,36 @@ not "fix" them back:
   separate from `sfx.ts`. Verified 2026-10-17 that the context runs and schedules
   oscillators after a real click; how it *sounds* is the owner's call.
 
-### Jackpot Rush — the casino in the bottom-right corner
+### Jackpot Rush — the slot machine in the right sidebar
 
 A joke survival mode added 2026-10-30 at the repo owner's request, deliberately
-louder than the rest of the app. `lib/rush.ts` (pure: clock, spin, heat),
-`state/rushStore.ts`, `components/RushDock.tsx`, styles at the end of
-`styles/index.css`, tests in `npm run test:rush`. Decisions the owner made:
+louder than the rest of the app. `lib/rush.ts` (pure: clock, difficulty,
+spin, heat), `state/rushStore.ts`, `components/rush/` (`RushGame.tsx`,
+`SlotSymbol.tsx`), styles at the end of `styles/index.css`, tests in
+`npm run test:rush`. Decisions the owner made:
 
-- **Not a separate route.** It is a dock started from the normal exam view and
-  scores whatever is submitted there, by subscribing to the quiz store. So,
-  unlike Blitz, **its answers are ordinary answers and do write
-  `quiz:progress:*`**. Its own key is only `quiz:rush:best:<deckId>`.
-- 4:00 to start, +1:00 per right answer, −0:15 per wrong one, and a slot
-  machine spun on each right answer that pays +1:00 on three of a kind at
+- **It lives in the right sidebar as a fourth tab, "Rush"**, beside Comments,
+  Notes and Refs, and the tab label carries the live clock. That sidebar only
+  exists at `xl`; below it the original corner card (`RushDock`) is kept, but
+  **desktop is the only target** — the owner asked not to spend effort on
+  mobile.
+- **Not a separate route.** It scores whatever is submitted in the exam view,
+  by subscribing to the quiz store. So, unlike Blitz, **its answers are
+  ordinary answers and do write `quiz:progress:*`**. Its own keys are
+  `quiz:rush:settings` (difficulty) and `quiz:rush:best:<deckId>:<difficulty>`.
+- **Three difficulties** (`DIFFICULTIES`): Easy 4:00 / +1:00 / −0:15 / jackpot
+  +1:00 (the original game), Normal 2:00 / +0:30 / −0:15 / +0:45, Hard 1:00 /
+  +0:20 / −0:20 / +0:30. Normal is the default; four minutes felt too long.
+- The slot machine spins on each right answer and pays on three of a kind at
   **exactly 1 in 8** (rolled first, not left to independent reels, which would
-  be 1 in 36). A run lives in memory; leaving the deck ends it.
+  be 1 in 36). A run lives in memory; leaving the deck ends it. **There is no
+  cash-out**: it only ended a run early, and the owner found it confusing.
+- **The reel symbols are drawn SVG, never emoji.** Windows renders the keycap
+  7 as a grey tile that reads as a calendar, and no emoji set looks like a
+  real slot machine.
 - Streak lights at 3 / 5 / 8 in a row via `html[data-rush-heat]`: a screen-edge
   glow, then colour cycling, then the question column itself sways. Every effect
   layer is `pointer-events: none`, and `prefers-reduced-motion` stops them all.
-- `html[data-rush-active]` pads the bottom of `main` so the action bar can be
-  scrolled clear of the card on a phone, where the card is most of the width.
 
 ### Questions that need a figure
 

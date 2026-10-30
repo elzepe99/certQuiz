@@ -107,10 +107,12 @@ button {
 }
 
 /* ── Jackpot Rush ─────────────────────────────────────────────────────────
-   The casino dock in the bottom-right corner (components/RushDock.tsx) and the
-   streak lights it switches on through `html[data-rush-heat]`. Every layer
-   here is pointer-events: none except the card itself, so no effect can ever
-   sit between the reader and an option tile. */
+   The cabinet in the right sidebar's Rush tab, the corner card for narrower
+   screens (components/rush/RushGame.tsx), and the streak lights switched on
+   through `html[data-rush-heat]`. Every layer outside the cabinet is
+   pointer-events: none, so no effect can sit between the reader and a tile.
+   Literal colours on purpose: a slot machine is brass and red whatever the
+   app's palette does. */
 
 .rush-pill {
   background: linear-gradient(135deg, #2a1a05, #1a1206);
@@ -119,82 +121,153 @@ button {
   box-shadow: 0 0 18px -6px rgba(251, 191, 36, 0.8);
 }
 
-.rush-card {
-  background: linear-gradient(180deg, #1b1408 0%, var(--bg-panel) 55%);
-  border-color: rgba(251, 191, 36, 0.45);
-  box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.12), 0 18px 40px -12px rgba(0, 0, 0, 0.8),
-    0 0 30px -10px rgba(251, 191, 36, 0.55);
-  overflow: hidden;
+.rush-cabinet {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(120, 20, 20, 0.35), transparent 40%),
+    linear-gradient(180deg, #1d140a, #120d07);
+  border: 1px solid rgba(212, 160, 23, 0.55);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 220, 140, 0.15),
+    0 0 28px -12px rgba(251, 191, 36, 0.6);
 }
-.rush-card[data-heat='2'],
-.rush-card[data-heat='3'] {
-  animation: rush-hue 2.4s linear infinite;
+.rush-cabinet[data-heat='2'],
+.rush-cabinet[data-heat='3'] {
+  animation: rush-cabinet-glow 1.2s ease-in-out infinite alternate;
+}
+
+.rush-marquee {
+  background: linear-gradient(180deg, #5c0f0f, #3a0808);
+  box-shadow: inset 0 0 0 1px rgba(212, 160, 23, 0.6), inset 0 0 18px rgba(0, 0, 0, 0.5);
 }
 
 .rush-title {
-  background: linear-gradient(90deg, #fde68a, #f59e0b, #fde68a);
+  background: linear-gradient(180deg, #fff3c4 0%, #fbbf24 50%, #b45309 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.6));
 }
 
-/* Marquee bulbs chasing round the top edge of the card. */
-.rush-bulbs {
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 3px;
-  background: repeating-linear-gradient(90deg, #fbbf24 0 6px, transparent 6px 14px);
-  background-size: 28px 3px;
-  animation: rush-chase 0.9s linear infinite;
-  opacity: 0.85;
+/* Marquee bulbs: a row of dots, alternate ones lit, chasing. */
+.rush-bulb-row {
+  height: 6px;
+  margin: 3px 0;
+  background-image: radial-gradient(circle, #fde68a 0 2px, transparent 2.6px),
+    radial-gradient(circle, rgba(253, 230, 138, 0.25) 0 2px, transparent 2.6px);
+  background-size: 12px 6px, 12px 6px;
+  background-position: 0 0, 6px 0;
+  animation: rush-chase 0.6s steps(2) infinite;
+}
+.rush-cabinet[data-heat='2'] .rush-bulb-row,
+.rush-cabinet[data-heat='3'] .rush-bulb-row {
+  animation: rush-chase 0.25s steps(2) infinite, rush-hue 1.5s linear infinite;
 }
 
-.rush-lever {
-  background: linear-gradient(180deg, #fbbf24, #d97706);
-  color: #1a1206;
-  box-shadow: 0 4px 0 #92400e, 0 0 20px -6px rgba(251, 191, 36, 0.9);
-  transition: transform 80ms, box-shadow 80ms;
+/* The LED readout. */
+.rush-led {
+  background: #070503;
+  box-shadow: inset 0 0 0 1px rgba(212, 160, 23, 0.35), inset 0 2px 10px rgba(0, 0, 0, 0.9);
 }
-.rush-lever:active {
-  transform: translateY(3px);
-  box-shadow: 0 1px 0 #92400e;
+.rush-led-digits {
+  letter-spacing: 0.06em;
 }
-
-.rush-clock-ok { color: var(--text-primary); }
-.rush-clock-warn { color: var(--warning); }
-.rush-clock-danger {
-  color: var(--danger);
+.rush-led-ok {
+  color: #fbbf24;
+  text-shadow: 0 0 8px rgba(251, 191, 36, 0.7);
+}
+.rush-led-warn {
+  color: #fb923c;
+  text-shadow: 0 0 10px rgba(251, 146, 60, 0.8);
+}
+.rush-led-danger {
+  color: #f87171;
+  text-shadow: 0 0 12px rgba(248, 113, 113, 0.9);
   animation: rush-pulse 0.5s ease-in-out infinite alternate;
 }
 
 .rush-machine {
   background: linear-gradient(180deg, #3b2506, #20160a);
-  box-shadow: inset 0 0 0 1px rgba(251, 191, 36, 0.35);
+  box-shadow: inset 0 0 0 1px rgba(212, 160, 23, 0.45);
 }
 .rush-machine-win {
   animation: rush-win 0.35s ease-in-out 4 alternate;
 }
 .rush-reel {
-  background: linear-gradient(180deg, #f8f5ec 0%, #fffdf7 45%, #d9d2bf 100%);
-  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.35), inset 0 -3px 6px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(180deg, #cfc7b2 0%, #fffdf6 30%, #fffdf6 70%, #cfc7b2 100%);
+  box-shadow: inset 0 6px 8px -4px rgba(0, 0, 0, 0.5), inset 0 -6px 8px -4px rgba(0, 0, 0, 0.5);
   overflow: hidden;
 }
-.rush-reel-spin {
-  filter: blur(1.2px);
+.rush-reel-spin svg {
+  filter: blur(1.5px);
   animation: rush-roll 70ms linear infinite;
+}
+.rush-payline {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  top: 50%;
+  height: 2px;
+  background: rgba(220, 38, 38, 0.55);
+  box-shadow: 0 0 6px rgba(220, 38, 38, 0.6);
+  pointer-events: none;
+}
+
+.rush-meter-bulb {
+  height: 8px;
+  border-radius: 999px;
+  background: #2a1f12;
+  box-shadow: inset 0 0 0 1px rgba(212, 160, 23, 0.25);
+}
+.rush-meter-on.rush-meter-1 { background: #fbbf24; box-shadow: 0 0 8px rgba(251, 191, 36, 0.8); }
+.rush-meter-on.rush-meter-2 { background: #f472b6; box-shadow: 0 0 8px rgba(244, 114, 182, 0.8); }
+.rush-meter-on.rush-meter-3 {
+  background: #c084fc;
+  box-shadow: 0 0 10px rgba(192, 132, 252, 0.9);
+  animation: rush-pulse 0.4s ease-in-out infinite alternate;
+}
+
+.rush-chip {
+  background: rgba(0, 0, 0, 0.35);
+  box-shadow: inset 0 0 0 1px rgba(212, 160, 23, 0.2);
+}
+
+.rush-diff {
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--text-secondary);
+  box-shadow: inset 0 0 0 1px rgba(212, 160, 23, 0.2);
+  transition: background 120ms, color 120ms;
+}
+.rush-diff:hover {
+  color: var(--text-primary);
+}
+.rush-diff-on {
+  background: rgba(251, 191, 36, 0.14);
+  color: #fcd34d;
+  box-shadow: inset 0 0 0 1px rgba(251, 191, 36, 0.7);
+}
+
+.rush-lever {
+  background: linear-gradient(180deg, #ef4444, #b91c1c);
+  color: #fff7ed;
+  box-shadow: 0 4px 0 #7f1d1d, 0 0 20px -6px rgba(239, 68, 68, 0.9);
+  transition: transform 80ms, box-shadow 80ms;
+}
+.rush-lever:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #7f1d1d;
 }
 
 .rush-toast {
   position: absolute;
   left: 50%;
-  top: -6px;
+  top: -10px;
   transform: translateX(-50%);
   white-space: nowrap;
   pointer-events: none;
   animation: rush-float 1.3s ease-out forwards;
 }
-.rush-toast-correct { color: var(--success); }
-.rush-toast-wrong { color: var(--danger); }
+.rush-toast-correct { color: var(--success); text-shadow: 0 0 8px rgba(74, 222, 128, 0.7); }
+.rush-toast-wrong { color: var(--danger); text-shadow: 0 0 8px rgba(248, 113, 113, 0.7); }
 .rush-toast-jackpot {
   color: #fde047;
   text-shadow: 0 0 10px rgba(251, 191, 36, 0.9);
@@ -206,8 +279,11 @@ button {
   border: 1px solid rgba(251, 191, 36, 0.5);
 }
 
-html[data-rush-active] main {
-  padding-bottom: 300px;
+/* The corner card pads the column below it, only where the card is shown. */
+@media (max-width: 1279px) {
+  html[data-rush-active] main {
+    padding-bottom: 300px;
+  }
 }
 
 /* The screen-edge glow. Heat 1 is a warm halo, 2 cycles colour, 3 throbs. */
@@ -250,7 +326,11 @@ html[data-rush-heat='3'] [data-rush-zone] {
 .rush-coin {
   position: absolute;
   top: -40px;
-  font-size: 26px;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 35% 30%, #fff7c2 0 18%, #fbbf24 40%, #b45309 100%);
+  box-shadow: inset 0 0 0 2px rgba(146, 64, 14, 0.6), 0 0 8px rgba(251, 191, 36, 0.7);
   animation: rush-fall 1.4s ease-in forwards;
 }
 
@@ -259,20 +339,24 @@ html[data-rush-heat='3'] [data-rush-zone] {
   to { filter: hue-rotate(360deg); }
 }
 @keyframes rush-chase {
-  from { background-position: 0 0; }
-  to { background-position: 28px 0; }
+  from { background-position: 0 0, 6px 0; }
+  to { background-position: 6px 0, 12px 0; }
+}
+@keyframes rush-cabinet-glow {
+  from { box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0 20px -10px rgba(236, 72, 153, 0.6); }
+  to { box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0 34px -6px rgba(192, 132, 252, 0.9); }
 }
 @keyframes rush-pulse {
-  from { opacity: 1; transform: scale(1); }
-  to { opacity: 0.7; transform: scale(1.04); }
+  from { opacity: 1; }
+  to { opacity: 0.65; }
 }
 @keyframes rush-win {
-  from { box-shadow: inset 0 0 0 1px rgba(251, 191, 36, 0.35); }
+  from { box-shadow: inset 0 0 0 1px rgba(212, 160, 23, 0.45); }
   to { box-shadow: inset 0 0 0 2px #fde047, 0 0 24px rgba(253, 224, 71, 0.8); }
 }
 @keyframes rush-roll {
-  from { transform: translateY(-3px); }
-  to { transform: translateY(3px); }
+  from { transform: translateY(-6px); }
+  to { transform: translateY(6px); }
 }
 @keyframes rush-float {
   0% { opacity: 0; transform: translate(-50%, 6px) scale(0.9); }
@@ -298,11 +382,12 @@ html[data-rush-heat='3'] [data-rush-zone] {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .rush-card,
-  .rush-bulbs,
+  .rush-cabinet,
+  .rush-bulb-row,
   .rush-lights,
-  .rush-reel-spin,
-  .rush-clock-danger,
+  .rush-reel-spin svg,
+  .rush-led-danger,
+  .rush-meter-on,
   .rush-machine-win,
   .rush-coin,
   html[data-rush-heat] [data-rush-zone] {

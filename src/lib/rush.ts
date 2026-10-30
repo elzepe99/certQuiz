@@ -1,8 +1,8 @@
 /**
  * Jackpot Rush — the pure half. A survival clock laid over the normal exam
- * view: four minutes to start, +60s for every right answer, −15s for every
- * wrong one, and a slot machine that spins on each right answer and pays
- * another +60s on three of a kind.
+ * view: a starting clock, time bought by every right answer and lost on every
+ * wrong one, and a slot machine that spins on each right answer and pays extra
+ * time on three of a kind. The amounts are per difficulty — see DIFFICULTIES.
  *
  * No React, no timers, no storage here, so `scripts/test-rush.mjs` can drive it
  * with a fixed clock and a seeded dice.
@@ -11,14 +11,39 @@
  * lesson. A throttled background tab is late repainting, never wrong.
  */
 
-export const START_MS = 4 * 60_000;
-export const CORRECT_BONUS_MS = 60_000;
-export const WRONG_PENALTY_MS = 15_000;
-export const JACKPOT_BONUS_MS = 60_000;
+export type Difficulty = 'easy' | 'normal' | 'hard';
+
+export type Rules = {
+  label: string;
+  startMs: number;
+  correctMs: number;
+  wrongMs: number;
+  jackpotMs: number;
+};
+
+/**
+ * The three tables. Easy is the original four-minute game; each step down
+ * halves the starting clock and makes a right answer buy less time, so a hard
+ * run only survives on a real streak.
+ */
+export const DIFFICULTIES: Record<Difficulty, Rules> = {
+  easy: { label: 'Easy', startMs: 4 * 60_000, correctMs: 60_000, wrongMs: 15_000, jackpotMs: 60_000 },
+  normal: { label: 'Normal', startMs: 2 * 60_000, correctMs: 30_000, wrongMs: 15_000, jackpotMs: 45_000 },
+  hard: { label: 'Hard', startMs: 60_000, correctMs: 20_000, wrongMs: 20_000, jackpotMs: 30_000 },
+};
+
+export const DIFFICULTY_ORDER: Difficulty[] = ['easy', 'normal', 'hard'];
+export const DEFAULT_DIFFICULTY: Difficulty = 'normal';
+
+export function isDifficulty(v: unknown): v is Difficulty {
+  return v === 'easy' || v === 'normal' || v === 'hard';
+}
+
 /** Probability that a spin lands three of a kind. */
 export const JACKPOT_ODDS = 1 / 8;
 
-export const SYMBOLS = ['🍒', '🍋', '🔔', '⭐', '💎', '7️⃣'] as const;
+/** Drawn as artwork by `SlotSymbol` in the dock, never as emoji. */
+export const SYMBOLS = ['cherry', 'lemon', 'bell', 'bar', 'diamond', 'seven'] as const;
 export type Symbol = (typeof SYMBOLS)[number];
 export type Reels = [Symbol, Symbol, Symbol];
 
@@ -26,6 +51,7 @@ export type RushPhase = 'idle' | 'running' | 'over';
 
 export type RushState = {
   phase: RushPhase;
+  difficulty: Difficulty;
   endsAt: number;
   /** Frozen remaining time once the run is over, for the results card. */
   finalMs: number;
@@ -42,6 +68,7 @@ export type RushState = {
 
 export const IDLE_RUSH: RushState = {
   phase: 'idle',
+  difficulty: DEFAULT_DIFFICULTY,
   endsAt: 0,
   finalMs: 0,
   streak: 0,
@@ -54,13 +81,19 @@ export const IDLE_RUSH: RushState = {
   endedAt: 0,
 };
 
-export function startRush(now: number): RushState {
-  return { ...IDLE_RUSH, phase: 'running', endsAt: now + START_MS, startedAt: now };
+export function startRush(now: number, difficulty: Difficulty = DEFAULT_DIFFICULTY): RushState {
+  return {
+    ...IDLE_RUSH,
+    phase: 'running',
+    difficulty,
+    endsAt: now + DIFFICULTIES[difficulty].startMs,
+    startedAt: now,
+  };
 }
 
 export function remainingMs(s: RushState, now: number): number {
   if (s.phase === 'over') return s.finalMs;
-  if (s.phase !== 'running') return START_MS;
+  if (s.phase !== 'running') return DIFFICULTIES[s.difficulty].startMs;
   return Math.max(0, s.endsAt - now);
 }
 
@@ -79,12 +112,13 @@ export function endRush(s: RushState, now: number): RushState {
  */
 export function applyAnswer(s: RushState, correct: boolean, now: number): RushState {
   if (s.phase !== 'running' || now >= s.endsAt) return s;
+  const rules = DIFFICULTIES[s.difficulty];
   if (correct) {
     const streak = s.streak + 1;
     return {
       ...s,
-      endsAt: s.endsAt + CORRECT_BONUS_MS,
-      bonusMs: s.bonusMs + CORRECT_BONUS_MS,
+      endsAt: s.endsAt + rules.correctMs,
+      bonusMs: s.bonusMs + rules.correctMs,
       streak,
       bestStreak: Math.max(s.bestStreak, streak),
       correct: s.correct + 1,
@@ -92,7 +126,7 @@ export function applyAnswer(s: RushState, correct: boolean, now: number): RushSt
   }
   const next: RushState = {
     ...s,
-    endsAt: s.endsAt - WRONG_PENALTY_MS,
+    endsAt: s.endsAt - rules.wrongMs,
     streak: 0,
     wrong: s.wrong + 1,
   };
@@ -101,10 +135,11 @@ export function applyAnswer(s: RushState, correct: boolean, now: number): RushSt
 
 export function applyJackpot(s: RushState): RushState {
   if (s.phase !== 'running') return s;
+  const { jackpotMs } = DIFFICULTIES[s.difficulty];
   return {
     ...s,
-    endsAt: s.endsAt + JACKPOT_BONUS_MS,
-    bonusMs: s.bonusMs + JACKPOT_BONUS_MS,
+    endsAt: s.endsAt + jackpotMs,
+    bonusMs: s.bonusMs + jackpotMs,
     jackpots: s.jackpots + 1,
   };
 }
@@ -147,6 +182,11 @@ export const HEAT_LABEL: Record<Heat, string> = {
   2: 'On fire',
   3: 'Unstoppable',
 };
+
+/** Seconds as a signed bonus for the rules list: "+0:30", "−0:15". */
+export function formatDelta(ms: number, sign: '+' | '−'): string {
+  return `${sign}${formatClock(ms)}`;
+}
 
 /** m:ss, rounding up so the clock never shows 0:00 while time is left. */
 export function formatClock(ms: number): string {

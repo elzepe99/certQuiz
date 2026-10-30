@@ -3,8 +3,9 @@ import { Lock } from 'lucide-react';
 import { useQuiz } from '@/state/quizStore';
 import { linkifySegments, parseExplanation } from '@/lib/quiz';
 import { CommentsPanel } from '@/components/CommentsPanel';
+import { RushPanel, RushTabLabel } from '@/components/rush/RushGame';
 
-export type RightPaneId = 'notes' | 'refs' | 'comments';
+export type RightPaneId = 'notes' | 'refs' | 'comments' | 'rush';
 
 type Props = {
   active: RightPaneId;
@@ -57,6 +58,9 @@ export function RightPanel({ active, onChange }: Props) {
         </Tab>
         <Tab id="refs" active={active === 'refs'} onClick={() => onChange('refs')}>
           Refs
+        </Tab>
+        <Tab id="rush" active={active === 'rush'} onClick={() => onChange('rush')}>
+          <RushTabLabel />
         </Tab>
       </div>
 
@@ -124,6 +128,8 @@ export function RightPanel({ active, onChange }: Props) {
           )
         ) : null}
 
+        {active === 'rush' ? <RushPanel /> : null}
+
         {active === 'comments' ? (
           isAnswered ? (
             <CommentsPanel />
@@ -151,7 +157,7 @@ function Tab({
   return (
     <button
       onClick={onClick}
-      className="-mb-px border-b-2 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.14em] transition-colors"
+      className="-mb-px whitespace-nowrap border-b-2 px-2 py-2 font-mono text-[10px] uppercase tracking-[0.14em] transition-colors"
       style={{
         color: active ? 'var(--accent)' : 'var(--text-secondary)',
         borderColor: active ? 'var(--accent)' : 'transparent',

@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import {
+  DEFAULT_DIFFICULTY,
   IDLE_RUSH,
-  SYMBOLS,
+  isDifficulty,
   applyAnswer,
   applyJackpot,
   endRush,
@@ -9,6 +10,7 @@ import {
   spin,
   startRush,
   survivedMs,
+  type Difficulty,
   type Reels,
   type RushState,
 } from '@/lib/rush';
@@ -24,7 +26,8 @@ import { useQuiz } from '@/state/quizStore';
  * whatever the reader submits there, so the answers are ordinary answers and
  * land in `quiz:progress:*` exactly as they would without the clock — unlike
  * Blitz, nothing here is a guess against a timer that the deck's accuracy
- * figure would have to absorb. Its own key is only `quiz:rush:best:<deckId>`.
+ * figure would have to absorb. Its own keys are `quiz:rush:settings` (the
+ * chosen difficulty) and `quiz:rush:best:<deckId>:<difficulty>`.
  *
  * A run lives in memory: a reload or leaving the deck ends it.
  */
@@ -51,17 +54,30 @@ type Store = RushState & {
 
   bind: (deckId: string) => void;
   start: () => void;
-  quit: () => void;
+  setDifficulty: (d: Difficulty) => void;
   reset: () => void;
 };
 
-function bestKey(deckId: string) {
-  return `quiz:rush:best:${deckId}`;
+const SETTINGS_KEY = 'quiz:rush:settings';
+
+function loadDifficulty(): Difficulty {
+  try {
+    const raw = window.localStorage.getItem(SETTINGS_KEY);
+    const d = raw ? (JSON.parse(raw) as { difficulty?: unknown }).difficulty : undefined;
+    return isDifficulty(d) ? d : DEFAULT_DIFFICULTY;
+  } catch {
+    return DEFAULT_DIFFICULTY;
+  }
 }
 
-function readBest(deckId: string): RushBest | null {
+/** A best is per difficulty: a long easy run says nothing about a hard one. */
+function bestKey(deckId: string, d: Difficulty) {
+  return `quiz:rush:best:${deckId}:${d}`;
+}
+
+function readBest(deckId: string, d: Difficulty): RushBest | null {
   try {
-    const raw = window.localStorage.getItem(bestKey(deckId));
+    const raw = window.localStorage.getItem(bestKey(deckId, d));
     if (!raw) return null;
     const b = JSON.parse(raw) as Partial<RushBest>;
     return typeof b.correct === 'number' ? (b as RushBest) : null;
@@ -70,9 +86,9 @@ function readBest(deckId: string): RushBest | null {
   }
 }
 
-function writeBest(deckId: string, best: RushBest) {
+function writeBest(deckId: string, d: Difficulty, best: RushBest) {
   try {
-    window.localStorage.setItem(bestKey(deckId), JSON.stringify(best));
+    window.localStorage.setItem(bestKey(deckId, d), JSON.stringify(best));
   } catch {
     // A best score that does not survive a reload is still a best score today.
   }
@@ -83,10 +99,11 @@ let spinSeq = 0;
 
 export const useRush = create<Store>((set, get) => ({
   ...IDLE_RUSH,
+  difficulty: loadDifficulty(),
   deckId: null,
   now: Date.now(),
-  reels: [SYMBOLS[5], SYMBOLS[5], SYMBOLS[5]],
-  target: [SYMBOLS[5], SYMBOLS[5], SYMBOLS[5]],
+  reels: ['seven', 'seven', 'seven'],
+  target: ['seven', 'seven', 'seven'],
   spinning: false,
   flash: null,
   best: null,
@@ -95,14 +112,14 @@ export const useRush = create<Store>((set, get) => ({
   bind: (deckId) => {
     if (get().deckId === deckId) return;
     get().reset();
-    set({ deckId, best: readBest(deckId) });
+    set({ deckId, best: readBest(deckId, get().difficulty) });
   },
 
   start: () => {
     unlockAudio();
     spinSeq++;
     set({
-      ...startRush(Date.now()),
+      ...startRush(Date.now(), get().difficulty),
       now: Date.now(),
       spinning: false,
       flash: null,
@@ -112,11 +129,27 @@ export const useRush = create<Store>((set, get) => ({
     syncTicker();
   },
 
-  quit: () => finish(Date.now()),
+  setDifficulty: (d) => {
+    if (get().phase === 'running') return;
+    const deckId = get().deckId;
+    set({ difficulty: d, best: deckId ? readBest(deckId, d) : null, newBest: false });
+    try {
+      window.localStorage.setItem(SETTINGS_KEY, JSON.stringify({ difficulty: d }));
+    } catch {
+      // The choice still holds for this visit.
+    }
+  },
 
   reset: () => {
     spinSeq++;
-    set({ ...IDLE_RUSH, spinning: false, flash: null, newBest: false, now: Date.now() });
+    set({
+      ...IDLE_RUSH,
+      difficulty: get().difficulty,
+      spinning: false,
+      flash: null,
+      newBest: false,
+      now: Date.now(),
+    });
     syncTicker();
   },
 }));
@@ -139,7 +172,7 @@ function finish(now: number, from: Store = useRush.getState()) {
   spinSeq++;
   // State first, then the sound — never the other way round (see sfx.ts).
   useRush.setState({ ...over, now, spinning: false, best: beat ? run : prev, newBest: beat });
-  if (beat && s.deckId) writeBest(s.deckId, run);
+  if (beat && s.deckId) writeBest(s.deckId, over.difficulty, run);
   syncTicker();
   sfx.finish();
 }
