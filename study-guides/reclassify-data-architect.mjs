@@ -115,27 +115,22 @@ export const UNCOVERED = [
   'Protecting personal data outside production. 0 hits for Data Mask; the DLD deck\'s 52e1dadf covers it. Guide s6.',
 ];
 
-const { pathToFileURL } = await import('node:url');
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const fs = await import('node:fs');
-  const deck = JSON.parse(fs.readFileSync('public/decks/questions_data_architect_merged.json', 'utf8'));
-  const ids = new Set(deck.map(q => q.id));
-  const missing = deck.filter(q => !(q.id in CALLS)).map(q => q.id);
-  const stale = Object.keys(CALLS).filter(id => !ids.has(id));
-  if (missing.length || stale.length) console.log('unclassified:', missing, 'stale:', stale);
-  const n = deck.length;
-  const counts = {};
-  const tagged = {};
-  for (const q of deck) {
-    counts[CALLS[q.id]] = (counts[CALLS[q.id]] || 0) + 1;
-    tagged[q._cat] = (tagged[q._cat] || 0) + 1;
-  }
-  console.log(`deck ${n} questions  |  exam 60 scored questions`);
-  for (const d of Object.keys(EXAM)) {
-    const c = counts[d] || 0;
-    console.log(
-      `${NAMES[d].padEnd(34)} exam ${String(EXAM[d]).padStart(2)}%  ~${Math.round(EXAM[d] * 0.6).toString().padStart(2)} Qs   deck ${String(c).padStart(3)}  ${(100 * c / n).toFixed(1).padStart(5)}%   by tag ${String(tagged[NAMES[d]] || 0).padStart(3)}`,
-    );
-  }
-  console.log(`\n${UNCOVERED.length} sub-objectives with no deck item.`);
+import { isMain, runReport } from './lib/report.mjs';
+
+if (isMain(import.meta.url)) {
+  runReport({
+    deckFile: 'questions_data_architect_merged.json',
+    CALLS, EXAM, NAMES,
+    pad: 34,
+    examLabel: '60 scored questions',
+    // The deck's own `_cat` tags carry the current domain names, so show both counts.
+    rowSuffix: (deck) => {
+      const tagged = {};
+      for (const q of deck) tagged[q._cat] = (tagged[q._cat] || 0) + 1;
+      return (d) => `   by tag ${String(tagged[NAMES[d]] || 0).padStart(3)}`;
+    },
+    footer: [
+      `\n${UNCOVERED.length} sub-objectives with no deck item.`,
+    ],
+  });
 }

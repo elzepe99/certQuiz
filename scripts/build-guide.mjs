@@ -16,81 +16,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { listGuides, orphanFragments } from './lib/guides.mjs';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
-const GUIDES = [
-  {
-    source: 'study-guides/integration-architect.artifact.html',
-    out: 'public/guides/salesforce-integration-architect.html',
-    lang: 'en',
-  },
-  {
-    source: 'study-guides/platform-developer-2.artifact.html',
-    out: 'public/guides/salesforce-platform-developer-2.html',
-    lang: 'en',
-  },
-  {
-    source: 'study-guides/iam-architect.artifact.html',
-    out: 'public/guides/salesforce-iam-architect.html',
-    lang: 'en',
-  },
-  {
-    source: 'study-guides/admin.artifact.html',
-    out: 'public/guides/salesforce-admin.html',
-    lang: 'en',
-  },
-  {
-    source: 'study-guides/app-builder.artifact.html',
-    out: 'public/guides/salesforce-app-builder.html',
-    lang: 'en',
-  },
-  {
-    source: 'study-guides/databricks-data-engineer-associate.artifact.html',
-    out: 'public/guides/databricks-data-engineer-associate.html',
-    lang: 'en',
-  },
-  {
-    source: 'study-guides/revenue-cloud.artifact.html',
-    out: 'public/guides/salesforce-revenue-cloud.html',
-    lang: 'en',
-  },
-  {
-    source: 'study-guides/data-cloud-consultant.artifact.html',
-    out: 'public/guides/salesforce-data-cloud-consultant.html',
-    lang: 'en',
-  },
-  {
-    source: 'study-guides/agentforce-specialist.artifact.html',
-    out: 'public/guides/salesforce-agentforce-specialist.html',
-    lang: 'en',
-  },
-  {
-    source: 'study-guides/sharing-visibility.artifact.html',
-    out: 'public/guides/salesforce-sharing-visibility.html',
-    lang: 'en',
-  },
-  {
-    source: 'study-guides/data-architect.artifact.html',
-    out: 'public/guides/salesforce-data-architect.html',
-    lang: 'en',
-  },
-  {
-    source: 'study-guides/dld.artifact.html',
-    out: 'public/guides/salesforce-dld.html',
-    lang: 'en',
-  },
-  {
-    source: 'study-guides/slack-consultant.artifact.html',
-    out: 'public/guides/salesforce-slack-consultant.html',
-    lang: 'en',
-  },
-  {
-    source: 'study-guides/claude-architect-foundations.artifact.html',
-    out: 'public/guides/claude-architect-foundations.html',
-    lang: 'en',
-  },
-];
+// Declared in one place: a deck's `guide` field in the manifest. See lib/guides.mjs.
+const GUIDES = listGuides(REPO);
 
 /** Pull the <title> out of the fragment so the standalone page keeps it. */
 function extractTitle(html) {
@@ -153,6 +84,11 @@ for (const guide of GUIDES) {
   console.log(
     `  built    ${guide.out}  (${(out.length / 1024).toFixed(1)} KB)  "${extractTitle(fragment)}"`,
   );
+}
+
+for (const orphan of orphanFragments(REPO, GUIDES)) {
+  console.error(`  ORPHAN   ${orphan} — no deck in manifest.json declares a guide for it, so it was not built`);
+  failed = true;
 }
 
 process.exit(failed ? 1 : 0);

@@ -112,16 +112,11 @@ export const TAG_TO_CODE = {
 
 // This file went a year without a runner, which is how the guide's section 2 came to be
 // measured at 133 questions while the deck held 146. Keep it.
-// The `file:///${argv[1]}` string comparison the four sibling reclassify scripts use needs a
-// backslash-escaping regex to work on Windows; pathToFileURL does the same job without one.
-const { pathToFileURL } = await import('node:url');
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const fs = await import('node:fs');
-  const deck = JSON.parse(fs.readFileSync('public/decks/integration_architect_questions_corrected.json', 'utf8'));
-  const ids = new Set(deck.map(q => q.id));
-  const missing = deck.filter(q => !(q.id in CALLS)).map(q => q.id);
-  const stale = Object.keys(CALLS).filter(id => !ids.has(id));
-  if (missing.length || stale.length) console.log('unclassified:', missing, 'stale:', stale);
+import { checkCalls, isMain, loadDeck } from './lib/report.mjs';
+
+if (isMain(import.meta.url)) {
+  const deck = loadDeck('integration_architect_questions_corrected.json');
+  checkCalls(deck, CALLS);
 
   const n = deck.length;
   const steel = new Set(STEELMAN_T);

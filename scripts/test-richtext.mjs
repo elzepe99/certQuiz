@@ -12,34 +12,11 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { DECKS_DIR, listDeckFiles } from './lib/decks.mjs';
+import { check, loadTs, tally } from './lib/harness.mjs';
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const { parseRichText, splitInlineCode } = await loadTs('src/lib/richtext.ts');
 
-const esbuild = (
-  await import(pathToFileURL(path.join(ROOT, 'node_modules/esbuild/lib/main.js')).href)
-).default;
-const src = fs.readFileSync(path.join(ROOT, 'src/lib/richtext.ts'), 'utf8');
-const js = esbuild.transformSync(src, { loader: 'ts', format: 'esm' }).code;
-const { parseRichText, splitInlineCode } = await import(
-  'data:text/javascript;base64,' + Buffer.from(js).toString('base64')
-);
-
-let pass = 0;
-let fail = 0;
-
-function check(name, actual, expected) {
-  const a = JSON.stringify(actual);
-  const e = JSON.stringify(expected);
-  if (a === e) {
-    pass++;
-  } else {
-    fail++;
-    console.log(`  FAIL  ${name}`);
-    console.log(`        got:      ${a}`);
-    console.log(`        expected: ${e}`);
-  }
-}
 
 /** Assert which segments a string produces, as a compact kind string. */
 function shape(text) {
@@ -176,14 +153,11 @@ check('orphaned brace is not a block', shape('}'), 'T');
 
 // Sweep every deck so an over-firing rule shows up as a count spike.
 console.log('\nrichtext: deck sweep');
-const deckDir = path.join(ROOT, 'public/decks');
+const deckDir = DECKS_DIR;
 const FIELDS = ['question', 'optionA', 'optionB', 'optionC', 'optionD', 'optionE', 'explanation'];
 let totalBlocks = 0;
 let totalQuestions = 0;
-for (const file of fs
-  .readdirSync(deckDir)
-  .filter((f) => f.endsWith('.json') && f !== 'manifest.json' && f !== 'deck-template.json')
-  .sort()) {
+for (const file of listDeckFiles().sort()) {
   const raw = JSON.parse(fs.readFileSync(path.join(deckDir, file), 'utf8'));
   const arr = Array.isArray(raw) ? raw : raw.questions;
   let blocks = 0;
@@ -207,5 +181,6 @@ for (const file of fs
 }
 console.log(`  ${'TOTAL'.padEnd(50)} ${String(totalBlocks).padStart(4)} blocks in ${totalQuestions} questions`);
 
+const { pass, fail } = tally();
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);

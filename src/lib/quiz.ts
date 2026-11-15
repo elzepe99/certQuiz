@@ -62,8 +62,7 @@ export function getOptions(q: Question): Array<{ letter: string; text: string }>
 
 /** Detect "Choose 2" / "Select 3" etc. in the prompt. */
 export function isMultiCorrectPrompt(prompt: string, correct: string): boolean {
-  if (correct.includes(',')) return true;
-  return /\b(choose|select|pick)\s+(two|three|four|five|2|3|4|5)\b/i.test(prompt);
+  return requiredAnswerCount(prompt, correct) > 1;
 }
 
 /** How many answers the question requires. Returns 1 for single-answer questions. */

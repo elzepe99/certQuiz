@@ -295,13 +295,15 @@ than retyping, and remember that a palette change has to be made in every file.
 
 ## Phase 7 — Wire it up, build, and verify
 
-Three edits, all easy to forget and all silent when missed:
+Three steps, all easy to forget:
 
-1. **`scripts/build-guide.mjs`** — add a `{ source, out, lang }` entry to the
-   `GUIDES` array. A guide missing from it is never built.
+1. **Name the fragment by convention** — `study-guides/<name>.artifact.html`, where
+   `<name>` is the deck id with any leading `salesforce-` dropped. That is how
+   `scripts/lib/guides.mjs` finds it; there is no list in `build-guide.mjs` to edit.
 2. **`public/decks/manifest.json`** — add `"guide": "guides/<out>.html"` to the
-   deck. Without it the app shows no Guide tab; `src/components/TopBar.tsx`
-   renders one only when `deck.guide` is set.
+   deck. This one field is what gets the guide built *and* shown: without it the
+   build reports the fragment as an orphan and fails, and the app shows no Guide
+   tab (`src/components/TopBar.tsx` renders one only when `deck.guide` is set).
 3. Build and check:
 
 ```bash

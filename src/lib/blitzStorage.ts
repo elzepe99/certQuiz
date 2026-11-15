@@ -13,6 +13,7 @@ import {
   type BlitzSource,
   type ReadAloudMode,
 } from '@/lib/blitz';
+import { readJson, writeJson } from '@/lib/localJson';
 
 export const BLITZ_SETTINGS_KEY = 'quiz:blitz:settings';
 export const BLITZ_BEST_KEY = (deckId: string) => `quiz:blitz:best:${deckId}`;
@@ -66,57 +67,39 @@ function num(value: unknown, fallback: number): number {
 }
 
 export function loadSettings(): BlitzSettings {
-  if (typeof window === 'undefined') return DEFAULT_SETTINGS;
-  try {
-    const raw = window.localStorage.getItem(BLITZ_SETTINGS_KEY);
-    if (!raw) return DEFAULT_SETTINGS;
-    const parsed = JSON.parse(raw) as Partial<BlitzSettings>;
-    return {
-      seconds: Math.max(5, Math.floor(num(parsed.seconds, DEFAULT_SETTINGS.seconds))),
-      readAloud: coerceReadAloud(parsed.readAloud),
-      voiceURI: typeof parsed.voiceURI === 'string' ? parsed.voiceURI : null,
-      rate: Math.min(2, Math.max(0.5, num(parsed.rate, DEFAULT_SETTINGS.rate))),
-      sound: parsed.sound !== false,
-      feedbackSeconds: Math.max(
-        0,
-        Math.floor(num(parsed.feedbackSeconds, DEFAULT_SETTINGS.feedbackSeconds)),
-      ),
-      source:
-        parsed.source === 'deck' || parsed.source === 'random' || parsed.source === 'set'
-          ? parsed.source
-          : DEFAULT_SETTINGS.source,
-    };
-  } catch {
-    return DEFAULT_SETTINGS;
-  }
+  const parsed = readJson(BLITZ_SETTINGS_KEY) as Partial<BlitzSettings> | null;
+  if (!parsed) return DEFAULT_SETTINGS;
+  return {
+    seconds: Math.max(5, Math.floor(num(parsed.seconds, DEFAULT_SETTINGS.seconds))),
+    readAloud: coerceReadAloud(parsed.readAloud),
+    voiceURI: typeof parsed.voiceURI === 'string' ? parsed.voiceURI : null,
+    rate: Math.min(2, Math.max(0.5, num(parsed.rate, DEFAULT_SETTINGS.rate))),
+    sound: parsed.sound !== false,
+    feedbackSeconds: Math.max(
+      0,
+      Math.floor(num(parsed.feedbackSeconds, DEFAULT_SETTINGS.feedbackSeconds)),
+    ),
+    source:
+      parsed.source === 'deck' || parsed.source === 'random' || parsed.source === 'set'
+        ? parsed.source
+        : DEFAULT_SETTINGS.source,
+  };
 }
 
 export function saveSettings(settings: BlitzSettings) {
-  if (typeof window === 'undefined') return;
-  try {
-    window.localStorage.setItem(BLITZ_SETTINGS_KEY, JSON.stringify(settings));
-  } catch {
-    // ignore quota errors
-  }
+  writeJson(BLITZ_SETTINGS_KEY, settings);
 }
 
 export function loadBest(deckId: string): BlitzBest | null {
-  if (typeof window === 'undefined') return null;
-  try {
-    const raw = window.localStorage.getItem(BLITZ_BEST_KEY(deckId));
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as Partial<BlitzBest>;
-    if (!Number.isFinite(Number(parsed.score))) return null;
-    return {
-      score: num(parsed.score, 0),
-      questions: num(parsed.questions, 0),
-      correct: num(parsed.correct, 0),
-      bestStreak: num(parsed.bestStreak, 0),
-      at: typeof parsed.at === 'string' ? parsed.at : '',
-    };
-  } catch {
-    return null;
-  }
+  const parsed = readJson(BLITZ_BEST_KEY(deckId)) as Partial<BlitzBest> | null;
+  if (!parsed || !Number.isFinite(Number(parsed.score))) return null;
+  return {
+    score: num(parsed.score, 0),
+    questions: num(parsed.questions, 0),
+    correct: num(parsed.correct, 0),
+    bestStreak: num(parsed.bestStreak, 0),
+    at: typeof parsed.at === 'string' ? parsed.at : '',
+  };
 }
 
 /**
@@ -126,13 +109,7 @@ export function loadBest(deckId: string): BlitzBest | null {
  * the record — a five-question sprint at 100% should not lock out the board.
  */
 export function recordBest(deckId: string, run: BlitzBest): boolean {
-  if (typeof window === 'undefined') return false;
   const prev = loadBest(deckId);
   if (prev && prev.score >= run.score) return false;
-  try {
-    window.localStorage.setItem(BLITZ_BEST_KEY(deckId), JSON.stringify(run));
-  } catch {
-    return false;
-  }
-  return true;
+  return writeJson(BLITZ_BEST_KEY(deckId), run);
 }

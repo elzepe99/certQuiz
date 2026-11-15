@@ -71,7 +71,7 @@ export type RushState = {
   jackpots: number;
   /** How many of those jackpots were three Tinchos. */
   tinchos: number;
-  /** Total time earned on top of the starting four minutes. */
+  /** Total time earned on top of the difficulty's starting clock. */
   bonusMs: number;
   startedAt: number;
   endedAt: number;
@@ -163,7 +163,7 @@ export function applyJackpot(s: RushState, tincho = false): RushState {
 }
 
 /**
- * Spin the three reels. Independent reels over six symbols would pay 1 in 36,
+ * Spin the three reels. Independent reels over seven symbols would pay 1 in 49,
  * which makes the jackpot a rumour; instead the triple is rolled first at
  * exactly `JACKPOT_ODDS`, and a losing spin is redrawn until it is not three of
  * a kind. Two of a kind still happens often, which is the near miss that keeps
@@ -208,11 +208,6 @@ export const HEAT_LABEL: Record<Heat, string> = {
   2: 'On fire',
   3: 'Unstoppable',
 };
-
-/** Seconds as a signed bonus for the rules list: "+0:30", "−0:15". */
-export function formatDelta(ms: number, sign: '+' | '−'): string {
-  return `${sign}${formatClock(ms)}`;
-}
 
 /** m:ss, rounding up so the clock never shows 0:00 while time is left. */
 export function formatClock(ms: number): string {

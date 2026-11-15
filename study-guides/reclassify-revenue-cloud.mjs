@@ -113,22 +113,16 @@ export const UNCOVERED = [
   'The renamed product surface. 66 of 135 stems say "Revenue Cloud"; "Agentforce Revenue Management" appears 0 times. Every Setup node, permission set and doc title a learner will meet now carries the new name.',
 ];
 
-if (import.meta.url === `file:///${process.argv[1].replace(/\\/g, '/')}`) {
-  const fs = await import('node:fs');
-  const deck = JSON.parse(fs.readFileSync('public/decks/salesforce-revenue-cloud.json', 'utf8'));
-  const ids = new Set(deck.map(q => q.id));
-  const missing = deck.filter(q => !(q.id in CALLS)).map(q => q.id);
-  const stale = Object.keys(CALLS).filter(id => !ids.has(id));
-  if (missing.length || stale.length) console.log('unclassified:', missing, 'stale:', stale);
-  const n = deck.length;
-  const counts = {};
-  for (const q of deck) counts[CALLS[q.id]] = (counts[CALLS[q.id]] || 0) + 1;
-  console.log(`deck ${n} questions  |  exam 60 scored questions`);
-  for (const d of Object.keys(EXAM)) {
-    const c = counts[d] || 0;
-    console.log(
-      `${NAMES[d].padEnd(26)} exam ${String(EXAM[d]).padStart(2)}%  ~${Math.round(EXAM[d] * 0.6).toString().padStart(2)} Qs   deck ${String(c).padStart(3)}  ${(100 * c / n).toFixed(1).padStart(5)}%`,
-    );
-  }
-  console.log(`\n${UNCOVERED.length} sub-objectives with no deck item.`);
+import { isMain, runReport } from './lib/report.mjs';
+
+if (isMain(import.meta.url)) {
+  runReport({
+    deckFile: 'salesforce-revenue-cloud.json',
+    CALLS, EXAM, NAMES,
+    pad: 26,
+    examLabel: '60 scored questions',
+    footer: [
+      `\n${UNCOVERED.length} sub-objectives with no deck item.`,
+    ],
+  });
 }

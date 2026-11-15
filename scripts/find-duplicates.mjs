@@ -44,9 +44,10 @@
  * removing anything. Borderline scores near ANSWER_MATCH are exactly where it
  * misjudges, in both directions.
  */
-import { readFileSync, readdirSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
+import { listDeckFiles } from './lib/decks.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DECKS = resolve(HERE, '..', 'public/decks');
@@ -134,8 +135,7 @@ const weight = (q) =>
   ((q.explanation || '').match(/https:\/\//g) || []).length * 400 +
   (q.corrected ? 300 : 0);
 
-const files = readdirSync(DECKS)
-  .filter((f) => f.endsWith('.json') && !/manifest|deck-template/.test(f))
+const files = listDeckFiles(DECKS)
   .filter((f) => !ONLY || f === ONLY);
 
 let same = 0;

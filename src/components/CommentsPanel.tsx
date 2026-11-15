@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Trash2, Send } from 'lucide-react';
 import type { Comment } from '@/types';
 import { useQuiz } from '@/state/quizStore';
-import { questionHash } from '@/lib/storage';
+import { questionKey } from '@/lib/storage';
 import { isCommentsEnabled } from '@/lib/supabase';
 import { addComment, deleteComment, listComments } from '@/lib/comments';
 import { getUsername, setUsername } from '@/lib/identity';
@@ -28,7 +28,7 @@ export function CommentsPanel() {
 
   const q = questions[idx];
   const deckId = deck?.id ?? '';
-  const hash = useMemo(() => (q ? questionHash(q) : ''), [q]);
+  const hash = useMemo(() => (q ? questionKey(q) : ''), [q]);
 
   const [comments, setComments] = useState<Comment[]>([]);
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');

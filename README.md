@@ -16,13 +16,13 @@ npm run dev      # http://localhost:5173/certQuiz/
 
 ## What's in it
 
-### The decks — 1,866 questions
+### The decks — 1,863 questions
 
 | Deck | Questions |
 |---|---:|
 | Salesforce Certified Administrator | 154 |
 | Salesforce Certified Platform App Builder | 222 |
-| Salesforce Certified Platform Developer II | 146 |
+| Salesforce Certified Platform Developer II | 145 |
 | Salesforce Certified Agentforce Specialist | 227 |
 | Salesforce Certified Integration Architect | 146 |
 | Salesforce Certified Identity and Access Management Architect | 116 |
@@ -30,9 +30,9 @@ npm run dev      # http://localhost:5173/certQuiz/
 | Salesforce Certified Data Architect | 135 |
 | Salesforce Development Lifecycle and Deployment Designer | 137 |
 | Salesforce Revenue Cloud Consultant | 135 |
-| Salesforce Certified Data Cloud Consultant | 100 |
+| Salesforce Certified Data Cloud Consultant | 99 |
 | Salesforce Certified Slack Consultant | 37 |
-| Databricks Certified Data Engineer Associate | 147 |
+| Databricks Certified Data Engineer Associate | 146 |
 | Claude Certified Architect — Foundations | 28 |
 
 Every answer has been checked against the vendor's official documentation, and every
@@ -81,6 +81,14 @@ the accuracy shown on the deck picker only reflects questions you answered in ex
 Voice quality depends on the browser. **Microsoft Edge** has natural-sounding voices
 built in; Chrome on Windows only has the old robotic ones.
 
+### Focus mode and Jackpot Rush
+
+- **Focus mode** (the timer button in the top bar) is an optional Pomodoro timer with
+  generated focus music. It is independent of your deck progress.
+- **Jackpot Rush** (the Rush tab in the right sidebar, on wide screens) lays a survival
+  clock over the exam view: right answers buy time and spin a slot machine, wrong ones
+  cost time. Its answers are ordinary answers and count towards your progress.
+
 ### Study guides — the **Guide** tab
 
 Every deck has a study guide that opens in a new tab. The deck teaches you the questions;
@@ -121,6 +129,7 @@ npm run typecheck      # TypeScript check
 npm run test:richtext  # code-block detection
 npm run test:sets      # set-splitting arithmetic
 npm run test:blitz     # Blitz scoring and the read-aloud script
+npm run test:rush      # Jackpot Rush clock, difficulty and slot-machine odds
 
 npm run review-comments  # export in-app comments to Markdown (needs Supabase keys)
 ```
@@ -131,6 +140,7 @@ npm run review-comments  # export in-app comments to Markdown (needs Supabase ke
 src/                 the app
   components/        exam view, review, explanations, correction notices, settings
   components/blitz/  Blitz mode
+  components/rush/   Jackpot Rush, the survival clock in the right sidebar
   diagrams/          hand-drawn figures for the questions that need one
   lib/               question parsing, code detection, sets, speech, storage
 public/decks/        the 14 decks + manifest.json

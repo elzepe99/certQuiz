@@ -17,25 +17,11 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
-
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-
-const esbuild = (
-  await import(pathToFileURL(path.join(ROOT, 'node_modules/esbuild/lib/main.js')).href)
-).default;
+import { DECKS_DIR, listDeckFiles } from './lib/decks.mjs';
+import { check, loadTs, ok, tally } from './lib/harness.mjs';
 
 // Bundled rather than transformed in isolation: blitz.ts leans on richtext.ts
 // for code detection, and `tsconfig` is what teaches esbuild the `@/` alias.
-const built = await esbuild.build({
-  entryPoints: [path.join(ROOT, 'src/lib/blitz.ts')],
-  bundle: true,
-  format: 'esm',
-  write: false,
-  tsconfig: path.join(ROOT, 'tsconfig.json'),
-  logLevel: 'silent',
-});
-const js = built.outputFiles[0].text;
 const {
   BLITZ_BASE_POINTS,
   CODE_SPOKEN_PLACEHOLDER,
@@ -51,31 +37,8 @@ const {
   speechScript,
   splitForSpeech,
   timeBudgetSeconds,
-} = await import('data:text/javascript;base64,' + Buffer.from(js).toString('base64'));
+} = await loadTs('src/lib/blitz.ts');
 
-let pass = 0;
-let fail = 0;
-
-function check(name, actual, expected) {
-  const a = JSON.stringify(actual);
-  const e = JSON.stringify(expected);
-  if (a === e) {
-    pass++;
-  } else {
-    fail++;
-    console.log(`  FAIL  ${name}`);
-    console.log(`        got:      ${a}`);
-    console.log(`        expected: ${e}`);
-  }
-}
-
-function ok(name, condition, detail = '') {
-  if (condition) pass++;
-  else {
-    fail++;
-    console.log(`  FAIL  ${name}${detail ? ` — ${detail}` : ''}`);
-  }
-}
 
 // ---------------------------------------------------------------- scoring ---
 console.log('\nScoring');
@@ -285,10 +248,8 @@ check('an empty deck yields an empty run', buildRunOrder({ source: 'deck', total
 // ------------------------------------------------------------- deck sweep ---
 console.log('Deck sweep');
 
-const decksDir = path.join(ROOT, 'public/decks');
-const files = fs
-  .readdirSync(decksDir)
-  .filter((f) => f.endsWith('.json') && !/manifest|deck-template/.test(f));
+const decksDir = DECKS_DIR;
+const files = listDeckFiles();
 
 let questions = 0;
 let withCode = 0;
@@ -320,5 +281,6 @@ console.log(
   `  ${questions} questions · ${withCode} carry code (spoken as a note, +${VISUAL_BONUS_SECONDS}s) · longest spoken stem ${longestStem} chars`,
 );
 
+const { pass, fail } = tally();
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail === 0 ? 0 : 1);

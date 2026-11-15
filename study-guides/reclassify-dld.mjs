@@ -125,23 +125,16 @@ export const UNCOVERED = [
   'Operating as a whole: 7 items (5.1%) against a 10% domain -- the old five-domain outline the deck was built on had no Operating domain. Guide s10.',
 ];
 
-const { pathToFileURL } = await import('node:url');
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const fs = await import('node:fs');
-  const deck = JSON.parse(fs.readFileSync('public/decks/salesforce_dld_questions_corrected.json', 'utf8'));
-  const ids = new Set(deck.map(q => q.id));
-  const missing = deck.filter(q => !(q.id in CALLS)).map(q => q.id);
-  const stale = Object.keys(CALLS).filter(id => !ids.has(id));
-  if (missing.length || stale.length) console.log('unclassified:', missing, 'stale:', stale);
-  const n = deck.length;
-  const counts = {};
-  for (const q of deck) counts[CALLS[q.id]] = (counts[CALLS[q.id]] || 0) + 1;
-  console.log(`deck ${n} questions  |  exam 60 scored questions`);
-  for (const d of Object.keys(EXAM)) {
-    const c = counts[d] || 0;
-    console.log(
-      `${NAMES[d].padEnd(34)} exam ${String(EXAM[d]).padStart(2)}%  ~${Math.round(EXAM[d] * 0.6).toString().padStart(2)} Qs   deck ${String(c).padStart(3)}  ${(100 * c / n).toFixed(1).padStart(5)}%`,
-    );
-  }
-  console.log(`\n${UNCOVERED.length} sub-objectives with no deck item.`);
+import { isMain, runReport } from './lib/report.mjs';
+
+if (isMain(import.meta.url)) {
+  runReport({
+    deckFile: 'salesforce_dld_questions_corrected.json',
+    CALLS, EXAM, NAMES,
+    pad: 34,
+    examLabel: '60 scored questions',
+    footer: [
+      `\n${UNCOVERED.length} sub-objectives with no deck item.`,
+    ],
+  });
 }

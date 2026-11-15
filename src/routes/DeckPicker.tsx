@@ -2,8 +2,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useMemo, useState } from 'react';
 import { TopBar } from '@/components/TopBar';
 import { loadDeckQuestions, useManifest } from '@/lib/decks';
-import { loadProgress } from '@/lib/storage';
-import { applyQuestionOrder, setBoundaries, setIndexOf } from '@/lib/sets';
+import { loadOrderedProgress } from '@/lib/storage';
+import { setBoundaries, setIndexOf } from '@/lib/sets';
 import { isCorrect } from '@/lib/quiz';
 import type { DeckMeta } from '@/types';
 import { ChevronLeft, ChevronRight, Search, Zap } from 'lucide-react';
@@ -64,10 +64,7 @@ export function DeckPicker() {
         if (cancelled) return;
         try {
           const raw = await loadDeckQuestions(deck);
-          const p = loadProgress(deck.id, raw);
-          // Progress is indexed by display position, so the deck has to be put
-          // into display order before the two are read against each other.
-          const qs = applyQuestionOrder(raw, p.questionOrder);
+          const { progress: p, questions: qs } = loadOrderedProgress(deck.id, raw);
           const submittedIdxs = Object.keys(p.submitted).map(Number);
           let correct = 0;
           for (const i of submittedIdxs) {

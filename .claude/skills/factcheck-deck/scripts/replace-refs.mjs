@@ -31,6 +31,7 @@
  * what you want.
  */
 import { readFileSync, writeFileSync } from 'node:fs';
+import { hasRefMarker, splitExplanation } from '../../../../scripts/lib/decks.mjs';
 
 const [deckPath, mapPath] = process.argv.slice(2).filter((a) => !a.startsWith('--'));
 const DRY = process.argv.includes('--dry');
@@ -73,27 +74,12 @@ if (overlaps.length) {
   process.exit(1);
 }
 
-/** Split an explanation into prose and its reference list. */
-function split(text) {
-  const m = (text ?? '').match(/(^|\n)\s*References?\s*:?\s*\n?/i);
-  if (!m || m.index === undefined) return { body: (text ?? '').trim(), refs: [] };
-  return {
-    body: text.slice(0, m.index).trim(),
-    refs: text
-      .slice(m.index + m[0].length)
-      .trim()
-      .split(/\n+/)
-      .map((l) => l.replace(/^[\s•\-*]+/, '').trim())
-      .filter(Boolean),
-  };
-}
-
 const changed = [];
 const orphaned = [];
 const hits = Object.fromEntries(keys.map((k) => [k, 0]));
 
 for (const q of deck) {
-  const { body, refs } = split(q.explanation);
+  const { body, refs } = splitExplanation(q.explanation);
   if (!refs.length) continue;
 
   let touched = false;
@@ -147,5 +133,5 @@ for (const [k, n] of swapped) {
   console.log(`  ${n.toString().padStart(3)} x  ${k}  ->  ${map[k] === null ? '(dropped)' : map[k]}`);
 }
 
-const cited = deck.filter((q) => /(^|\n)\s*References?\s*:/i.test(q.explanation ?? '')).length;
+const cited = deck.filter((q) => hasRefMarker(q.explanation)).length;
 console.log(`\nDeck coverage: ${cited}/${deck.length} question(s) carry at least one reference.`);

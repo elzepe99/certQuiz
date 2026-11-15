@@ -20,6 +20,7 @@ import {
   stopMusic,
   unlockFocusAudio,
 } from '@/lib/focusMusic';
+import { readJson, writeJson } from '@/lib/localJson';
 
 /**
  * Focus mode: an optional Pomodoro and generative music, behind the timer
@@ -56,21 +57,11 @@ type FocusState = TimerState &
   };
 
 function read<T>(key: string): Partial<T> {
-  try {
-    const raw = window.localStorage.getItem(key);
-    return raw ? (JSON.parse(raw) as Partial<T>) : {};
-  } catch {
-    return {};
-  }
+  return (readJson(key) ?? {}) as Partial<T>;
 }
 
-function write(key: string, value: unknown) {
-  try {
-    window.localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    // A timer that forgets itself on reload still works today.
-  }
-}
+// A timer that forgets itself on reload still works today, so a failed write is dropped.
+const write = writeJson;
 
 function loadSettings(): Settings {
   const s = read<Settings>(SETTINGS_KEY);
