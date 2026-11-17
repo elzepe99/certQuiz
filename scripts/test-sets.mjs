@@ -14,15 +14,9 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { DECKS_DIR, listDeckFiles } from './lib/decks.mjs';
+import { check, loadTs, ok, tally } from './lib/harness.mjs';
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-
-const esbuild = (
-  await import(pathToFileURL(path.join(ROOT, 'node_modules/esbuild/lib/main.js')).href)
-).default;
-const src = fs.readFileSync(path.join(ROOT, 'src/lib/sets.ts'), 'utf8');
-const js = esbuild.transformSync(src, { loader: 'ts', format: 'esm' }).code;
 const {
   DEFAULT_SET_SIZE,
   SET_SIZE_OPTIONS,
@@ -32,32 +26,8 @@ const {
   setRange,
   setInfoFor,
   applyQuestionOrder,
-} = await import('data:text/javascript;base64,' + Buffer.from(js).toString('base64'));
+} = await loadTs('src/lib/sets.ts');
 
-let pass = 0;
-let fail = 0;
-
-function check(name, actual, expected) {
-  const a = JSON.stringify(actual);
-  const e = JSON.stringify(expected);
-  if (a === e) {
-    pass++;
-  } else {
-    fail++;
-    console.log(`  FAIL  ${name}`);
-    console.log(`        got:      ${a}`);
-    console.log(`        expected: ${e}`);
-  }
-}
-
-function ok(name, cond, detail = '') {
-  if (cond) {
-    pass++;
-  } else {
-    fail++;
-    console.log(`  FAIL  ${name}${detail ? `  — ${detail}` : ''}`);
-  }
-}
 
 /** Set sizes implied by a boundary array. */
 function sizes(boundaries) {
@@ -160,11 +130,8 @@ check('missing order is ignored', applyQuestionOrder(['a', 'b'], undefined), ['a
 
 console.log('\nsets: deck sweep');
 
-const deckDir = path.join(ROOT, 'public/decks');
-const deckFiles = fs
-  .readdirSync(deckDir)
-  .filter((f) => f.endsWith('.json') && f !== 'manifest.json' && f !== 'deck-template.json')
-  .sort();
+const deckDir = DECKS_DIR;
+const deckFiles = listDeckFiles().sort();
 
 ok('found decks to sweep', deckFiles.length > 0, `${deckFiles.length} files`);
 
@@ -214,5 +181,6 @@ for (const file of deckFiles) {
 }
 
 console.log(`\n  default set size: ${DEFAULT_SET_SIZE}`);
+const { pass, fail } = tally();
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);

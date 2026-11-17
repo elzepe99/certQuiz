@@ -134,31 +134,28 @@ export const UNCOVERED = [
   'LEARN: the rollout communication plan. "rollout" and "communication plan" return 0 in stems and options.',
 ];
 
-const { pathToFileURL } = await import('node:url');
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const fs = await import('node:fs');
-  const deck = JSON.parse(fs.readFileSync('public/decks/Salesforce_Slack_Consultant_Questions.json', 'utf8'));
-  const ids = new Set(deck.map(q => q.id));
-  const missing = deck.filter(q => !(q.id in CALLS)).map(q => q.id);
-  const stale = Object.keys(CALLS).filter(id => !ids.has(id));
-  const tiered = new Set(Object.values(TIER).flat());
-  const untiered = deck.filter(q => !tiered.has(q.id)).map(q => q.id);
-  if (missing.length || stale.length || untiered.length) console.log('unclassified:', missing, 'stale:', stale, 'untiered:', untiered);
-  const n = deck.length;
-  const counts = {};
-  const judg = {};
-  for (const q of deck) {
-    const d = CALLS[q.id];
-    counts[d] = (counts[d] || 0) + 1;
-    if (TIER.JUDGMENT.includes(q.id)) judg[d] = (judg[d] || 0) + 1;
-  }
-  console.log(`deck ${n} questions  |  exam 60 scored questions`);
-  for (const d of Object.keys(EXAM)) {
-    const c = counts[d] || 0;
-    console.log(
-      `${NAMES[d].padEnd(26)} exam ${String(EXAM[d]).padStart(2)}%  ~${Math.round(EXAM[d] * 0.6).toString().padStart(2)} Qs   deck ${String(c).padStart(3)}  ${(100 * c / n).toFixed(1).padStart(5)}%   judgment ${judg[d] || 0}`,
-    );
-  }
-  console.log(`\ntiers: decisive ${TIER.DECISIVE.length}, supported ${TIER.SUPPORTED.length}, judgment ${TIER.JUDGMENT.length}`);
-  console.log(`${UNCOVERED.length} outline bullets with no keyed deck item.`);
+import { isMain, runReport } from './lib/report.mjs';
+
+if (isMain(import.meta.url)) {
+  runReport({
+    deckFile: 'Salesforce_Slack_Consultant_Questions.json',
+    CALLS, EXAM, NAMES,
+    pad: 26,
+    examLabel: '60 scored questions',
+    extraChecks: (deck) => {
+      const tiered = new Set(Object.values(TIER).flat());
+      return { untiered: deck.filter((q) => !tiered.has(q.id)).map((q) => q.id) };
+    },
+    rowSuffix: (deck) => {
+      const judg = {};
+      for (const q of deck) {
+        if (TIER.JUDGMENT.includes(q.id)) judg[CALLS[q.id]] = (judg[CALLS[q.id]] || 0) + 1;
+      }
+      return (d) => `   judgment ${judg[d] || 0}`;
+    },
+    footer: [
+      `\ntiers: decisive ${TIER.DECISIVE.length}, supported ${TIER.SUPPORTED.length}, judgment ${TIER.JUDGMENT.length}`,
+      `${UNCOVERED.length} outline bullets with no keyed deck item.`,
+    ],
+  });
 }

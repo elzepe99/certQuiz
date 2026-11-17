@@ -2,9 +2,10 @@ import { useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { ChevronDown, ChevronRight, Flag } from 'lucide-react';
 import { TopBar } from '@/components/TopBar';
+import { StatusScreen } from '@/components/StatusScreen';
 import { useDeck, useManifest } from '@/lib/decks';
-import { loadProgress } from '@/lib/storage';
-import { applyQuestionOrder, clampSetIndex, setBoundaries, setRange } from '@/lib/sets';
+import { loadOrderedProgress } from '@/lib/storage';
+import { clampSetIndex, setBoundaries, setRange } from '@/lib/sets';
 import { isCorrect, parseExplanation, getOptions } from '@/lib/quiz';
 import { CorrectionNotice } from '@/components/CorrectionNotice';
 import { RichText } from '@/components/RichText';
@@ -29,10 +30,7 @@ export function ReviewScreen() {
 
   const data = useMemo(() => {
     if (deckLoad.status !== 'ready' || !deckId) return null;
-    const p = loadProgress(deckId, deckLoad.questions);
-    // Saved progress is indexed by *display* position, so the deck must be put
-    // into display order before the two are read against each other.
-    const questions = applyQuestionOrder(deckLoad.questions, p.questionOrder);
+    const { progress: p, questions } = loadOrderedProgress(deckId, deckLoad.questions);
     const flaggedSet = new Set(p.flagged);
 
     const boundaries = setBoundaries(questions.length, p.setSize);
@@ -66,29 +64,13 @@ export function ReviewScreen() {
 
   if (deckLoad.status === 'loading' || !data) {
     return (
-      <div className="flex h-screen flex-col" style={{ background: 'var(--bg-canvas)' }}>
-        <TopBar />
-        <div
-          className="flex flex-1 items-center justify-center text-sm"
-          style={{ color: 'var(--text-muted)' }}
-        >
-          Loading…
-        </div>
-      </div>
+      <StatusScreen>Loading…</StatusScreen>
     );
   }
 
   if (deckLoad.status !== 'ready') {
     return (
-      <div className="flex h-screen flex-col" style={{ background: 'var(--bg-canvas)' }}>
-        <TopBar />
-        <div
-          className="flex flex-1 items-center justify-center text-sm"
-          style={{ color: 'var(--text-muted)' }}
-        >
-          Could not load deck.
-        </div>
-      </div>
+      <StatusScreen>Could not load deck.</StatusScreen>
     );
   }
 

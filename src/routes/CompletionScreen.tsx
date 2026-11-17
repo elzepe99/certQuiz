@@ -1,10 +1,11 @@
 import { useEffect, useMemo } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { TopBar } from '@/components/TopBar';
+import { StatusScreen } from '@/components/StatusScreen';
 import { useDeck, useManifest } from '@/lib/decks';
-import { clearProgress, loadProgress } from '@/lib/storage';
+import { clearProgress, loadOrderedProgress } from '@/lib/storage';
 import { isCorrect, formatTime } from '@/lib/quiz';
-import { applyQuestionOrder, clampSetIndex, setBoundaries, setRange } from '@/lib/sets';
+import { clampSetIndex, setBoundaries, setRange } from '@/lib/sets';
 
 export function CompletionScreen() {
   const { deckId } = useParams<{ deckId: string }>();
@@ -18,10 +19,7 @@ export function CompletionScreen() {
 
   const data = useMemo(() => {
     if (deckLoad.status !== 'ready' || !deckId) return null;
-    const p = loadProgress(deckId, deckLoad.questions);
-    // Progress is indexed by *display* position, so the deck has to be put into
-    // display order before either can be read against the other.
-    const questions = applyQuestionOrder(deckLoad.questions, p.questionOrder);
+    const { progress: p, questions } = loadOrderedProgress(deckId, deckLoad.questions);
 
     const boundaries = setBoundaries(questions.length, p.setSize);
     const count = Math.max(1, boundaries.length - 1);
@@ -84,15 +82,7 @@ export function CompletionScreen() {
 
   if (deckLoad.status !== 'ready' || !data) {
     return (
-      <div className="flex h-screen flex-col" style={{ background: 'var(--bg-canvas)' }}>
-        <TopBar />
-        <div
-          className="flex flex-1 items-center justify-center text-sm"
-          style={{ color: 'var(--text-muted)' }}
-        >
-          Loading…
-        </div>
-      </div>
+      <StatusScreen>Loading…</StatusScreen>
     );
   }
 

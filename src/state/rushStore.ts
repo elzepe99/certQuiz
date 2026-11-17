@@ -15,12 +15,13 @@ import {
   type RushState,
 } from '@/lib/rush';
 import { sfx, unlockAudio } from '@/lib/sfx';
+import { readJson, writeJson } from '@/lib/localJson';
 import { isCorrect } from '@/lib/quiz';
 import { useQuiz } from '@/state/quizStore';
 
 /**
  * Jackpot Rush: a survival clock over the normal exam view, started from the
- * casino dock in the bottom-right corner.
+ * Rush tab in the right sidebar (or the corner dock on narrower screens).
  *
  * It does not keep its own questions. It watches the quiz store and scores
  * whatever the reader submits there, so the answers are ordinary answers and
@@ -32,7 +33,7 @@ import { useQuiz } from '@/state/quizStore';
  * A run lives in memory: a reload or leaving the deck ends it.
  */
 
-/** Kept in step with the reel stops in RushDock (0.7s, 1.05s, 1.4s). */
+/** How long a spin lasts. `SlotMachine` derives its three reel stops from it. */
 export const SPIN_MS = 1400;
 
 export type RushBest = { correct: number; survivedMs: number; bestStreak: number };
@@ -43,7 +44,7 @@ type Store = RushState & {
   deckId: string | null;
   now: number;
   reels: Reels;
-  /** Where the reels will land; read by the dock to stop them one by one. */
+  /** Where the reels will land; read by the slot machine to stop them one by one. */
   target: Reels;
   spinning: boolean;
   /** The latest +/- event, for the floating "+1:00" toast. */
@@ -61,13 +62,8 @@ type Store = RushState & {
 const SETTINGS_KEY = 'quiz:rush:settings';
 
 function loadDifficulty(): Difficulty {
-  try {
-    const raw = window.localStorage.getItem(SETTINGS_KEY);
-    const d = raw ? (JSON.parse(raw) as { difficulty?: unknown }).difficulty : undefined;
-    return isDifficulty(d) ? d : DEFAULT_DIFFICULTY;
-  } catch {
-    return DEFAULT_DIFFICULTY;
-  }
+  const d = (readJson(SETTINGS_KEY) as { difficulty?: unknown } | null)?.difficulty;
+  return isDifficulty(d) ? d : DEFAULT_DIFFICULTY;
 }
 
 /** A best is per difficulty: a long easy run says nothing about a hard one. */
@@ -76,22 +72,13 @@ function bestKey(deckId: string, d: Difficulty) {
 }
 
 function readBest(deckId: string, d: Difficulty): RushBest | null {
-  try {
-    const raw = window.localStorage.getItem(bestKey(deckId, d));
-    if (!raw) return null;
-    const b = JSON.parse(raw) as Partial<RushBest>;
-    return typeof b.correct === 'number' ? (b as RushBest) : null;
-  } catch {
-    return null;
-  }
+  const b = readJson(bestKey(deckId, d)) as Partial<RushBest> | null;
+  return b && typeof b.correct === 'number' ? (b as RushBest) : null;
 }
 
 function writeBest(deckId: string, d: Difficulty, best: RushBest) {
-  try {
-    window.localStorage.setItem(bestKey(deckId, d), JSON.stringify(best));
-  } catch {
-    // A best score that does not survive a reload is still a best score today.
-  }
+  // A best score that does not survive a reload is still a best score today.
+  writeJson(bestKey(deckId, d), best);
 }
 
 let flashSeq = 0;
@@ -133,11 +120,8 @@ export const useRush = create<Store>((set, get) => ({
     if (get().phase === 'running') return;
     const deckId = get().deckId;
     set({ difficulty: d, best: deckId ? readBest(deckId, d) : null, newBest: false });
-    try {
-      window.localStorage.setItem(SETTINGS_KEY, JSON.stringify({ difficulty: d }));
-    } catch {
-      // The choice still holds for this visit.
-    }
+    // If it cannot be saved, the choice still holds for this visit.
+    writeJson(SETTINGS_KEY, { difficulty: d });
   },
 
   reset: () => {

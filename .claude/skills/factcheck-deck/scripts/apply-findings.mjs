@@ -55,6 +55,9 @@ if (!existsSync(libPath)) {
   process.exit(1);
 }
 const { stampCorrection } = await import(`file://${libPath.replace(/\\/g, '/')}`);
+const { hasRefMarker, splitExplanation } = await import(
+  `file://${join(REPO, 'scripts', 'lib', 'decks.mjs').replace(/\\/g, '/')}`
+);
 
 const findingsPath = process.argv[2];
 const DRY = process.argv.includes('--dry');
@@ -94,21 +97,6 @@ if (!/^\d{4}-\d{2}-\d{2}$/.test(reviewed ?? '')) {
  */
 const VERDICTS = new Set(['confirmed', 'clarified', 'reasoning', 'corrected']);
 const LETTERS = ['A', 'B', 'C', 'D', 'E'];
-
-/** Split an explanation into prose and its existing reference list. */
-function splitExplanation(text) {
-  const m = (text ?? '').match(/(^|\n)\s*References?\s*:?\s*\n?/i);
-  if (!m || m.index === undefined) return { body: (text ?? '').trim(), refs: [] };
-  return {
-    body: text.slice(0, m.index).trim(),
-    refs: text
-      .slice(m.index + m[0].length)
-      .trim()
-      .split(/\n+/)
-      .map((l) => l.replace(/^[\s•\-*]+/, '').trim())
-      .filter(Boolean),
-  };
-}
 
 const errors = [];
 const planned = [];
@@ -270,13 +258,13 @@ console.log(
 // Coverage across the WHOLE deck, not just this batch — the point of the pass is
 // that every explanation ends up carrying the doc that settles it, and that is
 // only visible deck-wide.
-const cited = deck.filter((q) => /(^|\n)\s*References?\s*:/i.test(q.explanation ?? '')).length;
+const cited = deck.filter((q) => hasRefMarker(q.explanation)).length;
 const uncited = deck.length - cited;
 console.log(`Deck coverage: ${cited}/${deck.length} question(s) carry at least one reference.`);
 
 if (uncited > 0) {
   const ids = deck
-    .filter((q) => !/(^|\n)\s*References?\s*:/i.test(q.explanation ?? ''))
+    .filter((q) => !hasRefMarker(q.explanation))
     .slice(0, 10)
     .map((q) => q.id);
   console.log(`  ${uncited} still uncited: ${ids.join(', ')}${uncited > 10 ? ` … and ${uncited - 10} more` : ''}`);

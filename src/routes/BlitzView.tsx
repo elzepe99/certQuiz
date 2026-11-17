@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { TopBar } from '@/components/TopBar';
+import { StatusScreen } from '@/components/StatusScreen';
 import { BlitzLobby } from '@/components/blitz/BlitzLobby';
 import { BlitzStage } from '@/components/blitz/BlitzStage';
 import { BlitzPodium } from '@/components/blitz/BlitzPodium';
 import { useDeck, useManifest } from '@/lib/decks';
-import { loadProgress } from '@/lib/storage';
-import { applyQuestionOrder, setInfoFor } from '@/lib/sets';
+import { loadOrderedProgress } from '@/lib/storage';
+import { setInfoFor } from '@/lib/sets';
 import { buildRunOrder, type BlitzSource } from '@/lib/blitz';
 import { useBlitz } from '@/state/blitzStore';
 
@@ -36,8 +37,7 @@ export function BlitzView() {
   // The deck in *display* order, which is what saved progress is indexed by.
   const prepared = useMemo(() => {
     if (deckLoad.status !== 'ready') return null;
-    const progress = loadProgress(deckLoad.deck.id, deckLoad.questions);
-    const questions = applyQuestionOrder(deckLoad.questions, progress.questionOrder);
+    const { progress, questions } = loadOrderedProgress(deckLoad.deck.id, deckLoad.questions);
     const info = setInfoFor(questions.length, progress.setSize, progress.currentIdx);
     return { questions, info };
   }, [deckLoad]);
@@ -75,28 +75,20 @@ export function BlitzView() {
 
   if (deckLoad.status !== 'ready' || !prepared) {
     return (
-      <div className="flex h-screen flex-col [height:100dvh]" style={{ background: 'var(--bg-canvas)' }}>
-        <TopBar />
-        <div
-          className="flex flex-1 items-center justify-center text-sm"
-          style={{
-            color: deckLoad.status === 'error' ? 'var(--danger)' : 'var(--text-muted)',
-          }}
-        >
-          {deckLoad.status === 'loading' ? (
-            'Loading deck…'
-          ) : deckLoad.status === 'error' ? (
-            `Failed to load deck: ${deckLoad.message}`
-          ) : (
-            <>
-              Deck not found.
-              <Link to="/" className="ml-2 underline" style={{ color: 'var(--accent)' }}>
-                Back to decks
-              </Link>
-            </>
-          )}
-        </div>
-      </div>
+      <StatusScreen dvh tone={deckLoad.status === 'error' ? 'danger' : 'muted'}>
+        {deckLoad.status === 'loading' ? (
+          'Loading deck…'
+        ) : deckLoad.status === 'error' ? (
+          `Failed to load deck: ${deckLoad.message}`
+        ) : (
+          <>
+            Deck not found.
+            <Link to="/" className="ml-2 underline" style={{ color: 'var(--accent)' }}>
+              Back to decks
+            </Link>
+          </>
+        )}
+      </StatusScreen>
     );
   }
 

@@ -14,6 +14,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { listGuides, orphanFragments } from '../../../../scripts/lib/guides.mjs';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../..');
 const only = process.argv[2];
@@ -26,23 +27,26 @@ const warn = (m) => { console.log(`  warn  ${m}`); warns++; };
 const read = (p) => fs.readFileSync(path.join(REPO, p), 'utf8');
 const exists = (p) => fs.existsSync(path.join(REPO, p));
 
-// --- the GUIDES array, parsed from source ------------------------------------------
-// Parsed rather than imported because build-guide.mjs does its work at module scope;
-// importing it would rebuild every guide as a side effect of verifying one.
-const buildSrc = read('scripts/build-guide.mjs');
-const guides = [...buildSrc.matchAll(/source:\s*'([^']+)',\s*\n\s*out:\s*'([^']+)'/g)]
-  .map(([, source, out]) => ({ source, out, slug: path.basename(out, '.html') }));
+// --- which guides exist -----------------------------------------------------------
+// Derived from the manifest's `guide` fields, the same way build-guide.mjs does.
+const guides = listGuides(REPO);
 
 if (!guides.length) {
-  console.error('Could not parse the GUIDES array out of scripts/build-guide.mjs.');
+  console.error('No deck in public/decks/manifest.json declares a "guide".');
   process.exit(1);
 }
 
 const selected = only ? guides.filter((g) => g.slug === only) : guides;
 if (only && !selected.length) {
-  console.error(`No GUIDES entry emits ${only}.html. build-guide.mjs knows: ${guides.map((g) => g.slug).join(', ')}`);
-  console.error('A guide missing from that array is the single most common reason a guide edit changes nothing.');
+  console.error(`No manifest deck declares guides/${only}.html. Known: ${guides.map((g) => g.slug).join(', ')}`);
+  console.error('A guide with no "guide" field in the manifest is never built and never shown.');
   process.exit(1);
+}
+
+const orphans = orphanFragments(REPO, guides);
+if (orphans.length) {
+  console.log('\nUndeclared fragments');
+  for (const o of orphans) fail(`${o} has no manifest deck pointing at it — it is never built`);
 }
 
 // --- the shared stylesheet ----------------------------------------------------------

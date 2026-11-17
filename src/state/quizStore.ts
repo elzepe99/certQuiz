@@ -4,21 +4,12 @@ import type { DeckMeta, DeckProgress, Question } from '@/types';
 import {
   emptyProgress,
   emptyProgressForQuestions,
-  loadProgress,
+  loadOrderedProgress,
   saveProgress,
   clearProgress,
 } from '@/lib/storage';
 import { isCorrect as isCorrectFn } from '@/lib/quiz';
-import { applyQuestionOrder, setInfoFor, setRange, type SetInfo } from '@/lib/sets';
-
-function shuffleOrder(total: number): number[] {
-  const out = Array.from({ length: total }, (_, i) => i);
-  for (let i = out.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [out[i], out[j]] = [out[j], out[i]];
-  }
-  return out;
-}
+import { applyQuestionOrder, setInfoFor, setRange, shuffled, type SetInfo } from '@/lib/sets';
 
 type State = {
   deck: DeckMeta | null;
@@ -56,8 +47,7 @@ export const useQuiz = create<State>((set, get) => ({
   questionStartTime: Date.now(),
 
   loadDeck: (deck, questions) => {
-    const progress = loadProgress(deck.id, questions);
-    const orderedQuestions = applyQuestionOrder(questions, progress.questionOrder);
+    const { progress, questions: orderedQuestions } = loadOrderedProgress(deck.id, questions);
     // Reset sessionStartTime so offline/sleep time between sessions isn't counted
     const freshProgress = { ...progress, sessionStartTime: Date.now() };
     set({ deck, questions: orderedQuestions, progress: freshProgress, questionStartTime: Date.now() });
@@ -97,7 +87,7 @@ export const useQuiz = create<State>((set, get) => ({
   },
 
   submit: () => {
-    const { progress, deck, questions, questionStartTime } = get();
+    const { progress, deck, questionStartTime } = get();
     if (!deck) return;
     const idx = progress.currentIdx;
     const sel = progress.answers[idx];
@@ -105,7 +95,6 @@ export const useQuiz = create<State>((set, get) => ({
     const elapsed = Math.round((Date.now() - questionStartTime) / 1000);
     const timeOnQ = [...progress.timeOnQ];
     timeOnQ[idx] = (timeOnQ[idx] ?? 0) + elapsed;
-    void questions; // referenced for future per-question logic
     const next: DeckProgress = {
       ...progress,
       submitted: { ...progress.submitted, [idx]: true },
@@ -208,7 +197,7 @@ export const useQuiz = create<State>((set, get) => ({
     if (!deck) return;
     clearProgress(deck.id);
     const fresh = emptyProgressForQuestions(questions);
-    const nextOrder = shuffleOrder(questions.length);
+    const nextOrder = shuffled(Array.from({ length: questions.length }, (_, i) => i));
     const shuffledQuestions = applyQuestionOrder(questions, nextOrder);
     // The chosen set size is a preference, not progress — it survives a reset.
     const nextProgress: DeckProgress = {

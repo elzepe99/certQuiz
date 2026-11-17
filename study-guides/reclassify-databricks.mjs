@@ -117,21 +117,14 @@ export const UNCOVERED = [
   'approx_count_distinct, mean and summary as aggregate/profiling operations, and exploding arrays (named in Section 3)',
 ];
 
-if (import.meta.url === `file:///${process.argv[1].replace(/\\/g, '/')}`) {
-  const fs = await import('node:fs');
-  const deck = JSON.parse(fs.readFileSync('public/decks/databricks-data-engineer-associate.json', 'utf8'));
-  const ids = new Set(deck.map(q => q.id));
-  const missing = deck.filter(q => !(q.id in CALLS)).map(q => q.id);
-  const stale = Object.keys(CALLS).filter(id => !ids.has(id));
-  if (missing.length || stale.length) console.log('unclassified:', missing, 'stale:', stale);
-  const n = deck.length;
-  const counts = {};
-  for (const q of deck) counts[CALLS[q.id]] = (counts[CALLS[q.id]] || 0) + 1;
-  console.log(`deck ${n} questions  |  exam 45 scored questions`);
-  for (const d of Object.keys(EXAM)) {
-    const c = counts[d] || 0;
-    console.log(
-      `${NAMES[d].padEnd(42)} exam ${String(EXAM[d]).padStart(2)}%  ~${Math.round(EXAM[d] * 0.45).toString().padStart(2)} Qs   deck ${String(c).padStart(3)}  ${(100 * c / n).toFixed(1).padStart(5)}%`,
-    );
-  }
+import { isMain, runReport } from './lib/report.mjs';
+
+if (isMain(import.meta.url)) {
+  runReport({
+    deckFile: 'databricks-data-engineer-associate.json',
+    CALLS, EXAM, NAMES,
+    pad: 42,
+    examLabel: '45 scored questions',
+    examQuestions: 45,
+  });
 }

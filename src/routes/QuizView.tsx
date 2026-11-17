@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { RotateCcw, ArrowRight, Eraser, Zap } from 'lucide-react';
 import { TopBar } from '@/components/TopBar';
+import { StatusScreen } from '@/components/StatusScreen';
 import { QuestionMap } from '@/components/QuestionMap';
 import { TopicsList } from '@/components/TopicsList';
 import { OptionList } from '@/components/OptionList';
@@ -86,46 +87,24 @@ export function QuizView() {
 
   if (deckLoad.status === 'loading') {
     return (
-      <div className="flex h-screen flex-col" style={{ background: 'var(--bg-canvas)' }}>
-        <TopBar />
-        <div
-          className="flex flex-1 items-center justify-center text-sm"
-          style={{ color: 'var(--text-muted)' }}
-        >
-          Loading deck…
-        </div>
-      </div>
+      <StatusScreen>Loading deck…</StatusScreen>
     );
   }
 
   if (deckLoad.status === 'not-found') {
     return (
-      <div className="flex h-screen flex-col" style={{ background: 'var(--bg-canvas)' }}>
-        <TopBar />
-        <div
-          className="flex flex-1 items-center justify-center text-sm"
-          style={{ color: 'var(--text-muted)' }}
-        >
-          Deck not found.{' '}
-          <Link to="/" className="ml-2 underline" style={{ color: 'var(--accent)' }}>
-            Back to decks
-          </Link>
-        </div>
-      </div>
+      <StatusScreen>
+        Deck not found.{' '}
+        <Link to="/" className="ml-2 underline" style={{ color: 'var(--accent)' }}>
+          Back to decks
+        </Link>
+      </StatusScreen>
     );
   }
 
   if (deckLoad.status === 'error') {
     return (
-      <div className="flex h-screen flex-col" style={{ background: 'var(--bg-canvas)' }}>
-        <TopBar />
-        <div
-          className="flex flex-1 items-center justify-center text-sm"
-          style={{ color: 'var(--danger)' }}
-        >
-          Failed to load deck: {deckLoad.message}
-        </div>
-      </div>
+      <StatusScreen tone="danger">Failed to load deck: {deckLoad.message}</StatusScreen>
     );
   }
 

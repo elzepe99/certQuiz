@@ -2,7 +2,7 @@
 
 A static certification practice quiz. Vite + React 18 + TypeScript + Tailwind,
 Zustand for per-deck state, React Router v6, progress in localStorage. No backend
-and no auth: the whole app is 13 JSON decks in `public/decks/` rendered by a small
+and no auth: the whole app is 14 JSON decks in `public/decks/` rendered by a small
 React app, deployable to any static host.
 
 **The decks are the product.** The app is stable and rarely needs work; the
@@ -134,17 +134,22 @@ scripts/
                         as one 350-character run
   review-comments.mjs   exports in-app comments to markdown
   test-richtext.mjs     regression suite for the code-fence heuristic
-  test-blitz.mjs        regression suite for Blitz scoring + the spoken script.
-                        Unlike the other two it bundles rather than transforming
-                        a single file, because blitz.ts imports richtext.ts —
-                        esbuild resolves the `@/` alias from tsconfig.json
+  test-blitz.mjs        regression suite for Blitz scoring + the spoken script
+  test-rush.mjs         regression suite for the Jackpot Rush clock and odds
+  lib/harness.mjs       what the four test suites share: `loadTs()` bundles a
+                        module out of src/ with esbuild (which resolves the
+                        `@/` alias from tsconfig.json), plus `check`/`ok`/`tally`
+  lib/decks.mjs         `listDeckFiles`, `REF_MARKER`, `splitExplanation` —
+                        shared by scripts/ and the skill scripts. REF_MARKER
+                        must stay identical to the regex in src/lib/quiz.ts
+  lib/guides.mjs        the list of study guides, derived from the manifest
   lib/corrections.mjs   stampCorrection() — LOAD-BEARING, see below
   build-guide.mjs       wraps each study guide's shell-less `.artifact.html`
                         fragment into a standalone page under public/guides/.
                         Wired to `npm run build:guide` and to `prebuild`.
-                        **A new guide must be added to its GUIDES
-                        array** or it is silently never built, and the script
-                        prints "built" for the ones it did build either way
+                        The list of guides is derived from the manifest's
+                        `guide` fields (`scripts/lib/guides.mjs`); a fragment
+                        no deck points at fails the build as an ORPHAN
 study-guides/         fourteen guides, each ONE hand-edited `<name>.artifact.html`
                       (no doctype/head/body, because it is also published as a
                       Claude Artifact, which supplies its own skeleton). The
@@ -152,13 +157,14 @@ study-guides/         fourteen guides, each ONE hand-edited `<name>.artifact.htm
                       repo owner's request — do not recreate them. The fourteen fragments
                       share one stylesheet BY COPY: lines 5–575 are
                       byte-identical, so a palette change must be made in all
-                      fourteen. `reclassify-*.mjs` holds one deck's per-question
+                      fourteen. `lib/report.mjs` is the report runner every
+                      reclassify script calls. `reclassify-*.mjs` holds one deck's per-question
                       domain calls against the official exam outline, because no
                       deck's `_cat` tags match the published domains
 .claude/skills/deck-study-guide/
   SKILL.md            the study-guide workflow
-  scripts/verify-guide.mjs   checks the wiring the build cannot: GUIDES entry,
-                             manifest `guide` field, every section heading
+  scripts/verify-guide.mjs   checks the wiring the build cannot: undeclared
+                             fragments, every section heading
                              actually present in the built page, no question
                              ids in the text, stylesheet drift, and whether the
                              question count the guide states still matches the
@@ -231,7 +237,7 @@ picker means, which is the number all the deck work in this file exists to keep
 honest. If you are asked to "make blitz count", that is the decision being
 overturned.
 
-Five things are load-bearing and easy to undo by accident:
+Six things are load-bearing and easy to undo by accident:
 
 - **Read-aloud is three-way, not a toggle**: question only, question and every
   option, or off (`ReadAloudMode` in `lib/blitz.ts`; `speechScript` takes an
@@ -487,7 +493,7 @@ spin, heat), `state/rushStore.ts`, `components/rush/` (`RushGame.tsx`,
   +0:20 / −0:20 / +0:30. Normal is the default; four minutes felt too long.
 - The slot machine spins on each right answer and pays on three of a kind at
   **exactly 1 in 8** (rolled first, not left to independent reels, which would
-  be 1 in 36). A run lives in memory; leaving the deck ends it. **There is no
+  be 1 in 49 with seven symbols). A run lives in memory; leaving the deck ends it. **There is no
   cash-out**: it only ended a run early, and the owner found it confusing.
 - **The Tincho chip is an easter egg — keep it.** Tincho is the owner's
   colleague, who came up with this mode first. His green casino chip is a
@@ -534,7 +540,7 @@ reading naturally puts them. **Ask for the source image before drawing from a
 stem.** The answer key did not move, but the figure was teaching the wrong
 convention.
 
-Four rules the existing four follow:
+Five rules the existing figures follow:
 
 - **Paint with the CSS variables, never literal hex.** The figure should
   inherit the palette, not sit on top of it.
@@ -1901,10 +1907,11 @@ questions. The nearest evidence is circumstantial and points both ways:
 So the rename is unprovable either way, and that asymmetry decides it. Renaming
 option text has a **certain** cost and a speculative benefit:
 
-1. **It re-mints ids.** Ids hash `question + optionA..E + correct + _cat`, so editing
-   an option changes the id and orphans any in-app comment on it. Editing an
-   *explanation* never does — which is why the current split (old names in options,
-   current names in prose) is the only version that costs nothing.
+1. **It costs a review of every renamed option, for no proven gain.** (This item used
+   to say a rename re-mints ids and orphans comments. That is false — ids are frozen
+   once minted, see the 2026-08-25 correction above — so the cost is review effort,
+   not lost comments.) The current split, old names in options and current names in
+   prose, needs no such review.
 2. **A learner who meets the old name on the exam and only ever saw the new one is
    worse off than the reverse.** Recognising "Data Cloud Admin" when the screen says
    "Data Cloud Architect" is a smaller failure than not recognising the name the item

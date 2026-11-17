@@ -32,10 +32,9 @@ export type QuestionDiagram = {
  * because ids are permanent (see scripts/add-question-ids.mjs) and because an
  * SVG inlined into a deck file would make the content unreadable to edit.
  *
- * Only add an entry where the prose genuinely cannot carry the mechanism. Four
- * questions in the Integration Architect deck qualify: two whose figures were
- * flattened into a bracketed textual rendering, and two that referred to a
- * diagram which never made it into the deck.
+ * Only add an entry where the prose genuinely cannot carry the mechanism:
+ * a figure that was flattened into a bracketed textual rendering, or a stem
+ * that refers to a diagram which never made it into the deck.
  */
 export const QUESTION_DIAGRAMS: Record<string, QuestionDiagram> = {
   // "Which computation represents the end-to-end response time?"

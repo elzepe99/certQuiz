@@ -25,9 +25,10 @@
  * It also strips *markdown emphasis*, because the app renders explanations as
  * plain text and would print the asterisks.
  */
-import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { resolve, join } from 'node:path';
+import { REF_MARKER, listDeckFiles } from '../../../../scripts/lib/decks.mjs';
 
 const args = process.argv.slice(2);
 const positional = args.filter((a) => !a.startsWith('--'));
@@ -51,8 +52,7 @@ const DECKS_DIR = 'public/decks';
 
 /** Find the one deck containing these ids, so a batch cannot be applied to the wrong file. */
 if (!deckPath) {
-  const candidates = readdirSync(DECKS_DIR)
-    .filter((f) => f.endsWith('.json') && !/manifest|deck-template/.test(f))
+  const candidates = listDeckFiles(DECKS_DIR)
     .filter((f) => {
       const d = JSON.parse(readFileSync(join(DECKS_DIR, f), 'utf8'));
       if (!Array.isArray(d)) return false;
@@ -72,7 +72,6 @@ if (!deckPath) {
 
 const deck = JSON.parse(readFileSync(deckPath, 'utf8'));
 const byId = new Map(deck.map((q) => [q.id, q]));
-const REF_MARKER = /(^|\n)\s*References?\s*:?\s*\n?/i;
 
 const errors = [];
 const findings = [];

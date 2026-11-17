@@ -8,23 +8,8 @@
  * mode, and a reel change that quietly took it from 1 in 8 to 1 in 36 would
  * still "look right" in a single game.
  */
-import path from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { loadTs, ok as check, tally } from './lib/harness.mjs';
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-
-const esbuild = (
-  await import(pathToFileURL(path.join(ROOT, 'node_modules/esbuild/lib/main.js')).href)
-).default;
-
-const built = await esbuild.build({
-  entryPoints: [path.join(ROOT, 'src/lib/rush.ts')],
-  bundle: true,
-  format: 'esm',
-  write: false,
-  tsconfig: path.join(ROOT, 'tsconfig.json'),
-  logLevel: 'silent',
-});
 const {
   DIFFICULTIES,
   JACKPOT_ODDS,
@@ -40,17 +25,7 @@ const {
   spin,
   startRush,
   survivedMs,
-} = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
-
-let pass = 0;
-let fail = 0;
-function check(name, cond, detail = '') {
-  if (cond) pass++;
-  else {
-    fail++;
-    console.log(`FAIL ${name}${detail ? ` — ${detail}` : ''}`);
-  }
-}
+} = await loadTs('src/lib/rush.ts');
 
 // A seeded dice, so the spin tests are repeatable.
 function mulberry32(seed) {
@@ -150,6 +125,7 @@ check('heat thresholds', [0, 2, 3, 4, 5, 7, 8, 20].map(heatFor).join() === '0,0,
 check('clock format', formatClock(240_000) === '4:00' && formatClock(61_000) === '1:01');
 check('clock rounds up', formatClock(100) === '0:01' && formatClock(0) === '0:00');
 
+const { pass, fail } = tally();
 console.log(`\n${pass} passed, ${fail} failed`);
 console.log(`Tincho jackpot rate: ${(tinchoRate * 100).toFixed(2)}% (target ${(JACKPOT_ODDS * TINCHO_SHARE * 100).toFixed(2)}%)`);
 console.log(`Jackpot rate over ${N} seeded spins: ${(rate * 100).toFixed(2)}% (target ${(JACKPOT_ODDS * 100).toFixed(1)}%)`);

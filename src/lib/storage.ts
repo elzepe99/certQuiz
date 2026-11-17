@@ -1,5 +1,6 @@
 import type { DeckProgress, Question } from '@/types';
-import { DEFAULT_SET_SIZE } from '@/lib/sets';
+import { applyQuestionOrder, DEFAULT_SET_SIZE } from '@/lib/sets';
+import { writeJson } from '@/lib/localJson';
 
 export const PROGRESS_KEY = (deckId: string) => `quiz:progress:${deckId}`;
 
@@ -43,8 +44,7 @@ export function questionSignature(q: Question): string {
 
 /**
  * Compact, URL/DB-friendly hash (FNV-1a, 32-bit, hex) of a question signature.
- * Used as `question_hash` when storing comments so a row stays bound to the
- * exact question content regardless of its index in the deck.
+ * Every question's `id` was seeded with this value.
  */
 export function hashSignature(sig: string): string {
   let h = 0x811c9dc5;
@@ -57,7 +57,8 @@ export function hashSignature(sig: string): string {
 
 /**
  * The durable key for a question: its assigned `id` when present, otherwise a
- * hash of its current content.
+ * hash of its current content. Saved progress keys off it, and comments store
+ * it as `question_hash`.
  *
  * Every question's id was seeded with exactly that content hash, so the two
  * branches agree for un-edited questions — which is what lets ids be adopted
@@ -66,11 +67,6 @@ export function hashSignature(sig: string): string {
  */
 export function questionKey(q: Question): string {
   return q.id ?? hashSignature(questionSignature(q));
-}
-
-/** Compact stable key for a single question, stored as `question_hash`. */
-export function questionHash(q: Question): string {
-  return questionKey(q);
 }
 
 /**
@@ -255,46 +251,27 @@ export function loadProgress(deckId: string, questions: Question[]): DeckProgres
   }
 }
 
+/**
+ * Saved progress together with the deck in *display* order.
+ *
+ * Progress is indexed by display position, so a freshly fetched deck has to be
+ * put into that order before the two can be read against each other. Every
+ * screen that reads progress outside the quiz store goes through here.
+ */
+export function loadOrderedProgress(
+  deckId: string,
+  questions: Question[],
+): { progress: DeckProgress; questions: Question[] } {
+  const progress = loadProgress(deckId, questions);
+  return { progress, questions: applyQuestionOrder(questions, progress.questionOrder) };
+}
+
 export function saveProgress(deckId: string, p: DeckProgress) {
-  if (typeof window === 'undefined') return;
-  try {
-    window.localStorage.setItem(PROGRESS_KEY(deckId), JSON.stringify(p));
-  } catch {
-    // ignore quota errors
-  }
+  // A failed write (quota, private mode) is dropped.
+  writeJson(PROGRESS_KEY(deckId), p);
 }
 
 export function clearProgress(deckId: string) {
   if (typeof window === 'undefined') return;
   window.localStorage.removeItem(PROGRESS_KEY(deckId));
-}
-
-export type ProgressSummary = {
-  answered: number;
-  correct: number;
-  total: number;
-  accuracy: number; // 0-1
-};
-
-export function summarizeProgress(
-  deckId: string,
-  questions: Question[],
-  isCorrectFn: (qIdx: number, selected: string) => boolean,
-): ProgressSummary | null {
-  const p = loadProgress(deckId, questions);
-  const total = questions.length;
-  const submittedIdxs = Object.keys(p.submitted).map(Number);
-  if (submittedIdxs.length === 0) return null;
-
-  let correct = 0;
-  for (const i of submittedIdxs) {
-    const sel = p.answers[i];
-    if (sel && isCorrectFn(i, sel)) correct++;
-  }
-  return {
-    answered: submittedIdxs.length,
-    correct,
-    total,
-    accuracy: submittedIdxs.length > 0 ? correct / submittedIdxs.length : 0,
-  };
 }

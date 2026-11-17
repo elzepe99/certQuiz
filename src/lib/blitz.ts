@@ -21,6 +21,7 @@
  */
 import { getOptions } from '@/lib/quiz';
 import { parseRichText } from '@/lib/richtext';
+import { shuffled } from '@/lib/sets';
 import type { Question } from '@/types';
 
 /** Points a perfect, instant answer is worth before any streak bonus. */
@@ -248,16 +249,6 @@ export function maxPossibleScore(questionCount: number): number {
     total += BLITZ_BASE_POINTS + Math.min(i, MAX_STREAK_STEPS) * STREAK_BONUS_STEP;
   }
   return total;
-}
-
-/** Fisher–Yates. */
-export function shuffled<T>(items: T[]): T[] {
-  const out = [...items];
-  for (let i = out.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [out[i], out[j]] = [out[j], out[i]];
-  }
-  return out;
 }
 
 /**

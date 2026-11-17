@@ -112,22 +112,16 @@ export const UNCOVERED = [
   'The renamed permission sets. The four option sets naming them use the pre-September-2025 labels -- Data Cloud Admin, Marketing Specialist, Marketing Manager, "for Marketing Data Aware Specialist" -- and the current names (Data Cloud Architect, Activation Specialist, Activation Manager, Data Cloud Data Aware Specialist) appear only in explanations. Learn both; answer with the deck.',
 ];
 
-if (import.meta.url === `file:///${process.argv[1].replace(/\\/g, '/')}`) {
-  const fs = await import('node:fs');
-  const deck = JSON.parse(fs.readFileSync('public/decks/data_cloud_consultant_questions.json', 'utf8'));
-  const ids = new Set(deck.map(q => q.id));
-  const missing = deck.filter(q => !(q.id in CALLS)).map(q => q.id);
-  const stale = Object.keys(CALLS).filter(id => !ids.has(id));
-  if (missing.length || stale.length) console.log('unclassified:', missing, 'stale:', stale);
-  const n = deck.length;
-  const counts = {};
-  for (const q of deck) counts[CALLS[q.id]] = (counts[CALLS[q.id]] || 0) + 1;
-  console.log(`deck ${n} questions  |  exam 60 scored questions`);
-  for (const d of Object.keys(EXAM)) {
-    const c = counts[d] || 0;
-    console.log(
-      `${NAMES[d].padEnd(38)} exam ${String(EXAM[d]).padStart(2)}%  ~${Math.round(EXAM[d] * 0.6).toString().padStart(2)} Qs   deck ${String(c).padStart(3)}  ${(100 * c / n).toFixed(1).padStart(5)}%`,
-    );
-  }
-  console.log(`\n${UNCOVERED.length} sub-objectives with no deck item.`);
+import { isMain, runReport } from './lib/report.mjs';
+
+if (isMain(import.meta.url)) {
+  runReport({
+    deckFile: 'data_cloud_consultant_questions.json',
+    CALLS, EXAM, NAMES,
+    pad: 38,
+    examLabel: '60 scored questions',
+    footer: [
+      `\n${UNCOVERED.length} sub-objectives with no deck item.`,
+    ],
+  });
 }
